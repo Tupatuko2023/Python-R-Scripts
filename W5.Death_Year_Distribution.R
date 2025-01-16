@@ -1,6 +1,5 @@
 
-# Temporal Distribution and Visualization of Mortality Data
-# : Analyzing Yearly Death Trends
+# Yearly Mortality Trends: Statistical Analysis and Visualization of Death Year Distribution
 
 # This R script [Death_Year_Distribution.R ] visualizes the distribution of death 
 # years, showing counts and percentages with a bar plot using custom colors, 
