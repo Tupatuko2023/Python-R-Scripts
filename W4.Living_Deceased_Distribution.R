@@ -1,5 +1,5 @@
 
-# Calculating and Visualizing the Distribution of Living and Deceased
+# Demographic Distribution of Living and Deceased Individuals: A Statistical Visualization Using Bar Charts
 
 # Generates a bar plot that shows the distribution of living and deceased 
 # individuals with counts displayed as normal integers. 
