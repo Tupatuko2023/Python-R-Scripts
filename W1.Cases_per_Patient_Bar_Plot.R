@@ -1,8 +1,12 @@
 
 # Calculating and Visualizing the Number of Cases per Patient with a Bar Plot
 
-# This R script calculates and visualizes the distribution of cases per patient 
-# using a bar plot, adding labels and saving the plot as an image.
+# This R script "Cases_per_Patient_Bar_Plot.R" calculates and visualizes the 
+# distribution of cases per patient using a bar plot, adding labels and saving 
+# the plot as an image.
+
+###############################################################################
+###############################################################################
 
 # 1: Load necessary libraries
 library(dplyr)
