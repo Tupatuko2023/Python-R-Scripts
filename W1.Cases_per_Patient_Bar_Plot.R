@@ -1,5 +1,5 @@
 
-# Bar Plot Analysis of Case Distribution Per Patient: Data Visualization and Statistical Summary
+# Work 1: Bar Plot Analysis of Case Distribution Per Patient: Data Visualization and Statistical Summary
 
 # This R script "Cases_per_Patient_Bar_Plot.R" calculates and visualizes the 
 # distribution of cases per patient using a bar plot, adding labels and saving 
