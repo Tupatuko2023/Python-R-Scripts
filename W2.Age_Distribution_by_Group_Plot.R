@@ -1,5 +1,5 @@
 
-# Age Distribution Analysis by Group: A Statistical Visualization Using Bar Plots
+# Work 2: Age Distribution Analysis by Group: A Statistical Visualization Using Bar Plots
 
 # This R script [Age_Distribution_by_ Group_Plot] calculates and visualizes 
 # the age distribution of patients by group, categorizing them into age ranges 
