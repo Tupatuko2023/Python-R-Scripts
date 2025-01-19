@@ -1,7 +1,7 @@
 
-# Demographic Distribution of Living and Deceased Individuals: A Statistical Visualization Using Bar Charts
+# Work 4: Demographic Distribution of Living and Deceased Individuals: A Statistical Visualization Using Bar Charts
 
-# Generates a bar plot that shows the distribution of living and deceased 
+# This R script [Living_Deceased_Distribution.R] Generates a bar plot that shows the distribution of living and deceased 
 # individuals with counts displayed as normal integers. 
 
 ###############################################################################
