@@ -1,5 +1,5 @@
 
-# Distribution of Patients' Status by Group: A Visual and Statistical Analysis Using Bar Charts
+# Work 3: Distribution of Patients' Status by Group: A Visual and Statistical Analysis Using Bar Charts
 
 # This R script [Distribution_of_Patients'_Status.R] calculates and visualizes 
 # the distribution of patients' status by group, using a bar plot with percentages 
