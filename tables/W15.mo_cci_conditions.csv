@@ -1,0 +1,234 @@
+Condition,Weight,ICD-10 Code
+Acute myocardial infarction,1,I21
+Acute myocardial infarction,1,I252
+Congestive heart failure,1,I50
+Peripheral vascular disease,1,I702
+Peripheral vascular disease,1,I73
+Cerebral vascular accident,1,I60
+Cerebral vascular accident,1,I61
+Cerebral vascular accident,1,I62
+Cerebral vascular accident,1,I63
+Cerebral vascular accident,1,I64
+Cerebral vascular accident,1,I69
+Dementia,1,F00
+Dementia,1,F01
+Dementia,1,F03
+Dementia,1,G30
+Pulmonary disease,1,J42
+Pulmonary disease,1,J43
+Pulmonary disease,1,J44
+Pulmonary disease,1,J45
+Pulmonary disease,1,J46
+Pulmonary disease,1,J47
+Pulmonary disease,1,J60
+Pulmonary disease,1,J61
+Pulmonary disease,1,J62
+Pulmonary disease,1,J63
+Pulmonary disease,1,J64
+Pulmonary disease,1,J65
+Pulmonary disease,1,J66
+Pulmonary disease,1,J67
+Pulmonary disease,1,J701
+Pulmonary disease,1,J703
+Connective tissue disease,1,M05
+Connective tissue disease,1,M06
+Connective tissue disease,1,M30
+Connective tissue disease,1,M31
+Connective tissue disease,1,M32
+Connective tissue disease,1,M33
+Connective tissue disease,1,M34
+Connective tissue disease,1,M35
+Connective tissue disease,1,M36
+Connective tissue disease,1,M45
+Peptic ulcer,1,K25
+Peptic ulcer,1,K26
+Peptic ulcer,1,K27
+Peptic ulcer,1,K28
+Liver disease,1,B18
+Liver disease,1,K704
+Liver disease,1,K711
+Liver disease,1,K713
+Liver disease,1,K714
+Liver disease,1,K715
+Liver disease,1,K73
+Liver disease,1,Z944
+Severe liver disease,3,K703
+Severe liver disease,3,K717
+Severe liver disease,3,K721
+Severe liver disease,3,K729
+Severe liver disease,3,K743
+Severe liver disease,3,K744
+Severe liver disease,3,K745
+Severe liver disease,3,K746
+Severe liver disease,3,I85
+Severe liver disease,3,I864
+Severe liver disease,3,I982
+Diabetes without complication (mild diabetes mellitus),1,E100
+Diabetes without complication (mild diabetes mellitus),1,E101
+Diabetes without complication (mild diabetes mellitus),1,E106
+Diabetes without complication (mild diabetes mellitus),1,E108
+Diabetes without complication (mild diabetes mellitus),1,E109
+Diabetes without complication (mild diabetes mellitus),1,E110
+Diabetes without complication (mild diabetes mellitus),1,E111
+Diabetes without complication (mild diabetes mellitus),1,E116
+Diabetes without complication (mild diabetes mellitus),1,E118
+Diabetes without complication (mild diabetes mellitus),1,E119
+Diabetes without complication (mild diabetes mellitus),1,E120
+Diabetes without complication (mild diabetes mellitus),1,E121
+Diabetes without complication (mild diabetes mellitus),1,E126
+Diabetes without complication (mild diabetes mellitus),1,E128
+Diabetes without complication (mild diabetes mellitus),1,E129
+Diabetes without complication (mild diabetes mellitus),1,E130
+Diabetes without complication (mild diabetes mellitus),1,E131
+Diabetes without complication (mild diabetes mellitus),1,E136
+Diabetes without complication (mild diabetes mellitus),1,E138
+Diabetes without complication (mild diabetes mellitus),1,E139
+Diabetes without complication (mild diabetes mellitus),1,E140
+Diabetes without complication (mild diabetes mellitus),1,E141
+Diabetes without complication (mild diabetes mellitus),1,E146
+Diabetes without complication (mild diabetes mellitus),1,E148
+Diabetes without complication (mild diabetes mellitus),1,E149
+Diabetes with complication (severe diabetes mellitus),2,E102
+Diabetes with complication (severe diabetes mellitus),2,E103
+Diabetes with complication (severe diabetes mellitus),2,E104
+Diabetes with complication (severe diabetes mellitus),2,E105
+Diabetes with complication (severe diabetes mellitus),2,E107
+Diabetes with complication (severe diabetes mellitus),2,E112
+Diabetes with complication (severe diabetes mellitus),2,E113
+Diabetes with complication (severe diabetes mellitus),2,E114
+Diabetes with complication (severe diabetes mellitus),2,E115
+Diabetes with complication (severe diabetes mellitus),2,E117
+Diabetes with complication (severe diabetes mellitus),2,E122
+Diabetes with complication (severe diabetes mellitus),2,E123
+Diabetes with complication (severe diabetes mellitus),2,E124
+Diabetes with complication (severe diabetes mellitus),2,E125
+Diabetes with complication (severe diabetes mellitus),2,E127
+Diabetes with complication (severe diabetes mellitus),2,E132
+Diabetes with complication (severe diabetes mellitus),2,E133
+Diabetes with complication (severe diabetes mellitus),2,E134
+Diabetes with complication (severe diabetes mellitus),2,E135
+Diabetes with complication (severe diabetes mellitus),2,E137
+Diabetes with complication (severe diabetes mellitus),2,E142
+Diabetes with complication (severe diabetes mellitus),2,E143
+Diabetes with complication (severe diabetes mellitus),2,E144
+Diabetes with complication (severe diabetes mellitus),2,E145
+Diabetes with complication (severe diabetes mellitus),2,E147
+Hemiplegia,2,G041
+Hemiplegia,2,G114
+Hemiplegia,2,G801
+Hemiplegia,2,G81
+Hemiplegia,2,G82
+Hemiplegia,2,G830
+Hemiplegia,2,G831
+Hemiplegia,2,G832
+Hemiplegia,2,G833
+Hemiplegia,2,G834
+Hemiplegia,2,G839
+Renal disease,2,N18
+Renal disease,2,Z940
+Renal disease,2,Z491
+Renal disease,2,Z492
+Renal disease,2,Z992
+Renal disease,2,T861
+Cancer,2,C00
+Cancer,2,C01
+Cancer,2,C02
+Cancer,2,C03
+Cancer,2,C04
+Cancer,2,C05
+Cancer,2,C06
+Cancer,2,C07
+Cancer,2,C08
+Cancer,2,C09
+Cancer,2,C10
+Cancer,2,C11
+Cancer,2,C12
+Cancer,2,C13
+Cancer,2,C14
+Cancer,2,C15
+Cancer,2,C16
+Cancer,2,C17
+Cancer,2,C18
+Cancer,2,C19
+Cancer,2,C20
+Cancer,2,C21
+Cancer,2,C22
+Cancer,2,C23
+Cancer,2,C24
+Cancer,2,C25
+Cancer,2,C26
+Cancer,2,C27
+Cancer,2,C28
+Cancer,2,C29
+Cancer,2,C30
+Cancer,2,C31
+Cancer,2,C32
+Cancer,2,C33
+Cancer,2,C34
+Cancer,2,C35
+Cancer,2,C36
+Cancer,2,C37
+Cancer,2,C38
+Cancer,2,C39
+Cancer,2,C40
+Cancer,2,C41
+Cancer,2,C42
+Cancer,2,C43
+Cancer,2,C44
+Cancer,2,C45
+Cancer,2,C46
+Cancer,2,C47
+Cancer,2,C48
+Cancer,2,C49
+Cancer,2,C50
+Cancer,2,C51
+Cancer,2,C52
+Cancer,2,C53
+Cancer,2,C54
+Cancer,2,C55
+Cancer,2,C56
+Cancer,2,C57
+Cancer,2,C58
+Cancer,2,C59
+Cancer,2,C60
+Cancer,2,C61
+Cancer,2,C62
+Cancer,2,C63
+Cancer,2,C64
+Cancer,2,C65
+Cancer,2,C66
+Cancer,2,C67
+Cancer,2,C68
+Cancer,2,C69
+Cancer,2,C70
+Cancer,2,C71
+Cancer,2,C72
+Cancer,2,C73
+Cancer,2,C74
+Cancer,2,C75
+Cancer,2,C76
+Cancer,2,C81
+Cancer,2,C82
+Cancer,2,C83
+Cancer,2,C84
+Cancer,2,C85
+Cancer,2,C86
+Cancer,2,C87
+Cancer,2,C88
+Cancer,2,C89
+Cancer,2,C90
+Cancer,2,C91
+Cancer,2,C92
+Cancer,2,C93
+Cancer,2,C94
+Cancer,2,C95
+Cancer,2,C96
+Cancer,2,C97
+Cancer with metastasis,6,C77
+Cancer with metastasis,6,C78
+Cancer with metastasis,6,C79
+Cancer with metastasis,6,C80
+AIDS,6,B20
+AIDS,6,B21
+AIDS,6,B22
+AIDS,6,B24
