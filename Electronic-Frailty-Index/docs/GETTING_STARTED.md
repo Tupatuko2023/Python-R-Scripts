@@ -1,14 +1,25 @@
-# Getting Started - 10 minute quickstart
+﻿# Getting Started
 
-Prerequisites: conda, R+renv, Quarto 1.8.x, TinyTeX [TODO], Node LTS (optional)
+Tämä ohje käynnistää projektin 10 minuutissa. Tässä ei ole oikeaa dataa. Demot käyttävät synteettistä CSV:tä.
 
-## Environments
+## Esivaatimukset
+- Windows 10 tai 11
+- VS Code
+- Conda tai Miniconda
+- R 4.x
+- Quarto 1.8.x
+- Node LTS jos haluat markdownlintin
+- TinyTeX PDF-rendaukseen [TODO: linkki ohjeeseen]
+
+## Kansiot pikavilkaisulla
+- docs: dokumentit ja tämä ohje
+- report: Quarto raportit
+- env: ympäristökuvaukset
+- notebooks: analyysinotebookit
+- docs/SYNTHETIC_DEMO: synteettinen CSV ja demot
+
+## Python: ympäristö ja demo
+```powershell
 conda env create -f env\environment.yml
 conda activate efi
-install.packages("renv"); renv::init()
-
-## Build docs
-quarto render docs\PHDSUM_efi_progress_2024_summary.md --to html --output-dir docs
-quarto render docs\PHDSUM_efi_progress_2024_summary.md --to pdf  --output-dir docs
-
-See docs\REPRODUCIBILITY.md
+python docs\SYNTHETIC_DEMO\demo_py.py
