@@ -1,15 +1,15 @@
-﻿# Electronic Frailty Index - Finland
+﻿## Quickstart
 
-TÃ¤mÃ¤ alikansio sisÃ¤ltÃ¤Ã¤ eFI-tyÃ¶n: dokumentit, synteettisen demon ja Quarto-yihtennÃ¸vdeon.
-[TODO: 2Â· 3 lauseen projektiesittely]
-
-** 10-minute quickstart
-
-## 10-minute quickstart
-
-```p'powershell
-\.make_demo.psa
-# odotettu tuloste: Samples=..., P=..., R=..., F11=... ja Cox smoke OK
+**Windows (PowerShell)**
+```powershell
+Set-Location "C:/GitWork/Python-R-Scripts/Electronic-Frailty-Index"
+quarto render .\report\efi_2024_progress.qmd
 ```
 
-LisÃ¤tiedot: docs/GETTING_STARTED.md ja docs/REPRODUCEBILITYM.md.
+**Linux/macOS (bash)**
+```bash
+cd /path/to/Python-R-Scripts/Electronic-Frailty-Index
+quarto render ./report/efi_2024_progress.qmd
+```
+
+See also: [GETTING_STARTED.md](./docs/GETTING_STARTED.md)
