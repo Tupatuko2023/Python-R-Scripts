@@ -1,7 +1,7 @@
 ﻿# Python and R Scripts
 
-Pääprojekti:
+Main project:
 - [Electronic Frailty Index](Electronic-Frailty-Index/README.md)
 
-Nopea aloitus:
-- avaa Electronic-Frailty-Index/README.md ja suorita Quickstart
+Quick start:
+- Open `Electronic-Frailty-Index/README.md` and follow the Quickstart section.
