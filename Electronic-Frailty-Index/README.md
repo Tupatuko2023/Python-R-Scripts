@@ -1,14 +1,17 @@
-# Electronic Frailty Index - module
+﻿## Quickstart
 
-This folder contains the EFI module sources and docs.
+### Windows (PowerShell)
 
-- Start here: [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)
-- Reproducibility: [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md)
+```powershell
+Set-Location "C:/GitWork/Python-R-Scripts/Electronic-Frailty-Index"
+quarto render .\report\efi_2024_progress.qmd
+```
 
-## Structure
+### Linux/macOS (bash)
 
-- docs —- user and reproducibility docs
-- env — environment definitions for Python
-- notebooks — analysis notebooks
-- scripts — utility scripts
-- report — Quarto reports and figures
+```bash
+cd /path/to/Python-R-Scripts/Electronic-Frailty-Index
+quarto render ./report/efi_2024_progress.qmd
+```
+
+See also: [GETTING_STARTED.md](./docs/GETTING_STARTED.md)

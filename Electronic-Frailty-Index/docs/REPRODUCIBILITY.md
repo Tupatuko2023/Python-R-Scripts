@@ -1,50 +1,48 @@
 # Reproducibility
 
-This document explains how to reproduce results produced by the EFI module.
+## Python
 
-## Environments and versions
-
-- OS: Windows 10 or 11
-- Python: defined in `Electronic-Frailty-Index/env/environment.yml`
-- Optional R: 4.x - required only if running R notebooks or Quarto docs that call R
-- Quarto: 1.8.x if rendering reports
-- Node: LTS - only for markdownlint and CI
-
-### Create the environment
-
-### powershell
-
-Set-Location C:\GitWork\Python-R-Scripts
-conda env create -f .\\Electronic-Frailty-Index\env\environment.yml
-conda activate efi_env
-
-###
-
-To capture exact packages for archiving:
-
-``powershell
-conda env export --n_-builds > .\\Electronic-Frailty-Index\env\environment.lock.yml
+- `env/environment.yml` defines Python 3.11 and libraries [TODO: list exact].
 
 ```powershell
-
-If using pip:
-
-``powershell
-pip freeze > .\\Electronic-Frailty-Index\env\requirements.lock.txt
+conda env create -f env/environment.yml
+conda activate efi
+python --version
+pip freeze > env/python-freeze.txt
 ```
 
-## Randomness and seeds
+## R
 
-Set a global seed for any code that uses randomness.
+```r
+install.packages("renv")
+renv::init()
+# After installing packages:
+renv::snapshot()
+writeLines(capture.output(sessionInfo()), "env/R-sessionInfo.txt")
+```
 
-Python example:
+## Randomness
 
-``python
-import os, random, numpy as np
-SEED = int(os.getenv("EFI_SEED", "20241015"))
-random.seed(SEED, args=())
-np.random.seed(SEED, args=())
+- Set random seeds in demos and notebooks. Add exact calls where needed.
+- Examples:
 
-## if using torch
+```python
+# Python
+import random, numpy as np
+random.seed(42)
+np.random.seed(42)
+# if you use PyTorch:
+# import torch
+# torch.manual_seed(42)
+```
 
-## import torch; torch.manual_seed(SEED); torch.cuda.manual_seed_all(SEED)
+```r
+# R
+set.seed(42)
+```
+
+## Data access
+
+- Repository contains only synthetic data.
+- Access to real data requires approvals and agreements [TODO: link to policy].
+- Scripts to access data are in `docs/SYNTHETIC_DEMO` folder.
