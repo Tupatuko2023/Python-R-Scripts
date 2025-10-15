@@ -1,6 +1,1 @@
-* text=auto
-*.ps1 text eol=crlf
-*.md  text eol=lf
-*.yml text eol=lf
-*.r   text eol=lf
-*.R   text eol=lf
+* text=auto eol=lf
