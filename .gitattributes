@@ -1,7 +1,7 @@
-﻿# Normalisoi rivinvaihdot
-* text=auto eol=crlf
-
-# Säilytä binäärit koskemattomina
-*.png binary
-*.jpg binary
-*.pdf binary
+﻿*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.R   text eol=lf
+*.py  text eol=lf
+*.md  text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
