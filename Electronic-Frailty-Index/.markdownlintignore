@@ -1,0 +1,4 @@
+﻿report/*.html
+report/*.pdf
+_site/
+.quarto/
