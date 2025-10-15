@@ -1,77 +1,46 @@
-# Getting Started - Windows PowerShell
+# Getting Started
 
-This guide sets up the EFI workspace on Windows in about 10 minutes.
+This guide boots the project in 10 minutes. The repo includes only synthetic data. No PHI.
 
 ## Prerequisites
 
 - Windows 10 or 11
-- VS Code with Git installed
-L- Conda or Miniconda
-- Node LTS if you want markdownlint in CI
-- Quarto 1.8.x if you plan to render reports
-- R 4.x only if you run R notebooks
+- VS Code
+- Conda or Miniconda
+- R 4.x
+- Quarto 1.8.x
+- Node LTS for markdownlint
+- TinyTeX for PDF output <https://yihui.org/tinytex/>
 
-## Folder layout - relative to repository root
+## Folder map
 
-- Electronic-Frailty-Index/docs
-- Electronic-Frailty-Index/env
-- Electronic-Frailty-Index/notebooks
-- Electronic-Frailty-Index/scripts
-- Electronic-Frailty-Index/report
+- docs: documentation and this guide
+- report: Quarto reports
+- env: environment descriptors
+- notebooks: analysis notebooks
+- docs/SYNTHETIC_DEMO: synthetic CSV and demo scripts
 
-## 1. Create and activate the Python environment
+## Python setup and demo
 
-``powershell
-Set-Location C:\GitWork\Python-R-Scripts
-conda env create -f .\\Electronic-Frailty-Index\Env\\environment.yml
-conda activate efi_env
-python --version
-pip list | Select-String "pandas|numpy|jupyter|ipykernel"
+    conda env create -f env\environment.yml
+    conda activate efi
+    python docs\SYNTHETIC_DEMO\demo_py.py
 
-```powershell
+## R setup and demo
 
-If you prefer pip-tools instead of conda, use `requirements.txt`:
+    install.packages("renv")
+    renv::init()
+    source("docs/SYNTHETIC_DEMO/demo_r.R")
 
-``powershell
-pip install -r .\\Electronic-Frailty-Index\\env\\requirements.txt
-```
+## Build docs
 
-## 2. VS Code - recommended settings
+    quarto render docs\PHDSUM_efi_progress_2024_summary.md --to html --output-dir docs
+    quarto render docs\PHDSUM_efi_progress_2024_summary.md --to pdf  --output-dir docs
 
-- Default shell: PowerShell
-- End of line: LF for Markdown and code
-- Suggested extensions:
-  - Python, Jupyter
-  - Markdown All in One
-  - markdownlint
-  - Quarto (if you render reports)
+## Lint markdown
 
-## 3. Quarto render - optional
+    markdownlint .
 
-``powershell
-Set-Location .\\Electronic-Frailty-Index\report
-quarto render
+Links
 
-```powershell
-
-Make sure `report` contains a `_quarto.yml` and at least one `.qmd` file before rendering.
-
-## 4. Lint Markdown locally
-
-``powershell
-npx markdownlint-cli "Electronic-Frailty-Index/**/*.md" --fix`
-```
-
-## 5. Run a notebook
-
-``powershell
-Set-Location C:\GitWork\Python-R-Scripts
-jupyter lab
-
-## open Electronic-Frailty-Index/notebooks and run cells
-
-```powershell
-
-Tips:
-- Use forward slashes in Markdown links, for example `docs/GETTING_STARTED.md`.
-- Use Windows paths in PowerShell blocks, for example `.\\Electronic-Frailty-Index\env\environment.yml`.
+- Reproducibility: docs/REPRODUCIBILITY.md
