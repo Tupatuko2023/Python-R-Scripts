@@ -18,3 +18,12 @@ desktop.ini
 .quarto/
 _site/
 *.log
+.vscode/
+.ipynb_checkpoints/
+.Rhistory
+.Rproj.user/
+.DS_Store
+*_cache/
+.quarto/
+_site/
+*.log
