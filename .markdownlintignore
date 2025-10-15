@@ -1,0 +1,5 @@
+report/**
+**/report/**
+**/.quarto/**
+**/.venv/**
+**/env/**
