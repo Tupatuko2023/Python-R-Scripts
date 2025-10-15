@@ -1,6 +1,25 @@
-/.quarto/
-**/*.quarto_ipynb
-_site/
+# Quarto ja render-tuotokset
+docs/*.html
+docs/*.pdf
+report/*.html
+report/*.pdf
+report/*.tex
+report/report/
+
+# Quarto työhakemisto
 .quarto/
-*.log
-node_modules/
+
+# Editorien ja työkalujen väliaikaiset
+.markdownlintignore
+.Rproj.user/
+.renv/
+renv/library*/
+.venv/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+
+# Varmuuskopiot
+*_bak
+*_backup
+_quarto.yml.bak
