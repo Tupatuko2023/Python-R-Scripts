@@ -25,7 +25,7 @@ To capture exact packages for archiving:
 ``powershell
 conda env export --n_-builds > .\\Electronic-Frailty-Index\env\environment.lock.yml
 
-```
+```powershell
 
 If using pip:
 
@@ -49,38 +49,3 @@ np.random.seed(SEED, args=())
 
 # import torch; torch.manual_seed(SEED); torch.cuda.manual_seed_all(SEED)
 
-```
-When reporting metrics, state the seed used or report mean and confidence intervals across multiple seeds.
-
-## Data access
-
-- This repository contains no production data.
-- Use synthetic or de-identified samples in examples.
-- Access to real data follows the custodian and IRB or equivalent approvals of your organization. Request access from the project owner and follow internal SOPs. Do not commit any data or secrets to the repository.
-
-## File locations
-
-- Environment files:
-  - `Electronic-Frailty-Index/env/environment.yml`
-  - `Electronic-Frailty-Index/env/requirements.txt`
-- Primary docs:
-  - `Electronic-Frailty-Index/docs/GETTING_STARTED.md`
-  - `Electronic-Frailty-Index/docs/REPRODUCIBILITY.md`
-
-## Session info - capture for bug reports
-
-Python:
-
-## powershell
-python -c "import sys,platform;print(platform.platform());print(sys.version)"
-pip list
-
-## R, if used:
-
-## powershell
-Rscript -e "sessionInfo()"
-
-## Determinism caveates
-
-- Some libraries use multithreading. Pin thread counts if exact repeatability is required.
-- Keep driver and CUDA ersions constant when comparing GPU runs.

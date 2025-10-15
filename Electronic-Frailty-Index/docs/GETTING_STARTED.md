@@ -28,7 +28,7 @@ conda activate efi_env
 python --version
 pip list | Select-String "pandas|numpy|jupyter|ipykernel"
 
-```
+```powershell
 
 If you prefer pip-tools instead of conda, use `requirements.txt`:
 
@@ -52,7 +52,7 @@ pip install -r .\\Electronic-Frailty-Index\\env\\requirements.txt
 Set-Location .\\Electronic-Frailty-Index\report
 quarto render
 
-```
+```powershell
 
 Make sure `report` contains a `_quarto.yml` and at least one `.qmd` file before rendering.
 
@@ -70,7 +70,7 @@ jupyter lab
 
 # open Electronic-Frailty-Index/notebooks and run cells
 
-```
+```powershell
 
 Tips:
 - Use forward slashes in Markdown links, for example `docs/GETTING_STARTED.md`.
