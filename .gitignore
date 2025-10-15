@@ -32,3 +32,5 @@ _site/
 
 !.github/
 !.github/workflows/
+
+efi_*.ps1
