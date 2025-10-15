@@ -1,0 +1,21 @@
+﻿project:
+  type: default
+execute:
+  freeze: auto
+lang: en
+format:
+  html:
+    toc: true
+    number-sections: true
+    code-fold: show
+    theme: cosmo
+  pdf:
+    toc: true
+    number-sections: true
+    pdf-engine: lualatex
+    include-in-header: header.tex
+    geometry:
+      - a4paper
+      - margin=25mm
+    fig-pos: "H"
+    tbl-pos: "H"

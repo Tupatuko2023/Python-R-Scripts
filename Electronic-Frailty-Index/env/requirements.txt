@@ -1,0 +1,2 @@
+﻿# pin-versiot tähän
+# esim: pandas==2.2.2
