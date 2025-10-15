@@ -1,3 +1,5 @@
-# Python and R Scripts  
+﻿# Electronic Frailty Index
 
-This repository contains Python and R scripts related to my research project.
+Katso ajantasainen kuvaus ja quickstart juuren README:stä:
+- ../README.md#10-minute-quickstart
+- ../README.md
