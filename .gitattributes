@@ -1,5 +1,7 @@
-* text=auto
-*.py text eol=lf
-*.R  text eol=lf
-*.ipynb text eol=lf
-*.ipynb filter=nbstripout
+﻿# Normalisoi rivinvaihdot
+* text=auto eol=crlf
+
+# Säilytä binäärit koskemattomina
+*.png binary
+*.jpg binary
+*.pdf binary
