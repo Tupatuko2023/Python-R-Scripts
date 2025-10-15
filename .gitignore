@@ -1,0 +1,8 @@
+# Windows ja Office
+Thumbs.db
+desktop.ini
+~$*
+*.tmp
+
+# OneDrive satunnaiset lukitusj?ljet
+*.lnk
