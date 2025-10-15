@@ -2,3 +2,4 @@
 report/*.pdf
 _site/
 .quarto/
+report/efi_2024_progress.md

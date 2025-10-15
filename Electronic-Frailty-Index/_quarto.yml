@@ -1,45 +1,15 @@
 ﻿project:
   type: default
 
+crossref:
+  ref-hyperlink: true
+
 format:
   html:
-    theme:
-      light: cosmo
     toc: true
+    toc-depth: 3
     number-sections: true
-    code-copy: true
-    code-overflow: wrap
-    link-external-newwindow: true
-    smooth-scroll: true
-    fig-cap-location: bottom
-    tbl-cap-location: top
-
   pdf:
     toc: true
     number-sections: true
-    pdf-engine: lualatex
-    papersize: a4
-    geometry:
-      - margin=25mm
-    mainfont: "Times New Roman"
-    sansfont: "Arial"
-    monofont: "Consolas"
-    colorlinks: true
-    linkcolor: blue
-    fig-cap-location: bottom
-    tbl-cap-location: top
-    lof: true
-    lot: true
-
-crossref:
-  fig-title: "Figure"
-  tbl-title: "Table"
-  eq-title: "Equation"
-  lof-title: "List of Figures"
-  lot-title: "List of Tables"
-  fig-prefix: "Fig."
-  tbl-prefix: "Tab."
-  labels: arabic
-  ref-hyperlink: true
-  number-depth: 3
-  chapters: false
+    include-in-header: header.tex

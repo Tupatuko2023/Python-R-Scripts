@@ -1,15 +1,15 @@
-# Electronic Frailty Index - Finland
+﻿# Electronic Frailty Index - Finland
 
-Tämä alikansio sisältää eFI-työn: dokumentit, synteettisen demon ja Quarto-yihtennøvdeon.
-[TODO: 2· 3 lauseen projektiesittely]
+TÃ¤mÃ¤ alikansio sisÃ¤ltÃ¤Ã¤ eFI-tyÃ¶n: dokumentit, synteettisen demon ja Quarto-yihtennÃ¸vdeon.
+[TODO: 2Â· 3 lauseen projektiesittely]
 
 ** 10-minute quickstart
 
-### 10-minute quickstart
+## 10-minute quickstart
 
 ```p'powershell
 \.make_demo.psa
 # odotettu tuloste: Samples=..., P=..., R=..., F11=... ja Cox smoke OK
 ```
 
-Lisätiedot: docs/GETTING_STARTED.md ja docs/REPRODUCEBILITYM.md.
+LisÃ¤tiedot: docs/GETTING_STARTED.md ja docs/REPRODUCEBILITYM.md.
