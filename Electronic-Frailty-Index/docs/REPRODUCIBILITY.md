@@ -45,7 +45,6 @@ SEED = int(os.getenv("EFI_SEED", "20241015"))
 random.seed(SEED, args=())
 np.random.seed(SEED, args=())
 
-# if using torch
+## if using torch
 
-# import torch; torch.manual_seed(SEED); torch.cuda.manual_seed_all(SEED)
-
+## import torch; torch.manual_seed(SEED); torch.cuda.manual_seed_all(SEED)
