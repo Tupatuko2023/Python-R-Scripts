@@ -1,26 +1,48 @@
-# Reproducibility
+﻿# Reproducibility
 
 ## Python
-- env\environment.yml defines Python 3.11 and libs [TODO list exact]
-`powershell
-conda env create -f env\environment.yml
+
+- `env/environment.yml` defines Python 3.11 and libraries [TODO: list exact].
+
+```powershell
+conda env create -f env/environment.yml
 conda activate efi
 python --version
-pip freeze > env\python-freeze.txt
-`",
-",
+pip freeze > env/python-freeze.txt
+```
 
-`
+## R
+
+```r
 install.packages("renv")
 renv::init()
-# renv::snapshot() after installs
+# After installing packages:
+renv::snapshot()
 writeLines(capture.output(sessionInfo()), "env/R-sessionInfo.txt")
-`",
-",
+```
 
-- Set random seeds in demos [TODO]
-- Commit env files to version control
+## Randomness
+
+- Set random seeds in demos and notebooks. Add exact calls where needed.
+- Examples:
+
+```python
+# Python
+import random, numpy as np
+random.seed(42)
+np.random.seed(42)
+# if you use PyTorch:
+# import torch
+# torch.manual_seed(42)
+```
+
+```r
+# R
+set.seed(42)
+```
 
 ## Data access
-- Repo contains only synthetic data
-- Real data requires approvals [TODO link to policy]
+
+- Repository contains only synthetic data.
+- Access to real data requires approvals and agreements [TODO: link to policy].
+- Scripts to access data are in `docs/SYNTHETIC_DEMO` folder.
