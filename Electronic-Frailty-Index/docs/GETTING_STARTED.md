@@ -9,7 +9,7 @@ This guide boots the project in 10 minutes. The repo includes only synthetic dat
 - R 4.x
 - Quarto 1.8.x
 - Node LTS for markdownlint
-- TinyTeX for PDF output [TODO: add link]
+- TinyTeX for PDF output <https://yihui.org/tinytex/>
 
 ## Folder map
 - docs: documentation and this guide
