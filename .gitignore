@@ -6,3 +6,24 @@ desktop.ini
 
 # OneDrive satunnaiset lukitusj?ljet
 *.lnk
+# IDE/editori
+.vscode/
+.ipynb_checkpoints/
+.Rhistory
+.Rproj.user/
+.DS_Store
+
+# Build ja väliaikaiset
+*_cache/
+.quarto/
+_site/
+*.log
+.vscode/
+.ipynb_checkpoints/
+.Rhistory
+.Rproj.user/
+.DS_Store
+*_cache/
+.quarto/
+_site/
+*.log
