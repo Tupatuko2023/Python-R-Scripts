@@ -1,4 +1,7 @@
 ﻿# Python and R Scripts
 
-This repository contains Python and R scripts related to my research project.
+Pääprojekti:
+- [Electronic Frailty Index](Electronic-Frailty-Index/README.md)
 
+Nopea aloitus:
+- avaa Electronic-Frailty-Index/README.md ja suorita Quickstart

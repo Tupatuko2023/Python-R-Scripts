@@ -1,5 +1,7 @@
-* text=auto
-*.py text eol=lf
-*.R  text eol=lf
-*.ipynb text eol=lf
-*.ipynb filter=nbstripout
+﻿*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.R   text eol=lf
+*.py  text eol=lf
+*.md  text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
