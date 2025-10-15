@@ -68,7 +68,7 @@ npx markdownlint-cli "Electronic-Frailty-Index/**/*.md" --fix`
 Set-Location C:\GitWork\Python-R-Scripts
 jupyter lab
 
-# open Electronic-Frailty-Index/notebooks and run cells
+## open Electronic-Frailty-Index/notebooks and run cells
 
 ```powershell
 
