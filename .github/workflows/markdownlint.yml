@@ -1,4 +1,5 @@
 name: markdownlint
+
 on:
   push:
     branches: [ "main" ]
@@ -6,6 +7,7 @@ on:
   pull_request:
     branches: [ "main" ]
     paths: [ "**/*.md", ".markdownlint.*" ]
+
 jobs:
   lint:
     runs-on: ubuntu-latest
