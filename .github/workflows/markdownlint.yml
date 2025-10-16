@@ -1,11 +1,11 @@
-﻿name: markdownlint
+name: markdownlint
 on:
-  pull_request:
-    branches: [ "main" ]
-    paths: [ "**/*.md" ]
   push:
     branches: [ "main" ]
-    paths: [ "**/*.md" ]
+    paths: [ "**/*.md", ".markdownlint.*" ]
+  pull_request:
+    branches: [ "main" ]
+    paths: [ "**/*.md", ".markdownlint.*" ]
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -13,6 +13,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "lts/*"
-      - run: npm install -g markdownlint-cli
-      - run: markdownlint "Electronic-Frailty-Index/**/*.md" "**/*.md" --ignore ".git/**"
+          node-version: lts/*
+      - name: Run markdownlint
+        run: npx --yes markdownlint-cli@0.38.0 "Electronic-Frailty-Index/**/*.md" "**/*.md" --ignore ".git/**" -c .markdownlint.json
