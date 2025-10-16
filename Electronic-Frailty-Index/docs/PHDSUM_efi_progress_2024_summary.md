@@ -2,81 +2,81 @@
 
 # Finnish eFI Project — 2024 Research Progress Summary
 
-_August 2024 draft; last updated 2024-12-20_
+August 2024 draft; last updated 2024-12-202431 by Tomi Korpi.
 
 ## Background
 
 From March–December 2024, within Tampere University’s Systems Biology of Aging (BioAge) group, the project advanced a Finnish **electronic Frailty Index (eFI)** to identify and stratify frailty using **EHR** data, combining structured elements (e.g., ICD-10, labs) with unstructured clinical narratives via **NLP**. Frailty reflects reduced physiological reserve and resilience and is linked to mortality, cardiovascular outcomes, falls, and hospitalizations (McIsaac, 2020; Clegg, 2013; Fried, 2021). Validated frameworks include the **Fried Phenotype** (Fried, 2001) and the **Rockwood Frailty Index** (Searle, 2008). Evidence suggests early identification and targeted intervention can mitigate risk (Fried, 2021; Kwak & Thompson, 2021).
 
-In Finland, assessments often rely on manual checklists prone to variability, underscoring the need for scalable, standardized tools (Kerminen, 2016; Kerminen, 2021; Luo, 2022). Frailty also affects some middle-aged adults (Bai, 2021; Fan, 2020; Hanlon, 2018). Standard structured-data screens can miss nuanced indicators captured in free text; hence increased interest in **AI/NLP** (Clegg, 2016; Lekan, 2017; Tayefi, 2021; Berman, 2021; Chen, 2023; Irving, 2021). Finnish **FinBERT** enables high-quality text processing (Virtanen, 2019), supporting an eFI that also flags key modifiers like mobility limitations and fall risk (Ambagtsheer, 2020; Mak, 2022; Mak, 2023; Remillard, 2019; Coventry, 2020; Niederstrasser, 2019; Paulson & Lichtenberg, 2015; Puls, 2014). 
+In Finland, assessments often rely on manual checklists prone to variability, underscoring the need for scalable, standardized tools (Kerminen, 2016; Kerminen, 2021; Luo, 2022). Frailty also affects some middle-aged adults (Bai, 2021; Fan, 2020; Hanlon, 2018). Standard structured-data screens can miss nuanced indicators captured in free text; hence increased interest in **AI/NLP** (Clegg, 2016; Lekan, 2017; Tayefi, 2021; Berman, 2021; Chen, 2023; Irving, 2021). Finnish **FinBERT** enables high-quality text processing (Virtanen, 2019), supporting an eFI that also flags key modifiers like mobility limitations and fall risk (Ambagtsheer, 2020; Mak, 2022; Mak, 2023; Remillard, 2019; Coventry, 2020; Niederstrasser, 2019; Paulson & Lichtenberg, 2015; Puls, 2014).
 
 ## Objectives
 
-**O1 — AI/NLP for frailty signals.** Design and validate methods to extract frailty-related factors from Finnish EHR free text (NER, assertion/negation, temporality).  
-**O2 — Data integration.** Combine structured (ICD-10, labs) and unstructured signals to compute and validate a Finnish eFI.  
-**O3 — Longitudinal trajectories.** Analyze 12-year frailty progression and its relationship to ADLs.  
-**O4 — ADLs & outcomes.** Quantify ADLs from free text, examine links to hip-fracture recovery, and evaluate joint/predictive effects of ADLs and eFI on rehabilitation outcomes over 12 years. 
+**O1 — AI/NLP for frailty signals.** Design and validate methods to extract frailty-related factors from Finnish EHR free text (NER, assertion/negation, temporality).
+**O2 — Data integration.** Combine structured (ICD-10, labs) and unstructured signals to compute and validate a Finnish eFI.
+**O3 — Longitudinal trajectories.** Analyze 12-year frailty progression and its relationship to ADLs.
+**O4 — ADLs & outcomes.** Quantify ADLs from free text, examine links to hip-fracture recovery, and evaluate joint/predictive effects of ADLs and eFI on rehabilitation outcomes over 12 years.
 
 ## Materials and Methods
 
 ### Data and setting
 
-- **Cohort & period:** 166,147 patients aged 38–96; **2010–2022**.  
-- **Corpus:** ~**10.6M** free-text EHR entries from Central Finland Wellbeing Services County (**HYVÄKS**).  
-- **Computing:** Secure Azure ML workspace for NLP and modeling.  
-- **Framework:** Rockwood deficit-accumulation FI principles; continuous eFI with cut-offs for states. (Searle, 2008; Blodgett, 2015). 
-  
+- **Cohort & period:** 166,147 patients aged 38–96; **2010–2022**.
+- **Corpus:** ~**10.6M** free-text EHR entries from Central Finland Wellbeing Services County (**HYVÄKS**).
+- **Computing:** Secure Azure ML workspace for NLP and modeling.
+- **Framework:** Rockwood deficit-accumulation FI principles; continuous eFI with cut-offs for states. (Searle, 2008; Blodgett, 2015).
+
 ### NLP pipeline and labeling
 
-- **Annotation:** Category-specific text labeling with clinician/nurse input; mutually exclusive labeler/approver roles; second-labeler verification; Microsoft NER guidelines.  
-- **Evaluation:** Precision/recall/F1; comparison with ICD-10 signals for select deficits (e.g., falls, incontinence); Cox models for mortality (age/sex adjusted). 
+- **Annotation:** Category-specific text labeling with clinician/nurse input; mutually exclusive labeler/approver roles; second-labeler verification; Microsoft NER guidelines.
+- **Evaluation:** Precision/recall/F1; comparison with ICD-10 signals for select deficits (e.g., falls, incontinence); Cox models for mortality (age/sex adjusted).
 
 ### Structured-data risk scores
 
-- **Hospital Frailty Risk Score (HFRS):**  
-  - Data merging and ICD-10 processing (`W7.Combine_data.ipynb`).  
-  - Score calculation and quality checks (`HFRS.2.Calculate_HFRS_Points.ipynb`).  
-  - Descriptive stats and visualizations (`HFRS.3…Histogram-n-Boxplot.ipynb`), risk classification plots, and unmatched-code audits (`HFRS.4…Risk_Classification.ipynb`). 
-  
-- **Charlson Comorbidity Index (CCI):**  
-  - ICD-10 expansion & Charlson weights (per Kang et al., 2021) (`W15.CCI.2.mo_CCI_weights.ipynb`).  
-  - Standardization & cleaning (`W16…procc_mo_CCI_weights.ipynb`, `W17…procc_CCI_data.ipynb`).  
-  - Score computation & longitudinal export (`W18…calculates_moCCI_scores.ipynb`). 
+- **Hospital Frailty Risk Score (HFRS):**
+  - Data merging and ICD-10 processing (`W7.Combine_data.ipynb`).
+  - Score calculation and quality checks (`HFRS.2.Calculate_HFRS_Points.ipynb`).
+  - Descriptive stats and visualizations (`HFRS.3…Histogram-n-Boxplot.ipynb`), risk classification plots, and unmatched-code audits (`HFRS.4…Risk_Classification.ipynb`).
+
+- **Charlson Comorbidity Index (CCI):**
+  - ICD-10 expansion & Charlson weights (per Kang et al., 2021) (`W15.CCI.2.mo_CCI_weights.ipynb`).
+  - Standardization & cleaning (`W16…procc_mo_CCI_weights.ipynb`, `W17…procc_CCI_data.ipynb`).
+  - Score computation & longitudinal export (`W18…calculates_moCCI_scores.ipynb`).
 
 ### Data engineering and analyses
 
-- **Overlap analysis:** Patient-ID Venn analysis across three datasets (`Vennd_Overlap.ipynb`). 
-- **Wide→Long transformations & longitudinal HFRS:**  
-  - ICD-10 truncation, pivoting, and summaries (`W12.HFRS.6.Pivot_HFRS.ipynb`).  
-  - Patient-level HFRS reference column computation (`W13.HFRS.7.Calculate_Pivot_HFRS.ipynb`).  
-  - Distribution plots for HFRS and classifications (`W14.HFRS.8.Plot_Pivot_HFRS.ipynb`). 
-  
-- **Correlation (CCI↔HFRS):**  
-  - Overall and sex-stratified Pearson correlations; heatmaps, scatterplots; linear regression (`W19…`, `W20…`, `W21…`). 
-- **BMI pipeline (text + structured):**  
-  - Retrieval of BMI mentions (Finnish/English terms), computation from height/weight, value filtering, and cohort summaries; dataset merges and recomputation functions (`W22…` to `W27…`). 
+- **Overlap analysis:** Patient-ID Venn analysis across three datasets (`Vennd_Overlap.ipynb`).
+- **Wide→Long transformations & longitudinal HFRS:**
+  - ICD-10 truncation, pivoting, and summaries (`W12.HFRS.6.Pivot_HFRS.ipynb`).
+  - Patient-level HFRS reference column computation (`W13.HFRS.7.Calculate_Pivot_HFRS.ipynb`).
+  - Distribution plots for HFRS and classifications (`W14.HFRS.8.Plot_Pivot_HFRS.ipynb`).
+
+- **Correlation (CCI↔HFRS):**
+  - Overall and sex-stratified Pearson correlations; heatmaps, scatterplots; linear regression (`W19…`, `W20…`, `W21…`).
+- **BMI pipeline (text + structured):**
+  - Retrieval of BMI mentions (Finnish/English terms), computation from height/weight, value filtering, and cohort summaries; dataset merges and recomputation functions (`W22…` to `W27…`).
 
 ## Results (2024 Progress)
 
-- **Pipelines implemented.** End-to-end **HFRS** and **CCI** computation/visualization pipelines built and validated on integrated ICD-10 datasets; longitudinal transformations support trajectory analyses. 
-- **Descriptive dashboards and figures prepared.**  
-  - Progress Gantt (project phases), dataset overlaps, and multiple baseline distributions (age groups, status, living vs. deceased, year of death).  
-  - Dental-care record counts per patient and other exploratory plots to guide variable selection for modeling. 
-- **NLP/NER labeling.** Targeted labeling sprints covered **mobility (04–06/2024)** and **bathing/dressing (09–10/2024)** domains for ADL extraction, supporting subsequent model fine-tuning. 
-- **Correlation analyses.** Initial **CCI–HFRS** associations computed overall and by sex; artifacts used to refine feature engineering and risk-group definitions for the integrated eFI. 
-- **BMI signal integration.** Consolidated BMI from text and structured fields, produced cohort-level summaries (min/max/mean/SD), and harmonized sources for downstream regression. 
+- **Pipelines implemented.** End-to-end **HFRS** and **CCI** computation/visualization pipelines built and validated on integrated ICD-10 datasets; longitudinal transformations support trajectory analyses.
+- **Descriptive dashboards and figures prepared.**
+  - Progress Gantt (project phases), dataset overlaps, and multiple baseline distributions (age groups, status, living vs. deceased, year of death).
+  - Dental-care record counts per patient and other exploratory plots to guide variable selection for modeling.
+- **NLP/NER labeling.** Targeted labeling sprints covered **mobility (04–06/2024)** and **bathing/dressing (09–10/2024)** domains for ADL extraction, supporting subsequent model fine-tuning.
+- **Correlation analyses.** Initial **CCI–HFRS** associations computed overall and by sex; artifacts used to refine feature engineering and risk-group definitions for the integrated eFI.
+- **BMI signal integration.** Consolidated BMI from text and structured fields, produced cohort-level summaries (min/max/mean/SD), and harmonized sources for downstream regression.
 
-> Note: Formal eFI performance metrics (e.g., discrimination, calibration) are planned after finalizing ADL features and temporal splits; current 2024 outputs emphasize data readiness, feature pipelines, and exploratory validations. 
+> Note: Formal eFI performance metrics (e.g., discrimination, calibration) are planned after finalizing ADL features and temporal splits; current 2024 outputs emphasize data readiness, feature pipelines, and exploratory validations.
 
 ## Academic & Project Activities (2024)
 
-- **Presentations:** Summary Toothdata (29 May), Labeling pipeline (19 Jun), Summer Workshop summary (6 Aug), Look-Back Windows (18 Nov), Longitudinal windows (20 Nov). 
--   
-- **Grant applications:** Tampere University, Faculty of Social Sciences (EN); **Suomen kulttuurirahasto** (FI). 
+- **Presentations:** Summary Toothdata (29 May), Labeling pipeline (19 Jun), Summer Workshop summary (6 Aug), Look-Back Windows (18 Nov), Longitudinal windows (20 Nov).
+-
+- **Grant applications:** Tampere University, Faculty of Social Sciences (EN); **Suomen kulttuurirahasto** (FI).
 
 ## Challenges and Lessons Learned
 
-- Onboarding to new cloud tooling (Azure) without prior hands-on support, handling large/complex EHR datasets, and ensuring clear communication across mixed Finnish/English guidance were recurrent themes. (Context reflected in progress notes and pipeline iterations.) 
+- Onboarding to new cloud tooling (Azure) without prior hands-on support, handling large/complex EHR datasets, and ensuring clear communication across mixed Finnish/English guidance were recurrent themes. (Context reflected in progress notes and pipeline iterations.)
 
 ### Abbreviations
 
@@ -147,4 +147,3 @@ Remillard, E. T., Fausset, C. B., & Fain, W. B. (2019). Aging With Long-Term Mob
 Searle, S. D., Mitnitski, A., Gahbauer, E. A., Gill, T. M., & Rockwood, K. (2008). A standard procedure for creating a frailty index. BMC Geriatrics, 8(1), 24. https://doi.org/10.1186/1471-2318-8-24
 Tayefi, M., Ngo, P., Chomutare, T., Dalianis, H., Salvi, E., Budrionis, A., & Godtliebsen, F. (2021). Challenges and opportunities beyond structured data in analysis of electronic health records. WIREs Computational Statistics, 13(6), e1549. https://doi.org/10.1002/wics.1549
 Virtanen, A., Kanerva, J., Ilo, R., Luoma, J., Luotolahti, J., Salakoski, T., Ginter, F., & Pyysalo, S. (2019). Multilingual is not enough: BERT for Finnish (No. arXiv:1912.07076). arXiv. https://doi.org/10.48550/arXiv.1912.07076
-
