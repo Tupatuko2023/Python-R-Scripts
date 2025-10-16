@@ -1,7 +1,7 @@
 ﻿
 # Project purpose & eFI overview
 
-This repository reports how I participated in developing a Finnish **electronic Frailty Index (eFI)** by combining **text-derived deficits** from FinBERT-based clinical NER with **structured** EHR data (ICD‑10, labs). In Central Finland EHRs (102,525 patients; 10.6 M notes), NER achieved F1 ≥ 0.81 and outperformed ICD‑10 for detecting falls and incontinence; NER-based onsets were more predictive of mortality. 
+This repository reports how I participated in developing a Finnish **electronic Frailty Index (eFI)** by combining **text-derived deficits** from FinBERT-based clinical NER with **structured** EHR data (ICD‑10, labs). In Central Finland EHRs (102,525 patients; 10.6 M notes), NER achieved F1 ≥ 0.81 and outperformed ICD‑10 for detecting falls and incontinence; NER-based onsets were more predictive of mortality.
 
 ## 2024 Progress Report
 
@@ -11,15 +11,15 @@ See [PHDSUM_efi_progress_2024_summary.md](./docs/PHDSUM_efi_progress_2024_summar
 
 ## Electronic Frailty Index — quickstart
 
-See also: 
+See also:
         [GETTING_STARTED.md](./docs/GETTING_STARTED.md)
         [REPRODUCIBILITY.md]: (./docs/REPRODUCIBILITY.md)
 
 ### Run the synthetic demo
 
-    conda env create -f Electronic-Frailty-Index/env/environment.yml
-    conda activate efi
-    python Electronic-Frailty-Index/docs/SYNTHETIC_DEMO/demo_py.py
+conda env create -f Electronic-Frailty-Index/env/environment.yml
+conda activate efi
+python Electronic-Frailty-Index/docs/SYNTHETIC_DEMO/demo_py.py
 
 ### Windows (PowerShell)
 

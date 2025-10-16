@@ -1,3 +1,4 @@
+
 # Getting Started
 
 This guide boots the project in 10 minutes. The repo includes only synthetic data. No PHI.
@@ -22,25 +23,20 @@ This guide boots the project in 10 minutes. The repo includes only synthetic dat
 
 ## Python setup and demo
 
-    conda env create -f env\environment.yml
-    conda activate efi
-    python docs\SYNTHETIC_DEMO\demo_py.py
+conda env create -f env\environment.yml
+conda activate efi
+python docs\SYNTHETIC_DEMO\demo_py.py
 
 ## R setup and demo
 
-    install.packages("renv")
-    renv::init()
-    source("docs/SYNTHETIC_DEMO/demo_r.R")
-
-## Build docs
-
-    quarto render docs\PHDSUM_efi_progress_2024_summary.md --to html --output-dir docs
-    quarto render docs\PHDSUM_efi_progress_2024_summary.md --to pdf  --output-dir docs
+install.packages("renv")
+renv::init()
+source("docs/SYNTHETIC_DEMO/demo_r.R")
 
 ## Lint markdown
 
-    markdownlint .
+markdownlint .
 
-Links
+## Links
 
 - Reproducibility: docs/REPRODUCIBILITY.md
