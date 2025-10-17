@@ -38,3 +38,4 @@ efi_*.ps1
 !.github/
 !.github/workflows/
 node_modules/
+.gitattributes.bak.*
