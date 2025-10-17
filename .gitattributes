@@ -12,3 +12,10 @@
 *.ipynb filter=nbstripout
 *.zpln filter=nbstripout
 *.ipynb diff=ipynb
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.gif -text
+*.svg -text
+*.pdf -text
+*.fig -text
