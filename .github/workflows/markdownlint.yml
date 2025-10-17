@@ -17,4 +17,4 @@ jobs:
         with:
           node-version: lts/*
       - name: Run markdownlint
-        run: npx --yes markdownlint-cli@0.38.0 "Electronic-Frailty-Index/**/*.md" "**/*.md" --ignore ".git/**" -c .markdownlint.json
+        run: npx --yes markdownlint-cli2@latest "**/*.md" --ignore ".git/**" -c .markdownlint.json
