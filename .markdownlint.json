@@ -3,9 +3,9 @@
   "MD013": false,
   "MD033": false,
   "MD041": false,
-  "MD046": { "style": "consistent" },  
-  "MD029": { "style": "ordered" },     
-  "MD034": false,                      
-  "MD022": true,                       
-  "MD012": true                        
+  "MD046": { "style": "fenced" },
+  "MD029": { "style": "ordered" },
+  "MD034": false,
+  "MD022": true,
+  "MD012": true
 }
