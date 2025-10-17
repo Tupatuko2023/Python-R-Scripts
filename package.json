@@ -1,0 +1,24 @@
+{
+  "name": "python-r-scripts",
+  "version": "1.0.0",
+  "description": "Main project: Electronic Frailty Index (EFI) analyses using Python and R",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:md": "markdownlint-cli2 '**/*.md' '!node_modules' '!**/.git/**' -c .markdownlint.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tupatuko2023/Python-R-Scripts.git"
+  },
+  "keywords": [],
+  "author": "Tomi Korpi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tupatuko2023/Python-R-Scripts/issues"
+  },
+  "homepage": "https://github.com/Tupatuko2023/Python-R-Scripts#readme",
+  "devDependencies": {
+    "markdownlint-cli2": "^0.18.1"
+  }
+}
