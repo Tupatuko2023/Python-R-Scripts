@@ -2,7 +2,7 @@
 
 # Finnish eFI Project — 2024 Research Progress Summary
 
-## August 2024 draft; last updated 2024-12-20_
+## August 2024 draft; last updated 2024-12-20
 
 ## Background
 

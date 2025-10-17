@@ -22,25 +22,35 @@ This guide boots the project in 10 minutes. The repo includes only synthetic dat
 
 ## Python setup and demo
 
-    conda env create -f env\environment.yml
-    conda activate efi
-    python docs\SYNTHETIC_DEMO\demo_py.py
+```bash
+conda env create -f env\environment.yml
+conda activate efi
+python docs\SYNTHETIC_DEMO\demo_py.py
+```
 
 ## R setup and demo
 
-    install.packages("renv")
-    renv::init()
-    source("docs/SYNTHETIC_DEMO/demo_r.R")
+```r
+install.packages("renv")
+renv::init()
+source("docs/SYNTHETIC_DEMO/demo_r.R")
+```
 
 ## Build docs
 
-    quarto render docs\PHDSUM_efi_progress_2024_summary.md --to html --output-dir docs
-    quarto render docs\PHDSUM_efi_progress_2024_summary.md --to pdf  --output-dir docs
+```bash
+quarto render docs\PHDSUM_efi_progress_2024_summary.md --to html --output-dir docs
+quarto render docs\PHDSUM_efi_progress_2024_summary.md --to pdf  --output-dir docs
+```
 
 ## Lint markdown
 
-    markdownlint .
+```bash
+markdownlint .
+```
 
-Links
+## Links
 
-- Reproducibility: docs/REPRODUCIBILITY.md
+[See reproducibility][REPRODUCIBILITY.md]
+
+[REPRODUCIBILITY.md]: (./docs/REPRODUCIBILITY.md)

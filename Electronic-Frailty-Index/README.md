@@ -13,8 +13,6 @@ See [PHDSUM_efi_progress_2024_summary.md](./docs/PHDSUM_efi_progress_2024_summar
 
 ## Quickstart
 
-## Electronic Frailty Index — quickstart
-
 See also:
 
 - [GETTING_STARTED.md](./docs/GETTING_STARTED.md)
@@ -23,9 +21,9 @@ See also:
 ### Run the synthetic demo
 
 ```bash
-conda env create -f [environment.yml](http://_vscodecontentref_/0)
+conda env create -f ./env/environment.yml
 conda activate efi
-python [demo_py.py](http://_vscodecontentref_/1)
+python ./docs/SYNTHETIC_DEMO/demo_py.py
 ```
 
 ### Windows (PowerShell)
@@ -41,5 +39,3 @@ quarto render .\report\efi_2024_progress.qmd
 cd /path/to/Python-R-Scripts/Electronic-Frailty-Index
 quarto render ./report/efi_2024_progress.qmd
 ```
-
-See also: [GETTING_STARTED.md](./docs/GETTING_STARTED.md)
