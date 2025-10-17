@@ -3,18 +3,24 @@ name: markdownlint
 on:
   push:
     branches: [ "main" ]
-    paths: [ "**/*.md", ".markdownlint.*" ]
+    paths: [ "**/*.md", ".markdownlint.*", "package.json" ]
   pull_request:
     branches: [ "main" ]
-    paths: [ "**/*.md", ".markdownlint.*" ]
+    paths: [ "**/*.md", ".markdownlint.*", "package.json" ]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      - name: Run markdownlint
-        run: npx --yes markdownlint-cli2@latest "**/*.md" --ignore ".git/**" -c .markdownlint.json
+
+      - name: Install dependencies (if any)
+        run: npm install
+
+      - name: Run markdownlint via npm script
+        run: npm run lint:md
