@@ -127,7 +127,6 @@ rehabilitation outcomes over 12 years.
 - **Presentations:** Summary Toothdata (29 May), Labeling pipeline (19 Jun),
   Summer Workshop summary (6 Aug), Look-Back Windows (18 Nov), Longitudinal
   windows (20 Nov).
--
 - **Grant applications:** Tampere University, Faculty of Social Sciences (EN);
   **Suomen kulttuurirahasto** (FI).
 

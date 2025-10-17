@@ -53,4 +53,4 @@ markdownlint .
 
 [See reproducibility][REPRODUCIBILITY.md]
 
-[REPRODUCIBILITY.md]: (./docs/REPRODUCIBILITY.md)
+[REPRODUCIBILITY.md]: ./docs/REPRODUCIBILITY.md
