@@ -7,6 +7,8 @@
 *.Rmd text eol=lf
 *.qmd text eol=lf
 *.sh  text eol=lf
+.markdownlint.json text eol=lf
+.markdownlintignore text eol=lf
 .gitattributes text eol=lf
 
 *.ipynb filter=nbstripout
