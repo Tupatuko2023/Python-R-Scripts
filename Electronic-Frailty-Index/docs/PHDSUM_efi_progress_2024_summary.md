@@ -64,30 +64,30 @@ rehabilitation outcomes over 12 years.
 ### Structured-data risk scores
 
 - **Hospital Frailty Risk Score (HFRS):**
-  - Data merging and ICD-10 processing (`W7.Combine_data.ipynb`).
-  - Score calculation and quality checks (`HFRS.2.Calculate_HFRS_Points.ipynb`).
-  - Descriptive stats and visualizations (`HFRS.3…Histogram-n-Boxplot.ipynb`),
+  - Data merging and ICD-10 processing ([`W7.Combine_data.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W7.Combine_data.ipynb)).
+  - Score calculation and quality checks ([`[HFRS.2.Calculate_HFRS_Points.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W8.HFRS.2.Calculate_HFRS_Points.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W8.HFRS.2.Calculate_HFRS_Points.ipynb)).
+  - Descriptive stats and visualizations ([`HFRS.3…[Histogram-n-Boxplot.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W9.HFRS.3.HFRS_Points_Histogram-n-Boxplot.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W9.HFRS.3.HFRS_Points_Histogram-n-Boxplot.ipynb)),
     risk classification plots, and unmatched-code audits
-    (`HFRS.4…Risk_Classification.ipynb`).
+    ([`HFRS.4…Risk_Classification.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W10.HFRS.4.HFRS_Scores_Risk_Classification.ipynb)).
 
 - **Charlson Comorbidity Index (CCI):**
   - ICD-10 expansion & Charlson weights (per Kang et al., 2021)
-    (`W15.CCI.2.mo_CCI_weights.ipynb`).
-  - Standardization & cleaning (`W16…procc_mo_CCI_weights.ipynb`,
-    `W17…procc_CCI_data.ipynb`).
+    ([`W15.CCI.2.mo_CCI_weights.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W15.CCI.2.mo_CCI_weights.ipynb)).
+  - Standardization & cleaning ([`W16…[procc_mo_CCI_weights.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W16.CCI.3.procc_mo_CCI_weights.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W16.CCI.3.procc_mo_CCI_weights.ipynb),
+    [`W17…[procc_CCI_data.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W17.CCI.4.procc_CCI_data.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W17.CCI.4.procc_CCI_data.ipynb)).
   - Score computation & longitudinal export
-    (`W18…calculates_moCCI_scores.ipynb`).
+    ([`W18…[calculates_moCCI_scores.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W18.CCI.5.calculates_moCCI_scores.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W18.CCI.5.calculates_moCCI_scores.ipynb)).
 
 ### Data engineering and analyses
 
 - **Overlap analysis:** Patient-ID Venn analysis across three datasets
-  (`Vennd_Overlap.ipynb`).
+  ([`Vennd_Overlap.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W6.Vennd_Overlap.ipynb)).
 - **Wide→Long transformations & longitudinal HFRS:**
-  - ICD-10 truncation, pivoting, and summaries (`W12.HFRS.6.Pivot_HFRS.ipynb`).
+  - ICD-10 truncation, pivoting, and summaries ([`W12.HFRS.6.Pivot_HFRS.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W12.HFRS.6.Pivot_HFRS.ipynb)).
   - Patient-level HFRS reference column computation
-    (`W13.HFRS.7.Calculate_Pivot_HFRS.ipynb`).
+    ([`[W13.HFRS.7.Calculate_Pivot_HFRS.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W13.HFRS.7.Calculate_Pivot_HFRS.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W13.HFRS.7.Calculate_Pivot_HFRS.ipynb)).
   - Distribution plots for HFRS and classifications
-    (`W14.HFRS.8.Plot_Pivot_HFRS.ipynb`).
+    ([`[W14.HFRS.8.Plot_Pivot_HFRS.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W14.HFRS.8.Plot_Pivot_HFRS.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W14.HFRS.8.Plot_Pivot_HFRS.ipynb)).
 
 - **Correlation (CCI↔HFRS):**
   - Overall and sex-stratified Pearson correlations; heatmaps, scatterplots;
@@ -392,65 +392,65 @@ arXiv. [Virtanen 2019][virtanen2019]
 [kerminen2021]: https://trepo.tuni.fi/handle/10024/124920
 [kerminen2016]: https://doi.org/10.1016/j.eurger.2016.06.006
 [korpi2025a]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/W1.Cases_per_Patient_Bar_Plot.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/[W1.Cases_per_Patient_Bar_Plot.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W1.Cases_per_Patient_Bar_Plot.R)
 [korpi2025b]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/W2.Age_Distribution_by_Group_Plot.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/[W2.Age_Distribution_by_Group_Plot.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W2.Age_Distribution_by_Group_Plot.R)
 [korpi2025c]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/W3.Distribution_of_Patients'_Status.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/W3.Distribution_of_Patients'[_Status.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W3.Distribution_of_Patients'_Status.R)
 [korpi2025d]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/demographics/W4.Living_Deceased_Distribution.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/demographics/[W4.Living_Deceased_Distribution.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W4.Living_Deceased_Distribution.R)
 [korpi2025e]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/demographics/W5.Death_Year_Distribution.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/demographics/[W5.Death_Year_Distribution.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W5.Death_Year_Distribution.R)
 [korpi2025f]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/W6.Vennd_Overlap.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/[W6.Vennd_Overlap.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W6.Vennd_Overlap.ipynb)
 [korpi2025g]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/W7.Combine_data.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/[W7.Combine_data.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W7.Combine_data.ipynb)
 [korpi2025h]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/W8.HFRS.2.Calculate_HFRS_Points.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/[W8.HFRS.2.Calculate_HFRS_Points.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W8.HFRS.2.Calculate_HFRS_Points.ipynb)
 [korpi2025i]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/W9.HFRS.3.HFRS_Points_Histogram-n-Boxplot.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/[W9.HFRS.3.HFRS_Points_Histogram-n-Boxplot.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W9.HFRS.3.HFRS_Points_Histogram-n-Boxplot.ipynb)
 [korpi2025j]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/W10.HFRS.4.HFRS_Scores_Risk_Classification.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/[W10.HFRS.4.HFRS_Scores_Risk_Classification.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W10.HFRS.4.HFRS_Scores_Risk_Classification.ipynb)
 [korpi2025k]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/W12.HFRS.6.Pivot_HFRS.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/[W12.HFRS.6.Pivot_HFRS.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W12.HFRS.6.Pivot_HFRS.ipynb)
 [korpi2025l]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/W13.HFRS.7.Calculate_Pivot_HFRS.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/[W13.HFRS.7.Calculate_Pivot_HFRS.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W13.HFRS.7.Calculate_Pivot_HFRS.ipynb)
 [korpi2025m]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/W14.HFRS.8.Plot_Pivot_HFRS.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/HFRS/[W14.HFRS.8.Plot_Pivot_HFRS.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W14.HFRS.8.Plot_Pivot_HFRS.ipynb)
 [korpi2025n]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/CCI/W15.CCI.2.mo_CCI_weights.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/CCI/[W15.CCI.2.mo_CCI_weights.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W15.CCI.2.mo_CCI_weights.ipynb)
 [korpi2025o]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/CCI/W16.CCI.3.procc_mo_CCI_weights.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/CCI/[W16.CCI.3.procc_mo_CCI_weights.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W16.CCI.3.procc_mo_CCI_weights.ipynb)
 [korpi2025p]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/CCI/W17.CCI.4.procc_CCI_data.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/CCI/[W17.CCI.4.procc_CCI_data.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W17.CCI.4.procc_CCI_data.ipynb)
 [korpi2025q]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/CCI/W18.CCI.5.Pivot_CCI_data.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/CCI/[W18.CCI.5.Pivot_CCI_data.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W18.CCI.5.calculates_moCCI_scores.ipynb)
 [korpi2025r]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/correlation_analysis/W19.Correlation_Analysis_CCI_HFRS.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/correlation_analysis/[W19.Correlation_Analysis_CCI_HFRS.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W19.Correlation_Analysis_CCI_HFRS.R)
 [korpi2025s]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/correlation_analysis/W20.Correlation_Analysis_CCI_HFRS_Men_Women.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/correlation_analysis/[W20.Correlation_Analysis_CCI_HFRS_Men_Women.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W20.Correlation_Analysis_CCI_HFRS_Men_Women.R)
 [korpi2025t]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/correlation_analysis/W21.Pearson_Correlation_Coefficient.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/correlation_analysis/[W21.Pearson_Correlation_Coefficient.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W21.Pearson_Correlation_Coefficient.R)
 [korpi2025u]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/W22.BMI.1.All_Records_BMI.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/[W22.BMI.1.All_Records_BMI.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W22.BMI.1.All_Records_BMI.ipynb)
 [korpi2025v]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/W23.BMI.2.Calculate_BMI_Height_Weight.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/[W23.BMI.2.Calculate_BMI_Height_Weight.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W23.BMI.2.Calculate_BMI_Height_Weight.ipynb)
 [korpi2025w]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/W24.BMI.3.Function_2Compute_BMI_summaries.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/[W24.BMI.3.Function_2Compute_BMI_summaries.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W24.BMI.3.Function_2Compute_BMI_summaries.ipynb)
 [korpi2025]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/W25.BMI.4.Create_BMI_column.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/[W25.BMI.4.Create_BMI_column.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W25.BMI.4.Create_BMI_column.ipynb)
 [korpi2025x]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/W26.BMI.5.Combine_BMI.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/[W26.BMI.5.Combine_BMI.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W26.BMI.5.Combine_BMI.ipynb)
 [korpi2025y]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/W27.BMI.6.Function_2Compute_Combine_BMI_Sum.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/BMI/[W27.BMI.6.Function_2Compute_Combine_BMI_Sum.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W27.BMI.6.Function_2Compute_Combine_BMI_Sum.ipynb)
 [korpi2025z]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/logistic_regression/W28.LRM.1.Mortality.BMI.CCI.HFRS.Adjusted.V1.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/logistic_regression/[W28.LRM.1.Mortality.BMI.CCI.HFRS.Adjusted.V1.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/logistic_regression/W28.LRM.1.Mortality.BMI.CCI.HFRS.Adjusted.V1.ipynb)
 [korpi2025aa]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/logistic_regression/W29.LRM.2.Mortality.CCI.HFRS.Adjusted.V2.ipynb
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/logistic_regression/[W29.LRM.2.Mortality.CCI.HFRS.Adjusted.V2.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/logistic_regression/W29.LRM.2.Mortality.CCI.HFRS.Adjusted.V2.ipynb)
 [korpi2025ab]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/logistic_regression/W30.LRM.3.Mortality.CCI.HFRS.Adjusted.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/logistic_regression/[W30.LRM.3.Mortality.CCI.HFRS.Adjusted.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/logistic_regression/W30.LRM.3.Mortality.CCI.HFRS.Adjusted.R)
 [korpi2025ac]:
-    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/logistic_regression/W31.LRM.4.Visualize.Model.R
+    https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/logistic_regression/[W31.LRM.4.Visualize.Model.R](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/logistic_regression/W31.LRM.4.Visualize.Model.R)
 [kwak2021]: https://doi.org/10.1016/j.smhs.2020.11.005
 [lekan2017]: https://doi.org/10.1177/1099800416679730
 [lin2024]: https://doi.org/10.1101/2024.10.08.24315141
