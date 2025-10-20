@@ -92,7 +92,7 @@ rehabilitation outcomes over 12 years.
 
 ### Data engineering and analyses
 
-- **Overlap analysis:** Patient-ID Venn analysis across three datasets (figure 1)
+- **Overlap analysis:** Patient-ID Venn analysis across three datasets (figure 1).
 
 ![Patient-ID overlap Venn (3 datasets)](../figures/eFigure7.Overlap_of_Patient_IDs_Across_Datasets.png "Overlap of Patient_IDs across datasets")
 
