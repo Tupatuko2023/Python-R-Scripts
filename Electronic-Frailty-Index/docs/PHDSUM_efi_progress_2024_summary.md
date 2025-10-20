@@ -38,10 +38,13 @@ flags key modifiers like mobility limitations and fall risk ([Ambagtsheer,
 **O1 — AI/NLP for frailty signals.** Design and validate methods to extract
 frailty-related factors from Finnish EHR free text (NER, assertion/negation,
 temporality).
+
 **O2 — Data integration.** Combine structured (ICD-10, labs) and unstructured
 signals to compute and validate a Finnish eFI.
+
 **O3 — Longitudinal trajectories.** Analyze 12-year frailty progression and its
 relationship to ADLs.
+
 **O4 — ADLs & outcomes.** Quantify ADLs from free text, examine links to
 hip-fracture recovery, and evaluate joint/predictive effects of ADLs and eFI on
 rehabilitation outcomes over 12 years.
