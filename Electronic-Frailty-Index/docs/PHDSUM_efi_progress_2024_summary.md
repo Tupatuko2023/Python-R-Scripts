@@ -271,61 +271,90 @@ in clinical practice? European Geriatric Medicine, 7(5), 454–458. [Kerminen
 
 Korpi, T. (2025a). W1: Bar Plot Analysis of Case Distribution Per Patient.
 GitHub. [Korpi 2025a][korpi2025a]
+
 Korpi, T. (2025b). W2: Age Distribution Analysis by Group. GitHub. [Korpi
 2025b][korpi2025b]
+
 Korpi, T. (2025c). W3: Distribution of Patients’ Status by Group. GitHub. [Korpi
 2025c][korpi2025c]
+
 Korpi, T. (2025d). W4: Demographic Distribution of Living and Deceased. GitHub.
 [Korpi 2025d][korpi2025d]
+
 Korpi, T. (2025e). W5: Yearly Mortality Trends. GitHub. [Korpi
 2025e][korpi2025e]
+
 Korpi, T. (2025f). W6: Patient_ID Overlap Analysis (Venn). GitHub. [Korpi
 2025f][korpi2025f]
+
 Korpi, T. (2025g). W7: Combining and Reshaping Health Diagnoses Data. GitHub.
 [Korpi 2025g][korpi2025g]
+
 Korpi, T. (2025h). W8: HFRS Scoring in Python. GitHub. [Korpi 2025h][korpi2025h]
+
 Korpi, T. (2025i). W9: Histogram and Boxplot of HFRS Scores. GitHub. [Korpi
 2025i][korpi2025i]
+
 Korpi, T. (2025j). W10: ICD-10–Based HFRS Score Calculation. GitHub. [Korpi
 2025j][korpi2025j]
+
 Korpi, T. (2025k). W12: Pivoting and Summarizing ICD-10 Diagnoses. GitHub.
 [Korpi 2025k][korpi2025k]
+
 Korpi, T. (2025l). W13: Calculating HFRS from ICD-10 Codes. GitHub. [Korpi
 2025l][korpi2025l]
+
 Korpi, T. (2025m). W14: Histogram of HFRS Scores per Patient. GitHub. [Korpi
 2025m][korpi2025m]
+
 Korpi, T. (2025n). W15: Modified Charlson Comorbidity Index Calculation. GitHub.
 [Korpi 2025n][korpi2025n]
+
 Korpi, T. (2025o). W16: Standardizing ICD-10 Codes in moCCI. GitHub. [Korpi
 2025o][korpi2025o]
+
 Korpi, T. (2025p). W17: Preprocessing and Truncating ICD-10 Codes. GitHub.
 [Korpi 2025p][korpi2025p]
+
 Korpi, T. (2025q). W18: moCCI Scores Using ICD-10 Codes. GitHub. [Korpi
 2025q][korpi2025q]
+
 Korpi, T. (2025r). W19: Correlation Analysis of CCI and HFRS (R). GitHub. [Korpi
 2025r][korpi2025r]
+
 Korpi, T. (2025s). W20: Correlation Analysis by Gender (R). GitHub. [Korpi
 2025s][korpi2025s]
+
 Korpi, T. (2025t). W21: Pearson Correlation CCI vs HFRS (R). GitHub. [Korpi
 2025t][korpi2025t]
+
 Korpi, T. (2025u). W22: Case-Insensitive Search for BMI. GitHub. [Korpi
 2025u][korpi2025u]
+
 Korpi, T. (2025v). W23: BMI Calculation from Height and Weight. GitHub. [Korpi
 2025v][korpi2025v]
+
 Korpi, T. (2025w). W24: Compute Cohort Summaries of BMI. GitHub. [Korpi
 2025w][korpi2025w]
+
 Korpi, T. (2025). W25: Extracting and Summarizing BMI Values from Text Data.
 GitHub. [Korpi 2025][korpi2025]
+
 Korpi, T. (2025x). W26: BMI Data Fusion and Cleanup. GitHub. [Korpi
 2025x][korpi2025x]
+
 Korpi, T. (2025y). W27: Cohort Summaries of Combined BMI Data. GitHub. [Korpi
 2025y][korpi2025y]
+
 Korpi, T. (2025z). W28: Logistic Regression on Mortality (BMI, CCI, HFRS).
 GitHub. [Korpi 2025z][korpi2025z]
+
 Korpi, T. (2025aa). W29: Logistic Regression on Mortality Using CCI and HFRS.
 GitHub. [Korpi 2025aa][korpi2025aa]
+
 Korpi, T. (2025ab). W30: Logistic Regression on Mortality Using CCI and HFRS
 (R). GitHub. [Korpi 2025ab][korpi2025ab]
+
 Korpi, T. (2025ac). W31: Logistic Regression for Mortality; Visualizations (R).
 GitHub. [Korpi 2025ac][korpi2025ac]
 
