@@ -26,6 +26,7 @@ labeling outputs as 2024. [TODO]
 
 ## Methods mapping to repository
 
+<!-- markdownlint-disable MD013 -->
 | Method item | Repository artifact |
 |---|---|
 | Overlap/profiling | notebooks/W6.Vennd_Overlap.ipynb |
@@ -34,6 +35,7 @@ labeling outputs as 2024. [TODO]
 | BMI extraction | notebooks/W22...-W27... (covariate prep) |
 
 [TODO] Verify notebook paths and commit hashes.
+<!-- markdownlint-enable MD013 -->
 
 ## Milestones (2024)
 
@@ -47,9 +49,11 @@ labeling outputs as 2024. [TODO]
 
 ## Dataset Overview
 
+<!-- markdownlint-disable MD013 -->
 | Cohort / Source | Years | Patients | Notes | Key fields | Access / Ethics |
 |---|---:|---:|---:|---|---|
 | HYVÄKS (Central Finland) | 2010-2022 | 166,147 | ~10.6M free-text notes | ICD-10, free text, labs | [TODO: approval IDs] |
+<!-- markdownlint-enable MD013 -->
 
 ## NLP Pipeline (condensed)
 
