@@ -134,6 +134,10 @@ notebook:
     distributions (age groups, status, living vs. deceased, year of death).
   - Dental-care record counts per patient and other exploratory plots to guide
     variable selection for modeling.
+
+![PhD schedule Gantt](../figures/eFigure1.PhD_Progression_Schedule.png "PhD Project Schedule 2024: Activities and Milestones")
+<br><em>Figure.</em> PhD project schedule and milestones (2024). Source: Python/Matplotlib Gantt.
+
 - **NLP/NER labeling.** Targeted labeling sprints covered **mobility
   (04–06/2024)** and **bathing/dressing (09–10/2024)** domains for ADL
   extraction, supporting subsequent model fine-tuning.
