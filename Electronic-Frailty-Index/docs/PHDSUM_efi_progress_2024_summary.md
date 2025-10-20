@@ -93,7 +93,6 @@ rehabilitation outcomes over 12 years.
 ### Data engineering and analyses
 
 - **Overlap analysis:** Patient-ID Venn analysis across three datasets
-  ([`Vennd_Overlap.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W6.Vennd_Overlap.ipynb)).
 
   ![Patient-ID overlap Venn (3
 datasets)](../figures/eFigure7.Overlap_of_Patient_IDs_Across_Datasets.png
