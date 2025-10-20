@@ -96,11 +96,19 @@ rehabilitation outcomes over 12 years.
 
 - **Correlation (CCI↔HFRS):**
   - Overall and sex-stratified Pearson correlations; heatmaps, scatterplots;
-    linear regression (`W19…`, `W20…`, `W21…`).
+    linear regression
+    (([`W19.Correlation_Analysis_CCI_HFRS.R`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W19.Correlation_Analysis_CCI_HFRS.R))
+    ,
+    ([`W20.Correlation_Analysis_CCI_HFRS_Men_Women.R`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W20.Correlation_Analysis_CCI_HFRS_Men_Women.R))
+    ,
+    ([`W21.Pearson_Correlation_Coefficient.R`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W21.Pearson_Correlation_Coefficient.R))).
 - **BMI pipeline (text + structured):**
   - Retrieval of BMI mentions (Finnish/English terms), computation from
     height/weight, value filtering, and cohort summaries; dataset merges and
-    recomputation functions (`W22…` to `W27…`).
+    recomputation functions
+     (([`W22.BMI.1.All_Records_BMI.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W22.BMI.1.All_Records_BMI.ipynb))
+     to
+     ([`W27.BMI.6.Function_2Compute_Combine_BMI_Sum.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W27.BMI.6.Function_2Compute_Combine_BMI_Sum.ipynb))).
 
 ## Results (2024 Progress)
 
