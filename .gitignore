@@ -39,4 +39,4 @@ efi_*.ps1
 !.github/workflows/
 node_modules/
 .gitattributes.bak.*
-style(markdownlint)*
+!.markdownlint*
