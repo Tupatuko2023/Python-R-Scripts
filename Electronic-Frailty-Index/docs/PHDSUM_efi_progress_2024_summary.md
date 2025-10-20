@@ -64,30 +64,35 @@ rehabilitation outcomes over 12 years.
 ### Structured-data risk scores
 
 - **Hospital Frailty Risk Score (HFRS):**
-  - Data merging and ICD-10 processing ([`W7.Combine_data.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W7.Combine_data.ipynb)).
-  - Score calculation and quality checks ([`[HFRS.2.Calculate_HFRS_Points.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W8.HFRS.2.Calculate_HFRS_Points.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W8.HFRS.2.Calculate_HFRS_Points.ipynb)).
-  - Descriptive stats and visualizations ([`HFRS.3…[Histogram-n-Boxplot.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W9.HFRS.3.HFRS_Points_Histogram-n-Boxplot.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W9.HFRS.3.HFRS_Points_Histogram-n-Boxplot.ipynb)),
+  - Data merging and ICD-10 processing
+    ([`W7.Combine_data.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W7.Combine_data.ipynb)).
+  - Score calculation and quality checks
+    ([`HFRS.2.Calculate_HFRS_Points.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W8.HFRS.2.Calculate_HFRS_Points.ipynb)).
+  - Descriptive stats and visualizations
+    ([`HFRS.3…[Histogram-n-Boxplot.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W9.HFRS.3.HFRS_Points_Histogram-n-Boxplot.ipynb)),
     risk classification plots, and unmatched-code audits
     ([`HFRS.4…Risk_Classification.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W10.HFRS.4.HFRS_Scores_Risk_Classification.ipynb)).
 
 - **Charlson Comorbidity Index (CCI):**
   - ICD-10 expansion & Charlson weights (per Kang et al., 2021)
     ([`W15.CCI.2.mo_CCI_weights.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W15.CCI.2.mo_CCI_weights.ipynb)).
-  - Standardization & cleaning ([`W16…[procc_mo_CCI_weights.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W16.CCI.3.procc_mo_CCI_weights.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W16.CCI.3.procc_mo_CCI_weights.ipynb),
-    [`W17…[procc_CCI_data.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W17.CCI.4.procc_CCI_data.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W17.CCI.4.procc_CCI_data.ipynb)).
+  - Standardization & cleaning
+    ([`W16.CCI.3.procc_mo_CCI_weights.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W16.CCI.3.procc_mo_CCI_weights.ipynb)),
+    ([`W17.CCI.4.procc_CCI_data.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W17.CCI.4.procc_CCI_data.ipynb)).
   - Score computation & longitudinal export
-    ([`W18…[calculates_moCCI_scores.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W18.CCI.5.calculates_moCCI_scores.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W18.CCI.5.calculates_moCCI_scores.ipynb)).
+    ([`W18.CCI.5.calculates_moCCI_scores.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/CCI/W18.CCI.5.calculates_moCCI_scores.ipynb)).
 
 ### Data engineering and analyses
 
 - **Overlap analysis:** Patient-ID Venn analysis across three datasets
   ([`Vennd_Overlap.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W6.Vennd_Overlap.ipynb)).
 - **Wide→Long transformations & longitudinal HFRS:**
-  - ICD-10 truncation, pivoting, and summaries ([`W12.HFRS.6.Pivot_HFRS.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W12.HFRS.6.Pivot_HFRS.ipynb)).
+  - ICD-10 truncation, pivoting, and summaries
+    ([`W12.HFRS.6.Pivot_HFRS.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W12.HFRS.6.Pivot_HFRS.ipynb)).
   - Patient-level HFRS reference column computation
-    ([`[W13.HFRS.7.Calculate_Pivot_HFRS.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W13.HFRS.7.Calculate_Pivot_HFRS.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W13.HFRS.7.Calculate_Pivot_HFRS.ipynb)).
+    ([`W13.HFRS.7.Calculate_Pivot_HFRS.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W13.HFRS.7.Calculate_Pivot_HFRS.ipynb)).
   - Distribution plots for HFRS and classifications
-    ([`[W14.HFRS.8.Plot_Pivot_HFRS.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W14.HFRS.8.Plot_Pivot_HFRS.ipynb)`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W14.HFRS.8.Plot_Pivot_HFRS.ipynb)).
+    ([`W14.HFRS.8.Plot_Pivot_HFRS.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W14.HFRS.8.Plot_Pivot_HFRS.ipynb)).
 
 - **Correlation (CCI↔HFRS):**
   - Overall and sex-stratified Pearson correlations; heatmaps, scatterplots;
