@@ -12,21 +12,26 @@ From March–December 2024, within Tampere University’s Systems Biology of Agi
 structured elements (e.g., ICD-10, labs) with unstructured clinical narratives
 via **NLP**. Frailty reflects reduced physiological reserve and resilience and
 is linked to mortality, cardiovascular outcomes, falls, and hospitalizations
-(McIsaac, 2020; Clegg, 2013; Fried, 2021). Validated frameworks include the
-**Fried Phenotype** (Fried, 2001) and the **Rockwood Frailty Index** (Searle,
-2008). Evidence suggests early identification and targeted intervention can
-mitigate risk (Fried, 2021; Kwak & Thompson, 2021).
+([McIsaac, 2020][mcisaac2020]; [Clegg, 2013][clegg2013]; [Fried, 2021][fried2021]). Validated frameworks include the
+**Fried Phenotype** ([Fried, 2001][fried2001]) and the **Rockwood Frailty
+Index** ([Searle,2008][searle2008]). Evidence suggests early identification and
+targeted intervention can mitigate risk ([Fried, 2021][fried2021]; [Kwak &
+Thompson, 2021][kwak2021]).
 
 In Finland, assessments often rely on manual checklists prone to variability,
-underscoring the need for scalable, standardized tools (Kerminen, 2016;
-Kerminen, 2021; Luo, 2022). Frailty also affects some middle-aged adults (Bai,
-2021; Fan, 2020; Hanlon, 2018). Standard structured-data screens can miss
-nuanced indicators captured in free text; hence increased interest in **AI/NLP**
-(Clegg, 2016; Lekan, 2017; Tayefi, 2021; Berman, 2021; Chen, 2023; Irving,
-2021). Finnish **FinBERT** enables high-quality text processing (Virtanen,
-2019), supporting an eFI that also flags key modifiers like mobility limitations
-and fall risk (Ambagtsheer, 2020; Mak, 2022; Mak, 2023; Remillard, 2019;
-Coventry, 2020; Niederstrasser, 2019; Paulson & Lichtenberg, 2015; Puls, 2014).
+underscoring the need for scalable, standardized tools ([Kerminen,
+2016][kerminen2016]; [Kerminen, 2021][kerminen2021]; [Luo, 2022][luo2022]).
+Frailty also affects some middle-aged adults ([Bai,2021][bai2021]; [Fan,
+2020][fan2020]; [Hanlon, 2018][hanlon2018]). Standard structured-data screens
+can miss nuanced indicators captured in free text; hence increased interest in
+**AI/NLP** ([Clegg, 2016][clegg2016]; [Lekan, 2017][lekan2017]; [Tayefi,
+2021][tayefi2021]; [Berman, 2021][berman2021]; [Chen, 2023][chen2023]; [Irving,
+2021][irving2021],[Virtanen,2019][virtanen2019]), supporting an eFI that also
+flags key modifiers like mobility limitations and fall risk ([Ambagtsheer,
+2020][ambagtsheer2020]; [Mak, 2022][mak2022]; [Mak, 2023][mak2023]; [Remillard,
+2019][remillard2019]; [Coventry, 2020][coventry2020]; [Niederstrasser,
+2019][niederstrasser2019]; [Paulson & Lichtenberg, 2015][paulson2015]; [Puls,
+2014][puls2014]).
 
 ## Objectives
 
@@ -50,7 +55,7 @@ rehabilitation outcomes over 12 years.
   Services County (**HYVÄKS**).
 - **Computing:** Secure Azure ML workspace for NLP and modeling.
 - **Framework:** Rockwood deficit-accumulation FI principles; continuous eFI
-  with cut-offs for states. (Searle, 2008; Blodgett, 2015).
+  with cut-offs for states. ([Searle,2008][searle2008]; [Blodgett, 2015][blodgett2015]).
 
 ### NLP pipeline and labeling
 
