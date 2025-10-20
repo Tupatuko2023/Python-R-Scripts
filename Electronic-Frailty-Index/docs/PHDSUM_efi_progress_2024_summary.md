@@ -94,9 +94,7 @@ rehabilitation outcomes over 12 years.
 
 - **Overlap analysis:** Patient-ID Venn analysis across three datasets
 
-  ![Patient-ID overlap Venn (3
-datasets)](../figures/eFigure7.Overlap_of_Patient_IDs_Across_Datasets.png
-"Overlap of Patient_IDs across datasets")
+![Patient-ID overlap Venn (3 datasets)](../figures/eFigure7.Overlap_of_Patient_IDs_Across_Datasets.png "Overlap of Patient_IDs across datasets")
 
 *Figure.* Patient-ID overlap across DGN_KAIKKI, KERTOMUS_DGN, TIL_TAP. See
 notebook:
