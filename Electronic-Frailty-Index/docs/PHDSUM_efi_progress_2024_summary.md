@@ -67,7 +67,7 @@ rehabilitation outcomes over 12 years.
   - Data merging and ICD-10 processing
     ([`W7.Combine_data.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W7.Combine_data.ipynb)).
   - Score calculation and quality checks
-    ([`HFRS.2.Calculate_HFRS_Points.ipynb](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W8.HFRS.2.Calculate_HFRS_Points.ipynb)).
+    ([`HFRS.2.Calculate_HFRS_Points.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W8.HFRS.2.Calculate_HFRS_Points.ipynb)).
   - Descriptive stats and visualizations
     ([`HFRS.3…[Histogram-n-Boxplot.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W9.HFRS.3.HFRS_Points_Histogram-n-Boxplot.ipynb)),
     risk classification plots, and unmatched-code audits
