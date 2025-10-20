@@ -92,11 +92,11 @@ rehabilitation outcomes over 12 years.
 
 ### Data engineering and analyses
 
-- **Overlap analysis:** Patient-ID Venn analysis across three datasets
+- **Overlap analysis:** Patient-ID Venn analysis across three datasets (figure 1)
 
 ![Patient-ID overlap Venn (3 datasets)](../figures/eFigure7.Overlap_of_Patient_IDs_Across_Datasets.png "Overlap of Patient_IDs across datasets")
 
-*Figure.* Patient-ID overlap across DGN_KAIKKI, KERTOMUS_DGN, TIL_TAP. See
+*Figure 1.* Patient-ID overlap across DGN_KAIKKI, KERTOMUS_DGN, TIL_TAP. See
 notebook:
 [`Vennd_Overlap.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W6.Vennd_Overlap.ipynb).
 
@@ -130,13 +130,13 @@ notebook:
   computation/visualization pipelines built and validated on integrated ICD-10
   datasets; longitudinal transformations support trajectory analyses.
 - **Descriptive dashboards and figures prepared.**
-  - Progress Gantt (project phases), dataset overlaps, and multiple baseline
+  - Progress Gantt (project phases) (figure 2), dataset overlaps, and multiple baseline
     distributions (age groups, status, living vs. deceased, year of death).
   - Dental-care record counts per patient and other exploratory plots to guide
     variable selection for modeling.
 
 ![PhD schedule Gantt](../figures/eFigure1.PhD_Progression_Schedule.png "PhD Project Schedule 2024: Activities and Milestones")
-<br><em>Figure.</em> PhD project schedule and milestones (2024). Source: Python/Matplotlib Gantt.
+<br><em>*Figure 2*.</em> PhD project schedule and milestones (2024). Source: Python/Matplotlib Gantt.
 
 - **NLP/NER labeling.** Targeted labeling sprints covered **mobility
   (04–06/2024)** and **bathing/dressing (09–10/2024)** domains for ADL
