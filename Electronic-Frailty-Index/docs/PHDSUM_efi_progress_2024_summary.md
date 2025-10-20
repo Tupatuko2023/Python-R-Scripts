@@ -96,7 +96,8 @@ rehabilitation outcomes over 12 years.
 
   ![Patient-ID overlap Venn (3
 datasets)](../figures/eFigure7.Overlap_of_Patient_IDs_Across_Datasets.png
-"Overlap of Patient_IDs across datasets") *Figure.* Patient-ID overlap across
+"Overlap of Patient_IDs across datasets")
+*Figure.* Patient-ID overlap across
 DGN_KAIKKI, KERTOMUS_DGN, TIL_TAP. See notebook:
 [`Vennd_Overlap.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W6.Vennd_Overlap.ipynb).
 
