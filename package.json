@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint:md": "markdownlint-cli2 \"**/*.md\" \"!node_modules\" \"!**/.git/**\"",
-    "lint:md:file": "markdownlint-cli2"
+    "lint:md": "npx markdownlint-cli2 \"**/*.md\" \"!node_modules\" \"!**/.git/**\"",
+    "lint:md:fix": "npx markdownlint-cli2 --fix \"**/*.md\" \"!node_modules\" \"!**/.git/**\"",
+    "lint:md:file": "npx markdownlint-cli2"
   },
   "repository": {
     "type": "git",
