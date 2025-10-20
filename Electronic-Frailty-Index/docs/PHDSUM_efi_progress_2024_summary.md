@@ -287,7 +287,7 @@ Korpi, T. (2024h). W8: Calculate HFRS Points . GitHub. [Korpi 2024h][korpi2024h]
 
 Korpi, T. (2024i). W9: Create Histogram and Boxplot for HFRS Points . GitHub. [Korpi 2024i][korpi2024i]
 
-Korpi, T. (2024j). W10: HFRS Scores Risk Classification. GitHub. [Korpi 2024j][korpi2024j
+Korpi, T. (2024j). W10: HFRS Scores Risk Classification. GitHub. [Korpi 2024j][korpi2024j]
 
 Korpi, T. (2024k). W11: Visualize the HFRS Scores Risk Classification. GitHub. [Korpi 2024k][korpi2024k]
 
