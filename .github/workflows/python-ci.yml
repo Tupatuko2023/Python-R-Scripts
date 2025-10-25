@@ -5,8 +5,10 @@ on:
   pull_request:
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
@@ -16,45 +18,55 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          # Use built-in pip cache keyed by dependency files
           cache: "pip"
           cache-dependency-path: |
             **/requirements*.txt
             **/pyproject.toml
+            **/setup.cfg
+            **/setup.py
 
       - name: Install dependencies
+        shell: bash -euo pipefail {0}
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
-          if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
-          if [ -f pyproject.toml ]; then python -m pip install ".[test]" || python -m pip install . || true; fi
-          python -m pip install pytest pytest-cov junit-xml coverage || true
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          elif [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
+            # Prefer test extra if defined; fall back to plain install
+            pip install ".[test]" || pip install .
+            # Ensure pytest present even if project has no test extra
+            python - <<'PY'
+import importlib, sys, subprocess
+try:
+    importlib.import_module("pytest")
+except Exception:
+    sys.exit(subprocess.call([sys.executable, "-m", "pip", "install", "pytest"]))
+PY
+          else
+            # Fallback minimal deps for tests that import pandas
+            pip install pandas pytest
+          fi
 
-      - name: Run tests with coverage (robust; handles “no tests collected”)
+      - name: Run tests (pytest → JUnit XML)
+        shell: bash -euo pipefail {0}
         run: |
           mkdir -p test-results
-          # Run pytest; capture exit code (pytest returns 5 if no tests collected)
-          python -m pytest -q --cov --cov-report=xml --junitxml=test-results/junit.xml || code=$?
-          code=${code:-0}
-          if [ "$code" = "5" ]; then
-            echo 'No tests collected; creating an empty JUnit report.'
+          # Allow pytest to fail but still create/upload a JUnit report
+          set +e
+          python -m pytest -q --maxfail=1 --disable-warnings \
+            --junitxml=test-results/junit.xml
+          rc=$?
+          set -e
+          # Make sure the report exists even on early failures
+          if [ ! -s test-results/junit.xml ]; then
             printf '<testsuite name="empty" tests="0" failures="0" errors="0" skipped="0"></testsuite>\n' > test-results/junit.xml
-            exit 0
           fi
-          exit "$code"
-
-      - name: Upload coverage.xml
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-xml
-          path: coverage.xml
-          if-no-files-found: ignore
+          exit "$rc"
 
       - name: Upload JUnit report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: junit
+          name: junit-report
           path: test-results/junit.xml
           if-no-files-found: warn
