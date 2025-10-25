@@ -28,22 +28,20 @@ jobs:
       - name: Install dependencies
         shell: bash -euo pipefail {0}
         run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          elif [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
-            # Prefer test extra if defined; fall back to plain install
-            pip install ".[test]" || pip install .
-            # Ensure pytest present even if project has no test extra
-            python - <<'PY'
-import importlib, sys, subprocess
-try:
-    importlib.import_module("pytest")
-except Exception:
-    sys.exit(subprocess.call([sys.executable, "-m", "pip", "install", "pytest"]))
-PY
+          set -euxo pipefail
+          if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
+            # Ensure pip and pytest are available
+            python -m pip install --upgrade pip
+            python -m pip install pytest || true
+
+            # Install project deps if available
+            if [ -f requirements.txt ]; then
+              pip install -r requirements.txt
+            else
+              pip install .
+            fi
           else
-            # Fallback minimal deps for tests that import pandas
+            # Fallback minimal deps for ad-hoc scripts/tests
             pip install pandas pytest
           fi
 
@@ -70,3 +68,11 @@ PY
           name: junit-report
           path: test-results/junit.xml
           if-no-files-found: warn
+
+      - name: Run inline Python
+        run: |
+          python - <<'PY'
+          import importlib, sys, subprocess
+          # your script here
+          print("modules loaded:", [m for m in ("importlib","sys","subprocess")])
+          PY
