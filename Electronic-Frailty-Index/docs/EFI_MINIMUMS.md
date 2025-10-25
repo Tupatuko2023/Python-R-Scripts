@@ -2,7 +2,9 @@
 
 ---
 
-title: "EFI Minimums" version: "v1.0" status: "Demo only — not for clinical use"
+title: "EFI Minimums"
+version: "v1.0"
+status: "Demo only — not for clinical use"
 updated: "2025-10-25"
 
 ---
@@ -36,7 +38,7 @@ using **synthetic** data.
 
 - **EFI definition:** approximately number of identified deficits divided by
   number of assessed deficits.
-  _Citations to be added._
+  _For academic validation and citations, see [future updates]._
 - **Weights:** equal weights in v1.0 unless otherwise noted.
 - **Normalization:** result scaled to 0–1.
 
@@ -59,4 +61,5 @@ Any extensions or changes should be documented and versioned.
 
 ## 6. References
 
-To be added in a future update.
+**Pending peer-review citations.** References will be added when available.
+For now, see [link to EFI literature/relevant papers] or [internal citation policy].

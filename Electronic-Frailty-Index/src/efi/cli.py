@@ -24,6 +24,13 @@ except Exception:
     raise
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--min-deficits", type=int, default=1, help="Minimum deficits to consider")
+args = parser.parse_args()
+
+min_deficits = args.min_deficits
+
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
         prog="efi-cli", description="Compute a demo EFI from synthetic data."
@@ -68,8 +75,14 @@ def compute_efi(df: "pd.DataFrame", min_deficits: int = 1) -> "pd.DataFrame":
     per-row for the standard calculation; rows with fewer measured
     deficits will receive the fallback value (if `age` exists) or NA.
 
-    This is a demo only, not a scientific implementation.
+    Requirements/notes:
+    - The input must contain column 'id' (used for the returned identifier).
+    - Column 'age' is optional and used only for the fallback paths.
+    - This is a demo only, not a scientific implementation.
     """
+    # Defensive: ensure 'id' exists when function is called directly
+    if "id" not in df.columns:
+        raise ValueError("compute_efi requires an 'id' column to return identifiers")
     if min_deficits is None:
         min_deficits = 1
     try:
@@ -120,6 +133,10 @@ def compute_efi(df: "pd.DataFrame", min_deficits: int = 1) -> "pd.DataFrame":
         if "age" in df.columns:
             fallback = df["age"].clip(lower=0, upper=100) / 200.0
         else:
+            print(
+                "Warning: min_deficits fallback requires 'age', but 'age' is missing; using NA",
+                file=sys.stderr,
+            )
             fallback = pd.Series([pd.NA] * len(df), index=df.index)
         result = result.where(~mask, other=fallback)
 
@@ -155,7 +172,7 @@ def main() -> int:
         print(f"Failed to read CSV: {e}", file=sys.stderr)
         return 2
 
-    required = {"id", "age"}
+    required = {"id"}
     if missing := (set(required) - set(df.columns)):
         raise ValueError(f"Missing required columns: {', '.join(sorted(missing))}")
 
