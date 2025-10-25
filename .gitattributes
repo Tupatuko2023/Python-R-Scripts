@@ -1,7 +1,14 @@
-* text=auto
+* text=auto eol=lf
+
+# Platform-specific overrides
 *.ps1 text eol=crlf
+
+# Text files (force LF)
 *.md  text eol=lf
 *.yml text eol=lf
+*.yaml text eol=lf
+*.py  text eol=lf
+*.csv text eol=lf
 *.r   text eol=lf
 *.R   text eol=lf
 *.Rmd text eol=lf
@@ -10,9 +17,13 @@
 .markdownlint.json text eol=lf
 .markdownlintignore text eol=lf
 .gitattributes text eol=lf
+
+# Notebooks: strip outputs and use notebook-aware diff
 *.ipynb filter=nbstripout
 *.zpln filter=nbstripout
 *.ipynb diff=ipynb
+
+# Binary files / LFS
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg -text
 *.jpeg -text
