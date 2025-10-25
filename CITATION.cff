@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: If you use this work, please cite it as below.
+title: Electronic Frailty Index (EFI) utilities in the Python-R-Scripts repository
+authors:
+  - family-names: Korpi
+    given-names: Tomi
+    affiliation: Tampere University
+type: software
+license: MIT
+version: 1.0.0
+date-released: 2025-10-25
+repository-code: https://github.com/Tupatuko2023/Python-R-Scripts
+keywords:
+  - Electronic Frailty Index
+  - EFI
+  - health data
+  - Python
+  - R
+abstract: >
+  This citation refers to the EFI subproject located under Electronic-Frailty-Index/.
+  Use this reference when you reuse code, documentation, or synthetic examples from that folder.
+preferred-citation:
+  type: article
+  title: Electronic Frailty Index (EFI) utilities
+  authors:
+    - family-names: Korpi
+      given-names: Tomi
+  year: 2025
+references:
+  - type: software
+    title: Electronic-Frailty-Index subproject path
+    repository-code: https://github.com/Tupatuko2023/Python-R-Scripts/tree/main/Electronic-Frailty-Index

@@ -1,0 +1,4 @@
+id,age,sex,def_hypertension,def_diabetes,def_cvd,def_copd,def_ckd
+P001,72,F,1,0,1,0,0
+P002,81,M,0,1,0,0,1
+P003,67,F,0,0,0,0,0
