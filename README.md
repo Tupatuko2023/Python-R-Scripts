@@ -26,6 +26,22 @@ python src/efi/cli.py \
 
 ## Disclaimer
 
-See [DISCLAIMER.md](DISCLAIMER.md)
+See [DISCLAIMER.md](DISCLAIMER.md). No PHI or PII in this repository.
 
-No PHI or PII in this repository.
+## Layout (high level)
+
+```text
+├─ Electronic-Frailty-Index/
+│  ├─ docs/                   # EFI documentation and reports
+│  ├─ env/                    # conda environment
+│  ├─ figures/                # images and figures
+│  ├─ BMI/                    # BMI features and scripts
+│  ├─ CCI/                    # CCI features and scripts
+│  ├─ HFRS/                   # HFRS features and scripts
+│  └─ logistic_regression/    # logistic regression models and scripts
+├─ src/efi/                   # Python CLI
+├─ data/external/             # synthetic example data
+├─ tests/                     # pytest tests
+├─ .github/workflows/         # continuous integration workflows
+└─ out/                       # outputs, ignored in VCS
+```
