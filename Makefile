@@ -1,4 +1,4 @@
-﻿# Makefile for EFI project basic commands
+# Makefile for EFI project basic commands
 # Dependencies: conda, python, optional: ruff, black, pytest, quarto
 
 
@@ -6,7 +6,8 @@ SHELL := bash
 PY := python
 
 ENV_FILE := Electronic-Frailty-Index/env/environment.yml
-DEMO := -m efi.cli --input Electronic-Frailty-Index/data/external/synthetic_patients_min.csv --out Electronic-Frailty-Index/out/efi_scores.csv --report-md Electronic-Frailty-Index/out/report.md
+OUT_DIR := Electronic-Frailty-Index/out
+DEMO := -m efi.cli --input Electronic-Frailty-Index/data/external/synthetic_patients_min.csv --out $(OUT_DIR)/efi_scores.csv --report-md $(OUT_DIR)/report.md
 
 .PHONY: help setup demo cli-run lint format test report clean
 
@@ -28,8 +29,8 @@ demo:
 	$(PY) $(DEMO)
 
 cli-run:
-	mkdir -p Electronic-Frailty-Index/out
-	$(PY) -m efi.cli --input Electronic-Frailty-Index/data/external/synthetic_patients.csv --out Electronic-Frailty-Index/out/efi_scores.csv
+	mkdir -p $(OUT_DIR)
+	$(PY) -m efi.cli --input Electronic-Frailty-Index/data/external/synthetic_patients.csv --out $(OUT_DIR)/efi_scores.csv
 
 lint:
 	-ruff check .
@@ -45,5 +46,5 @@ report:
 	@if ls docs/*.qmd >/dev/null 2>&1; then quarto render docs; else echo "No .qmd reports found. Skipping."; fi
 
 clean:
-	rm -rf out
+	rm -rf $(OUT_DIR)
 	rm -rf docs/_site
