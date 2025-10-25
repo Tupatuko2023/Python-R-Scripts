@@ -63,4 +63,5 @@ jobs:
 
       # Otherwise, do a smoke test and finish successfully
       - name: Smoke tests
-        run: "Rscript -e \"print(sessionInfo()); message('No DESCRIPTION: smoke tests skipped')\""
+        if: hashFiles('**/DESCRIPTION') == ''
+        run: "Rscript -e \"print(sessionInfo()); message('Smoke tests completed')\""

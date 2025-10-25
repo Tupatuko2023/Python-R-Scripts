@@ -37,11 +37,11 @@ jobs:
 
       - name: Run tests with coverage (or skip)
         run: |
+          mkdir -p test-results
           if [ -d tests ] || [ -f pytest.ini ] || grep -q "\[tool.pytest.ini_options\]" pyproject.toml 2>/dev/null; then
             python -m pytest -q --cov --cov-report=xml --junitxml=test-results/junit.xml
           else
             echo "No Python tests found: skipping"
-          fi
 
       - name: Upload coverage
         if: always()
