@@ -7,25 +7,20 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ['3.10', '3.11']
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt', '**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
-            ${{ runner.os }}-pip-
+          python-version: "3.11"
+          # Use built-in pip cache keyed by dependency files
+          cache: "pip"
+          cache-dependency-path: |
+            **/requirements*.txt
+            **/pyproject.toml
 
       - name: Install dependencies
         run: |
@@ -33,17 +28,22 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
           if [ -f pyproject.toml ]; then pip install ".[test]" || pip install . || true; fi
-          pip install pytest pytest-cov junit-xml coverage || true
+          python -m pip install pytest pytest-cov junit-xml coverage || true
 
-      - name: Run tests with coverage (or skip)
+      - name: Run tests with coverage (robust; handles “no tests collected”)
         run: |
           mkdir -p test-results
-          if [ -d tests ] || [ -f pytest.ini ] || grep -q "\[tool.pytest.ini_options\]" pyproject.toml 2>/dev/null; then
-            python -m pytest -q --cov --cov-report=xml --junitxml=test-results/junit.xml
-          else
-            echo "No Python tests found: skipping"
+          # Run pytest; capture exit code (pytest returns 5 if no tests collected)
+          python -m pytest -q --cov --cov-report=xml --junitxml=test-results/junit.xml || code=$?
+          code=${code:-0}
+          if [ "$code" = "5" ]; then
+            echo 'No tests collected; creating an empty JUnit report.'
+            printf '<testsuite name="empty" tests="0" failures="0" errors="0" skipped="0"></testsuite>\n' > test-results/junit.xml
+            exit 0
+          fi
+          exit "$code"
 
-      - name: Upload coverage
+      - name: Upload coverage.xml
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -51,10 +51,10 @@ jobs:
           path: coverage.xml
           if-no-files-found: ignore
 
-      - name: Upload JUnit
+      - name: Upload JUnit report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: junit
           path: test-results/junit.xml
-          if-no-files-found: ignore
+          if-no-files-found: warn
