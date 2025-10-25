@@ -40,3 +40,4 @@ efi_*.ps1
 node_modules/
 .gitattributes.bak.*
 !.markdownlint*out/
+out/
