@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+src/efi/cli.py
+src/efi_demo.egg-info/PKG-INFO
+src/efi_demo.egg-info/SOURCES.txt
+src/efi_demo.egg-info/dependency_links.txt
+src/efi_demo.egg-info/requires.txt
+src/efi_demo.egg-info/top_level.txt
+tests/test_cli.py
