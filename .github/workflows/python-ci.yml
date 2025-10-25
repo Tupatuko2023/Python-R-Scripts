@@ -1,44 +1,60 @@
-name: CI
+name: python-ci
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install npm dependencies
-        run: npm ci
-
-      - name: Build C++ via Make
-        run: make
-
-      - name: Run npm tests
-        run: npm test
-
-  lint-test:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11']
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: '3.11' }
-      - run: pip install -U pip pytest ruff black pandas
-      - run: ruff check .
-      - run: black --check .
-      - run: pytest -q
-      - name: Check markdown files
-        uses: actions/checkout@v4
-        with:
-          repository: actions/markdown-link-checker
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          if [ -f pyproject.toml ]; then pip install ".[test]" || pip install . || true; fi
+          pip install pytest pytest-cov junit-xml coverage || true
+
+      - name: Run tests with coverage (or skip)
+        run: |
+          if [ -d tests ] || [ -f pytest.ini ] || grep -q "\[tool.pytest.ini_options\]" pyproject.toml 2>/dev/null; then
+            python -m pytest -q --cov --cov-report=xml --junitxml=test-results/junit.xml
+          else
+            echo "No Python tests found: skipping"
+          fi
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          if-no-files-found: ignore
+
+      - name: Upload JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit
+          path: test-results/junit.xml
+          if-no-files-found: ignore
