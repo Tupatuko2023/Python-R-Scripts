@@ -24,11 +24,6 @@ except Exception:
     raise
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--min-deficits", type=int, default=1, help="Minimum deficits to consider")
-args = parser.parse_args()
-
-min_deficits = args.min_deficits
 
 
 def parse_args() -> argparse.Namespace:
