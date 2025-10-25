@@ -1,4 +1,4 @@
-﻿import pandas as pd
+﻿﻿import pandas as pd
 from efi.cli import compute_efi
 
 def test_compute_efi_basic():
@@ -11,6 +11,8 @@ def test_compute_efi_basic():
     out = compute_efi(df, min_deficits=1)
     assert list(out.columns) == ["id", "efi_score"]
     assert len(out) == 2
-    assert 0.0 <= out["efi_score"].min() <= 1.0
-    assert 0.0 <= out["efi_score"].max() <= 1.0
+    # Row 1: 2 deficits (def_a=1, def_b=1) / 2 columns = 1.0
+    # Row 2: 1 deficit (def_b=1) / 2 columns = 0.5
+    assert out.loc[out["id"] == 1, "efi_score"].values[0] == 1.0
+    assert out.loc[out["id"] == 2, "efi_score"].values[0] == 0.5
 
