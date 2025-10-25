@@ -1,4 +1,4 @@
-﻿﻿import pandas as pd
+﻿import pandas as pd
 from efi.cli import compute_efi
 
 def test_compute_efi_basic():

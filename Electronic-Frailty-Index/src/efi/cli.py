@@ -23,8 +23,9 @@ except Exception:
     )
     raise
 
-
-
+# NOTE: Do not call parse_args() at module import time.
+# The module may be imported by test runners (e.g. pytest) which pass their own CLI flags.
+# All CLI parsing must happen inside main() and only under the __main__ guard.
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
@@ -189,5 +190,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    # CLI entrypoint: argument parsing and execution are guarded
     raise SystemExit(main())
 # EOF
