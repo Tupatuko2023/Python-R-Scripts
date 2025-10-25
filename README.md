@@ -17,3 +17,15 @@ python src/efi/cli.py \
   --input data/external/synthetic_patients.csv \
   --out out/efi_scores.csv \
   --report-md out/report.md
+```
+
+## License and citation
+
+- License: [MIT License](LICENSE)
+- How to cite: [CITATION.cff](CITATION.cff)
+
+## Disclaimer
+
+See [DISCLAIMER.md](DISCLAIMER.md)
+
+. No PHI or PII in this repository.
