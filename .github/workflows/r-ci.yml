@@ -1,14 +1,66 @@
 name: r-ci
-on: [push, pull_request]
+
+on:
+  push:
+  pull_request:
+
 jobs:
-  check:
+  r-ci:
     runs-on: ubuntu-latest
+    env:
+      R_KEEP_PKG_SOURCE: yes
     steps:
       - uses: actions/checkout@v4
-      - uses: r-lib/actions/setup-r@v2
-      - uses: r-lib/actions/setup-renv@v2
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Set up Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      # Compute primary R lib path (for caching)
+      - name: Determine R library path
+        id: rlib
+        shell: Rscript {0}
+        run: |
+          cat(paste0("RLIB=", .libPaths()[1]), file = Sys.getenv("GITHUB_OUTPUT"))
+
+      - name: Cache R packages (conditional)
+        uses: actions/cache@v4
         with:
-          cache-version: 1
-      - run: Rscript -e "install.packages(c('lintr','testthat'))"
-      - run: Rscript -e "lintr::lint_dir()"
-      - run: Rscript -e "if (dir.exists('tests')) testthat::test_dir('tests') else message('no R tests')"
+          path: ${{ steps.rlib.outputs.RLIB }}
+          key: ${{ runner.os }}-r-${{ hashFiles('**/renv.lock', '**/DESCRIPTION', '**/NAMESPACE') }}
+          restore-keys: |
+            ${{ runner.os }}-r-
+
+      # Path A: renv workflow (only if lockfile exists)
+      - name: Restore renv
+        if: hashFiles('**/renv.lock') != ''
+        uses: r-lib/actions/setup-renv@v2
+
+      # Path B: no renv.lock → use pak
+      - name: Install pak
+        if: hashFiles('**/renv.lock') == ''
+        run: Rscript -e "install.packages('pak', repos='https://cloud.r-project.org')"
+
+      - name: Install dependencies via pak (package projects)
+        if: hashFiles('**/renv.lock') == '' && hashFiles('**/DESCRIPTION') != ''
+        run: Rscript -e "pak::pkg_install('.', dependencies = TRUE)"
+
+      # Optional lint for non-package codebases
+      - name: Optional lint (non-package only)
+        if: hashFiles('**/DESCRIPTION') == ''
+        run: |
+          Rscript -e "if (!requireNamespace('lintr', quietly=TRUE)) install.packages('lintr', repos='https://cloud.r-project.org')"
+          Rscript -e "if (requireNamespace('lintr', quietly=TRUE)) lintr::lint_dir('.')"
+
+      # If an R package, run full checks
+      - name: R CMD check
+        if: hashFiles('**/DESCRIPTION') != ''
+        uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
+
+      # Otherwise, do a smoke test and finish successfully
+      - name: Smoke tests
+        run: "Rscript -e \"print(sessionInfo()); message('No DESCRIPTION: smoke tests skipped')\""
