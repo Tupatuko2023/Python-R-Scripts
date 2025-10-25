@@ -1,11 +1,12 @@
-# Makefile for EFI project basic commands
+﻿# Makefile for EFI project basic commands
 # Dependencies: conda, python, optional: ruff, black, pytest, quarto
+
 
 SHELL := bash
 PY := python
 
 ENV_FILE := Electronic-Frailty-Index/env/environment.yml
-DEMO := Electronic-Frailty-Index/docs/SYNTHETIC_DEMO/demo_py.py
+DEMO := -m efi.cli --input Electronic-Frailty-Index/data/external/synthetic_patients_min.csv --out Electronic-Frailty-Index/out/efi_scores.csv --report-md Electronic-Frailty-Index/out/report.md
 
 .PHONY: help setup demo cli-run lint format test report clean
 
@@ -27,8 +28,8 @@ demo:
 	$(PY) $(DEMO)
 
 cli-run:
-	mkdir -p out
-	$(PY) src/efi/cli.py --input data/external/synthetic_patients.csv --out out/efi_scores.csv
+	mkdir -p Electronic-Frailty-Index/out
+	$(PY) -m efi.cli --input Electronic-Frailty-Index/data/external/synthetic_patients.csv --out Electronic-Frailty-Index/out/efi_scores.csv
 
 lint:
 	-ruff check .
