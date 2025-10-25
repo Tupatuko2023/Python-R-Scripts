@@ -135,7 +135,7 @@ notebook:
   - Dental-care record counts per patient and other exploratory plots to guide
     variable selection for modeling.
 
-![PhD schedule Gantt](../figures/eFigure1.PhD_Progression_Schedule.png "PhD Project Schedule 2024: Activities and Milestones")
+![PhD schedule Gantt](../figures/eFigure1.PhD_Progression_Schedule_v2.png "PhD Project Schedule 2024: Activities and Milestones")
 <br><em>*Figure 2*.</em> PhD project schedule and milestones (2024). Source: Python/Matplotlib Gantt.
 
 - **NLP/NER labeling.** Targeted labeling sprints covered **mobility
