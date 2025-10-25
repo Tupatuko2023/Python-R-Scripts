@@ -28,4 +28,4 @@ python src/efi/cli.py \
 
 See [DISCLAIMER.md](DISCLAIMER.md)
 
-. No PHI or PII in this repository.
+No PHI or PII in this repository.
