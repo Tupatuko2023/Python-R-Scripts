@@ -10,7 +10,8 @@ import argparse
 import os
 import sys
 import json
-from typing import List, Tuple, Dict, Optional
+from typing import List, Dict, Optional
+from pathlib import Path
 
 # Avoid extra dependencies. Pandas makes CSV handling easier, so it's assumed available.
 try:
@@ -97,9 +98,10 @@ def compute_efi(df: "pd.DataFrame", min_deficits: int = 1) -> "pd.DataFrame":
 
 
 def write_report_md(path: str, input_path: str, n_rows: int, n_def: int, out_path: str) -> None:
-    parent = os.path.dirname(path)
-    if parent:
-        os.makedirs(parent, exist_ok=True)
+    parent = Path(path).parent
+    # Skip creating when parent is current directory (no explicit directory component)
+    if parent != Path('.'):
+        parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write("# EFI demo report\n\n")
         f.write(f"- Input: `{input_path}`\n")
@@ -114,19 +116,24 @@ def main() -> int:
     cfg = load_config(args.config)
 
     # Read data
-    df = pd.read_csv(args.input)
-    required = {"id", "age"}
-    missing = required - set(df.columns)
-    if missing:
-        print(f"Missing required columns: {sorted(missing)}", file=sys.stderr)
+    try:
+        df = pd.read_csv(args.input)
+    except FileNotFoundError:
+        print(f"Input file not found: {args.input}", file=sys.stderr)
         return 2
+    except Exception as e:
+        print(f"Failed to read CSV: {e}", file=sys.stderr)
+        return 2
+
+    required = {"id", "age"}
+    if (missing := (set(required) - set(df.columns))):
+        raise ValueError(f"Missing required columns: {', '.join(sorted(missing))}")
 
     def_cols = find_deficit_cols(df)
     result = compute_efi(df, min_deficits=int(cfg.get("min_deficits", 1)))
 
     # Write result
-    out_parent = os.path.dirname(args.out)
-    if out_parent:
+    if (out_parent := os.path.dirname(args.out)):
         os.makedirs(out_parent, exist_ok=True)
     result.to_csv(args.out, index=False)
 
@@ -141,3 +148,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+# EOF
