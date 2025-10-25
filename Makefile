@@ -45,3 +45,4 @@ report:
 
 clean:
 	rm -rf out
+	rm -rf docs/_site
