@@ -20,7 +20,7 @@
 ########################################################################################################
 ########################################################################################################
 
-# 1: Set Working Directory C:\Users\tomik\OneDrive\TUTKIMUS\Päijät-Sote\P-Sote\P-Sote
+# 1: Set Working Directory 
 setwd("C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts")
 
 # 2: Data Import and Preliminary Processing

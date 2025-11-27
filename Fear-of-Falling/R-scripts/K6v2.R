@@ -9,6 +9,11 @@
 # FOF-ryhmien välisiä eroja 12 kuukauden muutoksessa fyysisessä toimintakyvyssä 
 # (kaikki interaktiot p > 0.27).
 
+# 1: Set Working Directory
+setwd("C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K6")
+
+
+# 2: Data Import and Preliminary Processing
 # Load required packages -----------------------------------------------
 library(dplyr)
 library(tidyr)
