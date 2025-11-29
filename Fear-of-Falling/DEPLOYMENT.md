@@ -12,11 +12,13 @@
 
 2. Edit `config/database.yml` with your local database credentials.
 
-3. The file is protected by `.gitignore` and will never be committed to version control.
+3. The file is protected by `.gitignore` and will never be committed to version
+   control.
 
 ### Production Deployment (Recommended)
 
-**Do NOT commit `config/database.yml` with actual credentials to version control.**
+**Do NOT commit `config/database.yml` with actual credentials to version
+control.**
 
 Instead, use environment variables to provide database configuration at runtime:
 
@@ -55,7 +57,8 @@ load_dotenv()  # Load .env file
 database_url = os.getenv('DATABASE_URL')
 ```
 
-**IMPORTANT**: `.env` files are listed in `.gitignore` and must never be committed.
+**IMPORTANT**: `.env` files are listed in `.gitignore` and must never be
+committed.
 
 ## Security Best Practices
 

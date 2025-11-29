@@ -1,9 +1,9 @@
-# KAAOS 1: Longitudinal Analysis of Fear of Falling and Functional Performance: Data Processing 
+# KAAOS 1: Longitudinal Analysis of Fear of Falling and Functional Performance: Data Processing
 #          and Statistical Computation in R
 
 # [K1.Z_Score_Change_2G_v3.R]
 
-# "This R script processes longitudinal data on fear of falling, transforms it, 
+# "This R script processes longitudinal data on fear of falling, transforms it,
 #  computes statistical summaries, performs t-tests, and exports the results."
 
 ########################################################################################################
@@ -49,8 +49,8 @@
 # 37: Arrange Columns so that Significance Labels Follow p-values
 # 38: Merge Cohen's d Effect Sizes into the Final Table
 # 39: Add Follow_up Effect Size and Its Label to the Final Table
-# 40: Arrange Columns to Place Cohen's d Next to Follow_up p-value, 
-#     Save Final Results as a CSV File, 
+# 40: Arrange Columns to Place Cohen's d Next to Follow_up p-value,
+#     Save Final Results as a CSV File,
 #     and Print File Path to Confirm Save
 
 
@@ -63,8 +63,8 @@
 # install.packages("tidyr")    # For transforming data into long format
 # install.packages("boot")     # For calculating confidence intervals
 # install.packages("haven")    # For reading .dta files
-# install.packages("tidyverse") 
-# install.packages("broom") 
+# install.packages("tidyverse")
+# install.packages("broom")
 
 library(ggplot2)
 library(dplyr)
@@ -74,7 +74,7 @@ library(haven)
 library(stringr)
 library(broom)
 
-# 2: Define the File Path 
+# 2: Define the File Path
 file_path <- "C:/Users/tomik/OneDrive/TUTKIMUS/Päijät-Sote/P-Sote/P-Sote/dataset/KaatumisenPelko.dta"
 
 # 3: Load the Dataset
@@ -93,19 +93,19 @@ df_long <- data %>%
   select(
     NRO,
     kaatumisenpelkoOn,
-    z_kavelynopeus0, z_kavelynopeus2, 
-    z_Tuoli0, z_Tuoli2, 
-    z_Seisominen0, z_Seisominen2, 
+    z_kavelynopeus0, z_kavelynopeus2,
+    z_Tuoli0, z_Tuoli2,
+    z_Seisominen0, z_Seisominen2,
     z_Puristus0, z_Puristus2
   ) %>%
   pivot_longer(
-    cols = starts_with("z_"), 
-    names_to = "Variable", 
+    cols = starts_with("z_"),
+    names_to = "Variable",
     values_to = "Z_score"
   ) %>%
   mutate(
     Timepoint = case_when(
-      str_detect(Variable, "0$") ~ "Baseline", 
+      str_detect(Variable, "0$") ~ "Baseline",
       str_detect(Variable, "2$") ~ "Follow_up"
     ),
     Test = case_when(
@@ -125,7 +125,7 @@ summary_df <- df_long %>%
   summarise(
     Mean = mean(Z_score, na.rm = TRUE),
     SD = sd(Z_score, na.rm = TRUE),
-    n = sum(!is.na(Z_score)),  
+    n = sum(!is.na(Z_score)),
     .groups = "drop"
   ) %>%
   mutate(
@@ -150,7 +150,7 @@ df_long <- df_long %>%
 df_wide <- df_long %>%
   select(-Variable) %>%                # Drop the 'Variable' column
   pivot_wider(
-    names_from  = Timepoint, 
+    names_from  = Timepoint,
     values_from = Z_score
   ) %>%
   drop_na(Baseline, Follow_up)
@@ -161,7 +161,7 @@ df_wide <- df_wide %>%
 
 print(df_wide)
 
-# 12: Perform Baseline Analysis
+# 13: Perform Baseline Analysis
 baseline_stats <- df_wide %>%
   group_by(kaatumisenpelkoOn, Test) %>%
   summarise(
@@ -171,12 +171,12 @@ baseline_stats <- df_wide %>%
     .groups = "drop"
   ) %>%
   mutate(
-    B_SE       = B_SD / sqrt(B_n),             
-    B_CI_lower = B_Mean - 1.96 * B_SE,          
+    B_SE       = B_SD / sqrt(B_n),
+    B_CI_lower = B_Mean - 1.96 * B_SE,
     B_CI_upper = B_Mean + 1.96 * B_SE
   )
 
-# 13: Perform Change Analysis
+# 14: Perform Change Analysis
 change_stats <- df_wide %>%
   group_by(kaatumisenpelkoOn, Test) %>%
   summarise(
@@ -186,13 +186,13 @@ change_stats <- df_wide %>%
     .groups = "drop"
   ) %>%
   mutate(
-    C_SE       = C_SD / sqrt(C_n),                
-    C_CI_lower = C_Mean - 1.96 * C_SE,            
+    C_SE       = C_SD / sqrt(C_n),
+    C_CI_lower = C_Mean - 1.96 * C_SE,
     C_CI_upper = C_Mean + 1.96 * C_SE
   )
 
 
-# 14: Perform Follow-up Analysis
+# 15: Perform Follow-up Analysis
 follow_up_stats <- df_wide %>%
   group_by(kaatumisenpelkoOn, Test) %>%
   summarise(
@@ -202,12 +202,12 @@ follow_up_stats <- df_wide %>%
     .groups = "drop"
   ) %>%
   mutate(
-    F_SE       = F_SD / sqrt(F_n),         
-    F_CI_lower = F_Mean - 1.96 * F_SE,     
+    F_SE       = F_SD / sqrt(F_n),
+    F_CI_lower = F_Mean - 1.96 * F_SE,
     F_CI_upper = F_Mean + 1.96 * F_SE
   )
 
-# 15: Conduct Paired t-test for Between-Group Comparison in Baseline
+# 16: Conduct Paired t-test for Between-Group Comparison in Baseline
 p_values_baseline <- df_wide %>%
   group_by(Test) %>%
   summarise(
@@ -218,7 +218,7 @@ p_values_baseline <- df_wide %>%
   ) %>%
   rename(Baseline_p_value = p_value)
 
-# 16: Conduct Paired t-test for Within-Group Comparison
+# 17: Conduct Paired t-test for Within-Group Comparison
 p_values_within <- df_wide %>%
   drop_na(Baseline, Follow_up) %>%
   mutate(
@@ -236,10 +236,10 @@ p_values_within <- df_wide %>%
   select(-n_pairs) %>%
   rename(Change_p_value = p_value)   # For instance
 
-# 17: Check p-values
+# 18: Check p-values
 print(p_values_within)
 
-# 18: Conduct Paired t-test for Between-Group Comparison for Performance Change (Change_p_between)
+# 19: Conduct Paired t-test for Between-Group Comparison for Performance Change (Change_p_between)
 df_change_p_value_between <- df_wide %>%
   group_by(Test) %>%
   summarise(
@@ -250,10 +250,10 @@ df_change_p_value_between <- df_wide %>%
   ) %>%
   rename(Change_p_between = p_value)
 
-# 19: Check p-values
+# 20: Check p-values
 print(df_change_p_value_between)
 
-# 20: Conduct Paired t-test for Between-Group Comparison for Follow_up Results (Follow_up_p_value)
+# 21: Conduct Paired t-test for Between-Group Comparison for Follow_up Results (Follow_up_p_value)
 follow_up_p_value <- df_wide %>%
   group_by(Test) %>%
   summarise(
@@ -264,23 +264,23 @@ follow_up_p_value <- df_wide %>%
   ) %>%
   rename(Follow_up_p_value = p_value)
 
-# 21: Check p-values
+# 22: Check p-values
 print(follow_up_p_value)
 
-# 22: Function for calculating Cohen's d for independent groups
+# 23: Function for calculating Cohen's d for independent groups
 cohen_d_independent <- function(mean1, sd1, n1, mean2, sd2, n2) {
   pooled_sd <- sqrt(((n1 - 1) * sd1^2 + (n2 - 1) * sd2^2) / (n1 + n2 - 2))  # Combined standard deviation
   d <- (mean1 - mean2) / pooled_sd
   return(d)
 }
 
-# 23: Function for Calculating Cohen's d for Paired Tests (Effect Size for Change)
+# 24: Function for Calculating Cohen's d for Paired Tests (Effect Size for Change)
 cohen_d_paired <- function(C_Mean, C_SD) {
   d <- C_Mean / C_SD  # Cohen's d = Mean change / SD change
   return(d)
 }
 
-# 24: Compute Baseline Cohen's d (Between-Group Baseline Comparison)
+# 25: Compute Baseline Cohen's d (Between-Group Baseline Comparison)
 baseline_effect <- df_wide %>%
   group_by(Test) %>%
   summarise(
@@ -296,12 +296,12 @@ baseline_effect <- df_wide %>%
   ) %>%
   rename(Baseline_d = d)
 
-# 25: Compute Cohen's d for Change within Groups (Within-Group Follow_up Comparison)
+# 26: Compute Cohen's d for Change within Groups (Within-Group Follow_up Comparison)
 change_effect <- change_stats %>%
   mutate(Change_d = cohen_d_paired(C_Mean, C_SD)) %>%
   select(kaatumisenpelkoOn, Test, Change_d)
 
-# 26: Compute Cohen's d for Between-Group Change Comparison
+# 27: Compute Cohen's d for Between-Group Change Comparison
 change_between_effect <- df_wide %>%
   group_by(Test) %>%
   summarise(
@@ -317,7 +317,7 @@ change_between_effect <- df_wide %>%
   ) %>%
   rename(Change_d_between = d)
 
-# 27: Compute Cohen's d for Follow_up (Between-Group Follow_up Comparison)
+# 28: Compute Cohen's d for Follow_up (Between-Group Follow_up Comparison)
 follow_up_effect <- df_wide %>%
   group_by(Test) %>%
   summarise(
@@ -341,20 +341,20 @@ effect_size_label <- function(d_value) {
   else return("Very Small")
 }
 
-# 29: Label Effect Size for Follow_up Cohen's d
+# 30: Label Effect Size for Follow_up Cohen's d
 follow_up_effect <- follow_up_effect %>%
   rowwise() %>%  # Ensures function works on each row separately
   mutate(Follow_up_d_label = effect_size_label(Follow_up_d)) %>%
   ungroup()  # Remove rowwise after use
 
-# 30: Combine All Results into Final Table
+# 31: Combine All Results into Final Table
 baseline_stats <- baseline_stats %>%
   left_join(p_values_baseline, by = "Test")
 
 change_stats <- change_stats %>%
   left_join(p_values_within, by = c("kaatumisenpelkoOn","Test"))
 
-# 31: Merge Baseline, Change, and Follow-Up Statistics
+# 32: Merge Baseline, Change, and Follow-Up Statistics
 final_table <- baseline_stats %>%
   left_join(change_stats, by = c("kaatumisenpelkoOn","Test"))
 
@@ -365,15 +365,15 @@ final_table <- final_table %>%
   left_join(follow_up_stats, by = c("kaatumisenpelkoOn","Test")) %>%
   left_join(follow_up_p_value, by = "Test")
 
-# 32: Reorder Columns for Clarity
+# 33: Reorder Columns for Clarity
 final_table <- final_table %>%
   select(
-    kaatumisenpelkoOn, Test, 
+    kaatumisenpelkoOn, Test,
     B_Mean, B_SD, B_n, B_SE, B_CI_lower, B_CI_upper,
     Baseline_p_value,
     C_Mean, C_SD, C_n, C_SE, C_CI_lower, C_CI_upper,
-    Change_p_value, 
-    Change_p_between,     
+    Change_p_value,
+    Change_p_between,
     F_Mean, F_SD, F_n, F_SE, F_CI_lower, F_CI_upper,
     Follow_up_p_value
   ) %>%
@@ -384,7 +384,7 @@ final_table <- final_table %>%
   ) %>%
   ungroup()
 
-# 33: Function to Add Significance Labels for p-values
+# 34: Function to Add Significance Labels for p-values
 significance_label <- function(p_value) {
   if (is.na(p_value)) return("")  # Jos p-arvo on NA, palautetaan tyhjä
   else if (p_value < 0.001) return("***")
@@ -393,7 +393,7 @@ significance_label <- function(p_value) {
   else return("")
 }
 
-# 34: Convert p-values to Numeric and Add Significance Labels
+# 35: Convert p-values to Numeric and Add Significance Labels
 final_table <- final_table %>%
   mutate(
     Baseline_p_value = as.numeric(Baseline_p_value),
@@ -401,7 +401,7 @@ final_table <- final_table %>%
     Change_p_between = as.numeric(Change_p_between),
     Follow_up_p_value = as.numeric(Follow_up_p_value)
   ) %>%
-  rowwise() %>%  
+  rowwise() %>%
   mutate(
     Baseline_p_value_sig = significance_label(Baseline_p_value),
     Change_p_value_sig = significance_label(Change_p_value),
@@ -411,11 +411,11 @@ final_table <- final_table %>%
   ungroup()
 
 
-# 35: Arrange Columns so that Significance Labels Follow p-values
+# 36: Arrange Columns so that Significance Labels Follow p-values
 final_table <- final_table %>%
   select(
     kaatumisenpelkoOn, Test, B_Mean, B_SD, B_n, B_SE, B_CI_lower, B_CI_upper,
-    Baseline_p_value, Baseline_p_value_sig, 
+    Baseline_p_value, Baseline_p_value_sig,
     C_n, C_Mean, C_SD, C_SE, C_CI_lower, C_CI_upper,
     Change_p_value, Change_p_value_sig,
     Change_p_between, Change_p_between_sig,
@@ -425,7 +425,7 @@ final_table <- final_table %>%
   )
 
 
-# 36: Merge Cohen's d Effect Sizes into the Final Table
+# 37: Merge Cohen's d Effect Sizes into the Final Table
 final_table <- final_table %>%
   left_join(baseline_effect, by = "Test") %>%
   left_join(change_effect, by = c("kaatumisenpelkoOn", "Test")) %>%
@@ -438,7 +438,7 @@ final_table <- final_table %>%
   ) %>%
   ungroup()
 
-# 37: Add Follow_up Effect Size and Its Label to the Final Table
+# 38: Add Follow_up Effect Size and Its Label to the Final Table
 final_table <- final_table %>%
   left_join(follow_up_effect, by = "Test") %>%
   rowwise() %>%
@@ -449,7 +449,7 @@ final_table <- final_table %>%
 
 str(final_table)
 
-# 38: Arrange Columns to Place Cohen's d Next to Follow_up p-value
+# 39: Arrange Columns to Place Cohen's d Next to Follow_up p-value
 final_table <- final_table %>%
   select(
     kaatumisenpelkoOn, Test, B_Mean, B_SD, B_n, B_SE, B_CI_lower, B_CI_upper,
@@ -461,11 +461,11 @@ final_table <- final_table %>%
     Follow_up_p_value, Follow_up_p_value_sig, Follow_up_d, Follow_up_d_label
   )
 
-View(final_table)  
+View(final_table)
 
-# 39: Save Final Results as a CSV File
+# 40: Save Final Results as a CSV File
 table_path <- paste0(output_dir, "K1:Z_Score_Change_2G_VHUS.csv")
 write.csv(final_table, table_path, row.names = FALSE)
 
-# 40: Print File Path to Confirm Save
+# 41: Print File Path to Confirm Save
 print(paste("Tiedosto tallennettu: ", table_path))
