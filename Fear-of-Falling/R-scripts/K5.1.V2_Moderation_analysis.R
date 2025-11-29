@@ -45,6 +45,7 @@ if (!dir.exists("outputs")) {
 # 1. Setup and packages -------------------------------------------------------
 
 required_packages <- c(
+  "here",
   "dplyr",
   "ggplot2",
   "broom",
@@ -322,6 +323,9 @@ make_jn_slope_plot <- function(model, jn_info, mod_var = "cComposite_Z0",
 
 # 2. Load data and basic checks ----------------------------------------------
 
+# Oletuspolku dataan projektin juuresta katsottuna
+data_default_path <- here::here("TUTKIMUS", "Hartikainen", "dataset", "KaatumisenPelko.csv")
+
 args <- commandArgs(trailingOnly = TRUE)
 is_interactive <- interactive()
 
@@ -333,13 +337,16 @@ if (length(args) > 0 && file.exists(args[1])) {
   data_source <- "file"
   
 } else if (is_interactive) {
-  # RStudio / interaktiivinen käyttö: luetaan suoraan oma csv
-  message("No command line data path supplied. Using interactive data_path.")
+  # RStudio / interaktiivinen käyttö: käytä projektin dataset/KaatumisenPelko.csv
+  message("No command line data path supplied. Using project data via here().")
   
-  data_path <- "C:/Users/tomik/OneDrive/TUTKIMUS/Päijät-Sote/P-Sote/P-Sote/dataset/KaatumisenPelko.csv"
+  data_path <- data_default_path  # = here::here("dataset", "KaatumisenPelko.csv")
   
   if (!file.exists(data_path)) {
-    stop("Data file not found: ", data_path)
+    stop(
+      "Data file not found: ", data_path,
+      "\nCheck that dataset/KaatumisenPelko.csv exists in the project root."
+    )
   }
   
   message("Using data file (RStudio interactive): ", data_path)
