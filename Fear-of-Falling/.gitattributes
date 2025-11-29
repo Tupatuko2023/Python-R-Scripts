@@ -1,2 +1,1 @@
-config/database.yml filter=git-crypt diff=git-crypt
 data/external/** filter=git-crypt diff=git-crypt

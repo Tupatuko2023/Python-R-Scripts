@@ -1,9 +1,9 @@
-# KAAOS 1: Longitudinal Analysis of Fear of Falling and Functional Performance: Data Processing 
+# KAAOS 1: Longitudinal Analysis of Fear of Falling and Functional Performance: Data Processing
 #          and Statistical Computation in R
 
 # [K1.Z_Score_Change_2G.R]
 
-# "This R script processes longitudinal data on fear of falling, transforms it, 
+# "This R script processes longitudinal data on fear of falling, transforms it,
 #  computes statistical summaries, performs t-tests, and exports the results."
 
 ########################################################################################################
@@ -58,8 +58,8 @@
 # install.packages("tidyr")    # For transforming data into long format
 # install.packages("boot")     # For calculating confidence intervals
 # install.packages("haven")    # For reading .dta files
-# install.packages("tidyverse") 
-# install.packages("broom") 
+# install.packages("tidyverse")
+# install.packages("broom")
 
 library(ggplot2)
 library(dplyr)
@@ -88,19 +88,19 @@ df_long <- data %>%
   select(
     NRO,
     kaatumisenpelkoOn,
-    z_kavelynopeus0, z_kavelynopeus2, 
-    z_Tuoli0, z_Tuoli2, 
-    z_Seisominen0, z_Seisominen2, 
+    z_kavelynopeus0, z_kavelynopeus2,
+    z_Tuoli0, z_Tuoli2,
+    z_Seisominen0, z_Seisominen2,
     z_Puristus0, z_Puristus2
   ) %>%
   pivot_longer(
-    cols = starts_with("z_"), 
-    names_to = "Variable", 
+    cols = starts_with("z_"),
+    names_to = "Variable",
     values_to = "Z_score"
   ) %>%
   mutate(
     Timepoint = case_when(
-      str_detect(Variable, "0$") ~ "Baseline", 
+      str_detect(Variable, "0$") ~ "Baseline",
       str_detect(Variable, "2$") ~ "Follow_up"
     ),
     Test = case_when(
@@ -121,7 +121,7 @@ summary_df <- df_long %>%
   summarise(
     Mean = mean(Z_score, na.rm = TRUE),
     SD = sd(Z_score, na.rm = TRUE),
-    n = sum(!is.na(Z_score)),  
+    n = sum(!is.na(Z_score)),
     .groups = "drop"
   ) %>%
   mutate(
@@ -148,7 +148,7 @@ df_long <- df_long %>%
 df_wide <- df_long %>%
   select(-Variable) %>%                # Drop the 'Variable' column
   pivot_wider(
-    names_from  = Timepoint, 
+    names_from  = Timepoint,
     values_from = Z_score
   ) %>%
   drop_na(Baseline, Follow_up)
@@ -385,12 +385,12 @@ final_table <- final_table %>%
 final_table <- final_table %>%
   left_join(df_change_p_value_between, by = "Test") %>%
   select(
-    kaatumisenpelkoOn, Test, 
+    kaatumisenpelkoOn, Test,
     Mean, SD, n.x, SE, CI_lower.x, CI_upper.x,
-    Baseline_p_value, 
+    Baseline_p_value,
     n.y, Mean_Change, SD_Change, SE_Change, CI_lower.y, CI_upper.y,
-    Change_p_value,             # <--- This is a column now
-    Change_p_value_between,     
+    Change_p_value,
+    Change_p_value_between,
     Follow_up_p_value
   ) %>%
   mutate(
@@ -418,7 +418,7 @@ final_table <- final_table %>%
     Change_p_value_between = as.numeric(Change_p_value_between),
     Follow_up_p_value = as.numeric(Follow_up_p_value)
   ) %>%
-  rowwise() %>%  
+  rowwise() %>%
   mutate(
     Baseline_p_value_sig = significance_label(Baseline_p_value),
     p_values_within_sig = significance_label(p_values_within),
@@ -435,7 +435,7 @@ final_table <- final_table %>%
 final_table <- final_table %>%
   select(
     kaatumisenpelkoOn, Test, Mean, SD, n.x, SE, CI_lower.x, CI_upper.x,
-    Baseline_p_value, Baseline_p_value_sig, 
+    Baseline_p_value, Baseline_p_value_sig,
     n.y, Mean_Change, SD_Change, SE_Change, CI_lower.y, CI_upper.y,
     p_values_within, p_values_within_sig,
     Change_p_value_between, Change_p_value_between_sig,
@@ -476,7 +476,7 @@ final_table <- final_table %>%
     Follow_up_p_value, Follow_up_p_value_sig, Follow_up_d, Follow_up_d_label
   )
 
-View(final_table)  
+View(final_table)
 
 # 37: Save Final Results as a CSV File
 table_path <- paste0(output_dir, "K1:Z_Score_Change_2R.csv")
