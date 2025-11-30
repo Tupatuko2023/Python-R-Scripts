@@ -1,0 +1,31 @@
+# Environment
+dataset/
+config/
+.env
+.env.local
+.env.*.local
+
+# IDE and OS
+.DS_Store
+.vscode/
+*.swp
+*.swo
+*~
+.RHistory
+.Rproj.user/
+
+# R output
+*.Rout
+*.Rdata
+.Rdata
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# Output and temporary files
+out/
+temp/
