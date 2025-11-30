@@ -1,0 +1,20 @@
+# Database Configuration Template
+# 
+# IMPORTANT: This is a template file. Do NOT commit actual credentials to version control.
+# 
+# For local development:
+#   1. Copy this file to config/database.yml
+#   2. Replace the placeholder with your actual database connection string
+#   3. The file is listed in .gitignore and will NOT be committed
+#
+# For production deployment:
+#   - Load database credentials from environment variables (recommended)
+#   - Use DATABASE_URL environment variable if your application supports it
+#   - Never hardcode secrets in any configuration file
+#
+# Example connection strings:
+#   SQLite:    sqlite:///./database.db
+#   PostgreSQL: postgresql://user:password@localhost:5432/dbname
+#   MySQL:      mysql+pymysql://user:password@localhost:3306/dbname
+
+database: your_database_connection_string_here
