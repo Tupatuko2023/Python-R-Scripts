@@ -1,9 +1,1 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-config/database.yml filter=git-crypt diff=git-crypt
->>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
-=======
-config/database.yml filter=git-crypt diff=git-crypt
->>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
 data/external/** filter=git-crypt diff=git-crypt
