@@ -1,0 +1,33 @@
+<html><head><meta charset='UTF-8'></head><body><h3>model_spline_vs_linear</h3><table border='1' style='border-collapse:collapse;'>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> term </th>
+   <th style="text-align:right;"> df.residual </th>
+   <th style="text-align:right;"> rss </th>
+   <th style="text-align:right;"> df </th>
+   <th style="text-align:right;"> sumsq </th>
+   <th style="text-align:right;"> statistic </th>
+   <th style="text-align:right;"> p.value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Delta_Composite_Z ~ FOF_status * cComposite_Z0 + Age + Sex + BMI </td>
+   <td style="text-align:right;"> 259 </td>
+   <td style="text-align:right;"> 74.62000 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Delta_Composite_Z ~ FOF_status * splines::ns(cComposite_Z0, df = 3) + Age + Sex + BMI </td>
+   <td style="text-align:right;"> 255 </td>
+   <td style="text-align:right;"> 72.36052 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 2.259483 </td>
+   <td style="text-align:right;"> 1.990616 </td>
+   <td style="text-align:right;"> 0.0964085 </td>
+  </tr>
+</tbody>
+</table></body></html>

@@ -1,0 +1,3 @@
+"term","df.residual","rss","df","sumsq","statistic","p.value"
+"Delta_Composite_Z ~ FOF_status * cComposite_Z0 + Age + Sex + BMI",259,74.6200007912591,NA,NA,NA,NA
+"Delta_Composite_Z ~ FOF_status * splines::ns(cComposite_Z0, df = 3) + Age + Sex + BMI",255,72.3605181657519,4,2.25948262550725,1.99061616786849,0.0964085472040248
