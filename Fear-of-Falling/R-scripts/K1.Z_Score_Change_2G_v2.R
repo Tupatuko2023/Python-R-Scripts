@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 # KAAOS 1: Longitudinal Analysis of Fear of Falling and Functional Performance: Data Processing
+=======
+# KAAOS 1: Longitudinal Analysis of Fear of Falling and Functional Performance: Data Processing 
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
 #          and Statistical Computation in R
 
 # [K1.Z_Score_Change_2G.R]
 
+<<<<<<< HEAD
 # "This R script processes longitudinal data on fear of falling, transforms it,
+=======
+# "This R script processes longitudinal data on fear of falling, transforms it, 
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
 #  computes statistical summaries, performs t-tests, and exports the results."
 
 ########################################################################################################
@@ -58,8 +66,13 @@
 # install.packages("tidyr")    # For transforming data into long format
 # install.packages("boot")     # For calculating confidence intervals
 # install.packages("haven")    # For reading .dta files
+<<<<<<< HEAD
 # install.packages("tidyverse")
 # install.packages("broom")
+=======
+# install.packages("tidyverse") 
+# install.packages("broom") 
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
 
 library(ggplot2)
 library(dplyr)
@@ -88,6 +101,7 @@ df_long <- data %>%
   select(
     NRO,
     kaatumisenpelkoOn,
+<<<<<<< HEAD
     z_kavelynopeus0, z_kavelynopeus2,
     z_Tuoli0, z_Tuoli2,
     z_Seisominen0, z_Seisominen2,
@@ -96,11 +110,25 @@ df_long <- data %>%
   pivot_longer(
     cols = starts_with("z_"),
     names_to = "Variable",
+=======
+    z_kavelynopeus0, z_kavelynopeus2, 
+    z_Tuoli0, z_Tuoli2, 
+    z_Seisominen0, z_Seisominen2, 
+    z_Puristus0, z_Puristus2
+  ) %>%
+  pivot_longer(
+    cols = starts_with("z_"), 
+    names_to = "Variable", 
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
     values_to = "Z_score"
   ) %>%
   mutate(
     Timepoint = case_when(
+<<<<<<< HEAD
       str_detect(Variable, "0$") ~ "Baseline",
+=======
+      str_detect(Variable, "0$") ~ "Baseline", 
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
       str_detect(Variable, "2$") ~ "Follow_up"
     ),
     Test = case_when(
@@ -121,7 +149,11 @@ summary_df <- df_long %>%
   summarise(
     Mean = mean(Z_score, na.rm = TRUE),
     SD = sd(Z_score, na.rm = TRUE),
+<<<<<<< HEAD
     n = sum(!is.na(Z_score)),
+=======
+    n = sum(!is.na(Z_score)),  
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
     .groups = "drop"
   ) %>%
   mutate(
@@ -148,7 +180,11 @@ df_long <- df_long %>%
 df_wide <- df_long %>%
   select(-Variable) %>%                # Drop the 'Variable' column
   pivot_wider(
+<<<<<<< HEAD
     names_from  = Timepoint,
+=======
+    names_from  = Timepoint, 
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
     values_from = Z_score
   ) %>%
   drop_na(Baseline, Follow_up)
@@ -385,12 +421,21 @@ final_table <- final_table %>%
 final_table <- final_table %>%
   left_join(df_change_p_value_between, by = "Test") %>%
   select(
+<<<<<<< HEAD
     kaatumisenpelkoOn, Test,
     Mean, SD, n.x, SE, CI_lower.x, CI_upper.x,
     Baseline_p_value,
     n.y, Mean_Change, SD_Change, SE_Change, CI_lower.y, CI_upper.y,
     Change_p_value,
     Change_p_value_between,
+=======
+    kaatumisenpelkoOn, Test, 
+    Mean, SD, n.x, SE, CI_lower.x, CI_upper.x,
+    Baseline_p_value, 
+    n.y, Mean_Change, SD_Change, SE_Change, CI_lower.y, CI_upper.y,
+    Change_p_value,             # <--- This is a column now
+    Change_p_value_between,     
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
     Follow_up_p_value
   ) %>%
   mutate(
@@ -418,7 +463,11 @@ final_table <- final_table %>%
     Change_p_value_between = as.numeric(Change_p_value_between),
     Follow_up_p_value = as.numeric(Follow_up_p_value)
   ) %>%
+<<<<<<< HEAD
   rowwise() %>%
+=======
+  rowwise() %>%  
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
   mutate(
     Baseline_p_value_sig = significance_label(Baseline_p_value),
     p_values_within_sig = significance_label(p_values_within),
@@ -435,7 +484,11 @@ final_table <- final_table %>%
 final_table <- final_table %>%
   select(
     kaatumisenpelkoOn, Test, Mean, SD, n.x, SE, CI_lower.x, CI_upper.x,
+<<<<<<< HEAD
     Baseline_p_value, Baseline_p_value_sig,
+=======
+    Baseline_p_value, Baseline_p_value_sig, 
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
     n.y, Mean_Change, SD_Change, SE_Change, CI_lower.y, CI_upper.y,
     p_values_within, p_values_within_sig,
     Change_p_value_between, Change_p_value_between_sig,
@@ -476,7 +529,11 @@ final_table <- final_table %>%
     Follow_up_p_value, Follow_up_p_value_sig, Follow_up_d, Follow_up_d_label
   )
 
+<<<<<<< HEAD
 View(final_table)
+=======
+View(final_table)  
+>>>>>>> 3f1968f0e59a28e4685cf897afbd18ebe0704a2e
 
 # 37: Save Final Results as a CSV File
 table_path <- paste0(output_dir, "K1:Z_Score_Change_2R.csv")
