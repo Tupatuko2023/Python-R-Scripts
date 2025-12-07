@@ -351,7 +351,7 @@ make_jn_slope_plot <- function(model, jn_info, mod_var = "cComposite_Z0",
 
 # 2. Load data and basic checks ----------------------------------------------
 
-data_default_path <- here::here("dataset", "KaatumisenPelko.csv")
+data_default_path <- here::here("data", "external", "KaatumisenPelko.csv")
 
 args <- commandArgs(trailingOnly = TRUE)
 is_interactive <- interactive()
