@@ -1,0 +1,3 @@
+"term","df.residual","rss","df","sumsq","statistic","p.value"
+"Delta_Composite_Z ~ FOF_status * Comp_Quartile + Age + Sex + BMI",257,74.480925936825,NA,NA,NA,NA
+"Delta_Composite_Z ~ FOF_status * Comp_Quartile + Age + Sex + BMI + Composite_Z0",256,73.7121137223123,1,0.768812214512693,2.67006217806605,0.103481161446854
