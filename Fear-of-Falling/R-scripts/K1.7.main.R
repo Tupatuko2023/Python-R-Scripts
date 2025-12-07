@@ -47,5 +47,3 @@ source("K1.6.results_export.R")
 
 # 8: End of Main Script
 cat("Analysis pipeline completed successfully.\n")
-
-
