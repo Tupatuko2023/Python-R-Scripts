@@ -1,10 +1,11 @@
 #!/usr/bin/env Rscript
-# KAAOS 1: Longitudinal Analysis of Fear of Falling and Functional Performance: Data Processing
-# and Statistical Computation in R
+# KAAOS 1: Longitudinal Analysis of Fear of Falling and Functional Performance:
+#          Data Processing
+#          and Statistical Computation in R
 
-########################################################################################################
+###############################################################################
 #  Sequence list (high level)
-########################################################################################################
+###############################################################################
 # 1: Install and load required packages
 # 2: Define the File Path
 # 3: Load the Dataset
@@ -14,7 +15,8 @@
 # 7: Check the Transformed Data
 # 8: Compute Means and 95% Confidence Intervals
 # 9: Ensure Directory Exists for Output
-# 10: Prepare Data for Pivoting and Add Row Index to Ensure Pivoting Works Correctly
+# 10: Prepare Data for Pivoting and Add Row Index to Ensure Pivoting Works
+#     Correctly
 # 11: Pivot Data Without Losing Observations
 # 12: Inspect the Pivoted Data
 # 13: Perform Baseline Analysis
@@ -25,7 +27,6 @@
 # 18: Combine results into final table and save
 
 ## 1: Install and load required packages (uncomment to install)
-# install.packages(c("ggplot2","dplyr","tidyr","boot","haven","stringr","broom"))
 
 library(ggplot2)
 library(dplyr)
@@ -34,19 +35,25 @@ library(boot)
 library(haven)
 library(stringr)
 library(broom)
+library(here)
 
 ## 2: Define the File Path
-file_path <- "C:/Users/tomik/OneDrive/TUTKIMUS/Päijät-Sote/P-Sote/P-Sote/dataset/KaatumisenPelko.dta"
+# Adjust the path as necessary for your environment
+file_path <- here::here("dataset", "KaatumisenPelko.csv")
 
 ## 3: Load the Dataset
-data <- read_dta(file_path)
+
+data <- readr::read_csv(file_path)   # or utils::read.csv(file_path)
+
+print(file_path)
+if (!file.exists(file_path)) stop("File not found: ", file_path)
 
 ## 4: Inspect the Structure of the Dataset
 str(data)
 head(data)
 
-## 5: Convert Categorical Variables to Factors
-data$kaatumisenpelkoOn <- as.factor(data$kaatumisenpelkoOn)  # 0 = no fear, 1 = fear
+## 5: Convert Categorical Variables to Factors | # 0 = no fear, 1 = fear
+data$kaatumisenpelkoOn <- as.factor(data$kaatumisenpelkoOn)
 data$sex <- as.factor(data$sex)  # 0 = female, 1 = male
 
 ## 6: Convert Data into Long Format
@@ -96,7 +103,8 @@ summary_df <- df_long %>%
   )
 
 ## 9: Ensure Directory Exists for Output
-output_dir <- "C:/Users/tomik/OneDrive/TUTKIMUS/Päijät-Sote/P-Sote/P-Sote/tables/"
+
+output_dir <- here::here("R-scripts", "K1", "outputs")
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }
@@ -404,8 +412,9 @@ final_table <- final_table %>%
 View(final_table)
 
 ## 30: Save Final Results as a CSV File
-table_path <- paste0(output_dir, "K1_Z_Score_Change_2G_VHUS.csv")
+
+table_path <- file.path(output_dir, "K1_Z_Score_Change_2G_4R.csv")
 write.csv(final_table, table_path, row.names = FALSE)
 
-## 31: Print File Path to Confirm Save
-print(paste("Tiedosto tallennettu: ", table_path))
+## 31: Confirmation
+cat("Tiedosto tallennettu: ", table_path, "\n")

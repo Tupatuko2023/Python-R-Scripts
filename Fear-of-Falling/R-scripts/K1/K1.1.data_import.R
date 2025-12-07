@@ -40,12 +40,17 @@ library(stringr)   # For string manipulation
 library(broom)     # For tidying statistical test outputs
 library(moments)   # For computing skewness and kurtosis
 library(stringr)   # for str_detect()
+library(here)
 
-# 3: Define the File Path
-file_path <- "C:/Users/tomik/OneDrive/TUTKIMUS/Päijät-Sote/P-Sote/P-Sote/dataset/KaatumisenPelko.dta"
+## 2: Define the File Path
+# Adjust the path as necessary for your environment
+file_path <- here::here("dataset", "KaatumisenPelko.csv")
 
-# 4: Read the Dataset
-data <- read_dta(file_path)
+## 3: Load the Dataset
+data <- readr::read_csv(file_path)   # or utils::read.csv(file_path)
+
+print(file_path)
+if (!file.exists(file_path)) stop("File not found: ", file_path)
 
 # 5: Inspect the Structure of the Dataset and Preview the Data
 str(data)    # Displays the structure and variable types of the dataset
