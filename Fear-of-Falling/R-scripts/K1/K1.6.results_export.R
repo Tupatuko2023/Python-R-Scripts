@@ -24,7 +24,7 @@
 library(dplyr)
 
 # 2: Ensure Directory Exists for Output
-output_dir <- "C:/Users/tomik/OneDrive/TUTKIMUS/Päijät-Sote/P-Sote/P-Sote/tables/"
+output_dir <- here::here("R-scripts", "K1", "outputs")
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }
@@ -115,7 +115,7 @@ final_table <- final_table %>%
 str(final_table)
 
 # 8: Export the Final Table to a CSV File
-table_path <- paste0(output_dir, "K1_Z_Score_Change_2G.csv")
+table_path <- file.path(output_dir, "K1_Z_Score_Change_2G.csv")
 write.csv(final_table, table_path, row.names = FALSE)
 
 # 9: Print the File Path to Confirm the Export

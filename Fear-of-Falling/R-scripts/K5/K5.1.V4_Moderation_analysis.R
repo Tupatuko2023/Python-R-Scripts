@@ -80,9 +80,6 @@ if (!dir.exists(outputs_dir)) {
   dir.create(outputs_dir, recursive = TRUE)
 }
 
-# --- Skriptin tunniste ---
-script_label <- "K5.1_MA"  # MA = Moderation Analysis
-
 # --- Erillinen manifest-kansio projektissa: ./manifest -----------------------
 # Projektin juurikansio oletetaan olevan .../Fear-of-Falling
 manifest_dir <- here::here("manifest")
@@ -92,6 +89,10 @@ if (!dir.exists(manifest_dir)) {
 manifest_path <- file.path(manifest_dir, "manifest.csv")
 
 # --- Skriptikohtainen alikansio tuloksille ---
+
+# Skriptin tunniste ---
+script_label <- "K5.1_MA"  # MA = Moderation Analysis
+
 script_dir <- file.path(outputs_dir, script_label)
 if (!dir.exists(script_dir)) {
   dir.create(script_dir, recursive = TRUE)
