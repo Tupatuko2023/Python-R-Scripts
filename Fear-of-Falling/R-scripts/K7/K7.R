@@ -49,7 +49,7 @@ names(analysis_data_raw)
 # Script directory
 script_dir <- here::here("R-scripts", "K7")
 
-# 1b. Output-kansio K6:n alle
+# 1b. Output-kansio K7:n alle
 outputs_dir <- here::here("R-scripts", "K7", "outputs")
 if (!dir.exists(outputs_dir)) {
   dir.create(outputs_dir, recursive = TRUE)
@@ -1247,78 +1247,6 @@ ggsave(
   height   = 4,
   dpi      = 300
 )
-
-# 13. Manifestin päivitys: keskeiset kuvat K7-skriptistä --------------------
-
-# Skriptin tunniste manifestia varten
-script_label <- "K7"
-
-# K7-skriptin tuottamat keskeiset kuvat (basename, ei koko polkua)
-k7_plot_files <- c(
-  "K7_box_DeltaComposite_FOF.png",
-  "K7_MWS_composite_interaction.png",
-  "K7_SLS_composite_interaction.png",
-  "K7_FTSST_composite_interaction.png",
-  "K7_MWS_composite_forest.png",
-  "K7_SLS_comp_forest.png",
-  "K7_FTSST_comp_forest.png",
-  "K7_MWS_own_forest.png",
-  "K7_SLS_own_forest.png",
-  "K7_FTSST_own_forest.png"
-)
-
-# Lyhyet kuvaukset samoille riveille samassa järjestyksessä
-k7_plot_descriptions <- c(
-  "Change in composite physical performance by FOF status (boxplot)",
-  "Change in composite PBT by FOF and baseline MWS subgroup (interaction plot)",
-  "Change in composite PBT by FOF and baseline SLS subgroup (interaction plot)",
-  "Change in composite PBT by FOF and baseline FTSST subgroup (interaction plot)",
-  "Composite PBT: non-FOF minus FOF by baseline MWS subgroup (forest plot)",
-  "Composite PBT: non-FOF minus FOF by baseline SLS subgroup (forest plot)",
-  "Composite PBT: non-FOF minus FOF by baseline FTSST subgroup (forest plot)",
-  "Maximal walking speed: non-FOF minus FOF by baseline MWS subgroup (forest plot)",
-  "Single-leg stance: non-FOF minus FOF by baseline SLS subgroup (forest plot)",
-  "Five-times sit-to-stand: non-FOF minus FOF by baseline FTSST subgroup (forest plot)"
-)
-
-# Rakennetaan manifestiin lisättävä data.frame
-manifest_rows <- tibble(
-  script     = script_label,
-  type       = "plot",
-  # Polku projektin tuloskansioon nähden, esim. "K7/K7_box_DeltaComposite_FOF.png"
-  filename   = file.path(script_label, k7_plot_files),
-  description = k7_plot_descriptions
-)
-
-# Varmista että manifest-kansio on olemassa
-if (!dir.exists(manifest_dir)) {
-  dir.create(manifest_dir, recursive = TRUE)
-}
-
-# Kirjoita tai appendaa manifest.csv
-if (!file.exists(manifest_path)) {
-  # Luodaan uusi manifest otsikkoriveineen
-  write.table(
-    manifest_rows,
-    file      = manifest_path,
-    sep       = ",",
-    row.names = FALSE,
-    col.names = TRUE,
-    append    = FALSE,
-    qmethod   = "double"
-  )
-} else {
-  # Lisätään rivit olemassa olevaan manifestiin ilman otsikoita
-  write.table(
-    manifest_rows,
-    file      = manifest_path,
-    sep       = ",",
-    row.names = FALSE,
-    col.names = FALSE,
-    append    = TRUE,
-    qmethod   = "double"
-  )
-}
 
 ## =====================================================================
 ## K7: Manifest-päivitys – taulukot ja kuvat

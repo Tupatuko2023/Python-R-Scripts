@@ -4,14 +4,25 @@
 ## ANCOVA models of change in physical performance by FOF status,
 ## with moderation by baseline balance problems and walking ability.
 
-########################################################################################################
+# Muuttuuko fyysinen toimintakyky eri tavalla FOF-ryhmissä? Ja riippuuko tämä
+# tasapaino-ongelmista tai kävelyvaikeuksista?
+#
+# Vastaus lyhyesti:
+#
+# ➡️ Ei näyttöä ryhmäeroista. 
+# ➡️ Ei näyttöä moderoinnista. 
+# ➡️ Trendi: molemmat ryhmät paranevat hieman.
+#
+# Johtopäätös:
+#
+# FOF-status ei näytä vaikuttavan fyysisen suorituskyvyn muutoksiin seurannassa,
+# eikä tämä vaikutus riipu lähtötason tasapainosta tai 500 m kävelykyvystä.
 
+
+########################################################################################################
 
 #  Sequence list
 ########################################################################################################
-
-# 1: Set Working Directory
-setwd("C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K8")
 
 # 1: Load required packages
 
@@ -25,27 +36,25 @@ library(sandwich)
 library(lmtest)
 library(purrr)
 library(stringr)
+library(here)
 
 set.seed(1234)  # for any later random procedures (e.g. bootstraps if added)
 
 ########################################################################################################
 ########################################################################################################
 
-## 1b. Output-kansio K8:n alle -------------------------------------------
+# 2: Output-kansio K8:n alle -------------------------------------------
 
-# Varmista, että here-paketti on ladattu:
-# library(here)
-
-# .../Fear-of-Falling/R-scripts/K8/outputs
+## .../Fear-of-Falling/R-scripts/K8/outputs
 outputs_dir <- here::here("R-scripts", "K8", "outputs")
 if (!dir.exists(outputs_dir)) {
   dir.create(outputs_dir, recursive = TRUE)
 }
 
-# --- Skriptin tunniste ---
+## 2.1: --- Skriptin tunniste ---
 script_label <- "K8_ANCOVA"   # tai esim. "K8" – voit muuttaa halutuksi
 
-# --- Erillinen manifest-kansio projektissa: ./manifest -------------------
+## 2.2 --- Erillinen manifest-kansio projektissa: ./manifest -------------------
 # Projektin juurikansio oletetaan olevan .../Fear-of-Falling
 manifest_dir <- here::here("manifest")
 if (!dir.exists(manifest_dir)) {
@@ -53,20 +62,16 @@ if (!dir.exists(manifest_dir)) {
 }
 manifest_path <- file.path(manifest_dir, "manifest.csv")
 
-# --- Skriptikohtainen alikansio tuloksille -------------------------------
-script_dir <- file.path(outputs_dir, script_label)
-if (!dir.exists(script_dir)) {
-  dir.create(script_dir, recursive = TRUE)
-}
 
-# 2: Data Preparation
 
-## Basic existence check
+# 3: Data Preparation
+
+## 3.1: Basic existence check
 exists("analysis_data")
 str(analysis_data, max.level = 1)
 
 
-## Identify age, sex, BMI variable names flexibly
+## 3.2: Identify age, sex, BMI variable names flexibly
 var_age <- dplyr::case_when(
   "Age" %in% names(analysis_data) ~ "Age",
   "age" %in% names(analysis_data) ~ "age",
@@ -88,7 +93,7 @@ if (any(is.na(c(var_age, var_sex, var_BMI)))) {
   stop("Could not find age, sex or BMI variable in analysis_data. Please check variable names.")
 }
 
-## Create recoded factors without overwriting originals
+## 3.3: Create recoded factors without overwriting originals
 analysis_data <- analysis_data %>%
   mutate(
     ## FOF_status from kaatumisenpelkoOn: 0 = nonFOF, 1 = FOF
@@ -120,7 +125,7 @@ analysis_data <- analysis_data %>%
     PainVAS0_c = if ("PainVAS0" %in% names(.)) PainVAS0 else NA_real_
   )
 
-## Quick recoding tables
+# 4: Quick recoding tables
 table(analysis_data$kaatumisenpelkoOn, analysis_data$FOF_status, useNA = "ifany")
 table(analysis_data$tasapainovaikeus, analysis_data$Balance_problem, useNA = "ifany")
 table(analysis_data$Vaikeus500m, analysis_data$Walk500m_3class, useNA = "ifany")
@@ -502,9 +507,18 @@ plot_DeltaComposite_Walk500 <- make_emm_plot(
 print(plot_DeltaComposite_Balance)
 print(plot_DeltaComposite_Walk500)
 
-ggsave("plot_DeltaComposite_Balance.png", plot_DeltaComposite_Balance, width = 7, height = 5, dpi = 300)
-ggsave("plot_DeltaComposite_Walk500.png", plot_DeltaComposite_Walk500, width = 7, height = 5, dpi = 300)
+ggsave(
+  filename = file.path(outputs_dir, "plot_DeltaComposite_Balance.png"),
+  plot     = plot_DeltaComposite_Balance,
+  width = 7, height = 5, dpi = 300
+)
 
+
+ggsave(
+  filename = file.path(outputs_dir, "plot_DeltaComposite_Walk500.png"),
+  plot     = plot_DeltaComposite_Walk500,
+  width = 7, height = 5, dpi = 300
+)
 
 ## Residual diagnostics: DeltaComposite ~ FOF_status * Balance_problem
 m_comp_balance <- ancova_results[["DeltaComposite__Balance_problem"]]$model
@@ -518,19 +532,103 @@ plot(m_comp_walk)
 par(mfrow = c(1, 1))
 
 ## Interaction and contrast tables for export
-write.csv(interaction_summary, "interaction_summary_FOFxG_ANCOVA.csv", row.names = FALSE)
-write.csv(contrast_summary, "contrast_summary_withinG_nonFOF_minus_FOF.csv", row.names = FALSE)
+write.csv(
+  interaction_summary,
+  file.path(outputs_dir, "interaction_summary_FOFxG_ANCOVA.csv"),
+  row.names = FALSE
+)
+
+write.csv(
+  contrast_summary,
+  file.path(outputs_dir, "contrast_summary_withinG_nonFOF_minus_FOF.csv"),
+  row.names = FALSE
+)
 
 ## Cell count tables
-write.csv(walk_cell_tables$initial_3_class,
-          "cell_counts_FOF_by_Walk500m_3class.csv", row.names = FALSE)
-write.csv(walk_cell_tables$final_2_class,
-          "cell_counts_FOF_by_Walk500m_G_final.csv", row.names = FALSE)
+write.csv(
+  walk_cell_tables$initial_3_class,
+  file.path(outputs_dir, "cell_counts_FOF_by_Walk500m_3class.csv"),
+  row.names = FALSE
+)
+
+write.csv(
+  walk_cell_tables$final_2_class,
+  file.path(outputs_dir, "cell_counts_FOF_by_Walk500m_G_final.csv"),
+  row.names = FALSE
+)
 
 ## Save example plots
-ggsave("plot_DeltaComposite_Balance.png", plot_DeltaComposite_Balance,
-       width = 7, height = 5, dpi = 300)
-ggsave("plot_DeltaComposite_Walk500.png", plot_DeltaComposite_Walk500,
-       width = 7, height = 5, dpi = 300)
+
+ggsave(
+  filename = file.path(outputs_dir, "plot_DeltaComposite_Balance.png"),
+  plot     = plot_DeltaComposite_Balance,
+  width = 7, height = 5, dpi = 300
+)
+
+ggsave(
+  filename = file.path(outputs_dir, "plot_DeltaComposite_Walk500.png"),
+  plot     = plot_DeltaComposite_Walk500,
+  width = 7, height = 5, dpi = 300
+)
+################################################################################
+################################################################################
+
+################################################################################
+## 13. Manifestin päivitys: keskeiset taulukot ja kuvat
+################################################################################
+
+# --- K8-skriptin tuottamat päätiedostot --------------------------------------
+
+manifest_rows <- dplyr::tibble(
+  script = script_label,
+  
+  type = c(
+    "table",  # interaction_summary_FOFxG_ANCOVA.csv
+    "table",  # contrast_summary_withinG_nonFOF_minus_FOF.csv
+    "table",  # cell_counts_FOF_by_Walk500m_3class.csv
+    "table",  # cell_counts_FOF_by_Walk500m_G_final.csv
+    "plot",   # plot_DeltaComposite_Balance.png
+    "plot"    # plot_DeltaComposite_Walk500.png
+  ),
+  
+  filename = c(
+    file.path(script_label, "interaction_summary_FOFxG_ANCOVA.csv"),
+    file.path(script_label, "contrast_summary_withinG_nonFOF_minus_FOF.csv"),
+    file.path(script_label, "cell_counts_FOF_by_Walk500m_3class.csv"),
+    file.path(script_label, "cell_counts_FOF_by_Walk500m_G_final.csv"),
+    file.path(script_label, "plot_DeltaComposite_Balance.png"),
+    file.path(script_label, "plot_DeltaComposite_Walk500.png")
+  ),
+  
+  description = c(
+    "FOF × moderaattori (Balance_problem / Walk500m_G_final) — interaktiotermit, Type III ANOVA",
+    "NonFOF – FOF LS-mean -kontrastit kunkin moderaattoritason sisällä (emmeans)",
+    "FOF × Walk500m alkuperäinen 3-luokkainen ristiintaulukko",
+    "FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko",
+    "Adjusted ΔComposite – EMM-kuva moderaattorina balance problems",
+    "Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability"
+  )
+)
+
+# --- Kirjoitetaan tai appendataan manifest.csv --------------------------------
+
+if (!file.exists(manifest_path)) {
+  # Luodaan uusi manifest tiedosto
+  write.csv(manifest_rows, manifest_path, row.names = FALSE)
+  message("Manifest created: ", manifest_path)
+} else {
+  # Lisätään perään ilman otsikkoriviä
+  write.table(
+    manifest_rows,
+    manifest_path,
+    append = TRUE,
+    sep = ",",
+    col.names = FALSE,
+    row.names = FALSE
+  )
+  message("Manifest updated: appended ", nrow(manifest_rows),
+          " rows to ", manifest_path)
+}
 
 
+# End of K8.R
