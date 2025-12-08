@@ -28,4 +28,4 @@ env/
 
 # Output and temporary files
 out/
-temp/
+temp/.RData
