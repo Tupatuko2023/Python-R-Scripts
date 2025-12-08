@@ -1,3 +1,15 @@
+
+# Title: KAAOS 7: Fear of Falling and Physical Performance: Moderation Analyses
+# Script: K7.R
+
+# ==============================================================================
+
+# K7-skripti tekee moderointianalyyseja kaatumisen pelon ja fyysisen
+# suorituskyvyn välillä. Skriptin ajon lopussa se ilmoittaa tärkeimmät KUVAT
+# keskitettyyn manifest/manifest.csv-tiedostoon. Yksi rivi vastaa yhtä kuvaa.
+# Riviltä näkee, mikä skripti kuvan on tehnyt, minkä tyyppinen tulos on
+# kyseessä, mistä tiedosto löytyy ja mitä se lyhyesti kuvaa.
+
 ## Packages ---------------------------------------------------------------
 library(dplyr)
 library(tidyr)
@@ -9,18 +21,60 @@ library(purrr)
 library(car)
 library(emmeans)
 library(rlang)
+library(here)
+library(tibble)
 
 set.seed(20251114)
+# ==============================================================================
 
+# 1: Load the dataset ------------------------------------------------------
+
+file_path <- here::here("data", "external", "KaatumisenPelko.csv")
+
+raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
+
+# Working copy so the original stays untouched
 ## Tarkista, että analysis_data on olemassa -------------------------------
-if (!exists("analysis_data")) {
-  stop("Object 'analysis_data' not found. Please load your data as analysis_data first.")
+if (!exists("raw_data")) {
+  stop("Object 'raw_data' not found. Please load your data as raw_data first.")
 }
 
 ## Tee raaka- ja työkopio
-analysis_data_raw  <- analysis_data
+analysis_data_raw  <- raw_data
 glimpse(analysis_data_raw)
 names(analysis_data_raw)
+
+
+# 1a. Määritä kansiot ------------------------------------------------------
+# Script directory
+script_dir <- here::here("R-scripts", "K7")
+
+# 1b. Output-kansio K6:n alle
+outputs_dir <- here::here("R-scripts", "K7", "outputs")
+if (!dir.exists(outputs_dir)) {
+  dir.create(outputs_dir, recursive = TRUE)
+}
+
+# Erillinen manifest-kansio projektissa: ./manifest
+manifest_dir <- here::here("manifest")
+if (!dir.exists(manifest_dir)) {
+  dir.create(manifest_dir, recursive = TRUE)
+}
+manifest_path <- file.path(manifest_dir, "manifest.csv")
+
+
+# 1c: Rakenna analyysimuuttujat alkuperäisistä sarakkeista
+analysis_data_raw <- raw_data %>%
+  mutate(
+    # Baseline-komposiitti ja muutoskomposiitti
+    Composite_Z0      = ToimintaKykySummary0,
+    Delta_Composite_Z = ToimintaKykySummary2 - ToimintaKykySummary0
+  ) %>%
+  # Nimeä kovariaatit analyysin mukaisiksi
+  rename(
+    Age = age,
+    Sex = sex
+  )
 
 analysis_data_work <- analysis_data_raw
 
@@ -248,6 +302,24 @@ ggplot(
 
 
 ## MWS: kolmiluokkainen versio -------------------------------------------
+
+analysis_data_work <- analysis_data_work %>%
+  mutate(
+    G_MWS1 = case_when(
+      kavelynopeus_m_sek0 < 1.0 ~ "<1.0 m/s",
+      kavelynopeus_m_sek0 >= 1.0 ~ "≥1.0 m/s",
+      TRUE ~ NA_character_
+    ),
+    G_MWS1 = factor(G_MWS1, levels = c("<1.0 m/s", "≥1.0 m/s"))
+  )
+
+analysis_data_work %>%
+  filter(!is.na(FOF_status), !is.na(G_MWS1)) %>%
+  count(G_MWS1, FOF_status)
+
+## (Valinnainen) kaksi luokkaa: hidas vs muut ------------------------------
+
+
 analysis_data_work <- analysis_data_work %>%
   mutate(
     G_MWS2 = case_when(
@@ -260,6 +332,18 @@ analysis_data_work <- analysis_data_work %>%
 
 
 ## Solukoot FOF x G_MWS ---------------------------------------------------
+
+tab_MWS1 <- analysis_data_work %>%
+  filter(!is.na(FOF_status), !is.na(G_MWS1)) %>%
+  count(G_MWS1, FOF_status) %>%
+  group_by(G_MWS1) %>%
+  mutate(total_in_G = sum(n)) %>%
+  ungroup()
+
+tab_MWS1
+
+## (Valinnainen) kaksi luokkaa: hidas vs muut ------------------------------
+
 tab_MWS2 <- analysis_data_work %>%
   filter(!is.na(FOF_status), !is.na(G_MWS2)) %>%
   count(G_MWS2, FOF_status) %>%
@@ -459,6 +543,85 @@ run_ancova_moderation <- function(data,
 }
 
 
+interpret_contrasts_generic <- function(tab, G_name, outcome_label,
+                                        rope_width = 0.10) {
+  tab %>%
+    mutate(
+      category = case_when(
+        p.value < 0.05 & estimate > 0 ~ "sig_positive",
+        p.value < 0.05 & estimate < 0 ~ "sig_negative",
+        p.value >= 0.05 &
+          conf.low > -rope_width &
+          conf.high < rope_width      ~ "ns_narrow",
+        TRUE                          ~ "ns_wide"
+      ),
+      verbal = case_when(
+        category == "sig_positive" ~ paste0(
+          "In subgroup ", .data[[G_name]],
+          ", non-FOF showed greater improvement in ", outcome_label,
+          " (difference ", round(estimate, 2),
+          ", 95% CI ", round(conf.low, 2), " to ", round(conf.high, 2),
+          ", p = ", signif(p.value, 2), ")."
+        ),
+        category == "sig_negative" ~ paste0(
+          "In subgroup ", .data[[G_name]],
+          ", participants with fear of falling improved more in ", outcome_label,
+          " (difference ", round(estimate, 2),
+          ", 95% CI ", round(conf.low, 2), " to ", round(conf.high, 2),
+          ", p = ", signif(p.value, 2), ")."
+        ),
+        category == "ns_narrow" ~ paste0(
+          "In subgroup ", .data[[G_name]],
+          ", there was little to no difference in change in ", outcome_label,
+          " between non-FOF and FOF (difference ", round(estimate, 2),
+          ", 95% CI ", round(conf.low, 2), " to ", round(conf.high, 2),
+          ", p = ", signif(p.value, 2),
+          "; CI suggests any group difference is small)."
+        ),
+        category == "ns_wide" ~ paste0(
+          "In subgroup ", .data[[G_name]],
+          ", the difference in change in ", outcome_label,
+          " between non-FOF and FOF was statistically non-significant (difference ",
+          round(estimate, 2), ", 95% CI ", round(conf.low, 2), " to ",
+          round(conf.high, 2), ", p = ", signif(p.value, 2),
+          "), and the wide confidence interval indicates substantial uncertainty."
+        ),
+        TRUE ~ NA_character_
+      )
+    )
+}
+
+## a) DeltaComposite ~ FOF * G_MWS1 + Composite0 + Age + Sex
+
+res_MWS1_Composite <- run_ancova_moderation(
+  data           = analysis_data_work,
+  G_var          = "G_MWS1",
+  delta_var      = "DeltaComposite",
+  baseline_var   = "Composite0",
+  outcome_label  = "Composite PBT",
+  subgroup_label = "MWS at baseline (<1.0 vs ≥1.0 m/s)"
+)
+
+res_MWS1_Composite$anova_type3
+res_MWS1_Composite$contrasts
+res_MWS1_Composite$plot
+
+## b) Delta_MWS ~ FOF * G_MWS1 + MWS
+
+res_MWS1_MWS <- run_ancova_moderation(
+  data           = analysis_data_work,
+  G_var          = "G_MWS1",
+  delta_var      = "Delta_MWS",
+  baseline_var   = "kavelynopeus_m_sek0",
+  outcome_label  = "maximal walking speed",
+  subgroup_label = "MWS at baseline (<1.0 vs ≥1.0 m/s)"
+)
+
+res_MWS1_MWS$anova_type3
+res_MWS1_MWS$contrasts
+res_MWS1_MWS$plot
+
+
 
 ## DeltaComposite ~ FOF * G_MWS2 + Composite0 + Age + Sex
 res_MWS_Composite <- run_ancova_moderation(
@@ -517,6 +680,7 @@ res_SLS_SLS$contrasts
 res_SLS_SLS$plot
 
 ## a) DeltaComposite ~ FOF * G_FTSST + Composite0 + Age + Sex
+
 res_FTSST_Composite <- run_ancova_moderation(
   data          = analysis_data_work,
   G_var         = "G_FTSST",
@@ -531,6 +695,7 @@ res_FTSST_Composite$contrasts
 res_FTSST_Composite$plot
 
 ## b) Delta_FTSST ~ FOF * G_FTSST + FTSST0_sec + Age + Sex
+
 res_FTSST_FTSST <- run_ancova_moderation(
   data          = analysis_data_work,
   G_var         = "G_FTSST",
@@ -545,6 +710,52 @@ res_FTSST_FTSST$contrasts
 res_FTSST_FTSST$plot
 
 ## MWS – Composite PBT, kontrastit + 95 % CI -------------------------------
+
+mws1_composite_tab <- res_MWS1_Composite$contrasts %>%
+  transmute(
+    G_MWS1,
+    contrast,
+    estimate,
+    std.error,
+    df,
+    conf.low  = estimate - qt(0.975, df) * std.error,
+    conf.high = estimate + qt(0.975, df) * std.error,
+    p.value
+  )
+
+mws1_comp_interpret <- interpret_contrasts_generic(
+  mws1_composite_tab,
+  G_name        = "G_MWS1",
+  outcome_label = "composite physical performance"
+)
+mws1_comp_interpret %>%
+  dplyr::select(G_MWS1, estimate, conf.low, conf.high, p.value, category, verbal)
+
+## MWS – Delta_MWS, kontrastit + 95 % CI -----------------------------------
+
+mws1_own_tab <- res_MWS1_MWS$contrasts %>%
+  dplyr::transmute(
+    G_MWS1,
+    contrast,
+    estimate,
+    std.error,
+    df,
+    conf.low  = estimate - qt(0.975, df) * std.error,
+    conf.high = estimate + qt(0.975, df) * std.error,
+    p.value
+  )
+
+mws1_own_interpret <- interpret_contrasts_generic(
+  mws1_own_tab,
+  G_name       = "G_MWS1",
+  outcome_label = "maximal walking speed"
+)
+mws1_own_interpret %>%
+  dplyr::select(G_MWS1, estimate, conf.low, conf.high, p.value, category, verbal)
+
+
+## MWS – Composite PBT, kontrastit + 95 % CI -------------------------------
+
 mws_composite_tab <- res_MWS_Composite$contrasts %>%
   dplyr::transmute(
     G_MWS2,
@@ -757,54 +968,7 @@ fts_own_interpret <- interpret_fts_contrasts(
 fts_own_interpret %>%
   dplyr::select(G_FTSST, estimate, conf.low, conf.high, p.value, category, verbal)
 
-
-interpret_contrasts_generic <- function(tab, G_name, outcome_label,
-                                        rope_width = 0.10) {
-  tab %>%
-    mutate(
-      category = case_when(
-        p.value < 0.05 & estimate > 0 ~ "sig_positive",
-        p.value < 0.05 & estimate < 0 ~ "sig_negative",
-        p.value >= 0.05 &
-          conf.low > -rope_width &
-          conf.high < rope_width      ~ "ns_narrow",
-        TRUE                          ~ "ns_wide"
-      ),
-      verbal = case_when(
-        category == "sig_positive" ~ paste0(
-          "In subgroup ", .data[[G_name]],
-          ", non-FOF showed greater improvement in ", outcome_label,
-          " (difference ", round(estimate, 2),
-          ", 95% CI ", round(conf.low, 2), " to ", round(conf.high, 2),
-          ", p = ", signif(p.value, 2), ")."
-        ),
-        category == "sig_negative" ~ paste0(
-          "In subgroup ", .data[[G_name]],
-          ", participants with fear of falling improved more in ", outcome_label,
-          " (difference ", round(estimate, 2),
-          ", 95% CI ", round(conf.low, 2), " to ", round(conf.high, 2),
-          ", p = ", signif(p.value, 2), ")."
-        ),
-        category == "ns_narrow" ~ paste0(
-          "In subgroup ", .data[[G_name]],
-          ", there was little to no difference in change in ", outcome_label,
-          " between non-FOF and FOF (difference ", round(estimate, 2),
-          ", 95% CI ", round(conf.low, 2), " to ", round(conf.high, 2),
-          ", p = ", signif(p.value, 2),
-          "; CI suggests any group difference is small)."
-        ),
-        category == "ns_wide" ~ paste0(
-          "In subgroup ", .data[[G_name]],
-          ", the difference in change in ", outcome_label,
-          " between non-FOF and FOF was statistically non-significant (difference ",
-          round(estimate, 2), ", 95% CI ", round(conf.low, 2), " to ",
-          round(conf.high, 2), ", p = ", signif(p.value, 2),
-          "), and the wide confidence interval indicates substantial uncertainty."
-        ),
-        TRUE ~ NA_character_
-      )
-    )
-}
+## Composite PBT, MWS- ja SLS-ryhmät ---------------------------------------
 
 mws_comp_interpret <- interpret_contrasts_generic(mws_composite_tab, "G_MWS2",
                                                   "composite physical performance")
@@ -838,7 +1002,7 @@ p_box_delta_comp <- ggplot(
 p_box_delta_comp
 
 ggsave(
-  filename = file.path("outputs", "K7_box_DeltaComposite_FOF.png"),
+  filename = file.path(outputs_dir, "K7_box_DeltaComposite_FOF.png"),
   plot     = p_box_delta_comp,
   width    = 6,
   height   = 4,
@@ -864,7 +1028,7 @@ p_mws_comp <- res_MWS_Composite$plot +
 p_mws_comp
 
 ggsave(
-  filename = file.path("outputs", "K7_MWS_composite_interaction.png"),
+  filename = file.path(outputs_dir, "K7_MWS_composite_interaction.png"),
   plot     = p_mws_comp,
   width    = 7,
   height   = 5,
@@ -890,7 +1054,7 @@ p_sls_comp <- res_SLS_Composite$plot +
 p_sls_comp
 
 ggsave(
-  filename = file.path("outputs", "K7_SLS_composite_interaction.png"),
+  filename = file.path(outputs_dir, "K7_SLS_composite_interaction.png"),
   plot     = p_sls_comp,
   width    = 7,
   height   = 5,
@@ -916,7 +1080,7 @@ p_fts_comp <- res_FTSST_Composite$plot +
 p_fts_comp
 
 ggsave(
-  filename = file.path("outputs", "K7_FTSST_composite_interaction.png"),
+  filename = file.path(outputs_dir, "K7_FTSST_composite_interaction.png"),
   plot     = p_fts_comp,
   width    = 7,
   height   = 5,
@@ -976,7 +1140,7 @@ p_mws_comp_forest <- plot_forest_single(
 p_mws_comp_forest
 
 ggsave(
-  filename = file.path("outputs", "K7_MWS_composite_forest.png"),
+  filename = file.path(outputs_dir, "K7_MWS_composite_forest.png"),
   plot     = p_mws_comp_forest,
   width    = 6,
   height   = 4,
@@ -997,7 +1161,7 @@ p_sls_comp_forest <- plot_forest_single(
 p_sls_comp_forest
 
 ggsave(
-  filename = file.path("outputs", "K7_SLS_comp_forest.png"),
+  filename = file.path(outputs_dir, "K7_SLS_comp_forest.png"),
   plot     = p_sls_comp_forest,
   width    = 6,
   height   = 4,
@@ -1017,7 +1181,7 @@ p_fts_comp_forest <- plot_forest_single(
 p_fts_comp_forest
 
 ggsave(
-  filename = file.path("outputs", "K7_FTSST_comp_forest.png"),
+  filename = file.path(outputs_dir, "K7_FTSST_comp_forest.png"),
   plot     = p_fts_comp_forest,
   width    = 6,
   height   = 4,
@@ -1037,7 +1201,7 @@ p_mws_own_forest <- plot_forest_single(
 p_mws_own_forest
 
 ggsave(
-  filename = file.path("outputs", "K7_MWS_own_forest.png"),
+  filename = file.path(outputs_dir, "K7_MWS_own_forest.png"),
   plot     = p_mws_own_forest,
   width    = 6,
   height   = 4,
@@ -1057,7 +1221,7 @@ p_sls_own_forest <- plot_forest_single(
 p_sls_own_forest
 
 ggsave(
-  filename = file.path("outputs", "K7_SLS_own_forest.png"),
+  filename = file.path(outputs_dir, "K7_SLS_own_forest.png"),
   plot     = p_sls_own_forest,
   width    = 6,
   height   = 4,
@@ -1077,11 +1241,178 @@ p_fts_own_forest <- plot_forest_single(
 p_fts_own_forest
 
 ggsave(
-  filename = file.path("outputs", "K7_FTSST_own_forest.png"),
+  filename = file.path(outputs_dir, "K7_FTSST_own_forest.png"),
   plot     = p_fts_own_forest,
   width    = 6,
   height   = 4,
   dpi      = 300
 )
+
+# 13. Manifestin päivitys: keskeiset kuvat K7-skriptistä --------------------
+
+# Skriptin tunniste manifestia varten
+script_label <- "K7"
+
+# K7-skriptin tuottamat keskeiset kuvat (basename, ei koko polkua)
+k7_plot_files <- c(
+  "K7_box_DeltaComposite_FOF.png",
+  "K7_MWS_composite_interaction.png",
+  "K7_SLS_composite_interaction.png",
+  "K7_FTSST_composite_interaction.png",
+  "K7_MWS_composite_forest.png",
+  "K7_SLS_comp_forest.png",
+  "K7_FTSST_comp_forest.png",
+  "K7_MWS_own_forest.png",
+  "K7_SLS_own_forest.png",
+  "K7_FTSST_own_forest.png"
+)
+
+# Lyhyet kuvaukset samoille riveille samassa järjestyksessä
+k7_plot_descriptions <- c(
+  "Change in composite physical performance by FOF status (boxplot)",
+  "Change in composite PBT by FOF and baseline MWS subgroup (interaction plot)",
+  "Change in composite PBT by FOF and baseline SLS subgroup (interaction plot)",
+  "Change in composite PBT by FOF and baseline FTSST subgroup (interaction plot)",
+  "Composite PBT: non-FOF minus FOF by baseline MWS subgroup (forest plot)",
+  "Composite PBT: non-FOF minus FOF by baseline SLS subgroup (forest plot)",
+  "Composite PBT: non-FOF minus FOF by baseline FTSST subgroup (forest plot)",
+  "Maximal walking speed: non-FOF minus FOF by baseline MWS subgroup (forest plot)",
+  "Single-leg stance: non-FOF minus FOF by baseline SLS subgroup (forest plot)",
+  "Five-times sit-to-stand: non-FOF minus FOF by baseline FTSST subgroup (forest plot)"
+)
+
+# Rakennetaan manifestiin lisättävä data.frame
+manifest_rows <- tibble(
+  script     = script_label,
+  type       = "plot",
+  # Polku projektin tuloskansioon nähden, esim. "K7/K7_box_DeltaComposite_FOF.png"
+  filename   = file.path(script_label, k7_plot_files),
+  description = k7_plot_descriptions
+)
+
+# Varmista että manifest-kansio on olemassa
+if (!dir.exists(manifest_dir)) {
+  dir.create(manifest_dir, recursive = TRUE)
+}
+
+# Kirjoita tai appendaa manifest.csv
+if (!file.exists(manifest_path)) {
+  # Luodaan uusi manifest otsikkoriveineen
+  write.table(
+    manifest_rows,
+    file      = manifest_path,
+    sep       = ",",
+    row.names = FALSE,
+    col.names = TRUE,
+    append    = FALSE,
+    qmethod   = "double"
+  )
+} else {
+  # Lisätään rivit olemassa olevaan manifestiin ilman otsikoita
+  write.table(
+    manifest_rows,
+    file      = manifest_path,
+    sep       = ",",
+    row.names = FALSE,
+    col.names = FALSE,
+    append    = TRUE,
+    qmethod   = "double"
+  )
+}
+
+## =====================================================================
+## K7: Manifest-päivitys – taulukot ja kuvat
+## =====================================================================
+
+script_label <- "K7"
+
+## 1) Taulukot: tiedostopolut (oletus: CSV:t on jo kirjoitettu) -------
+
+delta_desc_path      <- file.path(outputs_dir, "K7_delta_desc_by_FOF.csv")
+cell_means_path      <- file.path(outputs_dir, "K7_cell_means_DeltaComposite_by_subgroup.csv")
+ancova_type3_path    <- file.path(outputs_dir, "K7_ANCOVA_type3_all_models.csv")
+contrasts_comp_path  <- file.path(outputs_dir, "K7_contrasts_CompositePBT_by_subgroups.csv")
+contrasts_tests_path <- file.path(outputs_dir, "K7_contrasts_test_specific_by_subgroups.csv")
+sample_sizes_path    <- file.path(outputs_dir, "K7_sample_sizes_by_subgroup.csv")
+
+table_filenames <- c(
+  file.path(script_label, basename(delta_desc_path)),
+  file.path(script_label, basename(cell_means_path)),
+  file.path(script_label, basename(ancova_type3_path)),
+  file.path(script_label, basename(contrasts_comp_path)),
+  file.path(script_label, basename(contrasts_tests_path)),
+  file.path(script_label, basename(sample_sizes_path))
+)
+
+table_descriptions <- c(
+  "Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD).",
+  "Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST).",
+  "Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes).",
+  "Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",
+  "Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",
+  "Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup)."
+)
+
+## 2) Kuvat: tiedostonimet outputs_dir:ssä ------------------------------
+
+plot_files <- c(
+  "K7_box_DeltaComposite_FOF.png",
+  "K7_MWS_composite_interaction.png",
+  "K7_SLS_composite_interaction.png",
+  "K7_FTSST_composite_interaction.png",
+  "K7_MWS_composite_forest.png",
+  "K7_SLS_comp_forest.png",
+  "K7_FTSST_comp_forest.png",
+  "K7_MWS_own_forest.png",
+  "K7_SLS_own_forest.png",
+  "K7_FTSST_own_forest.png"
+)
+
+plot_descriptions <- c(
+  "Boxplot of change in composite physical performance (DeltaComposite) by FOF status.",
+  "Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).",
+  "Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.",
+  "Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.",
+  "Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.",
+  "Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.",
+  "Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.",
+  "Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.",
+  "Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.",
+  "Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup."
+)
+
+plot_filenames <- file.path(script_label, plot_files)
+
+## 3) Yhdistä taulukot ja kuvat samaan manifest-data.frameen --------------
+
+manifest_new <- dplyr::tibble(
+  script     = script_label,
+  type       = c(rep("table", length(table_filenames)),
+                 rep("plot",  length(plot_filenames))),
+  filename   = c(table_filenames, plot_filenames),
+  description = c(table_descriptions, plot_descriptions)
+)
+
+## 4) Päivitä manifest_rows muistissa -----------------------------------
+
+if (exists("manifest_rows")) {
+  manifest_rows <- dplyr::bind_rows(manifest_rows, manifest_new)
+} else {
+  manifest_rows <- manifest_new
+}
+
+## 5) Kirjoita manifest.csv projektin manifest-kansioon -----------------
+
+if (!dir.exists(manifest_dir)) {
+  dir.create(manifest_dir, recursive = TRUE)
+}
+
+if (!file.exists(manifest_path)) {
+  readr::write_csv(manifest_new, manifest_path)
+} else {
+  readr::write_csv(manifest_new, manifest_path,
+                   append = TRUE, col_names = FALSE)
+}
+
 
 # End of K7.R

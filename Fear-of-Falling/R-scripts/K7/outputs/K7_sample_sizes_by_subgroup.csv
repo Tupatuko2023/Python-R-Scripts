@@ -1,0 +1,17 @@
+moderator_type,group_level,FOF_status,n,total_in_G
+MWS,<1.3 m/s,non-FOF,44,165
+MWS,<1.3 m/s,FOF,121,165
+MWS,≥1.3 m/s,non-FOF,30,87
+MWS,≥1.3 m/s,FOF,57,87
+SLS,<5 s,non-FOF,37,147
+SLS,<5 s,FOF,110,147
+SLS,5–<10 s,non-FOF,7,27
+SLS,5–<10 s,FOF,20,27
+SLS,≥10 s,non-FOF,31,92
+SLS,≥10 s,FOF,61,92
+FTSST,slowest (worst),non-FOF,22,90
+FTSST,slowest (worst),FOF,68,90
+FTSST,intermediate,non-FOF,26,90
+FTSST,intermediate,FOF,64,90
+FTSST,fastest (best),non-FOF,29,93
+FTSST,fastest (best),FOF,64,93

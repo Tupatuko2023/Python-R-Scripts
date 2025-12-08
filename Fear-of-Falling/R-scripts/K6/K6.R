@@ -33,6 +33,9 @@ raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
 # Working copy so the original stays untouched
 analysis_data_raw <- raw_data
 
+# 1a. Määritä kansiot ------------------------------------------------------
+# Script directory
+script_dir <- here::here("R-scripts", "K6")
 
 # 1b. Output-kansio K6:n alle
 outputs_dir <- here::here("R-scripts", "K6", "outputs")
