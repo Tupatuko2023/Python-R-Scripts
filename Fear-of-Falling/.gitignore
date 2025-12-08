@@ -45,3 +45,8 @@ env/
 # Output and temporary files
 out/
 temp/.RData
+
+# R-scripts outputs: välioutput, testiajot, raskaat kuvat
+Fear-of-Falling/R-scripts/*/outputs/*.png
+Fear-of-Falling/R-scripts/*/outputs/*.html
+Fear-of-Falling/R-scripts/*/outputs/*.txt
