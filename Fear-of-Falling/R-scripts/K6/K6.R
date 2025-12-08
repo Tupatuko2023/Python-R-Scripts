@@ -777,16 +777,224 @@ ggsave(
   dpi      = 300
 )
 
+# ---------------------------------------------------------------
+# Kuvio 5: Dikotominen kipu (PainVAS0_G2 low vs high), päävaikutus
+# ---------------------------------------------------------------
+
+# Emmeans kipuluokille (vakioitu FOF, Age, Sex_factor ja Composite_Z0)
+emm_pain_main <- emmeans::emmeans(res_pain$fit, specs = "PainVAS0_G2")
+emm_pain_main_df <- summary(emm_pain_main, infer = TRUE) %>%
+  as.data.frame()
+
+p_pain_main <- ggplot(
+  emm_pain_main_df,
+  aes(x = PainVAS0_G2, y = emmean)
+) +
+  geom_point(size = 2) +
+  geom_errorbar(
+    aes(ymin = lower.CL, ymax = upper.CL),
+    width = 0.1
+  ) +
+  labs(
+    title = "Säädetty 12 kk muutos komposiitissa kipuluokan mukaan",
+    x     = "Lähtötason kipu (PainVAS0_G2: low vs high)",
+    y     = "Säädetty keskiarvo Delta_Composite_Z"
+  ) +
+  theme_minimal()
+
+ggsave(
+  filename = file.path(outputs_dir, "K6_PainVAS0_G2_main_effect.png"),
+  plot     = p_pain_main,
+  width    = 7,
+  height   = 5,
+  dpi      = 300
+)
+
+# ---------------------------------------------------------------
+# Kuvio 6: Jatkuva kipu (PainVAS0), päävaikutus
+# ---------------------------------------------------------------
+
+dat_pain_cont <- res_pain_cont$data_cc
+
+# Tehdään kipu-sekvenssi alkuperäiselle asteikolle 0-10
+pain_seq_orig <- seq(
+  from = min(dat_pain_cont$PainVAS0, na.rm = TRUE),
+  to   = max(dat_pain_cont$PainVAS0, na.rm = TRUE),
+  length.out = 100
+)
+
+# Uusi data ennustamista varten - HUOM: sarake on PainVAS0, ei scale(PainVAS0)
+newdat_pain_cont <- data.frame(
+  PainVAS0     = pain_seq_orig,
+  FOF_status   = factor("non_FOF", levels = levels(dat_pain_cont$FOF_status)),
+  Sex_factor   = factor("female", levels = levels(dat_pain_cont$Sex_factor)),
+  Age          = mean(dat_pain_cont$Age, na.rm = TRUE),
+  Composite_Z0 = mean(dat_pain_cont$Composite_Z0, na.rm = TRUE)
+)
+
+pred_pain_cont <- predict(
+  res_pain_cont$fit,
+  newdata = newdat_pain_cont,
+  se.fit  = TRUE
+)
+
+newdat_pain_cont$fit      <- pred_pain_cont$fit
+newdat_pain_cont$lower_CL <- pred_pain_cont$fit - 1.96 * pred_pain_cont$se.fit
+newdat_pain_cont$upper_CL <- pred_pain_cont$fit + 1.96 * pred_pain_cont$se.fit
+
+p_pain_cont <- ggplot(
+  newdat_pain_cont,
+  aes(x = PainVAS0, y = fit)
+) +
+  geom_ribbon(
+    aes(ymin = lower_CL, ymax = upper_CL),
+    alpha = 0.2
+  ) +
+  geom_line(size = 1) +
+  labs(
+    title = "Säädetty 12 kk muutos komposiitissa jatkuvan kivun funktiona",
+    x     = "Lähtötason kipu (PainVAS0, 0-10)",
+    y     = "Säädetty keskiarvo Delta_Composite_Z"
+  ) +
+  theme_minimal()
+
+ggsave(
+  filename = file.path(outputs_dir, "K6_PainVAS0_continuous_effect.png"),
+  plot     = p_pain_cont,
+  width    = 7,
+  height   = 5,
+  dpi      = 300
+)
 
 
+# ---------------------------------------------------------------
+# Kuvio 7: Ikäefekti Delta_Composite_Z:aan (Age)
+# ---------------------------------------------------------------
 
+dat_age <- res_pain$data_cc
+
+age_seq <- seq(
+  from = min(dat_age$Age, na.rm = TRUE),
+  to   = max(dat_age$Age, na.rm = TRUE),
+  length.out = 100
+)
+
+newdat_age <- data.frame(
+  Age          = age_seq,
+  FOF_status   = factor("non_FOF", levels = levels(dat_age$FOF_status)),
+  PainVAS0_G2  = factor("low", levels = levels(dat_age$PainVAS0_G2)),
+  Composite_Z0 = mean(dat_age$Composite_Z0, na.rm = TRUE),
+  Sex_factor   = factor("female", levels = levels(dat_age$Sex_factor))
+)
+
+pred_age <- predict(
+  res_pain$fit,
+  newdata = newdat_age,
+  se.fit  = TRUE
+)
+
+newdat_age$fit      <- pred_age$fit
+newdat_age$lower_CL <- pred_age$fit - 1.96 * pred_age$se.fit
+newdat_age$upper_CL <- pred_age$fit + 1.96 * pred_age$se.fit
+
+p_age <- ggplot(
+  newdat_age,
+  aes(x = Age, y = fit)
+) +
+  geom_ribbon(
+    aes(ymin = lower_CL, ymax = upper_CL),
+    alpha = 0.2
+  ) +
+  geom_line(size = 1) +
+  labs(
+    title = "Säädetty 12 kk muutos komposiitissa iän funktiona",
+    x     = "Ikä (vuotta)",
+    y     = "Säädetty keskiarvo Delta_Composite_Z"
+  ) +
+  theme_minimal()
+
+ggsave(
+  filename = file.path(outputs_dir, "K6_Age_effect.png"),
+  plot     = p_age,
+  width    = 7,
+  height   = 5,
+  dpi      = 300
+)
+
+# ---------------------------------------------------------------
+# E1.Effect size dikotomiselle kivulle (PainVAS0_G2: low vs high)
+# --------------------------------------------------------------
+
+get_partial_eta2 <- function(anova_tab, term) {
+  ss_term  <- anova_tab[term, "Sum Sq"]
+  ss_error <- anova_tab["Residuals", "Sum Sq"]
+  ss_term / (ss_term + ss_error)
+}
+
+eta2_pain_G2 <- get_partial_eta2(res_pain$anova, "PainVAS0_G2")
+eta2_pain_G2
+
+
+# ---------------------------------------------------------------
+# E2. Effect size jatkuvalle kivulle (scale(PainVAS0))
+# --------------------------------------------------------------
+
+eta2_pain_cont <- get_partial_eta2(res_pain_cont$anova, "scale(PainVAS0)")
+eta2_pain_cont
+
+# ---------------------------------------------------------------
+# E3. Standardoitu regressiokerroin (jatkuva kipu)
+# --------------------------------------------------------------
+
+Delta_Composite_Z ~ FOF_status * scale(PainVAS0) + Composite_Z0 + Age + Sex_factor
+model_summary <- summary(res_pain_cont$fit)
+model_summary
+
+# ---------------------------------------------------------------
+# E4. Effektin koko iälle (Age) eri malleissa
+# ---------------------------------------------------------------
+
+# Hyödynnetään samaa apufunktiota:
+# get_partial_eta2(anova_tab, term)
+
+# a) Ikä kipumallissa, dikotominen kipu (PainVAS0_G2)
+eta2_age_pain_G2 <- get_partial_eta2(res_pain$anova, "Age")
+eta2_age_pain_G2
+
+# b) Ikä kipumallissa, jatkuva kipu (scale(PainVAS0))
+eta2_age_pain_cont <- get_partial_eta2(res_pain_cont$anova, "Age")
+eta2_age_pain_cont
+
+# c) Ikä SRH-mallissa
+eta2_age_srh <- get_partial_eta2(res_srh$anova, "Age")
+eta2_age_srh
+
+# d) Ikä SRM-mallissa
+eta2_age_srm <- get_partial_eta2(res_srm$anova, "Age")
+eta2_age_srm
+
+
+# ---------------------------------------------------------------
+# E5. Standardoitu regressiokerroin iälle (Age) kipumallissa
+#    (sama malli kuin jatkuvan kivun kuvassa)
+# ---------------------------------------------------------------
+
+dat_cc_age <- res_pain_cont$data_cc
+
+sd_y   <- sd(dat_cc_age$Delta_Composite_Z, na.rm = TRUE)
+sd_age <- sd(dat_cc_age$Age, na.rm = TRUE)
+
+beta_age_std <- coef(res_pain_cont$fit)["Age"] * sd_age / sd_y
+beta_age_std
+
+# ==============================================================================
 
 # --------------------------------------------------------------------
 # Output- ja manifest-lohko K6-skriptin päämalleille
 # --------------------------------------------------------------------
 
-# Skriptin tunniste ja manifest-polku
-script_label  <- "K6_main"
+# Skriptin tunniste (käytetään manifestissa)
+script_label <- "K6_main"
 
 # Yhdistetty päämallitaulukko:
 # - yksi rivi per malli
@@ -835,20 +1043,42 @@ main_results_path <- file.path(outputs_dir, paste0(script_label, "_main_results.
 utils::write.csv(main_results, main_results_path, row.names = FALSE)
 message("K6-päämallien tulokset tallennettu: ", main_results_path)
 
-# Manifest-rivit K6-skriptin keskeisille tuloksille
-# Tässä lisätään ainakin päämallitaulukko; voit laajentaa listaa myöhemmin,
-# jos alat tallentaa myös esim. anova_tidy- tai emmeans-kontrastitaulukoita
-# omiin CSV-tiedostoihinsa.
+# Manifest-rivit K6-skriptin keskeisille tuloksille:
+# - 1 taulukko
+# - 4 kuvaa
 
 manifest_rows <- data.frame(
-  script      = script_label,
-  type        = c("table"),
-  filename    = c(paste0(script_label, "_main_results.csv")),
-  description = c("K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)"),
+  script   = script_label,
+  type     = c(
+    "table",
+    "plot", "plot", "plot", "plot",
+    "plot", "plot", "plot"
+  ),
+  filename = c(
+    basename(main_results_path),
+    "K6_FOF_PainVAS0_G2_emmeans.png",
+    "K6_FOF_SRH3_emmeans.png",
+    "K6_FOF_SRM3_emmeans.png",
+    "K6_FOF_contrasts_forest.png",
+    "K6_PainVAS0_G2_main_effect.png",
+    "K6_PainVAS0_continuous_effect.png",
+    "K6_Age_effect.png"
+  ),
+  description = c(
+    "K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)",
+    "Emmeans-interaktiokuva: FOF x kipuluokka (PainVAS0_G2)",
+    "Emmeans-interaktiokuva: FOF x self-rated health (SRH_3class)",
+    "Emmeans-interaktiokuva: FOF x self-rated mobility (SRM_3class)",
+    "FOF vs non_FOF erot Delta_Composite_Z:ssa moderaattoreiden ja luokkien mukaan (forest-kuva)",
+    "Päävaikutuskuva: kipuluokat (PainVAS0_G2 low vs high) ja säädetty 12 kk muutos komposiitissa",
+    "Päävaikutuskuva: jatkuvan kivun (PainVAS0) yhteys säädettyyn 12 kk muutokseen komposiitissa",
+    "Päävaikutuskuva: iän (Age) yhteys säädettyyn 12 kk muutokseen komposiitissa"
+  ),
   stringsAsFactors = FALSE
 )
 
-# Kirjoita tai paivita manifest.csv samaan logiikkaan kuin K5-skriptissa
+
+# Kirjoita tai paivita manifest.csv
 if (!file.exists(manifest_path)) {
   utils::write.table(
     manifest_rows,
@@ -872,3 +1102,4 @@ if (!file.exists(manifest_path)) {
 }
 
 message("Manifest paivitetty: ", manifest_path)
+

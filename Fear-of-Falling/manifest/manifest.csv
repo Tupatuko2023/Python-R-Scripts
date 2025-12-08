@@ -86,3 +86,18 @@ K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in compos
 K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.
 K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.
 K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.
+"K6_main","table","K6_main_main_results.csv","K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)"
+"K6_main","table","K6_main_main_results.csv","K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)"
+"K6_main","plot","K6_FOF_PainVAS0_G2_emmeans.png","Emmeans-interaktiokuva: FOF x kipuluokka (PainVAS0_G2)"
+"K6_main","plot","K6_FOF_SRH3_emmeans.png","Emmeans-interaktiokuva: FOF x self-rated health (SRH_3class)"
+"K6_main","plot","K6_FOF_SRM3_emmeans.png","Emmeans-interaktiokuva: FOF x self-rated mobility (SRM_3class)"
+"K6_main","plot","K6_FOF_contrasts_forest.png","FOF vs non_FOF erot Delta_Composite_Z:ssa moderaattoreiden ja luokkien mukaan (forest-kuva)"
+"K6_main","plot","K6_PainVAS0_G2_main_effect.png","Päävaikutuskuva: kipuluokat (PainVAS0_G2 low vs high) ja säädetty 12 kk muutos komposiitissa"
+"K6_main","plot","K6_PainVAS0_continuous_effect.png","Päävaikutuskuva: jatkuvan kivun (PainVAS0) yhteys säädettyyn 12 kk muutokseen komposiitissa"
+"K6_main","plot","K6_Age_effect.png","Päävaikutuskuva: iän (Age) yhteys säädettyyn 12 kk muutokseen komposiitissa"
+"K8_ANCOVA","table","K8_ANCOVA/interaction_summary_FOFxG_ANCOVA.csv","FOF × moderaattori (Balance_problem / Walk500m_G_final) — interaktiotermit, Type III ANOVA"
+"K8_ANCOVA","table","K8_ANCOVA/contrast_summary_withinG_nonFOF_minus_FOF.csv","NonFOF – FOF LS-mean -kontrastit kunkin moderaattoritason sisällä (emmeans)"
+"K8_ANCOVA","table","K8_ANCOVA/cell_counts_FOF_by_Walk500m_3class.csv","FOF × Walk500m alkuperäinen 3-luokkainen ristiintaulukko"
+"K8_ANCOVA","table","K8_ANCOVA/cell_counts_FOF_by_Walk500m_G_final.csv","FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko"
+"K8_ANCOVA","plot","K8_ANCOVA/plot_DeltaComposite_Balance.png","Adjusted ΔComposite – EMM-kuva moderaattorina balance problems"
+"K8_ANCOVA","plot","K8_ANCOVA/plot_DeltaComposite_Walk500.png","Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability"
