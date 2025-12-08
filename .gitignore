@@ -41,3 +41,10 @@ node_modules/
 .gitattributes.bak.*
 !.markdownlint*out/
 out/
+
+# Fear-of-Falling local workspaces and outputs
+Fear-of-Falling/*.RData
+Fear-of-Falling/*.Rdata
+Fear-of-Falling/R-scripts/**/*.RData
+Fear-of-Falling/R-scripts/**/*.Rdata
+Fear-of-Falling/R-scripts/**/outputs/
