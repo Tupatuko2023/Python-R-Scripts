@@ -18,3 +18,71 @@
 "K5.1_MA","plot","K5.1_MA/spline_interaction_plot.png","Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty)"
 "K5.1_MA","text","K5.1_MA/results_addendum_finnish.txt","Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle"
 "K6_main","table","K6_main_main_results.csv","K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)"
+"K7","plot","K7/K7_box_DeltaComposite_FOF.png","Change in composite physical performance by FOF status (boxplot)"
+"K7","plot","K7/K7_MWS_composite_interaction.png","Change in composite PBT by FOF and baseline MWS subgroup (interaction plot)"
+"K7","plot","K7/K7_SLS_composite_interaction.png","Change in composite PBT by FOF and baseline SLS subgroup (interaction plot)"
+"K7","plot","K7/K7_FTSST_composite_interaction.png","Change in composite PBT by FOF and baseline FTSST subgroup (interaction plot)"
+"K7","plot","K7/K7_MWS_composite_forest.png","Composite PBT: non-FOF minus FOF by baseline MWS subgroup (forest plot)"
+"K7","plot","K7/K7_SLS_comp_forest.png","Composite PBT: non-FOF minus FOF by baseline SLS subgroup (forest plot)"
+"K7","plot","K7/K7_FTSST_comp_forest.png","Composite PBT: non-FOF minus FOF by baseline FTSST subgroup (forest plot)"
+"K7","plot","K7/K7_MWS_own_forest.png","Maximal walking speed: non-FOF minus FOF by baseline MWS subgroup (forest plot)"
+"K7","plot","K7/K7_SLS_own_forest.png","Single-leg stance: non-FOF minus FOF by baseline SLS subgroup (forest plot)"
+"K7","plot","K7/K7_FTSST_own_forest.png","Five-times sit-to-stand: non-FOF minus FOF by baseline FTSST subgroup (forest plot)"
+K7,table,K7/K7_delta_desc_by_FOF.csv,"Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD)."
+K7,table,K7/K7_cell_means_DeltaComposite_by_subgroup.csv,"Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST)."
+K7,table,K7/K7_ANCOVA_type3_all_models.csv,"Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes)."
+K7,table,K7/K7_contrasts_CompositePBT_by_subgroups.csv,"Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_contrasts_test_specific_by_subgroups.csv,"Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_sample_sizes_by_subgroup.csv,"Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup)."
+K7,plot,K7/K7_box_DeltaComposite_FOF.png,Boxplot of change in composite physical performance (DeltaComposite) by FOF status.
+K7,plot,K7/K7_MWS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).
+K7,plot,K7/K7_SLS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_composite_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.
+"K7","plot","K7/K7_box_DeltaComposite_FOF.png","Change in composite physical performance by FOF status (boxplot)"
+"K7","plot","K7/K7_MWS_composite_interaction.png","Change in composite PBT by FOF and baseline MWS subgroup (interaction plot)"
+"K7","plot","K7/K7_SLS_composite_interaction.png","Change in composite PBT by FOF and baseline SLS subgroup (interaction plot)"
+"K7","plot","K7/K7_FTSST_composite_interaction.png","Change in composite PBT by FOF and baseline FTSST subgroup (interaction plot)"
+"K7","plot","K7/K7_MWS_composite_forest.png","Composite PBT: non-FOF minus FOF by baseline MWS subgroup (forest plot)"
+"K7","plot","K7/K7_SLS_comp_forest.png","Composite PBT: non-FOF minus FOF by baseline SLS subgroup (forest plot)"
+"K7","plot","K7/K7_FTSST_comp_forest.png","Composite PBT: non-FOF minus FOF by baseline FTSST subgroup (forest plot)"
+"K7","plot","K7/K7_MWS_own_forest.png","Maximal walking speed: non-FOF minus FOF by baseline MWS subgroup (forest plot)"
+"K7","plot","K7/K7_SLS_own_forest.png","Single-leg stance: non-FOF minus FOF by baseline SLS subgroup (forest plot)"
+"K7","plot","K7/K7_FTSST_own_forest.png","Five-times sit-to-stand: non-FOF minus FOF by baseline FTSST subgroup (forest plot)"
+K7,table,K7/K7_delta_desc_by_FOF.csv,"Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD)."
+K7,table,K7/K7_cell_means_DeltaComposite_by_subgroup.csv,"Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST)."
+K7,table,K7/K7_ANCOVA_type3_all_models.csv,"Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes)."
+K7,table,K7/K7_contrasts_CompositePBT_by_subgroups.csv,"Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_contrasts_test_specific_by_subgroups.csv,"Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_sample_sizes_by_subgroup.csv,"Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup)."
+K7,plot,K7/K7_box_DeltaComposite_FOF.png,Boxplot of change in composite physical performance (DeltaComposite) by FOF status.
+K7,plot,K7/K7_MWS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).
+K7,plot,K7/K7_SLS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_composite_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.
+K7,table,K7/K7_delta_desc_by_FOF.csv,"Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD)."
+K7,table,K7/K7_cell_means_DeltaComposite_by_subgroup.csv,"Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST)."
+K7,table,K7/K7_ANCOVA_type3_all_models.csv,"Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes)."
+K7,table,K7/K7_contrasts_CompositePBT_by_subgroups.csv,"Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_contrasts_test_specific_by_subgroups.csv,"Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_sample_sizes_by_subgroup.csv,"Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup)."
+K7,plot,K7/K7_box_DeltaComposite_FOF.png,Boxplot of change in composite physical performance (DeltaComposite) by FOF status.
+K7,plot,K7/K7_MWS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).
+K7,plot,K7/K7_SLS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_composite_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.

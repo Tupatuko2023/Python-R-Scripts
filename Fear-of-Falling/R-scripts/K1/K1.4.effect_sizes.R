@@ -1,7 +1,7 @@
 # KAAOS 1.4: R Script for Computing and Labeling Effect Sizes (Cohen's d) in KaatumisenPelko Data
 # [K1.4.effect_sizes.R]
 
-# "Calculates Cohen’s d effect sizes for baseline, within-group, between-group, 
+# "Calculates Cohen’s d effect sizes for baseline, within-group, between-group,
 #  and follow-up comparisons, with effect size labeling."
 
 # This script computes effect sizes (Cohen's d) for various comparisons:
@@ -16,17 +16,20 @@
 ########################################################################################################
 
 # 1: Function for calculating Cohen's d for independent groups
-# 2: Function for calculating Cohen's d for paired tests (effect size for change)
+# 2: Function for calculating Cohen's d for paired tests
+#    (effect size for change)
 # 3: Compute Baseline Cohen's d (Between-Group Baseline Comparison)
-# 4: Compute Cohen's d for Change within Groups (Within-Group Follow_up Comparison)
+# 4: Compute Cohen's d for Change within Groups (Within-Group Follow_up
+#    Comparison)
 # 5: Compute Cohen's d for Between-Group Change Comparison
 # 6: Compute Cohen's d for Follow_up (Between-Group Follow_up Comparison)
 # 7: Function for Labeling Effect Size
 # 8: Label Effect Size for Follow_up Cohen's d
-# 9: End of Script Message
+# 9: Print or Inspect Key Objects
+# 10: End of Script Message
 
-########################################################################################################
-########################################################################################################
+################################################################################
+################################################################################
 
 # 1: Function for calculating Cohen's d for independent groups
 cohen_d_independent <- function(mean1, sd1, n1, mean2, sd2, n2) {
@@ -37,7 +40,7 @@ cohen_d_independent <- function(mean1, sd1, n1, mean2, sd2, n2) {
   return(d)
 }
 
-# 2: Function for calculating Cohen's d for paired tests (effect size for change)
+# 2: Function for calculating Cohen's d for paired tests (effect size for delta)
 cohen_d_paired <- function(C_Mean, C_SD) {
   # Cohen's d = (mean change) / (SD of change)
   d <- C_Mean / C_SD
@@ -120,4 +123,3 @@ print(follow_up_effect)
 
 # 10: End of Script Message
 cat("Effect size calculations completed.\n")
-
