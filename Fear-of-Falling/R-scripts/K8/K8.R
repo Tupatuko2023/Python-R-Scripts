@@ -30,6 +30,35 @@ set.seed(1234)  # for any later random procedures (e.g. bootstraps if added)
 
 ########################################################################################################
 ########################################################################################################
+
+## 1b. Output-kansio K8:n alle -------------------------------------------
+
+# Varmista, että here-paketti on ladattu:
+# library(here)
+
+# .../Fear-of-Falling/R-scripts/K8/outputs
+outputs_dir <- here::here("R-scripts", "K8", "outputs")
+if (!dir.exists(outputs_dir)) {
+  dir.create(outputs_dir, recursive = TRUE)
+}
+
+# --- Skriptin tunniste ---
+script_label <- "K8_ANCOVA"   # tai esim. "K8" – voit muuttaa halutuksi
+
+# --- Erillinen manifest-kansio projektissa: ./manifest -------------------
+# Projektin juurikansio oletetaan olevan .../Fear-of-Falling
+manifest_dir <- here::here("manifest")
+if (!dir.exists(manifest_dir)) {
+  dir.create(manifest_dir, recursive = TRUE)
+}
+manifest_path <- file.path(manifest_dir, "manifest.csv")
+
+# --- Skriptikohtainen alikansio tuloksille -------------------------------
+script_dir <- file.path(outputs_dir, script_label)
+if (!dir.exists(script_dir)) {
+  dir.create(script_dir, recursive = TRUE)
+}
+
 # 2: Data Preparation
 
 ## Basic existence check
