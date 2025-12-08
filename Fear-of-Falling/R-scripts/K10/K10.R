@@ -1,12 +1,11 @@
 
-# KAAOS 10: Visualization of Longitudinal Analysis Results for Fear of Falling & Functional Performance
-# [K10.R]
+# KAAOS 10: Visualization of Longitudinal Analysis Results for Fear of Falling &
+# Functional Performance [K10.R]
 
 # Paketit
 library(dplyr)
 library(ggplot2)
-library(emmeans)   # LS-keskiarvot / emmeans :contentReference[oaicite:0]{index=0}
-
+library(emmeans)
 
 # --- K10: oma outputs-kansio ---
 script_label <- "K10"
@@ -24,9 +23,10 @@ if (!dir.exists(script_dir)) {
   dir.create(script_dir, recursive = TRUE)
 }
 
-# ========================================================================================================
-#  Kuvioiden piirto: Muutos fyysisessä toimintakyvyssä (Delta Composite Z) FOF-ryhmittäin
-# ========================================================================================================
+# ==============================================================================
+#  Kuvioiden piirto: Muutos fyysisessä toimintakyvyssä (Delta Composite Z)
+#  FOF-ryhmittäin
+# ==============================================================================
 ## 1.1 Emmeans FOF-ryhmille
 ## - cComposite_Z0 = 0 (keskitetty lähtötaso)
 ## - muut kovariaatit (Age, BMI) oletuksena keskiarvassa,
@@ -157,13 +157,13 @@ ggplot2::ggsave(
 #     .groups = "drop"
 #   ) %>%
 #   rename(Follow_up_d = d)
-# 
+#
 # # 7: Combine All Effect Size Results
 # effect_sizes <- baseline_effect %>%
 #   left_join(change_effect, by = c("Test", "kaatumisenpelkoOn")) %>%
 #   left_join(change_between_effect, by = "Test") %>%
 #   left_join(follow_up_effect, by = "Test")
-# 
+#
 # # 8: Label Effect Sizes
 # effect_sizes <- effect_sizes %>%
 #   rowwise() %>%
@@ -180,7 +180,7 @@ ggplot2::ggsave(
 #     Change_d, Change_d_label,
 #     Change_d_between, Change_d_between_label,
 #     Follow_up_d, Follow_up_d_label
-#   )     
+#   )
 
 message("Kuvat tallentuvat kansioon: ", normalizePath(script_dir))
 # End of K10.R

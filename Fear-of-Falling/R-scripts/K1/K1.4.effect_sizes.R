@@ -54,10 +54,10 @@ baseline_effect <- df_wide %>%
     d = cohen_d_independent(
       mean(Baseline[kaatumisenpelkoOn == 0], na.rm = TRUE),
       sd(Baseline[kaatumisenpelkoOn == 0], na.rm = TRUE),
-      sum(!is.na(Baseline[kaatumisenpelkoOn == 0])),
+      sum(!is.na(Baseline) & kaatumisenpelkoOn == 0),
       mean(Baseline[kaatumisenpelkoOn == 1], na.rm = TRUE),
       sd(Baseline[kaatumisenpelkoOn == 1], na.rm = TRUE),
-      sum(!is.na(Baseline[kaatumisenpelkoOn == 1]))
+      sum(!is.na(Baseline) & kaatumisenpelkoOn == 1)
     ),
     .groups = "drop"
   ) %>%
@@ -75,10 +75,10 @@ change_between_effect <- df_wide %>%
     d = cohen_d_independent(
       mean(Follow_up[kaatumisenpelkoOn == 0] - Baseline[kaatumisenpelkoOn == 0], na.rm = TRUE),
       sd(Follow_up[kaatumisenpelkoOn == 0] - Baseline[kaatumisenpelkoOn == 0], na.rm = TRUE),
-      sum(!is.na(Follow_up[kaatumisenpelkoOn == 0]) & !is.na(Baseline[kaatumisenpelkoOn == 0])),
+      sum(!is.na(Follow_up) & !is.na(Baseline) & kaatumisenpelkoOn == 0),
       mean(Follow_up[kaatumisenpelkoOn == 1] - Baseline[kaatumisenpelkoOn == 1], na.rm = TRUE),
       sd(Follow_up[kaatumisenpelkoOn == 1] - Baseline[kaatumisenpelkoOn == 1], na.rm = TRUE),
-      sum(!is.na(Follow_up[kaatumisenpelkoOn == 1]) & !is.na(Baseline[kaatumisenpelkoOn == 1]))
+      sum(!is.na(Follow_up) & !is.na(Baseline) & kaatumisenpelkoOn == 1)
     ),
     .groups = "drop"
   ) %>%
@@ -91,10 +91,10 @@ follow_up_effect <- df_wide %>%
     Follow_up_d = cohen_d_independent(
       mean(Follow_up[kaatumisenpelkoOn == 0], na.rm = TRUE),
       sd(Follow_up[kaatumisenpelkoOn == 0], na.rm = TRUE),
-      sum(!is.na(Follow_up[kaatumisenpelkoOn == 0])),
+      sum(!is.na(Follow_up) & kaatumisenpelkoOn == 0),
       mean(Follow_up[kaatumisenpelkoOn == 1], na.rm = TRUE),
       sd(Follow_up[kaatumisenpelkoOn == 1], na.rm = TRUE),
-      sum(!is.na(Follow_up[kaatumisenpelkoOn == 1]))
+      sum(!is.na(Follow_up) & kaatumisenpelkoOn == 1)
     ),
     .groups = "drop"
   )
