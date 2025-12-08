@@ -15,8 +15,24 @@ config/
 .Rproj.user/
 
 # R output
+*.Rhistory
+*.RDataTmp
+*.Ruserdata
+*.RuserdataTmp
+*.Rprofile
+*.Rbuildignore
+*.Rmd~
+*.Rnw~
+*.Rcache/
+*.Rplots.pdf
+*.Rcheck/
+*.Rbuild/
+*.Rinstignore
+*.Rlogs
 *.Rout
+*.RData
 *.Rdata
+.RData
 .Rdata
 
 # Python
