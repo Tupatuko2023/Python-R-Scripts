@@ -17,3 +17,4 @@
 "K5.1_MA","plot","K5.1_MA/jn_slope_plot_centered.png","JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty)"
 "K5.1_MA","plot","K5.1_MA/spline_interaction_plot.png","Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty)"
 "K5.1_MA","text","K5.1_MA/results_addendum_finnish.txt","Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle"
+"K6_main","table","K6_main_main_results.csv","K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)"
