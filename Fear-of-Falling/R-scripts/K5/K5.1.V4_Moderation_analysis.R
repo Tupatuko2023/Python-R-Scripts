@@ -94,16 +94,6 @@ if (!dir.exists(manifest_dir)) {
 }
 manifest_path <- file.path(manifest_dir, "manifest.csv")
 
-# --- Skriptikohtainen alikansio tuloksille ---
-
-# Skriptin tunniste ---
-script_label <- "K5.1_MA"  # MA = Moderation Analysis
-
-script_dir <- file.path(outputs_dir, script_label)
-if (!dir.exists(script_dir)) {
-  dir.create(script_dir, recursive = TRUE)
-}
-
 # Helper to save CSV + simple HTML table --------------------------------------
 
 save_table_csv_html <- function(df, basename) {
@@ -863,50 +853,50 @@ writeLines(results_text, con = file.path(outputs_dir, "results_addendum_finnish.
 
 # 13. Manifestin päivitys: keskeiset taulukot ja kuvat -----------------------
 
-tidy_jn_c_path <- file.path(script_dir, "K5.1_MA_tidy_jn_c.csv")
+tidy_jn_c_path <- file.path(outputs_dir, "K5.1_MA_tidy_jn_c.csv")
 if (!file.exists(tidy_jn_c_path)) {
   utils::write.csv(tidy_jn_c, tidy_jn_c_path, row.names = FALSE)
 }
 
-jn_summary_all_path <- file.path(script_dir, "K5.1_MA_jn_summary_all.csv")
+jn_summary_all_path <- file.path(outputs_dir, "K5.1_MA_jn_summary_all.csv")
 if (!file.exists(jn_summary_all_path)) {
   utils::write.csv(jn_summary_all, jn_summary_all_path, row.names = FALSE)
 }
 
-mult_df_path <- file.path(script_dir, "K5.1_MA_multiplicity_pvalues.csv")
+mult_df_path <- file.path(outputs_dir, "K5.1_MA_multiplicity_pvalues.csv")
 if (!file.exists(mult_df_path)) {
   utils::write.csv(mult_df, mult_df_path, row.names = FALSE)
 }
 
-eta_sq_df_path <- file.path(script_dir, "K5.1_MA_eta_sq_partial.csv")
+eta_sq_df_path <- file.path(outputs_dir, "K5.1_MA_eta_sq_partial.csv")
 if (!file.exists(eta_sq_df_path)) {
   utils::write.csv(eta_sq_df, eta_sq_df_path, row.names = FALSE)
 }
 
-g_df_path <- file.path(script_dir, "K5.1_MA_effectsize_hedges_g.csv")
+g_df_path <- file.path(outputs_dir, "K5.1_MA_effectsize_hedges_g.csv")
 if (!file.exists(g_df_path)) {
   utils::write.csv(g_df, g_df_path, row.names = FALSE)
 }
 
-r2_df_path <- file.path(script_dir, "K5.1_MA_model_r2.csv")
+r2_df_path <- file.path(outputs_dir, "K5.1_MA_model_r2.csv")
 if (!file.exists(r2_df_path)) {
   utils::write.csv(r2_df, r2_df_path, row.names = FALSE)
 }
 
 jn_slope_centered_src <- file.path(outputs_dir, "jn_slope_plot_centered.png")
-jn_slope_centered_dst <- file.path(script_dir, "jn_slope_plot_centered.png")
+jn_slope_centered_dst <- file.path(outputs_dir, "jn_slope_plot_centered.png")
 if (file.exists(jn_slope_centered_src)) {
   file.copy(jn_slope_centered_src, jn_slope_centered_dst, overwrite = TRUE)
 }
 
 spline_plot_src <- file.path(outputs_dir, "spline_interaction_plot.png")
-spline_plot_dst <- file.path(script_dir, "spline_interaction_plot.png")
+spline_plot_dst <- file.path(outputs_dir, "spline_interaction_plot.png")
 if (file.exists(spline_plot_src)) {
   file.copy(spline_plot_src, spline_plot_dst, overwrite = TRUE)
 }
 
 results_addendum_src <- file.path(outputs_dir, "results_addendum_finnish.txt")
-results_addendum_dst <- file.path(script_dir, "results_addendum_finnish.txt")
+results_addendum_dst <- file.path(outputs_dir, "results_addendum_finnish.txt")
 if (file.exists(results_addendum_src)) {
   file.copy(results_addendum_src, results_addendum_dst, overwrite = TRUE)
 }
