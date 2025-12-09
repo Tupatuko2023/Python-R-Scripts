@@ -280,7 +280,7 @@ baseline_by_FOF_Age_women
 # 7. Solukokojen tarkistus ja AgeClass_final---------------------
 # ---------------------------------------------------------------
 
-# 5. CELL SIZES -------------------------------------------------
+# 7. CELL SIZES -------------------------------------------------
 
 cell_counts_women <- data_women %>%
   count(FOF_status, AgeClass) %>%
@@ -485,5 +485,205 @@ contrast_composite_df
 
 # Solukokotaulukko
 cell_counts_women_final
+
+# ---------------------------------------------------------------
+# 12. Lisäkuviot: BMI- ja MOI-indeksin efektit (naiset)
+# ---------------------------------------------------------------
+
+dat_w <- analysis_women_composite  # lyhyempi alias
+
+# 12.1 BMI-efekti DeltaCompositeen ---------------------------------------
+
+bmi_seq <- seq(
+  from = min(dat_w$BMI, na.rm = TRUE),
+  to   = max(dat_w$BMI, na.rm = TRUE),
+  length.out = 100
+)
+
+newdat_bmi <- data.frame(
+  FOF_status          = factor("nonFOF", levels = levels(dat_w$FOF_status)),
+  AgeClass_final      = factor("65_84", levels = levels(dat_w$AgeClass_final), ordered = TRUE),
+  ToimintaKykySummary0 = mean(dat_w$ToimintaKykySummary0, na.rm = TRUE),
+  BMI                 = bmi_seq,
+  MOIindeksiindeksi   = mean(dat_w$MOIindeksiindeksi, na.rm = TRUE),
+  diabetes            = 0  # oletus: ei diabetesta (voit muuttaa 1:ksi)
+)
+
+pred_bmi <- predict(
+  model_composite_women,
+  newdata = newdat_bmi,
+  se.fit  = TRUE
+)
+
+newdat_bmi$fit      <- pred_bmi$fit
+newdat_bmi$lower_CL <- pred_bmi$fit - 1.96 * pred_bmi$se.fit
+newdat_bmi$upper_CL <- pred_bmi$fit + 1.96 * pred_bmi$se.fit
+
+p_bmi <- ggplot(
+  newdat_bmi,
+  aes(x = BMI, y = fit)
+) +
+  geom_ribbon(
+    aes(ymin = lower_CL, ymax = upper_CL),
+    alpha = 0.2
+  ) +
+  geom_line(size = 1) +
+  labs(
+    title = "Säädetty 12 kk muutos komposiitissa BMI:n funktiona (naiset)",
+    x     = "BMI (kg/m²)",
+    y     = "Säädetty keskiarvo DeltaComposite",
+    caption = "FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa"
+  ) +
+  theme_minimal()
+
+p_bmi
+
+ggsave(
+  filename = file.path(outputs_dir, "K9_BMI_effect_women.png"),
+  plot     = p_bmi,
+  width    = 7,
+  height   = 5,
+  dpi      = 300
+)
+
+
+# 12.2 MOI-indeksin efekti DeltaCompositeen -------------------------------
+
+moi_seq <- seq(
+  from = min(dat_w$MOIindeksiindeksi, na.rm = TRUE),
+  to   = max(dat_w$MOIindeksiindeksi, na.rm = TRUE),
+  length.out = 100
+)
+
+newdat_moi <- data.frame(
+  FOF_status          = factor("nonFOF", levels = levels(dat_w$FOF_status)),
+  AgeClass_final      = factor("65_84", levels = levels(dat_w$AgeClass_final), ordered = TRUE),
+  ToimintaKykySummary0 = mean(dat_w$ToimintaKykySummary0, na.rm = TRUE),
+  BMI                 = mean(dat_w$BMI, na.rm = TRUE),
+  MOIindeksiindeksi   = moi_seq,
+  diabetes            = 0
+)
+
+pred_moi <- predict(
+  model_composite_women,
+  newdata = newdat_moi,
+  se.fit  = TRUE
+)
+
+newdat_moi$fit      <- pred_moi$fit
+newdat_moi$lower_CL <- pred_moi$fit - 1.96 * pred_moi$se.fit
+newdat_moi$upper_CL <- pred_moi$fit + 1.96 * pred_moi$se.fit
+
+p_moi <- ggplot(
+  newdat_moi,
+  aes(x = MOIindeksiindeksi, y = fit)
+) +
+  geom_ribbon(
+    aes(ymin = lower_CL, ymax = upper_CL),
+    alpha = 0.2
+  ) +
+  geom_line(size = 1) +
+  labs(
+    title = "Säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (naiset)",
+    x     = "MOI-indeksi (0–22 pistettä)",
+    y     = "Säädetty keskiarvo DeltaComposite",
+    caption = "FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa"
+  ) +
+  theme_minimal()
+
+p_moi
+
+ggsave(
+  filename = file.path(outputs_dir, "K9_MOI_effect_women.png"),
+  plot     = p_moi,
+  width    = 7,
+  height   = 5,
+  dpi      = 300
+)
+
+# ---------------------------------------------------------------
+# 13. Manifestin päivitys: K9:n keskeiset tulokset
+# ---------------------------------------------------------------
+
+# 13.1 Tallennetaan tärkeimmät taulukot outputs-kansioon --------
+
+# Muutetaan Type III -Anova data.frame-muotoon
+anova_composite_women_df <- as.data.frame(anova_composite_women)
+anova_composite_women_df$term <- rownames(anova_composite_women_df)
+anova_composite_women_df <- dplyr::relocate(anova_composite_women_df, term)
+
+# Tiedostopolut taulukoille
+tbl_tidy_path          <- file.path(outputs_dir, "K9_tidy_composite_women.csv")
+tbl_anova_path         <- file.path(outputs_dir, "K9_anova_composite_women_typeIII.csv")
+tbl_contrast_path      <- file.path(outputs_dir, "K9_contrast_composite_women.csv")
+tbl_desc_women_path    <- file.path(outputs_dir, "K9_desc_deltas_women.csv")
+tbl_baseline_women_path<- file.path(outputs_dir, "K9_baseline_by_FOF_Age_women.csv")
+tbl_cells_women_path   <- file.path(outputs_dir, "K9_cell_counts_women_final.csv")
+tbl_desc_men_path      <- file.path(outputs_dir, "K9_desc_deltas_men.csv")
+tbl_cells_men_path     <- file.path(outputs_dir, "K9_cell_counts_men.csv")
+
+# Kirjoitetaan CSV:t
+readr::write_csv(tidy_composite_women,        tbl_tidy_path)
+readr::write_csv(anova_composite_women_df,   tbl_anova_path)
+readr::write_csv(contrast_composite_df,      tbl_contrast_path)
+readr::write_csv(desc_deltas_women,          tbl_desc_women_path)
+readr::write_csv(baseline_by_FOF_Age_women,  tbl_baseline_women_path)
+readr::write_csv(cell_counts_women_final,    tbl_cells_women_path)
+readr::write_csv(desc_deltas_men,            tbl_desc_men_path)
+readr::write_csv(cell_counts_men,            tbl_cells_men_path)
+
+# 13.2 Rivit manifestiin ----------------------------------------
+
+# Relatiiviset polut manifestia varten (script_label/K9/ + tiedostonimi)
+manifest_filenames <- c(
+  file.path(script_label, basename(tbl_tidy_path)),
+  file.path(script_label, basename(tbl_anova_path)),
+  file.path(script_label, basename(tbl_contrast_path)),
+  file.path(script_label, basename(tbl_desc_women_path)),
+  file.path(script_label, basename(tbl_baseline_women_path)),
+  file.path(script_label, basename(tbl_cells_women_path)),
+  file.path(script_label, basename(tbl_desc_men_path)),
+  file.path(script_label, basename(tbl_cells_men_path)),
+  file.path(script_label, "DeltaComposite_FOF_Age_women.png"),
+  file.path(script_label, "K9_BMI_effect_women.png"),
+  file.path(script_label, "K9_MOI_effect_women.png")
+)
+
+manifest_types <- c(
+  rep("table", 8),  # 8 taulukkoa
+  rep("plot",  3)   # 3 kuvaa
+)
+
+manifest_descriptions <- c(
+  "Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",
+  "Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",
+  "Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.",
+  "Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.",
+  "Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.",
+  "Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.",
+  "Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.",
+  "Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.",
+  "Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",
+  "Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",
+  "Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa)."
+)
+
+manifest_rows <- tibble::tibble(
+  script     = script_label,
+  type       = manifest_types,
+  filename   = manifest_filenames,
+  description= manifest_descriptions
+)
+
+# 13.3 Kirjoitetaan/appendataan manifest.csv --------------------
+
+if (!file.exists(manifest_path)) {
+  # luodaan uusi manifest-tiedosto otsikkorivillä
+  readr::write_csv(manifest_rows, manifest_path)
+} else {
+  # lisätään rivit olemassa olevan manifestin perään
+  readr::write_csv(manifest_rows, manifest_path, append = TRUE)
+}
+
 
 # End of K9.R
