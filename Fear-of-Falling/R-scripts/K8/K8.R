@@ -18,13 +18,18 @@
 # FOF-status ei näytä vaikuttavan fyysisen suorituskyvyn muutoksiin seurannassa,
 # eikä tämä vaikutus riipu lähtötason tasapainosta tai 500 m kävelykyvystä.
 
+# Fyysisen toimintakyvyn lähtötason ongelmat, erityisesti kävelykyvyn
+# rajoitteet, ennustavat selvästi heikompaa 12 kk muutosta. FOF-statuksella ei
+# ole itsenäistä vaikutusta, eikä se moderoi näitä tuloksia.
 
 ########################################################################################################
 
 #  Sequence list
 ########################################################################################################
 
-# 1: Load required packages
+# ---------------------------------------------------------------
+# 1: Load required packages -------------------------------------
+# ---------------------------------------------------------------
 
 library(dplyr)
 library(tidyr)
@@ -42,8 +47,9 @@ set.seed(1234)  # for any later random procedures (e.g. bootstraps if added)
 
 ########################################################################################################
 ########################################################################################################
-
-# 2: Output-kansio K8:n alle -------------------------------------------
+# ---------------------------------------------------------------
+# 2: Output-kansio K8:n alle ------------------------------------
+# ---------------------------------------------------------------
 
 ## .../Fear-of-Falling/R-scripts/K8/outputs
 outputs_dir <- here::here("R-scripts", "K8", "outputs")
@@ -62,9 +68,9 @@ if (!dir.exists(manifest_dir)) {
 }
 manifest_path <- file.path(manifest_dir, "manifest.csv")
 
-
-
-# 3: Data Preparation
+# ---------------------------------------------------------------
+# 3: Data Preparation ------------------------------------ ------
+# ---------------------------------------------------------------
 
 ## 3.1: Basic existence check
 exists("analysis_data")
@@ -573,22 +579,347 @@ ggsave(
 ################################################################################
 ################################################################################
 
+# ---------------------------------------------------------------
+# A. BALANCE_PROBLEM — päävaikutus
+# ---------------------------------------------------------------
+
+## Poimitaan malli (DeltaComposite ~ FOF_status * Balance_problem + covariates)
+mod_bal <- ancova_results[["DeltaComposite__Balance_problem"]]$model
+
+## Emmeans moderaattorille (vakioidaan FOF_status, kuten K6)
+emm_bal_main <- emmeans::emmeans(mod_bal, specs = "Balance_problem")
+
+emm_bal_df <- summary(emm_bal_main, infer = TRUE) %>% as.data.frame()
+
+p_bal_main <- ggplot(
+  emm_bal_df,
+  aes(x = Balance_problem, y = emmean)
+) +
+  geom_point(size = 2) +
+  geom_errorbar(
+    aes(ymin = lower.CL, ymax = upper.CL),
+    width = 0.1
+  ) +
+  labs(
+    title = "Säädetty muutos komposiitissa tasapaino-ongelman mukaan",
+    x     = "Tasapaino-ongelma (0 = ei, 1 = kyllä)",
+    y     = "Säädetty ΔComposite (positiivinen = paraneminen)"
+  ) +
+  theme_minimal()
+
+ggsave(
+  filename = file.path(outputs_dir, "K8_Balance_problem_main_effect.png"),
+  plot = p_bal_main,
+  width = 7, height = 5, dpi = 300
+)
+
+# ---------------------------------------------------------------
+# B. WALK500m_G_final — päävaikutus
+# ---------------------------------------------------------------
+
+mod_walk <- ancova_results[["DeltaComposite__Walk500m_G_final"]]$model
+
+emm_walk_main <- emmeans::emmeans(mod_walk, specs = "Walk500m_G_final")
+
+emm_walk_df <- summary(emm_walk_main, infer = TRUE) %>% as.data.frame()
+
+p_walk_main <- ggplot(
+  emm_walk_df,
+  aes(x = Walk500m_G_final, y = emmean)
+) +
+  geom_point(size = 2) +
+  geom_errorbar(
+    aes(ymin = lower.CL, ymax = upper.CL),
+    width = 0.1
+  ) +
+  labs(
+    title = "Säädetty muutos komposiitissa 500 m kävelykyvyn mukaan",
+    x     = "Kävelykyky 500 m",
+    y     = "Säädetty ΔComposite"
+  ) +
+  theme_minimal()
+
+ggsave(
+  filename = file.path(outputs_dir, "K8_Walk500m_main_effect.png"),
+  plot = p_walk_main,
+  width = 7, height = 5, dpi = 300
+)
+
+# ---------------------------------------------------------------
+# C. Effektikoot (partial η²) 
+# ---------------------------------------------------------------
+
+get_eta2 <- function(fit_obj, term){
+  a <- car::Anova(fit_obj, type = "III")
+  ss_term  <- a[term, "Sum Sq"]
+  ss_error <- a["Residuals", "Sum Sq"]
+  ss_term / (ss_term + ss_error)
+}
+
+eta2_balance <- get_eta2(mod_bal, "Balance_problem")
+eta2_walk    <- get_eta2(mod_walk, "Walk500m_G_final")
+
+eta2_balance
+eta2_walk
+
+# ---------------------------------------------------------------
+# D. Yhdistetty nelikenttä: Balance_problem & Walk500m_G_final
+#    (DeltaComposite, FOF_status, 2x2-facet)
+# ---------------------------------------------------------------
+
+# 1) Haetaan emmeans-taulukot kahdelle moderaattorille
+emm_bal_all  <- ancova_results[["DeltaComposite__Balance_problem"]]$emm %>%
+  as.data.frame()
+
+emm_walk_all <- ancova_results[["DeltaComposite__Walk500m_G_final"]]$emm %>%
+  as.data.frame()
+
+# 2) Vakioidaan sarakenimet (emmean / lower.CL / upper.CL)
+standardize_emm_cols <- function(df) {
+  if ("estimate"  %in% names(df) && !("emmean"   %in% names(df))) {
+    df <- df %>% dplyr::rename(emmean = estimate)
+  }
+  if ("conf.low"  %in% names(df) && !("lower.CL" %in% names(df))) {
+    df <- df %>% dplyr::rename(lower.CL = conf.low)
+  }
+  if ("conf.high" %in% names(df) && !("upper.CL" %in% names(df))) {
+    df <- df %>% dplyr::rename(upper.CL = conf.high)
+  }
+  df
+}
+
+emm_bal_all  <- standardize_emm_cols(emm_bal_all)
+emm_walk_all <- standardize_emm_cols(emm_walk_all)
+
+# 3) Lisätään siistit tasonimet ja moderaattorimuuttuja
+emm_bal_all <- emm_bal_all %>%
+  mutate(
+    moderator = "Balance problems",
+    level = factor(
+      Balance_problem,
+      levels = c("balance_problem", "no_balance_problem"),
+      labels = c("Balance problem", "No balance problem")
+    )
+  )
+
+emm_walk_all <- emm_walk_all %>%
+  mutate(
+    moderator = "500 m walking ability",
+    level = factor(
+      Walk500m_G_final,
+      levels = c("difficulty_or_unable", "no_difficulty"),
+      labels = c("Difficulty / unable", "No difficulty")
+    )
+  )
+
+# 4) Yhdistetään data yhdeksi emmeans-data.frameksi
+emm_all <- bind_rows(emm_bal_all, emm_walk_all)
+
+# 5) Nelikenttäkuva: rivit = moderaattori, sarakkeet = FOF-status
+p_fourpanel <- ggplot(
+  emm_all,
+  aes(x = level, y = emmean)
+) +
+  geom_point(size = 2) +
+  geom_errorbar(
+    aes(ymin = lower.CL, ymax = upper.CL),
+    width = 0.1
+  ) +
+  facet_grid(moderator ~ FOF_status) +
+  labs(
+    title = "Säädetty muutos komposiitissa\nFOF-statuksen, tasapaino-ongelman ja 500 m kävelykyvyn mukaan",
+    x     = NULL,
+    y     = "Säädetty ΔComposite (positiivinen = paraneminen)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 25, hjust = 1)
+  )
+
+# Tulostus ja tallennus
+print(p_fourpanel)
+
+ggsave(
+  filename = file.path(outputs_dir, "K8_Balance_Walk_fourpanel.png"),
+  plot     = p_fourpanel,
+  width    = 8,
+  height   = 6,
+  dpi      = 300
+)
+
+################################################################################
+################################################################################
+################################################################################
+## 12. Validointianalyysit:
+##     subjektiiviset tasapaino- ja kävelyvaikeudet vs. objektiiviset mittarit
+################################################################################
+
+# ---------------------------------------------------------------
+# 12.1 Spearman-korrelaatiot: tasapaino & 500 m -vaikeus
+#      vs. SLS0/SLS2 ja MWS0/MWS2
+# ---------------------------------------------------------------
+
+get_spearman_row <- function(x, y, label_x, label_y) {
+  # Poistetaan NA:t
+  cc <- complete.cases(x, y)
+  x2 <- x[cc]
+  y2 <- y[cc]
+  
+  ct <- suppressWarnings(
+    cor.test(x2, y2, method = "spearman", exact = FALSE)
+  )
+  
+  dplyr::tibble(
+    var_x   = label_x,
+    var_y   = label_y,
+    n       = length(x2),
+    rho     = unname(ct$estimate),
+    p_value = ct$p.value
+  )
+}
+
+spearman_tbl <- dplyr::bind_rows(
+  get_spearman_row(
+    analysis_data$tasapainovaikeus,
+    analysis_data$SLS0,
+    "tasapainovaikeus",
+    "SLS0 (yksi jalka seisten, baseline)"
+  ),
+  get_spearman_row(
+    analysis_data$tasapainovaikeus,
+    analysis_data$SLS2,
+    "tasapainovaikeus",
+    "SLS2 (yksi jalka seisten, 12 kk)"
+  ),
+  get_spearman_row(
+    analysis_data$Vaikeus500m,
+    analysis_data$kavelynopeus_m_sek0,
+    "Vaikeus500m",
+    "MWS0 (maksimikävelynopeus, baseline)"
+  ),
+  get_spearman_row(
+    analysis_data$Vaikeus500m,
+    analysis_data$kavelynopeus_m_sek2,
+    "Vaikeus500m",
+    "MWS2 (maksimikävelynopeus, 12 kk)"
+  )
+)
+
+# Tallennus
+readr::write_csv(
+  spearman_tbl,
+  file.path(outputs_dir, "K8_Spearman_subjective_vs_objective.csv")
+)
+
+# Halutessa tulostus konsoliin
+print(spearman_tbl)
+
+
+# ---------------------------------------------------------------
+# 12.2 Ryhmäkeskiarvataulukot (kuinka eri luokat eroavat tasossa)
+# ---------------------------------------------------------------
+
+tab_balance_SLS <- analysis_data %>%
+  dplyr::group_by(Balance_problem) %>%
+  dplyr::summarise(
+    n         = dplyr::n(),
+    mean_SLS0 = mean(SLS0, na.rm = TRUE),
+    sd_SLS0   = sd(SLS0, na.rm = TRUE),
+    mean_SLS2 = mean(SLS2, na.rm = TRUE),
+    sd_SLS2   = sd(SLS2, na.rm = TRUE),
+    .groups   = "drop"
+  )
+
+readr::write_csv(
+  tab_balance_SLS,
+  file.path(outputs_dir, "K8_groupmeans_Balance_vs_SLS.csv")
+)
+
+tab_walk_MWS <- analysis_data %>%
+  dplyr::group_by(Walk500m_G_final) %>%
+  dplyr::summarise(
+    n         = dplyr::n(),
+    mean_MWS0 = mean(MWS0, na.rm = TRUE),
+    sd_MWS0   = sd(MWS0, na.rm = TRUE),
+    mean_MWS2 = mean(MWS2, na.rm = TRUE),
+    sd_MWS2   = sd(MWS2, na.rm = TRUE),
+    .groups   = "drop"
+  )
+
+readr::write_csv(
+  tab_walk_MWS,
+  file.path(outputs_dir, "K8_groupmeans_Walk500m_vs_MWS.csv")
+)
+
+
+# ---------------------------------------------------------------
+# 12.3 Validointiboksiplotit (baseline)
+# ---------------------------------------------------------------
+
+p_SLS0_box <- ggplot(analysis_data,
+                     aes(x = Balance_problem, y = SLS0)) +
+  geom_boxplot() +
+  labs(
+    title = "Tasapaino-ongelma ja yksijalkaseisonnan kesto (baseline)",
+    x     = "Tasapaino-ongelma (no_balance_problem vs balance_problem)",
+    y     = "SLS0 (s, yksi jalka seisten)"
+  ) +
+  theme_minimal()
+
+ggsave(
+  filename = file.path(outputs_dir, "K8_Balance_vs_SLS0_boxplot.png"),
+  plot     = p_SLS0_box,
+  width    = 7,
+  height   = 5,
+  dpi      = 300
+)
+
+p_MWS0_box <- ggplot(analysis_data,
+                     aes(x = Walk500m_G_final, y = MWS0)) +
+  geom_boxplot() +
+  labs(
+    title = "500 m kävelyvaikeus ja maksimikävelynopeus (baseline)",
+    x     = "Kävelykyky 500 m (no_difficulty vs difficulty_or_unable)",
+    y     = "MWS0 (m/s, maksimi)"
+  ) +
+  theme_minimal()
+
+ggsave(
+  filename = file.path(outputs_dir, "K8_Walk500m_vs_MWS0_boxplot.png"),
+  plot     = p_MWS0_box,
+  width    = 7,
+  height   = 5,
+  dpi      = 300
+)
+
+
 ################################################################################
 ## 13. Manifestin päivitys: keskeiset taulukot ja kuvat
 ################################################################################
-
-# --- K8-skriptin tuottamat päätiedostot --------------------------------------
 
 manifest_rows <- dplyr::tibble(
   script = script_label,
   
   type = c(
+    # --- Aiemmat K8-päätulokset ---
     "table",  # interaction_summary_FOFxG_ANCOVA.csv
     "table",  # contrast_summary_withinG_nonFOF_minus_FOF.csv
     "table",  # cell_counts_FOF_by_Walk500m_3class.csv
     "table",  # cell_counts_FOF_by_Walk500m_G_final.csv
     "plot",   # plot_DeltaComposite_Balance.png
-    "plot"    # plot_DeltaComposite_Walk500.png
+    "plot",   # plot_DeltaComposite_Walk500.png
+    
+    # --- Uudet päävaikutus- ja nelikenttäkuvat ---
+    "plot",   # K8_Balance_problem_main_effect.png
+    "plot",   # K8_Walk500m_main_effect.png
+    "plot",   # K8_Balance_Walk_fourpanel.png
+    
+    # --- Validointianalyysit ---
+    "table",  # K8_Spearman_subjective_vs_objective.csv
+    "table",  # K8_groupmeans_Balance_vs_SLS.csv
+    "table",  # K8_groupmeans_Walk500m_vs_MWS.csv
+    "plot",   # K8_Balance_vs_SLS0_boxplot.png
+    "plot"    # K8_Walk500m_vs_MWS0_boxplot.png
   ),
   
   filename = c(
@@ -597,7 +928,17 @@ manifest_rows <- dplyr::tibble(
     file.path(script_label, "cell_counts_FOF_by_Walk500m_3class.csv"),
     file.path(script_label, "cell_counts_FOF_by_Walk500m_G_final.csv"),
     file.path(script_label, "plot_DeltaComposite_Balance.png"),
-    file.path(script_label, "plot_DeltaComposite_Walk500.png")
+    file.path(script_label, "plot_DeltaComposite_Walk500.png"),
+    
+    file.path(script_label, "K8_Balance_problem_main_effect.png"),
+    file.path(script_label, "K8_Walk500m_main_effect.png"),
+    file.path(script_label, "K8_Balance_Walk_fourpanel.png"),
+    
+    file.path(script_label, "K8_Spearman_subjective_vs_objective.csv"),
+    file.path(script_label, "K8_groupmeans_Balance_vs_SLS.csv"),
+    file.path(script_label, "K8_groupmeans_Walk500m_vs_MWS.csv"),
+    file.path(script_label, "K8_Balance_vs_SLS0_boxplot.png"),
+    file.path(script_label, "K8_Walk500m_vs_MWS0_boxplot.png")
   ),
   
   description = c(
@@ -606,18 +947,25 @@ manifest_rows <- dplyr::tibble(
     "FOF × Walk500m alkuperäinen 3-luokkainen ristiintaulukko",
     "FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko",
     "Adjusted ΔComposite – EMM-kuva moderaattorina balance problems",
-    "Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability"
+    "Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability",
+    
+    "Päävaikutuskuva: tasapaino-ongelma ja säädetty ΔComposite",
+    "Päävaikutuskuva: 500 m kävelykyky ja säädetty ΔComposite",
+    "Nelikenttäkuva: ΔComposite FOF-statuksen, tasapaino-ongelman ja 500 m kävelykyvyn mukaan",
+    
+    "Spearman-korrelaatiot: subjektiiviset tasapaino-/kävelyvaikeudet vs. objektiiviset mittarit (SLS, MWS)",
+    "Ryhmätasoiset SLS0/SLS2-keskiarvot tasapaino-ongelman (Balance_problem) mukaan",
+    "Ryhmätasoiset MWS0/MWS2-keskiarvot 500 m kävelykyvyn (Walk500m_G_final) mukaan",
+    "Validointiboksikuva: tasapaino-ongelma vs. SLS0 (baseline)",
+    "Validointiboksikuva: 500 m kävelyvaikeus vs. MWS0 (baseline)"
   )
 )
 
-# --- Kirjoitetaan tai appendataan manifest.csv --------------------------------
-
+# --- Kirjoitetaan tai appendataan manifest.csv kuten aiemmin ---
 if (!file.exists(manifest_path)) {
-  # Luodaan uusi manifest tiedosto
   write.csv(manifest_rows, manifest_path, row.names = FALSE)
   message("Manifest created: ", manifest_path)
 } else {
-  # Lisätään perään ilman otsikkoriviä
   write.table(
     manifest_rows,
     manifest_path,
