@@ -1,5 +1,11 @@
 #!/usr/bin/env Rscript
 
+# - K5.1_MA: Moderation Analysis Script for Fear of Falling & Functional
+#   Performance 
+# [K5.1.V4_Moderation_analysis.R] 
+# - "Performs an advanced moderation
+#   analysis with multiple enhancements and diagnostics."
+
 ###############################################################################
 # Moderation workflow - upgraded version
 #
@@ -966,3 +972,5 @@ session_info <- sessionInfo()
 capture.output(session_info, file = file.path(outputs_dir, "session_info.txt"))
 
 message("Analysis complete. Outputs written to ./outputs.")
+
+# End of K5.1.V4_Moderation_analysis.R

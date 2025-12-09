@@ -101,3 +101,84 @@ K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-ti
 "K8_ANCOVA","table","K8_ANCOVA/cell_counts_FOF_by_Walk500m_G_final.csv","FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko"
 "K8_ANCOVA","plot","K8_ANCOVA/plot_DeltaComposite_Balance.png","Adjusted ΔComposite – EMM-kuva moderaattorina balance problems"
 "K8_ANCOVA","plot","K8_ANCOVA/plot_DeltaComposite_Walk500.png","Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability"
+"K8_ANCOVA","table","K8_ANCOVA/interaction_summary_FOFxG_ANCOVA.csv","FOF × moderaattori (Balance_problem / Walk500m_G_final) — interaktiotermit, Type III ANOVA"
+"K8_ANCOVA","table","K8_ANCOVA/contrast_summary_withinG_nonFOF_minus_FOF.csv","NonFOF – FOF LS-mean -kontrastit kunkin moderaattoritason sisällä (emmeans)"
+"K8_ANCOVA","table","K8_ANCOVA/cell_counts_FOF_by_Walk500m_3class.csv","FOF × Walk500m alkuperäinen 3-luokkainen ristiintaulukko"
+"K8_ANCOVA","table","K8_ANCOVA/cell_counts_FOF_by_Walk500m_G_final.csv","FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko"
+"K8_ANCOVA","plot","K8_ANCOVA/plot_DeltaComposite_Balance.png","Adjusted ΔComposite – EMM-kuva moderaattorina balance problems"
+"K8_ANCOVA","plot","K8_ANCOVA/plot_DeltaComposite_Walk500.png","Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability"
+"K8_ANCOVA","plot","K8_ANCOVA/K8_Balance_problem_main_effect.png","Päävaikutuskuva: tasapaino-ongelma ja säädetty ΔComposite"
+"K8_ANCOVA","plot","K8_ANCOVA/K8_Walk500m_main_effect.png","Päävaikutuskuva: 500 m kävelykyky ja säädetty ΔComposite"
+"K8_ANCOVA","plot","K8_ANCOVA/K8_Balance_Walk_fourpanel.png","Nelikenttäkuva: ΔComposite FOF-statuksen, tasapaino-ongelman ja 500 m kävelykyvyn mukaan"
+"K8_ANCOVA","table","K8_ANCOVA/K8_Spearman_subjective_vs_objective.csv","Spearman-korrelaatiot: subjektiiviset tasapaino-/kävelyvaikeudet vs. objektiiviset mittarit (SLS, MWS)"
+"K8_ANCOVA","table","K8_ANCOVA/K8_groupmeans_Balance_vs_SLS.csv","Ryhmätasoiset SLS0/SLS2-keskiarvot tasapaino-ongelman (Balance_problem) mukaan"
+"K8_ANCOVA","table","K8_ANCOVA/K8_groupmeans_Walk500m_vs_MWS.csv","Ryhmätasoiset MWS0/MWS2-keskiarvot 500 m kävelykyvyn (Walk500m_G_final) mukaan"
+"K8_ANCOVA","plot","K8_ANCOVA/K8_Balance_vs_SLS0_boxplot.png","Validointiboksikuva: tasapaino-ongelma vs. SLS0 (baseline)"
+"K8_ANCOVA","plot","K8_ANCOVA/K8_Walk500m_vs_MWS0_boxplot.png","Validointiboksikuva: 500 m kävelyvaikeus vs. MWS0 (baseline)"
+K7,table,K7/K7_delta_desc_by_FOF.csv,"Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD)."
+K7,table,K7/K7_cell_means_DeltaComposite_by_subgroup.csv,"Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST)."
+K7,table,K7/K7_ANCOVA_type3_all_models.csv,"Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes)."
+K7,table,K7/K7_contrasts_CompositePBT_by_subgroups.csv,"Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_contrasts_test_specific_by_subgroups.csv,"Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_sample_sizes_by_subgroup.csv,"Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup)."
+K7,plot,K7/K7_box_DeltaComposite_FOF.png,Boxplot of change in composite physical performance (DeltaComposite) by FOF status.
+K7,plot,K7/K7_MWS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).
+K7,plot,K7/K7_SLS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_composite_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.
+K7,table,K7/K7_delta_desc_by_FOF.csv,"Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD)."
+K7,table,K7/K7_cell_means_DeltaComposite_by_subgroup.csv,"Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST)."
+K7,table,K7/K7_ANCOVA_type3_all_models.csv,"Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes)."
+K7,table,K7/K7_contrasts_CompositePBT_by_subgroups.csv,"Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_contrasts_test_specific_by_subgroups.csv,"Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs."
+K7,table,K7/K7_sample_sizes_by_subgroup.csv,"Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup)."
+K7,plot,K7/K7_box_DeltaComposite_FOF.png,Boxplot of change in composite physical performance (DeltaComposite) by FOF status.
+K7,plot,K7/K7_MWS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).
+K7,plot,K7/K7_SLS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_composite_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.
+K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.
+K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.
+K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.
+"K5.1_MA","table","K5.1_MA/K5.1_MA_tidy_jn_c.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit)"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_jn_summary_all.csv","Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori)"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_eta_sq_partial.csv","Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_effectsize_hedges_g.csv","Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_multiplicity_pvalues.csv","P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_model_r2.csv","Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa"
+"K5.1_MA","plot","K5.1_MA/jn_slope_plot_centered.png","JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty)"
+"K5.1_MA","plot","K5.1_MA/spline_interaction_plot.png","Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty)"
+"K5.1_MA","text","K5.1_MA/results_addendum_finnish.txt","Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_tidy_jn_c.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit)"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_jn_summary_all.csv","Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori)"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_eta_sq_partial.csv","Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_effectsize_hedges_g.csv","Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_multiplicity_pvalues.csv","P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_model_r2.csv","Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa"
+"K5.1_MA","plot","K5.1_MA/jn_slope_plot_centered.png","JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty)"
+"K5.1_MA","plot","K5.1_MA/spline_interaction_plot.png","Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty)"
+"K5.1_MA","text","K5.1_MA/results_addendum_finnish.txt","Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_tidy_jn_c.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit)"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_jn_summary_all.csv","Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori)"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_eta_sq_partial.csv","Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_effectsize_hedges_g.csv","Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_multiplicity_pvalues.csv","P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_model_r2.csv","Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa"
+"K5.1_MA","plot","K5.1_MA/jn_slope_plot_centered.png","JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty)"
+"K5.1_MA","plot","K5.1_MA/spline_interaction_plot.png","Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty)"
+"K5.1_MA","text","K5.1_MA/results_addendum_finnish.txt","Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle"
+"K6_main","table","K6_main_main_results.csv","K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)"
+"K6_main","plot","K6_FOF_PainVAS0_G2_emmeans.png","Emmeans-interaktiokuva: FOF x kipuluokka (PainVAS0_G2)"
+"K6_main","plot","K6_FOF_SRH3_emmeans.png","Emmeans-interaktiokuva: FOF x self-rated health (SRH_3class)"
+"K6_main","plot","K6_FOF_SRM3_emmeans.png","Emmeans-interaktiokuva: FOF x self-rated mobility (SRM_3class)"
+"K6_main","plot","K6_FOF_contrasts_forest.png","FOF vs non_FOF erot Delta_Composite_Z:ssa moderaattoreiden ja luokkien mukaan (forest-kuva)"
+"K6_main","plot","K6_PainVAS0_G2_main_effect.png","Päävaikutuskuva: kipuluokat (PainVAS0_G2 low vs high) ja säädetty 12 kk muutos komposiitissa"
+"K6_main","plot","K6_PainVAS0_continuous_effect.png","Päävaikutuskuva: jatkuvan kivun (PainVAS0) yhteys säädettyyn 12 kk muutokseen komposiitissa"
+"K6_main","plot","K6_Age_effect.png","Päävaikutuskuva: iän (Age) yhteys säädettyyn 12 kk muutokseen komposiitissa"

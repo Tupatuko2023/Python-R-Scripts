@@ -34,7 +34,6 @@ file_path <- here::here("data", "external", "KaatumisenPelko.csv")
 raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
 
 # Working copy so the original stays untouched
-## Tarkista, että analysis_data on olemassa -------------------------------
 if (!exists("raw_data")) {
   stop("Object 'raw_data' not found. Please load your data as raw_data first.")
 }
