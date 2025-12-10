@@ -18,6 +18,9 @@ library(mice)
 library(knitr)
 library(MASS)
 library(scales)
+library(nlme)
+library(quantreg)
+library(tibble)
 
 set.seed(20251124)  # jos myöhemmin käytetään satunnaisuutta (esim. bootstrap)
 
@@ -684,6 +687,341 @@ ggsave(
   plot     = plot_responderosuus_per_annot,
   width = 7, height = 5, dpi = 300
 )
+
+# ---------------------------------------------------------------
+# 10 Distributionaalinen näkökulma: hajonta ja kvanttilinjaregressio
+# ---------------------------------------------------------------
+
+## 10.1: R-mallipohjat (gls + rq)
+
+## Heteroskedastisuus FOF-ryhmien välillä (gls)
+
+### 10.1.A Perus-lm ja diagnostinen testi:
+
+mod_lm <- lm(
+  Delta_Composite_Z ~ FOF_status + Composite_Z0 + age + BMI + sex,
+  data = dat_fof
+)
+
+# Esim. Breusch–Pagan heteroskedastisuustesti
+library(lmtest)
+bptest(mod_lm, ~ FOF_status, data = dat_fof)
+
+
+### 10.1.B gls-mallit: oletus vs FOF-spesifinen varianssi
+
+# Homoskedastinen malli
+mod_gls_hom <- gls(
+  Delta_Composite_Z ~ FOF_status+ Composite_Z0 + age + BMI + sex,
+  data = dat_fof
+)
+
+# Eri varianssit FOF-ryhmille
+mod_gls_het <- gls(
+  Delta_Composite_Z ~ FOF_status+ Composite_Z0 + age + BMI + sex,
+  data = dat_fof,
+  weights = varIdent(form = ~ 1 | FOF_status)
+)
+
+anova(mod_gls_hom, mod_gls_het)  # testaa, parantaako heteroskedastisuus sovitusta
+
+# Arvioidut residuaalivarianssit ryhmittäin
+summary(mod_gls_het)$modelStruct$varStruct
+
+## 10.2: Kvanttilinjaregressio (rq, quantreg)
+
+taus <- c(0.25, 0.5, 0.75)
+
+mod_rq_25 <- rq(
+  Delta_Composite_Z ~ FOF_status + Composite_Z0 + age + BMI + sex,
+  tau  = 0.25,
+  data = dat_fof
+)
+
+mod_rq_50 <- rq(
+  Delta_Composite_Z ~ FOF_status + Composite_Z0 + age + BMI + sex,
+  tau  = 0.50,
+  data = dat_fof
+)
+
+mod_rq_75 <- rq(
+  Delta_Composite_Z ~ FOF_status + Composite_Z0 + age + BMI + sex,
+  tau  = 0.75,
+  data = dat_fof
+)
+
+summary(mod_rq_25)
+summary(mod_rq_50)
+summary(mod_rq_75)
+
+# Esim. kerää FOF_status-kertoimet taulukkoon
+get_fof <- function(fit) {
+  cf <- summary(fit)$coefficients
+  
+  est <- cf["FOF_status1", "coefficients"]
+  lo  <- cf["FOF_status1", "lower bd"]
+  hi  <- cf["FOF_status1", "upper bd"]
+  
+  # approksimoidaan keskihajonta 95 % CI:stä
+  se  <- (hi - lo) / (2 * 1.96)
+  
+  data.frame(
+    tau      = fit$tau,
+    beta_FOF = est,
+    se_FOF   = se,
+    ci_low   = lo,
+    ci_high  = hi
+  )
+}
+
+
+fof_rq <- rbind(
+  get_fof(mod_rq_25),
+  get_fof(mod_rq_50),
+  get_fof(mod_rq_75)
+)
+
+fof_rq
+
+# ---------------------------------------------------------------
+# 11. Taulukoiden tallennus CSV + HTML --------------------------
+# ---------------------------------------------------------------
+
+# 11.1 Kuvailevat frekvenssit ja ikäkvartiilit ------------------
+
+freq_FOF_status <- analysis_data_rec %>% 
+  count(FOF_status)
+
+freq_AgeClass <- analysis_data_rec %>% 
+  count(AgeClass)
+
+cross_FOF_AgeClass <- analysis_data_rec %>% 
+  count(FOF_status, AgeClass)
+
+age_quartile_summary <- dat_fof %>% 
+  group_by(age_quartile) %>% 
+  summarise(
+    n          = n(),
+    min_age    = min(age),
+    median_age = median(age),
+    max_age    = max(age),
+    .groups    = "drop"
+  )
+
+save_table_csv_html(freq_FOF_status,      "freq_FOF_status")
+save_table_csv_html(freq_AgeClass,        "freq_AgeClass")
+save_table_csv_html(cross_FOF_AgeClass,   "cross_FOF_AgeClass")
+save_table_csv_html(age_quartile_summary, "age_quartile_summary")
+
+
+# 11.2 Lineaariset mallit: base & extended ----------------------
+
+# tab_base ja tab_ext on jo luotu aiemmin, varmistetaan:
+tab_base <- broom::tidy(mod_base, conf.int = TRUE)
+tab_ext  <- broom::tidy(mod_ext,  conf.int = TRUE)
+
+save_table_csv_html(tab_base, "lm_base_model_full")
+save_table_csv_html(tab_ext,  "lm_extended_model_full")
+
+# FOF-kertoimen kooste base vs extended
+fof_base <- subset(tab_base, term == "FOF_status1")
+fof_ext  <- subset(tab_ext,  term == "FOF_status1")
+
+fof_comp <- fof_base %>% 
+  mutate(model = "base") %>% 
+  bind_rows(fof_ext %>% mutate(model = "extended")) %>% 
+  dplyr::select(model, term, estimate, conf.low, conf.high, p.value)
+
+save_table_csv_html(fof_comp, "FOF_effect_base_vs_extended")
+
+# Standardoidut kertoimet extended-mallille
+tab_std_ext <- standardize_parameters(mod_ext) %>% 
+  as.data.frame()
+
+save_table_csv_html(tab_std_ext, "lm_extended_standardized")
+
+
+# 11.3 MICE – imputoidut mallit (osa jo tallennettu) ------------
+
+# Huom: seuraavat oli jo tehty aiemmin skriptissä:
+# md_pattern_df
+# tab_base_imp
+# tab_ext_imp
+# save_table_csv_html(..., "missing_data_pattern")
+# save_table_csv_html(..., "mice_pooled_model_base")
+# save_table_csv_html(..., "mice_pooled_model_extended")
+
+# Kooste FOF-kertoimista imputoiduissa malleissa
+fof_base_imp <- tab_base_imp %>% dplyr::filter(term == "FOF_status1")
+fof_ext_imp  <- tab_ext_imp  %>% dplyr::filter(term == "FOF_status1")
+
+fof_imp_comp <- bind_rows(
+  fof_base_imp %>% mutate(model = "base_imputed"),
+  fof_ext_imp  %>% mutate(model = "extended_imputed")
+)
+
+save_table_csv_html(fof_imp_comp, "FOF_effect_MICE_base_vs_extended")
+
+
+# 11.4 Responder- ja ordinaalimallit -----------------------------
+
+# Logistinen responder-malli (OR:t)
+tab_resp <- tidy(mod_resp, conf.int = TRUE, exponentiate = TRUE)
+save_table_csv_html(tab_resp, "logit_responder_model")
+
+# Ordinaalimalli: OR + 95 % CI
+ctab <- coef(summary(mod_ord))
+ctab_df <- as.data.frame(ctab) %>%
+  tibble::rownames_to_column("term")
+
+OR_df <- as.data.frame(OR) %>%
+  tibble::rownames_to_column("term")
+
+save_table_csv_html(ctab_df, "ordinal_polr_coefficients")
+save_table_csv_html(OR_df,   "ordinal_polr_OR")
+
+# Responder-osuudet ikäkvartiileittain ja FOF-statuksen mukaan
+save_table_csv_html(responder_by_age_fof, "responder_by_age_and_FOF")
+
+# Kvartiilikohtaiset p-arvot (Chi-square/Fisher)
+save_table_csv_html(p_by_quartile, "responder_pvalues_by_age_quartile")
+
+# emmeans: FOF vs nonFOF per ikäkvartiili (OR + CI)
+contr_fof_by_age_df <- as.data.frame(
+  summary(contr_fof_by_age, infer = TRUE, type = "response")
+)
+
+save_table_csv_html(contr_fof_by_age_df, "emmeans_FOF_vs_nonFOF_by_agequartile")
+
+
+# 11.5 Hajonta & kvanttilinjaregressio ---------------------------
+
+# Breusch–Pagan heteroskedastisuustesti
+bp <- bptest(mod_lm, ~ FOF_status, data = dat_fof)
+
+bp_df <- data.frame(
+  statistic = unname(bp$statistic),
+  df        = unname(bp$parameter),
+  p_value   = bp$p.value
+)
+
+save_table_csv_html(bp_df, "BP_test_FOF_status")
+
+# GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen var
+gls_comp <- as.data.frame(anova(mod_gls_hom, mod_gls_het))
+save_table_csv_html(gls_comp, "gls_hom_vs_het_comparison")
+
+# Residuaalivarianssien suhteet FOF-ryhmittäin
+var_struct <- summary(mod_gls_het)$modelStruct$varStruct
+
+# Poimitaan varIdent-kertoimet (ei sisällä baseline-ryhmää, jonka kerroin = 1)
+var_coefs <- coef(var_struct, unconstrained = FALSE)
+
+# FOF-status -faktorin tasot datasta
+var_levels <- levels(dat_fof$FOF_status)
+
+# Baseline-ryhmä on se taso, jota ei ole var_coefs-nimissä
+baseline_level <- setdiff(var_levels, names(var_coefs))
+
+# Jos jostain syystä baselinea ei löydy, oletetaan ensimmäinen taso
+if (length(baseline_level) == 0) {
+  baseline_level <- var_levels[1]
+}
+
+# Kootaan täysi suhteiden vektori: baseline = 1, muut = coef(var_struct)
+ratios_full <- c(1, as.numeric(var_coefs))
+names(ratios_full) <- c(baseline_level, names(var_coefs))
+
+var_struct_df <- data.frame(
+  group = names(ratios_full),
+  ratio = as.numeric(ratios_full)
+)
+
+save_table_csv_html(var_struct_df, "gls_residual_variance_by_FOF")
+
+# Kvanttilinjaregressio: FOF-kerroin eri kvantiileissa
+save_table_csv_html(fof_rq, "quantile_reg_FOF_effect")
+
+
+# ---------------------------------------------------------------
+# 13. Manifestin päivitys: K11:n keskeiset taulukot ja kuvat ----
+# ---------------------------------------------------------------
+
+
+
+manifest_rows <- tibble::tibble(
+  script     = script_label,
+  type       = c(
+    # taulukot
+    rep("table", 21),
+    # kuvat
+    rep("plot",  2)
+  ),
+  filename   = c(
+    # --- TABLES (CSV) ---
+    file.path(script_label, "freq_FOF_status.csv"),
+    file.path(script_label, "freq_AgeClass.csv"),
+    file.path(script_label, "cross_FOF_AgeClass.csv"),
+    file.path(script_label, "age_quartile_summary.csv"),
+    file.path(script_label, "lm_base_model_full.csv"),
+    file.path(script_label, "lm_extended_model_full.csv"),
+    file.path(script_label, "lm_extended_standardized.csv"),
+    file.path(script_label, "FOF_effect_base_vs_extended.csv"),
+    file.path(script_label, "missing_data_pattern.csv"),
+    file.path(script_label, "mice_pooled_model_base.csv"),
+    file.path(script_label, "mice_pooled_model_extended.csv"),
+    file.path(script_label, "FOF_effect_MICE_base_vs_extended.csv"),
+    file.path(script_label, "logit_responder_model.csv"),
+    file.path(script_label, "ordinal_polr_OR.csv"),
+    file.path(script_label, "responder_by_age_and_FOF.csv"),
+    file.path(script_label, "responder_pvalues_by_age_quartile.csv"),
+    file.path(script_label, "emmeans_FOF_vs_nonFOF_by_agequartile.csv"),
+    file.path(script_label, "BP_test_FOF_status.csv"),
+    file.path(script_label, "gls_hom_vs_het_comparison.csv"),
+    file.path(script_label, "gls_residual_variance_by_FOF.csv"),
+    file.path(script_label, "quantile_reg_FOF_effect.csv"),
+    # --- PLOTS (PNG) ---
+    file.path(script_label, "Responder_osuus.png"),
+    file.path(script_label, "Responder_osuus_percent_annot.png")
+  ),
+  description = c(
+    # --- TABLE DESCRIPTIONS ---
+    "FOF-statusin frekvenssijakauma (nonFOF vs FOF).",
+    "Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma.",
+    "Ristiintaulukko FOF-status x AgeClass.",
+    "Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan.",
+    "Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.",
+    "Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala).",
+    "Laajennetun lineaarisen mallin standardoidut kertoimet.",
+    "FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.",
+    "MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.",
+    "MICE: poolattu perusmalli (lm) imputoidussa datassa.",
+    "MICE: poolattu laajennettu malli (lm) imputoidussa datassa.",
+    "MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).",
+    "Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.",
+    "Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).",
+    "Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.",
+    "Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square).",
+    "FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).",
+    "Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).",
+    "GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.",
+    "GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.",
+    "Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75).",
+    # --- PLOT DESCRIPTIONS ---
+    "Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.",
+    "Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina."
+  )
+)
+
+# Kirjoitetaan / päivitetään projektin yhteinen manifest.csv
+if (!file.exists(manifest_path)) {
+  # Luodaan uusi manifest otsikkoriveineen
+  readr::write_csv(manifest_rows, manifest_path)
+} else {
+  # Lisätään rivit olemassa olevan manifestin jatkoksi
+  readr::write_csv(manifest_rows, manifest_path,
+                   append = TRUE, col_names = FALSE)
+}
 
 
 # End of K11.R

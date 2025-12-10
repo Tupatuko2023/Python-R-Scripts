@@ -233,3 +233,49 @@ K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final
 K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA)."
 K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa)."
 K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa)."
+K11,table,K11/freq_FOF_status.csv,FOF-statusin frekvenssijakauma (nonFOF vs FOF).
+K11,table,K11/freq_AgeClass.csv,"Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma."
+K11,table,K11/cross_FOF_AgeClass.csv,Ristiintaulukko FOF-status x AgeClass.
+K11,table,K11/age_quartile_summary.csv,"Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan."
+K11,table,K11/lm_base_model_full.csv,Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.
+K11,table,K11/lm_extended_model_full.csv,"Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala)."
+K11,table,K11/lm_extended_standardized.csv,Laajennetun lineaarisen mallin standardoidut kertoimet.
+K11,table,K11/FOF_effect_base_vs_extended.csv,FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.
+K11,table,K11/missing_data_pattern.csv,MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.
+K11,table,K11/mice_pooled_model_base.csv,MICE: poolattu perusmalli (lm) imputoidussa datassa.
+K11,table,K11/mice_pooled_model_extended.csv,MICE: poolattu laajennettu malli (lm) imputoidussa datassa.
+K11,table,K11/FOF_effect_MICE_base_vs_extended.csv,MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).
+K11,table,K11/logit_responder_model.csv,Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.
+K11,table,K11/ordinal_polr_OR.csv,Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).
+K11,table,K11/responder_by_age_and_FOF.csv,Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.
+K11,table,K11/responder_pvalues_by_age_quartile.csv,"Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square)."
+K11,table,K11/emmeans_FOF_vs_nonFOF_by_agequartile.csv,FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).
+K11,table,K11/BP_test_FOF_status.csv,Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).
+K11,table,K11/gls_hom_vs_het_comparison.csv,GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.
+K11,table,K11/gls_residual_variance_by_FOF.csv,GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.
+K11,table,K11/quantile_reg_FOF_effect.csv,"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75)."
+K11,plot,K11/Responder_osuus.png,Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.
+K11,plot,K11/Responder_osuus_percent_annot.png,"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina."
+K11,table,K11/freq_FOF_status.csv,FOF-statusin frekvenssijakauma (nonFOF vs FOF).
+K11,table,K11/freq_AgeClass.csv,"Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma."
+K11,table,K11/cross_FOF_AgeClass.csv,Ristiintaulukko FOF-status x AgeClass.
+K11,table,K11/age_quartile_summary.csv,"Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan."
+K11,table,K11/lm_base_model_full.csv,Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.
+K11,table,K11/lm_extended_model_full.csv,"Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala)."
+K11,table,K11/lm_extended_standardized.csv,Laajennetun lineaarisen mallin standardoidut kertoimet.
+K11,table,K11/FOF_effect_base_vs_extended.csv,FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.
+K11,table,K11/missing_data_pattern.csv,MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.
+K11,table,K11/mice_pooled_model_base.csv,MICE: poolattu perusmalli (lm) imputoidussa datassa.
+K11,table,K11/mice_pooled_model_extended.csv,MICE: poolattu laajennettu malli (lm) imputoidussa datassa.
+K11,table,K11/FOF_effect_MICE_base_vs_extended.csv,MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).
+K11,table,K11/logit_responder_model.csv,Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.
+K11,table,K11/ordinal_polr_OR.csv,Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).
+K11,table,K11/responder_by_age_and_FOF.csv,Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.
+K11,table,K11/responder_pvalues_by_age_quartile.csv,"Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square)."
+K11,table,K11/emmeans_FOF_vs_nonFOF_by_agequartile.csv,FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).
+K11,table,K11/BP_test_FOF_status.csv,Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).
+K11,table,K11/gls_hom_vs_het_comparison.csv,GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.
+K11,table,K11/gls_residual_variance_by_FOF.csv,GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.
+K11,table,K11/quantile_reg_FOF_effect.csv,"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75)."
+K11,plot,K11/Responder_osuus.png,Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.
+K11,plot,K11/Responder_osuus_percent_annot.png,"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina."
