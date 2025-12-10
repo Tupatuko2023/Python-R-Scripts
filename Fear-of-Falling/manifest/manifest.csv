@@ -213,3 +213,23 @@ K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final
 K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA)."
 K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa)."
 K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa)."
+"K5.1_MA","table","K5.1_MA/K5.1_MA_tidy_jn_c.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit)"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_jn_summary_all.csv","Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori)"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_eta_sq_partial.csv","Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_effectsize_hedges_g.csv","Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_multiplicity_pvalues.csv","P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille"
+"K5.1_MA","table","K5.1_MA/K5.1_MA_model_r2.csv","Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa"
+"K5.1_MA","plot","K5.1_MA/jn_slope_plot_centered.png","JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty)"
+"K5.1_MA","plot","K5.1_MA/spline_interaction_plot.png","Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty)"
+"K5.1_MA","text","K5.1_MA/results_addendum_finnish.txt","Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle"
+K9,table,K9/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit)."
+K9,table,K9/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit)."
+K9,table,K9/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.
+K9,table,K9/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.
+K9,table,K9/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.
+K9,table,K9/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.
+K9,table,K9/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.
+K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.
+K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA)."
+K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa)."
+K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa)."

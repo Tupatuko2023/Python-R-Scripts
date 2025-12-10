@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
 # - K5.1_MA: Moderation Analysis Script for Fear of Falling & Functional
-#   Performance 
-# [K5.1.V4_Moderation_analysis.R] 
+#   Performance
+# [K5.1.V4_Moderation_analysis.R]
 # - "Performs an advanced moderation
 #   analysis with multiple enhancements and diagnostics."
 
@@ -79,7 +79,7 @@ load_or_stop <- function(pkgs) {
 
 load_or_stop(required_packages)
 
-# 1b. Output-kansio K5:n alle -------------------------------------------
+# 1b. Outputs-kansio K5:n alle -------------------------------------------
 
 outputs_dir <- here::here("R-scripts", "K5", "outputs")
 if (!dir.exists(outputs_dir)) {
@@ -94,14 +94,24 @@ if (!dir.exists(manifest_dir)) {
 }
 manifest_path <- file.path(manifest_dir, "manifest.csv")
 
+# --- Skriptikohtainen alikansio tuloksille ---
+
+# Skriptin tunniste ---
+script_label <- "K5.1_MA"  # MA = Moderation Analysis
+
+script_dir <- file.path(outputs_dir, script_label)
+if (!dir.exists(script_dir)) {
+  dir.create(script_dir, recursive = TRUE)
+}
+
 # Helper to save CSV + simple HTML table --------------------------------------
 
 save_table_csv_html <- function(df, basename) {
-  csv_path  <- file.path(outputs_dir, paste0(basename, ".csv"))
-  html_path <- file.path(outputs_dir, paste0(basename, ".html"))
-  
+  csv_path  <- file.path(script_dir, paste0(basename, ".csv"))
+  html_path <- file.path(script_dir, paste0(basename, ".html"))
+
   utils::write.csv(df, csv_path, row.names = FALSE)
-  
+
   html_table <- knitr::kable(
     df, format = "html",
     table.attr = "border='1' style='border-collapse:collapse;'"
@@ -132,7 +142,7 @@ plot_resid_fitted <- function(model, basename) {
     ) +
     theme_minimal()
   ggplot2::ggsave(
-    filename = file.path(outputs_dir, paste0(basename, "_resid_fitted.png")),
+    filename = file.path(script_dir, paste0(basename, "_resid_fitted.png")),
     plot = p, width = 6, height = 4, dpi = 300
   )
 }
@@ -157,7 +167,7 @@ plot_qq <- function(model, basename) {
     ) +
     theme_minimal()
   ggplot2::ggsave(
-    filename = file.path(outputs_dir, paste0(basename, "_qq.png")),
+    filename = file.path(script_dir, paste0(basename, "_qq.png")),
     plot = p, width = 6, height = 4, dpi = 300
   )
 }
@@ -178,7 +188,7 @@ plot_leverage <- function(model, basename) {
     ) +
     theme_minimal()
   ggplot2::ggsave(
-    filename = file.path(outputs_dir, paste0(basename, "_leverage.png")),
+    filename = file.path(script_dir, paste0(basename, "_leverage.png")),
     plot = p, width = 6, height = 4, dpi = 300
   )
 }
@@ -192,12 +202,12 @@ simulate_moderation_data <- function(n = 400L) {
   BMI <- rnorm(n, mean = 27, sd = 4)
   Composite_Z0 <- rnorm(n, mean = 0, sd = 1)
   FOF_status <- rbinom(n, size = 1, prob = 0.4)
-  
+
   baseline_effect <- -0.1 * Composite_Z0
   mod_effect <- -0.25 * FOF_status + 0.15 * FOF_status * Composite_Z0
   noise <- rnorm(n, mean = 0, sd = 0.5)
   Delta_Composite_Z <- baseline_effect + mod_effect + noise
-  
+
   data.frame(
     Delta_Composite_Z = Delta_Composite_Z,
     Composite_Z0 = Composite_Z0,
@@ -213,12 +223,12 @@ simulate_moderation_data <- function(n = 400L) {
 compute_jn_region_binary <- function(model, alpha = 0.05, mod_var = "cComposite_Z0") {
   coefs <- coef(model)
   vc <- vcov(model)
-  
+
   fof_coef_name <- grep("^FOF_status1$", names(coefs), value = TRUE)
   if (length(fof_coef_name) != 1L) {
     stop("FOF_status1 coefficient not found in model.", call. = FALSE)
   }
-  
+
   int_pattern1 <- paste0("FOF_status1:", mod_var)
   int_pattern2 <- paste0(mod_var, ":FOF_status1")
   int_coef_name <- grep(paste0("(", int_pattern1, "|", int_pattern2, ")"),
@@ -226,25 +236,25 @@ compute_jn_region_binary <- function(model, alpha = 0.05, mod_var = "cComposite_
   if (length(int_coef_name) != 1L) {
     stop("Interaction coefficient for FOF_status1 x moderator not found.", call. = FALSE)
   }
-  
+
   b1 <- coefs[fof_coef_name]
   b3 <- coefs[int_coef_name]
-  
+
   var_b1 <- vc[fof_coef_name, fof_coef_name]
   var_b3 <- vc[int_coef_name, int_coef_name]
   cov_b1b3 <- vc[fof_coef_name, int_coef_name]
-  
+
   df_res <- df.residual(model)
   t_crit <- stats::qt(1 - alpha / 2, df = df_res)
-  
+
   A <- t_crit^2 * var_b3 - b3^2
   B <- 2 * (t_crit^2 * cov_b1b3 - b1 * b3)
   C <- t_crit^2 * var_b1 - b1^2
-  
+
   disc <- B^2 - 4 * A * C
   z_min <- min(model$model[[mod_var]], na.rm = TRUE)
   z_max <- max(model$model[[mod_var]], na.rm = TRUE)
-  
+
   if (disc < 0 || abs(A) < .Machine$double.eps) {
     z0 <- mean(model$model[[mod_var]], na.rm = TRUE)
     eff <- b1 + b3 * z0
@@ -260,12 +270,12 @@ compute_jn_region_binary <- function(model, alpha = 0.05, mod_var = "cComposite_
       mod_max = z_max
     ))
   }
-  
+
   sqrt_disc <- sqrt(disc)
   z1 <- (-B - sqrt_disc) / (2 * A)
   z2 <- (-B + sqrt_disc) / (2 * A)
   roots <- sort(c(z1, z2))
-  
+
   list(
     roots = roots,
     region_type = "partially_significant",
@@ -280,37 +290,37 @@ make_jn_slope_plot <- function(model, jn_info, mod_var = "cComposite_Z0",
                                xlabel = "Lähtötason komposiitti (keskitetty)") {
   coefs <- coef(model)
   vc <- vcov(model)
-  
+
   fof_coef_name <- grep("^FOF_status1$", names(coefs), value = TRUE)
   int_pattern1 <- paste0("FOF_status1:", mod_var)
   int_pattern2 <- paste0(mod_var, ":FOF_status1")
   int_coef_name <- grep(paste0("(", int_pattern1, "|", int_pattern2, ")"),
                         names(coefs), value = TRUE)
-  
+
   if (length(fof_coef_name) != 1L || length(int_coef_name) != 1L) {
     stop("Could not find FOF_status1 or interaction term in the model.", call. = FALSE)
   }
-  
+
   b1 <- coefs[fof_coef_name]
   b3 <- coefs[int_coef_name]
-  
+
   var_b1 <- vc[fof_coef_name, fof_coef_name]
   var_b3 <- vc[int_coef_name, int_coef_name]
   cov_b1b3 <- vc[fof_coef_name, int_coef_name]
-  
+
   df_res <- df.residual(model)
   alpha <- jn_info$alpha
   t_crit <- stats::qt(1 - alpha / 2, df = df_res)
-  
+
   z_seq <- seq(jn_info$mod_min, jn_info$mod_max, length.out = 200)
-  
+
   effects <- b1 + b3 * z_seq
   se_eff <- sqrt(var_b1 + 2 * z_seq * cov_b1b3 + z_seq^2 * var_b3)
   lower <- effects - t_crit * se_eff
   upper <- effects + t_crit * se_eff
   p_vals <- 2 * stats::pt(-abs(effects / se_eff), df = df_res)
   sig_flag <- p_vals < alpha
-  
+
   df <- data.frame(
     moderator = z_seq,
     effect = effects,
@@ -319,7 +329,7 @@ make_jn_slope_plot <- function(model, jn_info, mod_var = "cComposite_Z0",
     p_value = p_vals,
     significant = sig_flag
   )
-  
+
   p <- ggplot(df, aes(x = moderator, y = effect)) +
     geom_ribbon(aes(ymin = lower, ymax = upper, alpha = significant),
                 show.legend = FALSE) +
@@ -332,15 +342,15 @@ make_jn_slope_plot <- function(model, jn_info, mod_var = "cComposite_Z0",
     ) +
     scale_alpha_manual(values = c(`TRUE` = 0.3, `FALSE` = 0.05)) +
     theme_minimal()
-  
+
   if (!is.null(jn_info$roots) && length(jn_info$roots) > 0) {
     for (r in jn_info$roots) {
       p <- p + geom_vline(xintercept = r, linetype = "dotted")
     }
   }
-  
+
   ggplot2::ggsave(
-    filename = file.path(outputs_dir, filename),
+    filename = file.path(script_dir, filename),
     plot = p, width = 7, height = 5, dpi = 300
   )
 }
@@ -357,23 +367,23 @@ if (length(args) > 0 && file.exists(args[1])) {
   message("Using data file (command line): ", data_path)
   raw_data <- utils::read.csv(data_path, stringsAsFactors = FALSE)
   data_source <- "file"
-  
+
 } else if (is_interactive) {
   message("No command line data path supplied. Using project data via here().")
-  
+
   data_path <- data_default_path
-  
+
   if (!file.exists(data_path)) {
     stop(
       "Data file not found: ", data_path,
       "\nCheck that dataset/KaatumisenPelko.csv exists in the project root."
     )
   }
-  
+
   message("Using data file (RStudio interactive): ", data_path)
   raw_data <- utils::read.csv(data_path, stringsAsFactors = FALSE)
   data_source <- "file"
-  
+
 } else {
   message("No valid data file supplied. Using simulated data.")
   raw_data <- simulate_moderation_data()
@@ -480,7 +490,7 @@ if (any(cell_counts$N < 30)) {
         levels = c("Q1_Weakest", "Q2", "Q3_Q4_Strongest")
       )
     )
-  
+
   cell_counts <- analysis_data_cc %>%
     dplyr::count(FOF_status, Comp_Quartile, name = "N")
 }
@@ -527,7 +537,7 @@ p_lsmeans <- ggplot(emm_quart_df,
   ) +
   theme_minimal()
 ggplot2::ggsave(
-  filename = file.path(outputs_dir, "discrete_lsmeans_plot_updated.png"),
+  filename = file.path(script_dir, "discrete_lsmeans_plot_updated.png"),
   plot = p_lsmeans, width = 7, height = 5, dpi = 300
 )
 
@@ -588,7 +598,7 @@ p_spline <- ggplot(pred_spline,
   ) +
   theme_minimal()
 ggplot2::ggsave(
-  filename = file.path(outputs_dir, "spline_interaction_plot.png"),
+  filename = file.path(script_dir, "spline_interaction_plot.png"),
   plot = p_spline, width = 7, height = 5, dpi = 300
 )
 
@@ -764,7 +774,7 @@ cut_labels <- c("Low (-1 SD)", "Mean (0)", "High (+1 SD)")
 probe_list <- lapply(seq_along(cutpoints), function(i) {
   cp <- cutpoints[i]
   label <- cut_labels[i]
-  
+
   emm_cp <- emmeans::emmeans(
     model_jn_c,
     specs = ~ FOF_status | cComposite_Z0,
@@ -849,54 +859,54 @@ results_text <- paste(
   "ja laskennallinen havaittava interaktioefekti oli nykyisellä otoskoolla varsin suuri,",
   "mikä tukee tulkintaa, että nollahavainto moderoinnista voi osin heijastaa rajallista tilastollista tarkkuutta."
 )
-writeLines(results_text, con = file.path(outputs_dir, "results_addendum_finnish.txt"))
+writeLines(results_text, con = file.path(script_dir, "results_addendum_finnish.txt"))
 
 # 13. Manifestin päivitys: keskeiset taulukot ja kuvat -----------------------
 
-tidy_jn_c_path <- file.path(outputs_dir, "K5.1_MA_tidy_jn_c.csv")
+tidy_jn_c_path <- file.path(script_dir, "K5.1_MA_tidy_jn_c.csv")
 if (!file.exists(tidy_jn_c_path)) {
   utils::write.csv(tidy_jn_c, tidy_jn_c_path, row.names = FALSE)
 }
 
-jn_summary_all_path <- file.path(outputs_dir, "K5.1_MA_jn_summary_all.csv")
+jn_summary_all_path <- file.path(script_dir, "K5.1_MA_jn_summary_all.csv")
 if (!file.exists(jn_summary_all_path)) {
   utils::write.csv(jn_summary_all, jn_summary_all_path, row.names = FALSE)
 }
 
-mult_df_path <- file.path(outputs_dir, "K5.1_MA_multiplicity_pvalues.csv")
+mult_df_path <- file.path(script_dir, "K5.1_MA_multiplicity_pvalues.csv")
 if (!file.exists(mult_df_path)) {
   utils::write.csv(mult_df, mult_df_path, row.names = FALSE)
 }
 
-eta_sq_df_path <- file.path(outputs_dir, "K5.1_MA_eta_sq_partial.csv")
+eta_sq_df_path <- file.path(script_dir, "K5.1_MA_eta_sq_partial.csv")
 if (!file.exists(eta_sq_df_path)) {
   utils::write.csv(eta_sq_df, eta_sq_df_path, row.names = FALSE)
 }
 
-g_df_path <- file.path(outputs_dir, "K5.1_MA_effectsize_hedges_g.csv")
+g_df_path <- file.path(script_dir, "K5.1_MA_effectsize_hedges_g.csv")
 if (!file.exists(g_df_path)) {
   utils::write.csv(g_df, g_df_path, row.names = FALSE)
 }
 
-r2_df_path <- file.path(outputs_dir, "K5.1_MA_model_r2.csv")
+r2_df_path <- file.path(script_dir, "K5.1_MA_model_r2.csv")
 if (!file.exists(r2_df_path)) {
   utils::write.csv(r2_df, r2_df_path, row.names = FALSE)
 }
 
 jn_slope_centered_src <- file.path(outputs_dir, "jn_slope_plot_centered.png")
-jn_slope_centered_dst <- file.path(outputs_dir, "jn_slope_plot_centered.png")
+jn_slope_centered_dst <- file.path(script_dir, "jn_slope_plot_centered.png")
 if (file.exists(jn_slope_centered_src)) {
   file.copy(jn_slope_centered_src, jn_slope_centered_dst, overwrite = TRUE)
 }
 
 spline_plot_src <- file.path(outputs_dir, "spline_interaction_plot.png")
-spline_plot_dst <- file.path(outputs_dir, "spline_interaction_plot.png")
+spline_plot_dst <- file.path(script_dir, "spline_interaction_plot.png")
 if (file.exists(spline_plot_src)) {
   file.copy(spline_plot_src, spline_plot_dst, overwrite = TRUE)
 }
 
 results_addendum_src <- file.path(outputs_dir, "results_addendum_finnish.txt")
-results_addendum_dst <- file.path(outputs_dir, "results_addendum_finnish.txt")
+results_addendum_dst <- file.path(script_dir, "results_addendum_finnish.txt")
 if (file.exists(results_addendum_src)) {
   file.copy(results_addendum_src, results_addendum_dst, overwrite = TRUE)
 }
@@ -959,8 +969,8 @@ message("Manifest päivitetty: ", manifest_path)
 # 14. Session info ------------------------------------------------------------
 
 session_info <- sessionInfo()
-capture.output(session_info, file = file.path(outputs_dir, "session_info.txt"))
+capture.output(session_info, file = file.path(script_dir, "session_info.txt"))
 
-message("Analysis complete. Outputs written to ./outputs.")
+message("Analysis complete. Outputs written to ./outputs/", script_label)
 
 # End of K5.1.V4_Moderation_analysis.R
