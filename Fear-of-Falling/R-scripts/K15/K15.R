@@ -175,15 +175,16 @@ labels = c("nonFOF", "FOF")
 # FRAILTY THRESHOLDS (can be edited later)
 # ------------------------------------------------
 
-grip_cut_strategy <- "sex_Q1" # "sex_Q1" (default) tai "literature" (placeholder)
+grip_cut_strategy <- "sex_Q1"
+# "sex_Q1" (default) tai "literature" (placeholder)
 gait_cut_m_per_sec <- 0.8 # Slowness: < 0.8 m/s = hidas
 low_BMI_threshold <- 21 # Low BMI: BMI < 21
 maxwalk_low_cut_m <- 400 # Max kävelymatka < 400 m tulkitaan matalaksi
 
 # Huom: Weakness-komponentille
 # - sex_Q1: sukupuolikohtainen alin kvartiili (Q1) Puristus0:sta
-# - literature: kiinteät placeholder-rajat (esim. naisille <20 kg, miehille <30 kg)
-# -> helppo muokata skriptin alussa tarpeen mukaan.
+# - literature: kiinteät placeholder-rajat (esim. naisille <20 kg, miehille <30
+#   kg) -> helppo muokata skriptin alussa tarpeen mukaan.
 
 # ==============================================================================
 # 4. KOMPPONENTTI: WEAKNESS (frailty_weakness) --------------------------------
@@ -193,7 +194,8 @@ maxwalk_low_cut_m <- 400 # Max kävelymatka < 400 m tulkitaan matalaksi
 # - 0 kg tulkitaan puuttuvaksi mittaukseksi (esim. ei tehty / tekninen ongelma).
 
 if (!("Puristus0" %in% names(analysis_data))) {
-  warning("Puristus0-muuttuja puuttuu analysis_data: weakness-komponentti jää NA:ksi.")
+  warning("Puristus0-muuttuja puuttuu analysis_data:
+  weakness-komponentti jää NA:ksi.")
 }
 
 # 4.1 Sukupuolimuuttuja apuun (sex_factor aina factor)
@@ -261,7 +263,8 @@ if ("Puristus0" %in% names(analysis_data)) {
                           levels = c("female", "male")),
       cut_Q1    = c(20, 30) # placeholder: naiset <20 kg, miehet <30 kg
     )
-    message("K15: Weakness-rajat (literature placeholder, päivitä tarvittaessa):")
+    message("K15: Weakness-rajat (literature placeholder,
+    päivitä tarvittaessa):")
     print(grip_cuts)
 
 
@@ -269,7 +272,8 @@ if ("Puristus0" %in% names(analysis_data)) {
 
   grip_cut_vec <- NULL
   if (!is.null(grip_cuts)) {
-    grip_cut_vec <- setNames(grip_cuts$cut_Q1, as.character(grip_cuts$sex_factor))
+    grip_cut_vec <- setNames(grip_cuts$cut_Q1,
+    as.character(grip_cuts$sex_factor))
   }
 
   analysis_data <- analysis_data %>%
@@ -670,10 +674,19 @@ update_manifest("plot", "K15_frailty_cat3_by_FOF",
 
 # TODO: Haluttaessa vastaava kuva frailty_cat_4:lle.
 
+# ==============================================================================
+# 11. SAVE ANALYSIS DATA FOR K16 ----------------------------------------------
+# ==============================================================================
+# Tallenna analysis_data K16:ta varten (sisältää kaikki frailty-muuttujat)
+rdata_path <- here::here("R-scripts", "K15", "outputs",
+                         "K15_frailty_analysis_data.RData")
+save(analysis_data, file = rdata_path)
+message("K15: analysis_data tallennettu: ", rdata_path)
+
 message("K15: Fried-inspired physical frailty proxy rakennettu ja perusjakaumat + FOF-vertailut tallennettu.")
 
 # ==============================================================================
-# 11. LOPPUKOMMENTIT (DOC-BLOKKI) ---------------------------------------------
+# 12. LOPPUKOMMENTIT (DOC-BLOKKI) ---------------------------------------------
 # ==============================================================================
 # Tämä skripti rakentaa eksplisiittisesti nimetyn "Fried-inspired physical frailty proxy" -muuttujan.
 # Sisältyvät komponentit:
