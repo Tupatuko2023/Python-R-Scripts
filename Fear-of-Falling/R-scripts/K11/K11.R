@@ -1,4 +1,5 @@
-# K11
+# K11: Kaatumisen pelko itsenäisenä ennustajana
+
 
 # ==============================================================================
 
@@ -554,17 +555,11 @@ p_by_quartile <- dat_fof %>%
   group_modify(~{
     tab <- table(.x$responder, .x$FOF_status)
     
-    # Jos solut pieniä → Fisher; muuten khii-neliö
-    test <- if (any(tab < 5)) {
-      fisher.test(tab)
-    } else {
-      chisq.test(tab, correct = FALSE)
-    }
+    test <- if (any(tab < 5)) fisher.test(tab) else chisq.test(tab, correct = FALSE)
     
     tibble(
-      age_quartile = unique(.x$age_quartile),
-      test_type    = if (any(tab < 5)) "Fisher" else "Chi-square",
-      p_value      = test$p.value
+      test_type = if (any(tab < 5)) "Fisher" else "Chi-square",
+      p_value   = test$p.value
     )
   }) %>%
   ungroup()
@@ -808,6 +803,19 @@ age_quartile_summary <- dat_fof %>%
     .groups    = "drop"
   )
 
+# Ikäjakaumat kvartaaleittain: montako kutakin ikää per kvartiili
+age_quartile_age_counts <- dat_fof %>%
+  group_by(age_quartile, age) %>%
+  summarise(
+    n = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(age_quartile, age)
+
+age_quartile_age_counts
+
+# Tallennus CSV + HTML (outputs-kansioon kuten muutkin)
+save_table_csv_html(age_quartile_age_counts, "age_quartile_age_counts")
 save_table_csv_html(freq_FOF_status,      "freq_FOF_status")
 save_table_csv_html(freq_AgeClass,        "freq_AgeClass")
 save_table_csv_html(cross_FOF_AgeClass,   "cross_FOF_AgeClass")
