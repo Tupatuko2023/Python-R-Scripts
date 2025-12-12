@@ -279,3 +279,212 @@ K11,table,K11/gls_residual_variance_by_FOF.csv,GLS: residuaalivarianssien suhtee
 K11,table,K11/quantile_reg_FOF_effect.csv,"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75)."
 K11,plot,K11/Responder_osuus.png,Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.
 K11,plot,K11/Responder_osuus_percent_annot.png,"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina."
+K11,table,K11/freq_FOF_status.csv,FOF-statusin frekvenssijakauma (nonFOF vs FOF).
+K11,table,K11/freq_AgeClass.csv,"Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma."
+K11,table,K11/cross_FOF_AgeClass.csv,Ristiintaulukko FOF-status x AgeClass.
+K11,table,K11/age_quartile_summary.csv,"Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan."
+K11,table,K11/lm_base_model_full.csv,Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.
+K11,table,K11/lm_extended_model_full.csv,"Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala)."
+K11,table,K11/lm_extended_standardized.csv,Laajennetun lineaarisen mallin standardoidut kertoimet.
+K11,table,K11/FOF_effect_base_vs_extended.csv,FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.
+K11,table,K11/missing_data_pattern.csv,MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.
+K11,table,K11/mice_pooled_model_base.csv,MICE: poolattu perusmalli (lm) imputoidussa datassa.
+K11,table,K11/mice_pooled_model_extended.csv,MICE: poolattu laajennettu malli (lm) imputoidussa datassa.
+K11,table,K11/FOF_effect_MICE_base_vs_extended.csv,MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).
+K11,table,K11/logit_responder_model.csv,Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.
+K11,table,K11/ordinal_polr_OR.csv,Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).
+K11,table,K11/responder_by_age_and_FOF.csv,Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.
+K11,table,K11/responder_pvalues_by_age_quartile.csv,"Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square)."
+K11,table,K11/emmeans_FOF_vs_nonFOF_by_agequartile.csv,FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).
+K11,table,K11/BP_test_FOF_status.csv,Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).
+K11,table,K11/gls_hom_vs_het_comparison.csv,GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.
+K11,table,K11/gls_residual_variance_by_FOF.csv,GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.
+K11,table,K11/quantile_reg_FOF_effect.csv,"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75)."
+K11,plot,K11/Responder_osuus.png,Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.
+K11,plot,K11/Responder_osuus_percent_annot.png,"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina."
+K11,table,K11/freq_FOF_status.csv,FOF-statusin frekvenssijakauma (nonFOF vs FOF).
+K11,table,K11/freq_AgeClass.csv,"Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma."
+K11,table,K11/cross_FOF_AgeClass.csv,Ristiintaulukko FOF-status x AgeClass.
+K11,table,K11/age_quartile_summary.csv,"Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan."
+K11,table,K11/lm_base_model_full.csv,Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.
+K11,table,K11/lm_extended_model_full.csv,"Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala)."
+K11,table,K11/lm_extended_standardized.csv,Laajennetun lineaarisen mallin standardoidut kertoimet.
+K11,table,K11/FOF_effect_base_vs_extended.csv,FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.
+K11,table,K11/missing_data_pattern.csv,MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.
+K11,table,K11/mice_pooled_model_base.csv,MICE: poolattu perusmalli (lm) imputoidussa datassa.
+K11,table,K11/mice_pooled_model_extended.csv,MICE: poolattu laajennettu malli (lm) imputoidussa datassa.
+K11,table,K11/FOF_effect_MICE_base_vs_extended.csv,MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).
+K11,table,K11/logit_responder_model.csv,Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.
+K11,table,K11/ordinal_polr_OR.csv,Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).
+K11,table,K11/responder_by_age_and_FOF.csv,Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.
+K11,table,K11/responder_pvalues_by_age_quartile.csv,"Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square)."
+K11,table,K11/emmeans_FOF_vs_nonFOF_by_agequartile.csv,FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).
+K11,table,K11/BP_test_FOF_status.csv,Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).
+K11,table,K11/gls_hom_vs_het_comparison.csv,GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.
+K11,table,K11/gls_residual_variance_by_FOF.csv,GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.
+K11,table,K11/quantile_reg_FOF_effect.csv,"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75)."
+K11,plot,K11/Responder_osuus.png,Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.
+K11,plot,K11/Responder_osuus_percent_annot.png,"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina."
+K12,table,K12/lm_models_all_outcomes.csv,"Lineaariset perus- ja laajennetut mallit kaikille outcomeille (Composite, HGS, MWS, FTSST, SLS)."
+K12,table,K12/FOF_effects_by_outcome.csv,"FOF-statusin kertoimet (estimate, 95 % LV, p-arvo) per outcome ja malli (base/extended)."
+K12,table,K12/FOF_effects_standardized_extended.csv,FOF-statusin standardoidut kertoimet (extended-mallit) per outcome.
+K12,plot,K12/FOF_effects_by_outcome_forest.png,"FOF-statusin vaikutus (pistediagrammi, estimate + 95 % LV) eri outcome-muuttujille (base ja extended mallit)."
+K12,table,K12/lm_models_all_outcomes.csv,"Lineaariset perus- ja laajennetut mallit kaikille outcomeille (Composite, HGS, MWS, FTSST, SLS)."
+K12,table,K12/FOF_effects_by_outcome.csv,"FOF-statusin kertoimet (estimate, 95 % LV, p-arvo) per outcome ja malli (base/extended)."
+K12,table,K12/FOF_effects_standardized_extended.csv,FOF-statusin standardoidut kertoimet (extended-mallit) per outcome.
+K12,plot,K12/FOF_effects_by_outcome_forest.png,"FOF-statusin vaikutus (pistediagrammi, estimate + 95 % LV) eri outcome-muuttujille (base ja extended mallit)."
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+K12,table,K12/lm_models_all_outcomes.csv,"Lineaariset perus- ja laajennetut mallit kaikille outcomeille (Composite, HGS, MWS, FTSST, SLS)."
+K12,table,K12/FOF_effects_by_outcome.csv,"FOF-statusin kertoimet (estimate, 95 % LV, p-arvo) per outcome ja malli (base/extended)."
+K12,table,K12/FOF_effects_standardized_extended.csv,FOF-statusin standardoidut kertoimet (extended-mallit) per outcome.
+K12,plot,K12/FOF_effects_by_outcome_forest.png,"FOF-statusin vaikutus (pistediagrammi, estimate + 95 % LV) eri outcome-muuttujille (base ja extended mallit)."
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+"K14","table","K14/K14_baseline_by_FOF.csv","Baseline characteristics by FOF-status (Table 1; unadjusted)."
+"K14","table","K14/K14_baseline_by_FOF.csv","Baseline characteristics by FOF-status (Table 1; unadjusted)."
+"K14","table","K14/K14_baseline_by_FOF.csv","Baseline characteristics by FOF-status (Table 1; unadjusted)."
+"K14","table","K14/K14_baseline_by_FOF.csv","Baseline characteristics by FOF-status (Table 1; unadjusted)."
+"K14","table","K14/K14_baseline_by_FOF.csv","Baseline characteristics by FOF-status (Table 1; unadjusted)."
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
+"K15","table","K15/K15_frailty_count_3_overall.csv","Distribution of frailty_count_3 (Fried-inspired proxy, 3 components; overall)."
+"K15","table","K15/K15_frailty_cat_3_overall.csv","Distribution of frailty_cat_3 (Fried-inspired proxy, 3 components; overall)."
+"K15","table","K15/K15_frailty_count_4_overall.csv","Distribution of frailty_count_4 (Fried-inspired proxy, 4 components; overall)."
+"K15","table","K15/K15_frailty_cat_4_overall.csv","Distribution of frailty_cat_4 (Fried-inspired proxy, 4 components; overall)."
+"K15","table","K15/K15_frailty_cat3_by_FOF.csv","Frailty categories (3-component proxy) by FOF-status (n and row %)."
+"K15","table","K15/K15_frailty_cat4_by_FOF.csv","Frailty categories (4-component proxy) by FOF-status (n and row %)."
+"K15","table","K15/K15_chisq_FOF_by_frailty_cat3.csv","Chi-square test for association: FOF_status × frailty_cat_3."
+"K15","table","K15/K15_chisq_FOF_by_frailty_cat4.csv","Chi-square test for association: FOF_status × frailty_cat_4."
+"K15","plot","K15/K15_frailty_cat3_by_FOF.png","Stacked proportion plot: frailty_cat_3 distribution by FOF-status."
+"K15","table","K15/K15_frailty_count_3_overall.csv","Distribution of frailty_count_3 (Fried-inspired proxy, 3 components; overall)."
+"K15","table","K15/K15_frailty_cat_3_overall.csv","Distribution of frailty_cat_3 (Fried-inspired proxy, 3 components; overall)."
+"K15","table","K15/K15_frailty_count_4_overall.csv","Distribution of frailty_count_4 (Fried-inspired proxy, 4 components; overall)."
+"K15","table","K15/K15_frailty_cat_4_overall.csv","Distribution of frailty_cat_4 (Fried-inspired proxy, 4 components; overall)."
+"K15","table","K15/K15_frailty_cat3_by_FOF.csv","Frailty categories (3-component proxy) by FOF-status (n and row %)."
+"K15","table","K15/K15_frailty_cat4_by_FOF.csv","Frailty categories (4-component proxy) by FOF-status (n and row %)."
+"K15","table","K15/K15_chisq_FOF_by_frailty_cat3.csv","Chi-square test for association: FOF_status × frailty_cat_3."
+"K15","table","K15/K15_chisq_FOF_by_frailty_cat4.csv","Chi-square test for association: FOF_status × frailty_cat_4."
+"K15","plot","K15/K15_frailty_cat3_by_FOF.png","Stacked proportion plot: frailty_cat_3 distribution by FOF-status."
+"K15","table","K15/K15_frailty_count_3_overall.csv","Distribution of frailty_count_3 (Fried-inspired proxy, 3 components; overall)."
+"K15","table","K15/K15_frailty_cat_3_overall.csv","Distribution of frailty_cat_3 (Fried-inspired proxy, 3 components; overall)."
+"K15","table","K15/K15_frailty_count_4_overall.csv","Distribution of frailty_count_4 (Fried-inspired proxy, 4 components; overall)."
+"K15","table","K15/K15_frailty_cat_4_overall.csv","Distribution of frailty_cat_4 (Fried-inspired proxy, 4 components; overall)."
+"K15","table","K15/K15_frailty_cat3_by_FOF.csv","Frailty categories (3-component proxy) by FOF-status (n and row %)."
+"K15","table","K15/K15_frailty_cat4_by_FOF.csv","Frailty categories (4-component proxy) by FOF-status (n and row %)."
+"K15","table","K15/K15_chisq_FOF_by_frailty_cat3.csv","Chi-square test for association: FOF_status × frailty_cat_3."
+"K15","table","K15/K15_chisq_FOF_by_frailty_cat4.csv","Chi-square test for association: FOF_status × frailty_cat_4."
+"K15","plot","K15/K15_frailty_cat3_by_FOF.png","Stacked proportion plot: frailty_cat_3 distribution by FOF-status."
+"K15","table","K15/K15_frailty_count_3_overall.csv","Distribution of frailty_count_3 (Fried-inspired proxy, 3 components; overall)."
+"K15","table","K15/K15_frailty_cat_3_overall.csv","Distribution of frailty_cat_3 (Fried-inspired proxy, 3 components; overall)."
+"K15","table","K15/K15_frailty_count_4_overall.csv","Distribution of frailty_count_4 (Fried-inspired proxy, 4 components; overall)."
+"K15","table","K15/K15_frailty_cat_4_overall.csv","Distribution of frailty_cat_4 (Fried-inspired proxy, 4 components; overall)."
+"K15","table","K15/K15_frailty_cat3_by_FOF.csv","Frailty categories (3-component proxy) by FOF-status (n and row %)."
+"K15","table","K15/K15_frailty_cat4_by_FOF.csv","Frailty categories (4-component proxy) by FOF-status (n and row %)."
+"K15","table","K15/K15_chisq_FOF_by_frailty_cat3.csv","Chi-square test for association: FOF_status × frailty_cat_3."
+"K15","table","K15/K15_chisq_FOF_by_frailty_cat4.csv","Chi-square test for association: FOF_status × frailty_cat_4."
+"K15","plot","K15/K15_frailty_cat3_by_FOF.png","Stacked proportion plot: frailty_cat_3 distribution by FOF-status."
