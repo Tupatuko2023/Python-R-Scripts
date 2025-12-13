@@ -6,6 +6,11 @@
 # Date: 2025-12-12
 # ==============================================================================
 
+message("RUNNING FILE: ", 
+        normalizePath(sub("^--file=", "",
+        commandArgs(trailingOnly = FALSE)[grep("^--file=", 
+        commandArgs(trailingOnly = FALSE))])))
+
 # 1) PACKAGES ------------------------------------------------------------------
 suppressPackageStartupMessages({
   library(dplyr)
@@ -19,6 +24,7 @@ suppressPackageStartupMessages({
   library(officer)
   library(ggplot2)
   library(here)
+  library(reformulas)
 })
 library(conflicted)
 conflicted::conflict_prefer("select", "dplyr")
@@ -651,8 +657,9 @@ pred_data <- tidyr::expand_grid(
     BMI = mean(analysis_long$BMI, na.rm = TRUE),
     sex = factor("female", levels = levels(analysis_long$sex))
   )
+# Verify that model matrix columns match
 
-fixed_terms <- delete.response(terms(lme4::nobars(formula(mod_mixed_frailty))))
+fixed_terms <- delete.response(terms(reformulas::nobars(formula(mod_mixed_frailty))))
 X_new <- model.matrix(fixed_terms, pred_data)
 X_fit <- lme4::getME(mod_mixed_frailty, "X")
 
@@ -727,6 +734,8 @@ p_txt <- function(p){
 
 sig_en <- ifelse(fof_effect_ancova$p.value < 0.05, "significantly", "not significantly")
 sig_fi <- ifelse(fof_effect_ancova$p.value < 0.05, "merkitsevästi", "ei-merkitsevästi")
+
+
 
 # Generate English Results text
 results_text_en <- paste0(
@@ -887,12 +896,11 @@ message("\n", strrep("=", 80))
 message("K16 ANALYSIS COMPLETE")
 message(strrep("=", 80))
 message("\nKey Findings:")
-message("✓ FOF effect persists after frailty adjustment (ANCOVA B = ",
+fof_sig <- ifelse(fof_effect_ancova$p.value < 0.05, "significant", "non-significant")
+message("✓ FOF effect after frailty adjustment (ANCOVA B = ",
         sprintf("%.3f", fof_effect_ancova$estimate[1]),
-        ", p ",
-        ifelse(fof_effect_ancova$p.value[1] < 0.001, "< 0.001",
-               sprintf("= %.3f", fof_effect_ancova$p.value[1])),
-        ")")
+        ", p ", p_txt(fof_effect_ancova$p.value[1]),
+        "; ", fof_sig, ")")
 message("✓ Frailty shows independent effects on physical function")
 message("✓ Adding frailty improved model fit (ΔR² = ", sprintf("%.3f", r2_change), ")")
 message("✓ Results robust across sensitivity analyses")
