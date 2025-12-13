@@ -1,1 +1,2 @@
 data/external/** filter=git-crypt diff=git-crypt
+*.R text eol=lf

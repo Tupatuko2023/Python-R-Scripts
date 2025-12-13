@@ -1,7 +1,18 @@
 "script","filepath","description","timestamp"
-"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx","Frailty-adjusted model results tables","2025-12-12 12:37:38.901351"
-"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData","All frailty-adjusted model objects","2025-12-12 12:37:38.996369"
-"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_effects_plot.png","Frailty effects coefficient plot","2025-12-12 12:37:39.710464"
-"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_predicted_trajectories.png","Predicted trajectories by frailty","2025-12-12 12:37:40.121136"
-"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_Results_EN.txt","Results text in English","2025-12-12 12:37:40.155231"
-"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_Results_FI.txt","Results text in Finnish","2025-12-12 12:37:40.160076"
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx","Frailty-adjusted model results tables","2025-12-12 15:06:26.819877"
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData","All frailty-adjusted model objects","2025-12-12 15:06:27.162308"
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_effects_plot.png","Frailty effects coefficient plot","2025-12-12 15:06:27.726987"
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_predicted_trajectories.png","Predicted trajectories by frailty","2025-12-12 15:06:28.24617"
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_Results_EN.txt","Results text in English","2025-12-12 15:06:28.335462"
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_Results_FI.txt","Results text in Finnish","2025-12-12 15:06:28.339443"
+K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.
+K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex."
+K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo)."
+K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui."
+K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).
+K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).
+K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).
+K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).
+K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).
