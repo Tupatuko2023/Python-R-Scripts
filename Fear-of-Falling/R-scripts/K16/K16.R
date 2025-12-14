@@ -16,22 +16,15 @@ paths <- init_paths(script_label)
 set.seed(20251124)
 
 
-# ==============================================================================
 # K16: Frailty-Adjusted Statistical Models for Fear-of-Falling Study
-# ==============================================================================
 # Purpose: Integrate frailty proxy variables from K15 into ANCOVA and mixed models
 
-# Date: 2025-12-12
-# ==============================================================================
+# Get paths from init_paths (already called in header)
+outputs_dir   <- getOption("fof.outputs_dir")
+manifest_path <- getOption("fof.manifest_path")
+output_dir    <- outputs_dir  # alias for compatibility
 
-message("RUNNING FILE: ", 
-        normalizePath(sub("^--file=", "",
-        commandArgs(trailingOnly = FALSE)[grep("^--file=", 
-        commandArgs(trailingOnly = FALSE))])))
-
-# 1) PACKAGES ------------------------------------------------------------------
 suppressPackageStartupMessages({
-  library(dplyr)
   library(tidyr)
   library(lme4)
   library(lmerTest)
@@ -41,7 +34,6 @@ suppressPackageStartupMessages({
   library(flextable)
   library(officer)
   library(ggplot2)
-  library(here)
   library(reformulas)
 })
 library(conflicted)
@@ -50,24 +42,15 @@ conflicted::conflict_prefer("filter", "dplyr")
 conflicted::conflict_prefer("recode", "dplyr")
 conflicted::conflict_prefer("lmer", "lmerTest")
 
-source(here::here("R", "functions", "io.R"))
-source(here::here("R", "functions", "checks.R"))
-source(here::here("R", "functions", "modeling.R"))
-source(here::here("R", "functions", "reporting.R"))
-
-
-# 2) GLOBAL SETUP --------------------------------------------------------------
-script_label <- "K16"
-paths <- init_paths(script_label)
-output_dir    <- paths$outputs_dir
-manifest_path <- paths$manifest_path
-
 message("\n", strrep("=", 80))
 message("K16: FRAILTY-ADJUSTED STATISTICAL MODELS")
 message(strrep("=", 80), "\n")
 
-# 3) LOAD DATA WITH FRAILTY VARIABLES ------------------------------------------
-message("3) Loading analysis data with frailty variables from K15...")
+# ==============================================================================
+# 01. Load Data with Frailty Variables
+# ==============================================================================
+
+message("01) Loading analysis data with frailty variables from K15...")
 
 force_reload <- TRUE
 if (force_reload && exists("analysis_data")) rm(analysis_data)
@@ -222,8 +205,11 @@ message("  - frailty_cat_3: ", sum(!is.na(analysis_data$frailty_cat_3)), " valid
 message("  - frailty_cat_3_obj: ", sum(!is.na(analysis_data$frailty_cat_3_obj)), " valid cases")
 message("  - frailty_cat_3_2plus: ", sum(!is.na(analysis_data$frailty_cat_3_2plus)), " valid cases")
 
-# 4) PREPARE DATA FOR ANALYSIS -------------------------------------------------
-message("\n4) Preparing data for analysis...")
+# ==============================================================================
+# 02. Prepare Data for Analysis
+# ==============================================================================
+
+message("\n02) Preparing data for analysis...")
 
 # 4.1 Create Delta variable for ANCOVA
 
@@ -279,8 +265,11 @@ message("✓ Data preparation complete")
 message("  - Wide format (ANCOVA): ", nrow(analysis_data), " participants")
 message("  - Long format (Mixed models): ", nrow(analysis_long), " observations")
 
-# 5) PRIMARY ANCOVA MODELS -----------------------------------------------------
-message("\n5) Running primary ANCOVA models (Delta-analysis)...")
+# ==============================================================================
+# 03. Primary ANCOVA Models
+# ==============================================================================
+
+message("\n03) Running primary ANCOVA models (Delta-analysis)...")
 
 # varmista että score on olemassa ja numeerinen
 analysis_data <- analysis_data %>%
@@ -360,8 +349,11 @@ ancova_comparison <- data.frame(
              summary(mod_delta_frailty_cont)$adj.r.squared)
 )
 
-# 6) PRIMARY MIXED MODELS ------------------------------------------------------
-message("\n6) Running primary mixed models (Longitudinal analysis)...")
+# ==============================================================================
+# 04. Primary Mixed Models
+# ==============================================================================
+
+message("\n04) Running primary mixed models (Longitudinal analysis)...")
 
 # 6.1 Model without frailty (baseline comparison)
 mod_mixed_baseline <- lmer(
@@ -403,8 +395,11 @@ mixed_comparison <- data.frame(
   BIC = c(BIC(mod_mixed_baseline), BIC(mod_mixed_frailty), BIC(mod_mixed_frailty_cont))
 )
 
-# 7) EXPLORATORY INTERACTION MODELS --------------------------------------------
-message("\n7) Running exploratory interaction models...")
+# ==============================================================================
+# 05. Exploratory Interaction Models
+# ==============================================================================
+
+message("\n05) Running exploratory interaction models...")
 
 # 7.1 ANCOVA with FOF × frailty interaction
 mod_delta_interaction <- lm(
@@ -427,8 +422,11 @@ interaction_results <- list(
   mixed = broom.mixed::tidy(mod_mixed_interaction, conf.int = TRUE)
 )
 
-# 8) SENSITIVITY ANALYSES ------------------------------------------------------
-message("\n8) Running sensitivity analyses with alternative frailty definitions...")
+# ==============================================================================
+# 06. Sensitivity Analyses
+# ==============================================================================
+
+message("\n06) Running sensitivity analyses with alternative frailty definitions...")
 
 # 8.1 Models with frailty_cat_3_obj (objective-only)
 mod_delta_sens_obj <- lm(
@@ -464,8 +462,11 @@ sensitivity_results <- list(
   mixed_strict = broom.mixed::tidy(mod_mixed_sens_strict, conf.int = TRUE)
 )
 
-# 9) CREATE OUTPUT TABLES ------------------------------------------------------
-message("\n9) Creating formatted output tables...")
+# ==============================================================================
+# 07. Create Output Tables
+# ==============================================================================
+
+message("\n07) Creating formatted output tables...")
 
 # 9.1 ANCOVA primary results table
 ancova_primary_table <- ancova_results$frailty_cat %>%
@@ -553,8 +554,11 @@ ft_sensitivity <- flextable(sensitivity_summary) %>%
   autofit() %>%
   theme_booktabs()
 
-# 10) SAVE TABLES --------------------------------------------------------------
-message("\n10) Saving output tables...")
+# ==============================================================================
+# 08. Save Tables
+# ==============================================================================
+
+message("\n08) Saving output tables...")
 
 # Save as Word document
 doc <- read_docx() %>%
@@ -595,8 +599,11 @@ save(model_list, ancova_results, mixed_results, interaction_results,
 register_output(rdata_path, "All frailty-adjusted model objects", script_label)
 message("✓ Saved model objects: ", rdata_path)
 
-# 11) CREATE VISUALIZATION -----------------------------------------------------
-message("\n11) Creating visualizations...")
+# ==============================================================================
+# 09. Create Visualization
+# ==============================================================================
+
+message("\n09) Creating visualizations...")
 
 # 11.1 Coefficient plot for frailty effects
 frailty_coefs <- bind_rows(
@@ -688,8 +695,11 @@ register_output(file.path(output_dir, "K16_predicted_trajectories.png"),
                 "Predicted trajectories by frailty", script_label)
 message("✓ Saved plot: K16_predicted_trajectories.png")
 
-# 12) GENERATE RESULTS TEXT ----------------------------------------------------
-message("\n12) Generating Results text...")
+# ==============================================================================
+# 10. Generate Results Text
+# ==============================================================================
+
+message("\n10) Generating Results text...")
 
 # Extract key statistics
 
@@ -880,7 +890,10 @@ writeLines(results_text_fi, results_fi_path)
 register_output(results_fi_path, "Results text in Finnish", script_label)
 message("✓ Saved Finnish Results: ", results_fi_path)
 
-# 13) SUMMARY ------------------------------------------------------------------
+# ==============================================================================
+# 11. Summary
+# ==============================================================================
+
 message("\n", strrep("=", 80))
 message("K16 ANALYSIS COMPLETE")
 message(strrep("=", 80))
@@ -901,15 +914,6 @@ message("✓ Trajectory plot: K16_predicted_trajectories.png")
 message("✓ Results text (EN): K16_Results_EN.txt")
 message("✓ Results text (FI): K16_Results_FI.txt")
 message(strrep("=", 80), "\n")
-
-# Save session info
-si_path <- file.path(output_dir, "sessionInfo_K16.txt")
-save_sessioninfo(si_path)
-append_manifest(
-  manifest_row(script = script_label, label = "sessionInfo",
-               path = si_path, kind = "sessioninfo"),
-  manifest_path
-)
 
 # End of K16.R
 

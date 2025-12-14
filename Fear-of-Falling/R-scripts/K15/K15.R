@@ -16,41 +16,12 @@ paths <- init_paths(script_label)
 set.seed(20251124)
 
 
-#!/usr/bin/env Rscript
-# K15.R -----------------------------------------------------------------------
-# # "Fried-inspired physical frailty proxy" (EI canonical Fried 5/5 -fenotyyppi) # # - Käyttää valmista analysis_data-dataframea (tai lukee KaatumisenPelko.csv:n). # - Luo komponentit: # * frailty_weakness (Puristus0 + sukupuoli, sex_Q1-rajat) # * frailty_slowness (kavelynopeus_m_sek0, < 0.8 m/s) # * frailty_low_activity (oma_arvio_liikuntakyky + 500m/2km + maxkävelymatka) # * frailty_low_BMI (optional, BMI < low_BMI_threshold) # - Laskee summapisteet: # * frailty_count_3 (weakness + slowness + low_activity) # * frailty_count_4 (weakness + slowness + low_activity + low_BMI) # - Luo luokat: # * frailty_cat_3 : 0 robust, 1 pre-frail, ≥2 frail # * frailty_cat_4 : 0 robust, 1–2 pre-frail, ≥3 frail # - Tuottaa jakaumataulukot ja FOF-ristiintaulukot sekä 1 esimerkkikuvaajan. # # Huom: Tämä on eksplisiittisesti nimetty "Fried-inspired physical frailty proxy", # ei standardoitu Friedin 5-komponenttinen fenotyyppi.
-# ==============================================================================
-# 0. PACKAGES -------------------------------------------------------------------
-# ==============================================================================
-
-suppressPackageStartupMessages({
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(broom)
-library(readr)
-library(knitr)
-library(tibble)
-library(scales)
-library(here)
-})
-
-source(here::here("R", "functions", "io.R"))
-source(here::here("R", "functions", "checks.R"))
-source(here::here("R", "functions", "modeling.R"))
-source(here::here("R", "functions", "reporting.R"))
-
-set.seed(20251124)
+# K15: "Fried-inspired physical frailty proxy"
+# (EI canonical Fried 5/5 -fenotyyppi)
 
 # ==============================================================================
-# 1. DATA & OUTPUT-PATHS -------------------------------------------------------
+# 01. Load Dataset & Data Checking
 # ==============================================================================
-
-script_label <- "K15"
-paths <- init_paths(script_label)
-outputs_dir   <- paths$outputs_dir
-manifest_path <- paths$manifest_path
 
 # Load data
 file_path <- here::here("data", "external", "KaatumisenPelko.csv")
@@ -68,9 +39,14 @@ print(qc)
 # K15 käyttää omaa muuttujarakennetta, joten säilytetään raw_data myös
 analysis_data <- raw_data
 
+# Get paths from init_paths (already called in header)
+outputs_dir   <- getOption("fof.outputs_dir")
+manifest_path <- getOption("fof.manifest_path")
+
 # ==============================================================================
-# 2. FOF-STATUS JA PERUSMUUTTUJAT ---------------------------------------------
+# 02. FOF-Status ja Perusmuuttujat
 # ==============================================================================
+
 # 2.1 FOF_status: oletus 0 = nonFOF, 1 = FOF
 
 if (!("FOF_status" %in% names(analysis_data))) {
@@ -100,11 +76,8 @@ labels = c("nonFOF", "FOF")
 )
 
 # ==============================================================================
-# 3. FRAILTY THRESHOLDS (muokattavissa) ---------------------------------------
+# 03. Frailty Thresholds (Muokattavissa)
 # ==============================================================================
-# ------------------------------------------------
-# FRAILTY THRESHOLDS (can be edited later)
-# ------------------------------------------------
 
 grip_cut_strategy <- "sex_Q1"
 # "sex_Q1" (default) tai "literature" (placeholder)
@@ -118,7 +91,7 @@ maxwalk_low_cut_m <- 400 # Max kävelymatka < 400 m tulkitaan matalaksi
 #   kg) -> helppo muokata skriptin alussa tarpeen mukaan.
 
 # ==============================================================================
-# 4. KOMPPONENTTI: WEAKNESS (frailty_weakness) --------------------------------
+# 04. Komponentti: Weakness (frailty_weakness)
 # ==============================================================================
 # Oletus:
 # - Puristus0 = käsipuristusvoiman keskiarvo (kg), baseline
@@ -225,7 +198,7 @@ if ("Puristus0" %in% names(analysis_data)) {
 }
 
 # ==============================================================================
-# 5. KOMPPONENTTI: SLOWNESS (frailty_slowness) --------------------------------
+# 05. Komponentti: Slowness (frailty_slowness)
 # ==============================================================================
 # Oletus:
 # - kavelynopeus_m_sek0 = kävelynopeus baseline (m/s).
@@ -249,7 +222,7 @@ if (!("kavelynopeus_m_sek0" %in% names(analysis_data))) {
 }
 
 # ==============================================================================
-# 6. KOMPPONENTTI: LOW PHYSICAL ACTIVITY / MOBILITY (frailty_low_activity) ----
+# 06. Komponentti: Low Physical Activity / Mobility (frailty_low_activity)
 # ==============================================================================
 # Käytettävät muuttujat (jos saatavilla):
 # - oma_arvio_liikuntakyky:
@@ -357,7 +330,7 @@ frailty_low_activity_2plus = case_when(
 )
 
 # ==============================================================================
-# 7. OPTIONAL KOMPPONENTTI: LOW BMI (frailty_low_BMI) -------------------------
+# 07. Optional Komponentti: Low BMI (frailty_low_BMI)
 # ==============================================================================
 # Huom: Tämä EI ole painonlasku-komponentti. Käytetään vain BMI-arvoa
 # (esim. aliravitsemusta / vähäistä reserviä indikoi BMI < low_BMI_threshold).
@@ -378,7 +351,7 @@ if (!("BMI" %in% names(analysis_data))) {
 }
 
 # ==============================================================================
-# 8. SUMMAPISTEET JA KATEGORIAT -----------------------------------------------
+# 08. Summapisteet ja Kategoriat
 # ==============================================================================
 
 analysis_data <- analysis_data %>%
@@ -473,9 +446,10 @@ print(table(analysis_data$frailty_cat_3_obj, useNA = "ifany"))
 print(table(analysis_data$frailty_cat_3_2plus, useNA = "ifany"))
 
 # ==============================================================================
-# 9. DESKRIPTIIVISET TAULUKOT -------------------------------------------------
+# 09. Deskriptiiviset Taulukot
 # ==============================================================================
-# 9.1 Jakaumat: count & category (3- ja 4-komponenttinen) ---------------------
+
+## 9.1 Jakaumat: count & category (3- ja 4-komponenttinen)
 
 tab_frailty_count_3 <- analysis_data %>%
   count(frailty_count_3) %>%
@@ -515,7 +489,7 @@ update_manifest("table", "K15_frailty_count_4_overall",
 update_manifest("table", "K15_frailty_cat_4_overall",
 "Distribution of frailty_cat_4 (Fried-inspired proxy, 4 components; overall).")
 
-# 9.2 FOF-ryhmittäiset ristiintaulukot ---------------------------------------
+## 9.2 FOF-ryhmittäiset ristiintaulukot
 
 tab_frailty_cat3_by_FOF <- analysis_data %>%
   filter(!is.na(FOF_status_factor), !is.na(frailty_cat_3)) %>%
@@ -545,7 +519,7 @@ update_manifest("table", "K15_frailty_cat3_by_FOF",
 update_manifest("table", "K15_frailty_cat4_by_FOF",
 "Frailty categories (4-component proxy) by FOF-status (n and row %).")
 
-# 9.3 Khiin neliö / Fisher (FOF × frailty_cat) --------------------------------
+## 9.3 Khiin neliö / Fisher (FOF × frailty_cat)
 
 dat_chi3 <- analysis_data %>%
   filter(!is.na(FOF_status_factor), !is.na(frailty_cat_3))
@@ -571,9 +545,10 @@ update_manifest("table", "K15_chisq_FOF_by_frailty_cat4",
 "Chi-square test for association: FOF_status × frailty_cat_4.")
 
 # ==============================================================================
-# 10. OPTIONAL PLOTS -----------------------------------------------------------
+# 10. Optional Plots
 # ==============================================================================
-# 10.1 Proportion plot: frailty_cat_3 × FOF_status
+
+## 10.1 Proportion plot: frailty_cat_3 × FOF_status
 
 plot_frailty_cat3_by_FOF <- ggplot(
   analysis_data %>%
@@ -606,7 +581,7 @@ update_manifest("plot", "K15_frailty_cat3_by_FOF",
 # TODO: Haluttaessa vastaava kuva frailty_cat_4:lle.
 
 # ==============================================================================
-# 11. SAVE ANALYSIS DATA FOR K16 ----------------------------------------------
+# 11. Save Analysis Data for K16
 # ==============================================================================
 # Tallenna analysis_data K16:ta varten (sisältää kaikki frailty-muuttujat)
 rdata_path <- here::here("R-scripts", "K15", "outputs",
@@ -616,17 +591,8 @@ message("K15: analysis_data tallennettu: ", rdata_path)
 
 message("K15: Fried-inspired physical frailty proxy rakennettu ja perusjakaumat + FOF-vertailut tallennettu.")
 
-# Save session info
-si_path <- file.path(outputs_dir, "sessionInfo_K15.txt")
-save_sessioninfo(si_path)
-append_manifest(
-  manifest_row(script = script_label, label = "sessionInfo",
-               path = si_path, kind = "sessioninfo"),
-  manifest_path
-)
-
 # ==============================================================================
-# 12. LOPPUKOMMENTIT (DOC-BLOKKI) ---------------------------------------------
+# 12. Loppukommentit (Doc-Blokki)
 # ==============================================================================
 # Tämä skripti rakentaa eksplisiittisesti nimetyn "Fried-inspired physical frailty proxy" -muuttujan.
 # Sisältyvät komponentit:
@@ -679,6 +645,7 @@ append_manifest(
 # - Tutkija voi säätää threshold-arvoja (grip_cut_strategy, gait_cut_m_per_sec,
 #   low_BMI_threshold, maxwalk_low_cut_m) skriptin alussa, ja tarvittaessa
 #   päivittää low_activity-luokittelun vastaamaan tarkempaa tietoa muuttujakoodauksesta.
+
 # End of K15.R
 
 save_sessioninfo_manifest()

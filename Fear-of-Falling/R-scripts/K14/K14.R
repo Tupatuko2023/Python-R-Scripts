@@ -16,80 +16,12 @@ paths <- init_paths(script_label)
 set.seed(20251124)
 
 
-#!/usr/bin/env Rscript
-
-###############################################################################
-#
 # K14: FOF-ryhmittäinen perustaulukko ("Table 1")
 # Skripti tuottaa deskriptiivisen taulukon, joka vertaa FOF-ryhmiä
 # eri muuttujien suhteen.
-# Käytetään ensisijaisesti dataa, joka on ladattu K1-skriptissä nimellä
-# 'data_final'; vaihtoehtoisesti käytetään 'analysis_data' tai luetaan
-# CSV-tiedosto.
-#
-# Tuottaa Table 1 -tyyppisen taulukon:
-# - Sarakkeet:
-#   * "Without FOF\nn=77" (todellinen n laskettu datasta)
-#   * "With FOF\nn=199"
-#   * "P-value"
-# - Rivit (täsmälleen annetussa järjestyksessä):
-#   1) Women, n (%)
-#   2) Age, mean (SD)
-#   3) Diseases, n (%)
-#      - Diabetes
-#      - Dementia
-#      - Parkinson’s
-#      - Cerebrovascular Accidents
-#   4) Self-rated Health, n (%)
-#      - Good
-#      - Moderate
-#      - Bad
-#   5) Mikkeli Osteoporosis Index, mean (SD)
-#   6) Body Mass Index, mean (SD)
-#   7) Smoked, n (%)
-#   8) Alcohol, n (%)
-#      - No
-#      - Moderate
-#      - Large
-#   9) Self-Rated Mobility, n (%)
-#      - Good
-#      - Moderate
-#      - Weak
-#  10) Walking 500 m, n (%)
-#      - No
-#      - Difficulties
-#      - Cannot
-#  11) Balance difficulties, n (%)
-#  12) Fallen, n (%)
-#  13) Fractures, n (%)
-#  14) Pain (Visual Analog Scale), mm, mean (SD)
-#
-# Huom. Tämä skripti on deskriptiivinen; p-arvot ovat t-/chisq/Fisher-testeistä,
-# mutta niitä ei pidä tulkita korjattuina monen testin suhteen.
-###############################################################################
 
 # ==============================================================================
-# 0. PACKAGES ---------------------------------------------------
-# ==============================================================================
-
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(tibble)
-  library(readr)
-  library(knitr)
-  library(here)
-})
-
-source(here::here("R", "functions", "io.R"))
-source(here::here("R", "functions", "checks.R"))
-source(here::here("R", "functions", "modeling.R"))
-source(here::here("R", "functions", "reporting.R"))
-
-set.seed(20251124)
-
-# ==============================================================================
-# 1: Load the dataset -------------------------------------------
+# 01. Load Dataset & Data Checking
 # ==============================================================================
 
 file_path <- here::here("data", "external", "KaatumisenPelko.csv")
@@ -107,17 +39,12 @@ print(qc)
 # K14 käyttää raakaa dataa (ei standardisoitua), joten käytetään raw_data:a
 analysis_data <- raw_data
 
-# ==============================================================================
-# 2: Output-kansio K14:n alle ------------------------------------
-# ==============================================================================
-
-script_label <- "K14"
-paths <- init_paths(script_label)
-outputs_dir   <- paths$outputs_dir
-manifest_path <- paths$manifest_path
+# Get paths from init_paths (already called in header)
+outputs_dir   <- getOption("fof.outputs_dir")
+manifest_path <- getOption("fof.manifest_path")
 
 # ==============================================================================
-# 3. RECODINGS: FOF-status + muut Table 1 -muuttujat----------------------------
+# 02. Recodings: FOF-Status + Muut Table 1 -Muuttujat
 # ==============================================================================
 
 # Tässä käytetty muuttujakartta:
@@ -242,10 +169,10 @@ N_group0 <- fof_counts$n[fof_counts$FOF_status == group0_lvl]
 N_group1 <- fof_counts$n[fof_counts$FOF_status == group1_lvl]
 
 # ==============================================================================
-# 4. Apufunktiot: mean(SD), n(%), p-arvot, p-arvon formatointi---------
+# 03. Apufunktiot: mean(SD), n(%), P-Arvot
 # ==============================================================================
 
-## 4.1 P-arvon muotoilu
+## 3.1 P-arvon muotoilu
 
 format_pvalue <- function(p) {
   if (is.null(p) || is.na(p)) {
@@ -258,7 +185,7 @@ format_pvalue <- function(p) {
   }
 }
 
-## 4.2 mean(SD) ryhmittäin
+## 3.2 mean(SD) ryhmittäin
 
 format_mean_sd <- function(x, group, digits = 1) {
   idx <- !is.na(x) & !is.na(group)
@@ -288,7 +215,7 @@ format_mean_sd <- function(x, group, digits = 1) {
   out
 }
 
-## 4.3 n(%) dikotomiselle muuttujalle (event = 1)
+## 3.3 n(%) dikotomiselle muuttujalle (event = 1)
 
 format_n_pct <- function(x, group, event = 1L) {
   idx <- !is.na(x) & !is.na(group)
@@ -311,7 +238,7 @@ format_n_pct <- function(x, group, event = 1L) {
   out
 }
 
-## 4.4 P-arvo jatkuville (t-testi)
+## 3.4 P-arvo jatkuville (t-testi)
 
 fun_pvalue_cont <- function(x, group) {
   idx <- !is.na(x) & !is.na(group)
@@ -331,7 +258,7 @@ fun_pvalue_cont <- function(x, group) {
   p
 }
 
-## 4.5 P-arvo kategorisille (chi-square / Fisher)
+## 3.5 P-arvo kategorisille (chi-square / Fisher)
 
 fun_pvalue_cat <- function(x, group) {
   idx <- !is.na(x) & !is.na(group)
@@ -363,7 +290,7 @@ fun_pvalue_cat <- function(x, group) {
   p
 }
 
-## 4.6 Helper: dikotominen rivi (n(%) + p-arvo)
+## 3.6 Helper: dikotominen rivi (n(%) + p-arvo)
 
 make_binary_row <- function(data, var_name, row_label, event = 1L,
                             group0 = group0_lvl, group1 = group1_lvl) {
@@ -379,7 +306,7 @@ make_binary_row <- function(data, var_name, row_label, event = 1L,
   )
 }
 
-## 4.7 Helper: moniluokkainen muuttuja (header + luokkakohtaiset rivit)
+## 3.7 Helper: moniluokkainen muuttuja (header + luokkakohtaiset rivit)
 
 make_multicat_rows <- function(data, var_name, header_label,
                                group0 = group0_lvl, group1 = group1_lvl) {
@@ -450,8 +377,7 @@ make_multicat_rows <- function(data, var_name, header_label,
   bind_rows(rows_list)
 }
 
-
-## 4.8 P-arvo yhdelle kategoriatasolle (esim. "Good" vs ei-Good)
+## 3.8 P-arvo yhdelle kategoriatasolle (esim. "Good" vs ei-Good)
 
 fun_pvalue_cat_level <- function(factor_var, group, level_value) {
   idx <- !is.na(factor_var) & !is.na(group)
@@ -483,9 +409,9 @@ fun_pvalue_cat_level <- function(factor_var, group, level_value) {
   p
 }
 
-## 4.9 Yleinen helper moniluokkaisille (SRH, Alcohol, SRM, Walk500):
-## header: n(100) / n(100) + kokonais-p
-## alarivit: tason n(%) + oma p-arvo (tasolla vs ei tasolla, EXPLORATORY)
+## 3.9 Yleinen helper moniluokkaisille (SRH, Alcohol, SRM, Walk500):
+##     header: n(100) / n(100) + kokonais-p
+##     alarivit: tason n(%) + oma p-arvo (tasolla vs ei tasolla, EXPLORATORY)
 
 make_multicat_rows_with_level_p <- function(data, var_name, header_label,
                                             group0 = group0_lvl, group1 = group1_lvl) {
@@ -580,10 +506,10 @@ make_multicat_rows_with_level_p <- function(data, var_name, header_label,
 }
 
 # ==============================================================================
-# 5. Taulukon yksittäiset lohkot --------------------------------------
+# 04. Taulukon Yksittäiset Lohkot
 # ==============================================================================
 
-## 5.1 Women, n (%)
+## 4.1 Women, n (%)
 
 vals_women <- format_n_pct(analysis_data_rec$woman,
                            analysis_data_rec$FOF_status, event = 1L)
@@ -597,7 +523,7 @@ tab_women <- tibble(
   P_value     = format_pvalue(p_women)
 )
 
-## 5.2 Age, mean (SD) – ikä kokonaislukuina
+## 4.2 Age, mean (SD)
 
 vals_age <- format_mean_sd(analysis_data_rec$age,
                            analysis_data_rec$FOF_status, digits = 0)
@@ -611,7 +537,7 @@ tab_age <- tibble(
   P_value     = format_pvalue(p_age)
 )
 
-## 5.3 Diseases, n (%): header + diagnoosikohtaiset rivit
+## 4.3 Diseases, n (%): header + diagnoosikohtaiset rivit
 
 # "Any disease" = vähintään yksi: diabetes / alzheimer / parkinson / AVH
 any_disease <- with(
@@ -647,9 +573,7 @@ tab_diseases <- bind_rows(
   tab_comorb
 )
 
-## 5.4 Self-rated Health, n (%)
-## Header: n(100) per FOF-ryhmä (vain ei-NA SRH)
-## Alarivit: Good / Moderate / Bad, jokaiselle oma p-arvo (tasolla vs ei tasolla)
+## 4.4 Self-rated Health, n (%)
 
 tab_SRH <- make_multicat_rows_with_level_p(
   data         = analysis_data_rec,
@@ -657,7 +581,7 @@ tab_SRH <- make_multicat_rows_with_level_p(
   header_label = "Self-rated Health, n (%)"
 )
 
-## 5.5 Mikkeli Osteoporosis Index, mean (SD)
+## 4.5 Mikkeli Osteoporosis Index, mean (SD)
 
 vals_MOI <- format_mean_sd(analysis_data_rec$MOIindeksiindeksi,
                            analysis_data_rec$FOF_status, digits = 1)
@@ -671,7 +595,7 @@ tab_MOI <- tibble(
   P_value     = format_pvalue(p_MOI)
 )
 
-## 5.6 Body Mass Index, mean (SD)
+## 4.6 Body Mass Index, mean (SD)
 
 vals_BMI <- format_mean_sd(analysis_data_rec$BMI,
                            analysis_data_rec$FOF_status, digits = 1)
@@ -685,7 +609,7 @@ tab_BMI <- tibble(
   P_value     = format_pvalue(p_BMI)
 )
 
-## 5.7 Smoked, n (%)
+## 4.7 Smoked, n (%)
 
 vals_smoked <- format_n_pct(analysis_data_rec$tupakointi,
                             analysis_data_rec$FOF_status, event = 1L)
@@ -699,9 +623,7 @@ tab_smoked <- tibble(
   P_value     = format_pvalue(p_smoked)
 )
 
-## 5.8 Alcohol, n (%)
-## Header: n(100) per FOF-ryhmä (alkoholi-mittauksen saaneet)
-## Alarivit: No / Moderate / Large, jokaiselle oma p-arvo (tasolla vs ei tasolla)
+## 4.8 Alcohol, n (%)
 
 tab_alcohol <- make_multicat_rows_with_level_p(
   data         = analysis_data_rec,
@@ -709,7 +631,7 @@ tab_alcohol <- make_multicat_rows_with_level_p(
   header_label = "Alcohol, n (%)"
 )
 
-## 5.9 Self-Rated Mobility, n (%)
+## 4.9 Self-Rated Mobility, n (%)
 
 tab_SRM <- make_multicat_rows_with_level_p(
   data         = analysis_data_rec,
@@ -717,7 +639,7 @@ tab_SRM <- make_multicat_rows_with_level_p(
   header_label = "Self-Rated Mobility, n (%)"
 )
 
-## 5.10 Walking 500 m, n (%)
+## 4.10 Walking 500 m, n (%)
 
 tab_Walk500 <- make_multicat_rows_with_level_p(
   data         = analysis_data_rec,
@@ -725,7 +647,7 @@ tab_Walk500 <- make_multicat_rows_with_level_p(
   header_label = "Walking 500 m, n (%)"
 )
 
-## 5.11 Balance difficulties, n (%)
+## 4.11 Balance difficulties, n (%)
 
 vals_balance <- format_n_pct(analysis_data_rec$tasapainovaikeus,
                              analysis_data_rec$FOF_status, event = 1L)
@@ -739,7 +661,7 @@ tab_balance <- tibble(
   P_value     = format_pvalue(p_balance)
 )
 
-## 5.12 Fallen, n (%)
+## 4.12 Fallen, n (%)
 
 vals_fallen <- format_n_pct(analysis_data_rec$kaatuminen,
                             analysis_data_rec$FOF_status, event = 1L)
@@ -753,7 +675,7 @@ tab_fallen <- tibble(
   P_value     = format_pvalue(p_fallen)
 )
 
-## 5.13 Fractures, n (%)
+## 4.13 Fractures, n (%)
 
 vals_fract <- format_n_pct(analysis_data_rec$murtumia,
                            analysis_data_rec$FOF_status, event = 1L)
@@ -767,7 +689,7 @@ tab_fractures <- tibble(
   P_value     = format_pvalue(p_fract)
 )
 
-## 5.14 Pain VAS, mean (SD)
+## 4.14 Pain VAS, mean (SD)
 
 vals_pain <- format_mean_sd(analysis_data_rec$PainVAS0,
                             analysis_data_rec$FOF_status, digits = 1)
@@ -782,7 +704,7 @@ tab_pain <- tibble(
 )
 
 # ==============================================================================
-# 6. Bind rows & nimeä sarakkeet Table 1 -muotoon -----------------------
+# 05. Bind Rows & Nimeä Sarakkeet Table 1 -Muotoon
 # ==============================================================================
 
 baseline_table_raw <- bind_rows(
@@ -827,7 +749,7 @@ table_footnote <- paste(
 attr(baseline_table, "footnote") <- table_footnote
 
 # ==============================================================================
-# 7. Tulostus, tallennus ja manifestin päivitys -----------------------------
+# 06. Tulostus, Tallennus ja Manifestin Päivitys
 # ==============================================================================
 
 ## Konsolitulostus (valinnainen)
@@ -871,15 +793,6 @@ if (!file.exists(manifest_path)) {
 }
 
 message("K14: baseline table by FOF-status tallennettu ja manifest päivitetty.")
-
-# Save session info
-si_path <- file.path(outputs_dir, "sessionInfo_K14.txt")
-save_sessioninfo(si_path)
-append_manifest(
-  manifest_row(script = script_label, label = "sessionInfo",
-               path = si_path, kind = "sessioninfo"),
-  manifest_path
-)
 
 # End of K14.R
 
