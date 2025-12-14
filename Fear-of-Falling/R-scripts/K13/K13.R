@@ -1,3 +1,21 @@
+# --- Kxx template (put at top of every script) -------------------------------
+suppressPackageStartupMessages({ library(here); library(dplyr) })
+
+rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
+   envir = .GlobalEnv)
+
+source(here("R","functions","io.R"))
+source(here("R","functions","checks.R"))
+source(here("R","functions","modeling.R"))
+source(here("R","functions","reporting.R"))
+
+script_label <- sub("\\.R$", "", basename(commandArgs(trailingOnly=FALSE)[grep("--file=", commandArgs())] |> sub("--file=", "", x=_)))
+if (is.na(script_label) || script_label == "") script_label <- "K13"
+paths <- init_paths(script_label)
+
+set.seed(20251124)
+
+
 # K13: FOF × ikä, BMI, sukupuoli -interaktioanalyysit (laajennetut mallit)
 
 
@@ -12,8 +30,8 @@ library(tidyr)
 library(ggplot2)
 library(forcats)
 library(broom)
-library(car)       
-library(emmeans)   
+library(car)
+library(emmeans)
 library(effectsize)
 library(mice)
 library(knitr)
@@ -22,6 +40,12 @@ library(scales)
 library(nlme)
 library(quantreg)
 library(tibble)
+library(here)
+
+source(here::here("R", "functions", "io.R"))
+source(here::here("R", "functions", "checks.R"))
+source(here::here("R", "functions", "modeling.R"))
+source(here::here("R", "functions", "reporting.R"))
 
 set.seed(20251124)  # jos myöhemmin käytetään satunnaisuutta (esim. bootstrap)
 
@@ -38,143 +62,47 @@ if (!exists("raw_data")) {
   stop("Object 'raw_data' not found. Please load your data as raw_data first.")
 }
 
-## Tee raaka- ja työkopio
-analysis_data  <- raw_data
-glimpse(analysis_data)
-names(analysis_data)
+## Standardize variable names and run sanity checks
+df <- standardize_analysis_vars(raw_data)
+qc <- sanity_checks(df)
+print(qc)
 
 # ==============================================================================
 # 2: Output-kansio K13:n alle ------------------------------------
 # ==============================================================================
 
-## .../Fear-of-Falling/R-scripts/K13/outputs
-outputs_dir <- here::here("R-scripts", "K13", "outputs")
-if (!dir.exists(outputs_dir)) {
-  dir.create(outputs_dir, recursive = TRUE)
-}
-
-## 2.1: --- Skriptin tunniste ---
-script_label <- "K13"   
-
-## 2.2: --- Erillinen manifest-kansio projektissa: ./manifest ------------------
-# Projektin juurikansio oletetaan olevan .../Fear-of-Falling
-manifest_dir <- here::here("manifest")
-if (!dir.exists(manifest_dir)) {
-  dir.create(manifest_dir, recursive = TRUE)
-}
-manifest_path <- file.path(manifest_dir, "manifest.csv")
-
-# 2.3: --- Helper to save CSV + simple HTML table ------------------------------
-
-save_table_csv_html <- function(df, basename,
-                                out_dir = outputs_dir) {
-  
-  # Varmista, että kansio on olemassa
-  if (!dir.exists(out_dir)) {
-    dir.create(out_dir, recursive = TRUE)
-  }
-  
-  csv_path  <- file.path(out_dir, paste0(basename, ".csv"))
-  html_path <- file.path(out_dir, paste0(basename, ".html"))
-  
-  # CSV
-  readr::write_csv(df, csv_path)
-  
-  # HTML-taulukko
-  html_table <- knitr::kable(
-    df, format = "html",
-    table.attr = "border='1' style='border-collapse:collapse;'"
-  )
-  
-  html_content <- paste0(
-    "<html><head><meta charset='UTF-8'></head><body>",
-    "<h3>", basename, "</h3>",
-    html_table,
-    "</body></html>"
-  )
-  
-  writeLines(html_content, con = html_path)
-  
-  invisible(list(csv = csv_path, html = html_path))
-}
+script_label <- "K13"
+paths <- init_paths(script_label)
+outputs_dir   <- paths$outputs_dir
+manifest_path <- paths$manifest_path
 
 # ==============================================================================
-# 3. DATA CHECKING ----------------------------------------------
+# 3. DATA PREPARATION -------------------------------------------
 # ==============================================================================
 
-# 3.1: Varmista että analysis_data on olemassa
-if (!exists("analysis_data")) {
-  stop("Objektia 'analysis_data' ei löytynyt. Lataa data ennen skriptin ajamista.")
-}
-
-# 3.2: Yleiskuva
-# names(analysis_data)
-# str(analysis_data)
-
-# 3.3: Tarkennettu rakennekatsaus keskeisille muuttujille (muokkaa tarvittaessa)
-analysis_data %>% 
-  dplyr::select(
-    age, sex, BMI, MOIindeksiindeksi, diabetes,
-    kaatumisenpelkoOn,
-    alzheimer, parkinson, AVH,
-    ToimintaKykySummary0, ToimintaKykySummary2,
-    dplyr::starts_with("Puristus"),
-    dplyr::starts_with("kavely"),
-    dplyr::starts_with("Tuoli"),
-    dplyr::starts_with("Seisominen"),
-    SRH = dplyr::any_of("SRH"),
-    koettuterveydentila = dplyr::any_of("koettuterveydentila"),
-    oma_arvio_liikuntakyky = dplyr::any_of("oma_arvio_liikuntakyky"),
-    PainVAS0 = dplyr::any_of("PainVAS0")
-  ) %>% 
-  glimpse()
-
-# ==============================================================================
-#  4. ANALYYSIDATA INTERAKTIOILLE (dat_fof + dat_int_cc)---------
-# ==============================================================================
-
-analysis_data_rec <- analysis_data %>%
+# Lisätään tarvittavat kovariaatit (df on jo standardisoitu)
+analysis_data_rec <- df %>%
   mutate(
-    # FOF-status
-    FOF_status = factor(
-      kaatumisenpelkoOn,
-      levels = c(0, 1),
-      labels = c("nonFOF", "FOF")
-    ),
-    
     # Ikäluokat
     AgeClass = case_when(
-      age < 65                 ~ "65_74",
-      age >= 65 & age <= 74    ~ "65_74",
-      age >= 75 & age <= 84    ~ "75_84",
-      age >= 85                ~ "85plus",
+      Age < 65                 ~ "65_74",
+      Age >= 65 & Age <= 74    ~ "65_74",
+      Age >= 75 & Age <= 84    ~ "75_84",
+      Age >= 85                ~ "85plus",
       TRUE                     ~ NA_character_
     ),
     AgeClass = factor(AgeClass, levels = c("65_74", "75_84", "85plus"), ordered = TRUE),
-    
+
     # Neuro
     Neuro_any_num = if_else(
       (alzheimer == 1 | parkinson == 1 | AVH == 1),
       1L, 0L,
       missing = 0L
     ),
-    # AVH = aivoverenkiertohäiriö
-    AVH_factor = factor(
-      AVH,
-      levels = c(0, 1),
-      labels = c("nonAVH", "AVH")
-    ),  
     Neuro_any = factor(
       Neuro_any_num,
       levels = c(0, 1),
       labels = c("no_neuro", "neuro")
-    ),
-    
-    # Sukupuoli: 0 = female, 1 = male
-    sex_factor = factor(
-      sex,
-      levels = c(0, 1),
-      labels = c("female", "male")
     )
   )
 
@@ -1097,56 +1025,6 @@ results_sentences
 #==============================================================================
 
 
-manifest_rows <- tibble::tibble(
-  script = script_label,
-  type = c(
-    # taulukot
-    rep("table", 8),
-    # kuvat
-    rep("plot", 3)
-  ),
-  filename = c(
-    # --- TABLES (CSV) ---
-    file.path(script_label, "lm_age_int_extended_full.csv"),
-    file.path(script_label, "lm_BMI_int_extended_full.csv"),
-    file.path(script_label, "lm_sex_int_extended_full.csv"),
-    file.path(script_label, "lm_all_int_extended_full.csv"),
-    file.path(script_label, "FOF_interaction_effects_overview.csv"),
-    file.path(script_label, "FOF_interaction_effects_standardized.csv"),
-    file.path(script_label, "simple_slopes_FOF_by_age.csv"),
-    file.path(script_label, "simple_slopes_FOF_by_BMI.csv"),
-    # --- PLOTS (PNG) ---
-    file.path(script_label, "FOF_effect_by_age_simple_slopes.png"),
-    file.path(script_label, "FOF_effect_by_BMI_simple_slopes.png"),
-    file.path(script_label, "FOF_effect_by_sex_simple_slopes.png")
-  ),
-  description = c(
-    "Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.",
-    "Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.",
-    "Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.",
-    "Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex.",
-    "Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo).",
-    "Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui.",
-    "Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).",
-    "Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).",
-    "Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).",
-    "Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).",
-    "Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä)."
-  )
-)
-
-## Kirjoita / päivitä manifest.csv
-
-if (!file.exists(manifest_path)) {
-  readr::write_csv(manifest_rows, manifest_path)
-} else {
-  readr::write_csv(
-    manifest_rows,
-    manifest_path,
-    append = TRUE,
-    col_names = FALSE
-  )
-}
 
 #==============================================================================
 # 11. KLIININEN YHTEENVETO 
@@ -1173,6 +1051,16 @@ clinical_summary_template <- c(
 
 clinical_summary_template
 
-
+# Save session info
+si_path <- file.path(outputs_dir, "sessionInfo_K13.txt")
+save_sessioninfo(si_path)
+append_manifest(
+  manifest_row(script = script_label, label = "sessionInfo",
+               path = si_path, kind = "sessioninfo"),
+  manifest_path
+)
 
 # End of K13.R
+
+save_sessioninfo_manifest()
+

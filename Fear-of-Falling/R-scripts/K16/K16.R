@@ -1,3 +1,21 @@
+# --- Kxx template (put at top of every script) -------------------------------
+suppressPackageStartupMessages({ library(here); library(dplyr) })
+
+rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
+   envir = .GlobalEnv)
+
+source(here("R","functions","io.R"))
+source(here("R","functions","checks.R"))
+source(here("R","functions","modeling.R"))
+source(here("R","functions","reporting.R"))
+
+script_label <- sub("\\.R$", "", basename(commandArgs(trailingOnly=FALSE)[grep("--file=", commandArgs())] |> sub("--file=", "", x=_)))
+if (is.na(script_label) || script_label == "") script_label <- "K16"
+paths <- init_paths(script_label)
+
+set.seed(20251124)
+
+
 # ==============================================================================
 # K16: Frailty-Adjusted Statistical Models for Fear-of-Falling Study
 # ==============================================================================
@@ -32,46 +50,17 @@ conflicted::conflict_prefer("filter", "dplyr")
 conflicted::conflict_prefer("recode", "dplyr")
 conflicted::conflict_prefer("lmer", "lmerTest")
 
+source(here::here("R", "functions", "io.R"))
+source(here::here("R", "functions", "checks.R"))
+source(here::here("R", "functions", "modeling.R"))
+source(here::here("R", "functions", "reporting.R"))
+
 
 # 2) GLOBAL SETUP --------------------------------------------------------------
 script_label <- "K16"
-output_dir <- here::here("R-scripts", script_label, "outputs")
-manifest_path <- here::here("manifest", "manifest.csv")
-
-if (!dir.exists(output_dir)) {
-  dir.create(output_dir, recursive = TRUE)
-  message("✓ Created output directory: ", output_dir)
-}
-if (!dir.exists(dirname(manifest_path))) {
-  dir.create(dirname(manifest_path), recursive = TRUE)
-}
-
-# Helper function to register outputs in manifest
-register_output <- function(filepath, description, script_label) {
-  if (!file.exists(manifest_path)) {
-    manifest <- data.frame(
-      script = character(),
-      filepath = character(),
-      description = character(),
-      timestamp = character(),
-      stringsAsFactors = FALSE
-    )
-  } else {
-    manifest <- read.csv(manifest_path, stringsAsFactors = FALSE)
-  }
-
-  new_entry <- data.frame(
-    script = script_label,
-    filepath = filepath,
-    description = description,
-    timestamp = as.character(Sys.time()),
-    stringsAsFactors = FALSE
-  )
-
-  manifest <- manifest[manifest$filepath != filepath, ]
-  manifest <- rbind(manifest, new_entry)
-  write.csv(manifest, manifest_path, row.names = FALSE)
-}
+paths <- init_paths(script_label)
+output_dir    <- paths$outputs_dir
+manifest_path <- paths$manifest_path
 
 message("\n", strrep("=", 80))
 message("K16: FRAILTY-ADJUSTED STATISTICAL MODELS")
@@ -913,4 +902,16 @@ message("✓ Results text (EN): K16_Results_EN.txt")
 message("✓ Results text (FI): K16_Results_FI.txt")
 message(strrep("=", 80), "\n")
 
+# Save session info
+si_path <- file.path(output_dir, "sessionInfo_K16.txt")
+save_sessioninfo(si_path)
+append_manifest(
+  manifest_row(script = script_label, label = "sessionInfo",
+               path = si_path, kind = "sessioninfo"),
+  manifest_path
+)
+
 # End of K16.R
+
+save_sessioninfo_manifest()
+

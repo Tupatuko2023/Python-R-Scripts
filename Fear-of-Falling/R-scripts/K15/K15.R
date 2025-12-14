@@ -1,3 +1,21 @@
+# --- Kxx template (put at top of every script) -------------------------------
+suppressPackageStartupMessages({ library(here); library(dplyr) })
+
+rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
+   envir = .GlobalEnv)
+
+source(here("R","functions","io.R"))
+source(here("R","functions","checks.R"))
+source(here("R","functions","modeling.R"))
+source(here("R","functions","reporting.R"))
+
+script_label <- sub("\\.R$", "", basename(commandArgs(trailingOnly=FALSE)[grep("--file=", commandArgs())] |> sub("--file=", "", x=_)))
+if (is.na(script_label) || script_label == "") script_label <- "K15"
+paths <- init_paths(script_label)
+
+set.seed(20251124)
+
+
 #!/usr/bin/env Rscript
 # K15.R -----------------------------------------------------------------------
 # # "Fried-inspired physical frailty proxy" (EI canonical Fried 5/5 -fenotyyppi) # # - Käyttää valmista analysis_data-dataframea (tai lukee KaatumisenPelko.csv:n). # - Luo komponentit: # * frailty_weakness (Puristus0 + sukupuoli, sex_Q1-rajat) # * frailty_slowness (kavelynopeus_m_sek0, < 0.8 m/s) # * frailty_low_activity (oma_arvio_liikuntakyky + 500m/2km + maxkävelymatka) # * frailty_low_BMI (optional, BMI < low_BMI_threshold) # - Laskee summapisteet: # * frailty_count_3 (weakness + slowness + low_activity) # * frailty_count_4 (weakness + slowness + low_activity + low_BMI) # - Luo luokat: # * frailty_cat_3 : 0 robust, 1 pre-frail, ≥2 frail # * frailty_cat_4 : 0 robust, 1–2 pre-frail, ≥3 frail # - Tuottaa jakaumataulukot ja FOF-ristiintaulukot sekä 1 esimerkkikuvaajan. # # Huom: Tämä on eksplisiittisesti nimetty "Fried-inspired physical frailty proxy", # ei standardoitu Friedin 5-komponenttinen fenotyyppi.
@@ -18,124 +36,37 @@ library(scales)
 library(here)
 })
 
+source(here::here("R", "functions", "io.R"))
+source(here::here("R", "functions", "checks.R"))
+source(here::here("R", "functions", "modeling.R"))
+source(here::here("R", "functions", "reporting.R"))
+
 set.seed(20251124)
 
 # ==============================================================================
 # 1. DATA & OUTPUT-PATHS -------------------------------------------------------
 # ==============================================================================
-# 1.1 Output-kansio K15:n alle
-# ./Fear-of-Falling/R-scripts/K15/outputs
-
-outputs_dir <- here::here("R-scripts", "K15", "outputs")
-if (!dir.exists(outputs_dir)) {
-dir.create(outputs_dir, recursive = TRUE)
-}
-
-# Skriptin tunniste
 
 script_label <- "K15"
+paths <- init_paths(script_label)
+outputs_dir   <- paths$outputs_dir
+manifest_path <- paths$manifest_path
 
-# Manifest-kansio projektissa: ./manifest
-
-manifest_dir <- here::here("manifest")
-if (!dir.exists(manifest_dir)) {
-dir.create(manifest_dir, recursive = TRUE)
-}
-manifest_path <- file.path(manifest_dir, "manifest.csv")
-
-# 1.2 Helper: tallenna taulukko CSV + yksinkertainen HTML ---------------------
-
-save_table_csv_html <- function(df, basename,
-out_dir = outputs_dir) {
-if (!dir.exists(out_dir)) {
-dir.create(out_dir, recursive = TRUE)
-}
-
-csv_path <- file.path(out_dir, paste0(basename, ".csv"))
-html_path <- file.path(out_dir, paste0(basename, ".html"))
-
-# CSV
-
-readr::write_csv(df, csv_path)
-
-# HTML-taulukko
-
-html_table <- knitr::kable(
-df, format = "html",
-table.attr = "border='1' style='border-collapse:collapse;'"
-)
-
-html_content <- paste0(
-"<html><head><meta charset='UTF-8'></head><body>",
-"<h3>", basename, "</h3>",
-html_table,
-"</body></html>"
-)
-
-writeLines(html_content, con = html_path)
-
-invisible(list(csv = csv_path, html = html_path))
-}
-
-# 1.3 Helper: lisää rivi manifestiin ------------------------------------------
-
-update_manifest <- function(type = c("table", "plot"),
-basename,
-description,
-ext = if (type[1] == "plot") "png" else "csv") {
-type <- match.arg(type)
-row <- tibble(
-script = script_label,
-type = type,
-filename = file.path(script_label, paste0(basename, ".", ext)),
-description = description
-)
-
-if (!file.exists(manifest_path)) {
-utils::write.table(
-row,
-file = manifest_path,
-sep = ",",
-row.names = FALSE,
-col.names = TRUE,
-append = FALSE,
-qmethod = "double"
-)
-} else {
-utils::write.table(
-row,
-file = manifest_path,
-sep = ",",
-row.names = FALSE,
-col.names = FALSE,
-append = TRUE,
-qmethod = "double"
-)
-}
-invisible(row)
-}
-
-# 1.4 Varmista, että analysis_data on olemassa -------------------------------
-
-if (!exists("analysis_data")) {
-
-# Sama logiikka kuin K11/K13/K14: luetaan oletus-CSV tarvittaessa
-
+# Load data
 file_path <- here::here("data", "external", "KaatumisenPelko.csv")
 if (!file.exists(file_path)) {
-stop(
-"Objektia 'analysis_data' ei löytynyt,\n",
-"eikä tiedostoa data/external/KaatumisenPelko.csv löydy.\n",
-"Luo 'analysis_data' ennen K15.R-skriptin ajamista tai tarkista polku."
-)
-}
-raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
-analysis_data <- raw_data
+  stop("Tiedostoa data/external/KaatumisenPelko.csv ei löydy.")
 }
 
-if (!is.data.frame(analysis_data)) {
-stop("'analysis_data' ei ole data.frame/tibble – tarkista datan lataus.")
-}
+raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
+
+## Standardize variable names and run sanity checks
+df <- standardize_analysis_vars(raw_data)
+qc <- sanity_checks(df)
+print(qc)
+
+# K15 käyttää omaa muuttujarakennetta, joten säilytetään raw_data myös
+analysis_data <- raw_data
 
 # ==============================================================================
 # 2. FOF-STATUS JA PERUSMUUTTUJAT ---------------------------------------------
@@ -685,6 +616,15 @@ message("K15: analysis_data tallennettu: ", rdata_path)
 
 message("K15: Fried-inspired physical frailty proxy rakennettu ja perusjakaumat + FOF-vertailut tallennettu.")
 
+# Save session info
+si_path <- file.path(outputs_dir, "sessionInfo_K15.txt")
+save_sessioninfo(si_path)
+append_manifest(
+  manifest_row(script = script_label, label = "sessionInfo",
+               path = si_path, kind = "sessioninfo"),
+  manifest_path
+)
+
 # ==============================================================================
 # 12. LOPPUKOMMENTIT (DOC-BLOKKI) ---------------------------------------------
 # ==============================================================================
@@ -740,3 +680,6 @@ message("K15: Fried-inspired physical frailty proxy rakennettu ja perusjakaumat 
 #   low_BMI_threshold, maxwalk_low_cut_m) skriptin alussa, ja tarvittaessa
 #   päivittää low_activity-luokittelun vastaamaan tarkempaa tietoa muuttujakoodauksesta.
 # End of K15.R
+
+save_sessioninfo_manifest()
+

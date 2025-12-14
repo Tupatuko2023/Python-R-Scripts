@@ -1,3 +1,21 @@
+# --- Kxx template (put at top of every script) -------------------------------
+suppressPackageStartupMessages({ library(here); library(dplyr) })
+
+rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
+   envir = .GlobalEnv)
+
+source(here("R","functions","io.R"))
+source(here("R","functions","checks.R"))
+source(here("R","functions","modeling.R"))
+source(here("R","functions","reporting.R"))
+
+script_label <- sub("\\.R$", "", basename(commandArgs(trailingOnly=FALSE)[grep("--file=", commandArgs())] |> sub("--file=", "", x=_)))
+if (is.na(script_label) || script_label == "") script_label <- "K14"
+paths <- init_paths(script_label)
+
+set.seed(20251124)
+
+
 #!/usr/bin/env Rscript
 
 ###############################################################################
@@ -63,92 +81,40 @@ suppressPackageStartupMessages({
   library(here)
 })
 
+source(here::here("R", "functions", "io.R"))
+source(here::here("R", "functions", "checks.R"))
+source(here::here("R", "functions", "modeling.R"))
+source(here::here("R", "functions", "reporting.R"))
+
 set.seed(20251124)
 
 # ==============================================================================
 # 1: Load the dataset -------------------------------------------
 # ==============================================================================
 
-## Ensisijaisesti käytetään data_final (K1), muuten analysis_data tai CSV
-
-if (!exists("analysis_data")) {
-  if (exists("data_final")) {
-    analysis_data <- data_final
-  } else {
-    # Projektipohjainen oletuspolku, sama kuin K11/K13:ssa
-    file_path <- here::here("data", "external", "KaatumisenPelko.csv")
-    if (!file.exists(file_path)) {
-      stop(
-        "Objektia 'analysis_data' tai 'data_final' ei löytynyt, ",
-        "eikä tiedostoa data/external/KaatumisenPelko.csv löydy.\n",
-        "Luo 'analysis_data' tai 'data_final' ennen skriptin ajamista tai tarkista polku."
-      )
-    }
-    raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
-    analysis_data <- raw_data
-  }
+file_path <- here::here("data", "external", "KaatumisenPelko.csv")
+if (!file.exists(file_path)) {
+  stop("Tiedostoa data/external/KaatumisenPelko.csv ei löydy.")
 }
 
-## Kevyt tarkistus
+raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
 
-if (!is.data.frame(analysis_data)) {
-  stop("'analysis_data' ei ole data.frame/tibble – tarkista datan lataus.")
-}
+## Standardize variable names and run sanity checks
+df <- standardize_analysis_vars(raw_data)
+qc <- sanity_checks(df)
+print(qc)
+
+# K14 käyttää raakaa dataa (ei standardisoitua), joten käytetään raw_data:a
+analysis_data <- raw_data
 
 # ==============================================================================
 # 2: Output-kansio K14:n alle ------------------------------------
 # ==============================================================================
 
-## ./Fear-of-Falling/R-scripts/K14/outputs
-
-outputs_dir <- here::here("R-scripts", "K14", "outputs")
-if (!dir.exists(outputs_dir)) {
-  dir.create(outputs_dir, recursive = TRUE)
-}
-
-## Skriptin tunniste
-
 script_label <- "K14"
-
-## Manifest-kansio projektissa: ./manifest
-
-manifest_dir <- here::here("manifest")
-if (!dir.exists(manifest_dir)) {
-  dir.create(manifest_dir, recursive = TRUE)
-}
-manifest_path <- file.path(manifest_dir, "manifest.csv")
-
-## Helper: tallenna taulukko CSV + yksinkertainen HTML
-
-save_table_csv_html <- function(df, basename,
-                                out_dir = outputs_dir) {
-  if (!dir.exists(out_dir)) {
-    dir.create(out_dir, recursive = TRUE)
-  }
-  
-  csv_path  <- file.path(out_dir, paste0(basename, ".csv"))
-  html_path <- file.path(out_dir, paste0(basename, ".html"))
-  
-  # CSV
-  readr::write_csv(df, csv_path)
-  
-  # HTML-taulukko
-  html_table <- knitr::kable(
-    df, format = "html",
-    table.attr = "border='1' style='border-collapse:collapse;'"
-  )
-  
-  html_content <- paste0(
-    "<html><head><meta charset='UTF-8'></head><body>",
-    "<h3>", basename, "</h3>",
-    html_table,
-    "</body></html>"
-  )
-  
-  writeLines(html_content, con = html_path)
-  
-  invisible(list(csv = csv_path, html = html_path))
-}
+paths <- init_paths(script_label)
+outputs_dir   <- paths$outputs_dir
+manifest_path <- paths$manifest_path
 
 # ==============================================================================
 # 3. RECODINGS: FOF-status + muut Table 1 -muuttujat----------------------------
@@ -906,4 +872,16 @@ if (!file.exists(manifest_path)) {
 
 message("K14: baseline table by FOF-status tallennettu ja manifest päivitetty.")
 
+# Save session info
+si_path <- file.path(outputs_dir, "sessionInfo_K14.txt")
+save_sessioninfo(si_path)
+append_manifest(
+  manifest_row(script = script_label, label = "sessionInfo",
+               path = si_path, kind = "sessioninfo"),
+  manifest_path
+)
+
 # End of K14.R
+
+save_sessioninfo_manifest()
+
