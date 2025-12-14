@@ -71,9 +71,9 @@ analysis_data_rec <- df %>%
     )
   )
 
-# ---------------------------------------------------------------
-# 4. PBT-muutokset (HGS, MWS, FTSST, SLS)------------------------
-# ---------------------------------------------------------------
+# ==============================================================================
+# 03. PBT Changes (HGS, MWS, FTSST, SLS)
+# ==============================================================================
 
 analysis_data_rec <- analysis_data_rec %>%
   mutate(
@@ -113,11 +113,11 @@ analysis_data_rec <- analysis_data_rec %>%
     MOI_score = MOIindeksiindeksi
   )
 
-# ---------------------------------------------------------------
-# 5. ANALYYSIDATAT PER OUTCOME (COMPLETE CASE)-------------------
-# ---------------------------------------------------------------
+# ==============================================================================
+# 04. Build Analysis Datasets per Outcome
+# ==============================================================================
 
-## 5.1: Helper: rakentaa analyysidatan annetulle outcome + baseline-parille
+# 4.1 Helper function: build analysis dataset for given outcome + baseline
 
 build_dat_outcome <- function(data,
                               outcome,
@@ -153,9 +153,7 @@ build_dat_outcome <- function(data,
     )
 }
 
-## 5.2: Komposiitti + alakomponentit -----------------------------
-
-# Komposiitti - huomaa että Composite_Z0 ja Delta_Composite_Z on jo olemassa df:ssä
+# 4.2 Build datasets for each outcome
 dat_comp <- build_dat_outcome(
   analysis_data_rec,
   outcome      = "Delta_Composite_Z",
@@ -202,11 +200,11 @@ purrr::map(
   ~ summary(.x[[2]])  # 2. sarake = outcome
 )
 
-# ---------------------------------------------------------------
-# 6. PERUS- JA LAAJENNETUT MALLIT PER OUTCOME -------------------
-# ---------------------------------------------------------------
+# ==============================================================================
+# 05. Fit Models per Outcome
+# ==============================================================================
 
-# Helper: Sovittaa perus- ja laajennetut mallit annetulle outcome-muuttujalle
+# 5.1 Helper function: fit base and extended models
 fit_models_for_outcome <- function(dat,
                                    outcome,
                                    baseline_var,
@@ -344,9 +342,9 @@ res_sls <- fit_models_for_outcome(
   outcome_label = "SLS"
 )
 
-# ---------------------------------------------------------------
-# 7. TIDY-TAULUKOT JA FOF-KOOSTE -------------------------------
-# ---------------------------------------------------------------
+# ==============================================================================
+# 06. Save Tables
+# ==============================================================================
 
 # Kaikki mallikertoimet samassa taulukossa
 lm_all_outcomes <- dplyr::bind_rows(
@@ -418,9 +416,9 @@ append_manifest(
   manifest_path
 )
 
-# ---------------------------------------------------------------
-# 9. KUVA: FOF-EFEKTIN METSÄKUVA OUTCOMIEN YLI -----------------
-# ---------------------------------------------------------------
+# ==============================================================================
+# 07. Save Figures
+# ==============================================================================
 
 fof_plot_data <- fof_effects %>%
   dplyr::mutate(
@@ -442,18 +440,6 @@ p_fof <- ggplot(fof_plot_data,
 plot_path <- file.path(outputs_dir, "FOF_effects_by_outcome_forest.png")
 ggplot2::ggsave(filename = plot_path, plot = p_fof,
                 width = 7, height = 4, dpi = 300)
-
-# ---------------------------------------------------------------
-# 8. SAVE SESSION INFO ------------------------------------------
-# ---------------------------------------------------------------
-
-si_path <- file.path(outputs_dir, "sessionInfo_K12.txt")
-save_sessioninfo(si_path)
-append_manifest(
-  manifest_row(script = script_label, label = "sessionInfo",
-               path = si_path, kind = "sessioninfo"),
-  manifest_path
-)
 
 # End of K12.R
 

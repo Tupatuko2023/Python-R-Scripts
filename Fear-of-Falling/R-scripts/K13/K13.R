@@ -18,39 +18,8 @@ set.seed(20251124)
 
 # K13: FOF × ikä, BMI, sukupuoli -interaktioanalyysit (laajennetut mallit)
 
-
 # ==============================================================================
-
-# ==============================================================================
-# 0. PACKAGES ---------------------------------------------------
-# ==============================================================================
-
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(broom)
-library(car)
-library(emmeans)
-library(effectsize)
-library(mice)
-library(knitr)
-library(MASS)
-library(scales)
-library(nlme)
-library(quantreg)
-library(tibble)
-library(here)
-
-source(here::here("R", "functions", "io.R"))
-source(here::here("R", "functions", "checks.R"))
-source(here::here("R", "functions", "modeling.R"))
-source(here::here("R", "functions", "reporting.R"))
-
-set.seed(20251124)  # jos myöhemmin käytetään satunnaisuutta (esim. bootstrap)
-
-# ==============================================================================
-# 1: Load the dataset -------------------------------------------
+# 01. Load Dataset & Data Checking
 # ==============================================================================
 
 file_path <- here::here("data", "external", "KaatumisenPelko.csv")
@@ -67,17 +36,12 @@ df <- standardize_analysis_vars(raw_data)
 qc <- sanity_checks(df)
 print(qc)
 
-# ==============================================================================
-# 2: Output-kansio K13:n alle ------------------------------------
-# ==============================================================================
-
-script_label <- "K13"
-paths <- init_paths(script_label)
-outputs_dir   <- paths$outputs_dir
-manifest_path <- paths$manifest_path
+# Get paths from init_paths (already called in header)
+outputs_dir   <- getOption("fof.outputs_dir")
+manifest_path <- getOption("fof.manifest_path")
 
 # ==============================================================================
-# 3. DATA PREPARATION -------------------------------------------
+# 02. Data Preparation
 # ==============================================================================
 
 # Lisätään tarvittavat kovariaatit (df on jo standardisoitu)
@@ -239,9 +203,8 @@ summary(dat_int_cc$BMI_c)
 summary(dat_int_cc$MOI_c)
 summary(dat_int_cc$PainVAS0_c)
 
-
 # ==============================================================================
-# 5. LINEAARISET INTERAKTIOMALLIT (laajennetut)
+# 03. Lineaariset Interaktiomallit (Laajennetut)
 # ==============================================================================
 
 ##   Kaikki mallit ovat eksploratiivisia, ja sisältävät:
@@ -348,9 +311,8 @@ mod_SRM_int_ext <- lm(
   data = dat_int_cc
 )
 
-
 # ==============================================================================
-# 6. TIDY-TAULUKOT JA INTERAKTIOKOOSTE
+# 04. Tidy-Taulukot ja Interaktiokooste
 # ==============================================================================
 
   
@@ -540,10 +502,10 @@ if (nrow(tab_std_interactions) > 0) {
 }
 
 # ==============================================================================
-# 7. SIMPLE SLOPES: FOF-EFEKTI ERI IKÄ- / BMI-TASOILLA JA SUKUPUOLITTAIN
+# 05. Simple Slopes: FOF-Efekti Eri Ikä-/BMI-Tasoilla ja Sukupuolittain
 # ==============================================================================
 
-##  7.1 FOF × age_c: FOF-efekti eri ikätasoilla
+## 5.1 FOF × age_c: FOF-efekti eri ikätasoilla
 
 age_c_values <- c(-10, 0, 10) # noin 10 vuoden erot centered-asteikolla
 age_values <- age_c_values + age_mean
@@ -902,10 +864,10 @@ ggsave(
 )
 
 # ==============================================================================
-# 8. MALLIDIAGNOSTIIKKA (VIF + residuaalit, vain koodi)
+# 06. Mallidiagnostiikka (VIF + Residuaalit)
 # ==============================================================================
 
-##  8.1 VIF-taulukot
+## 6.1 VIF-taulukot
 
 vif_age <- car::vif(mod_age_int_ext)
 vif_BMI <- car::vif(mod_BMI_int_ext)
@@ -925,16 +887,16 @@ vif_all_df <- bind_rows(vif_age_df, vif_BMI_df, vif_sex_df)
 
 save_table_csv_html(vif_all_df, "VIF_interaction_models")
 
-## 8.2 (Valinnainen) residuaaliplotit interaktiomalleille
+## 6.2 (Valinnainen) residuaaliplotit interaktiomalleille
 plot(mod_age_int_ext, which = 1) # residuaalit vs fitted
 plot(mod_BMI_int_ext, which = 1)
 plot(mod_sex_int_ext, which = 1)
 
 # ==============================================================================
-# 9. KLIININEN TULKINTA: 4-HAARAINEN LOGIIKKA (AUTOMAATTINEN TEKSTI)
+# 07. Kliininen Tulkinta: 4-Haarainen Logiikka (Automaattinen Teksti)
 # ==============================================================================
 
-## 9.1 Tulkintafunktio interaktiovaikutuksille
+## 7.1 Tulkintafunktio interaktiovaikutuksille
 interpret_interaction <- function(moderator_label, est, lwr, upr, p_value) {
   ci_width <- upr - lwr
   
@@ -983,7 +945,7 @@ interpret_interaction <- function(moderator_label, est, lwr, upr, p_value) {
   }
 }
 
-## 9.2 Automaattiset tulkinnat kaikille moderaattoreille
+## 7.2 Automaattiset tulkinnat kaikille moderaattoreille
 
 # Yhdistetään kaikki interaktiotaulukot samaan nippuun
 tab_interactions_all <- dplyr::bind_rows(
@@ -1019,16 +981,9 @@ results_sentences <- interaction_interpretations %>%
 
 results_sentences
 
-
-#==============================================================================
-# 11. KLIININEN YHTEENVETO (TEKSTIRUNKO, MUOKKAA TULOSTEN PERUSTEELLA)
-#==============================================================================
-
-
-
-#==============================================================================
-# 11. KLIININEN YHTEENVETO 
-#==============================================================================
+# ==============================================================================
+# 08. Kliininen Yhteenveto
+# ==============================================================================
 
 clinical_summary_template <- c(
   "Kliininen tulkinta (luonnos, muokkaa lopullisten estimaattien mukaan):",
@@ -1050,15 +1005,6 @@ clinical_summary_template <- c(
 )
 
 clinical_summary_template
-
-# Save session info
-si_path <- file.path(outputs_dir, "sessionInfo_K13.txt")
-save_sessioninfo(si_path)
-append_manifest(
-  manifest_row(script = script_label, label = "sessionInfo",
-               path = si_path, kind = "sessioninfo"),
-  manifest_path
-)
 
 # End of K13.R
 
