@@ -298,3 +298,16 @@ K11,NA,NA,2025-12-14 19:27:15.936015,gls_residual_variance_by_FOF,table_html,C:/
 K11,NA,NA,2025-12-14 19:27:16.002008,quantile_reg_FOF_effect,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
 K11,NA,NA,2025-12-14 19:27:16.18251,quantile_reg_FOF_effect,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
 K11,NA,NA,2025-12-14 19:27:16.282862,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt,NA,NA
+K11,NA,NA,2025-12-14 21:09:21.917215,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
+K11,NA,NA,2025-12-14 21:09:21.982468,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
+K12,NA,NA,2025-12-14 21:09:28.799375,lm_models_all_outcomes,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/lm_models_all_outcomes.csv,95,NA
+K12,NA,NA,2025-12-14 21:09:28.914828,FOF_effects_by_outcome,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_by_outcome.csv,10,NA
+K12,NA,NA,2025-12-14 21:09:29.053296,FOF_effects_standardized_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_standardized_extended.csv,5,NA
+K15,NA,NA,2025-12-14 21:09:45.816137,K15_frailty_count_3_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
+K15,NA,NA,2025-12-14 21:09:45.906058,K15_frailty_count_3_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
+K15,NA,NA,2025-12-14 21:09:45.958345,K15_frailty_cat_3_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv,NA,NA
+K15,NA,NA,2025-12-14 21:09:45.995324,K15_frailty_cat_3_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_3_overall.html,NA,NA
+K15,NA,NA,2025-12-14 21:09:46.048785,K15_frailty_count_4_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_4_overall.csv,NA,NA
+K15,NA,NA,2025-12-14 21:09:46.094213,K15_frailty_count_4_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_4_overall.html,NA,NA
+K15,NA,NA,2025-12-14 21:09:46.166756,K15_frailty_cat_4_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv,NA,NA
+K15,NA,NA,2025-12-14 21:09:46.207892,K15_frailty_cat_4_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_4_overall.html,NA,NA
