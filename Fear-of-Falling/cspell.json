@@ -1,0 +1,32 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "ANCOVA",
+    "emmeans",
+    "lme4",
+    "lmerTest",
+    "nlme",
+    "brms",
+    "tidyverse",
+    "dplyr",
+    "tidyr",
+    "readr",
+    "ggplot2",
+    "testthat",
+    "modelsummary",
+    "kableExtra",
+    "marginaleffects",
+    "effectsize",
+    "knitr",
+    "rmarkdown",
+    "here",
+    "Rscript",
+    "missingness",
+    "collinearity",
+    "heteroskedasticity",
+    "timepoints",
+    "timepoint",
+    "covariate"
+  ]
+}
