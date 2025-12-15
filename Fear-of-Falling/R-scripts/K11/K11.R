@@ -31,9 +31,16 @@ source(here("R","functions","checks.R"))
 source(here("R","functions","modeling.R"))
 source(here("R","functions","reporting.R"))
 
-script_label <- getOption("fof.script")
-if (is.null(script_label)) script_label <- "K11"  # interaktiivinen fallback
+if (!exists("save_table_csv_html", envir = .GlobalEnv)) {
+  stop("save_table_csv_html NOT loaded. Check: R/functions/reporting.R contains the function and source() points to correct file.")
+}
+
+script_label <- sub("\\.R$", "", basename(
+  sub("--file=", "", commandArgs(trailingOnly = FALSE)[grep("--file=", commandArgs(trailingOnly = FALSE))])
+))
+if (is.na(script_label) || script_label == "") script_label <- "K11"
 paths <- init_paths(script_label)
+
 outputs_dir <- paths$outputs_dir
 manifest_path <- paths$manifest_path
 set.seed(20251124)
