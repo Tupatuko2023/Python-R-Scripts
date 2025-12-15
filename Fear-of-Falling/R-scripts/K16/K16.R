@@ -574,7 +574,15 @@ doc <- read_docx() %>%
 
 docx_path <- file.path(output_dir, "K16_frailty_models_tables.docx")
 print(doc, target = docx_path)
-register_output(docx_path, "Frailty-adjusted model results tables", script_label)
+append_manifest(
+  manifest_row(script = getOption("fof.script"),
+               label  = "Frailty-adjusted model results tables",
+               path   = docx_path,
+               kind   = "table_docx",
+               n      = nrow(analysis_data)),
+  getOption("fof.manifest_path")
+)
+
 message("✓ Saved tables: ", docx_path)
 
 # Save model objects
