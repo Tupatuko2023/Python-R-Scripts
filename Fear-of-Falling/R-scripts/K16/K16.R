@@ -30,7 +30,14 @@ suppressPackageStartupMessages({
   library(lmerTest)
   library(car)
   library(broom)
+
+  # broom.mixed is required for mixed model tidying
+  if (!requireNamespace("broom.mixed", quietly = TRUE)) {
+    stop("Package 'broom.mixed' is required but not installed.\n",
+         "Install it with: install.packages('broom.mixed')")
+  }
   library(broom.mixed)
+
   library(flextable)
   library(officer)
   library(ggplot2)
