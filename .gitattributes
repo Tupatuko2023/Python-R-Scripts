@@ -31,3 +31,5 @@
 *.svg -text
 *.pdf -text
 *.fig -text
+
+Fear-of-Falling/data/external/KaatumisenPelko.csv filter=git-crypt diff=git-crypt -text
