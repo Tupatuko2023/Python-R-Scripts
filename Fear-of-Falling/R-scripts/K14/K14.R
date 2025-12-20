@@ -759,7 +759,7 @@ print(baseline_table)
 ## Tallennus CSV + HTML (K14/outputs)
 
 basename_out <- "K14_baseline_by_FOF"
-save_table_csv_html(baseline_table, basename_out, out_dir = outputs_dir)
+save_table_csv_html(baseline_table, basename_out)
 
 ## Manifest: lisätään rivi Table 1 -taulukosta
 
