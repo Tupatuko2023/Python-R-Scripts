@@ -169,6 +169,7 @@ dat_fof <- analysis_data_rec %>%
     !is.na(FOF_status)
   ) %>%
   mutate(
+    FOF_status = factor(FOF_status, levels = c(0, 1), labels = c("nonFOF", "FOF")),
     FOF_status = relevel(FOF_status, ref = "nonFOF")
   )
 

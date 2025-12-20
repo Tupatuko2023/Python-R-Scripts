@@ -21,6 +21,7 @@ suppressPackageStartupMessages({
   library(scales)
   library(tibble)
   library(lmtest)
+  library(effectsize)
 })
 
 rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),

@@ -480,15 +480,6 @@ save_table_csv_html(tab_frailty_cat_3, "K15_frailty_cat_3_overall")
 save_table_csv_html(tab_frailty_count_4, "K15_frailty_count_4_overall")
 save_table_csv_html(tab_frailty_cat_4, "K15_frailty_cat_4_overall")
 
-update_manifest("table", "K15_frailty_count_3_overall",
-"Distribution of frailty_count_3 (Fried-inspired proxy, 3 components; overall).")
-update_manifest("table", "K15_frailty_cat_3_overall",
-"Distribution of frailty_cat_3 (Fried-inspired proxy, 3 components; overall).")
-update_manifest("table", "K15_frailty_count_4_overall",
-"Distribution of frailty_count_4 (Fried-inspired proxy, 4 components; overall).")
-update_manifest("table", "K15_frailty_cat_4_overall",
-"Distribution of frailty_cat_4 (Fried-inspired proxy, 4 components; overall).")
-
 ## 9.2 FOF-ryhmittäiset ristiintaulukot
 
 tab_frailty_cat3_by_FOF <- analysis_data %>%
@@ -514,11 +505,6 @@ tab_frailty_cat4_by_FOF <- analysis_data %>%
 save_table_csv_html(tab_frailty_cat3_by_FOF, "K15_frailty_cat3_by_FOF")
 save_table_csv_html(tab_frailty_cat4_by_FOF, "K15_frailty_cat4_by_FOF")
 
-update_manifest("table", "K15_frailty_cat3_by_FOF",
-"Frailty categories (3-component proxy) by FOF-status (n and row %).")
-update_manifest("table", "K15_frailty_cat4_by_FOF",
-"Frailty categories (4-component proxy) by FOF-status (n and row %).")
-
 ## 9.3 Khiin neliö / Fisher (FOF × frailty_cat)
 
 dat_chi3 <- analysis_data %>%
@@ -538,11 +524,6 @@ tab_chi4 <- broom::tidy(chi4)
 
 save_table_csv_html(tab_chi3, "K15_chisq_FOF_by_frailty_cat3")
 save_table_csv_html(tab_chi4, "K15_chisq_FOF_by_frailty_cat4")
-
-update_manifest("table", "K15_chisq_FOF_by_frailty_cat3",
-"Chi-square test for association: FOF_status × frailty_cat_3.")
-update_manifest("table", "K15_chisq_FOF_by_frailty_cat4",
-"Chi-square test for association: FOF_status × frailty_cat_4.")
 
 # ==============================================================================
 # 10. Optional Plots
@@ -567,16 +548,21 @@ plot_frailty_cat3_by_FOF <- ggplot(
   ) +
   theme_minimal()
 
+plot_path <- file.path(outputs_dir, "K15_frailty_cat3_by_FOF.png")
 ggsave(
-  filename = file.path(outputs_dir, "K15_frailty_cat3_by_FOF.png"),
+  filename = plot_path,
   plot = plot_frailty_cat3_by_FOF,
   width = 7,
   height = 5,
   dpi = 300
 )
 
-update_manifest("plot", "K15_frailty_cat3_by_FOF",
-"Stacked proportion plot: frailty_cat_3 distribution by FOF-status.")
+append_manifest(
+  manifest_row(script = script_label, label = "K15_frailty_cat3_by_FOF",
+               path = plot_path, kind = "figure_png",
+               notes = "Stacked proportion plot: frailty_cat_3 distribution by FOF-status."),
+  manifest_path
+)
 
 # TODO: Haluttaessa vastaava kuva frailty_cat_4:lle.
 
