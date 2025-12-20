@@ -35,9 +35,15 @@ if (!exists("save_table_csv_html", envir = .GlobalEnv)) {
   stop("save_table_csv_html NOT loaded. Check: R/functions/reporting.R contains the function and source() points to correct file.")
 }
 
-script_label <- sub("\\.R$", "", basename(
-  sub("--file=", "", commandArgs(trailingOnly = FALSE)[grep("--file=", commandArgs(trailingOnly = FALSE))])
-))
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+
+script_label <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K11"  # interaktiivinen / RStudio fallback
+}
+
 if (is.na(script_label) || script_label == "") script_label <- "K11"
 paths <- init_paths(script_label)
 
