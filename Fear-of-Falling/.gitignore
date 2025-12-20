@@ -46,6 +46,10 @@ env/
 out/
 temp/.RData
 
+# renv
+**/renv/library/
+**/renv/staging/
+
 # R-scripts outputs: välioutput, testiajot, raskaat kuvat
 Fear-of-Falling/R-scripts/*/outputs/*.png
 Fear-of-Falling/R-scripts/*/outputs/*.html
