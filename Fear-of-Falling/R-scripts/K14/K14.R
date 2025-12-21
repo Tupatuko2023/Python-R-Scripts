@@ -1,6 +1,84 @@
-# --- Kxx template (put at top of every script) -------------------------------
-suppressPackageStartupMessages({ library(here); library(dplyr) })
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K14 - Baseline characteristics by FOF status (Table 1)
+# File tag: K14.R
+# Purpose: Produces descriptive summary table comparing FOF groups (nonFOF vs FOF)
+#          across demographics, clinical characteristics, self-rated measures,
+#          functional performance, and health behaviors at baseline
+#
+# Outcome: None (descriptive table only, no modeling)
+# Predictors: FOF_status (factor: "nonFOF"/"FOF", grouping variable for table)
+# Moderator/interaction: None
+# Grouping variable: FOF_status (table stratification)
+# Covariates: N/A (all variables presented as descriptives)
+#
+# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
+# kaatumisenpelkoOn, age, sex, BMI, diabetes, alzheimer, parkinson, AVH,
+# koettuterveydentila (or SRH), MOIindeksiindeksi, tupakointi, alkoholi,
+# oma_arvio_liikuntakyky, vaikeus_liikkua_500m (or Vaikeus500m), tasapainovaikeus,
+# kaatuminen, murtumia, PainVAS0, ToimintaKykySummary0
+#
+# Required vars (analysis df - after recoding in script):
+# FOF_status (factor: "nonFOF"/"FOF"), age, sex_factor, BMI, diabetes, alzheimer_dementia,
+# parkinson, AVH, SRH_3class, MOI, smoking, alcohol_3class, SRM_3class,
+# walk500m_3class, balance_diff, fallen, fractures, PainVAS0, Composite_Z0
+#
+# Mapping (raw -> analysis; keep minimal + explicit):
+# kaatumisenpelkoOn (0/1) -> FOF_status (factor: "nonFOF"/"FOF")
+# sex (0/1) -> sex_factor (factor: "female"/"male")
+# koettuterveydentila (0/1/2) -> SRH_3class (factor: "poor"/"moderate"/"good")
+# oma_arvio_liikuntakyky (0/1/2) -> SRM_3class (factor: "weak"/"moderate"/"good")
+# vaikeus_liikkua_500m (0/1/2) -> walk500m_3class (factor: "No"/"Difficulties"/"Cannot")
+# alkoholi (0/1/2) -> alcohol_3class (factor: "No"/"Moderate"/"Large")
+# tupakointi (0/1) -> smoking (factor: "No"/"Yes")
+# alzheimer -> alzheimer_dementia (relabeled for clarity)
+# MOIindeksiindeksi -> MOI (Mikkeli Multimorbidity Index)
+# ToimintaKykySummary0 -> Composite_Z0 (baseline composite function)
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: 20251124 (set for reproducibility, though no randomness in table generation)
+#
+# Outputs + manifest:
+# - script_label: K14 (canonical)
+# - outputs dir: R-scripts/K14/outputs/K14/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths)
+# 02) Load raw data (immutable; no edits)
+# 03) Check required raw columns (req_raw_cols)
+# 04) Standardize vars + QC (standardize_analysis_vars + sanity_checks)
+# 05) Recode categorical variables for table (FOF_status, sex, SRH, SRM, etc.)
+# 06) Compute summary statistics by FOF group (mean/SD for continuous, n/% for categorical)
+# 07) Test group differences (t-test for continuous, chi-square for categorical)
+# 08) Format Table 1 (include p-values, effect sizes if relevant)
+# 09) Save Table 1 as CSV + formatted Word/HTML table
+# 10) Append manifest row per artifact
+# 11) Save sessionInfo to manifest/
+# 12) EOF marker
+# ==============================================================================
+#
+suppressPackageStartupMessages({
+  library(here)
+  library(dplyr)
+})
 
+# --- Standard init (MANDATORY) -----------------------------------------------
+# Derive script_label from --file, supporting file tags like: K14.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+
+script_base <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K14"  # interactive fallback
+}
+
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
+if (is.na(script_label) || script_label == "") script_label <- "K14"
+
+# Source helper functions (io, checks, modeling, reporting)
 rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
    envir = .GlobalEnv)
 
@@ -9,16 +87,11 @@ source(here("R","functions","checks.R"))
 source(here("R","functions","modeling.R"))
 source(here("R","functions","reporting.R"))
 
-script_label <- sub("\\.R$", "", basename(commandArgs(trailingOnly=FALSE)[grep("--file=", commandArgs())] |> sub("--file=", "", x=_)))
-if (is.na(script_label) || script_label == "") script_label <- "K14"
+# init_paths() must set outputs_dir + manifest_path (+ options fof.*)
 paths <- init_paths(script_label)
 
+# seed (set for reproducibility, though no randomness in table generation)
 set.seed(20251124)
-
-
-# K14: FOF-ryhmittäinen perustaulukko ("Table 1")
-# Skripti tuottaa deskriptiivisen taulukon, joka vertaa FOF-ryhmiä
-# eri muuttujien suhteen.
 
 # ==============================================================================
 # 01. Load Dataset & Data Checking

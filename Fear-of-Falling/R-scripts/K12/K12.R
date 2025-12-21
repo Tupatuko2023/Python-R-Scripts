@@ -1,6 +1,95 @@
-# --- Kxx template (put at top of every script) -------------------------------
-suppressPackageStartupMessages({ library(here); library(dplyr) })
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K12 - FOF effects across individual physical performance tests
+# File tag: K12.R
+# Purpose: Tests whether FOF has stronger associations with specific physical
+#          performance battery (PBT) components (HGS, MWS, FTSST, SLS) compared
+#          to the overall composite physical function score
+#
+# Outcome: Multiple (analyzed separately):
+#   - Delta_Composite_Z (composite 12-month change)
+#   - Delta_HGS (hand grip strength change)
+#   - Delta_MWS (maximum walking speed change)
+#   - Delta_FTSST (five times sit-to-stand change, reverse-coded)
+#   - Delta_SLS (single leg stance change)
+# Predictors: FOF_status_f (factor: "Ei FOF"/"FOF")
+# Moderator/interaction: None (main effects across outcomes)
+# Grouping variable: None (separate complete-case datasets per outcome)
+# Covariates: Age, Sex (sex), BMI, MOI_score, diabetes, alzheimer, parkinson,
+#             AVH, previous_falls, psych_score
+#
+# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
+# id, age, sex, BMI, kaatumisenpelkoOn, ToimintaKykySummary0, ToimintaKykySummary2,
+# Puristus0, Puristus2, kavelynopeus_m_sek0, kavelynopeus_m_sek2, Tuoli0, Tuoli2,
+# Seisominen0, Seisominen2, MOIindeksiindeksi, diabetes, alzheimer, parkinson,
+# AVH, kaatuminen, mieliala
+# (Note: PBT may use either baseline+follow-up OR pre-computed change columns)
+#
+# Required vars (analysis df - after standardize_analysis_vars + Delta derivation):
+# id, Age, Sex, BMI, FOF_status_f, Composite_Z0, Delta_Composite_Z, Puristus0,
+# Delta_HGS, kavelynopeus_m_sek0, Delta_MWS, Tuoli0, Delta_FTSST, Seisominen0,
+# Delta_SLS, MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH, kaatuminen,
+# mieliala (mapped to MOI_score, previous_falls, psych_score in dat_* datasets)
+#
+# Mapping (raw -> analysis; keep minimal + explicit):
+# kaatumisenpelkoOn (0/1) -> FOF_status -> FOF_status_f (factor: "Ei FOF"/"FOF")
+# age -> Age
+# sex (0/1) -> Sex -> sex (factor in build_dat_outcome)
+# ToimintaKykySummary0 -> Composite_Z0
+# ToimintaKykySummary2 - ToimintaKykySummary0 -> Delta_Composite_Z
+# Puristus2 - Puristus0 -> Delta_HGS (or use PuristusMuutos if available)
+# kavelynopeus_m_sek2 - kavelynopeus_m_sek0 -> Delta_MWS (or Kävelymuutos)
+# (Tuoli0 - Tuoli2) -> Delta_FTSST, reverse-coded (or -Tuolimuutos)
+# Seisominen2 - Seisominen0 -> Delta_SLS (or TasapainoMuutos)
+# MOIindeksiindeksi -> MOI_score (in dat_*)
+# kaatuminen -> previous_falls (in dat_*)
+# mieliala -> psych_score (in dat_*)
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: N/A (no randomness - no MI, bootstrap, or resampling)
+#
+# Outputs + manifest:
+# - script_label: K12 (canonical)
+# - outputs dir: R-scripts/K12/outputs/K12/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths)
+# 02) Load raw data (immutable; no edits)
+# 03) Check required raw columns (req_raw_cols)
+# 04) Standardize vars + QC (standardize_analysis_vars + sanity_checks)
+# 05) Derive PBT change scores (Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS)
+# 06) Build outcome-specific complete-case datasets (dat_comp, dat_hgs, dat_mws, dat_fts, dat_sls)
+# 07) Fit base + extended models per outcome (FOF + baseline + covariates)
+# 08) Compile FOF effect estimates across all outcomes
+# 09) Save forest plot comparing FOF effects across outcomes
+# 10) Save tables (all model coefficients + FOF effects summary)
+# 11) Append manifest row per artifact
+# 12) Save sessionInfo to manifest/
+# 13) EOF marker
+# ==============================================================================
+#
+suppressPackageStartupMessages({
+  library(here)
+  library(dplyr)
+})
 
+# --- Standard init (MANDATORY) -----------------------------------------------
+# Derive script_label from --file, supporting file tags like: K12.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+
+script_base <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K12"  # interactive fallback
+}
+
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
+if (is.na(script_label) || script_label == "") script_label <- "K12"
+
+# Source helper functions (io, checks, modeling, reporting)
 rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
    envir = .GlobalEnv)
 
@@ -9,22 +98,16 @@ source(here("R","functions","checks.R"))
 source(here("R","functions","modeling.R"))
 source(here("R","functions","reporting.R"))
 
-script_label <- sub("\\.R$", "", basename(commandArgs(trailingOnly=FALSE)[grep("--file=", commandArgs())] |> sub("--file=", "", x=_)))
-if (is.na(script_label) || script_label == "") script_label <- "K12"
+# init_paths() must set outputs_dir + manifest_path (+ options fof.*)
 paths <- init_paths(script_label)
 
-set.seed(20251124)
-
-
-# K12: Onko FOF:lla voimakkaampi yhteys tiettyjen alakomposiittien (esim.
-# kävelynopeus, tasapaino) muutokseen kuin koko komposiittiin?
+# seed: N/A (no randomness in this script)
 
 # ==============================================================================
 # 01. Load Dataset & Data Checking
 # ==============================================================================
 
 file_path <- here::here("data", "external", "KaatumisenPelko.csv")
-
 raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
 
 ## Working copy so the original stays untouched
@@ -32,10 +115,55 @@ if (!exists("raw_data")) {
   stop("Object 'raw_data' not found. Please load your data as raw_data first.")
 }
 
-## Standardize variable names and run sanity checks
+# --- Required raw columns check (DO NOT INVENT) ------------------------------
+# Core variables (always required)
+req_raw_cols_core <- c(
+  "id", "age", "sex", "BMI", "kaatumisenpelkoOn",
+  "ToimintaKykySummary0", "ToimintaKykySummary2",
+  "MOIindeksiindeksi", "diabetes", "alzheimer", "parkinson",
+  "AVH", "kaatuminen", "mieliala"
+)
+
+# PBT baseline+follow-up (check at least one PBT source exists)
+# Flexible: accepts either baseline+follow-up OR pre-computed change columns
+req_raw_cols_pbt <- c(
+  "Puristus0", "Puristus2",
+  "kavelynopeus_m_sek0", "kavelynopeus_m_sek2",
+  "Tuoli0", "Tuoli2",
+  "Seisominen0", "Seisominen2"
+)
+
+# Check core columns (mandatory)
+missing_core_cols <- setdiff(req_raw_cols_core, names(raw_data))
+if (length(missing_core_cols) > 0) {
+  stop("Missing required core raw columns: ", paste(missing_core_cols, collapse = ", "))
+}
+
+# Check PBT columns (at least some baseline+follow-up pairs must exist)
+# The code handles missing PBT gracefully via case_when(), but warn if ALL missing
+missing_pbt_cols <- setdiff(req_raw_cols_pbt, names(raw_data))
+if (length(missing_pbt_cols) == length(req_raw_cols_pbt)) {
+  warning("All PBT baseline+follow-up columns missing. Derived Delta_* will be NA.")
+}
+
+# --- Standardize variable names and run sanity checks -----------------------
 df <- standardize_analysis_vars(raw_data)
 qc <- sanity_checks(df)
 print(qc)
+
+# --- Required analysis columns check -----------------------------------------
+# Core analysis columns (after standardize_analysis_vars)
+req_analysis_cols_core <- c(
+  "id", "Age", "Sex", "BMI", "FOF_status",
+  "Composite_Z0", "Composite_Z2", "Delta_Composite_Z",
+  "MOIindeksiindeksi", "diabetes", "alzheimer", "parkinson",
+  "AVH", "kaatuminen", "mieliala"
+)
+
+missing_analysis_cols <- setdiff(req_analysis_cols_core, names(df))
+if (length(missing_analysis_cols) > 0) {
+  stop("Missing required analysis columns: ", paste(missing_analysis_cols, collapse = ", "))
+}
 
 # Get paths from init_paths (already called in header)
 outputs_dir   <- getOption("fof.outputs_dir")

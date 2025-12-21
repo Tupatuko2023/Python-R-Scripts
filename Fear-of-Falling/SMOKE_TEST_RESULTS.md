@@ -8,13 +8,14 @@
 
 ✅ **5 out of 6 scripts pass smoke tests** (83% pass rate)
 
-```
+```text
 Total: 6 | Passed: 5 | Failed: 1
 ```
 
 ## Detailed Results
 
 ### ✅ K11 - Primary ANCOVA Models
+
 - **Status:** PASS ✓
 - **Runtime:** 9.7 seconds
 - **Fixed Issues:**
@@ -25,6 +26,7 @@ Total: 6 | Passed: 5 | Failed: 1
   - Responder analysis
 
 ### ✅ K12 - FOF Effects by Outcome
+
 - **Status:** PASS ✓
 - **Runtime:** 1.3 seconds
 - **Issues:** None (passed on first run)
@@ -33,6 +35,7 @@ Total: 6 | Passed: 5 | Failed: 1
   - Standardized effects
 
 ### ✅ K13 - Interaction Analyses
+
 - **Status:** PASS ✓
 - **Runtime:** 5.7 seconds
 - **Fixed Issues:**
@@ -43,6 +46,7 @@ Total: 6 | Passed: 5 | Failed: 1
   - Simple slopes analysis
 
 ### ✅ K14 - Baseline Characteristics Table
+
 - **Status:** PASS ✓
 - **Runtime:** 0.6 seconds
 - **Fixed Issues:**
@@ -53,6 +57,7 @@ Total: 6 | Passed: 5 | Failed: 1
   - 31 rows of demographic data
 
 ### ✅ K15 - Frailty Proxy Construction
+
 - **Status:** PASS ✓
 - **Runtime:** 2.3 seconds
 - **Fixed Issues:**
@@ -65,6 +70,7 @@ Total: 6 | Passed: 5 | Failed: 1
   - Analysis data saved for K16
 
 ### ⚠️ K16 - Frailty-Adjusted Models
+
 - **Status:** FAIL (Environment Dependency)
 - **Issue:** Missing packages with complex system dependencies
   - **Primary blocker:** `flextable` and `officer` packages
@@ -105,23 +111,29 @@ sudo apt-get install -y \
 ## Code Fixes Applied
 
 ### Commit 1: Smoke Test Suite (54c8d94)
+
 - Created comprehensive test framework
 - Added documentation and quick start guide
 - 6 test files created
 
 ### Commit 2: Script Fixes (2552ed2)
+
 All fixes verified and tested:
 
 1. **K11:** Added `library(effectsize)`
 2. **K13:** Fixed factor conversion:
+
    ```r
    FOF_status = factor(FOF_status, levels = c(0, 1), labels = c("nonFOF", "FOF"))
    ```
+
 3. **K14:** Removed incorrect parameter:
+
    ```r
    # Before: save_table_csv_html(baseline_table, basename_out, out_dir = outputs_dir)
    # After:  save_table_csv_html(baseline_table, basename_out)
    ```
+
 4. **K15:** Removed 9 `update_manifest()` calls, used proper manifest functions
 5. **K16:** Added clear error message for missing packages
 
@@ -157,11 +169,13 @@ All passing scripts successfully created their expected outputs:
 ## Packages Installed During Testing
 
 Successfully installed:
+
 - ✅ effectsize (for K11)
 - ✅ broom.mixed (for K16 mixed model tidying)
 - ✅ reformulas (for K16 formula manipulation)
 
 Unable to install (system dependency issues):
+
 - ❌ flextable (requires systemfonts, gdtools)
 - ❌ officer (requires ragg, xml2 with font support)
 
@@ -182,6 +196,7 @@ Unable to install (system dependency issues):
 ### For Continued Development
 
 1. Run tests after any code changes:
+
    ```bash
    Rscript tests/run_smoke_tests.R
    ```
@@ -194,7 +209,7 @@ Unable to install (system dependency issues):
 
 ## Files Created
 
-```
+```text
 tests/
 ├── run_smoke_tests.R        # Standalone test runner
 ├── smoke_test_k11_k16.R     # testthat framework version
@@ -223,10 +238,12 @@ The smoke test suite successfully identified and helped fix **5 distinct issues*
 - 9 non-existent function calls
 - 1 environment-dependent package issue
 
-**Result:** 83% of scripts now pass smoke tests automatically. The remaining script (K16) has correct logic but requires a fuller R environment with system font libraries.
+**Result:** 83% of scripts now pass smoke tests automatically. The remaining
+script (K16) has correct logic but requires a fuller R environment with system
+font libraries.
 
 ---
 
 **Tested by:** Claude Code
 **Test Framework:** Custom R smoke test suite
-**Source Code:** https://github.com/anthropics/claude-code
+**Source Code:** <https://github.com/anthropics/claude-code>
