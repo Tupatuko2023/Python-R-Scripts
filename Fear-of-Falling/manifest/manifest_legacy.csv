@@ -1,0 +1,42 @@
+"script","filepath","description","timestamp","label","kind","path","n","notes"
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx","Frailty-adjusted model results tables","2025-12-12 15:06:26.819877",NA,NA,NA,NA,NA
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData","All frailty-adjusted model objects","2025-12-12 15:06:27.162308",NA,NA,NA,NA,NA
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_effects_plot.png","Frailty effects coefficient plot","2025-12-12 15:06:27.726987",NA,NA,NA,NA,NA
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_predicted_trajectories.png","Predicted trajectories by frailty","2025-12-12 15:06:28.24617",NA,NA,NA,NA,NA
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_Results_EN.txt","Results text in English","2025-12-12 15:06:28.335462",NA,NA,NA,NA,NA
+"K16","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_Results_FI.txt","Results text in Finnish","2025-12-12 15:06:28.339443",NA,NA,NA,NA,NA
+"K13","table","K13/lm_age_int_extended_full.csv","Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.",NA,NA,NA,NA,NA
+"K13","table","K13/lm_BMI_int_extended_full.csv","Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.",NA,NA,NA,NA,NA
+"K13","table","K13/lm_sex_int_extended_full.csv","Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.",NA,NA,NA,NA,NA
+"K13","table","K13/lm_all_int_extended_full.csv","Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex.",NA,NA,NA,NA,NA
+"K13","table","K13/FOF_interaction_effects_overview.csv","Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo).",NA,NA,NA,NA,NA
+"K13","table","K13/FOF_interaction_effects_standardized.csv","Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui.",NA,NA,NA,NA,NA
+"K13","table","K13/simple_slopes_FOF_by_age.csv","Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).",NA,NA,NA,NA,NA
+"K13","table","K13/simple_slopes_FOF_by_BMI.csv","Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).",NA,NA,NA,NA,NA
+"K13","plot","K13/FOF_effect_by_age_simple_slopes.png","Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).",NA,NA,NA,NA,NA
+"K13","plot","K13/FOF_effect_by_BMI_simple_slopes.png","Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).",NA,NA,NA,NA,NA
+"K13","plot","K13/FOF_effect_by_sex_simple_slopes.png","Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).",NA,NA,NA,NA,NA
+"K11","table","K11/freq_FOF_status.csv","FOF-statusin frekvenssijakauma (nonFOF vs FOF).",NA,NA,NA,NA,NA
+"K11","table","K11/freq_AgeClass.csv","Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma.",NA,NA,NA,NA,NA
+"K11","table","K11/cross_FOF_AgeClass.csv","Ristiintaulukko FOF-status x AgeClass.",NA,NA,NA,NA,NA
+"K11","table","K11/Age_quartile_summary.csv","Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan.",NA,NA,NA,NA,NA
+"K11","table","K11/lm_base_model_full.csv","Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.",NA,NA,NA,NA,NA
+"K11","table","K11/lm_extended_model_full.csv","Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala).",NA,NA,NA,NA,NA
+"K11","table","K11/lm_extended_standardized.csv","Laajennetun lineaarisen mallin standardoidut kertoimet.",NA,NA,NA,NA,NA
+"K11","table","K11/FOF_effect_base_vs_extended.csv","FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.",NA,NA,NA,NA,NA
+"K11","table","K11/missing_data_pattern.csv","MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.",NA,NA,NA,NA,NA
+"K11","table","K11/mice_pooled_model_base.csv","MICE: poolattu perusmalli (lm) imputoidussa datassa.",NA,NA,NA,NA,NA
+"K11","table","K11/mice_pooled_model_extended.csv","MICE: poolattu laajennettu malli (lm) imputoidussa datassa.",NA,NA,NA,NA,NA
+"K11","table","K11/FOF_effect_MICE_base_vs_extended.csv","MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).",NA,NA,NA,NA,NA
+"K11","table","K11/logit_responder_model.csv","Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.",NA,NA,NA,NA,NA
+"K11","table","K11/ordinal_polr_OR.csv","Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).",NA,NA,NA,NA,NA
+"K11","table","K11/responder_by_Age_and_FOF.csv","Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.",NA,NA,NA,NA,NA
+"K11","table","K11/responder_pvalues_by_Age_quartile.csv","Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square).",NA,NA,NA,NA,NA
+"K11","table","K11/emmeans_FOF_vs_nonFOF_by_agequartile.csv","FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).",NA,NA,NA,NA,NA
+"K11","table","K11/BP_test_FOF_status.csv","Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).",NA,NA,NA,NA,NA
+"K11","table","K11/gls_hom_vs_het_comparison.csv","GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.",NA,NA,NA,NA,NA
+"K11","table","K11/gls_residual_variance_by_FOF.csv","GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.",NA,NA,NA,NA,NA
+"K11","table","K11/quantile_reg_FOF_effect.csv","Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75).",NA,NA,NA,NA,NA
+"K11","plot","K11/Responder_osuus.png","Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.",NA,NA,NA,NA,NA
+"K11","plot","K11/Responder_osuus_percent_annot.png","Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina.",NA,NA,NA,NA,NA
+"K12",NA,NA,"2025-12-14 16:13:26.461139","lm_models_all_outcomes","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/lm_models_all_outcomes.csv",95,NA
