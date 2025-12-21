@@ -136,7 +136,7 @@ All 12 scripts now satisfy the "Valid script" checklist:
 
 ✓ **1. Full STANDARD SCRIPT INTRO block** (placeholders filled)
 ✓ **2. script_label equals SCRIPT_ID** (or derived as prefix before `.V`)
-✓ **3. Output paths under** `outputs/<script_label>/...`
+✓ **3. Output paths under** `R-scripts/<script_label>/outputs/`
 ✓ **4. req_cols exists** and matches Required Vars 1:1
 ✓ **5. Manifest discipline:** Every artifact appends one manifest row
 ✓ **6. set.seed(20251124)** documented (set only when MI/bootstrap/resampling used)

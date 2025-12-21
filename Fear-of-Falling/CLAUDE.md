@@ -14,9 +14,8 @@
    - Use `set.seed(20251124)` where randomness exists (bootstrap, MI, resampling)
    - Save `sessionInfo()` (or `renv::diagnostics()`) into `manifest/`
 5. Output discipline:
-   - All tables/figures go to:
-     - Output root: `R-scripts/<K_FOLDER>/outputs/`
-     - Script-specific: `R-scripts/<K_FOLDER>/outputs/<script_label>/...`
+   - All tables/figures go to: `R-scripts/<script_label>/outputs/`
+     (where `<script_label>` = K11, K12, etc.; created by `init_paths(script_label)`)
    - Always write one `manifest/manifest.csv` row per output artifact
      (file, date, script, git hash if available)
 
@@ -29,8 +28,8 @@
 Every new script (Kxx) MUST start with a standardized intro/header block. This operationalizes:
 
 - Reproducibility rules (renv + seed + sessionInfo)
-- Output discipline + manifest logging (outputs/<script>/ + 1 manifest row per output artifact)
-- “Do not invent variables” by forcing an explicit Required Vars list
+- Output discipline + manifest logging (R-scripts/<script>/outputs/ + 1 manifest row per output artifact)
+- "Do not invent variables" by forcing an explicit Required Vars list
 
 ### Script-ID + file tag conventions (MANDATORY)
 
@@ -44,7 +43,8 @@ Every new script (Kxx) MUST start with a standardized intro/header block. This o
 
 ### Output + manifest conventions (MANDATORY)
 
-- All artifacts MUST be written under: `R-scripts/<K_FOLDER>/outputs/<script_label>/...`
+- All artifacts MUST be written under: `R-scripts/<script_label>/outputs/`
+  (e.g., K11 outputs go to `R-scripts/K11/outputs/fit_primary_ancova.csv`)
 - Every artifact MUST append exactly one row to `manifest/manifest.csv`
   (include: file, date, script, git hash if available).
 - Filenames SHOULD include the file tag prefix (at minimum `SCRIPT_ID`).
@@ -88,7 +88,7 @@ Every new script (Kxx) MUST start with a standardized intro/header block. This o
 #
 # Outputs + manifest:
 # - script_label: {{SCRIPT_ID}} (canonical)
-# - outputs dir: outputs/{{SCRIPT_ID}}/  (resolved via init_paths(script_label))
+# - outputs dir: R-scripts/{{SCRIPT_ID}}/outputs/  (resolved via init_paths(script_label))
 # - manifest: append 1 row per artifact to manifest/manifest.csv
 #
 # Workflow (tick off; do not skip):
@@ -100,7 +100,7 @@ Every new script (Kxx) MUST start with a standardized intro/header block. This o
 # 06) Fit primary model (ANCOVA or mixed per project strategy)
 # 07) Sensitivity models (if feasible; document)
 # 08) Reporting tables (estimates + 95% CI; emmeans as needed)
-# 09) Save artifacts -> outputs/{{SCRIPT_ID}}/
+# 09) Save artifacts -> R-scripts/{{SCRIPT_ID}}/outputs/
 # 10) Append manifest row per artifact
 # 11) Save sessionInfo / renv diagnostics to manifest/
 # 12) EOF marker
@@ -146,7 +146,7 @@ A new Kxx script is valid only if:
 
 1. It starts with the full STANDARD SCRIPT INTRO block (placeholders filled).
 2. `script_label` equals `SCRIPT_ID` (or is derived as prefix before `.V` in file tag).
-3. All output paths are under `outputs/<script_label>/...`
+3. All output paths are under `R-scripts/<script_label>/outputs/`
 4. `req_cols` exists and matches Required Vars in the intro **1:1**.
 5. Every saved table/figure/text/model artifact appends exactly one manifest row.
 6. If MI/bootstrap/resampling used -> `set.seed(20251124)` is set and documented.
