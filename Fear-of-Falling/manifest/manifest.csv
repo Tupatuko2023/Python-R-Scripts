@@ -1,429 +1,388 @@
-script,filepath,description,timestamp,label,kind,path,n,notes
-K16,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx,Frailty-adjusted model results tables,2025-12-12 15:06:26.819877,NA,NA,NA,NA,NA
-K16,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,All frailty-adjusted model objects,2025-12-12 15:06:27.162308,NA,NA,NA,NA,NA
-K16,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_effects_plot.png,Frailty effects coefficient plot,2025-12-12 15:06:27.726987,NA,NA,NA,NA,NA
-K16,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_predicted_trajectories.png,Predicted trajectories by frailty,2025-12-12 15:06:28.24617,NA,NA,NA,NA,NA
-K16,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_Results_EN.txt,Results text in English,2025-12-12 15:06:28.335462,NA,NA,NA,NA,NA
-K16,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_Results_FI.txt,Results text in Finnish,2025-12-12 15:06:28.339443,NA,NA,NA,NA,NA
-K13,table,K13/lm_age_int_extended_full.csv,Lineaarisen FOF × age_c -interaktiomallin (laajennettu malli) kaikki kertoimet.,NA,NA,NA,NA,NA
-K13,table,K13/lm_BMI_int_extended_full.csv,Lineaarisen FOF × BMI_c -interaktiomallin (laajennettu malli) kaikki kertoimet.,NA,NA,NA,NA,NA
-K13,table,K13/lm_sex_int_extended_full.csv,Lineaarisen FOF × sex -interaktiomallin (laajennettu malli) kaikki kertoimet.,NA,NA,NA,NA,NA
-K13,table,K13/lm_all_int_extended_full.csv,"Yhdistelmämalli, jossa mukana yhtä aikaa FOF × age_c, FOF × BMI_c ja FOF × sex.",NA,NA,NA,NA,NA
-K13,table,K13/FOF_interaction_effects_overview.csv,"Koontitaulukko FOF × moderaattori -interaktiokertoimista (estimate, 95 % LV, p-arvo).",NA,NA,NA,NA,NA
-K13,table,K13/FOF_interaction_effects_standardized.csv,"Standardoidut FOF × moderaattori -kertoimet (Std. Coef. + 95 % LV), jos laskenta onnistui.",NA,NA,NA,NA,NA
-K13,table,K13/simple_slopes_FOF_by_age.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri ikätasoilla (centered-age).,NA,NA,NA,NA,NA
-K13,table,K13/simple_slopes_FOF_by_BMI.csv,Simple slopes: FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla (centered-BMI).,NA,NA,NA,NA,NA
-K13,plot,K13/FOF_effect_by_age_simple_slopes.png,Kuva: FOF × ikä -interaktio (FOF-efekti Delta_Composite_Z:ään eri ikätasoilla).,NA,NA,NA,NA,NA
-K13,plot,K13/FOF_effect_by_BMI_simple_slopes.png,Kuva: FOF × BMI -interaktio (FOF-efekti Delta_Composite_Z:ään eri BMI-tasoilla).,NA,NA,NA,NA,NA
-K13,plot,K13/FOF_effect_by_sex_simple_slopes.png,Kuva: FOF × sukupuoli -interaktio (FOF-efekti Delta_Composite_Z:ään naisilla ja miehillä).,NA,NA,NA,NA,NA
-K11,table,K11/freq_FOF_status.csv,FOF-statusin frekvenssijakauma (nonFOF vs FOF).,NA,NA,NA,NA,NA
-K11,table,K11/freq_AgeClass.csv,"Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma.",NA,NA,NA,NA,NA
-K11,table,K11/cross_FOF_AgeClass.csv,Ristiintaulukko FOF-status x AgeClass.,NA,NA,NA,NA,NA
-K11,table,K11/Age_quartile_summary.csv,"Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan.",NA,NA,NA,NA,NA
-K11,table,K11/lm_base_model_full.csv,Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.,NA,NA,NA,NA,NA
-K11,table,K11/lm_extended_model_full.csv,"Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala).",NA,NA,NA,NA,NA
-K11,table,K11/lm_extended_standardized.csv,Laajennetun lineaarisen mallin standardoidut kertoimet.,NA,NA,NA,NA,NA
-K11,table,K11/FOF_effect_base_vs_extended.csv,FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.,NA,NA,NA,NA,NA
-K11,table,K11/missing_data_pattern.csv,MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.,NA,NA,NA,NA,NA
-K11,table,K11/mice_pooled_model_base.csv,MICE: poolattu perusmalli (lm) imputoidussa datassa.,NA,NA,NA,NA,NA
-K11,table,K11/mice_pooled_model_extended.csv,MICE: poolattu laajennettu malli (lm) imputoidussa datassa.,NA,NA,NA,NA,NA
-K11,table,K11/FOF_effect_MICE_base_vs_extended.csv,MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).,NA,NA,NA,NA,NA
-K11,table,K11/logit_responder_model.csv,Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.,NA,NA,NA,NA,NA
-K11,table,K11/ordinal_polr_OR.csv,Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).,NA,NA,NA,NA,NA
-K11,table,K11/responder_by_Age_and_FOF.csv,Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.,NA,NA,NA,NA,NA
-K11,table,K11/responder_pvalues_by_Age_quartile.csv,"Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square).",NA,NA,NA,NA,NA
-K11,table,K11/emmeans_FOF_vs_nonFOF_by_agequartile.csv,FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).,NA,NA,NA,NA,NA
-K11,table,K11/BP_test_FOF_status.csv,Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).,NA,NA,NA,NA,NA
-K11,table,K11/gls_hom_vs_het_comparison.csv,GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.,NA,NA,NA,NA,NA
-K11,table,K11/gls_residual_variance_by_FOF.csv,GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.,NA,NA,NA,NA,NA
-K11,table,K11/quantile_reg_FOF_effect.csv,"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75).",NA,NA,NA,NA,NA
-K11,plot,K11/Responder_osuus.png,Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.,NA,NA,NA,NA,NA
-K11,plot,K11/Responder_osuus_percent_annot.png,"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina.",NA,NA,NA,NA,NA
-K12,NA,NA,2025-12-14 16:13:26.461139,lm_models_all_outcomes,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/lm_models_all_outcomes.csv,95,NA
-K12,NA,NA,2025-12-14 16:13:26.562779,FOF_effects_by_outcome,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_by_outcome.csv,10,NA
-K12,NA,NA,2025-12-14 16:13:26.657435,FOF_effects_standardized_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_standardized_extended.csv,5,NA
-K12,NA,NA,2025-12-14 16:13:27.42612,sessionInfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/sessionInfo_K12.txt,NA,NA
-K11,NA,NA,2025-12-14 16:27:33.444991,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 16:27:33.482256,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 16:27:33.51424,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
-K11,NA,NA,2025-12-14 16:28:46.472433,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 16:28:46.506915,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 16:28:46.682693,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
-K11,NA,NA,2025-12-14 16:41:26.483091,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 16:41:26.515503,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 16:41:26.545794,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
-K11,NA,NA,2025-12-14 16:41:26.926293,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-14 16:41:26.955748,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-14 16:43:55.454964,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 16:43:55.485928,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 16:43:55.512456,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
-K11,NA,NA,2025-12-14 16:43:55.681297,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-14 16:43:55.872135,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-14 16:43:57.00082,mice_pooled_model_base,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv,266,NA
-K11,NA,NA,2025-12-14 16:43:57.135755,mice_pooled_model_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,266,NA
-K11,NA,NA,2025-12-14 16:43:57.169632,mice_pooled_model_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv,266,NA
-K11,NA,NA,2025-12-14 16:43:57.197423,mice_pooled_model_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html,266,NA
-K11,NA,NA,2025-12-14 16:51:15.46128,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 16:51:15.4911,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 16:51:15.526051,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
-K11,NA,NA,2025-12-14 16:51:15.950043,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-14 16:51:15.982404,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-14 16:51:48.450195,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 16:51:48.492459,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 16:51:48.54135,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
-K11,NA,NA,2025-12-14 16:51:48.836645,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-14 16:51:48.86476,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-14 16:55:49.763098,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 16:55:49.79603,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 16:55:49.826685,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
-K11,NA,NA,2025-12-14 16:55:50.123787,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-14 16:55:50.160071,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-14 17:01:14.101969,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 17:01:14.134854,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 17:01:14.165858,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
-K11,NA,NA,2025-12-14 17:01:14.643145,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-14 17:01:14.67463,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-14 17:01:15.830489,mice_pooled_model_base,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:15.857046,mice_pooled_model_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:16.042211,mice_pooled_model_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:16.078021,mice_pooled_model_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.497441,Age_quartile_Age_counts,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.577787,Age_quartile_Age_counts,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.611661,freq_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.642538,freq_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.67686,freq_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.704753,freq_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.735438,cross_FOF_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.871271,cross_FOF_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.905994,Age_quartile_summary,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.936415,Age_quartile_summary,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:17.990252,lm_base_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:18.179231,lm_base_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:18.235467,lm_extended_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:18.266185,lm_extended_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:18.304321,FOF_effect_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:18.486018,FOF_effect_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:18.697718,lm_extended_standardized,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:18.733287,lm_extended_standardized,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:18.77952,FOF_effect_MICE_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:18.813392,FOF_effect_MICE_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.030351,logit_responder_model,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.065897,logit_responder_model,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.109333,ordinal_polr_coefficients,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.145699,ordinal_polr_coefficients,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.285364,ordinal_polr_OR,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.322744,ordinal_polr_OR,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.357623,responder_by_Age_and_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.389817,responder_by_Age_and_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.430981,responder_pvalues_by_Age_quartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.666904,responder_pvalues_by_Age_quartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.710996,emmeans_FOF_vs_nonFOF_by_agequartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.742119,emmeans_FOF_vs_nonFOF_by_agequartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:19.988539,BP_test_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:20.231899,BP_test_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:20.373561,gls_hom_vs_het_comparison,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:20.411034,gls_hom_vs_het_comparison,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:20.452683,gls_residual_variance_by_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:20.483563,gls_residual_variance_by_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html,NA,NA
-K11,NA,NA,2025-12-14 17:01:20.519168,quantile_reg_FOF_effect,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
-K11,NA,NA,2025-12-14 17:01:20.664915,quantile_reg_FOF_effect,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:15.661763,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 17:04:15.890774,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 17:04:15.94335,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
-K11,NA,NA,2025-12-14 17:04:16.358171,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-14 17:04:16.401229,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-14 17:04:17.450325,mice_pooled_model_base,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:17.484302,mice_pooled_model_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:17.522854,mice_pooled_model_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:17.559346,mice_pooled_model_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:18.695025,Age_quartile_Age_counts,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:18.734825,Age_quartile_Age_counts,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.062032,freq_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.105232,freq_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.151046,freq_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.193276,freq_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.239056,cross_FOF_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.279192,cross_FOF_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.535868,Age_quartile_summary,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.742677,Age_quartile_summary,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.795032,lm_base_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.83418,lm_base_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:19.878358,lm_extended_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:20.028445,lm_extended_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:20.078434,FOF_effect_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:20.275855,FOF_effect_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:20.387625,lm_extended_standardized,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:20.593519,lm_extended_standardized,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:20.642565,FOF_effect_MICE_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:20.683282,FOF_effect_MICE_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:20.876153,logit_responder_model,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:20.915454,logit_responder_model,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.11737,ordinal_polr_coefficients,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.16101,ordinal_polr_coefficients,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.209497,ordinal_polr_OR,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.468434,ordinal_polr_OR,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.617368,responder_by_Age_and_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.658063,responder_by_Age_and_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.700035,responder_pvalues_by_Age_quartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.74006,responder_pvalues_by_Age_quartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.787032,emmeans_FOF_vs_nonFOF_by_agequartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:21.977195,emmeans_FOF_vs_nonFOF_by_agequartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:22.029169,BP_test_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:22.296431,BP_test_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:22.571693,gls_hom_vs_het_comparison,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:22.684832,gls_hom_vs_het_comparison,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:22.736677,gls_residual_variance_by_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:22.781376,gls_residual_variance_by_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html,NA,NA
-K11,NA,NA,2025-12-14 17:04:22.827823,quantile_reg_FOF_effect,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
-K11,NA,NA,2025-12-14 17:04:22.8715,quantile_reg_FOF_effect,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
-K11,table,K11/freq_FOF_status.csv,FOF-statusin frekvenssijakauma (nonFOF vs FOF).,NA,NA,NA,NA,NA
-K11,table,K11/freq_AgeClass.csv,"Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma.",NA,NA,NA,NA,NA
-K11,table,K11/cross_FOF_AgeClass.csv,Ristiintaulukko FOF-status x AgeClass.,NA,NA,NA,NA,NA
-K11,table,K11/Age_quartile_summary.csv,"Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan.",NA,NA,NA,NA,NA
-K11,table,K11/lm_base_model_full.csv,Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.,NA,NA,NA,NA,NA
-K11,table,K11/lm_extended_model_full.csv,"Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala).",NA,NA,NA,NA,NA
-K11,table,K11/lm_extended_standardized.csv,Laajennetun lineaarisen mallin standardoidut kertoimet.,NA,NA,NA,NA,NA
-K11,table,K11/FOF_effect_base_vs_extended.csv,FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.,NA,NA,NA,NA,NA
-K11,table,K11/missing_data_pattern.csv,MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.,NA,NA,NA,NA,NA
-K11,table,K11/mice_pooled_model_base.csv,MICE: poolattu perusmalli (lm) imputoidussa datassa.,NA,NA,NA,NA,NA
-K11,table,K11/mice_pooled_model_extended.csv,MICE: poolattu laajennettu malli (lm) imputoidussa datassa.,NA,NA,NA,NA,NA
-K11,table,K11/FOF_effect_MICE_base_vs_extended.csv,MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).,NA,NA,NA,NA,NA
-K11,table,K11/logit_responder_model.csv,Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.,NA,NA,NA,NA,NA
-K11,table,K11/ordinal_polr_OR.csv,Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).,NA,NA,NA,NA,NA
-K11,table,K11/responder_by_Age_and_FOF.csv,Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.,NA,NA,NA,NA,NA
-K11,table,K11/responder_pvalues_by_Age_quartile.csv,"Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square).",NA,NA,NA,NA,NA
-K11,table,K11/emmeans_FOF_vs_nonFOF_by_agequartile.csv,FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).,NA,NA,NA,NA,NA
-K11,table,K11/BP_test_FOF_status.csv,Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).,NA,NA,NA,NA,NA
-K11,table,K11/gls_hom_vs_het_comparison.csv,GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.,NA,NA,NA,NA,NA
-K11,table,K11/gls_residual_variance_by_FOF.csv,GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.,NA,NA,NA,NA,NA
-K11,table,K11/quantile_reg_FOF_effect.csv,"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75).",NA,NA,NA,NA,NA
-K11,plot,K11/Responder_osuus.png,Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.,NA,NA,NA,NA,NA
-K11,plot,K11/Responder_osuus_percent_annot.png,"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina.",NA,NA,NA,NA,NA
-K11,NA,NA,2025-12-14 17:04:23.126731,sessionInfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessionInfo_K11.txt,NA,NA
-K11,NA,NA,2025-12-14 19:26:32.030963,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 19:26:32.096992,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 19:26:32.621364,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-14 19:26:32.684963,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-14 19:26:34.18247,mice_pooled_model_base,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:34.242203,mice_pooled_model_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:34.30467,mice_pooled_model_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:34.485464,mice_pooled_model_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:36.136272,Age_quartile_Age_counts,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:36.201866,Age_quartile_Age_counts,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:36.383569,freq_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:36.436114,freq_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:36.491096,freq_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:36.651162,freq_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:36.703777,cross_FOF_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:36.749061,cross_FOF_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:36.95388,Age_quartile_summary,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:37.007705,Age_quartile_summary,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:37.188759,lm_base_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:37.240055,lm_base_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:37.290767,lm_extended_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:37.337271,lm_extended_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:37.54907,FOF_effect_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:37.599087,FOF_effect_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:37.907365,lm_extended_standardized,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.133366,lm_extended_standardized,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.242823,FOF_effect_MICE_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.298997,FOF_effect_MICE_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.402349,logit_responder_model,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.550924,logit_responder_model,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.611028,ordinal_polr_coefficients,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.664897,ordinal_polr_coefficients,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.828529,ordinal_polr_OR,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.88271,ordinal_polr_OR,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:38.934059,responder_by_Age_and_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.087131,responder_by_Age_and_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.146974,responder_pvalues_by_Age_quartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.207368,responder_pvalues_by_Age_quartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.276111,emmeans_FOF_vs_nonFOF_by_agequartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.580061,emmeans_FOF_vs_nonFOF_by_agequartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.64297,BP_test_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.6937,BP_test_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.751696,gls_hom_vs_het_comparison,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.801449,gls_hom_vs_het_comparison,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:39.961646,gls_residual_variance_by_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:40.018758,gls_residual_variance_by_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:40.083717,quantile_reg_FOF_effect,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
-K11,NA,NA,2025-12-14 19:26:40.267786,quantile_reg_FOF_effect,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
-K11,NA,NA,2025-12-14 19:26:40.396594,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt,NA,NA
-K11,NA,NA,2025-12-14 19:27:07.588148,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 19:27:07.651885,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-14 19:27:08.019085,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-14 19:27:08.247156,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-14 19:27:09.387145,mice_pooled_model_base,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:09.559052,mice_pooled_model_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:09.619527,mice_pooled_model_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:09.680885,mice_pooled_model_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:11.002096,Age_quartile_Age_counts,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:11.26979,Age_quartile_Age_counts,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:11.331058,freq_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:11.540178,freq_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:11.60053,freq_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:11.810788,freq_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:11.880447,cross_FOF_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:12.093833,cross_FOF_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:12.160676,Age_quartile_summary,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:12.390491,Age_quartile_summary,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:12.471854,lm_base_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:12.80748,lm_base_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:12.870359,lm_extended_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:12.928037,lm_extended_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:12.989619,FOF_effect_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:13.159447,FOF_effect_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:13.286378,lm_extended_standardized,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:13.510289,lm_extended_standardized,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:13.572663,FOF_effect_MICE_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:13.788911,FOF_effect_MICE_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.011493,logit_responder_model,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.07301,logit_responder_model,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.239721,ordinal_polr_coefficients,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.299027,ordinal_polr_coefficients,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.36514,ordinal_polr_OR,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.526292,ordinal_polr_OR,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.594841,responder_by_Age_and_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.654763,responder_by_Age_and_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.870462,responder_pvalues_by_Age_quartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:14.930886,responder_pvalues_by_Age_quartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:15.163014,emmeans_FOF_vs_nonFOF_by_agequartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:15.334368,emmeans_FOF_vs_nonFOF_by_agequartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:15.401754,BP_test_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:15.462846,BP_test_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:15.639312,gls_hom_vs_het_comparison,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:15.698827,gls_hom_vs_het_comparison,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:15.874187,gls_residual_variance_by_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:15.936015,gls_residual_variance_by_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:16.002008,quantile_reg_FOF_effect,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
-K11,NA,NA,2025-12-14 19:27:16.18251,quantile_reg_FOF_effect,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
-K11,NA,NA,2025-12-14 19:27:16.282862,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt,NA,NA
-K11,NA,NA,2025-12-14 21:09:21.917215,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-14 21:09:21.982468,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K12,NA,NA,2025-12-14 21:09:28.799375,lm_models_all_outcomes,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/lm_models_all_outcomes.csv,95,NA
-K12,NA,NA,2025-12-14 21:09:28.914828,FOF_effects_by_outcome,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_by_outcome.csv,10,NA
-K12,NA,NA,2025-12-14 21:09:29.053296,FOF_effects_standardized_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_standardized_extended.csv,5,NA
-K15,NA,NA,2025-12-14 21:09:45.816137,K15_frailty_count_3_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
-K15,NA,NA,2025-12-14 21:09:45.906058,K15_frailty_count_3_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
-K15,NA,NA,2025-12-14 21:09:45.958345,K15_frailty_cat_3_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv,NA,NA
-K15,NA,NA,2025-12-14 21:09:45.995324,K15_frailty_cat_3_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_3_overall.html,NA,NA
-K15,NA,NA,2025-12-14 21:09:46.048785,K15_frailty_count_4_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_4_overall.csv,NA,NA
-K15,NA,NA,2025-12-14 21:09:46.094213,K15_frailty_count_4_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_4_overall.html,NA,NA
-K15,NA,NA,2025-12-14 21:09:46.166756,K15_frailty_cat_4_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv,NA,NA
-K15,NA,NA,2025-12-14 21:09:46.207892,K15_frailty_cat_4_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_4_overall.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:02.151451,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-15 16:31:02.241414,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-15 16:31:02.711702,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-15 16:31:02.802767,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-15 16:31:04.435631,mice_pooled_model_base,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:04.644522,mice_pooled_model_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:04.756653,mice_pooled_model_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:05.106288,mice_pooled_model_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:06.844616,Age_quartile_Age_counts,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:07.056738,Age_quartile_Age_counts,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:07.15154,freq_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:07.437809,freq_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:07.7208,freq_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:07.950407,freq_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:08.184215,cross_FOF_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:08.40736,cross_FOF_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:08.494422,Age_quartile_summary,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:08.702482,Age_quartile_summary,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:08.818922,lm_base_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:09.031005,lm_base_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:09.257444,lm_extended_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:09.346088,lm_extended_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:09.583268,FOF_effect_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:09.797221,FOF_effect_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:10.105141,lm_extended_standardized,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:10.32599,lm_extended_standardized,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:10.43771,FOF_effect_MICE_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:10.661628,FOF_effect_MICE_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:10.925729,logit_responder_model,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:11.101651,logit_responder_model,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:11.214892,ordinal_polr_coefficients,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:11.427267,ordinal_polr_coefficients,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:11.642643,ordinal_polr_OR,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:11.73358,ordinal_polr_OR,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:11.944885,responder_by_Age_and_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:12.037414,responder_by_Age_and_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:12.270557,responder_pvalues_by_Age_quartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:12.490421,responder_pvalues_by_Age_quartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:12.587448,emmeans_FOF_vs_nonFOF_by_agequartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:12.871345,emmeans_FOF_vs_nonFOF_by_agequartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:13.264447,BP_test_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:13.36475,BP_test_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:13.589052,gls_hom_vs_het_comparison,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:13.67972,gls_hom_vs_het_comparison,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:13.896332,gls_residual_variance_by_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:14.117767,gls_residual_variance_by_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:14.216851,quantile_reg_FOF_effect,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
-K11,NA,NA,2025-12-15 16:31:14.458731,quantile_reg_FOF_effect,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
-K11,NA,NA,2025-12-15 16:31:14.788745,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt,NA,NA
-K11,NA,NA,2025-12-17 19:40:28.821566,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-17 19:40:28.919167,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-20 15:31:26.852735,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
-K11,NA,NA,2025-12-20 15:31:26.955333,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
-K11,NA,NA,2025-12-20 15:31:27.564909,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
-K11,NA,NA,2025-12-20 15:31:27.862294,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
-K11,NA,NA,2025-12-20 15:31:29.961871,mice_pooled_model_base,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:30.330423,mice_pooled_model_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:30.612192,mice_pooled_model_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:30.882063,mice_pooled_model_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:33.494371,Age_quartile_Age_counts,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:33.620369,Age_quartile_Age_counts,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:33.929351,freq_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:34.353506,freq_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:34.466148,freq_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:34.750803,freq_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:35.131676,cross_FOF_AgeClass,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:35.583979,cross_FOF_AgeClass,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:35.758058,Age_quartile_summary,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:36.143646,Age_quartile_summary,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:36.357657,lm_base_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:37.118216,lm_base_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:37.913301,lm_extended_model_full,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:38.690243,lm_extended_model_full,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:39.332327,FOF_effect_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:39.815398,FOF_effect_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:40.868485,lm_extended_standardized,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:41.293669,lm_extended_standardized,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:41.73131,FOF_effect_MICE_base_vs_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:42.15925,FOF_effect_MICE_base_vs_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:43.543951,logit_responder_model,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:43.980837,logit_responder_model,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:44.600061,ordinal_polr_coefficients,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:45.133231,ordinal_polr_coefficients,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:45.632489,ordinal_polr_OR,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:45.846363,ordinal_polr_OR,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:46.350265,responder_by_Age_and_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:46.700577,responder_by_Age_and_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:47.205744,responder_pvalues_by_Age_quartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:47.709208,responder_pvalues_by_Age_quartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:48.167282,emmeans_FOF_vs_nonFOF_by_agequartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:48.637782,emmeans_FOF_vs_nonFOF_by_agequartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:49.32354,BP_test_FOF_status,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:49.76409,BP_test_FOF_status,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:50.329465,gls_hom_vs_het_comparison,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:50.938879,gls_hom_vs_het_comparison,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:51.558111,gls_residual_variance_by_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:52.159633,gls_residual_variance_by_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:52.877181,quantile_reg_FOF_effect,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
-K11,NA,NA,2025-12-20 15:31:53.432257,quantile_reg_FOF_effect,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
-K11,NA,NA,2025-12-20 15:31:54.200972,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt,NA,NA
-K16,NA,NA,2025-12-20 17:24:42.74474,Frailty-adjusted model results tables,table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx,276,NA
-K16,NA,NA,2025-12-20 17:24:53.724326,Frailty-adjusted model results tables,table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx,276,NA
-K16,NA,NA,2025-12-20 17:35:46.202635,Frailty-adjusted model results tables,table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx,276,NA
-K16,NA,NA,2025-12-20 17:35:46.370193,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:35:46.946487,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:35:47.510533,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:35:47.707921,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:35:47.920636,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:35:48.239966,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/sessioninfo_K16.txt,NA,NA
-K16,NA,NA,2025-12-20 17:36:09.694517,Frailty-adjusted model results tables,table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx,276,NA
-K16,NA,NA,2025-12-20 17:36:09.873022,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:36:10.390566,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:36:10.907906,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:36:11.167947,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:36:11.270906,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
-K16,NA,NA,2025-12-20 17:36:11.667602,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/sessioninfo_K16.txt,NA,NA
+"timestamp","script","label","kind","path","n","notes"
+"2025-12-14 16:13:26.562779","K12","FOF_effects_by_outcome","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_by_outcome.csv",10,NA
+"2025-12-14 16:13:26.657435","K12","FOF_effects_standardized_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_standardized_extended.csv",5,NA
+"2025-12-14 16:13:27.42612","K12","sessionInfo","sessioninfo","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/sessionInfo_K12.txt",NA,NA
+"2025-12-14 16:27:33.444991","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 16:27:33.482256","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 16:27:33.51424","K11","fit_primary_ancova","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html",266,NA
+"2025-12-14 16:28:46.472433","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 16:28:46.506915","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 16:28:46.682693","K11","fit_primary_ancova","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html",266,NA
+"2025-12-14 16:41:26.483091","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 16:41:26.515503","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 16:41:26.545794","K11","fit_primary_ancova","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html",266,NA
+"2025-12-14 16:41:26.926293","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-14 16:41:26.955748","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-14 16:43:55.454964","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 16:43:55.485928","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 16:43:55.512456","K11","fit_primary_ancova","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html",266,NA
+"2025-12-14 16:43:55.681297","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-14 16:43:55.872135","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-14 16:43:57.00082","K11","mice_pooled_model_base","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv",266,NA
+"2025-12-14 16:43:57.135755","K11","mice_pooled_model_base","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html",266,NA
+"2025-12-14 16:43:57.169632","K11","mice_pooled_model_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv",266,NA
+"2025-12-14 16:43:57.197423","K11","mice_pooled_model_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html",266,NA
+"2025-12-14 16:51:15.46128","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 16:51:15.4911","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 16:51:15.526051","K11","fit_primary_ancova","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html",266,NA
+"2025-12-14 16:51:15.950043","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-14 16:51:15.982404","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-14 16:51:48.450195","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 16:51:48.492459","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 16:51:48.54135","K11","fit_primary_ancova","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html",266,NA
+"2025-12-14 16:51:48.836645","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-14 16:51:48.86476","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-14 16:55:49.763098","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 16:55:49.79603","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 16:55:49.826685","K11","fit_primary_ancova","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html",266,NA
+"2025-12-14 16:55:50.123787","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-14 16:55:50.160071","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-14 17:01:14.101969","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 17:01:14.134854","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 17:01:14.165858","K11","fit_primary_ancova","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html",266,NA
+"2025-12-14 17:01:14.643145","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-14 17:01:14.67463","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-14 17:01:15.830489","K11","mice_pooled_model_base","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv",NA,NA
+"2025-12-14 17:01:15.857046","K11","mice_pooled_model_base","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html",NA,NA
+"2025-12-14 17:01:16.042211","K11","mice_pooled_model_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv",NA,NA
+"2025-12-14 17:01:16.078021","K11","mice_pooled_model_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html",NA,NA
+"2025-12-14 17:01:17.497441","K11","Age_quartile_Age_counts","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv",NA,NA
+"2025-12-14 17:01:17.577787","K11","Age_quartile_Age_counts","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html",NA,NA
+"2025-12-14 17:01:17.611661","K11","freq_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv",NA,NA
+"2025-12-14 17:01:17.642538","K11","freq_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html",NA,NA
+"2025-12-14 17:01:17.67686","K11","freq_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv",NA,NA
+"2025-12-14 17:01:17.704753","K11","freq_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html",NA,NA
+"2025-12-14 17:01:17.735438","K11","cross_FOF_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv",NA,NA
+"2025-12-14 17:01:17.871271","K11","cross_FOF_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html",NA,NA
+"2025-12-14 17:01:17.905994","K11","Age_quartile_summary","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv",NA,NA
+"2025-12-14 17:01:17.936415","K11","Age_quartile_summary","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html",NA,NA
+"2025-12-14 17:01:17.990252","K11","lm_base_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv",NA,NA
+"2025-12-14 17:01:18.179231","K11","lm_base_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html",NA,NA
+"2025-12-14 17:01:18.235467","K11","lm_extended_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv",NA,NA
+"2025-12-14 17:01:18.266185","K11","lm_extended_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html",NA,NA
+"2025-12-14 17:01:18.304321","K11","FOF_effect_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv",NA,NA
+"2025-12-14 17:01:18.486018","K11","FOF_effect_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html",NA,NA
+"2025-12-14 17:01:18.697718","K11","lm_extended_standardized","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv",NA,NA
+"2025-12-14 17:01:18.733287","K11","lm_extended_standardized","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html",NA,NA
+"2025-12-14 17:01:18.77952","K11","FOF_effect_MICE_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv",NA,NA
+"2025-12-14 17:01:18.813392","K11","FOF_effect_MICE_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html",NA,NA
+"2025-12-14 17:01:19.030351","K11","logit_responder_model","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv",NA,NA
+"2025-12-14 17:01:19.065897","K11","logit_responder_model","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html",NA,NA
+"2025-12-14 17:01:19.109333","K11","ordinal_polr_coefficients","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv",NA,NA
+"2025-12-14 17:01:19.145699","K11","ordinal_polr_coefficients","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html",NA,NA
+"2025-12-14 17:01:19.285364","K11","ordinal_polr_OR","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv",NA,NA
+"2025-12-14 17:01:19.322744","K11","ordinal_polr_OR","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html",NA,NA
+"2025-12-14 17:01:19.357623","K11","responder_by_Age_and_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv",NA,NA
+"2025-12-14 17:01:19.389817","K11","responder_by_Age_and_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html",NA,NA
+"2025-12-14 17:01:19.430981","K11","responder_pvalues_by_Age_quartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv",NA,NA
+"2025-12-14 17:01:19.666904","K11","responder_pvalues_by_Age_quartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html",NA,NA
+"2025-12-14 17:01:19.710996","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv",NA,NA
+"2025-12-14 17:01:19.742119","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html",NA,NA
+"2025-12-14 17:01:19.988539","K11","BP_test_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv",NA,NA
+"2025-12-14 17:01:20.231899","K11","BP_test_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html",NA,NA
+"2025-12-14 17:01:20.373561","K11","gls_hom_vs_het_comparison","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv",NA,NA
+"2025-12-14 17:01:20.411034","K11","gls_hom_vs_het_comparison","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html",NA,NA
+"2025-12-14 17:01:20.452683","K11","gls_residual_variance_by_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv",NA,NA
+"2025-12-14 17:01:20.483563","K11","gls_residual_variance_by_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html",NA,NA
+"2025-12-14 17:01:20.519168","K11","quantile_reg_FOF_effect","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv",NA,NA
+"2025-12-14 17:01:20.664915","K11","quantile_reg_FOF_effect","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html",NA,NA
+"2025-12-14 17:04:15.661763","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 17:04:15.890774","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 17:04:15.94335","K11","fit_primary_ancova","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html",266,NA
+"2025-12-14 17:04:16.358171","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-14 17:04:16.401229","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-14 17:04:17.450325","K11","mice_pooled_model_base","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv",NA,NA
+"2025-12-14 17:04:17.484302","K11","mice_pooled_model_base","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html",NA,NA
+"2025-12-14 17:04:17.522854","K11","mice_pooled_model_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv",NA,NA
+"2025-12-14 17:04:17.559346","K11","mice_pooled_model_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html",NA,NA
+"2025-12-14 17:04:18.695025","K11","Age_quartile_Age_counts","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv",NA,NA
+"2025-12-14 17:04:18.734825","K11","Age_quartile_Age_counts","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html",NA,NA
+"2025-12-14 17:04:19.062032","K11","freq_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv",NA,NA
+"2025-12-14 17:04:19.105232","K11","freq_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html",NA,NA
+"2025-12-14 17:04:19.151046","K11","freq_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv",NA,NA
+"2025-12-14 17:04:19.193276","K11","freq_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html",NA,NA
+"2025-12-14 17:04:19.239056","K11","cross_FOF_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv",NA,NA
+"2025-12-14 17:04:19.279192","K11","cross_FOF_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html",NA,NA
+"2025-12-14 17:04:19.535868","K11","Age_quartile_summary","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv",NA,NA
+"2025-12-14 17:04:19.742677","K11","Age_quartile_summary","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html",NA,NA
+"2025-12-14 17:04:19.795032","K11","lm_base_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv",NA,NA
+"2025-12-14 17:04:19.83418","K11","lm_base_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html",NA,NA
+"2025-12-14 17:04:19.878358","K11","lm_extended_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv",NA,NA
+"2025-12-14 17:04:20.028445","K11","lm_extended_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html",NA,NA
+"2025-12-14 17:04:20.078434","K11","FOF_effect_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv",NA,NA
+"2025-12-14 17:04:20.275855","K11","FOF_effect_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html",NA,NA
+"2025-12-14 17:04:20.387625","K11","lm_extended_standardized","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv",NA,NA
+"2025-12-14 17:04:20.593519","K11","lm_extended_standardized","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html",NA,NA
+"2025-12-14 17:04:20.642565","K11","FOF_effect_MICE_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv",NA,NA
+"2025-12-14 17:04:20.683282","K11","FOF_effect_MICE_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html",NA,NA
+"2025-12-14 17:04:20.876153","K11","logit_responder_model","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv",NA,NA
+"2025-12-14 17:04:20.915454","K11","logit_responder_model","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html",NA,NA
+"2025-12-14 17:04:21.11737","K11","ordinal_polr_coefficients","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv",NA,NA
+"2025-12-14 17:04:21.16101","K11","ordinal_polr_coefficients","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html",NA,NA
+"2025-12-14 17:04:21.209497","K11","ordinal_polr_OR","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv",NA,NA
+"2025-12-14 17:04:21.468434","K11","ordinal_polr_OR","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html",NA,NA
+"2025-12-14 17:04:21.617368","K11","responder_by_Age_and_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv",NA,NA
+"2025-12-14 17:04:21.658063","K11","responder_by_Age_and_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html",NA,NA
+"2025-12-14 17:04:21.700035","K11","responder_pvalues_by_Age_quartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv",NA,NA
+"2025-12-14 17:04:21.74006","K11","responder_pvalues_by_Age_quartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html",NA,NA
+"2025-12-14 17:04:21.787032","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv",NA,NA
+"2025-12-14 17:04:21.977195","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html",NA,NA
+"2025-12-14 17:04:22.029169","K11","BP_test_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv",NA,NA
+"2025-12-14 17:04:22.296431","K11","BP_test_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html",NA,NA
+"2025-12-14 17:04:22.571693","K11","gls_hom_vs_het_comparison","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv",NA,NA
+"2025-12-14 17:04:22.684832","K11","gls_hom_vs_het_comparison","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html",NA,NA
+"2025-12-14 17:04:22.736677","K11","gls_residual_variance_by_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv",NA,NA
+"2025-12-14 17:04:22.781376","K11","gls_residual_variance_by_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html",NA,NA
+"2025-12-14 17:04:22.827823","K11","quantile_reg_FOF_effect","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv",NA,NA
+"2025-12-14 17:04:22.8715","K11","quantile_reg_FOF_effect","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html",NA,NA
+"FOF-statusin frekvenssijakauma (nonFOF vs FOF).","K11",NA,NA,NA,NA,NA
+"Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma.","K11",NA,NA,NA,NA,NA
+"Ristiintaulukko FOF-status x AgeClass.","K11",NA,NA,NA,NA,NA
+"Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan.","K11",NA,NA,NA,NA,NA
+"Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.","K11",NA,NA,NA,NA,NA
+"Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala).","K11",NA,NA,NA,NA,NA
+"Laajennetun lineaarisen mallin standardoidut kertoimet.","K11",NA,NA,NA,NA,NA
+"FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.","K11",NA,NA,NA,NA,NA
+"MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.","K11",NA,NA,NA,NA,NA
+"MICE: poolattu perusmalli (lm) imputoidussa datassa.","K11",NA,NA,NA,NA,NA
+"MICE: poolattu laajennettu malli (lm) imputoidussa datassa.","K11",NA,NA,NA,NA,NA
+"MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).","K11",NA,NA,NA,NA,NA
+"Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.","K11",NA,NA,NA,NA,NA
+"Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).","K11",NA,NA,NA,NA,NA
+"Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.","K11",NA,NA,NA,NA,NA
+"Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square).","K11",NA,NA,NA,NA,NA
+"FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).","K11",NA,NA,NA,NA,NA
+"Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).","K11",NA,NA,NA,NA,NA
+"GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.","K11",NA,NA,NA,NA,NA
+"GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.","K11",NA,NA,NA,NA,NA
+"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75).","K11",NA,NA,NA,NA,NA
+"Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.","K11",NA,NA,NA,NA,NA
+"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina.","K11",NA,NA,NA,NA,NA
+"2025-12-14 17:04:23.126731","K11","sessionInfo","sessioninfo","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessionInfo_K11.txt",NA,NA
+"2025-12-14 19:26:32.030963","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 19:26:32.096992","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 19:26:32.621364","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-14 19:26:32.684963","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-14 19:26:34.18247","K11","mice_pooled_model_base","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv",NA,NA
+"2025-12-14 19:26:34.242203","K11","mice_pooled_model_base","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html",NA,NA
+"2025-12-14 19:26:34.30467","K11","mice_pooled_model_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv",NA,NA
+"2025-12-14 19:26:34.485464","K11","mice_pooled_model_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html",NA,NA
+"2025-12-14 19:26:36.136272","K11","Age_quartile_Age_counts","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv",NA,NA
+"2025-12-14 19:26:36.201866","K11","Age_quartile_Age_counts","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html",NA,NA
+"2025-12-14 19:26:36.383569","K11","freq_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv",NA,NA
+"2025-12-14 19:26:36.436114","K11","freq_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html",NA,NA
+"2025-12-14 19:26:36.491096","K11","freq_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv",NA,NA
+"2025-12-14 19:26:36.651162","K11","freq_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html",NA,NA
+"2025-12-14 19:26:36.703777","K11","cross_FOF_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv",NA,NA
+"2025-12-14 19:26:36.749061","K11","cross_FOF_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html",NA,NA
+"2025-12-14 19:26:36.95388","K11","Age_quartile_summary","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv",NA,NA
+"2025-12-14 19:26:37.007705","K11","Age_quartile_summary","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html",NA,NA
+"2025-12-14 19:26:37.188759","K11","lm_base_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv",NA,NA
+"2025-12-14 19:26:37.240055","K11","lm_base_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html",NA,NA
+"2025-12-14 19:26:37.290767","K11","lm_extended_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv",NA,NA
+"2025-12-14 19:26:37.337271","K11","lm_extended_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html",NA,NA
+"2025-12-14 19:26:37.54907","K11","FOF_effect_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv",NA,NA
+"2025-12-14 19:26:37.599087","K11","FOF_effect_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html",NA,NA
+"2025-12-14 19:26:37.907365","K11","lm_extended_standardized","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv",NA,NA
+"2025-12-14 19:26:38.133366","K11","lm_extended_standardized","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html",NA,NA
+"2025-12-14 19:26:38.242823","K11","FOF_effect_MICE_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv",NA,NA
+"2025-12-14 19:26:38.298997","K11","FOF_effect_MICE_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html",NA,NA
+"2025-12-14 19:26:38.402349","K11","logit_responder_model","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv",NA,NA
+"2025-12-14 19:26:38.550924","K11","logit_responder_model","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html",NA,NA
+"2025-12-14 19:26:38.611028","K11","ordinal_polr_coefficients","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv",NA,NA
+"2025-12-14 19:26:38.664897","K11","ordinal_polr_coefficients","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html",NA,NA
+"2025-12-14 19:26:38.828529","K11","ordinal_polr_OR","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv",NA,NA
+"2025-12-14 19:26:38.88271","K11","ordinal_polr_OR","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html",NA,NA
+"2025-12-14 19:26:38.934059","K11","responder_by_Age_and_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv",NA,NA
+"2025-12-14 19:26:39.087131","K11","responder_by_Age_and_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html",NA,NA
+"2025-12-14 19:26:39.146974","K11","responder_pvalues_by_Age_quartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv",NA,NA
+"2025-12-14 19:26:39.207368","K11","responder_pvalues_by_Age_quartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html",NA,NA
+"2025-12-14 19:26:39.276111","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv",NA,NA
+"2025-12-14 19:26:39.580061","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html",NA,NA
+"2025-12-14 19:26:39.64297","K11","BP_test_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv",NA,NA
+"2025-12-14 19:26:39.6937","K11","BP_test_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html",NA,NA
+"2025-12-14 19:26:39.751696","K11","gls_hom_vs_het_comparison","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv",NA,NA
+"2025-12-14 19:26:39.801449","K11","gls_hom_vs_het_comparison","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html",NA,NA
+"2025-12-14 19:26:39.961646","K11","gls_residual_variance_by_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv",NA,NA
+"2025-12-14 19:26:40.018758","K11","gls_residual_variance_by_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html",NA,NA
+"2025-12-14 19:26:40.083717","K11","quantile_reg_FOF_effect","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv",NA,NA
+"2025-12-14 19:26:40.267786","K11","quantile_reg_FOF_effect","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html",NA,NA
+"2025-12-14 19:26:40.396594","K11","sessioninfo","sessioninfo","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt",NA,NA
+"2025-12-14 19:27:07.588148","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 19:27:07.651885","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 19:27:08.019085","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-14 19:27:08.247156","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-14 19:27:09.387145","K11","mice_pooled_model_base","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv",NA,NA
+"2025-12-14 19:27:09.559052","K11","mice_pooled_model_base","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html",NA,NA
+"2025-12-14 19:27:09.619527","K11","mice_pooled_model_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv",NA,NA
+"2025-12-14 19:27:09.680885","K11","mice_pooled_model_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html",NA,NA
+"2025-12-14 19:27:11.002096","K11","Age_quartile_Age_counts","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv",NA,NA
+"2025-12-14 19:27:11.26979","K11","Age_quartile_Age_counts","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html",NA,NA
+"2025-12-14 19:27:11.331058","K11","freq_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv",NA,NA
+"2025-12-14 19:27:11.540178","K11","freq_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html",NA,NA
+"2025-12-14 19:27:11.60053","K11","freq_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv",NA,NA
+"2025-12-14 19:27:11.810788","K11","freq_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html",NA,NA
+"2025-12-14 19:27:11.880447","K11","cross_FOF_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv",NA,NA
+"2025-12-14 19:27:12.093833","K11","cross_FOF_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html",NA,NA
+"2025-12-14 19:27:12.160676","K11","Age_quartile_summary","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv",NA,NA
+"2025-12-14 19:27:12.390491","K11","Age_quartile_summary","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html",NA,NA
+"2025-12-14 19:27:12.471854","K11","lm_base_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv",NA,NA
+"2025-12-14 19:27:12.80748","K11","lm_base_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html",NA,NA
+"2025-12-14 19:27:12.870359","K11","lm_extended_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv",NA,NA
+"2025-12-14 19:27:12.928037","K11","lm_extended_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html",NA,NA
+"2025-12-14 19:27:12.989619","K11","FOF_effect_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv",NA,NA
+"2025-12-14 19:27:13.159447","K11","FOF_effect_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html",NA,NA
+"2025-12-14 19:27:13.286378","K11","lm_extended_standardized","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv",NA,NA
+"2025-12-14 19:27:13.510289","K11","lm_extended_standardized","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html",NA,NA
+"2025-12-14 19:27:13.572663","K11","FOF_effect_MICE_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv",NA,NA
+"2025-12-14 19:27:13.788911","K11","FOF_effect_MICE_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html",NA,NA
+"2025-12-14 19:27:14.011493","K11","logit_responder_model","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv",NA,NA
+"2025-12-14 19:27:14.07301","K11","logit_responder_model","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html",NA,NA
+"2025-12-14 19:27:14.239721","K11","ordinal_polr_coefficients","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv",NA,NA
+"2025-12-14 19:27:14.299027","K11","ordinal_polr_coefficients","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html",NA,NA
+"2025-12-14 19:27:14.36514","K11","ordinal_polr_OR","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv",NA,NA
+"2025-12-14 19:27:14.526292","K11","ordinal_polr_OR","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html",NA,NA
+"2025-12-14 19:27:14.594841","K11","responder_by_Age_and_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv",NA,NA
+"2025-12-14 19:27:14.654763","K11","responder_by_Age_and_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html",NA,NA
+"2025-12-14 19:27:14.870462","K11","responder_pvalues_by_Age_quartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv",NA,NA
+"2025-12-14 19:27:14.930886","K11","responder_pvalues_by_Age_quartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html",NA,NA
+"2025-12-14 19:27:15.163014","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv",NA,NA
+"2025-12-14 19:27:15.334368","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html",NA,NA
+"2025-12-14 19:27:15.401754","K11","BP_test_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv",NA,NA
+"2025-12-14 19:27:15.462846","K11","BP_test_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html",NA,NA
+"2025-12-14 19:27:15.639312","K11","gls_hom_vs_het_comparison","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv",NA,NA
+"2025-12-14 19:27:15.698827","K11","gls_hom_vs_het_comparison","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html",NA,NA
+"2025-12-14 19:27:15.874187","K11","gls_residual_variance_by_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv",NA,NA
+"2025-12-14 19:27:15.936015","K11","gls_residual_variance_by_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html",NA,NA
+"2025-12-14 19:27:16.002008","K11","quantile_reg_FOF_effect","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv",NA,NA
+"2025-12-14 19:27:16.18251","K11","quantile_reg_FOF_effect","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html",NA,NA
+"2025-12-14 19:27:16.282862","K11","sessioninfo","sessioninfo","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt",NA,NA
+"2025-12-14 21:09:21.917215","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-14 21:09:21.982468","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-14 21:09:28.799375","K12","lm_models_all_outcomes","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/lm_models_all_outcomes.csv",95,NA
+"2025-12-14 21:09:28.914828","K12","FOF_effects_by_outcome","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_by_outcome.csv",10,NA
+"2025-12-14 21:09:29.053296","K12","FOF_effects_standardized_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_standardized_extended.csv",5,NA
+"2025-12-14 21:09:45.816137","K15","K15_frailty_count_3_overall","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_3_overall.csv",NA,NA
+"2025-12-14 21:09:45.906058","K15","K15_frailty_count_3_overall","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_3_overall.html",NA,NA
+"2025-12-14 21:09:45.958345","K15","K15_frailty_cat_3_overall","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv",NA,NA
+"2025-12-14 21:09:45.995324","K15","K15_frailty_cat_3_overall","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_3_overall.html",NA,NA
+"2025-12-14 21:09:46.048785","K15","K15_frailty_count_4_overall","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_4_overall.csv",NA,NA
+"2025-12-14 21:09:46.094213","K15","K15_frailty_count_4_overall","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_4_overall.html",NA,NA
+"2025-12-14 21:09:46.166756","K15","K15_frailty_cat_4_overall","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv",NA,NA
+"2025-12-14 21:09:46.207892","K15","K15_frailty_cat_4_overall","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_4_overall.html",NA,NA
+"2025-12-15 16:31:02.151451","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-15 16:31:02.241414","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-15 16:31:02.711702","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-15 16:31:02.802767","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-15 16:31:04.435631","K11","mice_pooled_model_base","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv",NA,NA
+"2025-12-15 16:31:04.644522","K11","mice_pooled_model_base","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html",NA,NA
+"2025-12-15 16:31:04.756653","K11","mice_pooled_model_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv",NA,NA
+"2025-12-15 16:31:05.106288","K11","mice_pooled_model_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html",NA,NA
+"2025-12-15 16:31:06.844616","K11","Age_quartile_Age_counts","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv",NA,NA
+"2025-12-15 16:31:07.056738","K11","Age_quartile_Age_counts","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html",NA,NA
+"2025-12-15 16:31:07.15154","K11","freq_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv",NA,NA
+"2025-12-15 16:31:07.437809","K11","freq_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html",NA,NA
+"2025-12-15 16:31:07.7208","K11","freq_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv",NA,NA
+"2025-12-15 16:31:07.950407","K11","freq_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html",NA,NA
+"2025-12-15 16:31:08.184215","K11","cross_FOF_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv",NA,NA
+"2025-12-15 16:31:08.40736","K11","cross_FOF_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html",NA,NA
+"2025-12-15 16:31:08.494422","K11","Age_quartile_summary","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv",NA,NA
+"2025-12-15 16:31:08.702482","K11","Age_quartile_summary","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html",NA,NA
+"2025-12-15 16:31:08.818922","K11","lm_base_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv",NA,NA
+"2025-12-15 16:31:09.031005","K11","lm_base_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html",NA,NA
+"2025-12-15 16:31:09.257444","K11","lm_extended_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv",NA,NA
+"2025-12-15 16:31:09.346088","K11","lm_extended_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html",NA,NA
+"2025-12-15 16:31:09.583268","K11","FOF_effect_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv",NA,NA
+"2025-12-15 16:31:09.797221","K11","FOF_effect_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html",NA,NA
+"2025-12-15 16:31:10.105141","K11","lm_extended_standardized","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv",NA,NA
+"2025-12-15 16:31:10.32599","K11","lm_extended_standardized","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html",NA,NA
+"2025-12-15 16:31:10.43771","K11","FOF_effect_MICE_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv",NA,NA
+"2025-12-15 16:31:10.661628","K11","FOF_effect_MICE_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html",NA,NA
+"2025-12-15 16:31:10.925729","K11","logit_responder_model","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv",NA,NA
+"2025-12-15 16:31:11.101651","K11","logit_responder_model","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html",NA,NA
+"2025-12-15 16:31:11.214892","K11","ordinal_polr_coefficients","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv",NA,NA
+"2025-12-15 16:31:11.427267","K11","ordinal_polr_coefficients","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html",NA,NA
+"2025-12-15 16:31:11.642643","K11","ordinal_polr_OR","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv",NA,NA
+"2025-12-15 16:31:11.73358","K11","ordinal_polr_OR","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html",NA,NA
+"2025-12-15 16:31:11.944885","K11","responder_by_Age_and_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv",NA,NA
+"2025-12-15 16:31:12.037414","K11","responder_by_Age_and_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html",NA,NA
+"2025-12-15 16:31:12.270557","K11","responder_pvalues_by_Age_quartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv",NA,NA
+"2025-12-15 16:31:12.490421","K11","responder_pvalues_by_Age_quartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html",NA,NA
+"2025-12-15 16:31:12.587448","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv",NA,NA
+"2025-12-15 16:31:12.871345","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html",NA,NA
+"2025-12-15 16:31:13.264447","K11","BP_test_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv",NA,NA
+"2025-12-15 16:31:13.36475","K11","BP_test_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html",NA,NA
+"2025-12-15 16:31:13.589052","K11","gls_hom_vs_het_comparison","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv",NA,NA
+"2025-12-15 16:31:13.67972","K11","gls_hom_vs_het_comparison","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html",NA,NA
+"2025-12-15 16:31:13.896332","K11","gls_residual_variance_by_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv",NA,NA
+"2025-12-15 16:31:14.117767","K11","gls_residual_variance_by_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html",NA,NA
+"2025-12-15 16:31:14.216851","K11","quantile_reg_FOF_effect","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv",NA,NA
+"2025-12-15 16:31:14.458731","K11","quantile_reg_FOF_effect","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html",NA,NA
+"2025-12-15 16:31:14.788745","K11","sessioninfo","sessioninfo","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt",NA,NA
+"2025-12-17 19:40:28.821566","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-17 19:40:28.919167","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-20 15:31:26.852735","K11","fit_primary_ancova","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv",266,NA
+"2025-12-20 15:31:26.955333","K11","fit_primary_ancova_pvalues","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv",266,NA
+"2025-12-20 15:31:27.564909","K11","missing_data_pattern","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv",266,NA
+"2025-12-20 15:31:27.862294","K11","missing_data_pattern","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html",266,NA
+"2025-12-20 15:31:29.961871","K11","mice_pooled_model_base","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv",NA,NA
+"2025-12-20 15:31:30.330423","K11","mice_pooled_model_base","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html",NA,NA
+"2025-12-20 15:31:30.612192","K11","mice_pooled_model_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv",NA,NA
+"2025-12-20 15:31:30.882063","K11","mice_pooled_model_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html",NA,NA
+"2025-12-20 15:31:33.494371","K11","Age_quartile_Age_counts","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.csv",NA,NA
+"2025-12-20 15:31:33.620369","K11","Age_quartile_Age_counts","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_Age_counts.html",NA,NA
+"2025-12-20 15:31:33.929351","K11","freq_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.csv",NA,NA
+"2025-12-20 15:31:34.353506","K11","freq_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_FOF_status.html",NA,NA
+"2025-12-20 15:31:34.466148","K11","freq_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.csv",NA,NA
+"2025-12-20 15:31:34.750803","K11","freq_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/freq_AgeClass.html",NA,NA
+"2025-12-20 15:31:35.131676","K11","cross_FOF_AgeClass","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.csv",NA,NA
+"2025-12-20 15:31:35.583979","K11","cross_FOF_AgeClass","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/cross_FOF_AgeClass.html",NA,NA
+"2025-12-20 15:31:35.758058","K11","Age_quartile_summary","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.csv",NA,NA
+"2025-12-20 15:31:36.143646","K11","Age_quartile_summary","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/Age_quartile_summary.html",NA,NA
+"2025-12-20 15:31:36.357657","K11","lm_base_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.csv",NA,NA
+"2025-12-20 15:31:37.118216","K11","lm_base_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_base_model_full.html",NA,NA
+"2025-12-20 15:31:37.913301","K11","lm_extended_model_full","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.csv",NA,NA
+"2025-12-20 15:31:38.690243","K11","lm_extended_model_full","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_model_full.html",NA,NA
+"2025-12-20 15:31:39.332327","K11","FOF_effect_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv",NA,NA
+"2025-12-20 15:31:39.815398","K11","FOF_effect_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_base_vs_extended.html",NA,NA
+"2025-12-20 15:31:40.868485","K11","lm_extended_standardized","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.csv",NA,NA
+"2025-12-20 15:31:41.293669","K11","lm_extended_standardized","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/lm_extended_standardized.html",NA,NA
+"2025-12-20 15:31:41.73131","K11","FOF_effect_MICE_base_vs_extended","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv",NA,NA
+"2025-12-20 15:31:42.15925","K11","FOF_effect_MICE_base_vs_extended","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html",NA,NA
+"2025-12-20 15:31:43.543951","K11","logit_responder_model","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.csv",NA,NA
+"2025-12-20 15:31:43.980837","K11","logit_responder_model","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/logit_responder_model.html",NA,NA
+"2025-12-20 15:31:44.600061","K11","ordinal_polr_coefficients","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.csv",NA,NA
+"2025-12-20 15:31:45.133231","K11","ordinal_polr_coefficients","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_coefficients.html",NA,NA
+"2025-12-20 15:31:45.632489","K11","ordinal_polr_OR","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.csv",NA,NA
+"2025-12-20 15:31:45.846363","K11","ordinal_polr_OR","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/ordinal_polr_OR.html",NA,NA
+"2025-12-20 15:31:46.350265","K11","responder_by_Age_and_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.csv",NA,NA
+"2025-12-20 15:31:46.700577","K11","responder_by_Age_and_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_by_Age_and_FOF.html",NA,NA
+"2025-12-20 15:31:47.205744","K11","responder_pvalues_by_Age_quartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv",NA,NA
+"2025-12-20 15:31:47.709208","K11","responder_pvalues_by_Age_quartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html",NA,NA
+"2025-12-20 15:31:48.167282","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv",NA,NA
+"2025-12-20 15:31:48.637782","K11","emmeans_FOF_vs_nonFOF_by_agequartile","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html",NA,NA
+"2025-12-20 15:31:49.32354","K11","BP_test_FOF_status","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.csv",NA,NA
+"2025-12-20 15:31:49.76409","K11","BP_test_FOF_status","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/BP_test_FOF_status.html",NA,NA
+"2025-12-20 15:31:50.329465","K11","gls_hom_vs_het_comparison","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv",NA,NA
+"2025-12-20 15:31:50.938879","K11","gls_hom_vs_het_comparison","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_hom_vs_het_comparison.html",NA,NA
+"2025-12-20 15:31:51.558111","K11","gls_residual_variance_by_FOF","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv",NA,NA
+"2025-12-20 15:31:52.159633","K11","gls_residual_variance_by_FOF","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html",NA,NA
+"2025-12-20 15:31:52.877181","K11","quantile_reg_FOF_effect","table_csv","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv",NA,NA
+"2025-12-20 15:31:53.432257","K11","quantile_reg_FOF_effect","table_html","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html",NA,NA
+"2025-12-20 15:31:54.200972","K11","sessioninfo","sessioninfo","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt",NA,NA
+"2025-12-20 17:24:42.74474","K16","Frailty-adjusted model results tables","table_docx","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx",276,NA
+"2025-12-20 17:24:53.724326","K16","Frailty-adjusted model results tables","table_docx","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx",276,NA
+"2025-12-20 17:35:46.202635","K16","Frailty-adjusted model results tables","table_docx","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx",276,NA
+"2025-12-20 17:35:46.370193","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:35:46.946487","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:35:47.510533","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:35:47.707921","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:35:47.920636","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:35:48.239966","K16","sessioninfo","sessioninfo","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/sessioninfo_K16.txt",NA,NA
+"2025-12-20 17:36:09.694517","K16","Frailty-adjusted model results tables","table_docx","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx",276,NA
+"2025-12-20 17:36:09.873022","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:36:10.390566","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:36:10.907906","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:36:11.167947","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:36:11.270906","K16","All frailty-adjusted model objects","rdata","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData",276,NA
+"2025-12-20 17:36:11.667602","K16","sessioninfo","sessioninfo","C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/sessioninfo_K16.txt",NA,NA

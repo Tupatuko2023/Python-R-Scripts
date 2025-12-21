@@ -1,11 +1,28 @@
 # MANIFEST.CSV STRUCTURE VERIFICATION REPORT
 
 **Date:** 2025-12-21
-**Status:** ⚠️ INCONSISTENT - Requires cleanup or migration
+**Status:** ✅ CLEAN - Migration completed successfully
+**Migration Date:** 2025-12-21
 
 ---
 
-## FINDINGS
+## MIGRATION COMPLETED
+
+**Clean Migration (Option 1) was successfully executed on 2025-12-21.**
+
+**Results:**
+
+- ✅ New manifest.csv has correct structure: `timestamp,script,label,kind,path,n,notes`
+- ✅ 387 rows in standardized format (rows 42-428 from original)
+- ✅ 41 legacy rows archived to `manifest_legacy.csv`
+- ✅ Full backup preserved as `manifest_backup_20251221.csv`
+- ✅ All future `append_manifest()` calls will work correctly
+
+**See `MIGRATION_LOG.md` for complete details.**
+
+---
+
+## ORIGINAL FINDINGS (Historical - Issues Now Resolved)
 
 ### Current Manifest Status
 
@@ -112,15 +129,15 @@ confusion and data misalignment.
 
 ### Correct order for manifest_row()
 
-| Position | Column Name  | Description                        |
-|----------|--------------|-------------------------------------|
-| 1        | timestamp    | ISO 8601 timestamp                 |
-| 2        | script       | Script ID (K11, K12, etc.)         |
-| 3        | label        | Artifact label                     |
-| 4        | kind         | Artifact type                      |
-| 5        | path         | Full file path                     |
-| 6        | n            | Sample size (integer or NA)        |
-| 7        | notes        | Optional notes (character or NA)   |
+| Position | Column Name  | Description                      |
+|----------|--------------|----------------------------------|
+| 1        | timestamp    | ISO 8601 timestamp               |
+| 2        | script       | Script ID (K11, K12, etc.)       |
+| 3        | label        | Artifact label                   |
+| 4        | kind         | Artifact type                    |
+| 5        | path         | Full file path                   |
+| 6        | n            | Sample size (integer or NA)      |
+| 7        | notes        | Optional notes (character or NA) |
 
 ---
 
