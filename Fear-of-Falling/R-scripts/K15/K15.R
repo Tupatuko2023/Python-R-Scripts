@@ -1,6 +1,84 @@
-# --- Kxx template (put at top of every script) -------------------------------
-suppressPackageStartupMessages({ library(here); library(dplyr) })
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K15 - Fried-inspired physical frailty proxy variable derivation
+# File tag: K15.R
+# Purpose: Derives a physical frailty proxy based on Fried phenotype criteria
+#          (exhaustion, weakness, slowness, low activity) adapted to available
+#          dataset variables; creates frailty categories (robust/pre-frail/frail)
+#          for subsequent K16 frailty-adjusted analyses
+#
+# Outcome: None (derives frailty variables as exposures/covariates for K16)
+# Predictors: None (this is a data preparation script)
+# Moderator/interaction: None
+# Grouping variable: frailty_cat_3 (derived: "robust"/"pre-frail"/"frail")
+# Covariates: N/A (script generates covariates)
+#
+# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
+# kaatumisenpelkoOn, ToimintaKykySummary0, ToimintaKykySummary2,
+# [Frailty component proxies - UNCERTAINTY: exact variable names TBD based on codebook]
+# Typical candidates: self-rated exhaustion, grip strength, gait speed, physical activity level
+# (Note: K15 code checks for multiple candidate variable names flexibly)
+#
+# Required vars (analysis df - after frailty derivation):
+# FOF_status (from kaatumisenpelkoOn), Composite_Z0, Composite_Z3 (or Composite_Z2),
+# frailty_count_3 (sum of frailty indicators), frailty_cat_3 (factor: robust/pre-frail/frail),
+# frailty_cat_3_obj (objective measures only), frailty_cat_3_2plus (strict: ≥2 indicators = frail)
+#
+# Mapping (raw -> analysis; keep minimal + explicit):
+# kaatumisenpelkoOn (0/1) -> FOF_status (0/1)
+# ToimintaKykySummary0 -> Composite_Z0 (or ToimintaKykySummary0_baseline)
+# ToimintaKykySummary2 -> Composite_Z3 (endpoint used by K16)
+# [Frailty indicators] -> frailty_exhaustion, frailty_weakness, frailty_slowness, frailty_lowactivity
+# Sum of indicators -> frailty_count_3
+# frailty_count_3: 0 -> "robust", 1 -> "pre-frail", ≥2 -> "frail"
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: 20251124 (set for reproducibility, though no randomness in derivation)
+#
+# Outputs + manifest:
+# - script_label: K15 (canonical)
+# - outputs dir: R-scripts/K15/outputs/K15/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+# - Primary output: K15_frailty_analysis_data.RData (saved for K16 use)
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths)
+# 02) Load raw data (immutable; no edits)
+# 03) Check required raw columns (req_raw_cols - flexible for frailty proxies)
+# 04) Standardize vars + QC (standardize_analysis_vars + sanity_checks)
+# 05) Define frailty thresholds (age/sex-specific if possible; document assumptions)
+# 06) Derive frailty component indicators (exhaustion, weakness, slowness, low activity)
+# 07) Compute frailty count (sum of indicators)
+# 08) Create frailty categories (robust/pre-frail/frail; multiple definitions)
+# 09) Validate frailty variables (check distributions, cross-tabs by FOF)
+# 10) Save frailty-augmented dataset as RData for K16
+# 11) Save frailty derivation summary tables (n/% by category, by FOF group)
+# 12) Append manifest row per artifact
+# 13) Save sessionInfo to manifest/
+# 14) EOF marker
+# ==============================================================================
+#
+suppressPackageStartupMessages({
+  library(here)
+  library(dplyr)
+})
 
+# --- Standard init (MANDATORY) -----------------------------------------------
+# Derive script_label from --file, supporting file tags like: K15.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+
+script_base <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K15"  # interactive fallback
+}
+
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
+if (is.na(script_label) || script_label == "") script_label <- "K15"
+
+# Source helper functions (io, checks, modeling, reporting)
 rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
    envir = .GlobalEnv)
 
@@ -9,15 +87,11 @@ source(here("R","functions","checks.R"))
 source(here("R","functions","modeling.R"))
 source(here("R","functions","reporting.R"))
 
-script_label <- sub("\\.R$", "", basename(commandArgs(trailingOnly=FALSE)[grep("--file=", commandArgs())] |> sub("--file=", "", x=_)))
-if (is.na(script_label) || script_label == "") script_label <- "K15"
+# init_paths() must set outputs_dir + manifest_path (+ options fof.*)
 paths <- init_paths(script_label)
 
+# seed (set for reproducibility, though no randomness in frailty derivation)
 set.seed(20251124)
-
-
-# K15: "Fried-inspired physical frailty proxy"
-# (EI canonical Fried 5/5 -fenotyyppi)
 
 # ==============================================================================
 # 01. Load Dataset & Data Checking

@@ -5,6 +5,7 @@ This directory contains smoke tests for the Fear of Falling analysis scripts (K1
 ## What are Smoke Tests?
 
 Smoke tests are simple, quick tests that verify the basic functionality of code:
+
 - ✓ Scripts can run without critical errors
 - ✓ Required input files exist
 - ✓ Expected output files are created
@@ -37,17 +38,20 @@ Rscript tests/run_smoke_tests.R
 ```
 
 This will:
+
 - Check all prerequisites
 - Run each script (K11-K16) in sequence
 - Verify expected outputs are created
 - Display a summary report
 
 **Pros:**
+
 - No additional dependencies required
 - Simple, readable output
 - Good for CI/CD pipelines
 
 **Cons:**
+
 - Less detailed error reporting
 - No test isolation
 
@@ -66,45 +70,53 @@ Rscript -e "testthat::test_file('tests/smoke_test_k11_k16.R')"
 ```
 
 **Pros:**
+
 - Better test isolation
 - Detailed error reports
 - Can skip tests if prerequisites missing
 
 **Cons:**
+
 - Requires `testthat` package
 
 ## Test Coverage
 
 ### K11.R - Primary ANCOVA Models
+
 - ✓ Script runs without errors
 - ✓ ANCOVA model outputs created
 - ✓ FOF effect tables generated
 - ✓ Responder analysis plots created
 
 ### K12.R - FOF Effects by Outcome
+
 - ✓ Script runs without errors
 - ✓ Models for all outcomes (HGS, MWS, FTSST, SLS) completed
 - ✓ Forest plot created
 - ✓ Standardized effects table generated
 
 ### K13.R - Interaction Analyses
+
 - ✓ Script runs without errors
 - ✓ Interaction models (age, BMI, sex) fitted
 - ✓ Simple slopes calculated
 - ✓ Interaction plots generated
 
 ### K14.R - Baseline Table
+
 - ✓ Script runs without errors
 - ✓ Baseline characteristics table created
 - ✓ CSV and HTML outputs generated
 
 ### K15.R - Frailty Proxy
+
 - ✓ Script runs without errors
 - ✓ Frailty components calculated
 - ✓ Frailty categories created
 - ✓ Analysis data saved for K16
 
 ### K16.R - Frailty-Adjusted Models
+
 - ✓ Script runs without errors
 - ✓ K15 output loaded successfully
 - ✓ ANCOVA and mixed models fitted
@@ -115,7 +127,7 @@ Rscript -e "testthat::test_file('tests/smoke_test_k11_k16.R')"
 
 ### Successful Test Output
 
-```
+```text
 ======================================================================
 SMOKE TESTS FOR K11-K16 R SCRIPTS
 ======================================================================
@@ -154,7 +166,7 @@ Total: 6 | Passed: 6 | Failed: 0
 
 ### Failed Test Output
 
-```
+```text
 ----------------------------------------------------------------------
 Testing: K11
 ----------------------------------------------------------------------
@@ -169,46 +181,57 @@ Total: 6 | Passed: 5 | Failed: 1
 ## Troubleshooting
 
 ### "Data file NOT found"
+
 **Problem:** `data/external/KaatumisenPelko.csv` is missing
 
 **Solution:**
+
 - Ensure data file is in the correct location
 - Check file permissions
 - Verify file name spelling (case-sensitive on Linux)
 
 ### "Helper file NOT found"
+
 **Problem:** Required R function files are missing
 
 **Solution:**
+
 - Ensure `R/functions/` directory exists
 - Check that `io.R`, `checks.R`, `modeling.R`, `reporting.R` are present
 - Verify file paths match project structure
 
 ### "K16 requires K15 output"
+
 **Problem:** K16 needs frailty data from K15
 
 **Solution:**
+
 1. Run K15 first: `Rscript R-scripts/K15/K15.R`
 2. Verify `R-scripts/K15/outputs/K15_frailty_analysis_data.RData` exists
 3. Then run K16 or the full smoke test
 
 ### Script runs but outputs are missing
+
 **Problem:** Script completes but doesn't create expected files
 
 **Possible causes:**
+
 - Permissions issues in `outputs/` directory
 - Script logic errors (check for warnings)
 - Data quality issues preventing model fitting
 
 **Solution:**
+
 - Check script console output for warnings
 - Verify `R-scripts/K*/outputs/` directories exist and are writable
 - Run script interactively to debug: `source("R-scripts/K11/K11.R")`
 
 ### Long execution time / timeout
+
 **Problem:** Script takes longer than expected
 
 **Solution:**
+
 - Increase `TIMEOUT_SECONDS` in `run_smoke_tests.R`
 - Check system resources (memory, CPU)
 - Consider running individual scripts instead of full suite
@@ -218,6 +241,7 @@ Total: 6 | Passed: 5 | Failed: 1
 To add smoke tests for new scripts:
 
 1. **Update `run_smoke_tests.R`**:
+
    ```r
    SCRIPTS_TO_TEST <- c("K11", "K12", ..., "K17", "K18")
 
@@ -229,6 +253,7 @@ To add smoke tests for new scripts:
    ```
 
 2. **Update `smoke_test_k11_k16.R`**:
+
    ```r
    test_that("K17.R runs without errors", {
      skip_if_not(file.exists(...), "Prerequisites not met")
@@ -279,6 +304,7 @@ Typical execution times (may vary by system):
 ## Support
 
 For issues or questions:
+
 1. Check script-specific documentation in `R-scripts/K*/`
 2. Review `CLAUDE.md` for project configuration
 3. Check individual script comments for requirements
@@ -287,6 +313,7 @@ For issues or questions:
 ## Maintenance
 
 These tests should be updated when:
+
 - New scripts are added (K17, K18, etc.)
 - Expected outputs change
 - New dependencies are introduced

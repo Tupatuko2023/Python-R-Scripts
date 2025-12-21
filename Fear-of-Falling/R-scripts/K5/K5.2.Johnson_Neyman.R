@@ -1,18 +1,78 @@
-# --- Parametrit ---
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K5.2_JN - Johnson-Neyman visualization and interpretation
+# File tag: K5.2.Johnson_Neyman.R
+# Purpose: Visualizes Johnson-Neyman regions of significance for the FOF ×
+#          Composite_Z0 interaction from K5.1. Produces publication-quality
+#          plots showing where along the baseline function continuum the FOF
+#          effect on functional change is statistically significant.
+#
+# Outcome: None (visualization script; uses results from K5.1_MA)
+# Predictors: FOF_status (0/1, from K5.1 analysis)
+# Moderator/interaction: cComposite_Z0 (centered baseline function, from K5.1)
+# Grouping variable: None
+# Covariates: N/A (uses pre-computed J-N bounds from K5.1)
+#
+# Required vars (analysis_data OR d OR raw_data - flexible loading):
+# kaatumisenpelkoOn (to derive FOF_status), cComposite_Z0 (centered baseline),
+# Composite_Z0 (raw baseline), Delta_Composite_Z (outcome)
+# DEPENDENCY: This script assumes K5.1_MA has been run and J-N bounds are available
+#             either as environment variables or hard-coded defaults.
+#
+# Required vars (after flexible column matching):
+# FOF_status (factor: 0/1), cComposite_Z0 (centered moderator),
+# Composite_Z0 (raw moderator), Delta_Composite_Z
+#
+# Mapping (flexible candidate matching; keep minimal + explicit):
+# kaatumisenpelkoOn (0/1 or text) -> FOF_status (factor: 0/1)
+# cComposite_Z0 candidates: "cComposite_Z0, cComposite.Z0, cCompZ0, baseline_z_centered, Z0_centered, Z0_c"
+# Composite_Z0 candidates: "Composite_Z0, Composite.Z0, ToimintaKykySummary0, baseline_z"
+# Delta_Composite_Z candidates: "Delta_Composite_Z, Delta.Composite.Z, change_z, DeltaComposite"
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: N/A (no randomness; pure visualization)
+#
+# Outputs + manifest:
+# - script_label: K5.2_JN (canonical SCRIPT_ID)
+# - outputs dir: outputs/K5.2_JN/  (manual creation relative to working dir)
+# - manifest: append 1 row per artifact to outputs/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Read J-N bounds from environment variables (JN_LOWER, JN_UPPER, OBS_MIN, OBS_MAX, N_TOTAL)
+# 02) Create outputs + manifest dirs manually
+# 03) Load analysis_data (or d or raw_data) flexibly from global environment
+# 04) Derive FOF_status from kaatumisenpelkoOn (flexible text/numeric conversion)
+# 05) Match required columns using candidate lists (cComposite_Z0, Composite_Z0, Delta)
+# 06) Create Johnson-Neyman plot (shaded significance regions)
+# 07) Add distribution rug/histogram for observed moderator values
+# 08) Annotate plot with J-N bounds, percentage of observations in significance regions
+# 09) Save plot as PNG + PDF (high-res for publication)
+# 10) Append manifest row per artifact
+# 11) EOF marker
+# ==============================================================================
+#
+# DEPENDENCY NOTE: This script requires K5.1_MA to have been run first to establish J-N bounds.
+# UNCERTAINTY: J-N bounds are passed via environment variables (not ideal for reproducibility).
+
+# --- Johnson-Neyman bounds (from K5.1_MA or environment variables) -----------
 lower <- as.numeric(Sys.getenv("JN_LOWER", "-0.04"))
 upper <- as.numeric(Sys.getenv("JN_UPPER", "0.21"))
 obs_min <- as.numeric(Sys.getenv("OBS_MIN", "-1.72"))
 obs_max <- as.numeric(Sys.getenv("OBS_MAX", "1.37"))
 n_total_reported <- as.integer(Sys.getenv("N_TOTAL", "276"))
 
-# --- Skriptin tunniste ja polut manifestia varten ---
-script_label <- "K5.2_JN"  
+# --- Standard init (MANDATORY) -----------------------------------------------
+# NOTE: K5.2 does NOT use init_paths() - uses manual dir creation (legacy pattern)
+script_label <- "K5.2_JN"  # JN = Johnson-Neyman
 
 if (!dir.exists("outputs")) dir.create("outputs", recursive = TRUE)
 script_dir <- file.path("outputs", script_label)
 if (!dir.exists(script_dir)) dir.create(script_dir, recursive = TRUE)
 
 manifest_path <- file.path("outputs", "manifest.csv")
+
+# seed: N/A (no randomness in this visualization script)
 
 
 
