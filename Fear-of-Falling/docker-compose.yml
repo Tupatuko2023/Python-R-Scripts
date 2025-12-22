@@ -1,0 +1,64 @@
+# Docker Compose configuration for Fear of Falling R Analysis
+# Usage: docker-compose up -d
+
+version: '3.8'
+
+services:
+  fof-r-analysis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fof-r-analysis:latest
+    container_name: fof-r-analysis
+    volumes:
+      # Mount project directory for live editing
+      - .:/project
+      # Preserve renv cache between runs
+      - renv-cache:/root/.local/share/renv
+    working_dir: /project
+    environment:
+      - RENV_PATHS_CACHE=/root/.local/share/renv
+    # Keep container running
+    stdin_open: true
+    tty: true
+    # Default command (can be overridden)
+    command: ["R"]
+
+  # Alternative service for running specific scripts
+  fof-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fof-r-analysis:latest
+    container_name: fof-runner
+    volumes:
+      - .:/project
+      - renv-cache:/root/.local/share/renv
+    working_dir: /project
+    environment:
+      - RENV_PATHS_CACHE=/root/.local/share/renv
+    # Override this command when running
+    command: ["echo", "Use 'docker-compose run fof-runner Rscript R-scripts/K11/K11.R'"]
+    profiles:
+      - tools
+
+  # Service for running smoke tests
+  fof-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fof-r-analysis:latest
+    container_name: fof-test
+    volumes:
+      - .:/project
+      - renv-cache:/root/.local/share/renv
+    working_dir: /project
+    environment:
+      - RENV_PATHS_CACHE=/root/.local/share/renv
+    command: ["Rscript", "tests/smoke_test_k6_k16.R"]
+    profiles:
+      - test
+
+volumes:
+  renv-cache:
+    name: fof-renv-cache
