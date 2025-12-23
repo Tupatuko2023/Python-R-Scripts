@@ -15,6 +15,8 @@ services:
       - .:/project
       # Preserve renv cache between runs
       - renv-cache:/root/.local/share/renv
+      # Preserve renv library (installed packages)
+      - renv-library:/project/renv/library
     working_dir: /project
     environment:
       - RENV_PATHS_CACHE=/root/.local/share/renv
@@ -34,6 +36,7 @@ services:
     volumes:
       - .:/project
       - renv-cache:/root/.local/share/renv
+      - renv-library:/project/renv/library
     working_dir: /project
     environment:
       - RENV_PATHS_CACHE=/root/.local/share/renv
@@ -52,6 +55,7 @@ services:
     volumes:
       - .:/project
       - renv-cache:/root/.local/share/renv
+      - renv-library:/project/renv/library
     working_dir: /project
     environment:
       - RENV_PATHS_CACHE=/root/.local/share/renv
@@ -62,3 +66,5 @@ services:
 volumes:
   renv-cache:
     name: fof-renv-cache
+  renv-library:
+    name: fof-renv-library

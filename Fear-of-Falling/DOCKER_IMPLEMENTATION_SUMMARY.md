@@ -471,7 +471,7 @@ Fear-of-Falling/
 
 ## Success Criteria
 
-### Docker Setup Complete When:
+### Docker Setup Complete When
 
 ✅ Docker installed and running
 ✅ Image built successfully (`fof-r-analysis:latest`)
@@ -479,7 +479,7 @@ Fear-of-Falling/
 ✅ Outputs created correctly
 ✅ Manifest updated properly
 
-### Production Ready When:
+### Production Ready When
 
 ✅ All K6-K16 scripts run successfully
 ✅ Smoke tests pass
