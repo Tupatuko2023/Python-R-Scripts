@@ -55,3 +55,5 @@ temp/.RData
 Fear-of-Falling/R-scripts/*/outputs/*.png
 Fear-of-Falling/R-scripts/*/outputs/*.html
 Fear-of-Falling/R-scripts/*/outputs/*.txt
+
+Rplots.pdf

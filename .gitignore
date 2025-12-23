@@ -48,3 +48,6 @@ Fear-of-Falling/*.Rdata
 Fear-of-Falling/R-scripts/**/*.RData
 Fear-of-Falling/R-scripts/**/*.Rdata
 Fear-of-Falling/R-scripts/**/outputs/
+
+.gemini/
+.claude/
