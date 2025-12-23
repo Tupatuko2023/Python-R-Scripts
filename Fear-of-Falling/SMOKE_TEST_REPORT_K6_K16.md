@@ -1,9 +1,9 @@
 # SMOKE TEST REPORT: K6-K16 R SCRIPTS
 
-**Date:** 2025-12-21 21:23:16.88303
+**Date:** 2025-12-23 16:33:29.083325
 **Scripts tested:** 11
-**Passed:** 0 ✓
-**Failed:** 11 ✗
+**Passed:** 11 ✓
+**Failed:** 0
 
 ---
 
@@ -11,17 +11,19 @@
 
 | Script | Status | Time (s) | Outputs | Error |
 |--------|--------|----------|---------|-------|
-| K6 | ✗ FAIL | N/A | - | there is no package called 'dplyr' |
-| K7 | ✗ FAIL | N/A | - | there is no package called 'dplyr' |
-| K8 | ✗ FAIL | N/A | - | there is no package called 'dplyr' |
-| K9 | ✗ FAIL | N/A | - | there is no package called 'dplyr' |
-| K10 | ✗ FAIL | N/A | - | there is no package called 'dplyr' |
-| K11 | ✗ FAIL | N/A | - | there is no package called 'here' |
-| K12 | ✗ FAIL | N/A | - | there is no package called 'here' |
-| K13 | ✗ FAIL | N/A | - | there is no package called 'here' |
-| K14 | ✗ FAIL | N/A | - | there is no package called 'here' |
-| K15 | ✗ FAIL | N/A | - | there is no package called 'here' |
-| K16 | ✗ FAIL | N/A | - | there is no package called 'here' |
+| K6 | ✓ PASS | N/A | - | Warning: Using `size` aesthetic for lines was depr |
+| K6 | ✓ PASS | N/A | - | Warning: Please use `linewidth` instead. |
+| K7 | ✓ PASS | N/A | - | Warning: The `fatten` argument of `geom_pointrange |
+| K7 | ✓ PASS | N/A | - | Warning: Please use the `size` aesthetic instead. |
+| K8 | ✓ PASS | N/A | - | Warning: Some FOF_status x Balance_problem cells h |
+| K9 | ✓ PASS | 5.3 | - | - |
+| K10 | ✓ PASS | 5.0 | - | - |
+| K11 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
+| K12 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
+| K13 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
+| K14 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
+| K15 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
+| K16 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
 
 ---
 
@@ -29,184 +31,75 @@
 
 ### K6
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'dplyr'
-```
-
-**Error in call:** library(dplyr)
+**Status:** ✓ PASSED
 
 ---
 
 ### K7
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'dplyr'
-```
-
-**Error in call:** library(dplyr)
+**Status:** ✓ PASSED
 
 ---
 
 ### K8
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'dplyr'
-```
-
-**Error in call:** library(dplyr)
+**Status:** ✓ PASSED
 
 ---
 
 ### K9
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'dplyr'
-```
-
-**Error in call:** library(dplyr)
+**Status:** ✓ PASSED
+**Execution time:** 5.3 seconds
 
 ---
 
 ### K10
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'dplyr'
-```
-
-**Error in call:** library(dplyr)
+**Status:** ✓ PASSED
+**Execution time:** 5.0 seconds
 
 ---
 
 ### K11
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'here'
-```
-
-**Error in call:** library(here)
+**Status:** ✓ PASSED
 
 ---
 
 ### K12
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'here'
-```
-
-**Error in call:** library(here)
+**Status:** ✓ PASSED
 
 ---
 
 ### K13
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'here'
-```
-
-**Error in call:** library(here)
+**Status:** ✓ PASSED
 
 ---
 
 ### K14
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'here'
-```
-
-**Error in call:** library(here)
+**Status:** ✓ PASSED
 
 ---
 
 ### K15
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'here'
-```
-
-**Error in call:** library(here)
+**Status:** ✓ PASSED
 
 ---
 
 ### K16
 
-**Status:** ✗ FAILED
-
-**Error:**
-```
-there is no package called 'here'
-```
-
-**Error in call:** library(here)
+**Status:** ✓ PASSED
 
 ---
 
 ## RECOMMENDATIONS
 
-### Failed Scripts
-
-** K6 **
-- Error: there is no package called 'dplyr'
-
-** K7 **
-- Error: there is no package called 'dplyr'
-
-** K8 **
-- Error: there is no package called 'dplyr'
-
-** K9 **
-- Error: there is no package called 'dplyr'
-
-** K10 **
-- Error: there is no package called 'dplyr'
-
-** K11 **
-- Error: there is no package called 'here'
-
-** K12 **
-- Error: there is no package called 'here'
-
-** K13 **
-- Error: there is no package called 'here'
-
-** K14 **
-- Error: there is no package called 'here'
-
-** K15 **
-- Error: there is no package called 'here'
-
-** K16 **
-- Error: there is no package called 'here'
-
+✓ All scripts passed! No issues detected.
 
 ---
 

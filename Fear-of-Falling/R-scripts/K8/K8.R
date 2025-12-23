@@ -69,6 +69,28 @@ if (!dir.exists(manifest_dir)) {
 manifest_path <- file.path(manifest_dir, "manifest.csv")
 
 # ---------------------------------------------------------------
+# 2.5: Load Dataset
+# ---------------------------------------------------------------
+
+file_path <- here::here("data", "external", "KaatumisenPelko.csv")
+raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
+
+# Working copy so the original stays untouched
+if (!exists("raw_data")) {
+  stop("Object 'raw_data' not found. Please load your data as raw_data first.")
+}
+
+# Create analysis data with Delta_Composite_Z
+analysis_data <- raw_data %>%
+  dplyr::mutate(
+    # Create baseline and follow-up composite scores
+    Composite_Z0 = ToimintaKykySummary0,
+    Composite_Z2 = ToimintaKykySummary2,
+    # Create delta (change) composite score
+    Delta_Composite_Z = ToimintaKykySummary2 - ToimintaKykySummary0
+  )
+
+# ---------------------------------------------------------------
 # 3: Data Preparation ------------------------------------ ------
 # ---------------------------------------------------------------
 

@@ -6,6 +6,10 @@
 library(dplyr)
 library(ggplot2)
 library(emmeans)
+library(readr)
+library(here)
+library(tidyr)
+library(effectsize)
 
 # --- K10: oma outputs-kansio ---
 script_label <- "K10"
@@ -21,6 +25,60 @@ if (!dir.exists(outputs_dir)) {
 script_dir <- file.path(outputs_dir, script_label)
 if (!dir.exists(script_dir)) {
   dir.create(script_dir, recursive = TRUE)
+}
+
+# ==============================================================================
+# Load and prepare data (if not already in environment)
+# ==============================================================================
+
+if (!exists("analysis_data_cc") || !exists("model_jn_c") || !exists("g_df")) {
+
+  # Load raw data
+  file_path <- here::here("data", "external", "KaatumisenPelko.csv")
+  raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
+
+  # Create analysis dataset
+  analysis_data <- raw_data %>%
+    dplyr::mutate(
+      # Baseline composite and delta
+      Composite_Z0 = ToimintaKykySummary0,
+      Delta_Composite_Z = ToimintaKykySummary2 - ToimintaKykySummary0,
+      # FOF status
+      FOF_status = dplyr::case_when(
+        kaatumisenpelkoOn == 0 ~ 0,
+        kaatumisenpelkoOn == 1 ~ 1,
+        TRUE ~ NA_real_
+      ),
+      # Rename covariates
+      Age = age,
+      Sex = as.factor(sex),
+      BMI = BMI
+    )
+
+  # Create complete case dataset
+  required_columns <- c("Delta_Composite_Z", "Composite_Z0", "FOF_status",
+                       "Age", "Sex", "BMI")
+  analysis_data_cc <- analysis_data %>%
+    dplyr::select(dplyr::all_of(required_columns)) %>%
+    tidyr::drop_na() %>%
+    dplyr::mutate(
+      # Center baseline composite for model
+      cComposite_Z0 = as.numeric(scale(Composite_Z0, center = TRUE, scale = FALSE))
+    )
+
+  # Fit model
+  model_jn_c <- stats::lm(
+    Delta_Composite_Z ~ FOF_status * cComposite_Z0 + Age + Sex + BMI,
+    data = analysis_data_cc
+  )
+
+  # Calculate Hedges g effect size
+  g_obj <- effectsize::hedges_g(
+    Delta_Composite_Z ~ FOF_status,
+    data = analysis_data_cc,
+    ci = 0.95
+  )
+  g_df <- as.data.frame(g_obj)
 }
 
 # ==============================================================================

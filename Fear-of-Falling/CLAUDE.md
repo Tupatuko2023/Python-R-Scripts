@@ -3,43 +3,44 @@
 ## CRITICAL RULES (NON-NEGOTIABLE)
 
 1. Do not edit raw data files. All transformations must be in code.
-2. Do not guess variable meanings or units.
-   If unclear: ask for (a) data_dictionary.csv or (b) `names(df)` + `glimpse(df)` + a 10-row sample.
+2. Do not guess variable meanings or units. If unclear: ask for (a)
+   data_dictionary.csv or (b) `names(df)` + `glimpse(df)` + a 10-row sample.
 3. Every code change must be:
    - Minimal and reversible
    - Logged (what/why)
    - Proposed as a diff-style patch when possible
 4. Reproducibility is mandatory:
    - Use `renv` (lock package versions)
-   - Use `set.seed(20251124)` where randomness exists (bootstrap, MI, resampling)
+   - Use `set.seed(20251124)` where randomness exists (bootstrap, MI,
+     resampling)
    - Save `sessionInfo()` (or `renv::diagnostics()`) into `manifest/`
 5. Output discipline:
-   - All tables/figures go to: `R-scripts/<script_label>/outputs/`
-     (where `<script_label>` = K11, K12, etc.; created by `init_paths(script_label)`)
-   - Always write one `manifest/manifest.csv` row per output artifact
-     (file, date, script, git hash if available)
+   - All tables/figures go to: `R-scripts/<script_label>/outputs/` (where
+     `<script_label>` = K11, K12, etc.; created by `init_paths(script_label)`)
+   - Always write one `manifest/manifest.csv` row per output artifact (file,
+     date, script, git hash if available)
 
 6. Every Kxx script MUST start with the standardized intro/header block in:
    **"## STANDARD SCRIPT INTRO (MANDATORY)"** (no exceptions).
 
 ## STANDARD SCRIPT INTRO (MANDATORY)
 
-**Purpose**
-Every new script (Kxx) MUST start with a standardized intro/header block. This operationalizes:
+**Purpose** Every new script (Kxx) MUST start with a standardized intro/header
+block. This operationalizes:
 
 - Reproducibility rules (renv + seed + sessionInfo)
-- Output discipline + manifest logging (R-scripts/<script>/outputs/ + 1 manifest row per output artifact)
+- Output discipline + manifest logging (R-scripts/<script>/outputs/ + 1 manifest
+  row per output artifact)
 - "Do not invent variables" by forcing an explicit Required Vars list
 
 ### Script-ID + file tag conventions (MANDATORY)
 
-- **SCRIPT_ID format:** `K{number}[.{sub}]_{suffix}`
-  Examples: `K5_MA`, `K5.1_MA`, `K11_MAIN`, `K16_FRAILTY`
+- **SCRIPT_ID format:** `K{number}[.{sub}]_{suffix}` Examples: `K5_MA`,
+  `K5.1_MA`, `K11_MAIN`, `K16_FRAILTY`
 - **File tag (recommended filename):** `{SCRIPT_ID}.V{version}_{name}.R`
-  - MUST start with `{SCRIPT_ID}.V`
-  Example: `K5.1_MA.V1_baseline-ancova.R`
-- **Canonical script_label:** MUST equal `SCRIPT_ID`.
-  If run via `Rscript`, derive as: prefix before `.V`.
+  - MUST start with `{SCRIPT_ID}.V` Example: `K5.1_MA.V1_baseline-ancova.R`
+- **Canonical script_label:** MUST equal `SCRIPT_ID`. If run via `Rscript`,
+  derive as: prefix before `.V`.
 
 ### Output + manifest conventions (MANDATORY)
 
@@ -51,15 +52,18 @@ Every new script (Kxx) MUST start with a standardized intro/header block. This o
 
 ### set.seed convention (MANDATORY WHEN RANDOMNESS)
 
-- Use `set.seed(20251124)` ONLY when randomness exists (MI/bootstrap/resampling).
+- Use `set.seed(20251124)` ONLY when randomness exists
+  (MI/bootstrap/resampling).
 - The seed value MUST be documented in the script intro.
 
 ### Required vars rule (DO NOT INVENT VARIABLES)
 
-- The intro’s **Required Vars** list MUST contain only columns actually used in code.
-- The script MUST include a column-check vector (e.g. `req_cols <- c(...)`)
-  that matches the intro Required Vars list **1:1**.
-- If unclear variable meaning/units -> stop and request codebook or `names/glimpse/sample`.
+- The intro’s **Required Vars** list MUST contain only columns actually used in
+  code.
+- The script MUST include a column-check vector (e.g. `req_cols <- c(...)`) that
+  matches the intro Required Vars list **1:1**.
+- If unclear variable meaning/units -> stop and request codebook or
+  `names/glimpse/sample`.
 
 ### Copy-paste R header template (MANDATORY)
 
@@ -135,41 +139,50 @@ manifest_path <- paths$manifest_path
 
 ### Template requirements (non-negotiable)
 
-- Must include: shebang + metadata block + workflow lines + 5-12 step list + required vars list + (optional) mapping snippet.
-- Must define `script_label` and output directory via `init_paths(script_label)` (or equivalent project-standard).
+- Must include: shebang + metadata block + workflow lines + 5-12 step list +
+  required vars list + (optional) mapping snippet.
+- Must define `script_label` and output directory via `init_paths(script_label)`
+  (or equivalent project-standard).
 - Must state manifest append policy (one row per artifact).
-- The intro block MUST be the first content in the script (before data reads/model fits).
+- The intro block MUST be the first content in the script (before data
+  reads/model fits).
 
 ### “Valid script” checklist (MANDATORY)
 
 A new Kxx script is valid only if:
 
 1. It starts with the full STANDARD SCRIPT INTRO block (placeholders filled).
-2. `script_label` equals `SCRIPT_ID` (or is derived as prefix before `.V` in file tag).
+2. `script_label` equals `SCRIPT_ID` (or is derived as prefix before `.V` in
+   file tag).
 3. All output paths are under `R-scripts/<script_label>/outputs/`
 4. `req_cols` exists and matches Required Vars in the intro **1:1**.
-5. Every saved table/figure/text/model artifact appends exactly one manifest row.
-6. If MI/bootstrap/resampling used -> `set.seed(20251124)` is set and documented.
+5. Every saved table/figure/text/model artifact appends exactly one manifest
+   row.
+6. If MI/bootstrap/resampling used -> `set.seed(20251124)` is set and
+   documented.
 7. Before final Results text: follow **TABLE-TO-TEXT CROSSCHECK** rules.
 
 ### Integration pointers (how this connects)
 
 - Reproducibility rules: see **CRITICAL RULES #4**.
-- Output + manifest rules: see **CRITICAL RULES #5** and **Output discipline** sections.
+- Output + manifest rules: see **CRITICAL RULES #5** and **Output discipline**
+  sections.
 - QC expectations: see **DATA QUALITY CHECKS (MUST RUN EARLY)**.
 - Reporting expectations: see **REPORTING RULES**.
 - Text integrity: see **TABLE-TO-TEXT CROSSCHECK**.
 
-> Note: Do not paste unified diffs into this document. Diffs belong to PRs / change logs / agent output.
+> Note: Do not paste unified diffs into this document. Diffs belong to PRs /
+> change logs / agent output.
 
 ## PROJECT GOAL
 
-Refactor and stabilize all Kxx.R scripts (i.e., any K-numbered R scripts/folders).
-Run a reproducible analysis to identify which factors (FOF / age / FOF_status, etc.)
-are associated with 12-month change in physical performance.
+Refactor and stabilize all Kxx.R scripts (i.e., any K-numbered R
+scripts/folders). Run a reproducible analysis to identify which factors (FOF /
+age / FOF_status, etc.) are associated with 12-month change in physical
+performance.
 
-Current analysis focus (example): K11–K16.
-(Examples only; rules/conventions in this document apply to all Kxx scripts.)
+Current analysis focus (example): K11–K16. (Examples only; rules/conventions in
+this document apply to all Kxx scripts.)
 
 - Primary outcome: `delta_composite_z` (12 months intervention change)
 - Alternative outcome (long format): `Composite_Z` with `time` factor/continuous
@@ -192,12 +205,13 @@ B) Long (repeated measures)
 FOF variables:
 
 - `FOF` and/or `FOF_status` (0/1)
-- `FOF_status_f = factor(FOF_status, levels = c(0, 1), labels = c("Ei FOF", "FOF"))`
+- `FOF_status_f = factor(FOF_status, levels = c(0, 1), labels = c("Ei FOF",
+  "FOF"))`
 
 Minimal required columns to proceed (pick A or B):
 
-- ID, age, sex, BMI (if used), FOF_status (0/1), baseline composite, follow-up composite
-  OR time + Composite_Z.
+- ID, age, sex, BMI (if used), FOF_status (0/1), baseline composite, follow-up
+  composite OR time + Composite_Z.
 
 ## REPO STRUCTURE (RECOMMENDED)
 
@@ -243,7 +257,8 @@ Minimal required columns to proceed (pick A or B):
 2. If repeated measures / long format:
    - Primary: mixed model (random intercept for ID):
      `Composite_Z ~ time * FOF_status + age + sex + BMI + (1 | ID)`
-      (Implementation note: use the actual ID column name from the dataset, e.g. `(1 | id)` per VERIFIED VARIABLE MAP.)
+     (Implementation note: use the actual ID column name from the dataset,
+      e.g. `(1 | id)` per VERIFIED VARIABLE MAP.)
 
 ### Why this structure
 
@@ -252,10 +267,11 @@ Minimal required columns to proceed (pick A or B):
 
 ## SENSITIVITY / ROBUSTNESS (RUN IF FEASIBLE)
 
-- Robust regression / quantile regression (if heavy tails/outliers materially affect results)
+- Robust regression / quantile regression (if heavy tails/outliers materially
+  affect results)
 - `nlme` with correlation structures (only if needed)
-- Multiple imputation with `mice` for covariate missingness
-  (document assumptions; compare to complete-case)
+- Multiple imputation with `mice` for covariate missingness (document
+  assumptions; compare to complete-case)
 
 ## REQUIRED PACKAGES (R)
 
@@ -265,7 +281,8 @@ Core:
 
 Modeling:
 
-- lme4 (+ lmerTest if p-values needed), nlme (optional), brms (optional Bayesian sensitivity)
+- lme4 (+ lmerTest if p-values needed), nlme (optional), brms (optional Bayesian
+  sensitivity)
 
 Inference:
 
@@ -290,7 +307,8 @@ Run a script:
 
 - `Rscript R-scripts/Kxx/Kxx.R`  (generic pattern)
 - `Rscript R-scripts/<K_FOLDER>/<SCRIPT_FILE>.R`  (placeholder form)
-- Example (file-tagged): `Rscript R-scripts/<K_FOLDER>/<SCRIPT_ID>.V1_short-name.R`
+- Example (file-tagged): `Rscript
+  R-scripts/<K_FOLDER>/<SCRIPT_ID>.V1_short-name.R`
 
 Save environment info:
 
@@ -302,7 +320,8 @@ Save environment info:
 2. ID uniqueness (wide) OR repeated structure (long)
 3. FOF_status only {0, 1} and factor labeling is explicit
 4. Delta computation check:
-   - `delta_composite_z == composite_z12 - composite_z0` (allow small float tolerance)
+   - `delta_composite_z == composite_z12 - composite_z0` (allow small float
+     tolerance)
 5. Missingness report:
    - counts and patterns (overall + by FOF group)
 
