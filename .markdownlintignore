@@ -3,3 +3,6 @@ report/**
 **/.quarto/**
 **/.venv/**
 **/env/**
+**/renv/**
+**/node_modules/**
+**/.git/**

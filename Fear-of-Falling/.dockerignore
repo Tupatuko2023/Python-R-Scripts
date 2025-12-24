@@ -1,0 +1,63 @@
+# Docker ignore file for Fear of Falling project
+# Excludes files from Docker build context
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# renv library (will be restored in container)
+renv/library/
+renv/local/
+renv/python/
+renv/sandbox/
+renv/staging/
+
+# Outputs (will be generated in container)
+R-scripts/*/outputs/*
+!R-scripts/*/outputs/.gitkeep
+
+# Documentation (not needed in container)
+*.md
+!README.md
+
+# Logs
+*.log
+smoke_test_output.log
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (if present)
+node_modules/
+package-lock.json
+
+# Python (if present)
+__pycache__/
+*.pyc
+.python-version
+venv/
+
+# Test artifacts
+tests/*.Rout
+tests/*.pdf
+tests/*.png

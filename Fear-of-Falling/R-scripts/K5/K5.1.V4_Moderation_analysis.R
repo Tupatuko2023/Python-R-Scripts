@@ -1,47 +1,67 @@
 #!/usr/bin/env Rscript
-
-# - K5.1_MA: Moderation Analysis Script for Fear of Falling & Functional
-#   Performance
-# [K5.1.V4_Moderation_analysis.R]
-# - "Performs an advanced moderation
-#   analysis with multiple enhancements and diagnostics."
-
-###############################################################################
-# Moderation workflow - upgraded version
+# ==============================================================================
+# K5.1_MA - FOF × Baseline Function moderation analysis (advanced)
+# File tag: K5.1.V4_Moderation_analysis.R
+# Purpose: Advanced moderation analysis testing whether baseline physical function
+#          (Composite_Z0) moderates the association between FOF status and 12-month
+#          functional change. Includes linear + quartile models, spline nonlinearity
+#          tests, Johnson-Neyman regions, MICE for missing data, inverse probability
+#          weighting, and comprehensive diagnostics.
 #
-# Outcome:      Delta_Composite_Z
-# Moderator:    Composite_Z0 (continuous, plus quartiles)
-# Group:        FOF_status (0 vs 1)
-# Covariates:   Age, Sex, BMI
+# Outcome: Delta_Composite_Z (12-month change in composite physical function)
+# Predictors: FOF_status (0/1, factor in models)
+# Moderator/interaction: Composite_Z0 (continuous baseline function + quartiles)
+#                        Tests: FOF_status × Composite_Z0 (linear),
+#                               FOF_status × Composite_Z0_quartile (categorical),
+#                               FOF_status × ns(Composite_Z0) (spline nonlinearity)
+# Grouping variable: None (wide format ANCOVA with interactions)
+# Covariates: Age, Sex, BMI
 #
-# This script:
-#   1) Reproduces main linear and quartile moderation models.
-#   2) Tests nonlinearity of Composite_Z0 with splines and spline-by-FOF interaction.
-#   3) Runs Johnson-Neyman on centered and standardized moderator.
-#   4) Implements multiple imputation (MICE) and pools main results.
-#   5) Applies inverse probability weights for outcome observation.
-#   6) Adds multiplicity control and effect sizes.
-#   7) Probes simple effects at clinically relevant moderator cutpoints.
-#   8) Produces diagnostics, tables and figures into ./outputs.
-#   9) Prints an updated Finnish Results text block.
+# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
+# age, sex, BMI, kaatumisenpelkoOn, ToimintaKykySummary0, ToimintaKykySummary2
 #
-# Required variables in the analysis data:
-#   Delta_Composite_Z, Composite_Z0, FOF_status, Age, Sex, BMI
+# Required vars (analysis df - after mapping in script):
+# Delta_Composite_Z (derived), Composite_Z0, FOF_status (0/1), Age, Sex, BMI
+# Derived in script: Composite_Z0_quartile, cComposite_Z0 (centered), zComposite_Z0 (standardized)
 #
-# If your raw data has different names, map them after reading:
-#   raw_data <- raw_data %>%
-#     dplyr::mutate(
-#       Composite_Z0 = ToimintaKykySummary0,
-#       Delta_Composite_Z = ToimintaKykySummary2 - ToimintaKykySummary0,
-#       FOF_status = dplyr::case_when(kaatumisenpelkoOn %in% c("0", 0) ~ 0,
-#                                     kaatumisenpelkoOn %in% c("1", 1) ~ 1,
-#                                     TRUE ~ NA_real_),
-#       Age = age,
-#       Sex = sex,
-#       BMI = BMI
-#     )
-###############################################################################
-
+# Mapping (raw -> analysis; keep minimal + explicit):
+# kaatumisenpelkoOn (0/1 or "0"/"1") -> FOF_status (0/1, converted to numeric if needed)
+# age -> Age
+# sex -> Sex (0/1, converted to numeric if needed)
+# ToimintaKykySummary0 -> Composite_Z0
+# ToimintaKykySummary2 - ToimintaKykySummary0 -> Delta_Composite_Z
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: 123 (UNCERTAINTY: differs from standard 20251124; used for MICE, spline knots, bootstrap)
+#
+# Outputs + manifest:
+# - script_label: K5.1_MA (canonical SCRIPT_ID)
+# - outputs dir: R-scripts/K5/outputs/K5.1_MA/  (manual creation, no init_paths)
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Create outputs + manifest dirs manually
+# 02) Load raw data (immutable; no edits)
+# 03) Check required raw columns (req_raw_cols)
+# 04) Map raw -> analysis variables (Delta_Composite_Z, Composite_Z0, FOF_status, Age, Sex, BMI)
+# 05) Derive moderator transformations (quartiles, centered, standardized)
+# 06) Fit linear moderation: Delta ~ FOF × Composite_Z0 + Age + Sex + BMI
+# 07) Fit quartile moderation: Delta ~ FOF × Composite_Z0_quartile + covariates
+# 08) Test spline nonlinearity: Delta ~ FOF × ns(Composite_Z0, df=3) + covariates
+# 09) Run Johnson-Neyman analysis (regions of significance for FOF effect)
+# 10) Multiple imputation (MICE) for missing covariates; pool interaction results
+# 11) Inverse probability weighting for outcome missingness
+# 12) Compute simple slopes at moderator cutpoints (quartile boundaries, ±1 SD)
+# 13) Diagnostics: residuals, leverage, Cook's D, VIF, homoscedasticity tests
+# 14) Save forest plots (FOF effect across moderator levels)
+# 15) Save tables (interaction tests, simple slopes, J-N bounds, MICE pooled results)
+# 16) Append manifest row per artifact
+# 17) Generate Finnish Results text block
+# 18) EOF marker
+# ==============================================================================
+#
+# UNCERTAINTY NOTE: seed = 123 (not standard 20251124) - reason unclear; used for MICE + bootstrap
 set.seed(123)
 
 # 1. Setup and packages -------------------------------------------------------

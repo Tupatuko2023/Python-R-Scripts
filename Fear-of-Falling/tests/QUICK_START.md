@@ -22,17 +22,20 @@ Rscript tests/run_smoke_tests.R
 ## Quick Commands
 
 ### Run All Tests
+
 ```bash
 Rscript tests/run_smoke_tests.R
 ```
 
 ### Run Single Script Test
+
 ```r
 # In R console
 source("R-scripts/K11/K11.R")  # Replace K11 with target script
 ```
 
 ### Check Prerequisites Only
+
 ```r
 # In R console
 source("tests/run_smoke_tests.R")
@@ -40,6 +43,7 @@ source("tests/run_smoke_tests.R")
 ```
 
 ### Use testthat Framework
+
 ```r
 library(testthat)
 test_file("tests/smoke_test_k11_k16.R")
@@ -61,6 +65,7 @@ test_file("tests/smoke_test_k11_k16.R")
 ## Common Issues & Quick Fixes
 
 ### Issue: "Data file NOT found"
+
 ```bash
 # Check data file exists
 ls data/external/KaatumisenPelko.csv
@@ -70,6 +75,7 @@ find . -name "KaatumisenPelko.csv"
 ```
 
 ### Issue: "Helper file NOT found"
+
 ```bash
 # Check helper functions
 ls R/functions/*.R
@@ -78,6 +84,7 @@ ls R/functions/*.R
 ```
 
 ### Issue: "K16 requires K15 output"
+
 ```bash
 # Run K15 first
 Rscript R-scripts/K15/K15.R
@@ -87,6 +94,7 @@ Rscript tests/run_smoke_tests.R
 ```
 
 ### Issue: Package not found
+
 ```r
 # Install missing packages
 install.packages(c("here", "dplyr", "ggplot2", "broom", "lme4"))
@@ -98,34 +106,42 @@ renv::restore()
 ## Interpreting Results
 
 ### Full Pass
-```
+
+```text
 Total: 6 | Passed: 6 | Failed: 0
 ✓ All smoke tests passed!
 ```
+
 **Action:** None needed. Pipeline is healthy.
 
 ### Partial Failure
-```
+
+```text
 Total: 6 | Passed: 5 | Failed: 1
 ✗ Some tests failed.
 ```
+
 **Action:**
+
 1. Check which script failed
 2. Review error message
 3. Run that script individually for details
 
 ### Missing Outputs
-```
+
+```text
 Outputs: 3 found, 2 missing
 ```
+
 **Action:**
+
 1. Check if script completed (might have warnings)
 2. Verify outputs directory exists and is writable
 3. Review script logs for errors
 
 ## File Locations
 
-```
+```text
 Fear-of-Falling/
 ├── tests/
 │   ├── run_smoke_tests.R       ← Main test runner
