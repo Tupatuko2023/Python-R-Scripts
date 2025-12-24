@@ -1,63 +1,44 @@
-# KAAOS 1.1: R Script for Data Import and Preliminary Processing of the KaatumisenPelko Dataset
-# [K1.1.data_import.R]
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K1.1_IMPORT - Data Import and Preliminary Processing
+# File tag: K1.1_IMPORT.V1_data-import.R
+# Purpose: Import raw KaatumisenPelko dataset and verify structure
+#
+# Input: data/raw/KaatumisenPelko.csv (or dataset/KaatumisenPelko.csv fallback)
+# Output: `data` object in R environment (raw, unprocessed)
+#
+# Required vars (raw data, DO NOT INVENT; must match req_cols):
+# id, ToimintaKykySummary0, ToimintaKykySummary2, kaatumisenpelkoOn, age, sex, BMI
+#
+# Note: This script is shared by K3 pipeline (sourced from K3.7.main.R)
+# ==============================================================================
 
-# "This R script imports a Stata dataset, loads key libraries, inspects its structure, and 
-# converts key categorical variables to factors for analysis."
+suppressPackageStartupMessages({
+  library(readr)
+  library(here)
+})
 
-########################################################################################################
-#  Sequence list
-########################################################################################################
+# Required columns for raw data
+req_cols <- c("id", "ToimintaKykySummary0", "ToimintaKykySummary2",
+              "kaatumisenpelkoOn", "age", "sex", "BMI")
 
-# 1: Install and Load Required Packages
-# 2: Load Required Libraries
-# 3: Define the File Path
-# 4: Read the Dataset
-# 5: Inspect the Structure of the Dataset and Preview the Data
-# 6: Convert Categorical Variables to Factors
+# Load raw data using helper with fallback logic
+source(here::here("R", "functions", "io.R"))
+data <- load_raw_data("KaatumisenPelko.csv")
 
-########################################################################################################
-########################################################################################################
+# Verify required columns exist
+missing_cols <- setdiff(req_cols, names(data))
+if (length(missing_cols) > 0) {
+  stop("Missing required columns in raw data: ", paste(missing_cols, collapse = ", "))
+}
 
-# 1: Install and Load Required Packages
+# Quick summary
+cat("Raw data loaded successfully:\n")
+cat("  Rows:", nrow(data), "\n")
+cat("  Columns:", ncol(data), "\n")
+cat("  Required columns present:", all(req_cols %in% names(data)), "\n")
 
-#install.packages("ggplot2")  # For visualization
-#install.packages("dplyr")    # For data manipulation
-#install.packages("tidyr")    # For transforming data into long format
-#install.packages("boot")     # For calculating confidence intervals
-#install.packages("haven")    # For reading .dta files
-#install.packages("tidyverse")
-#install.packages("moments")  # For skewness and kurtosis calculations
-#install.packages("broom")
-#install.packages("stringr")
+# Note: Factor conversion is deferred to K1.2 (standardize_analysis_vars)
+# This keeps K1.1 as a pure data import step
 
-# 2: Load Required Libraries
-library(ggplot2)   # For data visualization
-library(dplyr)     # For data manipulation
-library(tidyr)     # For reshaping data into long format
-library(boot)      # For computing confidence intervals
-library(haven)     # For reading Stata (.dta) files
-library(stringr)   # For string manipulation
-library(broom)     # For tidying statistical test outputs
-library(moments)   # For computing skewness and kurtosis
-library(stringr)   # for str_detect()
-library(here)
-
-## 2: Define the File Path
-# Adjust the path as necessary for your environment
-file_path <- here::here("dataset", "KaatumisenPelko.csv")
-
-## 3: Load the Dataset
-data <- readr::read_csv(file_path)   # or utils::read.csv(file_path)
-
-print(file_path)
-if (!file.exists(file_path)) stop("File not found: ", file_path)
-
-# 5: Inspect the Structure of the Dataset and Preview the Data
-str(data)    # Displays the structure and variable types of the dataset
-head(data)   # Displays the first few rows of the dataset
-
-# 6: Convert Categorical Variables to Factors
-data$kaatumisenpelkoOn <- as.factor(data$kaatumisenpelkoOn)  # 0 = no fear, 1 = fear of falling
-data$sex <- as.factor(data$sex)                              # 0 = female, 1 = male
-
-# End of K1.1.data_import.R
+# EOF

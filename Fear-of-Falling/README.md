@@ -81,6 +81,151 @@ Rscript R-scripts/run_mixed_fof_time.R --data "<DATA_PATH_OR_OBJECT>" --out "R-s
 
 ---
 
+## K1-K4 Analysis Pipelines (Refactored 2025-12-24)
+
+### Overview
+
+K1-K4 scripts provide foundational data processing and transformation pipelines that prepare data for downstream analyses. These scripts have been refactored to comply with CLAUDE.md standards:
+- Standard headers with documented variables
+- Reproducible paths (`here::here()` + `init_paths()`)
+- Manifest logging (all outputs tracked)
+- Seed setting for bootstrap (K1.4, K3.4)
+
+### Pipeline Summary
+
+| Pipeline | Purpose | Input | Output | Run Command |
+|----------|---------|-------|--------|-------------|
+| **K1** | Z-score change analysis | Raw CSV | Z-score change tables | `Rscript R-scripts/K1/K1.7.main.R` |
+| **K3** | Original values analysis | Raw CSV (shares K1.1) | Original value tables | `Rscript R-scripts/K3/K3.7.main.R` |
+| **K2** | Z-score pivot/transpose | K1 outputs | Transposed z-scores | `Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R` |
+| **K4** | Score pivot/transpose | K3 outputs | Transposed scores | `Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R` |
+
+### Running K1-K4 (from repo root)
+
+#### K1: Z-Score Change Analysis
+```bash
+# Full pipeline (K1.1 → K1.2 → K1.3 → K1.4 → K1.5 → K1.6)
+Rscript R-scripts/K1/K1.7.main.R
+
+# Outputs appear in:
+ls -lh R-scripts/K1/outputs/
+
+# Check manifest logging:
+grep '"K1"' manifest/manifest.csv | tail -10
+```
+
+**What K1 does:**
+1. Loads raw data (`dataset/KaatumisenPelko.csv`)
+2. Transforms to analysis variables (Composite_Z0, Composite_Z2, Delta, FOF_status)
+3. Runs statistical tests
+4. Calculates effect sizes with bootstrap CI (uses `set.seed(20251124)`)
+5. Computes distributional stats (skewness/kurtosis)
+6. Exports final table: `K1_Z_Score_Change_2G.csv`
+
+#### K3: Original Values Analysis
+```bash
+# Full pipeline (K1.1 → K3.2 → K3.3 → K3.4 → K1.5 → K3.6)
+# Note: K3 reuses K1.1 (data import) and K1.5 (kurtosis/skewness)
+Rscript R-scripts/K3/K3.7.main.R
+
+# Outputs:
+ls -lh R-scripts/K3/outputs/
+
+# Check manifest:
+grep '"K3"' manifest/manifest.csv | tail -10
+```
+
+**What K3 does:**
+Similar to K1 but analyzes original test values instead of z-scores.
+
+#### K2: Z-Score Pivot (requires K1 outputs)
+```bash
+# Transpose z-score results by FOF status
+Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R
+
+# Alternative script (if needed):
+Rscript R-scripts/K2/K2.KAAOS-Z_Score_C_Pivot_2R.R
+
+# Outputs:
+ls -lh R-scripts/K2/outputs/
+```
+
+**What K2 does:**
+Recodes test names by FOF status and transposes data for presentation.
+
+#### K4: Score Pivot (requires K3 outputs)
+```bash
+# Transpose score results by FOF status
+Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R
+
+# Outputs:
+ls -lh R-scripts/K4/outputs/
+```
+
+**What K4 does:**
+Similar to K2 but for original values instead of z-scores.
+
+### Migration Notes (Old → New)
+
+**Old behavior (pre-refactoring):**
+- Outputs went to `tables/` (hardcoded Windows paths like `C:/Users/tomik/...`)
+- No manifest tracking
+- Required manual path editing to run on different machines
+
+**New behavior (post-refactoring):**
+- Outputs go to `R-scripts/<K>/outputs/` (portable, `here::here()` based)
+- All outputs logged in `manifest/manifest.csv`
+- Scripts run from repo root without modification
+- Cross-platform compatible
+
+**If you have old outputs in `tables/`:** They are not automatically migrated. Re-run pipelines to generate new outputs in standard locations.
+
+### Dependencies
+
+```
+Raw Data (dataset/KaatumisenPelko.csv)
+    │
+    ├─────────────────────────────────────┐
+    │                                     │
+    v                                     v
+K1 Pipeline                          K3 Pipeline
+    │                                     │
+    ├─ K1.1 (data import) ────────────────┤ (shared)
+    ├─ K1.2 (transformation)              ├─ K3.2 (transformation)
+    ├─ K1.3 (statistics)                  ├─ K3.3 (statistics)
+    ├─ K1.4 (effect sizes + bootstrap)    ├─ K3.4 (effect sizes + bootstrap)
+    ├─ K1.5 (skewness/kurtosis) ──────────┤ (shared)
+    └─ K1.6 (export)                      └─ K3.6 (export)
+    │                                     │
+    v                                     v
+K1 outputs                           K3 outputs
+    │                                     │
+    v                                     v
+K2 Pipeline                          K4 Pipeline
+    │                                     │
+    v                                     v
+K2 outputs                           K4 outputs
+```
+
+### Troubleshooting K1-K4
+
+**Error: "Raw data file not found"**
+- Check that `dataset/KaatumisenPelko.csv` exists
+- Or place data in `data/raw/KaatumisenPelko.csv` (preferred)
+
+**Error: "Missing required columns"**
+- Verify raw data has: `id`, `ToimintaKykySummary0`, `ToimintaKykySummary2`, `kaatumisenpelkoOn`, `age`, `sex`, `BMI`
+
+**Error: "K1 output not found" (when running K2)**
+- Run K1 first: `Rscript R-scripts/K1/K1.7.main.R`
+- Check K1 outputs exist: `ls R-scripts/K1/outputs/`
+
+**Error: "K3 output not found" (when running K4)**
+- Run K3 first: `Rscript R-scripts/K3/K3.7.main.R`
+- Check K3 outputs exist: `ls R-scripts/K3/outputs/`
+
+---
+
 ## What gets run
 
 **Kanoninen sisääntulopiste:** `analysis_mixed_workflow()`.
