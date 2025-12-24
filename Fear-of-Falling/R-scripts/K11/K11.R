@@ -1,11 +1,64 @@
-# K11: Kaatumisen pelko itsenäisenä ennustajana
-
-
+#!/usr/bin/env Rscript
 # ==============================================================================
-# 01. Packages
+# K11 - FOF as independent predictor of 12-month functional change
+# File tag: K11.R
+# Purpose: Analyzes fear of falling (FOF) as independent predictor of 12-month
+#          change in composite physical function, with comprehensive covariate
+#          adjustment, missing data analysis (MICE), and distributional sensitivity
+#
+# Outcome: Delta_Composite_Z (12-month change in composite physical function)
+# Predictors: FOF_status (0 = Ei FOF, 1 = FOF)
+# Moderator/interaction: None (main effects + subgroup analyses by age quartiles)
+# Grouping variable: None (wide format ANCOVA)
+# Covariates: Age, Sex, BMI, MOI_score, diabetes, alzheimer, parkinson, AVH,
+#             previous_falls, psych_score
+#
+# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
+# id, age, sex, BMI, kaatumisenpelkoOn, ToimintaKykySummary0, ToimintaKykySummary2,
+# MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH, kaatuminen, mieliala
+#
+# Required vars (analysis df - after standardize_analysis_vars):
+# id, Age, Sex, BMI, FOF_status, Composite_Z0, Composite_Z2, Delta_Composite_Z,
+# MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH, kaatuminen, mieliala
+#
+# Mapping (raw -> analysis; keep minimal + explicit):
+# kaatumisenpelkoOn (0/1) -> FOF_status -> FOF_status_f (factor: "Ei FOF"/"FOF")
+# age -> Age
+# sex (0/1) -> Sex -> Sex_f (factor: "female"/"male")
+# ToimintaKykySummary0 -> Composite_Z0
+# ToimintaKykySummary2 -> Composite_Z2
+# Composite_Z2 - Composite_Z0 -> Delta_Composite_Z
+# MOIindeksiindeksi -> MOI_score (in dat_fof)
+# kaatuminen -> previous_falls (in dat_fof)
+# mieliala -> psych_score (in dat_fof)
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: 20251124 (set immediately before MICE; also passed to mice::mice())
+#
+# Outputs + manifest:
+# - script_label: K11 (canonical)
+# - outputs dir: R-scripts/K11/outputs/K11/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths)
+# 02) Load raw data (immutable; no edits)
+# 03) Check required raw columns (req_raw_cols)
+# 04) Standardize vars + QC (standardize_analysis_vars + sanity_checks)
+# 05) Check required analysis columns (req_analysis_cols)
+# 06) Prepare analysis dataset (dat_fof with complete-case filtering)
+# 07) Fit primary ANCOVA models (base + extended with clinical covariates)
+# 08) Sensitivity: MICE imputation (20 datasets, pooled results)
+# 09) Sensitivity: responder analysis (logistic regression, ordinal models)
+# 10) Subgroup analysis by age quartiles (responder proportions, emmeans)
+# 11) Distributional analysis (GLS heteroscedasticity, quantile regression)
+# 12) Save artifacts -> outputs/K11/
+# 13) Append manifest row per artifact
+# 14) Save sessionInfo to manifest/
+# 15) EOF marker
 # ==============================================================================
-
-# --- Kxx template (top of script) --------------------------------------------
+#
 suppressPackageStartupMessages({
   library(here)
   library(dplyr)
@@ -24,6 +77,21 @@ suppressPackageStartupMessages({
   library(effectsize)
 })
 
+# --- Standard init (MANDATORY) -----------------------------------------------
+# Derive script_label from --file, supporting file tags like: K11.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+
+script_base <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K11"  # interactive fallback
+}
+
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
+if (is.na(script_label) || script_label == "") script_label <- "K11"
+
+# Source helper functions (io, checks, modeling, reporting)
 rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
    envir = .GlobalEnv)
 
@@ -36,15 +104,12 @@ if (!exists("save_table_csv_html", envir = .GlobalEnv)) {
   stop("save_table_csv_html NOT loaded. Check: R/functions/reporting.R contains the function and source() points to correct file.")
 }
 
-script_label <- sub("\\.R$", "", basename(
-  sub("--file=", "", commandArgs(trailingOnly = FALSE)[grep("--file=", commandArgs(trailingOnly = FALSE))])
-))
-if (is.na(script_label) || script_label == "") script_label <- "K11"
+# init_paths() must set outputs_dir + manifest_path (+ options fof.*)
 paths <- init_paths(script_label)
-
-outputs_dir <- paths$outputs_dir
+outputs_dir   <- paths$outputs_dir
 manifest_path <- paths$manifest_path
-set.seed(20251124)
+
+# seed (set ONLY immediately before MICE, not here - see section 06)
 
 # ==============================================================================
 # 02. Load Dataset & Data Checking
@@ -58,9 +123,34 @@ if (!exists("raw_data")) {
   stop("Object 'raw_data' not found. Please load your data as raw_data first.")
 }
 
+# --- Required raw columns check (DO NOT INVENT) ------------------------------
+req_raw_cols <- c(
+  "id", "age", "sex", "BMI", "kaatumisenpelkoOn",
+  "ToimintaKykySummary0", "ToimintaKykySummary2",
+  "MOIindeksiindeksi", "diabetes", "alzheimer", "parkinson",
+  "AVH", "kaatuminen", "mieliala"
+)
+missing_raw_cols <- setdiff(req_raw_cols, names(raw_data))
+if (length(missing_raw_cols) > 0) {
+  stop("Missing required raw columns: ", paste(missing_raw_cols, collapse = ", "))
+}
+
+# --- Standardize variable names and run sanity checks -----------------------
 df <- standardize_analysis_vars(raw_data)
 qc <- sanity_checks(df)
 print(qc)
+
+# --- Required analysis columns check -----------------------------------------
+req_analysis_cols <- c(
+  "id", "Age", "Sex", "BMI", "FOF_status",
+  "Composite_Z0", "Composite_Z2", "Delta_Composite_Z",
+  "MOIindeksiindeksi", "diabetes", "alzheimer", "parkinson",
+  "AVH", "kaatuminen", "mieliala"
+)
+missing_analysis_cols <- setdiff(req_analysis_cols, names(df))
+if (length(missing_analysis_cols) > 0) {
+  stop("Missing required analysis columns: ", paste(missing_analysis_cols, collapse = ", "))
+}
 
 # DATA CHECKING (kevyt)
 print(qc)
@@ -314,6 +404,9 @@ standardize_parameters(mod_ext)
 # ==============================================================================
 # 06. Missing Data Analysis (MICE)
 # ==============================================================================
+
+# Set seed for reproducibility (MICE uses random imputation)
+set.seed(20251124)
 
 dat_fof <- dat_fof %>%
   mutate(

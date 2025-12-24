@@ -1,30 +1,104 @@
-# K9: Kaatumisen pelko ja toimintakyvyn muutos naisilla
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K9 - FOF and functional change in women (subgroup analysis)
+# File tag: K9.R
+# Purpose: Analyzes FOF-group differences in 12-month change in composite
+#          physical function specifically in the female subgroup, with age and
+#          BMI adjustment (Sex-stratified ANCOVA)
+#
+# Outcome: Delta_Composite_Z (12-month change in composite physical function)
+# Predictors: FOF_status (factor: "Ei FOF"/"FOF")
+# Moderator/interaction: None (subgroup: Sex == 0/female only)
+# Grouping variable: None (wide format ANCOVA, filtered to women)
+# Covariates: Age, BMI, Composite_Z0 (baseline function), clinical vars
+#
+# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
+# age, sex, BMI, kaatumisenpelkoOn, ToimintaKykySummary0, ToimintaKykySummary2,
+# MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH
+#
+# Required vars (analysis df - after filtering to sex == 0):
+# Age (from age), Sex (from sex, == 0 for women), BMI, FOF_status (from kaatumisenpelkoOn),
+# ToimintaKykySummary0, ToimintaKykySummary2, Delta_Composite_Z (derived),
+# MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH
+#
+# Mapping (raw -> analysis; keep minimal + explicit):
+# age -> Age (standardization not shown in K9, may use raw age)
+# sex -> Sex (0 = female, filter to Sex == 0)
+# kaatumisenpelkoOn (0/1) -> FOF_status (factor: "Ei FOF"/"FOF")
+# ToimintaKykySummary0 -> ToimintaKykySummary0 (baseline, used as-is)
+# ToimintaKykySummary2 - ToimintaKykySummary0 -> Delta_Composite_Z
+# MOIindeksiindeksi -> MOIindeksiindeksi (used as-is for multimorbidity adjustment)
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: 20251124 (set for potential future bootstrap, currently no randomness)
+#
+# Outputs + manifest:
+# - script_label: K9 (canonical)
+# - outputs dir: R-scripts/K9/outputs/  (manual creation, no init_paths)
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Create outputs + manifest dirs manually
+# 02) Load raw data (immutable; no edits)
+# 03) Check required raw columns (req_raw_cols)
+# 04) Filter to women (sex == 0)
+# 05) Map raw -> analysis variables (Age, BMI, FOF_status, Delta_Composite_Z)
+# 06) Check sample size after filtering (n women with complete data)
+# 07) Fit ANCOVA model: Delta_Composite_Z ~ FOF_status + ToimintaKykySummary0 + Age + BMI (+ clinical)
+# 08) Compute emmeans (FOF vs Ei FOF in women)
+# 09) Save forest plot (FOF effect in women vs men comparison if available)
+# 10) Save tables (ANCOVA estimates, emmeans, contrasts)
+# 11) Append manifest row per artifact
+# 12) EOF marker
+# ==============================================================================
+#
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
+  library(forcats)
+  library(broom)
+  library(car)
+  library(emmeans)
+  library(here)
+})
 
+# --- Standard init (MANDATORY) -----------------------------------------------
+# NOTE: K9 does NOT use init_paths() - uses manual dir creation (legacy pattern)
+# Derive script_label from --file, supporting file tags like: K9.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+
+script_base <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K9"  # interactive fallback
+}
+
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
+if (is.na(script_label) || script_label == "") script_label <- "K9"
+
+# Manual dir setup (legacy - does not use init_paths)
+outputs_dir <- here::here("R-scripts", "K9", "outputs")
+if (!dir.exists(outputs_dir)) {
+  dir.create(outputs_dir, recursive = TRUE)
+}
+
+manifest_dir <- here::here("manifest")
+if (!dir.exists(manifest_dir)) {
+  dir.create(manifest_dir, recursive = TRUE)
+}
+manifest_path <- file.path(manifest_dir, "manifest.csv")
+
+# seed (set for potential future bootstrap, currently no randomness in main analysis)
+set.seed(20251124)
 
 # ==============================================================================
-
-# ---------------------------------------------------------------
-# 0. PACKAGES ---------------------------------------------------
-# ---------------------------------------------------------------
-
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(broom)
-library(car)       # Anova(type = "III")
-library(emmeans)   # Estimated marginal means
-
-set.seed(20251124)  # jos myöhemmin käytetään satunnaisuutta (esim. bootstrap)
-
-
+# 01. Load Dataset & Data Checking
 # ==============================================================================
-# ---------------------------------------------------------------
-# 1: Load the dataset -------------------------------------------
-# ---------------------------------------------------------------
 
 file_path <- here::here("data", "external", "KaatumisenPelko.csv")
-
 raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
 
 ## Working copy so the original stays untouched
@@ -32,31 +106,21 @@ if (!exists("raw_data")) {
   stop("Object 'raw_data' not found. Please load your data as raw_data first.")
 }
 
-## Tee raaka- ja työkopio
+# --- Required raw columns check (DO NOT INVENT) ------------------------------
+req_raw_cols <- c(
+  "age", "sex", "BMI", "kaatumisenpelkoOn",
+  "ToimintaKykySummary0", "ToimintaKykySummary2",
+  "MOIindeksiindeksi", "diabetes", "alzheimer", "parkinson", "AVH"
+)
+
+missing_raw_cols <- setdiff(req_raw_cols, names(raw_data))
+if (length(missing_raw_cols) > 0) {
+  stop("Missing required raw columns: ", paste(missing_raw_cols, collapse = ", "))
+}
+
 analysis_data  <- raw_data
 glimpse(analysis_data)
 names(analysis_data)
-
-# ---------------------------------------------------------------
-# 2: Output-kansio K9:n alle ------------------------------------
-# ---------------------------------------------------------------
-
-## .../Fear-of-Falling/R-scripts/K9/outputs
-outputs_dir <- here::here("R-scripts", "K9", "outputs")
-if (!dir.exists(outputs_dir)) {
-  dir.create(outputs_dir, recursive = TRUE)
-}
-
-## 2.1: --- Skriptin tunniste ---
-script_label <- "K9"   
-
-## 2.2 --- Erillinen manifest-kansio projektissa: ./manifest -------------------
-# Projektin juurikansio oletetaan olevan .../Fear-of-Falling
-manifest_dir <- here::here("manifest")
-if (!dir.exists(manifest_dir)) {
-  dir.create(manifest_dir, recursive = TRUE)
-}
-manifest_path <- file.path(manifest_dir, "manifest.csv")
 
 # ---------------------------------------------------------------
 # 3. DATA CHECKING ----------------------------------------------

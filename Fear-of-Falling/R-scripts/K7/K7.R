@@ -1,36 +1,117 @@
-
-# Title: KAAOS 7: Fear of Falling and Physical Performance: Moderation Analyses
-# Script: K7.R
-
+#!/usr/bin/env Rscript
 # ==============================================================================
+# K7 - FOF × multi-domain moderators on functional change
+# File tag: K7.R
+# Purpose: Comprehensive moderation analysis testing whether neurological status,
+#          self-rated health (SRH), self-rated mobility (SRM), or walking ability
+#          (500m walk difficulty) moderate FOF-group differences in 12-month
+#          change in composite physical function
+#
+# Outcome: Delta_Composite_Z (12-month change in composite physical function)
+# Predictors: FOF_status (factor: "non-FOF"/"FOF")
+# Moderator/interaction: neuro_any (factor: "no"/"yes", derived from alzheimer/parkinson/AVH),
+#                        SRH_3class (factor: "good"/"fair"/"poor"),
+#                        SRM_3class (factor: "good"/"fair"/"poor"),
+#                        Walk500m_3class (factor: "no difficulty"/"some difficulty"/"unable")
+# Grouping variable: None (wide format ANCOVA with FOF × moderator interactions)
+# Covariates: Age, Sex, Composite_Z0 (baseline function)
+#
+# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
+# age, sex, BMI, kaatumisenpelkoOn, ToimintaKykySummary0, ToimintaKykySummary2,
+# alzheimer, parkinson, AVH, SRH (or koettuterveydentila), oma_arvio_liikuntakyky,
+# Vaikeus500m
+#
+# Required vars (analysis df - after manual mapping in script):
+# Age, Sex, FOF_status, Composite_Z0, Delta_Composite_Z, neuro_any, SRH_3class,
+# SRM_3class, Walk500m_3class
+#
+# Mapping (raw -> analysis; keep minimal + explicit):
+# age -> Age
+# sex -> Sex
+# kaatumisenpelkoOn (0/1) -> FOF_status (factor: "non-FOF"/"FOF")
+# ToimintaKykySummary0 -> Composite_Z0
+# ToimintaKykySummary2 - ToimintaKykySummary0 -> Delta_Composite_Z
+# (alzheimer==1 | parkinson==1 | AVH==1) -> neuro_any ("yes" vs "no")
+# SRH (1/2/3) -> SRH_3class ("good"/"fair"/"poor")
+# oma_arvio_liikuntakyky (1/2/3) -> SRM_3class ("good"/"fair"/"poor")
+# Vaikeus500m (0/1/2) -> Walk500m_3class ("no difficulty"/"some difficulty"/"unable")
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: 20251114 (UNCERTAINTY: differs from standard 20251124 - reason unknown)
+#
+# Outputs + manifest:
+# - script_label: K7_main (canonical)
+# - outputs dir: R-scripts/K7/outputs/  (manual creation, no init_paths)
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Create outputs + manifest dirs manually
+# 02) Load raw data (immutable; no edits)
+# 03) Check required raw columns (req_raw_cols)
+# 04) Map raw -> analysis variables (Age, Sex, FOF_status, Composite_Z0/2, Delta)
+# 05) Derive moderator variables (neuro_any, SRH_3class, SRM_3class, Walk500m_3class)
+# 06) Check cell sizes (FOF × moderator) for adequate power
+# 07) Fit ANCOVA models: FOF × neuro_any, FOF × SRH_3class, FOF × SRM_3class, FOF × Walk500m_3class
+# 08) Compute emmeans + contrasts (FOF vs non_FOF within each moderator level)
+# 09) Save interaction plots (emmeans by moderator + FOF)
+# 10) Save forest plot (FOF contrasts across moderator levels)
+# 11) Save tables (Type III ANOVA, emmeans, contrasts)
+# 12) Append manifest row per artifact
+# 13) EOF marker
+# ==============================================================================
+#
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
+  library(forcats)
+  library(broom)
+  library(janitor)
+  library(purrr)
+  library(car)
+  library(emmeans)
+  library(rlang)
+  library(here)
+  library(tibble)
+})
 
-# K7-skripti tekee moderointianalyyseja kaatumisen pelon ja fyysisen
-# suorituskyvyn välillä. Skriptin ajon lopussa se ilmoittaa tärkeimmät KUVAT
-# keskitettyyn manifest/manifest.csv-tiedostoon. Yksi rivi vastaa yhtä kuvaa.
-# Riviltä näkee, mikä skripti kuvan on tehnyt, minkä tyyppinen tulos on
-# kyseessä, mistä tiedosto löytyy ja mitä se lyhyesti kuvaa.
+# --- Standard init (MANDATORY) -----------------------------------------------
+# NOTE: K7 does NOT use init_paths() - uses manual dir creation (legacy pattern)
+# Derive script_label from --file, supporting file tags like: K7.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
 
-## Packages ---------------------------------------------------------------
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(broom)
-library(janitor)
-library(purrr)
-library(car)
-library(emmeans)
-library(rlang)
-library(here)
-library(tibble)
+script_base <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K7"  # interactive fallback
+}
 
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
+if (is.na(script_label) || script_label == "") script_label <- "K7_main"
+
+# Manual dir setup (legacy - does not use init_paths)
+script_dir <- here::here("R-scripts", "K7")
+outputs_dir <- here::here("R-scripts", "K7", "outputs")
+if (!dir.exists(outputs_dir)) {
+  dir.create(outputs_dir, recursive = TRUE)
+}
+
+manifest_dir <- here::here("manifest")
+if (!dir.exists(manifest_dir)) {
+  dir.create(manifest_dir, recursive = TRUE)
+}
+manifest_path <- file.path(manifest_dir, "manifest.csv")
+
+# seed (UNCERTAINTY: differs from standard 20251124 - reason unclear)
 set.seed(20251114)
-# ==============================================================================
 
-# 1: Load the dataset ------------------------------------------------------
+# ==============================================================================
+# 01. Load Dataset & Data Checking
+# ==============================================================================
 
 file_path <- here::here("data", "external", "KaatumisenPelko.csv")
-
 raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
 
 # Working copy so the original stays untouched
@@ -38,28 +119,26 @@ if (!exists("raw_data")) {
   stop("Object 'raw_data' not found. Please load your data as raw_data first.")
 }
 
-## Tee raaka- ja työkopio
+# --- Required raw columns check (DO NOT INVENT) ------------------------------
+req_raw_cols <- c(
+  "age", "sex", "BMI", "kaatumisenpelkoOn",
+  "ToimintaKykySummary0", "ToimintaKykySummary2",
+  "alzheimer", "parkinson", "AVH",
+  "oma_arvio_liikuntakyky", "Vaikeus500m"
+)
+# SRH may be "SRH" or "koettuterveydentila" - check flexibly
+if (!("SRH" %in% names(raw_data)) && !("koettuterveydentila" %in% names(raw_data))) {
+  warning("Missing SRH variable: neither 'SRH' nor 'koettuterveydentila' found in raw_data.")
+}
+
+missing_raw_cols <- setdiff(req_raw_cols, names(raw_data))
+if (length(missing_raw_cols) > 0) {
+  stop("Missing required raw columns: ", paste(missing_raw_cols, collapse = ", "))
+}
+
 analysis_data_raw  <- raw_data
 glimpse(analysis_data_raw)
 names(analysis_data_raw)
-
-
-# 1a. Määritä kansiot ------------------------------------------------------
-# Script directory
-script_dir <- here::here("R-scripts", "K7")
-
-# 1b. Output-kansio K7:n alle
-outputs_dir <- here::here("R-scripts", "K7", "outputs")
-if (!dir.exists(outputs_dir)) {
-  dir.create(outputs_dir, recursive = TRUE)
-}
-
-# Erillinen manifest-kansio projektissa: ./manifest
-manifest_dir <- here::here("manifest")
-if (!dir.exists(manifest_dir)) {
-  dir.create(manifest_dir, recursive = TRUE)
-}
-manifest_path <- file.path(manifest_dir, "manifest.csv")
 
 
 # 1c: Rakenna analyysimuuttujat alkuperäisistä sarakkeista

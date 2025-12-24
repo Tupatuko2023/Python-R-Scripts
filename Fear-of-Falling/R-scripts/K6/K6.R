@@ -1,54 +1,139 @@
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K6 - FOF × baseline moderators (Pain, SRH, SRM) on functional change
+# File tag: K6.R
+# Purpose: Tests whether baseline pain (PainVAS0), self-rated health (SRH), or
+#          self-rated mobility (SRM) moderate FOF-group differences in 12-month
+#          change in composite physical function (exploratory ANCOVA interactions)
+#
+# Outcome: Delta_Composite_Z (12-month change in composite physical function)
+# Predictors: FOF_status (factor: "non_FOF"/"FOF")
+# Moderator/interaction: PainVAS0 (continuous + tertiles/dichotomized),
+#                        SRH_3class (factor: "good"/"intermediate"/"poor"),
+#                        SRM_3class (factor: "good"/"intermediate"/"poor")
+# Grouping variable: None (wide format ANCOVA with FOF × moderator interactions)
+# Covariates: Age, Sex_factor, Composite_Z0 (baseline function)
+#
+# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
+# id (or NRO), age, sex, BMI, kaatumisenpelkoOn, ToimintaKykySummary0,
+# ToimintaKykySummary2, PainVAS0, SRH, oma_arvio_liikuntakyky
+#
+# Required vars (analysis df - after manual mapping in script):
+# Age, Sex, Sex_factor, FOF_status, Composite_Z0, Delta_Composite_Z, PainVAS0,
+# PainVAS0_tertile, PainVAS0_G2 (dichotomized), SRH, SRH_3class,
+# oma_arvio_liikuntakyky, SRM_3class
+#
+# Mapping (raw -> analysis; keep minimal + explicit):
+# age -> Age
+# sex -> Sex -> Sex_factor (0="female", 1="male")
+# kaatumisenpelkoOn (0/1) -> FOF_status (factor: "non_FOF"/"FOF")
+# ToimintaKykySummary0 -> Composite_Z0
+# ToimintaKykySummary2 - ToimintaKykySummary0 -> Delta_Composite_Z
+# PainVAS0 (0-100 VAS) -> PainVAS0 (used as-is, continuous)
+# PainVAS0 -> PainVAS0_tertile (cut at tertiles: "T1"/"T2"/"T3")
+# PainVAS0_tertile -> PainVAS0_G2 (merge T2+T3 -> "high" vs T1 -> "low")
+# SRH (0/1/2) -> SRH_3class (factor: "good"/"intermediate"/"poor")
+# oma_arvio_liikuntakyky (0/1/2) -> SRM_3class (factor: "good"/"intermediate"/"poor")
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: N/A (no randomness - no MI, bootstrap, or resampling)
+#
+# Outputs + manifest:
+# - script_label: K6_main (canonical)
+# - outputs dir: R-scripts/K6/outputs/  (manual creation, no init_paths)
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Create outputs + manifest dirs manually
+# 02) Load raw data (immutable; no edits)
+# 03) Check required raw columns (req_raw_cols)
+# 04) Map raw -> analysis variables (Age, Sex, FOF_status, Composite_Z0/2, Delta)
+# 05) Derive moderator variables (PainVAS0_tertile, PainVAS0_G2, SRH_3class, SRM_3class)
+# 06) Check cell sizes (FOF × moderator) for adequate power
+# 07) Fit ANCOVA models: FOF × PainVAS0_G2, FOF × SRH_3class, FOF × SRM_3class
+# 08) Compute emmeans + contrasts (FOF vs non_FOF within each moderator level)
+# 09) Save interaction plots (emmeans by moderator + FOF)
+# 10) Save forest plot (FOF contrasts across moderator levels)
+# 11) Save tables (Type III ANOVA, emmeans, contrasts)
+# 12) Append manifest row per artifact
+# 13) EOF marker
+# ==============================================================================
+#
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
+  library(forcats)
+  library(broom)
+  library(car)
+  library(emmeans)
+  library(rlang)
+  library(tibble)
+  library(knitr)
+  library(here)
+  library(readr)
+})
 
-# K6: Secondary exploratory ANCOVA analyses
-# Aim: Does baseline pain / SRH / SRM modify FOF-group differences
-# in 12-month change in Composite_Z?
+# --- Standard init (MANDATORY) -----------------------------------------------
+# NOTE: K6 does NOT use init_paths() - uses manual dir creation (legacy pattern)
+# Derive script_label from --file, supporting file tags like: K6.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
 
+script_base <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K6"  # interactive fallback
+}
 
-# Ei havaittu tilastollisesti merkitsevää näyttöä siitä, että 
-# lähtötason kipu, koettu yleisterveys tai koettu liikuntakyky muuttaisivat 
-# FOF-ryhmien välisiä eroja 12 kuukauden muutoksessa fyysisessä toimintakyvyssä 
-# (kaikki interaktiot p > 0.27).
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
+if (is.na(script_label) || script_label == "") script_label <- "K6_main"
 
-# Load required packages -----------------------------------------------
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(broom)
-library(car)        
-library(emmeans)    
-library(rlang)
-library(tibble)
-library(knitr)
-library(here)
-library(readr)
-
-
-# 1: Load the dataset ------------------------------------------------------
-
-file_path <- here::here("data", "external", "KaatumisenPelko.csv")
-
-raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
-
-# Working copy so the original stays untouched
-analysis_data_raw <- raw_data
-
-# 1a. Määritä kansiot ------------------------------------------------------
-# Script directory
+# Manual dir setup (legacy - does not use init_paths)
 script_dir <- here::here("R-scripts", "K6")
-
-# 1b. Output-kansio K6:n alle
 outputs_dir <- here::here("R-scripts", "K6", "outputs")
 if (!dir.exists(outputs_dir)) {
   dir.create(outputs_dir, recursive = TRUE)
 }
 
-# Erillinen manifest-kansio projektissa: ./manifest
 manifest_dir <- here::here("manifest")
 if (!dir.exists(manifest_dir)) {
   dir.create(manifest_dir, recursive = TRUE)
 }
 manifest_path <- file.path(manifest_dir, "manifest.csv")
+
+# seed: N/A (no randomness in this script)
+
+# ==============================================================================
+# 01. Load Dataset & Data Checking
+# ==============================================================================
+
+file_path <- here::here("data", "external", "KaatumisenPelko.csv")
+raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
+
+# Working copy so the original stays untouched
+if (!exists("raw_data")) {
+  stop("Object 'raw_data' not found. Please load your data as raw_data first.")
+}
+
+# --- Required raw columns check (DO NOT INVENT) ------------------------------
+req_raw_cols <- c(
+  "age", "sex", "BMI", "kaatumisenpelkoOn",
+  "ToimintaKykySummary0", "ToimintaKykySummary2",
+  "PainVAS0", "SRH", "oma_arvio_liikuntakyky"
+)
+# Note: id column may be "id" or "NRO" - check flexibly
+if (!("id" %in% names(raw_data)) && !("NRO" %in% names(raw_data))) {
+  stop("Missing id column: neither 'id' nor 'NRO' found in raw_data.")
+}
+
+missing_raw_cols <- setdiff(req_raw_cols, names(raw_data))
+if (length(missing_raw_cols) > 0) {
+  stop("Missing required raw columns: ", paste(missing_raw_cols, collapse = ", "))
+}
+
+analysis_data_raw <- raw_data
 
 
 # 1c: Rakenna analyysimuuttujat alkuperäisistä sarakkeista

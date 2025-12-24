@@ -1,6 +1,87 @@
-# --- Kxx template (put at top of every script) -------------------------------
-suppressPackageStartupMessages({ library(here); library(dplyr) })
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K16 - Frailty-adjusted FOF models (ANCOVA + mixed models)
+# File tag: K16.R
+# Purpose: Integrates physical frailty proxy variables derived in K15 into
+#          ANCOVA (change analysis) and mixed models (longitudinal analysis) to
+#          test whether FOF effects on functional change persist after adjusting
+#          for baseline frailty status
+#
+# Outcome: Delta_Composite_Z (ANCOVA), Composite_Z over time (mixed models)
+# Predictors: FOF_status (factor: "nonFOF"/"FOF")
+# Moderator/interaction: None (frailty as covariate/confounder, not moderator)
+#                        Exploratory: FOF × frailty_cat_3 interaction
+# Grouping variable: ID (for mixed models random effects)
+# Covariates: age, sex, BMI, Composite_Z0_baseline, frailty_cat_3 (or frailty_score_3)
+#
+# Required vars (K15 RData - DO NOT INVENT; must be present in K15 output):
+# ID (or Jnro/NRO), FOF_status (or FOF_status_factor), Composite_Z0, Composite_Z3,
+# age, sex, BMI, frailty_cat_3, frailty_cat_3_obj, frailty_cat_3_2plus, frailty_score_3
+#
+# Required vars (analysis df - after harmonization in script):
+# ID, FOF_status (factor: "nonFOF"/"FOF"), Composite_Z0, Composite_Z3, Delta_Composite_Z,
+# age, sex (factor: "female"/"male"), BMI, frailty_cat_3 (factor: "Robust"/"Pre-frail"/"Frail"),
+# frailty_cat_3_obj, frailty_cat_3_2plus, frailty_score_3 (continuous)
+#
+# Mapping (K15 RData -> analysis; keep minimal + explicit):
+# Jnro/NRO -> ID (harmonized in script lines 84-92)
+# ToimintaKykySummary0 -> Composite_Z0 (harmonized if needed, lines 95-109)
+# ToimintaKykySummary2 -> Composite_Z3 (harmonized if needed, lines 103-109)
+# FOF_status (0/1 or factor) -> FOF_status (factor: "nonFOF"/"FOF", lines 150-165, releveled 307-312)
+# sex (0/1) -> sex (factor: "female"/"male", lines 168-177, releveled 307-312)
+# frailty_cat_3 (character/factor) -> frailty_cat_3 (factor: "Robust"/"Pre-frail"/"Frail", lines 112-131, releveled 307-312)
+# frailty_count_3 -> frailty_score_3 (lines 137-143)
+# Delta_Composite_Z = Composite_Z3 - Composite_Z0 (derived, line 241)
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: 20251124 (set for reproducibility, though no randomness in primary models)
+#
+# Outputs + manifest:
+# - script_label: K16 (canonical)
+# - outputs dir: R-scripts/K16/outputs/K16/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths)
+# 02) Load frailty-augmented data from K15 (K15_frailty_analysis_data.RData)
+# 03) Harmonize variable names (ID, Composite_Z0/3, FOF_status, sex, frailty_cat_3)
+# 04) Check required frailty variables (frailty_cat_3, frailty_score_3, etc.)
+# 05) Prepare wide-format data for ANCOVA (Delta_Composite_Z = Composite_Z3 - Composite_Z0)
+# 06) Prepare long-format data for mixed models (Composite_Z at time 0 and 3)
+# 07) Fit primary ANCOVA models: baseline (no frailty), frailty_cat_3, frailty_score_3
+# 08) Fit primary mixed models: baseline (no frailty), frailty_cat_3, frailty_score_3
+# 09) Fit exploratory interaction models: FOF × frailty_cat_3 (ANCOVA + mixed)
+# 10) Fit sensitivity analyses: frailty_cat_3_obj, frailty_cat_3_2plus
+# 11) Create formatted tables (ANCOVA + mixed results, model comparisons, sensitivity)
+# 12) Create visualizations (frailty effects coefficient plot, predicted trajectories)
+# 13) Generate Results text (English + Finnish)
+# 14) Save all artifacts to outputs/K16/
+# 15) Append manifest row per artifact
+# 16) Save sessionInfo to manifest/
+# 17) EOF marker
+# ==============================================================================
+#
+suppressPackageStartupMessages({
+  library(here)
+  library(dplyr)
+})
 
+# --- Standard init (MANDATORY) -----------------------------------------------
+# Derive script_label from --file, supporting file tags like: K16.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+
+script_base <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K16"  # interactive fallback
+}
+
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
+if (is.na(script_label) || script_label == "") script_label <- "K16"
+
+# Source helper functions (io, checks, modeling, reporting)
 rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
    envir = .GlobalEnv)
 
@@ -9,15 +90,11 @@ source(here("R","functions","checks.R"))
 source(here("R","functions","modeling.R"))
 source(here("R","functions","reporting.R"))
 
-script_label <- sub("\\.R$", "", basename(commandArgs(trailingOnly=FALSE)[grep("--file=", commandArgs())] |> sub("--file=", "", x=_)))
-if (is.na(script_label) || script_label == "") script_label <- "K16"
+# init_paths() must set outputs_dir + manifest_path (+ options fof.*)
 paths <- init_paths(script_label)
 
+# seed (set for reproducibility, though no randomness in primary models)
 set.seed(20251124)
-
-
-# K16: Frailty-Adjusted Statistical Models for Fear-of-Falling Study
-# Purpose: Integrate frailty proxy variables from K15 into ANCOVA and mixed models
 
 # Get paths from init_paths (already called in header)
 outputs_dir   <- getOption("fof.outputs_dir")
@@ -611,7 +688,17 @@ model_list <- list(
 rdata_path <- file.path(output_dir, "K16_all_models.RData")
 save(model_list, ancova_results, mixed_results, interaction_results,
      sensitivity_results, file = rdata_path)
-register_output(rdata_path, "All frailty-adjusted model objects", script_label)
+append_manifest(
+  manifest_row(
+    script = getOption("fof.script"),
+    label  = "All frailty-adjusted model objects",
+    path   = rdata_path,
+    kind   = "rdata",
+    n      = nrow(analysis_data)
+  ),
+  getOption("fof.manifest_path")
+)
+
 message("✓ Saved model objects: ", rdata_path)
 
 # ==============================================================================
@@ -647,8 +734,17 @@ p_frailty_coefs <- ggplot(frailty_coefs, aes(x = term, y = estimate, color = Mod
 
 ggsave(file.path(output_dir, "K16_frailty_effects_plot.png"),
        p_frailty_coefs, width = 8, height = 5, dpi = 300)
-register_output(file.path(output_dir, "K16_frailty_effects_plot.png"),
-                "Frailty effects coefficient plot", script_label)
+append_manifest(
+  manifest_row(
+    script = getOption("fof.script"),
+    label  = "All frailty-adjusted model objects",
+    path   = rdata_path,
+    kind   = "rdata",
+    n      = nrow(analysis_data)
+  ),
+  getOption("fof.manifest_path")
+)
+
 message("✓ Saved plot: K16_frailty_effects_plot.png")
 
 # 11.2 Predicted trajectories by frailty status  ---- FIXED ----
@@ -706,8 +802,17 @@ p_trajectories <- ggplot(pred_data, aes(x = time, y = predicted,
 
 ggsave(file.path(output_dir, "K16_predicted_trajectories.png"),
        p_trajectories, width = 10, height = 6, dpi = 300)
-register_output(file.path(output_dir, "K16_predicted_trajectories.png"),
-                "Predicted trajectories by frailty", script_label)
+append_manifest(
+  manifest_row(
+    script = getOption("fof.script"),
+    label  = "All frailty-adjusted model objects",
+    path   = rdata_path,
+    kind   = "rdata",
+    n      = nrow(analysis_data)
+  ),
+  getOption("fof.manifest_path")
+)
+
 message("✓ Saved plot: K16_predicted_trajectories.png")
 
 # ==============================================================================
@@ -897,12 +1002,32 @@ results_text_fi <- paste0(
 # Save Results texts
 results_en_path <- file.path(output_dir, "K16_Results_EN.txt")
 writeLines(results_text_en, results_en_path)
-register_output(results_en_path, "Results text in English", script_label)
+append_manifest(
+  manifest_row(
+    script = getOption("fof.script"),
+    label  = "All frailty-adjusted model objects",
+    path   = rdata_path,
+    kind   = "rdata",
+    n      = nrow(analysis_data)
+  ),
+  getOption("fof.manifest_path")
+)
+
 message("✓ Saved English Results: ", results_en_path)
 
 results_fi_path <- file.path(output_dir, "K16_Results_FI.txt")
 writeLines(results_text_fi, results_fi_path)
-register_output(results_fi_path, "Results text in Finnish", script_label)
+append_manifest(
+  manifest_row(
+    script = getOption("fof.script"),
+    label  = "All frailty-adjusted model objects",
+    path   = rdata_path,
+    kind   = "rdata",
+    n      = nrow(analysis_data)
+  ),
+  getOption("fof.manifest_path")
+)
+
 message("✓ Saved Finnish Results: ", results_fi_path)
 
 # ==============================================================================

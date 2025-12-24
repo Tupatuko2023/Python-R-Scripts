@@ -1,6 +1,84 @@
-# --- Kxx template (put at top of every script) -------------------------------
-suppressPackageStartupMessages({ library(here); library(dplyr) })
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K13 - FOF × Age/BMI/Sex interactions on functional change
+# File tag: K13.R
+# Purpose: Tests whether the association between FOF and 12-month change in
+#          composite physical function varies by age, BMI, or sex through
+#          three-way and two-way interaction models (extended ANCOVA)
+#
+# Outcome: Delta_Composite_Z (12-month change in composite physical function)
+# Predictors: FOF_status_f (factor: "Ei FOF"/"FOF")
+# Moderator/interaction: Age (continuous), BMI (continuous), Sex_f (factor: "female"/"male")
+#                        Tested: FOF × Age, FOF × BMI, FOF × Sex, FOF × Age × Sex
+# Grouping variable: None (wide format ANCOVA with interactions)
+# Covariates: Composite_Z0 (baseline function), MOI_score, diabetes, alzheimer,
+#             parkinson, AVH, previous_falls, psych_score
+#
+# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
+# id, age, sex, BMI, kaatumisenpelkoOn, ToimintaKykySummary0, ToimintaKykySummary2,
+# MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH, kaatuminen, mieliala
+#
+# Required vars (analysis df - after standardize_analysis_vars):
+# id, Age, Sex, BMI, FOF_status, Composite_Z0, Composite_Z2, Delta_Composite_Z,
+# MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH, kaatuminen, mieliala
+#
+# Mapping (raw -> analysis; keep minimal + explicit):
+# kaatumisenpelkoOn (0/1) -> FOF_status -> FOF_status_f (factor: "Ei FOF"/"FOF")
+# age -> Age
+# sex (0/1) -> Sex -> Sex_f (factor: "female"/"male")
+# ToimintaKykySummary0 -> Composite_Z0
+# ToimintaKykySummary2 -> Composite_Z2
+# Composite_Z2 - Composite_Z0 -> Delta_Composite_Z
+# MOIindeksiindeksi -> MOI_score (in analysis_data_rec)
+# kaatuminen -> previous_falls (in analysis_data_rec)
+# mieliala -> psych_score (in analysis_data_rec)
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: 20251124 (set for potential bootstrap, currently no randomness in main analysis)
+#
+# Outputs + manifest:
+# - script_label: K13 (canonical)
+# - outputs dir: R-scripts/K13/outputs/K13/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths)
+# 02) Load raw data (immutable; no edits)
+# 03) Check required raw columns (req_raw_cols)
+# 04) Standardize vars + QC (standardize_analysis_vars + sanity_checks)
+# 05) Check required analysis columns (req_analysis_cols)
+# 06) Prepare analysis dataset (derive MOI_score, previous_falls, psych_score)
+# 07) Fit interaction models: FOF × Age, FOF × BMI, FOF × Sex, FOF × Age × Sex
+# 08) Compute emmeans at key moderator values (Age quartiles, BMI tertiles, by Sex)
+# 09) Test interaction significance (Type III ANOVA)
+# 10) Save interaction plots (emmeans by moderator level)
+# 11) Save tables (model estimates, interaction p-values, emmeans contrasts)
+# 12) Append manifest row per artifact
+# 13) Save sessionInfo to manifest/
+# 14) EOF marker
+# ==============================================================================
+#
+suppressPackageStartupMessages({
+  library(here)
+  library(dplyr)
+})
 
+# --- Standard init (MANDATORY) -----------------------------------------------
+# Derive script_label from --file, supporting file tags like: K13.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+
+script_base <- if (length(file_arg) > 0) {
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K13"  # interactive fallback
+}
+
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
+if (is.na(script_label) || script_label == "") script_label <- "K13"
+
+# Source helper functions (io, checks, modeling, reporting)
 rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
    envir = .GlobalEnv)
 
@@ -9,14 +87,11 @@ source(here("R","functions","checks.R"))
 source(here("R","functions","modeling.R"))
 source(here("R","functions","reporting.R"))
 
-script_label <- sub("\\.R$", "", basename(commandArgs(trailingOnly=FALSE)[grep("--file=", commandArgs())] |> sub("--file=", "", x=_)))
-if (is.na(script_label) || script_label == "") script_label <- "K13"
+# init_paths() must set outputs_dir + manifest_path (+ options fof.*)
 paths <- init_paths(script_label)
 
+# seed (set for potential bootstrap, currently no randomness in main analysis)
 set.seed(20251124)
-
-
-# K13: FOF × ikä, BMI, sukupuoli -interaktioanalyysit (laajennetut mallit)
 
 # ==============================================================================
 # 01. Load Dataset & Data Checking
@@ -79,12 +154,12 @@ has_Delta_CompositeZ <- "Delta_Composite_Z" %in% names(analysis_data_rec)
 
 if (has_DeltaComposite) {
   message("Using existing DeltaComposite column.")
-  
+
 } else if (has_Delta_CompositeZ) {
   analysis_data_rec <- analysis_data_rec %>%
     mutate(DeltaComposite = Delta_Composite_Z)
   message("Created DeltaComposite from Delta_Composite_Z.")
-  
+
 } else {
   # lasketaan muutos komposiitista kuten K11:ssä
   analysis_data_rec <- analysis_data_rec %>%
@@ -115,10 +190,10 @@ analysis_data_rec <- analysis_data_rec %>%
     # Keskitetty MOI (osteroporoosiriski-indeksi)
     MOI_score = MOIindeksiindeksi,
     MOI_c = MOI_score - mean(MOI_score, na.rm = TRUE),
-    
+
     # Keskitetty kipu (0–10 VAS)
     PainVAS0_c = PainVAS0 - mean(PainVAS0, na.rm = TRUE),
-    
+
     # SRH 3-luokkainen (oletus: 0 = huono, 1 = kohtalainen, 2 = hyvä)
     SRH_3class = factor(
       SRH,
@@ -126,7 +201,7 @@ analysis_data_rec <- analysis_data_rec %>%
       labels = c("poor", "fair", "good"),
       ordered = TRUE
     ),
-    
+
     # SRM 3-luokkainen (oma_arvio_liikuntakyky, 0–2)
     SRM_3class = factor(
       oma_arvio_liikuntakyky,
@@ -316,7 +391,7 @@ mod_SRM_int_ext <- lm(
 # 04. Tidy-Taulukot ja Interaktiokooste
 # ==============================================================================
 
-  
+
   tidy_age <- broom::tidy(mod_age_int_ext, conf.int = TRUE) %>%
   mutate(model = "age_int_ext")
 tidy_BMI <- broom::tidy(mod_BMI_int_ext, conf.int = TRUE) %>%
@@ -477,18 +552,18 @@ get_std_interactions <- function(fit, moderator_label, model_label) {
       NULL
     }
   )
-  
+
   if (is.null(std_tab)) return(NULL)
-  
+
 ##  effectsize nimeää parametrin muodossa "FOF status [1] * age_c" tms.
-  
+
   std_int <- std_tab %>%
     dplyr::filter(grepl("FOF", .data$Parameter) & grepl(moderator_label, .data$Parameter)) %>%
     dplyr::mutate(
       model = model_label,
       moderator = moderator_label
     )
-  
+
   std_int
 }
 
@@ -900,14 +975,14 @@ plot(mod_sex_int_ext, which = 1)
 ## 7.1 Tulkintafunktio interaktiovaikutuksille
 interpret_interaction <- function(moderator_label, est, lwr, upr, p_value) {
   ci_width <- upr - lwr
-  
+
   # Pieni helper kuvaamaan LV:n leveyttä
   ci_band <- dplyr::case_when(
     ci_width <= 0.20 ~ "suhteellisen kapea",
     ci_width <= 0.50 ~ "kohtalaisen leveä",
     TRUE             ~ "laaja"
   )
-  
+
   # 4-haarainen logiikka
   if (!is.na(p_value) && p_value < 0.05 && est > 0) {
     paste0(
@@ -1010,4 +1085,6 @@ clinical_summary_template
 # End of K13.R
 
 save_sessioninfo_manifest()
-
+# ==============================================================================
+# Loppu
+# ==============================================================================
