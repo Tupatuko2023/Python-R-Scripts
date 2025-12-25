@@ -1,69 +1,108 @@
 #!/usr/bin/env Rscript
-################################################################################
-# KAAOS 1.7: Main Script for Longitudinal Analysis Pipeline of
-# Fear of Falling & Functional Performance
-# [K1.7.main.R]
-
-# "Executes a full analysis pipeline: imports & preprocesses data,
-#  transforms it, computes stats & effect sizes, merges results,
-#  and exports CSV"
-
-################################################################################
-#  Sequence list
-################################################################################
-# 1: Set project paths using here
-# 2: Data Import and Preliminary Processing
-# 3: Data Transformation
-# 4: Statistical Analysis
-# 5: Effect Size Calculations and Helper Functions
-# 6: Skewness and Kurtosis Helper Functions
-# 7: Combining and Exporting Results
-# 8: End of Main Script
-################################################################################
-
-# 1: Set project paths using here -----------------------------------------
+# ==============================================================================
+# K1_MAIN - Longitudinal Analysis Pipeline: Z-Score Change by FOF Status
+# File tag: K1_MAIN.V1_zscore-change.R
+# Purpose: Complete analysis pipeline for z-score changes in physical performance tests
+#
+# Outcome: Delta_Composite_Z (12-month change in composite z-score)
+# Predictors: FOF_status (0/1), Age, Sex, BMI
+# Moderator/interaction: None (main effects only)
+# Grouping variable: FOF_status_f (Ei FOF, FOF)
+# Covariates: Age, Sex, BMI, Composite_Z0 (baseline)
+#
+# Required vars (DO NOT INVENT; must match req_cols check in subscripts):
+# id, ToimintaKykySummary0, ToimintaKykySummary2, kaatumisenpelkoOn, age, sex, BMI
+#
+# Mapping example (raw -> analysis; handled in K1.2):
+# ToimintaKykySummary0 -> Composite_Z0
+# ToimintaKykySummary2 -> Composite_Z2
+# Delta_Composite_Z = Composite_Z2 - Composite_Z0
+# kaatumisenpelkoOn (0/1) -> FOF_status (numeric), FOF_status_f (factor)
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: 20251124 (set in K1.4.effect_sizes.R for bootstrap CI)
+#
+# Outputs + manifest:
+# - script_label: K1 (canonical)
+# - outputs dir: R-scripts/K1/outputs/  (resolved via init_paths("K1"))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths) [DONE]
+# 02) Load raw data (immutable; no edits) [K1.1]
+# 03) Standardize vars + QC (sanity checks early) [K1.2]
+# 04) Derive/rename vars (document mapping) [K1.2]
+# 05) Prepare analysis dataset (complete-case) [K1.2]
+# 06) Fit models and compute statistics [K1.3]
+# 07) Effect size calculations (bootstrap CI) [K1.4 with set.seed]
+# 08) Distributional checks (skewness/kurtosis) [K1.5]
+# 09) Combine results and export table [K1.6]
+# 10) Save artifacts -> R-scripts/K1/outputs/ [K1.6]
+# 11) Append manifest row per artifact [K1.6]
+# 12) Save sessionInfo to manifest/ [K1.6]
+# 13) EOF marker
+# ==============================================================================
 
 suppressPackageStartupMessages({
   library(here)
 })
 
-# Debug print
-cat("Project root detected by here():", here::here(), "\n")
+# --- Standard init (MANDATORY) -----------------------------------------------
+# Derive script_label from --file, supporting file tags like: K1_MAIN.V1_name.R
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
 
-# Siirrytään K1-kansioon suhteessa projektijuureen:
-# C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K1
-k1_dir <- here::here("R-scripts", "K1")
-setwd(k1_dir)
+script_base <- if (length(file_arg) > 0) {
+  sub("\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+} else {
+  "K1_MAIN"  # interactive fallback
+}
 
-cat("Working directory set to:", getwd(), "\n")
+script_label <- sub("\.V.*$", "", script_base)  # canonical SCRIPT_ID
+# Map K1_MAIN or K1.7 to "K1" for outputs directory
+if (grepl("^K1", script_label)) script_label <- "K1"
+if (is.na(script_label) || script_label == "") script_label <- "K1"
 
+# init_paths() must set outputs_dir + manifest_path (+ options fof.*)
+source(here::here("R", "functions", "reporting.R"))
+paths <- init_paths(script_label)
+outputs_dir   <- paths$outputs_dir
+manifest_path <- paths$manifest_path
 
-# 2: Data Import and Preliminary Processing -------------------------------
+cat("================================================================================\n")
+cat("K1 Pipeline - Longitudinal Analysis: Z-Score Change by FOF Status\n")
+cat("================================================================================\n")
+cat("Script label:", script_label, "\n")
+cat("Outputs dir:", outputs_dir, "\n")
+cat("Manifest:", manifest_path, "\n")
+cat("Project root:", here::here(), "\n")
+cat("================================================================================\n\n")
 
-# K1.1.data_import.R imports and preprocesses the KaatumisenPelko data
+# --- Pipeline Steps (absolute paths, no setwd) ------------------------------
 
-source("K1.1.data_import.R")
+cat("[Step 1/6] Data Import...\n")
+source(here::here("R-scripts", "K1", "K1.1.data_import.R"))
 
-# 3: Data Transformation ---------------------------------------------------
+cat("[Step 2/6] Data Transformation & QC...\n")
+source(here::here("R-scripts", "K1", "K1.2.data_transformation.R"))
 
-source("K1.2.data_transformation.R")
+cat("[Step 3/6] Statistical Analysis...\n")
+source(here::here("R-scripts", "K1", "K1.3.statistical_analysis.R"))
 
-# 4: Statistical Analysis --------------------------------------------------
+cat("[Step 4/6] Effect Size Calculations (bootstrap)...\n")
+source(here::here("R-scripts", "K1", "K1.4.effect_sizes.R"))
 
-source("K1.3.statistical_analysis.R")
+cat("[Step 5/6] Distributional Checks (skewness/kurtosis)...\n")
+source(here::here("R-scripts", "K1", "K1.5.kurtosis_skewness.R"))
 
-# 5: Effect Size Calculations and Helper Functions ------------------------
+cat("[Step 6/6] Combine Results & Export...\n")
+source(here::here("R-scripts", "K1", "K1.6.results_export.R"))
 
-source("K1.4.effect_sizes.R")
+cat("\n================================================================================\n")
+cat("K1 Pipeline completed successfully.\n")
+cat("Outputs saved to:", outputs_dir, "\n")
+cat("Manifest updated:", manifest_path, "\n")
+cat("================================================================================\n")
 
-# 6: Skewness and Kurtosis Helper Functions -------------------------------
-
-source("K1.5.kurtosis_skewness.R")
-
-# 7: Combining and Exporting Results --------------------------------------
-
-source("K1.6.results_export.R")
-
-# 8: End of Main Script ----------------------------------------------------
-
-cat("Analysis pipeline completed successfully.\n")
+# EOF
