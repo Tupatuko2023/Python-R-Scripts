@@ -59,7 +59,7 @@ services:
     working_dir: /project
     environment:
       - RENV_PATHS_CACHE=/root/.local/share/renv
-    command: ["Rscript", "tests/smoke_test_k6_k16.R"]
+    command: ["Rscript", "tests/smoke_test_all_k_scripts.R"]
     profiles:
       - test
 
