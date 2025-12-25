@@ -52,8 +52,8 @@ temp/.RData
 
 
 # R-scripts outputs: välioutput, testiajot, raskaat kuvat
-Fear-of-Falling/R-scripts/*/outputs/*.png
-Fear-of-Falling/R-scripts/*/outputs/*.html
-Fear-of-Falling/R-scripts/*/outputs/*.txt
+R-scripts/*/outputs/*.png
+R-scripts/*/outputs/*.html
+R-scripts/*/outputs/*.txt
 
 Rplots.pdf
