@@ -27,4 +27,26 @@ standardize_analysis_vars <- function(raw_data) {
       Sex_f = factor(Sex, levels = c(0, 1), labels = c("female", "male"))  # vain jos tiedät koodauksen (0/1 = ?)
     )
 }
+#' Load raw data from standard location with fallback
+#' @param file_name Name of the CSV file (default: "KaatumisenPelko.csv")
+#' @return A data frame with raw data loaded from CSV
+load_raw_data <- function(file_name = "KaatumisenPelko.csv") {
+  # Try primary location first (data/raw/)
+  file_path <- here::here("data", "raw", file_name)
+
+  # Fallback to legacy location (dataset/)
+  if (!file.exists(file_path)) {
+    file_path <- here::here("dataset", file_name)
+  }
+
+  if (!file.exists(file_path)) {
+    stop("Raw data file not found. Tried:\n",
+         "  - ", here::here("data", "raw", file_name), "\n",
+         "  - ", here::here("dataset", file_name))
+  }
+
+  cat("Loading raw data from:", file_path, "\n")
+  readr::read_csv(file_path, show_col_types = FALSE)
+}
+
 #' Load and preprocess the dataset from a CSV file

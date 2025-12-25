@@ -1,49 +1,50 @@
-########################################################################################################
-# KAAOS 3.3: R Script for Statistical Analysis & Group Comparisons of KaatumisenPelko Data
+#!/usr/bin/env Rscript
+# ==============================================================================
+# K3.3_STATS - Statistical Analysis & Group Comparisons (Original Values)
+# File tag: K3.3_STATS.V1_statistical-analysis.R
+# Purpose: Compute summary statistics and perform t-tests for group comparisons using original values
 #
-# [K3.3.statistical_analysis.R]
+# Input: `df_wide` object from K3.2 (wide format with Baseline and Follow_up columns, original values)
+# Output: Multiple summary and p-value objects (baseline_stats, change_stats, follow_up_stats, p-values)
 #
-# "Performs detailed statistical analyses on KaatumisenPelko data: computes summary stats 
-#  (mean, SD, CI) and executes paired & between-group t-tests based on the original Values."
-########################################################################################################
+# Required vars (from df_wide, DO NOT INVENT; must match req_cols):
+# kaatumisenpelkoOn, Test, Baseline, Follow_up
+#
+# Analyses performed:
+# 1. Baseline summary stats (mean, SD, CI, skewness, kurtosis) by group and test
+# 2. Change summary stats (Follow_up - Baseline) by group and test
+# 3. Follow-up summary stats by group and test
+# 4. Between-group t-test for Baseline (by test)
+# 5. Within-group paired t-test for Baseline vs Follow_up
+# 6. Between-group t-test for Change
+# 7. Between-group t-test for Follow_up
+#
+# Note: Uses moments::skewness() and moments::kurtosis()
+#       This is identical to K1.3 logic but operates on original values instead of z-scores
+# ==============================================================================
 
-########################################################################################################
-#  Sequence list
-########################################################################################################
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(moments)
+})
 
-# 1: (Optional) Compute Overall Summaries from Long Data
-# 2: Baseline Analysis (Means, SD, CIs)
-# 3: Change Analysis (Means, SD, CIs)
-# 4: Follow-up Analysis (Means, SD, CIs)
-# 5: Between-Group t-test for Baseline
-# 6: Within-Group (Paired) t-test for Baseline vs. Follow-up
-# 7: Between-Group t-test for Change (Follow_up - Baseline)
-# 8: Between-Group t-test for Follow-up
-# 9: (Optional) Other Statistical Calculations (e.g., ANOVA)
-# 10: Print or Inspect Key Objects (Optional)
-# 11: End of Script
+# Required columns from df_wide
+req_cols <- c("kaatumisenpelkoOn", "Test", "Baseline", "Follow_up")
 
-########################################################################################################
-########################################################################################################
+# Verify required columns exist
+if (!exists("df_wide")) {
+  stop("df_wide object not found. Ensure K3.2.data_transformation.R has been sourced.")
+}
 
-# 1: (Optional) Compute Overall Summaries from Long Data
-# Uncomment and adapt the code below to compute overall summary stats by group and timepoint:
-# summary_df <- df_long %>%
-#   group_by(kaatumisenpelkoOn, Timepoint, Test) %>%
-#   summarise(
-#     Mean = mean(Value, na.rm = TRUE),
-#     SD   = sd(Value, na.rm = TRUE),
-#     n    = sum(!is.na(Value)),
-#     .groups = "drop"
-#   ) %>%
-#   mutate(
-#     SE       = SD / sqrt(n),
-#     CI_lower = Mean - 1.96 * SE,
-#     CI_upper = Mean + 1.96 * SE
-#   )
-# print(summary_df)
+missing_cols <- setdiff(req_cols, names(df_wide))
+if (length(missing_cols) > 0) {
+  stop("Missing required columns in df_wide: ", paste(missing_cols, collapse = ", "))
+}
 
-# 2: Baseline Analysis (Means, SD, CIs)
+cat("Starting statistical analyses (original values)...\n")
+
+# Baseline Analysis (Means, SD, CIs, Skewness, Kurtosis)
+cat("  Computing baseline statistics...\n")
 baseline_stats <- df_wide %>%
   group_by(kaatumisenpelkoOn, Test) %>%
   summarise(
@@ -60,7 +61,8 @@ baseline_stats <- df_wide %>%
     B_CI_upper = B_Mean + 1.96 * B_SE
   )
 
-# 3: Change Analysis (Means, SD, CIs)
+# Change Analysis (Means, SD, CIs)
+cat("  Computing change statistics (Follow_up - Baseline)...\n")
 change_stats <- df_wide %>%
   group_by(kaatumisenpelkoOn, Test) %>%
   summarise(
@@ -77,7 +79,8 @@ change_stats <- df_wide %>%
     C_CI_upper = C_Mean + 1.96 * C_SE
   )
 
-# 4: Follow-up Analysis (Means, SD, CIs)
+# Follow-up Analysis (Means, SD, CIs)
+cat("  Computing follow-up statistics...\n")
 follow_up_stats <- df_wide %>%
   group_by(kaatumisenpelkoOn, Test) %>%
   summarise(
@@ -94,7 +97,8 @@ follow_up_stats <- df_wide %>%
     F_CI_upper = F_Mean + 1.96 * F_SE
   )
 
-# 5: Between-Group t-test for Baseline
+# Between-Group t-test for Baseline
+cat("  Running between-group t-tests (Baseline)...\n")
 p_values_baseline <- df_wide %>%
   group_by(Test) %>%
   summarise(
@@ -107,7 +111,8 @@ p_values_baseline <- df_wide %>%
   ) %>%
   rename(Baseline_p_value = p_value)
 
-# 6: Within-Group (Paired) t-test for Baseline vs. Follow-up
+# Within-Group (Paired) t-test for Baseline vs. Follow-up
+cat("  Running within-group paired t-tests (Baseline vs Follow_up)...\n")
 p_values_within <- df_wide %>%
   drop_na(Baseline, Follow_up) %>%
   mutate(
@@ -125,7 +130,8 @@ p_values_within <- df_wide %>%
   select(-n_pairs) %>%
   rename(Change_p_value = p_value)
 
-# 7: Between-Group t-test for Change (Follow_up - Baseline)
+# Between-Group t-test for Change (Follow_up - Baseline)
+cat("  Running between-group t-tests (Change)...\n")
 df_change_p_value_between <- df_wide %>%
   group_by(Test) %>%
   summarise(
@@ -138,7 +144,8 @@ df_change_p_value_between <- df_wide %>%
   ) %>%
   rename(Change_p_between = p_value)
 
-# 8: Between-Group t-test for Follow-up
+# Between-Group t-test for Follow-up
+cat("  Running between-group t-tests (Follow_up)...\n")
 follow_up_p_value <- df_wide %>%
   group_by(Test) %>%
   summarise(
@@ -151,19 +158,23 @@ follow_up_p_value <- df_wide %>%
   ) %>%
   rename(Follow_up_p_value = p_value)
 
-# 9: (Optional) Other Statistical Calculations, such as ANOVA
-# Example (commented out by default):
-# anova_results <- aov(Value ~ kaatumisenpelkoOn * Timepoint, data = df_long)
-# summary(anova_results)
-
-# 10: Print or Inspect Key Objects (Optional)
+# Preview results
+cat("\nStatistical analysis results (original values):\n")
+cat("  Baseline stats:\n")
 print(baseline_stats)
+cat("\n  Change stats:\n")
 print(change_stats)
+cat("\n  Follow-up stats:\n")
 print(follow_up_stats)
+cat("\n  Baseline p-values:\n")
 print(p_values_baseline)
+cat("\n  Within-group (paired) p-values:\n")
 print(p_values_within)
+cat("\n  Change between-group p-values:\n")
 print(df_change_p_value_between)
+cat("\n  Follow-up p-values:\n")
 print(follow_up_p_value)
 
-# 11: End of Script
-cat("Statistical analyses completed.\n")
+cat("\nStatistical analyses (original values) completed successfully.\n")
+
+# EOF
