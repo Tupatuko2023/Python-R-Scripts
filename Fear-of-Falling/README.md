@@ -1,5 +1,7 @@
 # FOF × aika (baseline → 12 kk) — mixed model -ajamisohje (Composite_Z)
 
+[![K Scripts Smoke Tests](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml/badge.svg)](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml)
+
 Tämä README on ajamisohje ("runbook") FOF-alatutkimuksen päätarkastelulle:
 **FOF_status × time** -interaktio fyysisen toimintakyvyn muutoksessa
 (**Composite_Z**) käyttäen **lineaarista sekamallia** (lmer; satunnaisintersepti
