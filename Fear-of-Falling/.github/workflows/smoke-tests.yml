@@ -1,0 +1,88 @@
+name: K Scripts Smoke Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Fear-of-Falling/**'
+      - '.github/workflows/smoke-tests.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Fear-of-Falling/**'
+  workflow_dispatch:  # Allow manual triggers
+
+jobs:
+  smoke-tests:
+    name: Run K Scripts Smoke Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    defaults:
+      run:
+        working-directory: Fear-of-Falling
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t fof-r-analysis:latest .
+
+      - name: Run smoke tests
+        id: smoke_test
+        continue-on-error: true
+        run: |
+          docker run --name fof-test fof-r-analysis:latest \
+            Rscript tests/smoke_test_all_k_scripts.R
+
+      - name: Extract smoke test report
+        if: always()
+        run: |
+          docker cp fof-test:/project/SMOKE_TEST_REPORT_ALL_K_SCRIPTS.md ./SMOKE_TEST_REPORT.md || true
+          docker logs fof-test > smoke_test_output.log 2>&1 || true
+
+      - name: Display test summary
+        if: always()
+        run: |
+          echo "=== Smoke Test Summary ==="
+          if [ -f SMOKE_TEST_REPORT.md ]; then
+            grep -A 10 "^## SUMMARY" SMOKE_TEST_REPORT.md || echo "Summary not found"
+          else
+            echo "Report file not found"
+          fi
+
+      - name: Upload smoke test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-report
+          path: |
+            Fear-of-Falling/SMOKE_TEST_REPORT.md
+            Fear-of-Falling/smoke_test_output.log
+          retention-days: 30
+
+      - name: Check test results
+        if: always()
+        run: |
+          if [ -f SMOKE_TEST_REPORT.md ]; then
+            FAILED=$(grep "^\*\*Failed:\*\*" SMOKE_TEST_REPORT.md | grep -oE '[0-9]+' | head -1)
+            echo "Failed tests: $FAILED"
+            if [ "$FAILED" != "0" ]; then
+              echo "::error::Smoke tests failed! $FAILED test(s) did not pass."
+              exit 1
+            fi
+            echo "::notice::All smoke tests passed! ✓"
+          else
+            echo "::error::Smoke test report not found"
+            exit 1
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rm fof-test || true
