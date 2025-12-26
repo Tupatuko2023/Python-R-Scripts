@@ -19,7 +19,6 @@ config/
 *.RDataTmp
 *.Ruserdata
 *.RuserdataTmp
-*.Rprofile
 *.Rbuildignore
 *.Rmd~
 *.Rnw~
