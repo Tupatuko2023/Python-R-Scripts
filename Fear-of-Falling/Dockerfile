@@ -49,15 +49,25 @@ COPY renv/settings.json renv/settings.json
 # Install renv
 RUN R -e "install.packages('renv', repos = 'https://cloud.r-project.org')"
 
+# Remove system rprojroot from all library locations to avoid version conflicts
+# The base image has rprojroot 2.0.4, but we need >= 2.1.0 from renv
+RUN rm -rf /usr/local/lib/R/site-library/rprojroot \
+    && rm -rf /usr/local/lib/R/library/rprojroot
+
 # Restore R packages from lockfile
 # This is the time-consuming step but cached unless renv.lock changes
-RUN R -e "renv::restore(prompt = FALSE, repos = 'https://cloud.r-project.org')"
+# Force rebuild to ensure lockfile versions override system packages
+RUN R -e "renv::restore(prompt = FALSE, rebuild = TRUE, repos = 'https://cloud.r-project.org')"
+
+# Set R_LIBS to include renv library even with --vanilla
+# This ensures scripts run with --vanilla can still find renv packages
+ENV R_LIBS=/project/renv/library/linux-ubuntu-noble/R-4.4/x86_64-pc-linux-gnu:/usr/local/lib/R/site-library:/usr/local/lib/R/library
 
 # Copy the rest of the project
 COPY . .
 
-# Verify critical packages are installed
-RUN R -e "library(dplyr); library(here); library(ggplot2); library(lme4); cat('✓ Critical packages loaded successfully\n')"
+# Verify critical packages are installed and check versions
+RUN R -e "library(rprojroot); cat('rprojroot version:', as.character(packageVersion('rprojroot')), '\n'); library(dplyr); library(here); library(ggplot2); library(lme4); cat('✓ Critical packages loaded successfully\n')"
 
 # Create outputs directories
 RUN mkdir -p R-scripts/{K6,K7,K8,K9,K10,K11,K12,K13,K14,K15,K16}/outputs
