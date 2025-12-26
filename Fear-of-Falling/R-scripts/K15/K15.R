@@ -62,6 +62,7 @@
 suppressPackageStartupMessages({
   library(here)
   library(dplyr)
+  library(ggplot2)
 })
 
 # --- Standard init (MANDATORY) -----------------------------------------------

@@ -62,6 +62,8 @@
 suppressPackageStartupMessages({
   library(here)
   library(dplyr)
+  library(emmeans)
+  library(ggplot2)
 })
 
 # --- Standard init (MANDATORY) -----------------------------------------------

@@ -54,12 +54,12 @@ args_all <- commandArgs(trailingOnly = FALSE)
 file_arg <- grep("^--file=", args_all, value = TRUE)
 
 script_base <- if (length(file_arg) > 0) {
-  sub("\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
 } else {
   "K1_MAIN"  # interactive fallback
 }
 
-script_label <- sub("\.V.*$", "", script_base)  # canonical SCRIPT_ID
+script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
 # Map K1_MAIN or K1.7 to "K1" for outputs directory
 if (grepl("^K1", script_label)) script_label <- "K1"
 if (is.na(script_label) || script_label == "") script_label <- "K1"

@@ -31,8 +31,13 @@ standardize_analysis_vars <- function(raw_data) {
 #' @param file_name Name of the CSV file (default: "KaatumisenPelko.csv")
 #' @return A data frame with raw data loaded from CSV
 load_raw_data <- function(file_name = "KaatumisenPelko.csv") {
-  # Try primary location first (data/raw/)
-  file_path <- here::here("data", "raw", file_name)
+  # Try primary location first (data/external/)
+  file_path <- here::here("data", "external", file_name)
+
+  # Fallback to data/raw/
+  if (!file.exists(file_path)) {
+    file_path <- here::here("data", "raw", file_name)
+  }
 
   # Fallback to legacy location (dataset/)
   if (!file.exists(file_path)) {
@@ -41,6 +46,7 @@ load_raw_data <- function(file_name = "KaatumisenPelko.csv") {
 
   if (!file.exists(file_path)) {
     stop("Raw data file not found. Tried:\n",
+         "  - ", here::here("data", "external", file_name), "\n",
          "  - ", here::here("data", "raw", file_name), "\n",
          "  - ", here::here("dataset", file_name))
   }
