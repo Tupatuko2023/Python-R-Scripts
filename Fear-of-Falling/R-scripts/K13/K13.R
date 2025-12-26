@@ -618,20 +618,20 @@ simple_slopes_age <- as.data.frame(
 
 save_table_csv_html(simple_slopes_age, "simple_slopes_FOF_by_age")
 
-plot_FOFxAge <- ggplot(
+plot_FOFxAge <- ggplot2::ggplot(
   simple_slopes_age,
-  aes(x = age, y = estimate, ymin = conf.low, ymax = conf.high)
+  ggplot2::aes(x = age, y = estimate, ymin = conf.low, ymax = conf.high)
 ) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_pointrange() +
-  labs(
+  ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+  ggplot2::geom_pointrange() +
+  ggplot2::labs(
     x = "Ikä (vuotta)",
     y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
     title = "FOF × ikä: FOF-efekti eri ikätasoilla"
   ) +
-  theme_minimal()
+  ggplot2::theme_minimal()
 
-ggsave(
+ggplot2::ggsave(
   filename = file.path(outputs_dir, "FOF_effect_by_age_simple_slopes.png"),
   plot = plot_FOFxAge,
   width = 7, height = 4, dpi = 300
@@ -672,20 +672,20 @@ simple_slopes_BMI <- as.data.frame(
 
 save_table_csv_html(simple_slopes_BMI, "simple_slopes_FOF_by_BMI")
 
-plot_FOFxBMI <- ggplot(
+plot_FOFxBMI <- ggplot2::ggplot(
   simple_slopes_BMI,
-  aes(x = BMI, y = estimate, ymin = conf.low, ymax = conf.high)
+  ggplot2::aes(x = BMI, y = estimate, ymin = conf.low, ymax = conf.high)
 ) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_pointrange() +
-  labs(
+  ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+  ggplot2::geom_pointrange() +
+  ggplot2::labs(
     x = "BMI (kg/m²)",
     y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
     title = "FOF × BMI: FOF-efekti eri BMI-tasoilla"
   ) +
-  theme_minimal()
+  ggplot2::theme_minimal()
 
-ggsave(
+ggplot2::ggsave(
   filename = file.path(outputs_dir, "FOF_effect_by_BMI_simple_slopes.png"),
   plot = plot_FOFxBMI,
   width = 7, height = 4, dpi = 300
@@ -720,20 +720,20 @@ simple_slopes_sex <- as.data.frame(
 
 save_table_csv_html(simple_slopes_sex, "simple_slopes_FOF_by_sex")
 
-plot_FOFxSex <- ggplot(
+plot_FOFxSex <- ggplot2::ggplot(
   simple_slopes_sex,
-  aes(x = sex, y = estimate, ymin = conf.low, ymax = conf.high)
+  ggplot2::aes(x = sex, y = estimate, ymin = conf.low, ymax = conf.high)
 ) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_pointrange() +
-  labs(
+  ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+  ggplot2::geom_pointrange() +
+  ggplot2::labs(
     x = "Sukupuoli",
     y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
     title = "FOF × sukupuoli: FOF-efekti naisilla vs miehillä"
   ) +
-  theme_minimal()
+  ggplot2::theme_minimal()
 
-ggsave(
+ggplot2::ggsave(
   filename = file.path(outputs_dir, "FOF_effect_by_sex_simple_slopes.png"),
   plot = plot_FOFxSex,
   width = 6, height = 4, dpi = 300
@@ -773,20 +773,20 @@ simple_slopes_MOI <- as.data.frame(
 
 save_table_csv_html(simple_slopes_MOI, "simple_slopes_FOF_by_MOI")
 
-plot_FOFxMOI <- ggplot(
+plot_FOFxMOI <- ggplot2::ggplot(
   simple_slopes_MOI,
-  aes(x = MOI, y = estimate, ymin = conf.low, ymax = conf.high)
+  ggplot2::aes(x = MOI, y = estimate, ymin = conf.low, ymax = conf.high)
 ) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_pointrange() +
-  labs(
+  ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+  ggplot2::geom_pointrange() +
+  ggplot2::labs(
     x = "MOI-score",
     y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
     title = "FOF × MOI: FOF-efekti eri osteoporoosiriskitasoilla"
   ) +
-  theme_minimal()
+  ggplot2::theme_minimal()
 
-ggsave(
+ggplot2::ggsave(
   filename = file.path(outputs_dir, "FOF_effect_by_MOI_simple_slopes.png"),
   plot     = plot_FOFxMOI,
   width    = 7, height = 4, dpi = 300
@@ -825,20 +825,20 @@ simple_slopes_Pain <- as.data.frame(
 
 save_table_csv_html(simple_slopes_Pain, "simple_slopes_FOF_by_Pain")
 
-plot_FOFxPain <- ggplot(
+plot_FOFxPain <- ggplot2::ggplot(
   simple_slopes_Pain,
-  aes(x = PainVAS0, y = estimate, ymin = conf.low, ymax = conf.high)
+  ggplot2::aes(x = PainVAS0, y = estimate, ymin = conf.low, ymax = conf.high)
 ) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_pointrange() +
-  labs(
+  ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+  ggplot2::geom_pointrange() +
+  ggplot2::labs(
     x = "Kipu VAS 0–10",
     y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
     title = "FOF × kipu: FOF-efekti eri kiputasoilla"
   ) +
-  theme_minimal()
+  ggplot2::theme_minimal()
 
-ggsave(
+ggplot2::ggsave(
   filename = file.path(outputs_dir, "FOF_effect_by_Pain_simple_slopes.png"),
   plot     = plot_FOFxPain,
   width    = 7, height = 4, dpi = 300
@@ -875,20 +875,20 @@ simple_slopes_SRH <- as.data.frame(
 
 save_table_csv_html(simple_slopes_SRH, "simple_slopes_FOF_by_SRH")
 
-plot_FOFxSRH <- ggplot(
+plot_FOFxSRH <- ggplot2::ggplot(
   simple_slopes_SRH,
-  aes(x = SRH_3class, y = estimate, ymin = conf.low, ymax = conf.high)
+  ggplot2::aes(x = SRH_3class, y = estimate, ymin = conf.low, ymax = conf.high)
 ) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_pointrange() +
-  labs(
+  ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+  ggplot2::geom_pointrange() +
+  ggplot2::labs(
     x = "Itsearvioitu terveys (SRH)",
     y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
     title = "FOF × SRH: FOF-efekti eri terveyden itsearvioissa"
   ) +
-  theme_minimal()
+  ggplot2::theme_minimal()
 
-ggsave(
+ggplot2::ggsave(
   filename = file.path(outputs_dir, "FOF_effect_by_SRH_simple_slopes.png"),
   plot     = plot_FOFxSRH,
   width    = 6, height = 4, dpi = 300
@@ -922,20 +922,20 @@ simple_slopes_SRM <- as.data.frame(
 
 save_table_csv_html(simple_slopes_SRM, "simple_slopes_FOF_by_SRM")
 
-plot_FOFxSRM <- ggplot(
+plot_FOFxSRM <- ggplot2::ggplot(
   simple_slopes_SRM,
-  aes(x = SRM_3class, y = estimate, ymin = conf.low, ymax = conf.high)
+  ggplot2::aes(x = SRM_3class, y = estimate, ymin = conf.low, ymax = conf.high)
 ) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_pointrange() +
-  labs(
+  ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+  ggplot2::geom_pointrange() +
+  ggplot2::labs(
     x = "Itsearvioitu liikuntakyky (SRM)",
     y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
     title = "FOF × SRM: FOF-efekti eri liikuntakyvyn itsearvioissa"
   ) +
-  theme_minimal()
+  ggplot2::theme_minimal()
 
-ggsave(
+ggplot2::ggsave(
   filename = file.path(outputs_dir, "FOF_effect_by_SRM_simple_slopes.png"),
   plot     = plot_FOFxSRM,
   width    = 6, height = 4, dpi = 300
