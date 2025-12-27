@@ -74,12 +74,14 @@ Raw Data: KaatumisenPelko.csv
 ### Dependency Chains
 
 **K1 → K2:**
+
 ```bash
 Rscript R-scripts/K1/K1.7.main.R  # Produces K1_Z_Score_Change_2G.csv
 Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R  # Requires K1 output
 ```
 
 **K3 → K4:**
+
 ```bash
 Rscript R-scripts/K3/K3.7.main.R  # Produces K3_Values_2G.csv
 Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R  # Requires K3 output
@@ -90,6 +92,7 @@ Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R  # Requires K3 output
 ## Key Refactoring Changes
 
 ### Before Refactoring
+
 ❌ Hardcoded Windows paths (`C:/Users/...`)
 ❌ No standard headers or documentation
 ❌ No required columns verification
@@ -100,6 +103,7 @@ Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R  # Requires K3 output
 ❌ No sessionInfo tracking
 
 ### After Refactoring
+
 ✅ Portable paths (`here::here()`, `init_paths()`)
 ✅ Complete CLAUDE.md standard headers
 ✅ Required columns/objects verification (`req_cols`)
@@ -120,6 +124,7 @@ Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R  # Requires K3 output
 **Purpose:** Analyze standardized performance test changes (baseline to 12-month follow-up) by FOF status
 
 **Scripts:**
+
 1. **K1.7.main.R** - Orchestrator (sources all subscripts)
 2. **K1.1.data_import.R** - Load raw data (SHARED with K3)
 3. **K1.2.data_transformation.R** - Transform to z-scores, create long/wide formats
@@ -133,6 +138,7 @@ Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R  # Requires K3 output
 **Tests analyzed:** MWS, FTSST, SLS, HGS (4 performance tests, z-scores)
 
 **Run command:**
+
 ```bash
 Rscript R-scripts/K1/K1.7.main.R
 ```
@@ -144,6 +150,7 @@ Rscript R-scripts/K1/K1.7.main.R
 **Purpose:** Transpose K1 output to wide format (tests as columns, parameters as rows)
 
 **Scripts:**
+
 1. **K2.Z_Score_C_Pivot_2G.R** - Main transpose script (processes K1 output)
 2. **K2.KAAOS-Z_Score_C_Pivot_2R.R** - Legacy/alternative version (processes KAAOS data)
 
@@ -152,6 +159,7 @@ Rscript R-scripts/K1/K1.7.main.R
 **Dependency:** Requires K1 output
 
 **Run command:**
+
 ```bash
 Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R
 ```
@@ -163,6 +171,7 @@ Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R
 **Purpose:** Analyze raw performance test values (not standardized) by FOF status
 
 **Scripts:**
+
 1. **K3.7.main.R** - Orchestrator (sources subscripts, including K1.1 and K1.5)
 2. **K1.1.data_import.R** - Load raw data (SHARED from K1)
 3. **K3.2.data_transformation.R** - Transform to original values, create long/wide formats
@@ -176,6 +185,7 @@ Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R
 **Tests analyzed:** FTSST, MWS, SLS, HGS, VAS (5 tests, original values)
 
 **Run command:**
+
 ```bash
 Rscript R-scripts/K3/K3.7.main.R
 ```
@@ -187,6 +197,7 @@ Rscript R-scripts/K3/K3.7.main.R
 **Purpose:** Transpose K3 output to wide format (tests as columns, parameters as rows)
 
 **Scripts:**
+
 1. **K4.A_Score_C_Pivot_2G.R** - Main transpose script (processes K3 output)
 
 **Output:** `K4_Values_2G_Transposed.csv` (transposed format with original values)
@@ -194,6 +205,7 @@ Rscript R-scripts/K3/K3.7.main.R
 **Dependency:** Requires K3 output
 
 **Run command:**
+
 ```bash
 Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R
 ```
@@ -273,6 +285,7 @@ tail -20 manifest/manifest.csv
 ## Comprehensive Verification Checklist
 
 ### K1 Pipeline ✅
+
 - [ ] K1.7.main.R runs without errors
 - [ ] All 6 subscripts execute in sequence
 - [ ] Output file created: `R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv`
@@ -283,6 +296,7 @@ tail -20 manifest/manifest.csv
 - [ ] No hardcoded paths in output
 
 ### K2 Pipeline ✅
+
 - [ ] K2 runs after K1 successfully
 - [ ] Output file created: `R-scripts/K2/outputs/K2_Z_Score_Change_2G_Transposed.csv`
 - [ ] 1 manifest row added
@@ -290,6 +304,7 @@ tail -20 manifest/manifest.csv
 - [ ] All 4 tests × 2 groups = 8 columns (+ Parameter column)
 
 ### K3 Pipeline ✅
+
 - [ ] K3.7.main.R runs without errors
 - [ ] All subscripts execute (including shared K1.1 and K1.5)
 - [ ] Output file created: `R-scripts/K3/outputs/K3_Values_2G.csv`
@@ -299,6 +314,7 @@ tail -20 manifest/manifest.csv
 - [ ] VAS test included (5 tests total)
 
 ### K4 Pipeline ✅
+
 - [ ] K4 runs after K3 successfully
 - [ ] Output file created: `R-scripts/K4/outputs/K4_Values_2G_Transposed.csv`
 - [ ] 1 manifest row added
@@ -326,6 +342,7 @@ tail -20 manifest/manifest.csv
 ## Test Name Reference
 
 ### Finnish → English Mapping
+
 | Finnish | English | Abbrev | Description |
 |---------|---------|--------|-------------|
 | Kävelynopeus | Maximal Walking Speed | MWS | Walking speed (m/s) |
@@ -335,6 +352,7 @@ tail -20 manifest/manifest.csv
 | PainVAS | Visual Analogue Scale | VAS | Pain intensity (0-10) |
 
 ### FOF Status Encoding
+
 | kaatumisenpelkoOn | Label | Description |
 |-------------------|-------|-------------|
 | 0 | Without_FOF | No fear of falling |
@@ -345,12 +363,14 @@ tail -20 manifest/manifest.csv
 ## Documentation Reference
 
 ### Individual Pipeline Documentation
+
 - **K1:** `docs/K1_REFACTORING_COMPLETE.md` - Complete K1 refactoring details
 - **K2:** `docs/K2_REFACTORING_COMPLETE.md` - Complete K2 refactoring details
 - **K3:** `docs/K3_REFACTORING_COMPLETE.md` - Complete K3 refactoring details
 - **K4:** `docs/K4_REFACTORING_COMPLETE.md` - Complete K4 refactoring details
 
 ### Supporting Documentation
+
 - **Inventory:** `docs/k1-k4_inventory.md` - Complete script inventory
 - **Differences:** `docs/k1-k4_differences_matrix.md` - Implementation comparison matrix
 - **Plan:** `docs/k1-k4_refactor_plan.md` - Original refactoring plan
@@ -362,21 +382,25 @@ tail -20 manifest/manifest.csv
 ## Known Issues & Limitations
 
 ### Data Dependency
+
 - All pipelines require `KaatumisenPelko.csv` to be present
 - No sample/mock data provided for testing without real data
 - **Recommendation:** Create synthetic test data for CI/CD testing
 
 ### Legacy Scripts
+
 - K2.KAAOS-Z_Score_C_Pivot_2R.R processes legacy KAAOS data
 - May fail if legacy input not available (expected behavior)
 - **Recommendation:** Document deprecation timeline
 
 ### Test Names
+
 - Scripts handle both Finnish and English test names
 - Assumes standard test name conventions
 - **Recommendation:** Add test name validation function
 
 ### VAS Test
+
 - Only present in K3/K4 (original values), not in K1/K2 (z-scores)
 - Creates column count difference between K2 (9 cols) and K4 (11 cols)
 - **Expected behavior:** Not an issue
@@ -386,23 +410,27 @@ tail -20 manifest/manifest.csv
 ## Next Steps
 
 ### Immediate (Ready Now)
+
 1. ✅ **Testing:** Run all 4 pipelines with real data (if available)
 2. ✅ **Verification:** Check all manifest entries are correct
 3. ✅ **Documentation:** Review all completion reports
 
 ### Short-term (Next Sprint)
+
 1. **Create smoke test script:** Automated testing without manual verification
 2. **Add unit tests:** Use `testthat` for critical functions
 3. **Create synthetic data:** Mock data for testing without real dataset
 4. **Update README.md:** Add K1-K4 runbook section (already started)
 
 ### Medium-term (Next Month)
+
 1. **Performance profiling:** Identify bottlenecks in large datasets
 2. **Parallel processing:** Use `future` for independent pipeline steps
 3. **HTML reports:** Generate interactive HTML outputs (kableExtra, DT)
 4. **Docker container:** Containerize entire pipeline for reproducibility
 
 ### Long-term (Next Quarter)
+
 1. **Continuous Integration:** GitHub Actions for automated testing
 2. **Data validation:** Pre-flight checks before analysis
 3. **Visualization dashboard:** Shiny app for interactive exploration
@@ -413,12 +441,14 @@ tail -20 manifest/manifest.csv
 ## Acknowledgments
 
 ### Refactoring Methodology
+
 - Followed CLAUDE.md conventions throughout
 - Used `here::here()` for portable paths (Müller & Bryan, 2020)
 - Implemented manifest logging for reproducibility
 - Applied DRY principle with shared scripts
 
 ### R Package Ecosystem
+
 - **Core:** tidyverse, here, readr
 - **Stats:** moments, boot
 - **Reporting:** knitr, rmarkdown

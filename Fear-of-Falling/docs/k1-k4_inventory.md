@@ -5,7 +5,7 @@
 
 ## K1: Longitudinal Analysis Pipeline (Z-Score Change)
 
-### Scripts
+### K1 Scripts
 
 | Script | Role | Input | Output | Dependencies | Run Command |
 |--------|------|-------|--------|--------------|-------------|
@@ -18,7 +18,8 @@
 | **K1.7.main.R** | **Pipeline orchestrator** | - | Complete pipeline execution | All above | `Rscript R-scripts/K1/K1.7.main.R` |
 | K1.Z_Score_Change_2G_v4.R | Monolithic version (all-in-one) | dataset/KaatumisenPelko.csv | tables/K1_Z_Score_Change_2G.csv | All libs | `Rscript R-scripts/K1/K1.Z_Score_Change_2G_v4.R` |
 
-### Current Issues
+### K1 Current Issues
+
 - ❌ Hardcoded paths (setwd, absolute file paths)
 - ❌ No CLAUDE.md standard header
 - ❌ No req_cols check
@@ -27,7 +28,8 @@
 - ❌ No init_paths() usage
 - ❌ No seed setting (if randomness exists)
 
-### Dependencies Chain
+### K1 Dependencies Chain
+
 ```
 K1.7.main.R
   ├─ K1.1.data_import.R (reads raw CSV)
@@ -42,14 +44,15 @@ K1.7.main.R
 
 ## K2: Data Transformation (Z-Score Pivot/Transpose)
 
-### Scripts
+### K2 Scripts
 
 | Script | Role | Input | Output | Dependencies | Run Command |
 |--------|------|-------|--------|--------------|-------------|
 | K2.KAAOS-Z_Score_C_Pivot_2R.R | Transpose z-score results | Unknown CSV | tables/K2_..._Transposed.csv | dplyr, tidyr, readr, tibble | `Rscript R-scripts/K2/K2.KAAOS-Z_Score_C_Pivot_2R.R` |
 | K2.Z_Score_C_Pivot_2G.R | Transpose z-score change (2 groups) | tables/K1_Z_Score_Change_2G.csv | tables/K2_Z_Score_Change_2G_Transposed.csv | dplyr, tidyr, readr, tibble | `Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R` |
 
-### Current Issues
+### K2 Current Issues
+
 - ❌ Hardcoded absolute Windows paths (`C:/Users/tomik/OneDrive/...`)
 - ❌ No CLAUDE.md standard header
 - ❌ No req_cols check
@@ -57,7 +60,8 @@ K1.7.main.R
 - ❌ Outputs to `tables/` instead of `R-scripts/K2/outputs/`
 - ❌ No init_paths() usage
 
-### Dependencies Chain
+### K2 Dependencies Chain
+
 ```
 K2.Z_Score_C_Pivot_2G.R
   └─ Depends on K1 output: tables/K1_Z_Score_Change_2G.csv
@@ -67,7 +71,7 @@ K2.Z_Score_C_Pivot_2G.R
 
 ## K3: Longitudinal Analysis Pipeline (Original Values)
 
-### Scripts
+### K3 Scripts
 
 | Script | Role | Input | Output | Dependencies | Run Command |
 |--------|------|-------|--------|--------------|-------------|
@@ -77,7 +81,8 @@ K2.Z_Score_C_Pivot_2G.R
 | K3.6.results_export.R | Export final table | All results | tables/K3_Values_2G.csv | - | Sourced by K3.7.main.R |
 | **K3.7.main.R** | **Pipeline orchestrator** | - | Complete pipeline execution | K1.1, K1.5, K3.* | `Rscript R-scripts/K3/K3.7.main.R` |
 
-### Current Issues
+### K3 Current Issues
+
 - ❌ Hardcoded absolute Windows paths (`C:/Users/tomik/OneDrive/...`)
 - ❌ No CLAUDE.md standard header
 - ❌ No req_cols check
@@ -86,7 +91,8 @@ K2.Z_Score_C_Pivot_2G.R
 - ❌ No init_paths() usage
 - ❌ Reuses K1.1 and K1.5 (cross-folder dependency)
 
-### Dependencies Chain
+### K3 Dependencies Chain
+
 ```
 K3.7.main.R
   ├─ K1.1.data_import.R (SHARED from K1)
@@ -101,13 +107,14 @@ K3.7.main.R
 
 ## K4: Data Transformation (Score Pivot/Transpose)
 
-### Scripts
+### K4 Scripts
 
 | Script | Role | Input | Output | Dependencies | Run Command |
 |--------|------|-------|--------|--------------|-------------|
 | K4.A_Score_C_Pivot_2G.R | Transpose score change (2 groups) | tables/K3_Values_2G.csv | tables/K4_Score_Change_2G_Transposed.csv | dplyr, tidyr, readr, tibble | `Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R` |
 
-### Current Issues
+### K4 Current Issues
+
 - ❌ Hardcoded absolute Windows paths (`C:/Users/tomik/OneDrive/...`)
 - ❌ No CLAUDE.md standard header
 - ❌ No req_cols check
@@ -115,7 +122,8 @@ K3.7.main.R
 - ❌ Outputs to `tables/` instead of `R-scripts/K4/outputs/`
 - ❌ No init_paths() usage
 
-### Dependencies Chain
+### K4 Dependencies Chain
+
 ```
 K4.A_Score_C_Pivot_2G.R
   └─ Depends on K3 output: tables/K3_Values_2G.csv
@@ -163,6 +171,7 @@ Located in `R/functions/`:
 ## Summary of Refactoring Needs
 
 ### High Priority (All K1-K4)
+
 1. **Add CLAUDE.md standard headers** to all scripts
 2. **Remove hardcoded paths** and implement `init_paths(script_label)`
 3. **Redirect outputs** from `tables/` to `R-scripts/<K>/outputs/<script_label>/`
@@ -171,44 +180,52 @@ Located in `R/functions/`:
 6. **Add set.seed(20251124)** where randomness exists (K1.4, K3.4 bootstrap)
 
 ### Medium Priority
-7. **Use existing R/functions/** helpers (`standardize_analysis_vars`, `sanity_checks`)
-8. **Create new helpers** (`init_paths`, `append_manifest`, `save_table_csv_html`)
-9. **Make paths portable** (remove Windows-specific C:/ paths)
+
+1. **Use existing R/functions/** helpers (`standardize_analysis_vars`, `sanity_checks`)
+2. **Create new helpers** (`init_paths`, `append_manifest`, `save_table_csv_html`)
+3. **Make paths portable** (remove Windows-specific C:/ paths)
 
 ### Low Priority
-10. **Document variable mappings** (raw → analysis)
-11. **Add sessionInfo/renv diagnostics** to manifest/
-12. **Consider consolidating** K1.7/K1.Z monolithic duplication
+
+1. **Document variable mappings** (raw → analysis)
+2. **Add sessionInfo/renv diagnostics** to manifest/
+3. **Consider consolidating** K1.7/K1.Z monolithic duplication
 
 ---
 
 ## Refactoring Strategy
 
 ### Phase 1: Foundation (R/functions/)
+
 - Create `R/functions/paths.R` with `init_paths(script_label)`
 - Create `R/functions/manifest.R` with `append_manifest()`
 - Enhance existing helpers
 
 ### Phase 2: K1 Refactor
+
 - Refactor K1.7.main.R as primary entry point
 - Add standard headers to all K1.*.R scripts
 - Update paths, manifest, req_cols
 - Deprecate or align K1.Z monolithic version
 
 ### Phase 3: K2 Refactor
+
 - Refactor both K2 scripts
 - Fix hardcoded paths
 - Add standard headers
 
 ### Phase 4: K3 Refactor
+
 - Refactor K3.7.main.R and subscripts
 - Resolve cross-folder dependencies (K1.1, K1.5)
 
 ### Phase 5: K4 Refactor
+
 - Refactor K4 script
 - Fix hardcoded paths
 
 ### Phase 6: Verification
+
 - Smoke tests for all K1-K4
 - Before/after comparisons
 - Update README with runbook

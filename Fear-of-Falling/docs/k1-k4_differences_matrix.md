@@ -43,6 +43,7 @@
 ## Code Patterns Identified
 
 ### 1. Data Import Pattern (K1.1, K3)
+
 ```r
 # Current (hardcoded)
 file_path <- here::here("dataset", "KaatumisenPelko.csv")
@@ -58,6 +59,7 @@ sanity_checks(data)
 ```
 
 ### 2. Results Export Pattern (K1.6, K3.6)
+
 ```r
 # Current (no manifest)
 table_path <- "C:/Users/.../tables/K1_Z_Score_Change_2G.csv"
@@ -72,6 +74,7 @@ save_sessioninfo_manifest()
 ```
 
 ### 3. Bootstrap CI Pattern (K1.4, K3.4)
+
 ```r
 # Current (no seed)
 boot_result <- boot(data, boot_fn, R = 1000)
@@ -82,6 +85,7 @@ boot_result <- boot(data, boot_fn, R = 1000)
 ```
 
 ### 4. Pipeline Orchestration Pattern (K1.7, K3.7)
+
 ```r
 # Current (setwd + relative source)
 k1_dir <- here::here("R-scripts", "K1")
@@ -97,6 +101,7 @@ source(here::here("R-scripts", "K1", "K1.2.data_transformation.R"))
 ```
 
 ### 5. Pivot/Transpose Pattern (K2, K4)
+
 ```r
 # Current (hardcoded paths)
 file_path <- "C:/Users/tomik/OneDrive/.../tables/K1_Z_Score_Change_2G.csv"
@@ -182,10 +187,12 @@ save_table_csv_html(df_transposed, "K2_Z_Score_Change_2G_Transposed",
 ### K1.1.data_import.R (shared by K3)
 
 **Current situation:**
+
 - K3.7.main.R sources `"K1.1.data_import.R"` with hardcoded relative path
 - K3.7.main.R uses `setwd("C:/Users/tomik/...")`
 
 **Refactored solution:**
+
 1. Move K1.1.data_import.R logic to R/functions/io.R as `load_raw_data()`
 2. Both K1 and K3 pipelines call `load_raw_data()` helper
 3. OR: Keep K1.1 and source it with absolute path: `source(here::here("R-scripts", "K1", "K1.1.data_import.R"))`
@@ -195,9 +202,11 @@ save_table_csv_html(df_transposed, "K2_Z_Score_Change_2G_Transposed",
 ### K1.5.kurtosis_skewness.R (shared by K3)
 
 **Current situation:**
+
 - K3.7.main.R sources `"K1.5.kurtosis_skewness.R"` with hardcoded relative path
 
 **Refactored solution:**
+
 - Source with absolute path: `source(here::here("R-scripts", "K1", "K1.5.kurtosis_skewness.R"))`
 - OR: Extract functions to R/functions/stats.R
 

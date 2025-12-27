@@ -242,8 +242,11 @@ Minimal required columns to proceed (pick A or B):
 - BMI: `BMI`
 - FOF_status (0/1): from `kaatumisenpelkoOn`
 - Composite_Z0: `ToimintaKykySummary0`
-- Composite_Z2: `ToimintaKykySummary2`
-- Delta_Composite_Z: `ToimintaKykySummary2 - ToimintaKykySummary0`
+- Composite_Z12: `ToimintaKykySummary2` (12 months)
+- Delta_Composite_Z: `ToimintaKykySummary2 - ToimintaKykySummary0` (12-month change)
+
+Note: Legacy code may reference `Composite_Z2` or `Composite_Z3`; these should be
+interpreted as 12-month follow-up (Z12) per current naming convention.
 
 ## PRIMARY ANALYSIS STRATEGY (DEFAULT)
 
@@ -259,6 +262,10 @@ Minimal required columns to proceed (pick A or B):
      `Composite_Z ~ time * FOF_status + age + sex + BMI + (1 | ID)`
      (Implementation note: use the actual ID column name from the dataset,
       e.g. `(1 | id)` per VERIFIED VARIABLE MAP.)
+   - Two-timepoint long change model: Can use `time_f` (0 vs 12) without
+     baseline covariate, as baseline is included as an outcome row. This
+     approach estimates change via time coefficient while accounting for
+     within-subject correlation through random effects.
 
 ### Why this structure
 

@@ -9,6 +9,7 @@
 ## Overview
 
 This PR refactors K1-K4 R scripts to comply with project CLAUDE.md conventions while preserving all analysis logic and results. The refactoring focuses on:
+
 - Standardizing script headers
 - Implementing reproducible path management
 - Adding manifest logging for all artifacts
@@ -22,6 +23,7 @@ This PR refactors K1-K4 R scripts to comply with project CLAUDE.md conventions w
 ### ✅ Completed Changes
 
 #### 1. Foundation (R/functions/)
+
 - **R/functions/io.R**: Added `load_raw_data()` wrapper with fallback logic
   - Primary location: `data/raw/KaatumisenPelko.csv`
   - Fallback: `dataset/KaatumisenPelko.csv` (legacy)
@@ -36,6 +38,7 @@ This PR refactors K1-K4 R scripts to comply with project CLAUDE.md conventions w
   - `sanity_checks()` - validates data structure
 
 #### 2. K1 Pipeline (Partial)
+
 - **K1.7.main.R** - Orchestrator script:
   - ✅ Added full CLAUDE.md standard header
   - ✅ Implemented `script_label` derivation from `--file` argument
@@ -55,6 +58,7 @@ This PR refactors K1-K4 R scripts to comply with project CLAUDE.md conventions w
 ### ⏳ In Progress / Remaining
 
 #### K1 Pipeline (Remaining)
+
 - [ ] **K1.2.data_transformation.R**: Add standard header + req_cols check (needs review - see notes)
 - [ ] **K1.3.statistical_analysis.R**: Add standard header
 - [ ] **K1.4.effect_sizes.R**: Add standard header + `set.seed(20251124)` for bootstrap
@@ -62,15 +66,18 @@ This PR refactors K1-K4 R scripts to comply with project CLAUDE.md conventions w
 - [ ] **K1.6.results_export.R**: Refactor to use `save_table_csv_html()` + manifest logging
 
 #### K3 Pipeline
+
 - [ ] **K3.7.main.R**: Similar to K1.7, but sources K1.1 and K1.5 with absolute paths
 - [ ] **K3.2, K3.3, K3.4, K3.6**: Similar to K1 equivalents
 - [ ] **K3.4.effect_sizes.R**: Add `set.seed(20251124)` for bootstrap
 
 #### K2 Pipeline
+
 - [ ] **K2.Z_Score_C_Pivot_2G.R**: Standard header + dynamic input paths from K1 outputs
 - [ ] **K2.KAAOS-Z_Score_C_Pivot_2R.R**: Standard header + dynamic input paths
 
 #### K4 Pipeline
+
 - [ ] **K4.A_Score_C_Pivot_2G.R**: Standard header + dynamic input path from K3 outputs
 
 ---
@@ -78,7 +85,9 @@ This PR refactors K1-K4 R scripts to comply with project CLAUDE.md conventions w
 ## Why These Changes
 
 ### Problem Statement
+
 K1-K4 scripts had several issues preventing reproducibility and maintainability:
+
 1. **Hardcoded paths**: Windows-specific absolute paths (`C:/Users/tomik/...`)
 2. **No manifest logging**: Outputs not tracked in manifest/manifest.csv
 3. **No standard headers**: Missing documentation of purpose, variables, mappings
@@ -87,7 +96,9 @@ K1-K4 scripts had several issues preventing reproducibility and maintainability:
 6. **Scattered helper logic**: Same code repeated across scripts
 
 ### Solution Approach
+
 Minimal, reversible refactoring following CLAUDE.md conventions:
+
 - Add standard headers (documentation only, no logic change)
 - Use existing R/functions/ helpers (already tested)
 - Replace hardcoded paths with `here::here()` + `init_paths()`
@@ -99,6 +110,7 @@ Minimal, reversible refactoring following CLAUDE.md conventions:
 ## How to Run
 
 ### Prerequisites
+
 ```bash
 # From repo root
 cd Fear-of-Falling
@@ -110,30 +122,39 @@ Rscript -e "renv::restore(prompt = FALSE)"
 ### Run Pipelines (from repo root)
 
 #### K1: Z-Score Change Analysis
+
 ```bash
 Rscript R-scripts/K1/K1.7.main.R
 ```
+
 **Outputs:** `R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv` (and others)
 
 #### K3: Original Values Analysis
+
 ```bash
 Rscript R-scripts/K3/K3.7.main.R
 ```
+
 **Outputs:** `R-scripts/K3/outputs/K3_Values_2G.csv` (and others)
 
 #### K2: Z-Score Pivot (requires K1 outputs)
+
 ```bash
 Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R
 ```
+
 **Outputs:** `R-scripts/K2/outputs/K2_Z_Score_Change_2G_Transposed.csv`
 
 #### K4: Score Pivot (requires K3 outputs)
+
 ```bash
 Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R
 ```
+
 **Outputs:** `R-scripts/K4/outputs/K4_Score_Change_2G_Transposed.csv`
 
 ### Verify Manifest Logging
+
 ```bash
 # Check manifest has new entries
 tail -20 manifest/manifest.csv
@@ -150,12 +171,14 @@ grep -c '"K4"' manifest/manifest.csv
 ## What Was Tested
 
 ### ✅ Completed Testing
+
 - [x] Verified R/functions/ helpers exist and have correct signatures
 - [x] Verified `init_paths()` creates correct directory structure
 - [x] Verified K1.7.main.R has proper header and init logic
 - [x] Verified K1.1.data_import.R has req_cols check and fallback logic
 
 ### ⏳ Remaining Testing (After Completing Refactoring)
+
 - [ ] Smoke test: K1 pipeline runs without errors
 - [ ] Smoke test: K3 pipeline runs without errors
 - [ ] Smoke test: K2 pipeline runs without errors (after K1)
@@ -182,7 +205,9 @@ grep -c '"K4"' manifest/manifest.csv
 | K1.2 logic differs from helper | Medium | Medium | Review K1.2 before applying standardize_analysis_vars() |
 
 ### Rollback Plan
+
 If issues arise:
+
 1. `git revert` to last working commit
 2. Review specific diff causing issue
 3. Fix and retest (don't revert entire refactoring)
@@ -193,19 +218,24 @@ If issues arise:
 ## Migration Notes
 
 ### For Users
+
 **Old behavior:**
+
 - Outputs went to `tables/` directory (hardcoded Windows paths)
 - No manifest tracking
 - Required manual path editing to run on different machines
 
 **New behavior:**
+
 - Outputs go to `R-scripts/<K>/outputs/` (portable paths)
 - All outputs logged in `manifest/manifest.csv`
 - Scripts run from repo root without modification
 - Cross-platform compatible (uses `here::here()`)
 
 ### For Developers
+
 **Adding new Kxx scripts:**
+
 1. Copy standard header template from REFACTORING_IMPLEMENTATION_GUIDE.md
 2. Call `init_paths("Kxx")` at start (for main scripts)
 3. Use `save_table_csv_html()` for outputs
@@ -213,6 +243,7 @@ If issues arise:
 5. Define `req_cols` and check them
 
 **Modifying existing K1-K4:**
+
 - Review REFACTORING_IMPLEMENTATION_GUIDE.md first
 - Preserve analysis logic (don't change statistical computations)
 - Update manifest logging if adding new outputs
@@ -223,12 +254,14 @@ If issues arise:
 ## Documentation Updates
 
 ### New Documentation
+
 1. **docs/k1-k4_inventory.md**: Complete inventory of K1-K4 scripts
 2. **docs/k1-k4_differences_matrix.md**: Comparison matrix and patterns
 3. **docs/k1-k4_refactor_plan.md**: Detailed 6-phase refactoring plan
 4. **docs/REFACTORING_IMPLEMENTATION_GUIDE.md**: Templates and completion guide
 
 ### Updated Documentation
+
 - **README.md**: Added K1-K4 runbook section (see below)
 - **CLAUDE.md**: Already defines standards (no changes needed)
 
@@ -237,6 +270,7 @@ If issues arise:
 ## Next Steps
 
 ### Immediate (Complete Refactoring)
+
 1. Complete K1.2-K1.6 refactoring (see REFACTORING_IMPLEMENTATION_GUIDE.md)
 2. Run K1 smoke test and verify outputs
 3. Complete K3 refactoring (K3.2-K3.7)
@@ -247,6 +281,7 @@ If issues arise:
 8. Document before/after comparison results
 
 ### Future Enhancements
+
 1. Apply same standards to K5-K16 (especially K11-K16 which are analysis-focused)
 2. Consider deprecating K1.Z_Score_Change_2G_v4.R (monolithic duplicate of K1.7)
 3. Add automated tests (testthat) for key functions
@@ -273,6 +308,7 @@ If issues arise:
 ## Summary
 
 This refactoring brings K1-K4 scripts into compliance with CLAUDE.md standards without changing any statistical logic. The changes are minimal, reversible, and focused on:
+
 - **Reproducibility** (renv + seed)
 - **Portability** (no hardcoded paths)
 - **Transparency** (manifest logging + standard headers)
