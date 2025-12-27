@@ -57,21 +57,29 @@ mock_data <- tibble(
   z_Puristus2 = rnorm(n, mean = 0.1, sd = 1),
 
   # === Raw test values (for K3/K4 scripts that use original values) ===
-  # Maximum walking speed (m/s)
+  # Maximum walking speed (m/s) - English and Finnish names
   MWS0 = round(rnorm(n, mean = 1.2, sd = 0.3), 2),
   MWS2 = round(rnorm(n, mean = 1.25, sd = 0.3), 2),
+  kavelynopeus_m_sek0 = round(rnorm(n, mean = 1.2, sd = 0.3), 2),
+  kavelynopeus_m_sek2 = round(rnorm(n, mean = 1.25, sd = 0.3), 2),
 
-  # Five times sit-to-stand test (seconds)
+  # Five times sit-to-stand test (seconds) - English and Finnish names
   FTSST0 = round(rnorm(n, mean = 15, sd = 5), 1),
   FTSST2 = round(rnorm(n, mean = 14.5, sd = 5), 1),
+  tuoliltanousu0 = round(rnorm(n, mean = 15, sd = 5), 1),
+  tuoliltanousu2 = round(rnorm(n, mean = 14.5, sd = 5), 1),
 
-  # Single leg stand (seconds)
+  # Single leg stand (seconds) - English and Finnish names
   SLS0 = round(rnorm(n, mean = 8, sd = 6), 1),
   SLS2 = round(rnorm(n, mean = 8.5, sd = 6), 1),
+  Seisominen0 = round(rnorm(n, mean = 8, sd = 6), 1),
+  Seisominen2 = round(rnorm(n, mean = 8.5, sd = 6), 1),
 
-  # Hand grip strength (kg)
+  # Hand grip strength (kg) - English and Finnish names
   HGS0 = round(rnorm(n, mean = 22, sd = 6), 1),
   HGS2 = round(rnorm(n, mean = 22.5, sd = 6), 1),
+  Puristus0 = round(rnorm(n, mean = 22, sd = 6), 1),
+  Puristus2 = round(rnorm(n, mean = 22.5, sd = 6), 1),
 
   # === Health covariates ===
   # Osteoporosis index (MOI)
@@ -92,6 +100,7 @@ mock_data <- tibble(
   # === Subjective health measures ===
   # Pain VAS (0-10 scale)
   PainVAS0 = round(runif(n, min = 0, max = 10), 1),
+  PainVAS2 = round(runif(n, min = 0, max = 10), 1),
 
   # Self-rated health (ordinal: 0=poor, 1=fair, 2=good)
   SRH = sample(0:2, n, replace = TRUE, prob = c(0.2, 0.5, 0.3)),
@@ -99,9 +108,10 @@ mock_data <- tibble(
   # Self-rated mobility (ordinal: 0=poor, 1=fair, 2=good)
   oma_arvio_liikuntakyky = sample(0:2, n, replace = TRUE, prob = c(0.2, 0.5, 0.3)),
 
-  # === Walking difficulty (for K8 script) ===
-  # 500m walking difficulty (0=no, 1=some, 2=much, 3=cannot)
+  # === Walking difficulty (for K7/K8 scripts) ===
+  # 500m walking difficulty (0=no, 1=some, 2=much, 3=cannot) - English and Finnish
   Walk500m = sample(0:3, n, replace = TRUE, prob = c(0.4, 0.3, 0.2, 0.1)),
+  Vaikeus500m = sample(0:3, n, replace = TRUE, prob = c(0.4, 0.3, 0.2, 0.1)),
 
   # Balance problems (0=no, 1=yes)
   Balance_problem = sample(0:1, n, replace = TRUE, prob = c(0.7, 0.3)),
