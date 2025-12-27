@@ -14,12 +14,20 @@
 #   - Track outputs created under R-scripts/<K>/outputs (before/after)
 #   - Fail (exit status 1) if ANY script fails
 #
+# CI/CD Support:
+#   - Detects CI environment (GITHUB_ACTIONS, CI env vars)
+#   - Generates mock data for CI (real data is encrypted with git-crypt)
+#   - Uses real data for local testing
+#
 # Default per-script timeout: 300s (best-effort; uses R.utils::withTimeout if available)
 #
-# Date: 2025-12-25
+# Date: 2025-12-26
 # ==============================================================================
 
 TIMEOUT_SECONDS <- 300
+
+# Detect CI environment
+is_ci <- Sys.getenv("CI") == "true" || Sys.getenv("GITHUB_ACTIONS") == "true"
 
 # Explicit script mapping with correct entry points for K1-K4
 SCRIPTS_TO_TEST <- list(
@@ -282,6 +290,31 @@ cat_header("SMOKE TEST SUITE: ALL REQUIRED K SCRIPTS")
 cat("Scripts to test (ordered):", paste(names(SCRIPTS_TO_TEST), collapse = ", "), "\n")
 cat("Timeout per script:", TIMEOUT_SECONDS, "seconds\n")
 cat("Started at:", as.character(Sys.time()), "\n")
+
+# Generate mock data for CI environment
+if (is_ci) {
+  cat("\n[CI MODE] Detected CI environment - generating mock data...\n")
+  mock_generator <- "tests/generate_mock_data.R"
+  mock_output <- "data/external/KaatumisenPelko.csv"
+
+  if (file.exists(mock_generator)) {
+    # Run mock data generator
+    result <- system2("Rscript", args = c(mock_generator, mock_output),
+                      stdout = TRUE, stderr = TRUE)
+    if (attr(result, "status") %||% 0 == 0) {
+      cat("✓ Mock data generated successfully at:", mock_output, "\n")
+    } else {
+      cat("✗ Failed to generate mock data\n")
+      cat("Error:", paste(result, collapse = "\n"), "\n")
+      quit(status = 1)
+    }
+  } else {
+    cat("✗ Mock data generator not found:", mock_generator, "\n")
+    quit(status = 1)
+  }
+} else {
+  cat("\n[LOCAL MODE] Using real data (encrypted in git)\n")
+}
 
 cat("\nChecking prerequisites...\n")
 data_path <- find_data_file()

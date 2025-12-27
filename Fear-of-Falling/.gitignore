@@ -59,3 +59,6 @@ Rplots.pdf
 
 # Smoke test reports (generated artifacts)
 SMOKE_TEST_REPORT_*.md
+
+# Testing mock data (generated in CI, don't commit)
+data/testing/mock_*.csv
