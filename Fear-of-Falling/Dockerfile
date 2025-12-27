@@ -69,8 +69,13 @@ COPY . .
 # Verify critical packages are installed and check versions
 RUN R -e "library(rprojroot); cat('rprojroot version:', as.character(packageVersion('rprojroot')), '\n'); library(dplyr); library(here); library(ggplot2); library(lme4); cat('✓ Critical packages loaded successfully\n')"
 
+# Generate mock data for CI/CD (replaces encrypted real data)
+# This ensures smoke tests can run in Docker without git-crypt keys
+RUN Rscript tests/generate_mock_data.R data/external/KaatumisenPelko.csv && \
+    echo "✓ Mock data generated for Docker image"
+
 # Create outputs directories
-RUN mkdir -p R-scripts/{K6,K7,K8,K9,K10,K11,K12,K13,K14,K15,K16}/outputs
+RUN mkdir -p R-scripts/{K1,K2,K3,K4,K6,K7,K8,K9,K10,K11,K12,K13,K14,K15,K16}/outputs
 
 # Set proper permissions
 RUN chmod -R 755 /project
