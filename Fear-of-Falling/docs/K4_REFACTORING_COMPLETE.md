@@ -8,6 +8,7 @@
 ## Summary
 
 The K4 pipeline (Original Values Pivot & Transpose) has been successfully refactored to comply with CLAUDE.md standards. The script now has:
+
 - Standard header with complete documentation
 - Required columns checks (`req_cols`)
 - Portable path management (no hardcoded paths)
@@ -20,8 +21,10 @@ The K4 pipeline (Original Values Pivot & Transpose) has been successfully refact
 ## Refactored Script
 
 ### K4.A_Score_C_Pivot_2G.R (Primary Script) ✅
+
 **Size:** 7.4 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Implemented `script_label` derivation from `--file` argument
 - Added `init_paths("K4")` call for portable paths
@@ -36,12 +39,14 @@ The K4 pipeline (Original Values Pivot & Transpose) has been successfully refact
 **Run command:** `Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R`
 
 **Purpose:**
+
 - Transposes K3 original values output from long to wide format
 - Recodes test names to include FOF status (e.g., "MWS_Without_FOF", "MWS_With_FOF")
 - Creates parameter-by-test transposed table for easier reporting
 - **Similar to K2 but processes original test values instead of z-scores**
 
 **Required columns:**
+
 ```r
 req_cols <- c("kaatumisenpelkoOn", "Test")
 ```
@@ -50,6 +55,7 @@ req_cols <- c("kaatumisenpelkoOn", "Test")
 **Output:** `R-scripts/K4/outputs/K4_Values_2G_Transposed.csv`
 
 **Transformation logic:**
+
 1. Load K3 output (original values statistics by group and test)
 2. Recode test names: "Kävelynopeus"/"MWS" → "MWS_Without_FOF" or "MWS_With_FOF" (based on kaatumisenpelkoOn)
 3. Remove kaatumisenpelkoOn column (info now in test names)
@@ -63,6 +69,7 @@ req_cols <- c("kaatumisenpelkoOn", "Test")
 ## Testing Instructions
 
 ### Prerequisites
+
 ```bash
 # From repo root
 cd Fear-of-Falling
@@ -76,12 +83,14 @@ Rscript R-scripts/K3/K3.7.main.R
 ```
 
 ### Run K4 Script
+
 ```bash
 # Execute K4 script (requires K3 output)
 Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R
 ```
 
 **Expected output:**
+
 ```
 ================================================================================
 K4 Script - Original Values Data Transpose (2 Groups)
@@ -119,6 +128,7 @@ Manifest updated: /path/to/manifest/manifest.csv
 ```
 
 ### Verify Outputs
+
 ```bash
 # Check output files created
 ls -lh R-scripts/K4/outputs/
@@ -134,6 +144,7 @@ tail -10 manifest/manifest.csv
 ```
 
 ### Verification Checklist
+
 - [ ] K3 pipeline runs successfully first
 - [ ] K4 script runs without errors
 - [ ] Output file created: `R-scripts/K4/outputs/K4_Values_2G_Transposed.csv`
@@ -148,6 +159,7 @@ tail -10 manifest/manifest.csv
 ## Key Improvements
 
 ### Before Refactoring
+
 ❌ Hardcoded path (`C:/Users/tomik/OneDrive/...`)
 ❌ No standard header
 ❌ No req_cols checks
@@ -156,6 +168,7 @@ tail -10 manifest/manifest.csv
 ❌ No dependency verification
 
 ### After Refactoring
+
 ✅ Portable paths (`here::here()`, `init_paths()`)
 ✅ Complete CLAUDE.md standard header
 ✅ Required columns verification
@@ -172,10 +185,13 @@ tail -10 manifest/manifest.csv
 ## K4 Pipeline Details
 
 ### Purpose
+
 K4 script transforms K3 statistical output from "long" format (one row per group-test combination) to "wide" transposed format (one column per group-test combination, parameters as rows).
 
 ### Use Case
+
 Transposed format is useful for:
+
 - Creating summary tables for reports/papers with original test values
 - Side-by-side comparison of test results across FOF groups (in original units)
 - Easier visual inspection of all parameters for each test
@@ -184,6 +200,7 @@ Transposed format is useful for:
 ### Example Transformation
 
 **K3 Output (Long Format - Original Values):**
+
 ```
 kaatumisenpelkoOn | Test  | B_Mean | B_SD | C_Mean | ... | Follow_up_d
 0                 | MWS   | 1.25   | 0.18 | 0.05   | ... | 0.25
@@ -196,6 +213,7 @@ kaatumisenpelkoOn | Test  | B_Mean | B_SD | C_Mean | ... | Follow_up_d
 ```
 
 **K4 Output (Wide/Transposed Format - Original Values):**
+
 ```
 Parameter    | MWS_Without_FOF | MWS_With_FOF | HGS_Without_FOF | HGS_With_FOF | VAS_Without_FOF | VAS_With_FOF | ...
 B_Mean       | 1.25            | 1.15         | 28.5            | 26.3         | 3.2             | 4.5          | ...
@@ -206,6 +224,7 @@ Follow_up_d  | 0.25            | 0.42         | 0.18            | 0.35         |
 ```
 
 ### Test Name Mapping
+
 | Original (Finnish) | English | FOF=0 (No FOF)    | FOF=1 (With FOF) |
 |--------------------|---------|-------------------|------------------|
 | Kävelynopeus       | MWS     | MWS_Without_FOF   | MWS_With_FOF     |
@@ -238,6 +257,7 @@ K4 Script (K4.A_Score_C_Pivot_2G.R)
 ```
 
 **Run order:**
+
 1. Run K3 first: `Rscript R-scripts/K3/K3.7.main.R`
 2. Then run K4: `Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R`
 
@@ -262,6 +282,7 @@ K4 Script (K4.A_Score_C_Pivot_2G.R)
 ## Complete K1-K4 Pipeline Overview
 
 ### Analysis Pipelines (Main)
+
 ```
 K1 Pipeline → K2 Transpose
   (Z-scores)    (Z-scores transposed)
@@ -271,6 +292,7 @@ K3 Pipeline → K4 Transpose
 ```
 
 ### Full Dependency Graph
+
 ```
 Raw Data (KaatumisenPelko.csv)
   ├─ K1 Pipeline (Z-Score Analysis)

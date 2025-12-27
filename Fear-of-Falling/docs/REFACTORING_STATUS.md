@@ -93,6 +93,7 @@
 ### ✅ K1 Pipeline (COMPLETED - 7 scripts)
 
 #### All Scripts Refactored
+
 - [x] **K1.1.data_import.R** - Standard header, req_cols check, load_raw_data() helper
 - [x] **K1.2.data_transformation.R** - Standard header, req_cols check, preserved pivot logic
 - [x] **K1.3.statistical_analysis.R** - Standard header, req_cols check, all statistical tests
@@ -233,6 +234,7 @@ Located in `R/functions/`:
 ## Success Criteria (Checklist)
 
 ### Code Quality
+
 - [ ] All K1-K4 scripts have CLAUDE.md standard headers
 - [ ] All scripts use init_paths(script_label) or inherit from parent
 - [ ] All outputs go to R-scripts/<K>/outputs/
@@ -243,6 +245,7 @@ Located in `R/functions/`:
 - [ ] No setwd() calls
 
 ### Testing
+
 - [ ] K1 smoke test passes
 - [ ] K3 smoke test passes
 - [ ] K2 smoke test passes
@@ -252,6 +255,7 @@ Located in `R/functions/`:
 - [ ] Before/after comparison shows no unexpected differences (or documented)
 
 ### Documentation
+
 - [ ] README.md has K1-K4 runbook (DONE)
 - [ ] PR_SUMMARY.md complete (DONE)
 - [ ] Implementation guide complete (DONE)
@@ -276,12 +280,14 @@ Located in `R/functions/`:
 ## Contact Points
 
 ### If you need help:
+
 1. Review REFACTORING_IMPLEMENTATION_GUIDE.md
 2. Check k1-k4_differences_matrix.md for patterns
 3. Look at refactored examples (K1.7.main.R, K1.1.data_import.R)
 4. Refer to CLAUDE.md for conventions
 
 ### If you find issues:
+
 1. Document in REFACTORING_IMPLEMENTATION_GUIDE.md (Script-Specific Notes)
 2. Add to troubleshooting section if recurring
 3. Update PR_SUMMARY.md risks section

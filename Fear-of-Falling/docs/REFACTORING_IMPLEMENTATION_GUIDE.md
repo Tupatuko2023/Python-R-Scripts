@@ -8,16 +8,19 @@
 ## Completed Work
 
 ### ✅ Phase 0: Documentation (DONE)
+
 - [x] Created inventory (docs/k1-k4_inventory.md)
 - [x] Created differences matrix (docs/k1-k4_differences_matrix.md)
 - [x] Created refactoring plan (docs/k1-k4_refactor_plan.md)
 
 ### ✅ Phase 1: Foundation (DONE)
+
 - [x] Verified existing R helpers (checks.R, io.R, modeling.R, reporting.R)
 - [x] Enhanced R/functions/io.R with `load_raw_data()` wrapper
 - [x] Confirmed `init_paths()`, `append_manifest()`, `save_table_csv_html()` are ready
 
 ### ⏳ Phase 2: K1 Refactor (IN PROGRESS)
+
 - [x] Refactored K1.7.main.R (orchestrator)
 - [x] Refactored K1.1.data_import.R (data import)
 - [ ] Refactor K1.2.data_transformation.R (needs review - see notes below)
@@ -71,33 +74,39 @@ req_cols <- c("{{VAR1}}", "{{VAR2}}", ...)
 For each K1-K4 script, apply these changes:
 
 ### 1. Header Section
+
 - [ ] Add shebang: `#!/usr/bin/env Rscript`
 - [ ] Add CLAUDE.md standard header with all sections
 - [ ] Document Required vars (match 1:1 with req_cols check)
 - [ ] Document mapping if variables are renamed/derived
 
 ### 2. Required Columns Check
+
 - [ ] Define `req_cols` vector early in script
 - [ ] Verify all req_cols exist in data (if loading/transforming data)
 - [ ] Stop with clear error if columns missing
 
 ### 3. Path Management
+
 - [ ] Replace hardcoded paths with `here::here()` or init_paths results
 - [ ] For main scripts (K*.7.main.R): Call `init_paths(script_label)` and source helpers
 - [ ] For subscripts: Use paths from parent environment (set by main script)
 - [ ] Remove all `setwd()` calls
 
 ### 4. Manifest Logging (for scripts that save outputs)
+
 - [ ] Source `R/functions/reporting.R`
 - [ ] Replace `write.csv()` / `write_csv()` with `save_table_csv_html()`
 - [ ] Ensure `init_paths()` was called earlier (by main script)
 - [ ] Add `save_sessioninfo_manifest()` at end (only in final export scripts)
 
 ### 5. Randomness Handling
+
 - [ ] If script uses `boot()`, `sample()`, or any RNG: Add `set.seed(20251124)`
 - [ ] Document seed in header under Reproducibility section
 
 ### 6. Use Helpers
+
 - [ ] Use `load_raw_data()` for data loading (K1.1)
 - [ ] Use `standardize_analysis_vars()` for variable transformation (K1.2 or equivalent)
 - [ ] Use `sanity_checks()` for QC (K1.2 or equivalent)
@@ -107,8 +116,10 @@ For each K1-K4 script, apply these changes:
 ## Script-Specific Notes
 
 ### K1.2.data_transformation.R
+
 **Current logic:** Pivots individual performance tests to long/wide format
 **Refactoring approach:**
+
 - Review if `standardize_analysis_vars()` helper applies (it creates Composite_Z0/Z2, Delta, FOF_status)
 - The current K1.2 logic seems to be working with individual test z-scores (`z_kavelynopeus0`, `z_Tuoli0`, etc.)
 - **Decision needed:** Does K1 use composite scores OR individual test scores?
@@ -116,19 +127,24 @@ For each K1-K4 script, apply these changes:
   - If individual: Keep existing logic but add standard header
 
 **Recommended action:**
+
 1. Add standard header to existing K1.2
 2. Add req_cols check for the variables it actually uses
 3. Keep pivot logic intact (don't break working analysis)
 
 ### K1.3.statistical_analysis.R
+
 **Refactoring approach:**
+
 - Add standard header
 - Review if it uses helpers from `R/functions/modeling.R` (`fit_primary_ancova()`, etc.)
 - If not using helpers, keep existing logic (preserve analysis)
 
 ### K1.4.effect_sizes.R
+
 **CRITICAL:** Add `set.seed(20251124)` before bootstrap
 **Refactoring approach:**
+
 ```r
 # ==============================================================================
 # K1.4_EFFECT - Effect Size Calculations with Bootstrap CI
@@ -149,15 +165,19 @@ set.seed(20251124)
 ```
 
 ### K1.5.kurtosis_skewness.R
+
 **Note:** Shared by K3 (sourced from K3.7.main.R)
 **Refactoring approach:**
+
 - Add standard header
 - Note in header that it's shared by K1 and K3
 - Keep logic intact
 
 ### K1.6.results_export.R
+
 **CRITICAL:** Use manifest logging
 **Refactoring approach:**
+
 ```r
 # ==============================================================================
 # K1.6_EXPORT - Combine Results and Export
@@ -194,7 +214,9 @@ cat("K1 results exported successfully.\n")
 ## Template for K2, K3, K4
 
 ### K2 Scripts (Pivot/Transpose)
+
 **Pattern:**
+
 ```r
 #!/usr/bin/env Rscript
 # ==============================================================================
@@ -229,13 +251,17 @@ save_sessioninfo_manifest()
 ```
 
 ### K3 Scripts
+
 **Same pattern as K1**, but:
+
 - K3.7.main.R sources K1.1 and K1.5 with absolute paths
 - K3.2, K3.3, K3.4, K3.6 follow same structure as K1 equivalents
 - K3.4 needs `set.seed(20251124)` if it uses bootstrap
 
 ### K4 Script
+
 **Same pattern as K2**, but:
+
 - Reads input from K3 outputs: `R-scripts/K3/outputs/K3_Values_2G.csv`
 
 ---
@@ -280,6 +306,7 @@ tail -20 manifest/manifest.csv | grep K4
 ### Before/After Comparison
 
 If you have baseline outputs, compare:
+
 1. Output file dimensions (rows/columns)
 2. Numeric columns (tolerance 1e-6 for float differences)
 3. Column names
@@ -291,6 +318,7 @@ If no baseline available, document new outputs as canonical.
 ## Remaining Work
 
 ### To Complete Phase 2 (K1):
+
 1. Review K1.2 logic and decide approach (see notes above)
 2. Add standard header to K1.3
 3. Add standard header + set.seed to K1.4
@@ -298,16 +326,20 @@ If no baseline available, document new outputs as canonical.
 5. Refactor K1.6 to use save_table_csv_html
 
 ### Phase 3 (K3):
+
 1. Create K3.7.main.R similar to K1.7 but source K1.1 and K1.5 with absolute paths
 2. Refactor K3.2, K3.3, K3.4, K3.6 similar to K1 equivalents
 
 ### Phase 4 (K2):
+
 1. Refactor both K2 scripts with dynamic input paths from K1 outputs
 
 ### Phase 5 (K4):
+
 1. Refactor K4 script with dynamic input path from K3 outputs
 
 ### Phase 6 (Documentation):
+
 1. Create PR_SUMMARY.md
 2. Update README with K1-K4 runbook
 

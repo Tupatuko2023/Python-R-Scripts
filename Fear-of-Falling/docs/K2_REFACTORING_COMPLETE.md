@@ -8,6 +8,7 @@
 ## Summary
 
 The K2 pipeline (Z-Score Pivot & Transpose) has been successfully refactored to comply with CLAUDE.md standards. Both scripts now have:
+
 - Standard headers with complete documentation
 - Required columns checks (`req_cols`)
 - Portable path management (no hardcoded paths)
@@ -20,8 +21,10 @@ The K2 pipeline (Z-Score Pivot & Transpose) has been successfully refactored to 
 ## Refactored Scripts
 
 ### 1. K2.Z_Score_C_Pivot_2G.R (Primary Script) ✅
+
 **Size:** 6.6 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Implemented `script_label` derivation from `--file` argument
 - Added `init_paths("K2")` call for portable paths
@@ -34,11 +37,13 @@ The K2 pipeline (Z-Score Pivot & Transpose) has been successfully refactored to 
 **Run command:** `Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R`
 
 **Purpose:**
+
 - Transposes K1 z-score change output from long to wide format
 - Recodes test names to include FOF status (e.g., "MWS_Without_FOF", "MWS_With_FOF")
 - Creates parameter-by-test transposed table for easier reporting
 
 **Required columns:**
+
 ```r
 req_cols <- c("kaatumisenpelkoOn", "Test")
 ```
@@ -47,6 +52,7 @@ req_cols <- c("kaatumisenpelkoOn", "Test")
 **Output:** `R-scripts/K2/outputs/K2_Z_Score_Change_2G_Transposed.csv`
 
 **Transformation logic:**
+
 1. Load K1 output (z-score change statistics by group and test)
 2. Recode test names: "Kävelynopeus" → "MWS_Without_FOF" or "MWS_With_FOF" (based on kaatumisenpelkoOn)
 3. Remove kaatumisenpelkoOn column (info now in test names)
@@ -54,8 +60,10 @@ req_cols <- c("kaatumisenpelkoOn", "Test")
 5. Rename columns for clarity (handle .1, .2 suffixes from duplicates)
 
 ### 2. K2.KAAOS-Z_Score_C_Pivot_2R.R (Legacy/Alternative) ✅
+
 **Size:** 6.0 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Marked as **legacy/alternative version** (processes different input)
 - Implemented `script_label` derivation (uses "K2_2R" to avoid conflicts)
@@ -68,11 +76,13 @@ req_cols <- c("kaatumisenpelkoOn", "Test")
 **Run command:** `Rscript R-scripts/K2/K2.KAAOS-Z_Score_C_Pivot_2R.R`
 
 **Purpose:**
+
 - Transposes KAAOS z-score change data (legacy format)
 - Maintained for backward compatibility with older data
 - Similar logic to primary script but different input source
 
 **Required columns:**
+
 ```r
 req_cols <- c("kaatumisenpelkoOn", "Testi")  # Note: "Testi" not "Test"
 ```
@@ -81,6 +91,7 @@ req_cols <- c("kaatumisenpelkoOn", "Testi")  # Note: "Testi" not "Test"
 **Output:** `R-scripts/K2_2R/outputs/KAAOS-Z_Score_Change_Transposed.csv`
 
 **Note:** This script tries multiple fallback locations for the input file:
+
 1. `data/processed/KAAOS-Z_Score_Change_2R.csv`
 2. `vanha.P-Sote/taulukot/KAAOS-Z_Score_Change_2R.csv`
 3. `tables/KAAOS-Z_Score_Change_2R.csv`
@@ -90,6 +101,7 @@ req_cols <- c("kaatumisenpelkoOn", "Testi")  # Note: "Testi" not "Test"
 ## Testing Instructions
 
 ### Prerequisites
+
 ```bash
 # From repo root
 cd Fear-of-Falling
@@ -103,12 +115,14 @@ Rscript R-scripts/K1/K1.7.main.R
 ```
 
 ### Run K2 Primary Script
+
 ```bash
 # Execute primary K2 script (requires K1 output)
 Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R
 ```
 
 **Expected output:**
+
 ```
 ================================================================================
 K2 Script - Z-Score Change Data Transpose (2 Groups)
@@ -146,6 +160,7 @@ Manifest updated: /path/to/manifest/manifest.csv
 ```
 
 ### Run K2 Legacy Script (Optional)
+
 ```bash
 # Execute legacy K2 script (requires legacy input file)
 Rscript R-scripts/K2/K2.KAAOS-Z_Score_C_Pivot_2R.R
@@ -155,6 +170,7 @@ Rscript R-scripts/K2/K2.KAAOS-Z_Score_C_Pivot_2R.R
 ```
 
 ### Verify Outputs
+
 ```bash
 # Check output files created (primary script)
 ls -lh R-scripts/K2/outputs/
@@ -170,6 +186,7 @@ tail -10 manifest/manifest.csv
 ```
 
 ### Verification Checklist
+
 - [ ] K1 pipeline runs successfully first
 - [ ] K2 primary script runs without errors
 - [ ] Output file created: `R-scripts/K2/outputs/K2_Z_Score_Change_2G_Transposed.csv`
@@ -184,6 +201,7 @@ tail -10 manifest/manifest.csv
 ## Key Improvements
 
 ### Before Refactoring
+
 ❌ Hardcoded paths (`C:/Users/tomik/...`, `C:/Users/korptom20/...`)
 ❌ No standard headers
 ❌ No req_cols checks
@@ -192,6 +210,7 @@ tail -10 manifest/manifest.csv
 ❌ No dependency verification
 
 ### After Refactoring
+
 ✅ Portable paths (`here::here()`, `init_paths()`)
 ✅ Complete CLAUDE.md standard headers
 ✅ Required columns verification
@@ -207,10 +226,13 @@ tail -10 manifest/manifest.csv
 ## K2 Pipeline Details
 
 ### Purpose
+
 K2 scripts transform K1 statistical output from "long" format (one row per group-test combination) to "wide" transposed format (one column per group-test combination, parameters as rows).
 
 ### Use Case
+
 Transposed format is useful for:
+
 - Creating summary tables for reports/papers
 - Side-by-side comparison of test results across FOF groups
 - Easier visual inspection of all parameters for each test
@@ -218,6 +240,7 @@ Transposed format is useful for:
 ### Example Transformation
 
 **K1 Output (Long Format):**
+
 ```
 kaatumisenpelkoOn | Test         | B_Mean | B_SD | ... | Follow_up_d
 0                 | Kävelynopeus | -0.15  | 0.92 | ... | 0.25
@@ -228,6 +251,7 @@ kaatumisenpelkoOn | Test         | B_Mean | B_SD | ... | Follow_up_d
 ```
 
 **K2 Output (Wide/Transposed Format):**
+
 ```
 Parameter    | MWS_Without_FOF | MWS_With_FOF | HGS_Without_FOF | HGS_With_FOF | ...
 B_Mean       | -0.15           | -0.31        | 0.08            | -0.12        | ...
@@ -237,6 +261,7 @@ Follow_up_d  | 0.25            | 0.42         | 0.18            | 0.35         |
 ```
 
 ### Test Name Mapping
+
 | Original (Finnish) | FOF=0 (No FOF)    | FOF=1 (With FOF) |
 |--------------------|-------------------|------------------|
 | Kävelynopeus       | MWS_Without_FOF   | MWS_With_FOF     |
@@ -266,6 +291,7 @@ K2 Script (K2.Z_Score_C_Pivot_2G.R)
 ```
 
 **Run order:**
+
 1. Run K1 first: `Rscript R-scripts/K1/K1.7.main.R`
 2. Then run K2: `Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R`
 
@@ -274,6 +300,7 @@ K2 Script (K2.Z_Score_C_Pivot_2G.R)
 ## Notes for K4 Refactoring
 
 K4 is likely similar to K2 but processes K3 outputs (original values instead of z-scores):
+
 - Should follow same transformation pattern
 - Input: K3_Values_2G.csv from K3 outputs
 - Output: K4_Values_2G_Transposed.csv

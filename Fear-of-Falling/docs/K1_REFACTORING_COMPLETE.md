@@ -8,6 +8,7 @@
 ## Summary
 
 The K1 pipeline (Z-Score Change Analysis) has been successfully refactored to comply with CLAUDE.md standards. All 7 scripts now have:
+
 - Standard headers with complete documentation
 - Required columns checks (`req_cols`)
 - Portable path management (no hardcoded paths)
@@ -20,8 +21,10 @@ The K1 pipeline (Z-Score Change Analysis) has been successfully refactored to co
 ## Refactored Scripts
 
 ### 1. K1.7.main.R (Orchestrator) ✅
+
 **Size:** 4.5 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Implemented `script_label` derivation from `--file` argument
 - Added `init_paths("K1")` call before sourcing subscripts
@@ -32,8 +35,10 @@ The K1 pipeline (Z-Score Change Analysis) has been successfully refactored to co
 **Run command:** `Rscript R-scripts/K1/K1.7.main.R`
 
 ### 2. K1.1.data_import.R (Data Import) ✅
+
 **Size:** 1.6 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Defined `req_cols` for raw data (7 variables)
 - Uses `load_raw_data()` helper with fallback logic
@@ -42,14 +47,17 @@ The K1 pipeline (Z-Score Change Analysis) has been successfully refactored to co
 - Note: Shared by K3 pipeline
 
 **Required columns:**
+
 ```r
 req_cols <- c("id", "ToimintaKykySummary0", "ToimintaKykySummary2",
               "kaatumisenpelkoOn", "age", "sex", "BMI")
 ```
 
 ### 3. K1.2.data_transformation.R (Data Transformation) ✅
+
 **Size:** 3.7 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Defined `req_cols` for individual test z-scores (10 variables)
 - Added column existence verification
@@ -58,6 +66,7 @@ req_cols <- c("id", "ToimintaKykySummary0", "ToimintaKykySummary2",
 - Documented variable mappings in header
 
 **Required columns:**
+
 ```r
 req_cols <- c("NRO", "kaatumisenpelkoOn",
               "z_kavelynopeus0", "z_kavelynopeus2",
@@ -69,8 +78,10 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 **Output:** Creates `df_long` and `df_wide` objects
 
 ### 4. K1.3.statistical_analysis.R (Statistical Tests) ✅
+
 **Size:** 5.7 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Defined `req_cols` for df_wide (4 variables)
 - Added object existence verification
@@ -79,6 +90,7 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 - Documented all 7 analyses in header
 
 **Analyses performed:**
+
 1. Baseline summary stats (mean, SD, CI, skewness, kurtosis)
 2. Change summary stats (Follow_up - Baseline)
 3. Follow-up summary stats
@@ -90,8 +102,10 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 **Output:** Multiple objects (baseline_stats, change_stats, follow_up_stats, p_values_*)
 
 ### 5. K1.4.effect_sizes.R (Cohen's d) ✅
+
 **Size:** 5.5 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Defined `req_cols` for df_wide (4 variables)
 - Added object existence verification
@@ -101,6 +115,7 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 - If bootstrap is added later, should add `set.seed(20251124)`
 
 **Effect sizes computed:**
+
 1. Baseline Cohen's d (between-group)
 2. Change Cohen's d (within-group paired)
 3. Change_between Cohen's d (between-group change)
@@ -109,8 +124,10 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 **Output:** baseline_effect, change_effect, change_between_effect, follow_up_effect
 
 ### 6. K1.5.kurtosis_skewness.R (Distribution Interpretation) ✅
+
 **Size:** 2.1 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Documented function purposes and thresholds
 - Added reference citation (Hair et al., 2022)
@@ -118,12 +135,15 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 - Added message when functions load
 
 **Functions defined:**
+
 - `skewness_label(skew_val)` - Categorizes as Excellent, Acceptable, or Substantial nonnormality
 - `kurtosis_label(kurt_val)` - Categorizes as Too peaked, Too flat, or Normal
 
 ### 7. K1.6.results_export.R (Final Export + Manifest) ✅
+
 **Size:** 6.7 KB
 **Changes:**
+
 - Added full CLAUDE.md standard header
 - Sources `R/functions/reporting.R` for helpers
 - Added verification of all required objects from K1.2-K1.5
@@ -134,6 +154,7 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 - Documented final table structure (44 columns)
 
 **Manifest logging:**
+
 - Outputs to: `R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv`
 - Logs to: `manifest/manifest.csv` (1 row for CSV)
 - SessionInfo: `R-scripts/K1/outputs/sessioninfo_K1.txt` (1 row for sessionInfo)
@@ -143,6 +164,7 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 ## Testing Instructions
 
 ### Prerequisites
+
 ```bash
 # From repo root
 cd Fear-of-Falling
@@ -157,12 +179,14 @@ ls -lh data/raw/KaatumisenPelko.csv
 ```
 
 ### Run K1 Pipeline
+
 ```bash
 # Execute full pipeline from repo root
 Rscript R-scripts/K1/K1.7.main.R
 ```
 
 **Expected output:**
+
 ```
 ================================================================================
 K1 Pipeline - Longitudinal Analysis: Z-Score Change by FOF Status
@@ -236,6 +260,7 @@ Manifest updated: /path/to/manifest/manifest.csv
 ```
 
 ### Verify Outputs
+
 ```bash
 # Check output files created
 ls -lh R-scripts/K1/outputs/
@@ -253,6 +278,7 @@ tail -20 manifest/manifest.csv
 ```
 
 ### Verification Checklist
+
 - [ ] K1 pipeline runs without errors
 - [ ] Output file created: `R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv`
 - [ ] SessionInfo file created: `R-scripts/K1/outputs/sessioninfo_K1.txt`
@@ -267,6 +293,7 @@ tail -20 manifest/manifest.csv
 ## Key Improvements
 
 ### Before Refactoring
+
 ❌ Hardcoded paths (`setwd()`, relative paths)
 ❌ No standard headers
 ❌ No req_cols checks
@@ -275,6 +302,7 @@ tail -20 manifest/manifest.csv
 ❌ No sessionInfo tracking
 
 ### After Refactoring
+
 ✅ Portable paths (`here::here()`, `init_paths()`)
 ✅ Complete CLAUDE.md standard headers
 ✅ Required columns verification
@@ -289,6 +317,7 @@ tail -20 manifest/manifest.csv
 ## Notes for K3 Refactoring
 
 K1.1 and K1.5 are **shared by K3**:
+
 - K3.7.main.R will source: `source(here::here("R-scripts", "K1", "K1.1.data_import.R"))`
 - K3.7.main.R will source: `source(here::here("R-scripts", "K1", "K1.5.kurtosis_skewness.R"))`
 

@@ -16,23 +16,23 @@ ja kirjaavat ne `manifest/manifest.csv`-tiedostoon (1 rivi per artefakti).
 
 **Tarvitset:**
 
-* Git
-* R (käytä projektin `renv.lock`-tiedoston kanssa yhteensopivaa R-versiota)
-* renv (asennetaan tarvittaessa ajon yhteydessä)
+- Git
+- R (käytä projektin `renv.lock`-tiedoston kanssa yhteensopivaa R-versiota)
+- renv (asennetaan tarvittaessa ajon yhteydessä)
 
 **Oletettu reposisrakenne (minimi):**
 
-* `renv.lock`
-* `manifest/` (luodaan jos puuttuu)
-* `R-scripts/<K_FOLDER>/outputs/<script_label>/` (output discipline; luodaan skripteissä tarvittaessa)
-* (suositus) `R/` tai `R-scripts/` jossa ajoskripti ja/tai `analysis_mixed_workflow()`-funktio
+- `renv.lock`
+- `manifest/` (luodaan jos puuttuu)
+- `R-scripts/<K_FOLDER>/outputs/<script_label>/` (output discipline; luodaan skripteissä tarvittaessa)
+- (suositus) `R/` tai `R-scripts/` jossa ajoskripti ja/tai `analysis_mixed_workflow()`-funktio
 
 **Huom:** Vältä repo-root `outputs/`-hakemistoa (legacy/deprecated); käytä CLAUDE.md:n mukaista polkua.
 
 **Data-politiikka (ei raw-dataa KB:hen):**
 
-* Älä kopioi tai “upload”-ohjeista osallistujatason raakadataa tietopankkiin.
-* Käytä aina **polkuja** (esim. `data/external/...`) tai valmiita R-olioita paikallisesti.
+- Älä kopioi tai “upload”-ohjeista osallistujatason raakadataa tietopankkiin.
+- Käytä aina **polkuja** (esim. `data/external/...`) tai valmiita R-olioita paikallisesti.
 
 ---
 
@@ -105,6 +105,7 @@ K1-K4 scripts provide foundational data processing and transformation pipelines 
 ### Running K1-K4 (from repo root)
 
 #### K1: Z-Score Change Analysis
+
 ```bash
 # Full pipeline (K1.1 → K1.2 → K1.3 → K1.4 → K1.5 → K1.6)
 Rscript R-scripts/K1/K1.7.main.R
@@ -117,6 +118,7 @@ grep '"K1"' manifest/manifest.csv | tail -10
 ```
 
 **What K1 does:**
+
 1. Loads raw data (`dataset/KaatumisenPelko.csv`)
 2. Transforms to analysis variables (Composite_Z0, Composite_Z2, Delta, FOF_status)
 3. Runs statistical tests
@@ -125,6 +127,7 @@ grep '"K1"' manifest/manifest.csv | tail -10
 6. Exports final table: `K1_Z_Score_Change_2G.csv`
 
 #### K3: Original Values Analysis
+
 ```bash
 # Full pipeline (K1.1 → K3.2 → K3.3 → K3.4 → K1.5 → K3.6)
 # Note: K3 reuses K1.1 (data import) and K1.5 (kurtosis/skewness)
@@ -141,6 +144,7 @@ grep '"K3"' manifest/manifest.csv | tail -10
 Similar to K1 but analyzes original test values instead of z-scores.
 
 #### K2: Z-Score Pivot (requires K1 outputs)
+
 ```bash
 # Transpose z-score results by FOF status
 Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R
@@ -156,6 +160,7 @@ ls -lh R-scripts/K2/outputs/
 Recodes test names by FOF status and transposes data for presentation.
 
 #### K4: Score Pivot (requires K3 outputs)
+
 ```bash
 # Transpose score results by FOF status
 Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R
@@ -234,20 +239,20 @@ K2 outputs                           K4 outputs
 
 **Malli (kiinteät + satunnaiset):**
 
-* Kiinteät: `Composite_Z ~ time * FOF_status + age + sex + BMI (+ optional covariates)`
-* Satunnaiset: `(1 | id)`
-* Päätulos: **interaktiotermi `time:FOF_status`** (FOF-ryhmän muutos vs nonFOF-ryhmän muutos baseline→12 kk)
+- Kiinteät: `Composite_Z ~ time * FOF_status + age + sex + BMI (+ optional covariates)`
+- Satunnaiset: `(1 | id)`
+- Päätulos: **interaktiotermi `time:FOF_status`** (FOF-ryhmän muutos vs nonFOF-ryhmän muutos baseline→12 kk)
 
 **FOF_status-koodaus (suositus):**
 
-* `FOF_status = factor(..., levels = c("nonFOF","FOF"))`
+- `FOF_status = factor(..., levels = c("nonFOF","FOF"))`
 
 **Manifest + outputs -käytäntö (CLAUDE.md Output discipline):**
 
-* Output-polku: `R-scripts/<K_FOLDER>/outputs/<script_label>/` (script_label = SCRIPT_ID, katso "Naming conventions" alla)
-* `manifest/manifest.csv`: 1 rivi per artefakti, pakolliset sarakkeet: **file, date, script, git hash** (jos saatavilla)
+- Output-polku: `R-scripts/<K_FOLDER>/outputs/<script_label>/` (script_label = SCRIPT_ID, katso "Naming conventions" alla)
+- `manifest/manifest.csv`: 1 rivi per artefakti, pakolliset sarakkeet: **file, date, script, git hash** (jos saatavilla)
   - Legacy/optional sarakkeet: type, filename, description (voidaan säilyttää yhteensopivuuden vuoksi)
-* Siemen: `set.seed(20251124)` **vain** kun satunnaisuutta (MI, bootstrap, resampling)—ei deterministisille malleille (lm, lmer)
+- Siemen: `set.seed(20251124)` **vain** kun satunnaisuutta (MI, bootstrap, resampling)—ei deterministisille malleille (lm, lmer)
 
 ---
 
@@ -257,27 +262,27 @@ K2 outputs                           K4 outputs
 
 **Pakolliset sarakkeet:**
 
-* `id` : yksilö-ID (integer/character)
-* `time` : aikamuuttuja (katso koodaus alla)
-* `Composite_Z` : lopputulos (numeric)
-* `FOF_status` : ryhmä (factor: `nonFOF`, `FOF`)
-* kovariaatit: `age` (numeric), `sex` (factor), `BMI` (numeric)
+- `id` : yksilö-ID (integer/character)
+- `time` : aikamuuttuja (katso koodaus alla)
+- `Composite_Z` : lopputulos (numeric)
+- `FOF_status` : ryhmä (factor: `nonFOF`, `FOF`)
+- kovariaatit: `age` (numeric), `sex` (factor), `BMI` (numeric)
 
 **Ajan koodaus (valitse yksi ja dokumentoi):**
 
 1. **Binäärinen 0/1 + faktoriksi** (suositus emmeans-vertailuille):
 
-* baseline = 0 → `"baseline"`
-* 12 kk = 1 → `"m12"`
+- baseline = 0 → `"baseline"`
+- 12 kk = 1 → `"m12"`
 
 1. Faktoritasot suoraan:
 
-* `factor(time, levels = c("baseline","m12"))`
+- `factor(time, levels = c("baseline","m12"))`
 
 **Minimitarkistus (ennen mallia):**
 
-* Molemmissa ryhmissä (FOF/nonFOF) havaintoja molemmilla aikapisteillä
-* Ei “tyhjiä” faktoritason kombinaatioita (emmeans antaa helposti varoituksia)
+- Molemmissa ryhmissä (FOF/nonFOF) havaintoja molemmilla aikapisteillä
+- Ei “tyhjiä” faktoritason kombinaatioita (emmeans antaa helposti varoituksia)
 
 ---
 
@@ -316,17 +321,17 @@ fit <- lmer(outcome ~ predictor + (1|id), data = df)  # ei tarvitse seediä
 
 Tallenna **aina** (joka ajolla) tiedostoihin `manifest/`:
 
-* `sessionInfo_<script_label>.txt`
-* `renv_diagnostics_<script_label>.txt`
+- `sessionInfo_<script_label>.txt`
+- `renv_diagnostics_<script_label>.txt`
 
 4. **Manifest-kirjaus (CLAUDE.md Output discipline)**
 
 **1 rivi per artefakti**, pakolliset sarakkeet:
 
-* `file` — tiedostopolku (suhteellinen repojuuresta)
-* `date` — aikaleima (Sys.time())
-* `script` — skripti-ID (esim. K11, K12)
-* `git_hash` — Git commit hash (jos saatavilla; muuten NA)
+- `file` — tiedostopolku (suhteellinen repojuuresta)
+- `date` — aikaleima (Sys.time())
+- `script` — skripti-ID (esim. K11, K12)
+- `git_hash` — Git commit hash (jos saatavilla; muuten NA)
 
 Esimerkki R-koodista:
 
@@ -361,9 +366,9 @@ Skripti-tunniste (esim. `K11`, `K12`, `K13`, ...). Jokainen skriptikansio `R-scr
 
 **Esimerkki:**
 
-* `R-scripts/K11/` → SCRIPT_ID = `K11`
-* `R-scripts/K12/` → SCRIPT_ID = `K12`
-* `R-scripts/K5/` → SCRIPT_ID = `K5`
+- `R-scripts/K11/` → SCRIPT_ID = `K11`
+- `R-scripts/K12/` → SCRIPT_ID = `K12`
+- `R-scripts/K5/` → SCRIPT_ID = `K5`
 
 ### file_tag
 
@@ -371,9 +376,9 @@ Tiedostonimen kuvaava osa (ilman `.R`-päätettä).
 
 **Esimerkkejä:**
 
-* `K11.R` → file_tag = `K11`
-* `K5.1.V4_Moderation_analysis.R` → file_tag = `K5.1.V4_Moderation_analysis`
-* `K2.Z_Score_C_Pivot_2G.R` → file_tag = `K2.Z_Score_C_Pivot_2G`
+- `K11.R` → file_tag = `K11`
+- `K5.1.V4_Moderation_analysis.R` → file_tag = `K5.1.V4_Moderation_analysis`
+- `K2.Z_Score_C_Pivot_2G.R` → file_tag = `K2.Z_Score_C_Pivot_2G`
 
 ### script_label (canonical)
 
@@ -381,9 +386,9 @@ Tiedostonimen kuvaava osa (ilman `.R`-päätettä).
 
 **Esimerkkejä:**
 
-* `K11.R` → `script_label = K11`
-* `K5.1.V4_Moderation_analysis.R` → `script_label = K5.1` (prefix ennen `.V4`)
-* `K2.Z_Score_C_Pivot_2G.R` → `script_label = K2.Z_Score_C_Pivot_2G` (ei versiota, käytetään koko file_tag)
+- `K11.R` → `script_label = K11`
+- `K5.1.V4_Moderation_analysis.R` → `script_label = K5.1` (prefix ennen `.V4`)
+- `K2.Z_Score_C_Pivot_2G.R` → `script_label = K2.Z_Score_C_Pivot_2G` (ei versiota, käytetään koko file_tag)
 
 **Käyttö:** Output-hakemistot ja manifest-merkinnät viittaavat `script_label`:iin yhtenäisyyden varmistamiseksi.
 
@@ -395,9 +400,9 @@ R-scripts/<K_FOLDER>/outputs/<script_label>/
 
 **Esimerkkejä:**
 
-* `R-scripts/K11/outputs/K11/` (K11.R)
-* `R-scripts/K5/outputs/K5.1/` (K5.1.V4_Moderation_analysis.R)
-* `R-scripts/K12/outputs/K12/` (K12.R)
+- `R-scripts/K11/outputs/K11/` (K11.R)
+- `R-scripts/K5/outputs/K5.1/` (K5.1.V4_Moderation_analysis.R)
+- `R-scripts/K12/outputs/K12/` (K12.R)
 
 ---
 
@@ -405,27 +410,27 @@ R-scripts/<K_FOLDER>/outputs/<script_label>/
 
 **Oletus:** kaikki artefaktit menevät hakemistoon (CLAUDE.md Output discipline):
 
-* `R-scripts/<K_FOLDER>/outputs/<script_label>/` (esim. `R-scripts/K11/outputs/K11/`)
+- `R-scripts/<K_FOLDER>/outputs/<script_label>/` (esim. `R-scripts/K11/outputs/K11/`)
 
 **Vältä:** repo-root `outputs/` (legacy/deprecated). Käytä aina skriptikohtaista polkua.
 
 **Suositellut tiedostonimet (raportointivalmiit):**
 
-* `fixed_effects.csv` + `fixed_effects.html`
+- `fixed_effects.csv` + `fixed_effects.html`
   (estimate, SE, df (jos saatavilla), t, 95% CI, p)
-* `interaction_focus.csv` + `interaction_focus.html`
+- `interaction_focus.csv` + `interaction_focus.html`
   (vain interaktio + tulkintaa varten tarvittavat sarakkeet)
-* `emmeans_time_by_fof.csv` + `emmeans_time_by_fof.html`
+- `emmeans_time_by_fof.csv` + `emmeans_time_by_fof.html`
   (EMM:t: Composite_Z ajan mukaan, erikseen FOF-ryhmittäin)
-* `contrasts_change_over_time.csv` + `contrasts_change_over_time.html`
+- `contrasts_change_over_time.csv` + `contrasts_change_over_time.html`
   (muutos baseline→12 kk per ryhmä)
-* `interaction_plot.png` (valinnainen)
+- `interaction_plot.png` (valinnainen)
 
 **Manifest-kirjaus (CLAUDE.md):**
 
-* `manifest/manifest.csv`: 1 rivi per artefakti
-* Pakolliset sarakkeet: **file, date, script, git_hash** (jos saatavilla)
-* Legacy/optional: type, filename, description (voidaan säilyttää yhteensopivuuden vuoksi)
+- `manifest/manifest.csv`: 1 rivi per artefakti
+- Pakolliset sarakkeet: **file, date, script, git_hash** (jos saatavilla)
+- Legacy/optional: type, filename, description (voidaan säilyttää yhteensopivuuden vuoksi)
 
 ---
 
@@ -724,25 +729,25 @@ message("Manifest updated: ", manifest_path)
 
 **Mitä tulkitaan ensisijaisesti:**
 
-* **Interaktio `time:FOF_status`**: kuvaa **ryhmäeroa muutoksessa** baseline→12 kk (FOF vs nonFOF), kun:
+- **Interaktio `time:FOF_status`**: kuvaa **ryhmäeroa muutoksessa** baseline→12 kk (FOF vs nonFOF), kun:
 
-  * `FOF_status` referenssi = `nonFOF`
-  * `time` referenssi = `baseline`
-  * (tämä varmistetaan ajurissa `factor(levels=...)`)
+  - `FOF_status` referenssi = `nonFOF`
+  - `time` referenssi = `baseline`
+  - (tämä varmistetaan ajurissa `factor(levels=...)`)
 
 **Raportoi aina:**
 
-* β (estimaatti), 95 % luottamusväli (LV), sekä käytännöllisen merkittävyyden
+- β (estimaatti), 95 % luottamusväli (LV), sekä käytännöllisen merkittävyyden
   kynnys **`<PRACTICAL_THRESHOLD>`** (esim. `0.20` SD-yksikköä; aseta
   tutkimuskohtaisesti)
 
 **P-arvot:**
 
-* Pidä toissijaisina (tukevat havaintoa), älä rakenna johtopäätöstä pelkän p-arvon varaan.
+- Pidä toissijaisina (tukevat havaintoa), älä rakenna johtopäätöstä pelkän p-arvon varaan.
 
 **4-haarainen auto-teksti (sama logiikka kuin ajurissa):**
 
-* Aseta `<PRACTICAL_THRESHOLD>` (esim. `0.20`) ja käytä interaktiotermin riviä sellaisenaan (term-name *täsmälleen* taulukosta).
+- Aseta `<PRACTICAL_THRESHOLD>` (esim. `0.20`) ja käytä interaktiotermin riviä sellaisenaan (term-name *täsmälleen* taulukosta).
 
 1. **Merkittävä negatiivinen (LV ei sisällä 0, β < 0)**
 
@@ -773,9 +778,9 @@ message("Manifest updated: ", manifest_path)
 
 **Tulkinnan varovaisuus / rajoitteet (mainitse raportissa):**
 
-* Havainnoiva asetelma → ei kausaalipäätelmiä (assosiaatio ≠ kausaliteetti).
-* FOF on usein yksittäiseen kysymykseen perustuva luokittelu (esim. `kaatumisenpelkoOn` → `FOF_status`)
-* Seurantapuuttuvuus/attritio voi vinouttaa ryhmävertailuja; dokumentoi puuttuvat aikapisteet.
+- Havainnoiva asetelma → ei kausaalipäätelmiä (assosiaatio ≠ kausaliteetti).
+- FOF on usein yksittäiseen kysymykseen perustuva luokittelu (esim. `kaatumisenpelkoOn` → `FOF_status`)
+- Seurantapuuttuvuus/attritio voi vinouttaa ryhmävertailuja; dokumentoi puuttuvat aikapisteet.
 
 ---
 
@@ -783,7 +788,7 @@ message("Manifest updated: ", manifest_path)
 
 **1) `analysis_mixed_workflow` not found**
 
-* Varmista että funktio on ladattu (`source(...)`) tai että paketti/skripti on
+- Varmista että funktio on ladattu (`source(...)`) tai että paketti/skripti on
   mukana. Ajuri sisältää minimifallbackin, mutta repossa kannattaa pitää yksi
   "authoritative" toteutus.
 
@@ -794,33 +799,33 @@ renv::diagnostics()
 renv::restore(prompt = FALSE)
 ```
 
-* Tarkista R-version yhteensopivuus `renv.lock` kanssa.
+- Tarkista R-version yhteensopivuus `renv.lock` kanssa.
 
 ### 3) lmer-konvergenssi / singular fit
 
-* Tarkista data: liian vähän havaintoja joissakin time×FOF-soluissa.
-* Kokeile:
+- Tarkista data: liian vähän havaintoja joissakin time×FOF-soluissa.
+- Kokeile:
 
-  * skaalaa jatkuvat kovariaatit (age, BMI) ja/tai
-  * raportoi singular fit varoituksena ja tee herkkyysanalyysi (esim.
+  - skaalaa jatkuvat kovariaatit (age, BMI) ja/tai
+  - raportoi singular fit varoituksena ja tee herkkyysanalyysi (esim.
     yksinkertaisempi kovariaattijoukko).
 
 ### 4) emmeans varoitukset (non-estimable / empty cells)
 
-* Tarkista että `FOF_status`- ja `time`-tasoyhdistelmät ovat aidosti havaittuja.
-* Varmista `time` faktoriksi ja tasojärjestys `baseline`, `m12`.
+- Tarkista että `FOF_status`- ja `time`-tasoyhdistelmät ovat aidosti havaittuja.
+- Varmista `time` faktoriksi ja tasojärjestys `baseline`, `m12`.
 
 ### 5) "term-nimi ei täsmää" (tulostus vs teksti)
 
-* Älä hardcodea `time:FOF_status`-rivin nimeä; käytä ajurin `find_interaction_term(...)`-logiikkaa.
+- Älä hardcodea `time:FOF_status`-rivin nimeä; käytä ajurin `find_interaction_term(...)`-logiikkaa.
 
 ---
 
 ## Internal consistency check
 
-* Interaktiotermin **rivinimi** riippuu faktoritasojen nimistä (esim.
+- Interaktiotermin **rivinimi** riippuu faktoritasojen nimistä (esim.
   `timem12:FOF_statusFOF`), joten **poimi termi aina taulukosta** (ajurin
   `find_interaction_term()`), älä kirjoita sitä käsin.
-* Tulkinta "FOF-ryhmän muutos vs nonFOF-ryhmän muutos" edellyttää, että
+- Tulkinta "FOF-ryhmän muutos vs nonFOF-ryhmän muutos" edellyttää, että
   referenssitasot ovat `time = baseline` ja `FOF_status = nonFOF` (ajurissa
   `factor(levels=...)`).

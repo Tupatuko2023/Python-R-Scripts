@@ -36,7 +36,9 @@
 **Goal:** Capture baseline state for before/after comparison
 
 **Actions:**
+
 1. Document current outputs:
+
    ```bash
    # List all current outputs
    find R-scripts/K1 R-scripts/K2 R-scripts/K3 R-scripts/K4 -name "*.csv" -o -name "*.html" > docs/baseline_outputs.txt
@@ -46,17 +48,20 @@
    ```
 
 2. Document expected variables:
+
    ```bash
    # Grep for all read_csv/write_csv to understand current I/O
    grep -n "read_csv\|write_csv\|read\.csv\|write\.csv" R-scripts/K*/**.R > docs/baseline_io.txt
    ```
 
 3. Check if renv is consistent:
+
    ```bash
    Rscript -e "renv::status()"
    ```
 
 **Deliverables:**
+
 - docs/baseline_outputs.txt
 - docs/baseline_io.txt
 - Confirmation that renv is in sync
@@ -68,18 +73,21 @@
 **Goal:** Ensure all helper functions are production-ready
 
 **Current State:**
+
 - ✅ `R/functions/io.R` has `standardize_analysis_vars()`
 - ✅ `R/functions/checks.R` has `sanity_checks()`
 - ✅ `R/functions/modeling.R` has `fit_primary_ancova()`, etc.
 - ✅ `R/functions/reporting.R` has `init_paths()`, `append_manifest()`, `save_table_csv_html()`, `save_sessioninfo_manifest()`
 
 **Actions:**
+
 1. **Review and test existing helpers:**
    - Read each helper function
    - Verify they match CLAUDE.md conventions
    - Check that `init_paths()` creates correct directory structure
 
 2. **Optional enhancement to io.R:**
+
    ```r
    # Add wrapper for consistent data loading
    load_raw_data <- function(file_name = "KaatumisenPelko.csv") {
@@ -94,6 +102,7 @@
    ```
 
 3. **Test init_paths() manually:**
+
    ```r
    source(here::here("R", "functions", "reporting.R"))
    paths <- init_paths("TEST")
@@ -102,6 +111,7 @@
    ```
 
 **Deliverables:**
+
 - Optional: Enhanced `R/functions/io.R` with `load_raw_data()`
 - Verified that all helpers work as expected
 
@@ -118,6 +128,7 @@
 #### 2.1: K1.1.data_import.R
 
 **Changes:**
+
 - Add CLAUDE.md standard header
 - Define `req_cols` for raw data: `c("id", "ToimintaKykySummary0", "ToimintaKykySummary2", "kaatumisenpelkoOn", "age", "sex", "BMI")`
 - Replace `here::here("dataset", "KaatumisenPelko.csv")` with portable path (use `load_raw_data()` or here::here("data", "raw", ...))
@@ -125,6 +136,7 @@
 - Add column existence check
 
 **Diff preview:**
+
 ```r
 #!/usr/bin/env Rscript
 # ==============================================================================
@@ -164,12 +176,14 @@ cat("Data import successful:", nrow(data), "rows,", ncol(data), "columns\n")
 ```
 
 **Verification:**
+
 - Source the script and check that `data` object is created
 - Verify `req_cols` check works
 
 #### 2.2: K1.2.data_transformation.R
 
 **Changes:**
+
 - Add CLAUDE.md standard header
 - Source `R/functions/io.R` and `R/functions/checks.R`
 - Use `standardize_analysis_vars()` helper
@@ -177,6 +191,7 @@ cat("Data import successful:", nrow(data), "rows,", ncol(data), "columns\n")
 - Document variable mapping in header
 
 **Diff preview:**
+
 ```r
 #!/usr/bin/env Rscript
 # ==============================================================================
@@ -209,17 +224,20 @@ print(qc_result)
 #### 2.3: K1.3.statistical_analysis.R
 
 **Changes:**
+
 - Add CLAUDE.md standard header
 - Minimal logic changes (just header + documentation)
 
 #### 2.4: K1.4.effect_sizes.R
 
 **Changes:**
+
 - Add CLAUDE.md standard header
 - **Add `set.seed(20251124)` before bootstrap** (CRITICAL for reproducibility)
 - Document seed in header
 
 **Diff preview:**
+
 ```r
 # ==============================================================================
 # K1.4_EFFECT - Effect Size Calculations with Bootstrap CI
@@ -238,12 +256,14 @@ boot_result <- boot::boot(data, statistic = boot_fn, R = 1000)
 #### 2.5: K1.5.kurtosis_skewness.R
 
 **Changes:**
+
 - Add CLAUDE.md standard header
 - (This file is shared by K3, so changes affect both pipelines)
 
 #### 2.6: K1.6.results_export.R
 
 **Changes:**
+
 - Add CLAUDE.md standard header
 - **Source reporting.R and use helpers**
 - Replace `write.csv()` with `save_table_csv_html()`
@@ -251,6 +271,7 @@ boot_result <- boot::boot(data, statistic = boot_fn, R = 1000)
 - Add `save_sessioninfo_manifest()` at end
 
 **Diff preview:**
+
 ```r
 # ==============================================================================
 # K1.6_EXPORT - Combine Results and Export
@@ -285,6 +306,7 @@ cat("Results exported successfully.\n")
 #### 2.7: K1.7.main.R (Orchestrator)
 
 **Changes:**
+
 - Add CLAUDE.md standard header
 - Define `script_label` from `--file` or fallback "K1"
 - **Call `init_paths("K1")` before sourcing subscripts**
@@ -292,6 +314,7 @@ cat("Results exported successfully.\n")
 - Source subscripts with `here::here("R-scripts", "K1", ...)`
 
 **Diff preview:**
+
 ```r
 #!/usr/bin/env Rscript
 # ==============================================================================
@@ -340,6 +363,7 @@ cat("K1 pipeline completed successfully.\n")
 ```
 
 **Verification:**
+
 1. Run from repo root: `Rscript R-scripts/K1/K1.7.main.R`
 2. Check that outputs appear in `R-scripts/K1/outputs/`
 3. Check that manifest/manifest.csv has new rows
@@ -348,6 +372,7 @@ cat("K1 pipeline completed successfully.\n")
 #### 2.8: K1.Z_Score_Change_2G_v4.R (Monolithic - Optional)
 
 **Decision:**
+
 - **Option A:** Refactor similarly to K1.7 (full standard header, init_paths, etc.)
 - **Option B:** Add deprecation notice and recommend using K1.7.main.R instead
 - **Option C:** Leave as-is (legacy backup)
@@ -355,6 +380,7 @@ cat("K1 pipeline completed successfully.\n")
 **Recommendation:** Option B (add deprecation notice) to avoid duplication
 
 **Deliverables (Phase 2):**
+
 - ✅ All K1 scripts have standard headers
 - ✅ K1 uses init_paths() and manifest logging
 - ✅ K1.4 has set.seed(20251124)
@@ -390,6 +416,7 @@ source(here::here("R-scripts", "K3", "K3.6.results_export.R"))
 #### 3.2: Script-by-Script Refactoring
 
 Apply same pattern as K1:
+
 - K3.2 → Similar to K1.2 (header, helpers)
 - K3.3 → Similar to K1.3 (header)
 - K3.4 → Similar to K1.4 (header, **set.seed(20251124)**)
@@ -397,6 +424,7 @@ Apply same pattern as K1:
 - K3.7.main → Similar to K1.7.main (init_paths("K3"), absolute source paths)
 
 **Deliverables (Phase 3):**
+
 - ✅ All K3 scripts have standard headers
 - ✅ K3 uses init_paths("K3") and manifest logging
 - ✅ K3.4 has set.seed(20251124)
@@ -414,9 +442,11 @@ Apply same pattern as K1:
 #### 4.1: K2.Z_Score_C_Pivot_2G.R
 
 **Changes:**
+
 - Add CLAUDE.md standard header
 - Define `script_label = "K2"` and call `init_paths("K2")`
 - **Replace hardcoded input path** with dynamic path from K1 outputs:
+
   ```r
   # Old:
   file_path <- "C:/Users/tomik/.../tables/K1_Z_Score_Change_2G.csv"
@@ -424,10 +454,12 @@ Apply same pattern as K1:
   # New:
   file_path <- here::here("R-scripts", "K1", "outputs", "K1_Z_Score_Change_2G.csv")
   ```
+
 - Replace `write_csv()` with `save_table_csv_html()`
 - Add manifest logging
 
 **Diff preview:**
+
 ```r
 #!/usr/bin/env Rscript
 # ==============================================================================
@@ -520,6 +552,7 @@ cat("K2 pivot completed successfully.\n")
 **Changes:** Similar pattern as K2.Z_Score_C_Pivot_2G.R
 
 **Deliverables (Phase 4):**
+
 - ✅ Both K2 scripts have standard headers
 - ✅ K2 uses dynamic input paths (from K1 outputs)
 - ✅ K2 uses init_paths("K2") and manifest logging
@@ -536,18 +569,22 @@ cat("K2 pivot completed successfully.\n")
 #### 5.1: K4.A_Score_C_Pivot_2G.R
 
 **Changes:**
+
 - Add CLAUDE.md standard header
 - Define `script_label = "K4"` and call `init_paths("K4")`
 - Replace hardcoded input path with dynamic path from K3 outputs:
+
   ```r
   file_path <- here::here("R-scripts", "K3", "outputs", "K3_Values_2G.csv")
   ```
+
 - Replace `write_csv()` with `save_table_csv_html()`
 - Add manifest logging
 
 **Pattern:** Same as K2 (see Phase 4.1)
 
 **Deliverables (Phase 5):**
+
 - ✅ K4 script has standard header
 - ✅ K4 uses dynamic input path (from K3 outputs)
 - ✅ K4 uses init_paths("K4") and manifest logging
@@ -580,13 +617,16 @@ Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R
 #### 6.2: Before/After Comparison
 
 For each Kx pipeline:
+
 1. Compare output file dimensions:
+
    ```bash
    wc -l R-scripts/K1/outputs/*.csv
    # vs baseline (if available)
    ```
 
 2. Compare key summary statistics:
+
    ```r
    # Read baseline and new output
    baseline <- read_csv("baseline/K1_Z_Score_Change_2G.csv")
@@ -604,6 +644,7 @@ For each Kx pipeline:
    ```
 
 3. Verify manifest.csv:
+
    ```bash
    # Check that manifest has new rows for K1-K4
    tail -20 manifest/manifest.csv
@@ -630,32 +671,41 @@ Add K1-K4 runbook section to README.md:
 ```bash
 Rscript R-scripts/K1/K1.7.main.R
 ```
+
 Outputs: `R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv`
 
 ### K3: Original Values Analysis
+
 ```bash
 Rscript R-scripts/K3/K3.7.main.R
 ```
+
 Outputs: `R-scripts/K3/outputs/K3_Values_2G.csv`
 
 ### K2: Z-Score Pivot
+
 ```bash
 Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R
 ```
+
 Requires: K1 outputs
 Outputs: `R-scripts/K2/outputs/K2_Z_Score_Change_2G_Transposed.csv`
 
 ### K4: Score Pivot
+
 ```bash
 Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R
 ```
+
 Requires: K3 outputs
 Outputs: `R-scripts/K4/outputs/K4_Score_Change_2G_Transposed.csv`
 
 ### Migration Notes
+
 - Old outputs were in `tables/` (legacy)
 - New outputs are in `R-scripts/<K>/outputs/` (CLAUDE.md standard)
 - All outputs logged to `manifest/manifest.csv`
+
 ```
 
 #### 6.4: Create PR Summary

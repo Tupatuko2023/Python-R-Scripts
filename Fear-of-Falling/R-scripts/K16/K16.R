@@ -12,26 +12,28 @@
 # Moderator/interaction: None (frailty as covariate/confounder, not moderator)
 #                        Exploratory: FOF × frailty_cat_3 interaction
 # Grouping variable: ID (for mixed models random effects)
-# Covariates: age, sex, BMI, Composite_Z0_baseline, frailty_cat_3 (or frailty_score_3)
+# Covariates: age, sex, BMI, frailty_cat_3 (or frailty_score_3)
+#             NOTE: Primary mixed models use time_f (0 vs 12) without baseline covariate,
+#                   as baseline is included as an outcome row
 #
 # Required vars (K15 RData - DO NOT INVENT; must be present in K15 output):
-# ID (or Jnro/NRO), FOF_status (or FOF_status_factor), Composite_Z0, Composite_Z3,
+# ID (or Jnro/NRO), FOF_status (or FOF_status_factor), Composite_Z0, Composite_Z12 (ToimintaKykySummary2),
 # age, sex, BMI, frailty_cat_3, frailty_cat_3_obj, frailty_cat_3_2plus, frailty_score_3
 #
 # Required vars (analysis df - after harmonization in script):
-# ID, FOF_status (factor: "nonFOF"/"FOF"), Composite_Z0, Composite_Z3, Delta_Composite_Z,
+# ID, FOF_status (factor: "nonFOF"/"FOF"), Composite_Z0, Composite_Z12, Delta_Composite_Z (12-month change),
 # age, sex (factor: "female"/"male"), BMI, frailty_cat_3 (factor: "Robust"/"Pre-frail"/"Frail"),
 # frailty_cat_3_obj, frailty_cat_3_2plus, frailty_score_3 (continuous)
 #
 # Mapping (K15 RData -> analysis; keep minimal + explicit):
-# Jnro/NRO -> ID (harmonized in script lines 84-92)
-# ToimintaKykySummary0 -> Composite_Z0 (harmonized if needed, lines 95-109)
-# ToimintaKykySummary2 -> Composite_Z3 (harmonized if needed, lines 103-109)
-# FOF_status (0/1 or factor) -> FOF_status (factor: "nonFOF"/"FOF", lines 150-165, releveled 307-312)
-# sex (0/1) -> sex (factor: "female"/"male", lines 168-177, releveled 307-312)
-# frailty_cat_3 (character/factor) -> frailty_cat_3 (factor: "Robust"/"Pre-frail"/"Frail", lines 112-131, releveled 307-312)
-# frailty_count_3 -> frailty_score_3 (lines 137-143)
-# Delta_Composite_Z = Composite_Z3 - Composite_Z0 (derived, line 241)
+# Jnro/NRO -> ID (harmonized in script)
+# ToimintaKykySummary0 -> Composite_Z0 (baseline)
+# ToimintaKykySummary2 -> Composite_Z12 (12 months follow-up)
+# FOF_status (0/1 or factor) -> FOF_status (factor: "nonFOF"/"FOF", releveled)
+# sex (0/1) -> sex (factor: "female"/"male", releveled)
+# frailty_cat_3 (character/factor) -> frailty_cat_3 (factor: "Robust"/"Pre-frail"/"Frail", releveled)
+# frailty_count_3 -> frailty_score_3
+# Delta_Composite_Z = Composite_Z12 - Composite_Z0 (derived, 12-month change)
 #
 # Reproducibility:
 # - renv restore/snapshot REQUIRED
@@ -45,17 +47,17 @@
 # Workflow (tick off; do not skip):
 # 01) Init paths + options + dirs (init_paths)
 # 02) Load frailty-augmented data from K15 (K15_frailty_analysis_data.RData)
-# 03) Harmonize variable names (ID, Composite_Z0/3, FOF_status, sex, frailty_cat_3)
+# 03) Harmonize variable names (ID, Composite_Z0/Z12, FOF_status, sex, frailty_cat_3)
 # 04) Check required frailty variables (frailty_cat_3, frailty_score_3, etc.)
-# 05) Prepare wide-format data for ANCOVA (Delta_Composite_Z = Composite_Z3 - Composite_Z0)
-# 06) Prepare long-format data for mixed models (Composite_Z at time 0 and 3)
+# 05) Prepare wide-format data for ANCOVA (Delta_Composite_Z = Composite_Z12 - Composite_Z0, 12-month change)
+# 06) Prepare long-format data for mixed models (Composite_Z at time 0 and 12; time_f factor)
 # 07) Fit primary ANCOVA models: baseline (no frailty), frailty_cat_3, frailty_score_3
-# 08) Fit primary mixed models: baseline (no frailty), frailty_cat_3, frailty_score_3
+# 08) Fit primary mixed models (time_f * FOF, no baseline covariate): baseline (no frailty), frailty_cat_3, frailty_score_3
 # 09) Fit exploratory interaction models: FOF × frailty_cat_3 (ANCOVA + mixed)
 # 10) Fit sensitivity analyses: frailty_cat_3_obj, frailty_cat_3_2plus
 # 11) Create formatted tables (ANCOVA + mixed results, model comparisons, sensitivity)
-# 12) Create visualizations (frailty effects coefficient plot, predicted trajectories)
-# 13) Generate Results text (English + Finnish)
+# 12) Create visualizations (frailty effects coefficient plot, predicted trajectories at 0 and 12 months)
+# 13) Generate Results text (English + Finnish, referencing 12-month change)
 # 14) Save all artifacts to outputs/K16/
 # 15) Append manifest row per artifact
 # 16) Save sessionInfo to manifest/
@@ -177,12 +179,17 @@ if (!("Composite_Z0" %in% names(analysis_data))) {
   }
 }
 
-if (!("Composite_Z3" %in% names(analysis_data))) {
+if (!("Composite_Z12" %in% names(analysis_data))) {
   if ("ToimintaKykySummary2" %in% names(analysis_data)) {
-    analysis_data <- analysis_data %>% mutate(Composite_Z3 = ToimintaKykySummary2)
+    analysis_data <- analysis_data %>% mutate(Composite_Z12 = ToimintaKykySummary2)
   } else {
-    stop("K16: Composite_Z3 puuttuu eikä löytynyt ToimintaKykySummary2-korviketta.")
+    stop("K16: Composite_Z12 puuttuu eikä löytynyt ToimintaKykySummary2-korviketta.")
   }
+}
+
+# Backward compatibility: create Composite_Z3 alias if legacy code needs it
+if (!("Composite_Z3" %in% names(analysis_data)) && ("Composite_Z12" %in% names(analysis_data))) {
+  analysis_data <- analysis_data %>% mutate(Composite_Z3 = Composite_Z12)
 }
 
 
@@ -263,7 +270,7 @@ print(sort(unique(as.character(analysis_data$FOF_raw))))
 
 # 3) Kuinka moni on complete-case per ryhmä?
 cc_flag <- complete.cases(
-  analysis_data[, c("Composite_Z0","Composite_Z3","age","sex","BMI","FOF_status")]
+  analysis_data[, c("Composite_Z0","Composite_Z12","age","sex","BMI","FOF_status")]
 )
 
 analysis_data %>%
@@ -272,12 +279,12 @@ analysis_data %>%
 
 # Verify required frailty variables exist
 required_vars <- c("frailty_cat_3", "frailty_cat_3_obj", "frailty_cat_3_2plus",
-                   "frailty_score_3", "FOF_status", "Composite_Z0", "Composite_Z3")
+                   "frailty_score_3", "FOF_status", "Composite_Z0", "Composite_Z12")
 
 
 analysis_data %>%
-  mutate(has_CZ3 = !is.na(Composite_Z3)) %>%
-  count(FOF_status, has_CZ3)
+  mutate(has_CZ12 = !is.na(Composite_Z12)) %>%
+  count(FOF_status, has_CZ12)
 
 missing_vars <- setdiff(required_vars, names(analysis_data))
 if (length(missing_vars) > 0) {
@@ -315,7 +322,7 @@ table(analysis_data$frailty_cat_3, useNA="ifany")
 
 analysis_data <- analysis_data %>%
   mutate(
-    Delta_Composite_Z = Composite_Z3 - Composite_Z0,
+    Delta_Composite_Z = Composite_Z12 - Composite_Z0,  # 12-month change
     frailty_cat_3       = fix_frailty(frailty_cat_3),
     frailty_cat_3_obj   = fix_frailty(frailty_cat_3_obj),
     frailty_cat_3_2plus = fix_frailty(frailty_cat_3_2plus)
@@ -326,24 +333,40 @@ analysis_data <- analysis_data %>%
 message("Creating long-format data for mixed models...")
 
 analysis_long <- analysis_data %>%
-  mutate(Composite_Z0_baseline = Composite_Z0) %>%
   dplyr::select(
     ID, FOF_status, frailty_cat_3, frailty_cat_3_obj, frailty_cat_3_2plus,
     frailty_score_3, age, sex, BMI,
-    Composite_Z0_baseline, Composite_Z0, Composite_Z3
+    Composite_Z0, Composite_Z12
   ) %>%
   pivot_longer(
-    cols = c(Composite_Z0, Composite_Z3),
+    cols = c(Composite_Z0, Composite_Z12),
     names_to = "timepoint",
     values_to = "Composite_Z"
   ) %>%
   mutate(
-    time = ifelse(timepoint == "Composite_Z0", 0, 3),
-    time_factor = factor(time, levels = c(0, 3), labels = c("Baseline", "3 months"))
+    time_months = ifelse(timepoint == "Composite_Z0", 0, 12),
+    time_f = factor(time_months, levels = c(0, 12), labels = c("0", "12"))
   )
 
 analysis_long$FOF_status
 analysis_long$sex
+
+# Sanity check: verify time_f levels are exactly 0 and 12
+message("Sanity check: time_f levels...")
+time_f_table <- table(analysis_long$time_f, useNA = "ifany")
+print(time_f_table)
+stopifnot(
+  "time_f must have exactly 2 levels: 0 and 12" =
+    all(levels(analysis_long$time_f) == c("0", "12"))
+)
+message("✓ time_f levels verified: 0 and 12 months")
+
+# Verify Composite_Z12 source
+message("Sanity check: Composite_Z12 derived from ToimintaKykySummary2...")
+stopifnot(
+  "Composite_Z12 must exist" = "Composite_Z12" %in% names(analysis_data)
+)
+message("✓ Composite_Z12 confirmed as 12-month follow-up")
 
 message("✓ Data preparation complete")
 message("  - Wide format (ANCOVA): ", nrow(analysis_data), " participants")
@@ -360,7 +383,7 @@ analysis_data <- analysis_data %>%
   mutate(frailty_score_3 = as.numeric(frailty_score_3))
 
 dat_delta <- analysis_data %>%
-  mutate(Delta_Composite_Z = Composite_Z3 - Composite_Z0) %>%
+  mutate(Delta_Composite_Z = Composite_Z12 - Composite_Z0) %>%  # 12-month change
   dplyr::select(
     Delta_Composite_Z, FOF_status,
     frailty_cat_3, frailty_score_3,
@@ -440,27 +463,52 @@ ancova_comparison <- data.frame(
 message("\n04) Running primary mixed models (Longitudinal analysis)...")
 
 # 6.1 Model without frailty (baseline comparison)
+# NOTE: Using time_f (0 vs 12) without baseline covariate,
+#       as baseline is included as an outcome row
 mod_mixed_baseline <- lmer(
-  Composite_Z ~ time * FOF_status + Composite_Z0_baseline + age + sex + BMI + (1 | ID),
+  Composite_Z ~ time_f * FOF_status + age + sex + BMI + (1 | ID),
   data = analysis_long,
   REML = TRUE
 )
 
 # 6.2 Model with frailty_cat_3 (primary)
 mod_mixed_frailty <- lmer(
-  Composite_Z ~ time * FOF_status + frailty_cat_3 + Composite_Z0_baseline + age + sex + BMI + (1 | ID),
+  Composite_Z ~ time_f * FOF_status + frailty_cat_3 + age + sex + BMI + (1 | ID),
   data = analysis_long,
   REML = TRUE
 )
 
 # 6.3 Model with frailty_score_3 (continuous)
 mod_mixed_frailty_cont <- lmer(
-  Composite_Z ~ time * FOF_status + frailty_score_3 + Composite_Z0_baseline + age + sex + BMI + (1 | ID),
+  Composite_Z ~ time_f * FOF_status + frailty_score_3 + age + sex + BMI + (1 | ID),
   data = analysis_long,
   REML = TRUE
 )
 
 message("✓ Mixed models fitted")
+
+# Sanity check: verify primary mixed model terms
+message("Sanity check: verifying primary mixed model fixed effects...")
+fixed_terms_primary <- names(fixef(mod_mixed_frailty))
+print(fixed_terms_primary)
+expected_terms <- c("(Intercept)", "time_f12", "FOF_statusFOF",
+                    "frailty_cat_3Pre-frail", "frailty_cat_3Frail",
+                    "age", "sexmale", "BMI", "time_f12:FOF_statusFOF")
+missing_expected <- setdiff(expected_terms, fixed_terms_primary)
+unexpected_terms <- setdiff(
+  fixed_terms_primary[!grepl("Intercept", fixed_terms_primary)],
+  expected_terms[!grepl("Intercept", expected_terms)]
+)
+if (length(missing_expected) > 0) {
+  warning("Missing expected terms in primary model: ", paste(missing_expected, collapse = ", "))
+}
+if (length(unexpected_terms) > 0 && any(grepl("Composite_Z0_baseline", unexpected_terms))) {
+  stop("PRIMARY MODEL ERROR: Composite_Z0_baseline found in fixed effects. ",
+       "Primary model should NOT include baseline covariate. ",
+       "Unexpected terms: ", paste(unexpected_terms, collapse = ", "))
+}
+message("✓ Primary model terms verified (time_f12, FOF_statusFOF, time_f12:FOF_statusFOF, frailty)")
+message("  - No Composite_Z0_baseline in primary model (as expected)")
 
 # Extract and format results
 mixed_results <- list(
@@ -493,7 +541,7 @@ mod_delta_interaction <- lm(
 
 # 7.2 Mixed model with time × FOF × frailty interaction
 mod_mixed_interaction <- lmer(
-  Composite_Z ~ time * FOF_status * frailty_cat_3 + Composite_Z0_baseline + age + sex + BMI + (1 | ID),
+  Composite_Z ~ time_f * FOF_status * frailty_cat_3 + age + sex + BMI + (1 | ID),
   data = analysis_long,
   REML = TRUE
 )
@@ -519,7 +567,7 @@ mod_delta_sens_obj <- lm(
 )
 
 mod_mixed_sens_obj <- lmer(
-  Composite_Z ~ time * FOF_status + frailty_cat_3_obj + Composite_Z0_baseline + age + sex + BMI + (1 | ID),
+  Composite_Z ~ time_f * FOF_status + frailty_cat_3_obj + age + sex + BMI + (1 | ID),
   data = analysis_long,
   REML = TRUE
 )
@@ -531,7 +579,7 @@ mod_delta_sens_strict <- lm(
 )
 
 mod_mixed_sens_strict <- lmer(
-  Composite_Z ~ time * FOF_status + frailty_cat_3_2plus + Composite_Z0_baseline + age + sex + BMI + (1 | ID),
+  Composite_Z ~ time_f * FOF_status + frailty_cat_3_2plus + age + sex + BMI + (1 | ID),
   data = analysis_long,
   REML = TRUE
 )
@@ -584,15 +632,14 @@ mixed_primary_table <- mixed_results$frailty_cat %>%
   filter(effect == "fixed", term != "(Intercept)") %>%
   mutate(
     term = recode(term,
-                  "time" = "Time (3 months)",
+                  "time_f12" = "Time (12 months vs. baseline)",
                   "FOF_statusFOF" = "FOF (vs. No FOF)",
                   "frailty_cat_3Pre-frail" = "Pre-frail (vs. Robust)",
                   "frailty_cat_3Frail" = "Frail (vs. Robust)",
-                  "Composite_Z0_baseline" = "Baseline Composite Z",
                   "age" = "Age (years)",
                   "sexmale" = "Sex (Male vs. Female)",
                   "BMI" = "BMI (kg/m²)",
-                  "time:FOF_statusFOF" = "Time × FOF"),
+                  "time_f12:FOF_statusFOF" = "Time (12 months) × FOF"),
     CI = paste0("[", sprintf("%.3f", conf.low), ", ", sprintf("%.3f", conf.high), "]"),
     p_formatted = case_when(
       p.value < 0.001 ~ "<0.001",
@@ -750,7 +797,7 @@ message("✓ Saved plot: K16_frailty_effects_plot.png")
 # 11.2 Predicted trajectories by frailty status  ---- FIXED ----
 
 pred_data <- tidyr::expand_grid(
-  time = c(0, 3),
+  time_f = factor(c("0", "12"), levels = c("0", "12")),
   FOF_status    = levels(analysis_long$FOF_status),
   frailty_cat_3 = levels(analysis_long$frailty_cat_3)
 ) %>%
@@ -759,10 +806,10 @@ pred_data <- tidyr::expand_grid(
     FOF_status    = factor(FOF_status, levels = levels(analysis_long$FOF_status)),
     frailty_cat_3 = factor(frailty_cat_3, levels = levels(analysis_long$frailty_cat_3)),
 
-    Composite_Z0_baseline = mean(analysis_long$Composite_Z0_baseline, na.rm = TRUE),
     age = mean(analysis_long$age, na.rm = TRUE),
     BMI = mean(analysis_long$BMI, na.rm = TRUE),
-    sex = factor("female", levels = levels(analysis_long$sex))
+    sex = factor("female", levels = levels(analysis_long$sex)),
+    time_months = as.numeric(as.character(time_f))  # for plotting x-axis
   )
 # Verify that model matrix columns match
 
@@ -783,20 +830,20 @@ pred_data <- pred_data %>%
                                    "nonFOF" = "No FOF",
                                    "FOF"    = "FOF"))
 
-p_trajectories <- ggplot(pred_data, aes(x = time, y = predicted,
+p_trajectories <- ggplot(pred_data, aes(x = time_months, y = predicted,
                                         color = frailty_cat_3,
                                         linetype = FOF_status, group = interaction(frailty_cat_3, FOF_status))) +
   geom_line(linewidth = 1) +
   geom_point(size = 2) +
   labs(
-    title = "Predicted Physical Function Trajectories",
+    title = "Predicted Physical Function Trajectories (12-month change)",
     subtitle = "By frailty status and FOF (adjusted for covariates)",
     x = "Time (months)",
     y = "Predicted Composite Physical Function (Z-score)",
     color = "Frailty Status",
     linetype = "Fear of Falling"
   ) +
-  scale_x_continuous(breaks = c(0, 3)) +
+  scale_x_continuous(breaks = c(0, 12)) +
   theme_minimal() +
   theme(legend.position = "right")
 
@@ -832,7 +879,7 @@ get_term <- function(df, pattern, effect_fixed = FALSE){
 }
 
 fof_effect_ancova <- get_term(ancova_results$frailty_cat, "^FOF_status")
-fof_time_mixed    <- get_term(mixed_results$frailty_cat, "time.*FOF_status", effect_fixed = TRUE)
+fof_time_mixed    <- get_term(mixed_results$frailty_cat, "time_f.*FOF_status", effect_fixed = TRUE)
 
 frailty_prefrail_ancova <- get_term(ancova_results$frailty_cat, "frailty_cat_3.*Pre")
 frailty_frail_ancova    <- get_term(ancova_results$frailty_cat, "frailty_cat_3.*Frail")
