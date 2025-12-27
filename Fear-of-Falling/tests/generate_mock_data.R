@@ -68,6 +68,8 @@ mock_data <- tibble(
   FTSST2 = round(rnorm(n, mean = 14.5, sd = 5), 1),
   tuoliltanousu0 = round(rnorm(n, mean = 15, sd = 5), 1),
   tuoliltanousu2 = round(rnorm(n, mean = 14.5, sd = 5), 1),
+  Tuoli0 = round(rnorm(n, mean = 15, sd = 5), 1),
+  Tuoli2 = round(rnorm(n, mean = 14.5, sd = 5), 1),
 
   # Single leg stand (seconds) - English and Finnish names
   SLS0 = round(rnorm(n, mean = 8, sd = 6), 1),
@@ -80,6 +82,7 @@ mock_data <- tibble(
   HGS2 = round(rnorm(n, mean = 22.5, sd = 6), 1),
   Puristus0 = round(rnorm(n, mean = 22, sd = 6), 1),
   Puristus2 = round(rnorm(n, mean = 22.5, sd = 6), 1),
+  PuristusMuutos = round(rnorm(n, mean = 0.5, sd = 3), 1),  # Change in grip strength
 
   # === Health covariates ===
   # Osteoporosis index (MOI)
@@ -112,6 +115,12 @@ mock_data <- tibble(
   # 500m walking difficulty (0=no, 1=some, 2=much, 3=cannot) - English and Finnish
   Walk500m = sample(0:3, n, replace = TRUE, prob = c(0.4, 0.3, 0.2, 0.1)),
   Vaikeus500m = sample(0:3, n, replace = TRUE, prob = c(0.4, 0.3, 0.2, 0.1)),
+
+  # Maximum walking distance (meters)
+  maxkävelymatka = round(rnorm(n, mean = 500, sd = 200)),
+
+  # 2km walking difficulty (for K15 script)
+  vaikeus_liikkua_2km = sample(0:2, n, replace = TRUE, prob = c(0.5, 0.3, 0.2)),
 
   # Balance problems (0=no, 1=yes)
   Balance_problem = sample(0:1, n, replace = TRUE, prob = c(0.7, 0.3)),
@@ -154,13 +163,24 @@ mock_data <- mock_data %>%
     BMI = pmax(15, pmin(45, BMI)),
     MWS0 = pmax(0.3, MWS0),
     MWS2 = pmax(0.3, MWS2),
+    kavelynopeus_m_sek0 = pmax(0.3, kavelynopeus_m_sek0),
+    kavelynopeus_m_sek2 = pmax(0.3, kavelynopeus_m_sek2),
     FTSST0 = pmax(5, FTSST0),
     FTSST2 = pmax(5, FTSST2),
+    tuoliltanousu0 = pmax(5, tuoliltanousu0),
+    tuoliltanousu2 = pmax(5, tuoliltanousu2),
+    Tuoli0 = pmax(5, Tuoli0),
+    Tuoli2 = pmax(5, Tuoli2),
     SLS0 = pmax(0, SLS0),
     SLS2 = pmax(0, SLS2),
+    Seisominen0 = pmax(0, Seisominen0),
+    Seisominen2 = pmax(0, Seisominen2),
     HGS0 = pmax(5, HGS0),
     HGS2 = pmax(5, HGS2),
-    MOIindeksiindeksi = pmax(0, pmin(20, MOIindeksiindeksi))
+    Puristus0 = pmax(5, Puristus0),
+    Puristus2 = pmax(5, Puristus2),
+    MOIindeksiindeksi = pmax(0, pmin(20, MOIindeksiindeksi)),
+    maxkävelymatka = pmax(50, pmin(2000, maxkävelymatka))
   )
 
 # Determine output path
