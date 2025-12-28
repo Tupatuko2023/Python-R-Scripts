@@ -62,6 +62,7 @@ mock_data <- tibble(
   MWS2 = round(rnorm(n, mean = 1.25, sd = 0.3), 2),
   kavelynopeus_m_sek0 = round(rnorm(n, mean = 1.2, sd = 0.3), 2),
   kavelynopeus_m_sek2 = round(rnorm(n, mean = 1.25, sd = 0.3), 2),
+  Kävelymuutos = round(rnorm(n, mean = 0.05, sd = 0.2), 2),  # Change in walking speed
 
   # Five times sit-to-stand test (seconds) - English and Finnish names
   FTSST0 = round(rnorm(n, mean = 15, sd = 5), 1),
@@ -122,8 +123,9 @@ mock_data <- tibble(
   # 2km walking difficulty (for K15 script)
   vaikeus_liikkua_2km = sample(0:2, n, replace = TRUE, prob = c(0.5, 0.3, 0.2)),
 
-  # Balance problems (0=no, 1=yes)
+  # Balance problems (0=no, 1=yes) - English and Finnish
   Balance_problem = sample(0:1, n, replace = TRUE, prob = c(0.7, 0.3)),
+  tasapainovaikeus = sample(0:1, n, replace = TRUE, prob = c(0.7, 0.3)),
 
   # === Frailty components (for K15/K16 scripts) ===
   # Weight loss
