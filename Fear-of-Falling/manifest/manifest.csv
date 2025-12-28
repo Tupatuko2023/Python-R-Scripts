@@ -573,3 +573,19 @@ K17,table,K17/K17_baseline_by_FOF_with_frailty.csv,Baseline characteristics by F
 2025-12-28 14:10:55.37044,K18,Results text (Finnish),text,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_FI.txt,276,NA
 2025-12-28 14:10:55.695527,K18,All frailty change models and emmeans results (PRIMARY+EXPLORATORY),rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_all_models.RData,276,NA
 2025-12-28 14:10:56.08851,K18,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/sessioninfo_K18.txt,NA,NA
+2025-12-28 14:34:14.418734,K18,PRIMARY frailty change contrasts tables (M1),table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_PRIMARY_tables_M1.docx,276,NA
+2025-12-28 14:34:15.853716,K18,EXPLORATORY frailty change contrasts tables (M2),table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_EXPLORATORY_tables_M2.docx,276,NA
+2025-12-28 14:34:18.126245,K18,PRIMARY change contrasts forest plot (M1),plot_png,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_PRIMARY_contrasts_M1.png,276,NA
+2025-12-28 14:34:21.436097,K18,EXPLORATORY change contrasts forest plot (M2),plot_png,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_EXPLORATORY_contrasts_M2.png,276,NA
+2025-12-28 14:34:23.521004,K18,Predicted trajectories by frailty and FOF (M1),plot_png,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_predicted_trajectories_M1.png,276,NA
+2025-12-28 14:34:23.961137,K18,Results text (English),text,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_EN.txt,276,NA
+2025-12-28 14:34:24.259543,K18,Results text (Finnish),text,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_FI.txt,276,NA
+2025-12-28 14:35:21.31657,K18,PRIMARY frailty change contrasts tables (M1),table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_PRIMARY_tables_M1.docx,276,NA
+2025-12-28 14:35:25.395019,K18,EXPLORATORY frailty change contrasts tables (M2),table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_EXPLORATORY_tables_M2.docx,276,NA
+2025-12-28 14:35:28.052445,K18,PRIMARY change contrasts forest plot (M1),plot_png,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_PRIMARY_contrasts_M1.png,276,NA
+2025-12-28 14:35:30.427688,K18,EXPLORATORY change contrasts forest plot (M2),plot_png,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_EXPLORATORY_contrasts_M2.png,276,NA
+2025-12-28 14:35:32.00548,K18,Predicted trajectories by frailty and FOF (M1),plot_png,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_predicted_trajectories_M1.png,276,NA
+2025-12-28 14:35:32.411223,K18,Results text (English),text,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_EN.txt,276,NA
+2025-12-28 14:35:32.635543,K18,Results text (Finnish),text,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_FI.txt,276,NA
+2025-12-28 14:35:33.11169,K18,All frailty change models and emmeans results (PRIMARY+EXPLORATORY),rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_all_models.RData,276,NA
+2025-12-28 14:35:33.483686,K18,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/sessioninfo_K18.txt,NA,NA
