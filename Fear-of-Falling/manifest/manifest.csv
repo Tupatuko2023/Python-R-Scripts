@@ -616,3 +616,14 @@ K17,table,K17/K17_baseline_by_FOF_with_frailty.csv,Baseline characteristics by F
 2025-12-28 15:36:07.401165,K18,Results text (Finnish),text,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_FI.txt,276,NA
 2025-12-28 15:36:08.045586,K18,All frailty change models and emmeans results (PRIMARY+EXPLORATORY),rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_all_models.RData,276,NA
 2025-12-28 15:36:08.511839,K18,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/sessioninfo_K18.txt,NA,NA
+K9,table,K9/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit)."
+K9,table,K9/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit)."
+K9,table,K9/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.
+K9,table,K9/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.
+K9,table,K9/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.
+K9,table,K9/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.
+K9,table,K9/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.
+K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.
+K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA)."
+K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa)."
+K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa)."
