@@ -162,7 +162,7 @@ ci_fmt <- function(lo, hi) {
 }
 
 # Multiplicity adjustment policies
-primary_adjust <- "tukey"       # For M1 primary contrasts (frailty pairwise)
+primary_adjust <- "sidak"       # For M1 primary contrasts (emmeans auto-switches from tukey for interaction contrasts)
 exploratory_adjust <- "holm"    # For M2 exploratory contrasts
 
 message("\n", strrep("=", 80))
@@ -533,31 +533,24 @@ chg_M1 <- contrast(emm_M1,
                    by = c("frailty_cat_3", "FOF_status"))
 chg_M1_df <- as.data.frame(summary(chg_M1, infer = TRUE))
 
-# P2: ΔΔ frailty (common across FOF groups) — Tukey without auto-switch
-message("  P2: Computing PRIMARY ΔΔ frailty (common; Tukey on pairwise change estimates)...")
+# P2: PRIMARY ΔΔ frailty (common across FOF groups) — adjust = primary_adjust
+message("  P2: Computing PRIMARY ΔΔ frailty (common; adjustment via primary_adjust)...")
 
-# Step A: emmeans of time within frailty, marginalizing over FOF (common-by-design)
-emm_M1_frailty_time_by <- emmeans(mod_M1, ~ time_f | frailty_cat_3)
+emm_M1_frailty <- emmeans(mod_M1, ~ time_f * frailty_cat_3)
 
-# Step B: change (12 - 0) within each frailty group
-chg_M1_frailty <- contrast(
-  emm_M1_frailty_time_by,
-  method = list("12-0" = c(-1, 1)),
-  by = "frailty_cat_3"
+dd_frailty_M1 <- contrast(
+  emm_M1_frailty,
+  interaction = c("consec", "pairwise"),  # (12-0) then pairwise between frailty
+  adjust = primary_adjust
 )
 
-# Step C: pairwise differences of those changes between frailty groups (ΔΔ), Tukey-adjusted
-dd_frailty_M1 <- contrast(chg_M1_frailty, method = "pairwise", adjust = primary_adjust)
-
 dd_frailty_M1_df <- as.data.frame(summary(dd_frailty_M1, infer = TRUE))
+names(dd_frailty_M1_df)[names(dd_frailty_M1_df) == "frailty_cat_3_pairwise"] <- "contrast"
 
-# Ensure consistent column naming for downstream tables/plots/text
-if ("contrast" %in% names(dd_frailty_M1_df)) {
-  # ok
-} else if ("frailty_cat_3" %in% names(dd_frailty_M1_df)) {
-  # defensive fallback; but prefer the 'contrast' column from emmeans
-  names(dd_frailty_M1_df)[names(dd_frailty_M1_df) == "frailty_cat_3"] <- "contrast"
-}
+# --- HARD QA GUARDS (fail fast) ---
+stopifnot("P2 must have exactly 3 pairwise rows" = nrow(dd_frailty_M1_df) == 3)
+stopifnot("P2 estimate must not be NA" = !anyNA(dd_frailty_M1_df$estimate))
+stopifnot("P2 contrast labels must exist" = "contrast" %in% names(dd_frailty_M1_df))
 
 # P3: ΔΔ FOF (common across frailty levels)
 message("  P3: Computing PRIMARY ΔΔ FOF (common; no adjustment)...")
@@ -729,7 +722,7 @@ table_P2 <- dd_frailty_M1_df %>%
 ft_table_P2 <- flextable(table_P2) %>%
   set_caption(paste0(
     "Table P2: PRIMARY Frailty-Level Differences in Change (ΔΔ frailty) - COMMON ACROSS FOF GROUPS (M1)\n",
-    "Note: M1 design → frailty ΔΔ is common (not stratified by FOF). Tukey adjustment applied to pairwise comparisons of 12-0 change estimates.\n",
+    "Note: M1 design → frailty ΔΔ is common (not stratified by FOF). Sidak adjustment applied (emmeans auto-switched from Tukey for interaction contrasts).\n",
     "Adjustment: ", primary_adjust
   )) %>%
   autofit() %>%
@@ -1278,7 +1271,7 @@ results_text_en <- paste0(results_text_en, "\n",
   "P2: PRIMARY Frailty ΔΔ (COMMON across FOF groups)\n",
   "--------------------------------------------------\n",
   "Note: M1 does NOT include 3-way interaction, so frailty contrasts are averaged over FOF.\n",
-  "Adjustment: ", primary_adjust, "\n\n"
+  "Adjustment: ", primary_adjust, " (emmeans auto-switched from Tukey for interaction contrasts)\n\n"
 )
 
 # Add PRIMARY ΔΔ frailty (common)
@@ -1491,9 +1484,8 @@ all_models <- list(
   ),
   primary_emmeans_M1 = list(
     emm_M1 = emm_M1,
-    emm_M1_frailty_time_by = emm_M1_frailty_time_by,
+    emm_M1_frailty = emm_M1_frailty,  # Updated: for interaction contrast P2
     emm_M1_time_fof = emm_M1_time_fof,
-    chg_M1_frailty = chg_M1_frailty,
     chg_M1 = chg_M1,
     dd_frailty_M1 = dd_frailty_M1,
     dd_fof_M1 = dd_fof_M1
@@ -1556,7 +1548,7 @@ message("✓ Model comparisons (LRT):")
 message("  - M0 vs M1 (time×frailty): p ", p_fmt(lrt_time_frailty_p))
 message("  - M1 vs M2 (3-way): p ", p_fmt(lrt_3way_p))
 message("✓ PRIMARY contrasts (M1 - common-by-design):")
-message("  - Frailty ΔΔ: COMMON across FOF (Tukey adj)")
+message("  - Frailty ΔΔ: COMMON across FOF (Sidak adj)")
 message("  - FOF ΔΔ: COMMON across frailty (no adj)")
 message("✓ EXPLORATORY contrasts (M2 - stratified):")
 message("  - Frailty ΔΔ: STRATIFIED by FOF (Holm adj)")
