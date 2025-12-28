@@ -153,7 +153,7 @@ conflicted::conflict_prefer("lmer", "lmerTest")
 # P-value formatting: unified across all tables/plots/texts
 p_fmt <- function(p) {
   ifelse(is.na(p), NA_character_,
-         ifelse(p < 0.001, "<0.001", sprintf("%.3f", p)))
+         ifelse(p < 0.001, "< 0.001", sprintf("%.3f", p)))
 }
 
 # Confidence interval formatting
@@ -1035,7 +1035,7 @@ plot_data_primary <- bind_rows(
 p_primary <- ggplot(plot_data_primary, aes(x = estimate, y = Label, color = sig)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
   geom_point(size = 3) +
-  geom_errorbarh(aes(xmin = LCL, xmax = UCL), height = 0.2) +
+  geom_errorbar(aes(xmin = LCL, xmax = UCL), width = 0.2, orientation = "y") +
   geom_text(aes(label = p_text), hjust = -0.2, size = 3, show.legend = FALSE) +
   facet_wrap(~ Type, scales = "free_y", ncol = 1) +
   labs(
@@ -1052,8 +1052,14 @@ p_primary <- ggplot(plot_data_primary, aes(x = estimate, y = Label, color = sig)
     strip.text = element_text(face = "bold", size = 11)
   )
 
-ggsave(file.path(output_dir, "K18_PRIMARY_contrasts_M1.png"),
-       p_primary, width = 10, height = 12, dpi = 300)
+ggsave(
+  filename = file.path(output_dir, "K18_PRIMARY_contrasts_M1.png"),
+  plot = p_primary,
+  width = 10,
+  height = 12,
+  units = "in",
+  dpi = 300
+)
 append_manifest(
   manifest_row(
     script = getOption("fof.script"),
@@ -1117,7 +1123,7 @@ plot_data_exploratory <- bind_rows(
 p_exploratory <- ggplot(plot_data_exploratory, aes(x = estimate, y = Label, color = sig)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
   geom_point(size = 3) +
-  geom_errorbarh(aes(xmin = LCL, xmax = UCL), height = 0.2) +
+  geom_errorbar(aes(xmin = LCL, xmax = UCL), width = 0.2, orientation = "y") +
   geom_text(aes(label = p_text), hjust = -0.2, size = 3, show.legend = FALSE) +
   facet_wrap(~ Type, scales = "free_y", ncol = 1) +
   labs(
@@ -1134,8 +1140,14 @@ p_exploratory <- ggplot(plot_data_exploratory, aes(x = estimate, y = Label, colo
     strip.text = element_text(face = "bold", size = 11)
   )
 
-ggsave(file.path(output_dir, "K18_EXPLORATORY_contrasts_M2.png"),
-       p_exploratory, width = 10, height = 14, dpi = 300)
+ggsave(
+  filename = file.path(output_dir, "K18_EXPLORATORY_contrasts_M2.png"),
+  plot = p_exploratory,
+  width = 10,
+  height = 14,
+  units = "in",
+  dpi = 300
+)
 append_manifest(
   manifest_row(
     script = getOption("fof.script"),
@@ -1188,8 +1200,14 @@ p_trajectories <- ggplot(emm_M1_summary, aes(x = time_f, y = emmean,
     strip.text = element_text(face = "bold", size = 11)
   )
 
-ggsave(file.path(output_dir, "K18_predicted_trajectories_M1.png"),
-       p_trajectories, width = 12, height = 6, dpi = 300)
+ggsave(
+  filename = file.path(output_dir, "K18_predicted_trajectories_M1.png"),
+  plot = p_trajectories,
+  width = 12,
+  height = 6,
+  units = "in",
+  dpi = 300
+)
 append_manifest(
   manifest_row(
     script = getOption("fof.script"),
