@@ -132,11 +132,15 @@ analysis_data <- analysis_data %>%
     ) %>% factor(levels = c("nonFOF", "FOF")),
     
     ## Balance_problem from tasapainovaikeus: 0 = no, 1 = yes
-    Balance_problem = case_when(
-      tasapainovaikeus == 0 ~ "no_balance_problem",
-      tasapainovaikeus == 1 ~ "balance_problem",
-      TRUE ~ NA_character_
-    ) %>% factor(levels = c("no_balance_problem", "balance_problem")),
+    Balance_problem = if ("tasapainovaikeus" %in% names(.)) {
+      case_when(
+        tasapainovaikeus == 0 ~ "no_balance_problem",
+        tasapainovaikeus == 1 ~ "balance_problem",
+        TRUE ~ NA_character_
+      ) %>% factor(levels = c("no_balance_problem", "balance_problem"))
+    } else {
+      factor(NA_character_, levels = c("no_balance_problem", "balance_problem"))
+    },
     
     ## Walk500m_3class from Vaikeus500m: 0,1,2 → 3 classes
     Walk500m_3class = case_when(
