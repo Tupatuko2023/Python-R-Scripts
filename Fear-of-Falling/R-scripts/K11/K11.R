@@ -239,37 +239,34 @@ if (has_DeltaComposite) {
 dat_fof <- dat_fof %>%
   mutate(
     # HGS: positiivinen = parannus
-    Delta_HGS = case_when(
-      "PuristusMuutos" %in% names(dat_fof) ~ PuristusMuutos,
-      "Puristus0" %in% names(dat_fof) & "Puristus2" %in% names(dat_fof) ~ 
-        Puristus2 - Puristus0,
-      TRUE ~ NA_real_
+    Delta_HGS = if_else(
+      !is.na(Puristus0) & !is.na(Puristus2),
+      Puristus2 - Puristus0,
+      NA_real_
     ),
-    
+
     # MWS: positiivinen = parannus
-    Delta_MWS = case_when(
-      "Kävelymuutos" %in% names(dat_fof) ~ Kävelymuutos,
-      "kavelynopeus_m_sek0" %in% names(dat_fof) & "kavelynopeus_m_sek2" %in% names(dat_fof) ~
-        kavelynopeus_m_sek2 - kavelynopeus_m_sek0,
-      TRUE ~ NA_real_
+    Delta_MWS = if_else(
+      !is.na(kavelynopeus_m_sek0) & !is.na(kavelynopeus_m_sek2),
+      kavelynopeus_m_sek2 - kavelynopeus_m_sek0,
+      NA_real_
     ),
-    
+
     # FTSST (Tuoli): pienempi aika = parempi -> muutoksen merkki käännetään
-    Delta_FTSST = case_when(
-      "Tuolimuutos" %in% names(dat_fof) ~ Tuolimuutos * (-1),
-      "Tuoli0" %in% names(dat_fof) & "Tuoli2" %in% names(dat_fof) ~
-        (Tuoli0 - Tuoli2),  # positiivinen = nopeampi testi
-      TRUE ~ NA_real_
+    Delta_FTSST = if_else(
+      !is.na(Tuoli0) & !is.na(Tuoli2),
+      Tuoli0 - Tuoli2,  # positiivinen = nopeampi testi
+      NA_real_
     ),
-    
+
     # SLS (Seisominen): suurempi aika = parempi
-    Delta_SLS = case_when(
-      "TasapainoMuutos" %in% names(dat_fof) ~ TasapainoMuutos,
-      "Seisominen0" %in% names(dat_fof) & "Seisominen2" %in% names(dat_fof) ~
-        Seisominen2 - Seisominen0,
-      TRUE ~ NA_real_
+    Delta_SLS = if_else(
+      !is.na(Seisominen0) & !is.na(Seisominen2),
+      Seisominen2 - Seisominen0,
+      NA_real_
     )
   )
+
 
 # 3.3 Complete-case analysis dataset
 
