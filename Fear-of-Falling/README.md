@@ -2,22 +2,10 @@
 
 [![K Scripts Smoke Tests](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml/badge.svg)](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml)
 [![Analysis Plan](https://img.shields.io/badge/Docs-Analysis_Plan-blue)](docs/ANALYSIS_PLAN.md)
+[![Scope & Guardrails](https://img.shields.io/badge/Docs-Thesis_Scope-orange)](docs/THESIS_SCOPE.md)
 
 **Official Analysis Plan:** [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md)
-
-**Primary model + QC gate (short):**
-
-- Model: Composite_Z ~ time * FOF_status + age + sex + BMI + (1 | id)
-- Required vars: id, time, FOF_status, Composite_Z, age, sex, BMI
-- time coding: TODO (confirm from data/data_dictionary.csv)
-- FOF_status coding: 0=Ei FOF, 1=FOF (from kaatumisenpelkoOn)
-- Long data: (id, time) unique; 2 time levels only
-- Missingness: report overall + FOF_status x time
-- Delta check: if Delta_Composite_Z exists, verify follow-up - baseline
-- QC runner: R-scripts/K18/K18_QC.V1_qc-run.R --data <PATH>
-- Stop-the-line: do not model until QC passes
-- Outputs: R-scripts/<K_FOLDER>/outputs/<script_label>/
-- Audit: manifest/manifest.csv row per artifact
+**Scope & Guardrails:** [docs/THESIS_SCOPE.md](docs/THESIS_SCOPE.md)
 
 **Primary Analysis:** Longitudinal mixed model (`Composite_Z ~ time * FOF_status + ...`).
 **QC Gates:** All data must pass strict checks (n=2 timepoints, correct factors) defined in [QC_CHECKLIST.md](QC_CHECKLIST.md) before modeling.
