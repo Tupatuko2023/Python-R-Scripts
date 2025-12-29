@@ -11,6 +11,10 @@
   `Fear-of-Falling/`), unless the task is explicitly repo-root scoped.
 - If a script depends on relative paths, set the working directory to that script's subproject root and keep it stable.
 
+## Command guardrails
+
+- Use only repo-typical commands documented in README/AGENTS (examples: `python`, `py`, `Rscript`, `R -e "renv::restore()"`, `pytest`, `make`, `git status -sb`, `rg`).
+- Ask for explicit approval before: `git push`, `git reset`, `git clean`, `rm -rf` / `del /s` / `rd /s /q` / `rmdir /s /q` / `Remove-Item -Recurse -Force`, `curl`, `wget`, `docker`, or any network access.
 ## Project summary
 
 This is a mixed-language (R + Python) research analysis repository with multiple subprojects.

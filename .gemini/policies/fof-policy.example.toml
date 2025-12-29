@@ -1,0 +1,23 @@
+# Fear-of-Falling Project Policy Template for Gemini CLI
+# Copy this file to: ~/.gemini/policies/fof-policy.toml
+
+name = "Fear-of-Falling Guardrails"
+description = "Ported from Claude Code permissions: deny secrets, ask risky commands, allow safe tools."
+
+# 1. Deny Secrets (Highest Priority)
+[[policy]]
+action = "deny"
+commandPrefix = ["read_file", "read_many_files", "glob", "search_file_content"]
+argsPattern = ".*(\.env|secrets/|\.aws/|\.ssh/|id_rsa).*"
+
+# 2. Ask User for Risky Commands
+[[policy]]
+action = "ask_user"
+commandPrefix = "run_shell_command"
+argsPattern = "^(git push|git reset --hard|git clean|rm -r|rm -rf|curl|wget|docker|docker-compose).*"
+
+# 3. Allow Safe Repeated Commands (Mirroring settings.json allowed list for policy completeness)
+[[policy]]
+action = "allow"
+commandPrefix = "run_shell_command"
+argsPattern = "^(Rscript|R -q|python|python3|pytest|make|ls|find|cat|grep|rg|git status|git diff|git log|git show|echo|pwd).*"
