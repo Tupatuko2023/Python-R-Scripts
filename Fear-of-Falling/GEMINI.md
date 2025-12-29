@@ -1,12 +1,3 @@
-# GEMINI.md
-
-Alla on **uusi projektirepon `GEMINI.md`** (copy-paste), koottu ja yhdenmukaistettu **nykyisen `GEMINI.md`**, **`AGENTS.md`** ja **`CLAUDE.md`** -linjausten pohjalta. Olen tehnyt tästä **Gemini CLI -agentille “source-of-truth”** -dokumentin: sama kurinalaisuus (data readonly, nolla-arvailu, renv, output/manifest, standard header, QC, table-to-text), mutta nimetty ja muotoiltu GEMINI-ohjeeksi.
-
-> Suositus: tallenna tämä polkuun `Fear-of-Falling/GEMINI.md` ja pidä `CLAUDE.md` jatkossa “legacy reference” -tasona (tai linkitä siihen GEMINI.md:stä), jotta GEMINI.md on yksiselitteisesti ensisijainen.
-
----
-
-````md
 # GEMINI.md — Fear-of-Falling (FOF) R Analysis Pipeline (Gemini CLI Source-of-Truth)
 
 Tämä dokumentti määrittelee pakolliset säännöt, konventiot ja workflow’n Fear-of-Falling (FOF) -projektin R-analyysiputken refaktorointiin ja stabilointiin Gemini CLI -koodausagentilla.
@@ -193,13 +184,13 @@ args_all <- commandArgs(trailingOnly = FALSE)
 file_arg <- grep("^--file=", args_all, value = TRUE)
 
 script_base <- if (length(file_arg) > 0) {
-  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+  sub("\.R$", "", basename(sub("^--file=", "", file_arg[1])))
 } else {
   "{{SCRIPT_ID}}"  # interactive fallback
 }
 
 # Canonical SCRIPT_ID (e.g. K11_MAIN)
-script_id_raw <- sub("\\.V.*$", "", script_base)
+script_id_raw <- sub("\.V.*$", "", script_base)
 if (is.na(script_id_raw) || script_id_raw == "") script_id_raw <- "{{SCRIPT_ID}}"
 
 # Derive script_label for folder mapping (e.g. K11_MAIN -> K11)
@@ -327,5 +318,3 @@ Jos et pysty vahvistamaan: pysähdy ja pyydä data_dictionary tai sample.
 * Lisää smoke test -skripti (jos mahdollista).
 
 ---
-
-````
