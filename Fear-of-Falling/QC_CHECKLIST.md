@@ -1,28 +1,22 @@
-````markdown
 
 # QC_CHECKLIST.md — FOF_status × time (baseline → 12m) mixed-malliputken pakolliset QC-tarkistukset
 
-**Context:** This checklist supports the Official Analysis Plan: [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md).
+**Context:** This checklist supports the Official Analysis Plan:
+[docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md).
 
-Tämä tarkistuslista määrittää pakolliset, auditointikelpoiset QC-askeleet ennen kuin ajetaan FOF_status × time -interaktiota arvioiva mixed model -workflow (lmer; random intercept (1 | id)) Composite_Z-muuttujalle long-muodossa (baseline ja 12m). Tarkistukset on tarkoitettu refaktoroinnin, debuggauksen ja pipeline-kovettamisen hyväksymiskriteereiksi FOF-alatutkimuksessa.
-
-
+Tämä tarkistuslista määrittää pakolliset, auditointikelpoiset QC-askeleet ennen
+kuin ajetaan FOF_status × time -interaktiota arvioiva mixed model -workflow
+(lmer; random intercept (1 | id)) Composite_Z-muuttujalle long-muodossa
+(baseline ja 12m). Tarkistukset on tarkoitettu refaktoroinnin, debuggauksen ja
+pipeline-kovettamisen hyväksymiskriteereiksi FOF-alatutkimuksessa.
 
 ---
 
-
-
 ## Milloin QC ajetaan
-
-
 
 ## Ajo yhdell? komennolla (K18_QC)
 
-
-
-Aja QC n?in (korvaa data-polku):
-
-
+Aja QC näin (korvaa data-polku):
 
 ```bash
 
@@ -30,19 +24,11 @@ Rscript R-scripts/K18/K18_QC.V1_qc-run.R --data data/processed/analysis_long.csv
 
 ```
 
-
-
 QC-artefaktit kirjoitetaan polkuun `R-scripts/K18/outputs/K18_QC/qc/` ja
 
-manifestiin lis?t?n yksi rivi per artefakti.
-
-
-
-
+manifestiin lisätään yksi rivi per artefakti.
 
 ## Automatisoitu QC-runner (stop-the-line)
-
-
 
 Aja skripti: `Rscript R-scripts/K18/K18_QC.V1_qc-run.R --data <path>`
 
@@ -52,35 +38,25 @@ Artefaktit tallentuvat polkuun `R-scripts/K18/outputs/K18_QC/qc/` ja
 
 manifestiin lisataan rivi per artefakti.
 
-
-
-
-
-
-
 Aja QC aina:
 
-1) **Ennen mallinnusta** (ennen `analysis_mixed_workflow()` / `lmer()`): varmistetaan datan rakenne, koodaukset, puuttuvat ja perusjakaumat.
+1) **Ennen mallinnusta** (ennen `analysis_mixed_workflow()` / `lmer()`):
+   varmistetaan datan rakenne, koodaukset, puuttuvat ja perusjakaumat.
 
-2) **Ennen raportointia**: varmistetaan, että raportoitavat n:t ja aikatasot vastaavat analyysidataa (ei “silent recoding”/droppeja).
+2) **Ennen raportointia**: varmistetaan, että raportoitavat n:t ja aikatasot
+   vastaavat analyysidataa (ei “silent recoding”/droppeja).
 
-3) **Refaktoroinnin / korjausten jälkeen**: jokaisen koodimuutoksen (data prep, pivot, recode, join) jälkeen QC uudelleen ja artefaktit talteen.
-
-
+3) **Refaktoroinnin / korjausten jälkeen**: jokaisen koodimuutoksen (data prep,
+   pivot, recode, join) jälkeen QC uudelleen ja artefaktit talteen.
 
 ---
 
-
-
 ## Ydinmuuttujat ja odotettu muoto
-
-
 
 ### Vaatimus mixed-malliin (long)
 
-Datan tulee olla **long**-muodossa siten, että jokainen rivi on yhden henkilön (`id`) yksi aikapiste (`time`).
-
-
+Datan tulee olla **long**-muodossa siten, että jokainen rivi on yhden henkilön
+(`id`) yksi aikapiste (`time`).
 
 **Pakolliset sarakkeet (minimi):**
 
@@ -92,56 +68,56 @@ Datan tulee olla **long**-muodossa siten, että jokainen rivi on yhden henkilön
 
 - `Composite_Z` (numeric; fyysisen toimintakyvyn yhdistelmä-z)
 
-
-
 ### Jos data on wide
 
-Jos saatavilla on wide-muotoisia sarakkeita (esim. `Composite_Z0`, `Composite_Z2` tms.), QC:n pitää joko:
+Jos saatavilla on wide-muotoisia sarakkeita (esim. `Composite_Z0`,
+`Composite_Z2` tms.), QC:n pitää joko:
 
 - (A) varmistaa, että ne voidaan pivottaa longiksi ilman rivien häviämistä, tai
 
 - (B) estää mallin ajo, kunnes long-data on tuotettu ja validoitu.
 
-
-
 ### Delta-muuttuja (jos käytössä)
 
-Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delta_Composite_Z`), sen tulee vastata **follow-up − baseline** toleranssilla.
+Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä:
+`Delta_Composite_Z`), sen tulee vastata **follow-up − baseline** toleranssilla.
 
-**HUOM:** Jos delta on nimetty eri tavalla (esim. `delta_composite_z`), tee eksplisiittinen “mapping” ja dokumentoi se (TODO).
-
-
+**HUOM:** Jos delta on nimetty eri tavalla (esim. `delta_composite_z`), tee
+eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 ---
 
-
-
 ## Pakolliset QC-tarkistukset
 
-> **Yleinen ajotapa**: jokainen tarkistus kirjoittaa artefaktin `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/`-hakemistoon (tai `outputs/<script>/` jos ajetaan Kxx-skriptin sisällä). Älä kirjoita raakadatan päälle.
-
-> **Privacy**: QC-artefaktit eivät saa sisältää osallistujatason rivejä (ei listoja id:istä). Tallenna vain aggregaattiyhteenvetoja.
+> **Yleinen ajotapa**: jokainen tarkistus kirjoittaa artefaktin
+> `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/`-hakemistoon (tai
+> `outputs/<script>/` jos ajetaan Kxx-skriptin sisällä). Älä kirjoita raakadatan
+> päälle.
+> **Privacy**: QC-artefaktit eivät saa sisältää osallistujatason rivejä (ei
+> listoja id:istä). Tallenna vain aggregaattiyhteenvetoja.
 
 ### 0) Variable Standardization (Pre-check)
 
-* **Check name:** Sarakenimien standardointi
-* **What it verifies:** Datan sarakenimet muutetaan kanoniseen muotoon (`data/VARIABLE_STANDARDIZATION.csv` mukaan).
-* **Conflict Check:** Pysäyttää ajon, jos löytyy useita sarakkeita, jotka mappautuvat samaan kanoniseen nimeen (esim. `id` ja `ID`).
-* **Verify Gate:** Pysäyttää ajon, jos löytyy alias, jonka action on `verify` (vaatii ihmisen hyväksynnän/muutoksen renameksi).
-* **Artifacts to save:**
-  * `qc_variable_standardization_renames.csv`
-  * `qc_variable_standardization_verify_hits.csv`
-  * `qc_variable_standardization_conflicts.csv`
+- **Check name:** Sarakenimien standardointi
+- **What it verifies:** Datan sarakenimet muutetaan kanoniseen muotoon
+  (`data/VARIABLE_STANDARDIZATION.csv` mukaan).
+- **Conflict Check:** Pysäyttää ajon, jos löytyy useita sarakkeita, jotka
+  mappautuvat samaan kanoniseen nimeen (esim. `id` ja `ID`).
+- **Verify Gate:** Pysäyttää ajon, jos löytyy alias, jonka action on `verify`
+  (vaatii ihmisen hyväksynnän/muutoksen renameksi).
+- **Artifacts to save:**
+  - `qc_variable_standardization_renames.csv`
+  - `qc_variable_standardization_verify_hits.csv`
+  - `qc_variable_standardization_conflicts.csv`
 
 ---
 
 ### 1) Saraketyypit (types)
 
-
-
 - **Check name:** Saraketyypit
 
-- **What it verifies:** `id`, `time`, `FOF_status`, `Composite_Z` löytyvät ja ovat odotettua tyyppiä (ei list/complex; Composite_Z numeric).
+- **What it verifies:** `id`, `time`, `FOF_status`, `Composite_Z` löytyvät ja
+  ovat odotettua tyyppiä (ei list/complex; Composite_Z numeric).
 
 - **How to run (base R):**
 
@@ -193,11 +169,7 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 ````
 
-
-
 * **Pass criteria:**
-
-
 
   * `qc_types_status.csv: ok == TRUE`
 
@@ -211,21 +183,13 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Artifact to save:**
 
-
-
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_types_status.csv`
 
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_types.csv`
 
-
-
 ---
 
-
-
 ### 2) ID-rakenne: (id, time) uniikkius + aikapeitto (ei osallistujatason listoja)
-
-
 
 * **Check name:** ID-rakenne
 
@@ -236,8 +200,6 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
   aggregaattina.
 
 * **How to run (base R):**
-
-
 
   ```r
 
@@ -293,8 +255,6 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Pass criteria:**
 
-
-
   * `n_dup_(id_time) == 0` (tai duplikaatit on korjattu deterministisesti ennen
 
     mallia)
@@ -309,21 +269,13 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Artifact to save:**
 
-
-
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_id_integrity_summary.csv`
 
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_id_timepoint_coverage_dist.csv`
 
-
-
 ---
 
-
-
 ### 3) Puuttuvat tiedot: overall + FOF_status × time (pakollinen stratifiointi)
-
-
 
 * **Check name:** Puuttuvat tiedot
 
@@ -334,8 +286,6 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
   systemaattinen puuttuvuus näkyy.
 
 * **How to run (base R):**
-
-
 
   ```r
 
@@ -399,8 +349,6 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Pass criteria:**
 
-
-
   * Artefaktit tuotettu; puuttuvuus ei ole “yllätys” (esim. 12m lähes tyhjä)
 
     ilman dokumentoitua syytä.
@@ -415,21 +363,13 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Artifact to save:**
 
-
-
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_missingness_overall.csv`
 
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_missingness_by_group_time.csv`
 
-
-
 ---
 
-
-
 ### 4) FOF_status koodaus + eksplisiittinen factor-labelointi
-
-
 
 * **Check name:** FOF_status koodaus
 
@@ -438,8 +378,6 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
   factor; tasot raportoidaan; ei ylimääräisiä arvoja.
 
 * **How to run (base R):**
-
-
 
   ```r
 
@@ -491,15 +429,9 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Artifact to save:** `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_fof_status.csv`
 
-
-
 ---
 
-
-
 ### 5) Aikapisteet (time levels): baseline ja 12m
-
-
 
 * **Check name:** Aikatasot
 
@@ -508,8 +440,6 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
   tai koodaus {0,1}; ylimääräiset tasot flagataan.
 
 * **How to run (base R):**
-
-
 
   ```r
 
@@ -557,21 +487,13 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Artifact to save:**
 
-
-
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_time_levels.csv`
 
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_time_levels_status.csv`
 
-
-
 ---
 
-
-
 ### 6) Delta-tarkistus (jos Delta_Composite_Z käytössä)
-
-
 
 * **Check name:** Delta-tarkistus (follow-up − baseline)
 
@@ -582,8 +504,6 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
   aggregaattitulokset.
 
 * **How to run (base R; aggregate only):**
-
-
 
   ```r
 
@@ -691,15 +611,9 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Artifact to save:** `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_delta_check.csv`
 
-
-
 ---
 
-
-
 ### 7) Composite_Z jakauma ja arvojen järkevyys (range sanity)
-
-
 
 * **Check name:** Composite_Z jakauma
 
@@ -708,8 +622,6 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
   näy selviä koodausvirheitä; tuotetaan histogrammi + summary CSV.
 
 * **How to run (base R):**
-
-
 
   ```r
 
@@ -773,21 +685,13 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Artifact to save:**
 
-
-
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_composite_z_summary.csv`
 
   * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_composite_z_distribution.png`
 
-
-
 ---
 
-
-
 ### 8) “Silent filtering” -vahti (rivi- ja id-määrät per pipeline-vaihe)
-
-
 
 * **Check name:** Rivimäärä & id-vahti
 
@@ -796,8 +700,6 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
   huomaamatta; kirjataan aggregaattina n_rows ja n_unique_id per vaihe.
 
 * **How to run (base R; lisää pipelineen jokaisen päävaiheen jälkeen):**
-
-
 
   ```r
 
@@ -849,25 +751,15 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 * **Artifact to save:** `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_row_id_watch.csv`
 
-
-
 ---
 
-
-
 ## Pakolliset QC-artifactit
-
-
 
 Oletuspolku: `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/` (jos QC ajetaan Kxx-skriptin sisällä, käytä
 
 ensisijaisesti `outputs/<Kxx>/qc_*.csv` ja peilaa tarvittaessa `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/`).
 
-
-
 **Pakolliset (minimi):**
-
-
 
 * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_types_status.csv`
 
@@ -895,29 +787,17 @@ ensisijaisesti `outputs/<Kxx>/qc_*.csv` ja peilaa tarvittaessa `R-scripts/<K_FOL
 
 * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_row_id_watch.csv` *(jos pipeline tukee vaihelogia)*
 
-
-
 **Manifest (jos putki vaatii):**
-
-
 
 * `manifest/manifest.csv` päivitetään projektisäännön mukaan (TODO): lisää
 
   rivi per QC-ajokerta (script, timestamp, artefaktit).
 
-
-
 ---
-
-
 
 ## Failure handling
 
-
-
 Kun mikä tahansa pakollinen check failaa:
-
-
 
 1. **Stop-the-line:** älä aja `analysis_mixed_workflow()` / `lmer()` ennen
 
@@ -939,17 +819,15 @@ Kun mikä tahansa pakollinen check failaa:
 
    linkitä QC-artefakteihin.
 
-
-
 ---
 
 ## Yleiset QC-periaatteet
 
 1. Always verify data before analysis:
 
-   - Check variable types, missingness, distributions.
+   * Check variable types, missingness, distributions.
 
-   - Validate key assumptions (e.g., coding, ranges).
+   * Validate key assumptions (e.g., coding, ranges).
 
 2. Do not guess variable meanings or units.
 
@@ -957,25 +835,25 @@ Kun mikä tahansa pakollinen check failaa:
 
 3. Every code change must be:
 
-   - Minimal and reversible
+   * Minimal and reversible
 
-   - Logged (what/why)
+   * Logged (what/why)
 
-   - Proposed as a diff-style patch when possible
+   * Proposed as a diff-style patch when possible
 
 4. Reproducibility is mandatory:
 
-5. - Use `renv` (lock package versions)
+5. * Use `renv` (lock package versions)
 
-   - Use `set.seed(20251124)` where randomness exists (bootstrap, MI, resampling)
+   * Use `set.seed(20251124)` where randomness exists (bootstrap, MI, resampling)
 
-   - Save `sessionInfo()` (or `renv::diagnostics()`) into `manifest/`
+   * Save `sessionInfo()` (or `renv::diagnostics()`) into `manifest/`
 
-   - 5. Output discipline:
+      * Output discipline:
 
-   - All tables/figures go to `outputs/<script>/...`
+   * All tables/figures go to `outputs/<script>/...`
 
-   - Always write one `manifest/manifest.csv` row per output artifact
+   * Always write one `manifest/manifest.csv` row per output artifact
 
      (file, date, script, git hash if available)
 
@@ -985,9 +863,9 @@ Refactor and stabilize R scripts K11.R–K16.R and run a reproducible analysis t
 
 (FOF / age / FOF_status, etc.) are associated with 12-month change in physical performance.
 
-- Primary outcome: `Delta_Composite_Z` (12 months intervention change)
+* Primary outcome: `Delta_Composite_Z` (12 months intervention change)
 
-- Alternative outcome (long format): `Composite_Z` with `time` factor/continuous
+* Alternative outcome (long format): `Composite_Z` with `time` factor/continuous
 
 ## DATA ASSUMPTIONS (MUST VERIFY)
 
@@ -995,95 +873,95 @@ We may have either:
 
 A) Wide (baseline + 12 months)
 
-- Composite_Z0, Composite_Z2 (or similar)
+* Composite_Z0, Composite_Z2 (or similar)
 
-- Delta_Composite_Z = Composite_Z2 - Composite_Z0
+* Delta_Composite_Z = Composite_Z2 - Composite_Z0
 
 B) Long (repeated measures)
 
-- id
+* id
 
-- time (baseline/12m tai 0/1, ks. data_dictionary.csv)
+* time (baseline/12m tai 0/1, ks. data_dictionary.csv)
 
-- Composite_Z
+* Composite_Z
 
 FOF variables:
 
-- `FOF` and/or `FOF_status` (0/1)
+* `FOF` and/or `FOF_status` (0/1)
 
-- `FOF_status_f = factor(FOF_status, levels = c(0, 1), labels = c("Ei FOF", "FOF"))`
+* `FOF_status_f = factor(FOF_status, levels = c(0, 1), labels = c("Ei FOF", "FOF"))`
 
 Minimal required columns to proceed (pick A or B):
 
-- ID, age, sex, BMI (if used), FOF_status (0/1), baseline composite, follow-up composite
+* ID, age, sex, BMI (if used), FOF_status (0/1), baseline composite, follow-up composite
 
   OR time + Composite_Z.
 
 ## REPO STRUCTURE (RECOMMENDED)
 
-- data/
+* data/
 
-  - raw/ (immutable)
+  * raw/ (immutable)
 
-  - processed/ (derived)
+  * processed/ (derived)
 
-- R/
+* R/
 
-  - functions/ (helpers; e.g., io, checks, modeling)
+  * functions/ (helpers; e.g., io, checks, modeling)
 
-  - pipeline/ (import -> clean -> model -> report)
+  * pipeline/ (import -> clean -> model -> report)
 
-- R-scripts/
+* R-scripts/
 
-  - K11/ K12/ ... K16/
+  * K11/ K12/ ... K16/
 
-    - script.R
+    * script.R
 
-    - outputs/
+    * outputs/
 
-      - qc/ (QC artifacts)
+      * qc/ (QC artifacts)
 
-      - figures/
+      * figures/
 
-      - tables/
+      * tables/
 
-    - manifest/ (sessionInfo, manifest.csv)
+    * manifest/ (sessionInfo, manifest.csv)
 
-    - logs/ (script logs)
+    * logs/ (script logs)
 
-    - README.md (script purpose, inputs, outputs)
+    * README.md (script purpose, inputs, outputs)
 
-    - run_analysis.R (main script to run)
+    * run_analysis.R (main script to run)
 
-    - requirements.R (package setup)
+    * requirements.R (package setup)
 
-    - data_inputs.R (data loading and preprocessing)
+    * data_inputs.R (data loading and preprocessing)
 
-    - analysis_mixed_workflow.R (modeling functions)
+    * analysis_mixed_workflow.R (modeling functions)
 
-    - report_generation.R (reporting functions)
+    * report_generation.R (reporting functions)
 
-    - tests/ (unit tests for functions)
+    * tests/ (unit tests for functions)
 
-    - docs/ (additional documentation)
+    * docs/ (additional documentation)
 
-    - utils/ (utility scripts)
+    * utils/ (utility scripts)
 
-    - config/ (configuration files)
+    * config/ (configuration files)
 
-    - references/ (reference materials)
+    * references/ (reference materials)
 
-    - templates/ (report templates)
+    * templates/ (report templates)
 
-- reports/
+* reports/
 
-  - paper/ (Rmd / Quarto)
+  * paper/ (Rmd / Quarto)
 
-- tests/ (integration tests, end-to-end tests)
+* tests/ (integration tests, end-to-end tests)
 
-- manifest/
+* manifest/
 
-  - manifest.csv
+  * manifest.csv
 
 ```  - sessionInfo.txt
 
