@@ -1,0 +1,15 @@
+canonical_name,alias,priority,action
+id,ID,10,rename_to_canonical
+id,Jnro,20,verify
+id,NRO,20,verify
+time,time_months,10,rename_to_canonical
+FOF_status,FOF,10,rename_to_canonical
+FOF_status,kaatumisenpelkoOn,20,verify
+FOF_status,FOF_status_factor,10,rename_to_canonical
+Composite_Z,CompositeZ,10,rename_to_canonical
+age,Age,10,rename_to_canonical
+sex,Sex,10,rename_to_canonical
+sex,Sukupuoli,20,verify
+BMI,bmi,10,rename_to_canonical
+BMI,Painoindeksi,20,verify
+SRH,koettuterveydentila,20,verify

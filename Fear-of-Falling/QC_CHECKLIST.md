@@ -118,13 +118,22 @@ Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä: `Delt
 
 ## Pakolliset QC-tarkistukset
 
-
-
 > **Yleinen ajotapa**: jokainen tarkistus kirjoittaa artefaktin `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/`-hakemistoon (tai `outputs/<script>/` jos ajetaan Kxx-skriptin sisällä). Älä kirjoita raakadatan päälle.
 
 > **Privacy**: QC-artefaktit eivät saa sisältää osallistujatason rivejä (ei listoja id:istä). Tallenna vain aggregaattiyhteenvetoja.
 
+### 0) Variable Standardization (Pre-check)
 
+* **Check name:** Sarakenimien standardointi
+* **What it verifies:** Datan sarakenimet muutetaan kanoniseen muotoon (`data/VARIABLE_STANDARDIZATION.csv` mukaan).
+* **Conflict Check:** Pysäyttää ajon, jos löytyy useita sarakkeita, jotka mappautuvat samaan kanoniseen nimeen (esim. `id` ja `ID`).
+* **Verify Gate:** Pysäyttää ajon, jos löytyy alias, jonka action on `verify` (vaatii ihmisen hyväksynnän/muutoksen renameksi).
+* **Artifacts to save:**
+  * `qc_variable_standardization_renames.csv`
+  * `qc_variable_standardization_verify_hits.csv`
+  * `qc_variable_standardization_conflicts.csv`
+
+---
 
 ### 1) Saraketyypit (types)
 
