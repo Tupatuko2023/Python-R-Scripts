@@ -35,13 +35,13 @@
 #
 # Outputs + manifest:
 # - script_label: K5.2_JN (canonical SCRIPT_ID)
-# - outputs dir: outputs/K5.2_JN/  (manual creation relative to working dir)
-# - manifest: append 1 row per artifact to outputs/manifest.csv
+# - outputs dir: R-scripts/K5/outputs/K5.2_JN/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
 #
 # Workflow (tick off; do not skip):
 # 01) Read J-N bounds from environment variables (JN_LOWER, JN_UPPER, OBS_MIN, OBS_MAX, N_TOTAL)
-# 02) Create outputs + manifest dirs manually
-# 03) Load analysis_data (or d or raw_data) flexibly from global environment
+# 02) Init paths using init_paths(script_label)
+# 03) Load analysis_data (or d or raw_data) flexibly from global environment or file
 # 04) Derive FOF_status from kaatumisenpelkoOn (flexible text/numeric conversion)
 # 05) Match required columns using candidate lists (cComposite_Z0, Composite_Z0, Delta)
 # 06) Create Johnson-Neyman plot (shaded significance regions)
@@ -63,14 +63,20 @@ obs_max <- as.numeric(Sys.getenv("OBS_MAX", "1.37"))
 n_total_reported <- as.integer(Sys.getenv("N_TOTAL", "276"))
 
 # --- Standard init (MANDATORY) -----------------------------------------------
-# NOTE: K5.2 does NOT use init_paths() - uses manual dir creation (legacy pattern)
 script_label <- "K5.2_JN"  # JN = Johnson-Neyman
 
-if (!dir.exists("outputs")) dir.create("outputs", recursive = TRUE)
-script_dir <- file.path("outputs", script_label)
-if (!dir.exists(script_dir)) dir.create(script_dir, recursive = TRUE)
+# Load required packages
+suppressPackageStartupMessages({
+  library(here)
+})
 
-manifest_path <- file.path("outputs", "manifest.csv")
+# Initialize paths using project conventions
+source(here("R", "functions", "reporting.R"))
+# Use "K5" as base path, then create subdirectory for K5.2_JN
+paths <- init_paths("K5")
+outputs_dir   <- file.path(paths$outputs_dir, script_label)
+dir.create(outputs_dir, recursive = TRUE, showWarnings = FALSE)
+manifest_path <- paths$manifest_path
 
 # seed: N/A (no randomness in this visualization script)
 
@@ -138,23 +144,8 @@ col_fof <- "FOF_status"
 cat("FOF_status johdettuna:\n")
 print(table(df$FOF_status, useNA = "ifany"))
 
-
-cat("FOF_status uudelleen johdettuna:\n")
-print(table(df$FOF_status, useNA = "ifany"))
-
-col_fof <- "FOF_status"
-
-
 # Varmuuden vuoksi: data.frameeksi ja printtaa sarakenimet
 df <- as.data.frame(df)
-cat("Sarakenimet df:ssä:\n")
-print(names(df))
-
-cat("\nFOF-avainsanoja sisältävät sarakkeet:\n")
-ix_fof <- grepl("fof|pelko|kaatumis", names(df), ignore.case = TRUE)
-print(names(df)[ix_fof])
-
-
 cat("Sarakenimet df:ssä:\n")
 print(names(df))
 
@@ -271,8 +262,7 @@ summary_all <- data.frame(
 )
 
 # --- Vienti ---
-if (!dir.exists("outputs")) dir.create("outputs", recursive = TRUE)
-write.csv(summary_all, file = "outputs/JN_counts_summary.csv", row.names = FALSE)
+write.csv(summary_all, file = file.path(outputs_dir, "JN_counts_summary.csv"), row.names = FALSE)
 
 html <- paste0(
   "<html><head><meta charset='UTF-8'></head><body>",
@@ -287,46 +277,18 @@ html <- paste0(
   ),
   "</table></body></html>"
 )
-writeLines(html, "outputs/JN_counts_summary.html")
+writeLines(html, file.path(outputs_dir, "JN_counts_summary.html"))
 
-message("Valmis. Katso outputs/JN_counts_summary.csv ja outputs/JN_counts_summary.html")
-
-## --- Kuvan piirtäminen: FOF-ero ΔComposite_Z:ssa vs cComposite_Z0 ---
-
-# Rakennetaan kuvaa varten oma data: käytä suodatettua df_sub:ia
-df_plot <- df_sub
-
-# ΔComposite_Z = ToimintaKykySummary2 - ToimintaKykySummary0
-df_plot$Delta_Composite_Z <- df_plot$ToimintaKykySummary2 - df_plot$ToimintaKykySummary0
-
-# Yhtenäiset nimet kovariaateille
-# Map lowercase 'sex' to 'Sex' if needed
-if ("sex" %in% names(df_plot) && !"Sex" %in% names(df_plot)) {
-  df_plot$Sex <- df_plot$sex
-}
-if ("Sex" %in% names(df_plot)) {
-  df_plot$Sex <- factor(df_plot$Sex)
-}
-# Age on jo numeerinen, erillistä riviä ei tarvita
-# BMI on jo nimellä BMI
-
-# col_cZ0 on jo asetettu ylempänä:
-# col_cZ0 <- "cComposite_Z0_tmp" tms.
-print(col_cZ0)
-print(col_fof)   # pitäisi olla "FOF_status"
-
-
-## --- Kuvan piirtäminen: FOF-ero ΔComposite_Z:ssa vs cComposite_Z0 ---
+message("Valmis. Katso ", file.path(outputs_dir, "JN_counts_summary.csv"), " ja ", file.path(outputs_dir, "JN_counts_summary.html"))
 
 ## --- Kuvan piirtäminen: FOF-ero ΔComposite_Z:ssa vs cComposite_Z0 ---
 
 if (!requireNamespace("ggplot2", quietly = TRUE)) {
-  install.packages("ggplot2")
+  stop("Package 'ggplot2' is required but not installed. Please run: renv::install('ggplot2')")
 }
 library(ggplot2)
 
-# 1) Rakenna kuva-data suoraan df:stä
-
+# Rakenna kuva-data suoraan df:stä
 df_plot <- subset(
   df,
   !is.na(ToimintaKykySummary0) &
@@ -403,16 +365,14 @@ JN_plot <- ggplot() +
   ) +
   theme_minimal()
 
-# 2) Varmista hakemisto ja tallenna
-if (!dir.exists("outputs")) dir.create("outputs", recursive = TRUE)
-
+# Tallenna kuva
 ggplot2::ggsave(
-  filename = file.path(script_dir, "jn_obs_plot.png"),
+  filename = file.path(outputs_dir, "jn_obs_plot.png"),
   plot = JN_plot,
   width = 7, height = 5, dpi = 300
 )
 
-message("JN-kuva tallennettu: ", file.path(script_dir, "jn_obs_plot.png"))
+message("JN-kuva tallennettu: ", file.path(outputs_dir, "jn_obs_plot.png"))
 
 
 
@@ -420,14 +380,14 @@ message("JN-kuva tallennettu: ", file.path(script_dir, "jn_obs_plot.png"))
 
 # --- Päämallin tulostaulukko (fit) ---
 if (!requireNamespace("broom", quietly = TRUE)) {
-  install.packages("broom")
+  stop("Package 'broom' is required but not installed. Please run: renv::install('broom')")
 }
 library(broom)
 
 main_results <- broom::tidy(fit)
 
 main_results_path <- file.path(
-  script_dir,
+  outputs_dir,
   paste0(script_label, "_main_results.csv")
 )
 
@@ -441,9 +401,9 @@ manifest_rows <- data.frame(
   script      = script_label,
   type        = c("table",                 "table",                  "plot"),
   filename    = c(
-    file.path(script_label, paste0(script_label, "_main_results.csv")),
-    "JN_counts_summary.csv",
-    file.path(script_label, "jn_obs_plot.png")
+    file.path("R-scripts/K5/outputs", script_label, paste0(script_label, "_main_results.csv")),
+    file.path("R-scripts/K5/outputs", script_label, "JN_counts_summary.csv"),
+    file.path("R-scripts/K5/outputs", script_label, "jn_obs_plot.png")
   ),
   description = c(
     "Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot)",
