@@ -93,7 +93,16 @@ if (is.null(df)) df <- pick_data_frame("d")
 if (is.null(df)) df <- pick_data_frame("raw_data")
 
 if (is.null(df)) {
-  stop("En löytänyt kelvollista data.frame-analyysiaineistoa (df, d tai raw_data).")
+  # Try loading from default data file
+  suppressPackageStartupMessages(library(here))
+  data_path <- here::here("data", "external", "KaatumisenPelko.csv")
+
+  if (file.exists(data_path)) {
+    message("Loading data from file: ", data_path)
+    df <- utils::read.csv(data_path, stringsAsFactors = FALSE)
+  } else {
+    stop("En löytänyt kelvollista data.frame-analyysiaineistoa (df, d, raw_data) eikä tiedostoa: ", data_path)
+  }
 }
 
 # --- Johda FOF_status kaatumisenpelkoOn-sarakkeesta ---
@@ -291,7 +300,13 @@ df_plot <- df_sub
 df_plot$Delta_Composite_Z <- df_plot$ToimintaKykySummary2 - df_plot$ToimintaKykySummary0
 
 # Yhtenäiset nimet kovariaateille
-df_plot$Sex <- factor(df_plot$Sex)
+# Map lowercase 'sex' to 'Sex' if needed
+if ("sex" %in% names(df_plot) && !"Sex" %in% names(df_plot)) {
+  df_plot$Sex <- df_plot$sex
+}
+if ("Sex" %in% names(df_plot)) {
+  df_plot$Sex <- factor(df_plot$Sex)
+}
 # Age on jo numeerinen, erillistä riviä ei tarvita
 # BMI on jo nimellä BMI
 

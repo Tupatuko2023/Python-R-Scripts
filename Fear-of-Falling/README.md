@@ -88,6 +88,7 @@ Rscript R-scripts/run_mixed_fof_time.R --data "<DATA_PATH_OR_OBJECT>" --out "R-s
 ### Overview
 
 K1-K4 scripts provide foundational data processing and transformation pipelines that prepare data for downstream analyses. These scripts have been refactored to comply with CLAUDE.md standards:
+
 - Standard headers with documented variables
 - Reproducible paths (`here::here()` + `init_paths()`)
 - Manifest logging (all outputs tracked)
@@ -120,11 +121,11 @@ grep '"K1"' manifest/manifest.csv | tail -10
 **What K1 does:**
 
 1. Loads raw data (`dataset/KaatumisenPelko.csv`)
-2. Transforms to analysis variables (Composite_Z0, Composite_Z2, Delta, FOF_status)
-3. Runs statistical tests
-4. Calculates effect sizes with bootstrap CI (uses `set.seed(20251124)`)
-5. Computes distributional stats (skewness/kurtosis)
-6. Exports final table: `K1_Z_Score_Change_2G.csv`
+1. Transforms to analysis variables (Composite_Z0, Composite_Z2, Delta, FOF_status)
+1. Runs statistical tests
+1. Calculates effect sizes with bootstrap CI (uses `set.seed(20251124)`)
+1. Computes distributional stats (skewness/kurtosis)
+1. Exports final table: `K1_Z_Score_Change_2G.csv`
 
 #### K3: Original Values Analysis
 
@@ -175,11 +176,13 @@ Similar to K2 but for original values instead of z-scores.
 ### Migration Notes (Old → New)
 
 **Old behavior (pre-refactoring):**
+
 - Outputs went to `tables/` (hardcoded Windows paths like `C:/Users/tomik/...`)
 - No manifest tracking
 - Required manual path editing to run on different machines
 
 **New behavior (post-refactoring):**
+
 - Outputs go to `R-scripts/<K>/outputs/` (portable, `here::here()` based)
 - All outputs logged in `manifest/manifest.csv`
 - Scripts run from repo root without modification
@@ -217,17 +220,21 @@ K2 outputs                           K4 outputs
 ### Troubleshooting K1-K4
 
 **Error: "Raw data file not found"**
+
 - Check that `dataset/KaatumisenPelko.csv` exists
 - Or place data in `data/raw/KaatumisenPelko.csv` (preferred)
 
 **Error: "Missing required columns"**
+
 - Verify raw data has: `id`, `ToimintaKykySummary0`, `ToimintaKykySummary2`, `kaatumisenpelkoOn`, `age`, `sex`, `BMI`
 
 **Error: "K1 output not found" (when running K2)**
+
 - Run K1 first: `Rscript R-scripts/K1/K1.7.main.R`
 - Check K1 outputs exist: `ls R-scripts/K1/outputs/`
 
 **Error: "K3 output not found" (when running K4)**
+
 - Run K3 first: `Rscript R-scripts/K3/K3.7.main.R`
 - Check K3 outputs exist: `ls R-scripts/K3/outputs/`
 
@@ -302,7 +309,7 @@ renv::snapshot(prompt = FALSE)
 
 **Huom:** Älä snapshottaa joka ajolla—vain kun lisäät/päivität paketteja.
 
-2. **Seed** (satunnaisuus)
+1. **Seed** (satunnaisuus)
 
 **Käytä `set.seed(20251124)` VAIN kun satunnaisuutta:**
 
@@ -317,14 +324,14 @@ if (use_multiple_imputation) {
 fit <- lmer(outcome ~ predictor + (1|id), data = df)  # ei tarvitse seediä
 ```
 
-3. **Manifestiin tekninen toistettavuus**
+1. **Manifestiin tekninen toistettavuus**
 
 Tallenna **aina** (joka ajolla) tiedostoihin `manifest/`:
 
 - `sessionInfo_<script_label>.txt`
 - `renv_diagnostics_<script_label>.txt`
 
-4. **Manifest-kirjaus (CLAUDE.md Output discipline)**
+1. **Manifest-kirjaus (CLAUDE.md Output discipline)**
 
 **1 rivi per artefakti**, pakolliset sarakkeet:
 
@@ -350,7 +357,7 @@ manifest_entry <- tibble(
 write_csv(manifest_entry, "manifest/manifest.csv", append = TRUE)
 ```
 
-5. **Ei raw-datan siirtoa**
+1. **Ei raw-datan siirtoa**
 
 Kirjaa manifestiin vain polut + artefaktien nimet, ei osallistujatason dataa.
 
