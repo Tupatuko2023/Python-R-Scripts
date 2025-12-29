@@ -53,6 +53,7 @@ Pakolliset kentät (toteutuksen mukaiset nimet):
 * `kind`: artefaktin tyyppi (esim. `table_csv`, `qc`)
 
 Valinnaiset kentät (nykyisessä toteutuksessa):
+
 * `n`: rivilukumäärä (jos relevantti)
 * `notes`: lisätiedot
 
