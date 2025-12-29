@@ -144,6 +144,7 @@
 **Outputs created:** 0
 
 **STDERR:**
+
 ```
 
 Attaching package: ‘dplyr’
@@ -212,6 +213,7 @@ Execution halted
 ```
 
 **STDOUT (tail):**
+
 ```
 [1] TRUE
 tibble [300 × 59] (S3: tbl_df/tbl/data.frame)
@@ -228,6 +230,7 @@ tibble [300 × 59] (S3: tbl_df/tbl/data.frame)
 **Outputs created:** 0
 
 **STDERR:**
+
 ```
 Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0.
 Error in `mutate()` at magrittr/R/pipe.R:136:3:
@@ -257,6 +260,7 @@ Execution halted
 ```
 
 **STDOUT (tail):**
+
 ```
   ..   oma_arvio_liikuntakyky = col_double(),
   ..   Walk500m = col_double(),
@@ -366,6 +370,7 @@ $ PainVAS0               <dbl> 1.9, 2.9, 6.2, 9.0, 3.3, 7.0, 6.6, 4.2, 6.1, 3.�
 **Outputs created:** 0
 
 **STDERR:**
+
 ```
 Created DeltaComposite from Delta_Composite_Z.
 Error in `mutate()` at magrittr/R/pipe.R:136:3:
@@ -395,6 +400,7 @@ Execution halted
 ```
 
 **STDOUT (tail):**
+
 ```
 $ Composite_Z0           <dbl> -0.390131181, 0.399747217, -0.893071443, -0.246…
 $ Composite_Z2           <dbl> -0.28449055, 1.25360472, -0.19970932, 0.9880648…
@@ -489,6 +495,7 @@ $ Neuro_any              <fct> no_neuro, neuro, neuro, no_neuro, no_neuro, no_�
 **Outputs created:** 0
 
 **STDERR:**
+
 ```
 Error in `mutate()` at magrittr/R/pipe.R:136:3:
 ℹ In argument: `Delta_MWS = case_when(...)`.
@@ -517,6 +524,7 @@ Execution halted
 ```
 
 **STDOUT (tail):**
+
 ```
 # A tibble: 1 × 2
       n n_complete_primary
@@ -573,6 +581,7 @@ Execution halted
 **Outputs created:** 0
 
 **STDERR:**
+
 ```
 Error in `mutate()` at magrittr/R/pipe.R:136:3:
 ℹ In argument: `SRH_3class_table = factor(...)`.
@@ -596,6 +605,7 @@ Execution halted
 ```
 
 **STDOUT (tail):**
+
 ```
 # A tibble: 1 × 2
       n n_complete_primary
@@ -665,18 +675,23 @@ Execution halted
 
 The following objects are masked from ‘package:stats’:
 
-    filter, lag
+```text
+filter, lag
+```
 
 The following objects are masked from ‘package:base’:
 
-    intersect, setdiff, setequal, union
+```text
+intersect, setdiff, setequal, union
+```
 
 Loa
+
 - **K9** (exit 1): Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0.
 Error in `mutate()` at magrittr/R/pipe.R:136:3:
 ℹ In argument: `Delta_MWS = case_when(...)`.
 Caused by error in `case_when()`:
-! 
+!
 - **K11** (exit 1): Created DeltaComposite from Delta_Composite_Z.
 Error in `mutate()` at magrittr/R/pipe.R:136:3:
 ℹ In argument: `Delta_MWS = case_when(...)`.

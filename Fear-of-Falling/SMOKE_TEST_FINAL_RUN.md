@@ -386,7 +386,9 @@ Execution halted
 ```
 # A tibble: 1 × 2
 ```
+
   n n_complete_primary
+
 ```
   <int>              <int>
 1   276                276
@@ -417,17 +419,23 @@ tibble [266 × 21] (S3: tbl_df/tbl/data.frame)
  $ oma_arvio_liikuntakyky: num [1:266] 1 1 2 2 2 1 1 0 0 1 ...
  $ SRM_3class            : Ord.factor w/ 3 levels "poor"<"fair"<..: 2 2 3 3 3 2 2 1 1 2 ...
 ```
-  Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+
+  Min.    1st Qu.     Median       Mean    3rd Qu.       Max.
+
 ```
 -12.744361  -4.744361   0.255639  -0.001745   4.255639  18.255639 
 ```
- Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+
+ Min.   1st Qu.    Median      Mean   3rd Qu.      Max.
+
 ```
 -13.06969  -3.01695  -0.05476   0.06508   3.03736  15.01336 
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 -8.1513 -2.1513 -0.1513  0.1188  1.8487  6.8487 
 ```
-Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+
+Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
+
 ```
 -3.96442 -2.46442  1.03558  0.01026  2.03558  6.03558 
 # A tibble: 0 × 2

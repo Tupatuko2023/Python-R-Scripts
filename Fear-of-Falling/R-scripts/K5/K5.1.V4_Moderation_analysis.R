@@ -405,9 +405,18 @@ if (length(args) > 0 && file.exists(args[1])) {
   data_source <- "file"
 
 } else {
-  message("No valid data file supplied. Using simulated data.")
-  raw_data <- simulate_moderation_data()
-  data_source <- "simulated"
+  # Non-interactive mode (e.g., via source()): try default path first
+  data_path <- data_default_path
+
+  if (file.exists(data_path)) {
+    message("Using data file (non-interactive): ", data_path)
+    raw_data <- utils::read.csv(data_path, stringsAsFactors = FALSE)
+    data_source <- "file"
+  } else {
+    message("No valid data file supplied. Using simulated data.")
+    raw_data <- simulate_moderation_data()
+    data_source <- "simulated"
+  }
 }
 
 # Mapataan sarakkeet analyysin käyttämiin nimiin ------------------------------
