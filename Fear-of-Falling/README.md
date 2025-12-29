@@ -1,6 +1,12 @@
 # FOF × aika (baseline → 12 kk) — mixed model -ajamisohje (Composite_Z)
 
 [![K Scripts Smoke Tests](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml/badge.svg)](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml)
+[![Analysis Plan](https://img.shields.io/badge/Docs-Analysis_Plan-blue)](docs/ANALYSIS_PLAN.md)
+
+**Official Analysis Plan:** [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md)
+
+**Primary Analysis:** Longitudinal mixed model (`Composite_Z ~ time * FOF_status + ...`).
+**QC Gates:** All data must pass strict checks (n=2 timepoints, correct factors) defined in [QC_CHECKLIST.md](QC_CHECKLIST.md) before modeling.
 
 Tämä README on ajamisohje ("runbook") FOF-alatutkimuksen päätarkastelulle:
 **FOF_status × time** -interaktio fyysisen toimintakyvyn muutoksessa
@@ -121,7 +127,7 @@ grep '"K1"' manifest/manifest.csv | tail -10
 **What K1 does:**
 
 1. Loads raw data (`dataset/KaatumisenPelko.csv`)
-1. Transforms to analysis variables (Composite_Z0, Composite_Z2, Delta, FOF_status)
+1. Transforms to analysis variables (Composite_Z0, Composite_Z2, Delta_Composite_Z, FOF_status)
 1. Runs statistical tests
 1. Calculates effect sizes with bootstrap CI (uses `set.seed(20251124)`)
 1. Computes distributional stats (skewness/kurtosis)
@@ -248,11 +254,11 @@ K2 outputs                           K4 outputs
 
 - Kiinteät: `Composite_Z ~ time * FOF_status + age + sex + BMI (+ optional covariates)`
 - Satunnaiset: `(1 | id)`
-- Päätulos: **interaktiotermi `time:FOF_status`** (FOF-ryhmän muutos vs nonFOF-ryhmän muutos baseline→12 kk)
+- Päätulos: **interaktiotermi `time:FOF_status`** (FOF-ryhmän muutos vs Ei FOF-ryhmän muutos baseline→12 kk)
 
 **FOF_status-koodaus (suositus):**
 
-- `FOF_status = factor(..., levels = c("nonFOF","FOF"))`
+- `FOF_status = factor(..., levels = c("Ei FOF","FOF"))`
 
 **Manifest + outputs -käytäntö (CLAUDE.md Output discipline):**
 
@@ -270,9 +276,9 @@ K2 outputs                           K4 outputs
 **Pakolliset sarakkeet:**
 
 - `id` : yksilö-ID (integer/character)
-- `time` : aikamuuttuja (katso koodaus alla)
+- `time` : aikamuuttuja (tarkista koodaus data_dictionary.csv:st??; esimerkit alla k??ytt??v??t baseline/m12)
 - `Composite_Z` : lopputulos (numeric)
-- `FOF_status` : ryhmä (factor: `nonFOF`, `FOF`)
+- `FOF_status` : ryhmä (factor: `Ei FOF`, `FOF`)
 - kovariaatit: `age` (numeric), `sex` (factor), `BMI` (numeric)
 
 **Ajan koodaus (valitse yksi ja dokumentoi):**
@@ -288,7 +294,7 @@ K2 outputs                           K4 outputs
 
 **Minimitarkistus (ennen mallia):**
 
-- Molemmissa ryhmissä (FOF/nonFOF) havaintoja molemmilla aikapisteillä
+- Molemmissa ryhmissä (FOF/Ei FOF) havaintoja molemmilla aikapisteillä
 - Ei “tyhjiä” faktoritason kombinaatioita (emmeans antaa helposti varoituksia)
 
 ---
@@ -543,9 +549,9 @@ if (length(miss) > 0) stop("Puuttuvat sarakkeet: ", paste(miss, collapse = ", ")
 # ---- enforce factor coding (critical for interpretation)
 dat <- dat %>%
   mutate(
-    FOF_status = factor(FOF_status, levels = c("nonFOF", "FOF")),  # :contentReference[oaicite:8]{index=8}
+    FOF_status = factor(FOF_status, levels = c("Ei FOF", "FOF")),  # :contentReference[oaicite:8]{index=8}
     sex = as.factor(sex),
-    # time recommended as factor with baseline reference
+    # time recommended as factor with baseline reference; adjust levels per data_dictionary.csv
     time = if (is.numeric(time) || is.integer(time)) {
       factor(time, levels = c(0, 1), labels = c("baseline", "m12"))
     } else {
@@ -626,12 +632,12 @@ if (!exists("analysis_mixed_workflow")) {
 
       if (ci_excludes_0 && est < 0) {
         auto_text <- sprintf(
-          "Interaktio (%s) oli negatiivinen ja 95 %% LV ei sisältänyt nollaa (β = %.3f, 95 %% LV %.3f–%.3f). Tämä viittaa siihen, että FOF-ryhmän muutos baseline→12 kk poikkesi (pienempänä) nonFOF-ryhmän muutoksesta noin %.3f SD-yksikköä (koodaus: time baseline→m12, FOF_status nonFOF→FOF).",
+          "Interaktio (%s) oli negatiivinen ja 95 %% LV ei sisältänyt nollaa (β = %.3f, 95 %% LV %.3f–%.3f). Tämä viittaa siihen, että FOF-ryhmän muutos baseline→12 kk poikkesi (pienempänä) Ei FOF-ryhmän muutoksesta noin %.3f SD-yksikköä (koodaus: time baseline→m12, FOF_status Ei FOF→FOF).",
           iterm, est, lo, hi, est
         )
       } else if (ci_excludes_0 && est > 0) {
         auto_text <- sprintf(
-          "Interaktio (%s) oli positiivinen ja 95 %% LV ei sisältänyt nollaa (β = %.3f, 95 %% LV %.3f–%.3f). Tämä viittaa siihen, että FOF-ryhmän muutos baseline→12 kk poikkesi (suurempana) nonFOF-ryhmän muutoksesta noin %.3f SD-yksikköä (koodaus: time baseline→m12, FOF_status nonFOF→FOF).",
+          "Interaktio (%s) oli positiivinen ja 95 %% LV ei sisältänyt nollaa (β = %.3f, 95 %% LV %.3f–%.3f). Tämä viittaa siihen, että FOF-ryhmän muutos baseline→12 kk poikkesi (suurempana) Ei FOF-ryhmän muutoksesta noin %.3f SD-yksikköä (koodaus: time baseline→m12, FOF_status Ei FOF→FOF).",
           iterm, est, lo, hi, est
         )
       } else if (!ci_excludes_0 && narrow) {
@@ -736,9 +742,9 @@ message("Manifest updated: ", manifest_path)
 
 **Mitä tulkitaan ensisijaisesti:**
 
-- **Interaktio `time:FOF_status`**: kuvaa **ryhmäeroa muutoksessa** baseline→12 kk (FOF vs nonFOF), kun:
+- **Interaktio `time:FOF_status`**: kuvaa **ryhmäeroa muutoksessa** baseline→12 kk (FOF vs Ei FOF), kun:
 
-  - `FOF_status` referenssi = `nonFOF`
+  - `FOF_status` referenssi = `Ei FOF`
   - `time` referenssi = `baseline`
   - (tämä varmistetaan ajurissa `factor(levels=...)`)
 
@@ -760,15 +766,15 @@ message("Manifest updated: ", manifest_path)
 
 > "Interaktio (**{term}**) oli negatiivinen ja 95 % LV ei sisältänyt nollaa
 > (β = {β}, 95 % LV {lo}–{hi}). Tämä viittaa siihen, että FOF-ryhmän muutos
-> baseline→12 kk oli pienempi kuin nonFOF-ryhmän muutos noin {β} SD-yksikköä
-> (koodaus: time baseline→m12, FOF_status nonFOF→FOF)."
+> baseline→12 kk oli pienempi kuin Ei FOF-ryhmän muutos noin {β} SD-yksikköä
+> (koodaus: time baseline→m12, FOF_status Ei FOF→FOF)."
 
 1. **Merkittävä positiivinen (LV ei sisällä 0, β > 0)**
 
 > "Interaktio (**{term}**) oli positiivinen ja 95 % LV ei sisältänyt nollaa
 > (β = {β}, 95 % LV {lo}–{hi}). Tämä viittaa siihen, että FOF-ryhmän muutos
-> baseline→12 kk oli suurempi kuin nonFOF-ryhmän muutos noin {β} SD-yksikköä
-> (koodaus: time baseline→m12, FOF_status nonFOF→FOF)."
+> baseline→12 kk oli suurempi kuin Ei FOF-ryhmän muutos noin {β} SD-yksikköä
+> (koodaus: time baseline→m12, FOF_status Ei FOF→FOF)."
 
 1. **Ei-merkitsevä, kapea LV (LV sisältää 0 ja kapea suhteessa kynnysarvoon)**
 
@@ -833,6 +839,6 @@ renv::restore(prompt = FALSE)
 - Interaktiotermin **rivinimi** riippuu faktoritasojen nimistä (esim.
   `timem12:FOF_statusFOF`), joten **poimi termi aina taulukosta** (ajurin
   `find_interaction_term()`), älä kirjoita sitä käsin.
-- Tulkinta "FOF-ryhmän muutos vs nonFOF-ryhmän muutos" edellyttää, että
-  referenssitasot ovat `time = baseline` ja `FOF_status = nonFOF` (ajurissa
+- Tulkinta "FOF-ryhmän muutos vs Ei FOF-ryhmän muutos" edellyttää, että
+  referenssitasot ovat `time = baseline` ja `FOF_status = Ei FOF` (ajurissa
   `factor(levels=...)`).
