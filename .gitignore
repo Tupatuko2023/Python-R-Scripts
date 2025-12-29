@@ -51,4 +51,4 @@ Fear-of-Falling/R-scripts/**/outputs/
 
 # Gemini and Claude local workspaces
 .gemini/
-.claude/
+.claude/settings.local.json

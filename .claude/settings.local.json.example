@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(Rscript *)",
+      "Bash(R -q -e *)",
+      "Bash(R -q --vanilla -e *)",
+      "Bash(Rscript -e *)",
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(pytest *)",
+      "Bash(make *)",
+      "Bash(ls *)",
+      "Bash(ls:*)",
+      "Bash(cat *)",
+      "Bash(cat:*)",
+      "Bash(find *)",
+      "Bash(rg *)",
+      "Bash(grep *)",
+      "Bash(grep:*)",
+      "Bash(git status *)",
+      "Bash(git status:*)",
+      "Bash(git diff *)",
+      "Bash(git diff:*)",
+      "Bash(git log *)",
+      "Bash(git log:*)",
+      "Bash(git show *)",
+      "Bash(pwd *)",
+      "Bash(echo *)",
+      "Bash(test *)",
+      "Bash(test:*)",
+      "Bash(npx markdownlint-cli2:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run watch:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run download:*)",
+      "Read(//tmp/claude/C--GitWork-Python-R-Scripts/tasks/**)"
+    ]
+  }
+}
