@@ -1,105 +1,115 @@
 # Fear-of-Falling Analysis Plan (K20)
 
-**Version:** 1.0 (Draft)
+**Version:** 1.1 (Draft)
 **Date:** 2025-12-29
 **Status:** Active
 
-This document defines the authoritative analysis plan for the "Fear of Falling" (FOF) sub-project. It serves as the bridge between the research protocol and the technical implementation (R code).
+This document defines the analysis plan for the Fear-of-Falling (FOF) subproject.
+It is anchored to the project rules in `../CLAUDE.md` and the variable definitions
+in `../data/data_dictionary.csv` and `../data/Muuttujasanakirja.md`.
 
-## 1. Study Design & Research Question
+## 1. Study Design and Research Question
 
-**Objective:** To determine if baseline Fear of Falling (FOF) predicts 12-month changes in physical performance (Composite Z-score) among older adults, adjusting for key confounders.
+**Objective:** Determine whether Fear of Falling (FOF) is associated with
+12-month change in physical performance (Composite_Z), adjusting for key
+covariates.
 
-*   **Design:** Longitudinal cohort study (Baseline -> 12-month follow-up).
-*   **Primary Comparison:** FOF vs. Non-FOF group differences in change over time.
+* **Design:** Longitudinal cohort (baseline -> follow-up)
+* **Primary comparison:** FOF vs Ei FOF change over time
 
-## 2. Data & Variables (Verified Map)
+## 2. Sources of Truth and Verification
 
-All analysis must use these **canonical variable names**. Do not invent aliases.
+* **Variables and coding:** `../data/data_dictionary.csv`
+* **Reference levels and delta rule:** `../data/Muuttujasanakirja.md`
+* **QC gates:** `../QC_CHECKLIST.md`
+* **Mappings in code:** search with `rg` in `R/` and `R-scripts/`
 
-| Canonical Name | Source / Derivation | Type | Levels / Coding |
-| :--- | :--- | :--- | :--- |
-| **id** | `id` (from source) | Identifier | Unique per participant |
-| **time** | `time` / `time_months` | Factor | `0` (Baseline), `12` (Follow-up) |
-| **FOF_status** | `kaatumisenpelkoOn` | Factor | `0`="Ei FOF" (Ref), `1`="FOF" |
-| **Composite_Z** | `ToimintaKykySummary0` & `2` | Numeric | Continuous (Z-score) |
-| **age** | `age` | Numeric | Years |
-| **sex** | `sex` | Factor | Verify: Male/Female |
-| **BMI** | `BMI` | Numeric | kg/m² |
-| *SRH* (Optional) | `SRH` / `koettuterveydentila` | Factor | Verify: Good/Avg/Poor (1-3 or 0-2) |
+If a variable, coding, or timepoint is unclear, mark it **TODO** and cite the
+source required for verification (data_dictionary, Muuttujasanakirja, or code).
 
-**Notes:**
-*   **Immutable Data:** Raw data in `data/` is strictly READ-ONLY. All transformations happen in R.
-*   **FOF Derivation:** Derived from binary `kaatumisenpelkoOn`. Ensure factor levels are explicit.
-*   **Timepoint:** Ensure "12" corresponds to the correct follow-up column (`ToimintaKykySummary2`).
+## 3. Variable Map (Canonical Names Only)
 
-## 3. Statistical Models
+All analysis must use these canonical names. Do not invent aliases.
 
-### 3.1 Primary Model: Longitudinal Mixed Model (LMM)
+| Canonical name | Source / derivation | Coding / units | Status | Notes |
+| --- | --- | --- | --- | --- |
+| id | data_dictionary.csv | Unique per participant | TODO | Confirm exact column name in data (data_dictionary). |
+| time | data_dictionary.csv | baseline/m12 (preferred) or 0/1 | TODO | Confirm exact labels and reference (data_dictionary). |
+| FOF_status | R/functions/io.R | 0=Ei FOF, 1=FOF | Verified | Derived from kaatumisenpelkoOn (0/1). |
+| Composite_Z | data_dictionary.csv | Continuous (z-score) | TODO | Confirm construction and long-format source. |
+| Composite_Z0 | R/functions/io.R | Continuous (z-score) | Verified | From ToimintaKykySummary0. |
+| Composite_Z2 | R/functions/io.R | Continuous (z-score) | Verified | From ToimintaKykySummary2; TODO confirm that "2" is 12 kk. |
+| Delta_Composite_Z | R/functions/io.R, R/functions/checks.R | Composite_Z2 - Composite_Z0 | Verified | TODO confirm follow-up timepoint. |
+| age | data_dictionary.csv | Years | TODO | Confirm baseline-only vs time-varying. |
+| sex | data_dictionary.csv | Unknown coding | TODO | Confirm coding and labels. |
+| BMI | data_dictionary.csv | kg/m^2 | TODO | data_dictionary says kg/m^2; confirm in codebook/data. |
+| SRH (optional) | data_dictionary.csv | Unknown scale | TODO | Confirm variable name and levels. |
 
-We analyze the *long-format* dataset to maximize power and handle missing data under MAR.
+**Non-negotiable:** Raw data under `data/` is read-only; all transformations are
+in code.
+
+## 4. Statistical Models
+
+### 4.1 Primary Model (Long Mixed Model)
 
 ```r
-# Formula (lmer)
 Composite_Z ~ time * FOF_status + age + sex + BMI + (1 | id)
 ```
 
-*   **Key Interest:** The interaction term `time12:FOF_statusFOF`.
-*   **Interpretation:** Difference in the rate of change between FOF and Non-FOF groups.
+* **Key term:** `time:FOF_status`
+* **Time coding:** TODO (use verified levels from data_dictionary)
+* **FOF reference:** 0 = Ei FOF (verified in code)
 
-### 3.2 Cross-Check: ANCOVA (Wide Format)
-
-To verify robustness, we perform an ANCOVA on the wide dataset (complete cases for outcome).
+### 4.2 Cross-Check (Wide ANCOVA)
 
 ```r
-# Formula (lm)
-Composite_Z_12m ~ FOF_status + Composite_Z_baseline + age + sex + BMI
+Composite_Z2 ~ FOF_status + Composite_Z0 + age + sex + BMI
 ```
 
-*   **Consistency Check:** The effect size and direction should align with the LMM interaction term.
+* **Follow-up column:** Composite_Z2 (TODO confirm that "2" is 12 kk)
+* **Baseline column:** Composite_Z0
 
-## 4. QC Gates (Quality Control)
+## 5. QC Gates (Stop-the-line)
 
-Before running the final models, the data must pass the strict QC gates defined in `QC_CHECKLIST.md`.
+All data must pass the gates defined in `../QC_CHECKLIST.md` before modeling.
+Required checks include:
 
-*   **Gate 1 (Ingest):** No data corruption (row counts match, IDs unique).
-*   **Gate 2 (Logic):** `time` has exactly 2 levels; `FOF_status` has exactly 2 levels.
-*   **Gate 3 (Missingness):** Report missingness by Group x Time.
-*   **Gate 4 (Delta Check):** Ensure `Delta = FollowUp - Baseline` (tolerance 1e-8).
+* (id, time) uniqueness in long data
+* Exactly 2 time levels and 2 FOF_status levels
+* Missingness overall and by FOF_status x time
+* Delta check if Delta_Composite_Z exists
 
-**Runner:** `R-scripts/K18/K18_QC.V1_qc-run.R` (or latest equivalent).
+**Runner:** `R-scripts/K18/K18_QC.V1_qc-run.R`
 
-## 5. Analysis Runbook
+## 6. Outputs and Audit Trail
 
-Follow this sequence to reproduce the results.
+* Outputs must be written to: `R-scripts/<script_label>/outputs/`
+* Append one row per artifact to `manifest/manifest.csv`
+* Save `sessionInfo()` or `renv::diagnostics()` to `manifest/`
 
-1.  **Environment Setup:**
-    ```bash
-    Rscript -e "renv::restore()"
-    ```
+## 7. Runbook (Placeholders)
 
-2.  **QC & Validation:**
-    ```bash
-    Rscript R-scripts/K18/K18_QC.V1_qc-run.R
-    # Verify: outputs/qc_report.html says "PASS"
-    ```
+```bash
+# 1) Setup
+a) Rscript -e "renv::restore()"
 
-3.  **Primary Analysis (Long):**
-    ```bash
-    # Placeholder: Rscript R-scripts/K20/K20_LMM.V1_primary.R
-    ```
+# 2) QC
+Rscript R-scripts/K18/K18_QC.V1_qc-run.R --data <PATH_TO_ANALYSIS_LONG>
 
-4.  **Sensitivity Analysis (Wide):**
-    ```bash
-    # Placeholder: Rscript R-scripts/K20/K20_ANCOVA.V1_check.R
-    ```
+# 3) Primary model (placeholder)
+Rscript R-scripts/K20/K20_LMM.V1_primary.R --data <PATH_TO_ANALYSIS_LONG>
 
-## 6. What Cannot Change (Non-Negotiables)
+# 4) Cross-check (placeholder)
+Rscript R-scripts/K20/K20_ANCOVA.V1_check.R --data <PATH_TO_WIDE>
+```
 
-1.  **Raw Data:** Never manually edit CSV/Excel files.
-2.  **Variable Names:** Use the map above. Do not rename `FOF_status` to `Group` or similar ambiguity.
-3.  **Reproducibility:** `set.seed(20251124)` only for bootstrapping/MI.
-4.  **Outputs:** All artifacts go to `R-scripts/Kxx/outputs/` and are logged in `manifest/manifest.csv`.
+## 8. What Cannot Change (Non-Negotiables)
+
+1. **Raw data:** Never edit CSV/Excel files directly.
+2. **Variable meanings:** Do not guess; use data_dictionary or codebook.
+3. **Reproducibility:** `set.seed(20251124)` only when randomness is used.
+4. **Output discipline:** All artifacts under `R-scripts/<script_label>/outputs/`.
 
 ---
-*Reference: See `data/data_dictionary.csv` and `data/Muuttujasanakirja.md` for full definitions.*
+**References:** `../data/data_dictionary.csv`, `../data/Muuttujasanakirja.md`,
+`../QC_CHECKLIST.md`, `../CLAUDE.md`.
