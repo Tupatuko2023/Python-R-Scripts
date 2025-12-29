@@ -1,0 +1,40 @@
+{
+  "context": {
+    "fileName": [
+      "GEMINI.md"
+    ],
+    "fileFiltering": {
+      "respectGitIgnore": true
+    }
+  },
+  "general": {
+    "checkpointing": {
+      "enabled": true
+    }
+  },
+  "tools": {
+    "autoAccept": true,
+    "allowed": [
+      "Rscript",
+      "R -q --vanilla -e",
+      "python",
+      "python3",
+      "pytest",
+      "make",
+      "ls",
+      "find",
+      "cat",
+      "grep",
+      "rg",
+      "git status",
+      "git diff",
+      "git log",
+      "git show",
+      "echo",
+      "pwd"
+    ]
+  },
+  "security": {
+    "enablePermanentToolApproval": true
+  }
+}
