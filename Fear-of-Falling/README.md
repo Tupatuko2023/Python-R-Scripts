@@ -5,6 +5,8 @@
 
 **Official Analysis Plan:** [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md)
 
+**Scope & Guardrails:** [docs/THESIS_SCOPE.md](docs/THESIS_SCOPE.md)
+
 **Primary model + QC gate (short):**
 
 - Model: Composite_Z ~ time * FOF_status + age + sex + BMI + (1 | id)
@@ -507,7 +509,7 @@ manifest_dir <- here::here("manifest")
 if (!dir.exists(manifest_dir)) dir.create(manifest_dir, recursive = TRUE)
 manifest_path <- file.path(manifest_dir, "manifest.csv")
 
-# ---- helpers (pattern consistent with earlier scripts) :contentReference[oaicite:7]{index=7}
+# ---- helpers (pattern consistent with earlier scripts)
 save_table_csv_html <- function(df, basename, out_dir) {
   csv_path  <- file.path(out_dir, paste0(basename, ".csv"))
   html_path <- file.path(out_dir, paste0(basename, ".html"))
@@ -564,7 +566,7 @@ if (length(miss) > 0) stop("Puuttuvat sarakkeet: ", paste(miss, collapse = ", ")
 # ---- enforce factor coding (critical for interpretation)
 dat <- dat %>%
   mutate(
-    FOF_status = factor(FOF_status, levels = c("Ei FOF", "FOF")),  # :contentReference[oaicite:8]{index=8}
+    FOF_status = factor(FOF_status, levels = c("Ei FOF", "FOF")),  #
     sex = as.factor(sex),
     # time recommended as factor with baseline reference; adjust levels per data_dictionary.csv
     time = if (is.numeric(time) || is.integer(time)) {
@@ -720,7 +722,7 @@ writeLines(capture.output(sessionInfo()), con = sess_path)
 diag_path <- file.path(manifest_dir, paste0("renv_diagnostics_", script_label, ".txt"))
 writeLines(capture.output(renv::diagnostics()), con = diag_path)
 
-# ---- update manifest (pattern consistent with K14) :contentReference[oaicite:9]{index=9}
+# ---- update manifest (pattern consistent with K14)
 manifest_rows <- tibble::tibble(
   script      = script_label,
   type        = c("table","table","table","table","text","figure","meta","meta"),
