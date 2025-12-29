@@ -1,59 +1,30 @@
 # R/functions/qc.R
 
-init_paths <- function(script_label, project_root = getwd()) {
-  k_folder <- sub("_.*$", "", script_label)
-  outputs_dir <- file.path(project_root, "R-scripts", k_folder, "outputs")
-  manifest_path <- file.path(project_root, "manifest", "manifest.csv")
-  dir.create(outputs_dir, recursive = TRUE, showWarnings = FALSE)
-  dir.create(dirname(manifest_path), recursive = TRUE, showWarnings = FALSE)
-  options(
-    fof.outputs_dir = outputs_dir,
-    fof.manifest_path = manifest_path,
-    fof.script = script_label
-  )
-  list(outputs_dir = outputs_dir, manifest_path = manifest_path)
-}
+suppressPackageStartupMessages({
+  library(here)
+  library(tibble)
+  library(readr)
+  library(dplyr)
+})
 
-qc_relpath <- function(path, outputs_dir) {
-  out_norm <- normalizePath(outputs_dir, winslash = "/", mustWork = FALSE)
-  path_norm <- normalizePath(path, winslash = "/", mustWork = FALSE)
-  if (!startsWith(path_norm, paste0(out_norm, "/"))) return(path)
-  rel <- sub(paste0("^", out_norm, "/"), "", path_norm)
-  file.path("R-scripts", basename(dirname(out_norm)), "outputs", rel)
-}
+# Load canonical init/manifest functions
+source(here::here("R", "functions", "init.R"))
 
-qc_append_manifest <- function(row, manifest_path) {
-  stopifnot(is.data.frame(row))
-  dir.create(dirname(manifest_path), recursive = TRUE, showWarnings = FALSE)
-  if (!file.exists(manifest_path)) {
-    utils::write.csv(row, manifest_path, row.names = FALSE)
-  } else {
-    old <- utils::read.csv(manifest_path, stringsAsFactors = FALSE)
-    out <- rbind(old, row)
-    utils::write.csv(out, manifest_path, row.names = FALSE)
-  }
-  invisible(manifest_path)
-}
-
-qc_manifest_row <- function(script, label, path, notes = NA_character_) {
-  data.frame(
-    timestamp = as.character(Sys.time()),
-    script = script,
-    label = label,
-    kind = "qc",
-    path = path,
-    n = NA_integer_,
-    notes = notes,
-    stringsAsFactors = FALSE
-  )
-}
+# --- QC Utilities --------------------------------------------------------------
 
 qc_write_csv <- function(tbl, path, script, manifest_path, outputs_dir, notes = NA_character_) {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   utils::write.csv(tbl, path, row.names = FALSE)
-  rel_path <- qc_relpath(path, outputs_dir)
-  qc_append_manifest(qc_manifest_row(script, tools::file_path_sans_ext(basename(path)), rel_path, notes),
-                     manifest_path)
+  
+  # Use canonical manifest logic
+  append_manifest(
+    manifest_row(script = script, 
+                 label = tools::file_path_sans_ext(basename(path)), 
+                 path = get_relpath(path), 
+                 kind = "qc_csv",
+                 notes = notes),
+    manifest_path
+  )
   invisible(path)
 }
 
@@ -62,9 +33,16 @@ qc_write_png <- function(path, script, manifest_path, outputs_dir, plot_fn, note
   grDevices::png(path, width = 1200, height = 900)
   on.exit(grDevices::dev.off(), add = TRUE)
   plot_fn()
-  rel_path <- qc_relpath(path, outputs_dir)
-  qc_append_manifest(qc_manifest_row(script, tools::file_path_sans_ext(basename(path)), rel_path, notes),
-                     manifest_path)
+  
+  # Use canonical manifest logic
+  append_manifest(
+    manifest_row(script = script, 
+                 label = tools::file_path_sans_ext(basename(path)), 
+                 path = get_relpath(path), 
+                 kind = "qc_png",
+                 notes = notes),
+    manifest_path
+  )
   invisible(path)
 }
 
