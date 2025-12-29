@@ -121,7 +121,8 @@ Rscript -e "renv::diagnostics()" > manifest/renv_diagnostics.txt
 * **File tag / filename:** `{SCRIPT_ID}.V{version}_{name}.R`
 
   * Tiedostonimen on suositeltavaa alkaa `{SCRIPT_ID}.V` (esim. `K11_MAIN.V1_primary-ancova.R`)
-* **script_label:** aina `SCRIPT_ID` (tai johdettu tiedoston nimestä: prefix ennen `.V`)
+* **script_label:** kanoninen tunniste, joka vastaa `R-scripts/` alla olevaa kansion nimeä (esim. "K1", "K11").
+  * Jos SCRIPT_ID on "K11_MAIN", `script_label` tulisi normalisoida muotoon "K11", jotta outputit menevät `R-scripts/K11/outputs/`.
 
 ### 6.2 Output + manifest (pakolliset)
 
@@ -183,6 +184,7 @@ Rscript -e "renv::diagnostics()" > manifest/renv_diagnostics.txt
 # 12) EOF marker
 # ==============================================================================
 suppressPackageStartupMessages({
+  library(here)
   {{REQUIRED_PACKAGES}}
 })
 
@@ -196,10 +198,18 @@ script_base <- if (length(file_arg) > 0) {
   "{{SCRIPT_ID}}"  # interactive fallback
 }
 
-script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
-if (is.na(script_label) || script_label == "") script_label <- "{{SCRIPT_ID}}"
+# Canonical SCRIPT_ID (e.g. K11_MAIN)
+script_id_raw <- sub("\\.V.*$", "", script_base)
+if (is.na(script_id_raw) || script_id_raw == "") script_id_raw <- "{{SCRIPT_ID}}"
+
+# Derive script_label for folder mapping (e.g. K11_MAIN -> K11)
+# Adjust logic as needed to match directory structure R-scripts/Kxx/
+script_label <- strsplit(script_id_raw, "_")[[1]][1] # Simple heuristic: K11_MAIN -> K11
 
 # init_paths() must set outputs_dir + manifest_path (+ options fof.*)
+# Ensure reporting.R or qc.R is loaded for init_paths
+source(here::here("R", "functions", "reporting.R"))
+
 paths <- init_paths(script_label)
 outputs_dir   <- paths$outputs_dir
 manifest_path <- paths$manifest_path
@@ -309,6 +319,7 @@ Jos et pysty vahvistamaan: pysähdy ja pyydä data_dictionary tai sample.
 
 ## 14) TODOs (maintainers)
 
+* **Yhtenäistä `init_paths`**: Repossa on nyt `R/functions/qc.R` ja `R/functions/reporting.R`. Yhdistä kanoniseksi versioksi.
 * Listaa 1–3 “canonical entrypoint” -skriptiä ja oikeat ajokomennot.
 * Vahvista `init_paths()` sijainti ja optionimet (esim. `fof.outputs_dir`, `fof.manifest_path`).
 * Dokumentoi datan sijainti ja mikä on gitignored (ilman arkaluontoista sisältöä).
