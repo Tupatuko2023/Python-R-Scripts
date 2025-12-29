@@ -15,7 +15,22 @@ Tässä aliprojektissa käsitellään kaatumisen pelkoon (FOF) liittyvää tutki
   * Pieni, keinotekoinen datasetti, jonka rakenne vastaa analyysiskriptien odotuksia.
   * Tarkoitus on varmistaa, että putki ja skriptit ajautuvat läpi automaatiossa ilman oikeaa dataa.
 
-## 2) Kansiorakenne ja oletetut polut
+## 2) Data dictionary
+
+Tämän aliprojektin muuttujakartan lähde on `data/data_dictionary.csv`.
+Sitä käytetään automaattisissa validoinneissa ja smoke-testeissä (esim. sarake- ja
+tyyppitarkistukset), ja se on source-of-truth muuttujien nimille ja rooleille.
+Älä lisää uusia muuttujarivejä ilman varmistusta datasta tai codebookista.
+
+Pikakäyttö (ohje, ei vaadi oikeaa dataa):
+
+```r
+# dd <- read.csv("data/data_dictionary.csv", stringsAsFactors = FALSE)
+# names(dd)
+# subset(dd, needs_confirmation == "yes")
+```
+
+## 3) Kansiorakenne ja oletetut polut
 
 Minimimalli (suositus). Jos repo poikkeaa tästä, päivitä ja täydennä.
 
@@ -38,7 +53,7 @@ Minimimalli (suositus). Jos repo poikkeaa tästä, päivitä ja täydennä.
 
   * Tämä ohje.
 
-## 3) Versionhallinta- ja .gitignore-säännöt
+## 4) Versionhallinta- ja .gitignore-säännöt
 
 ### DO
 
@@ -70,7 +85,7 @@ Minimimalli (suositus). Jos repo poikkeaa tästä, päivitä ja täydennä.
 
 TODO: varmista nykyinen .gitignore-käytäntö (repojuuri + aliprojekti) ja sovita nämä siihen.
 
-## 4) Mock-data CI/smoke-testeihin
+## 5) Mock-data CI/smoke-testeihin
 
 ### Miksi mock-dataa käytetään
 
