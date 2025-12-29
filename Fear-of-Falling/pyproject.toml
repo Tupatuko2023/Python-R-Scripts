@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fear-of-falling"
+version = "0.0.0"
+description = "Fear-of-Falling subproject: Python helpers for a research analysis pipeline (not a published package)."
+readme = "AGENTS.md"
+requires-python = ">=3.10"
+dependencies = [
+  # TODO: add runtime deps only after confirming actual Python imports in this subproject
+]
+
+[dependency-groups]
+dev = [
+  "ruff",
+  "pytest",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+extend-exclude = [
+  ".venv",
+  "renv",
+  "outputs",
+  "data",
+  "manifest",
+  "build",
+  "dist",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra"
+testpaths = ["tests"]
+python_files = ["test_*.py"]

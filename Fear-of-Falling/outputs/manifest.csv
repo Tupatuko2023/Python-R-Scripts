@@ -1,0 +1,7 @@
+"script","type","filename","description"
+"K5.2_JN","table","K5.2_JN/K5.2_JN_main_results.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot)"
+"K5.2_JN","table","JN_counts_summary.csv","JN-alueen määrälaskennan yhteenvetotaulukko"
+"K5.2_JN","plot","K5.2_JN/jn_obs_plot.png","JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona"
+"K5.2_JN","table","K5.2_JN/K5.2_JN_main_results.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot)"
+"K5.2_JN","table","JN_counts_summary.csv","JN-alueen määrälaskennan yhteenvetotaulukko"
+"K5.2_JN","plot","K5.2_JN/jn_obs_plot.png","JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona"
