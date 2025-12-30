@@ -15,6 +15,11 @@
 
 - Use only repo-typical commands documented in README/AGENTS (examples: `python`, `py`, `Rscript`, `R -e "renv::restore()"`, `pytest`, `make`, `git status -sb`, `rg`).
 - Ask for explicit approval before: `git push`, `git reset`, `git clean`, `rm -rf` / `del /s` / `rd /s /q` / `rmdir /s /q` / `Remove-Item -Recurse -Force`, `curl`, `wget`, `docker`, or any network access.
+
+## Safety notes
+
+- Windows-hosted sandboxing is more limited; prefer WSL or a container when you need stronger isolation. Docs: [codex-security]
+- MCP servers (e.g., `MCP_DOCKER`) add power and attack surface; enable and use them intentionally. Docs: [codex-cli-features]
 ## Project summary
 
 This is a mixed-language (R + Python) research analysis repository with multiple subprojects.
@@ -129,3 +134,8 @@ Before you finish a task, do all that apply:
 - Relevant script/command runs successfully from the correct subproject root.
 - No secrets, no private data, no generated artifacts committed unless explicitly requested.
 - Changes are minimal, scoped, and consistent with existing style; docs updated if behavior changed.
+
+## References
+
+- [codex-security]: https://developers.openai.com/codex/security/
+- [codex-cli-features]: https://developers.openai.com/codex/cli/features/
