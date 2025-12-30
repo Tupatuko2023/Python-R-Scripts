@@ -9,7 +9,7 @@
 # ==============================================================================
 #
 # Activate renv environment if not already loaded
-if (Sys.getenv("RENV_PROJECT") == "") source("renv/activate.R")
+if (Sys.getenv("RENV_PROJECT") == "") source(here::here("renv/activate.R"))
 
 suppressPackageStartupMessages({
   library(here)
