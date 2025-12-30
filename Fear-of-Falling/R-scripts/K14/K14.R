@@ -113,6 +113,16 @@ if (is.na(srh_var)) {
   warning("Using legacy 'koettuterveydentila' as source for SRH. Consider standardizing to 'SRH'.")
 }
 
+# Determine the source variable for 500m walk
+walk500m_var <- if ("vaikeus_liikkua_500m" %in% names(analysis_data)) {
+  "vaikeus_liikkua_500m"
+} else if ("Vaikeus500m" %in% names(analysis_data)) {
+  "Vaikeus500m"
+} else {
+  warning("No column found for 500m walk difficulty ('vaikeus_liikkua_500m' or 'Vaikeus500m'). Table section will be NA.")
+  NULL
+}
+
 analysis_data_rec <- analysis_data %>%
   mutate(
     # FOF-status: sama määrittely kuin muissa skripteissä (K9/K11/K13)
@@ -151,12 +161,16 @@ analysis_data_rec <- analysis_data %>%
     ),
 
     # Walking 500 m: 0 = No difficulties, 1 = Difficulties, 2 = Cannot
-    Walk500m_3class_table = factor(
-      vaikeus_liikkua_500m,
-      levels = c(0, 1, 2),
-      labels = c("No", "Difficulties", "Cannot"),
-      ordered = TRUE
-    ),
+    Walk500m_3class_table = if (!is.null(walk500m_var)) {
+      factor(
+        .data[[walk500m_var]],
+        levels = c(0, 1, 2),
+        labels = c("No", "Difficulties", "Cannot"),
+        ordered = TRUE
+      )
+    } else {
+      factor(NA, levels = c("No", "Difficulties", "Cannot"))
+    },
 
     # Alkoholinkäyttö: oletus 0 = No, 1 = Moderate, 2 = Large
     alcohol_3class_table = factor(
