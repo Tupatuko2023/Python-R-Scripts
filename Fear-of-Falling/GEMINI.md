@@ -100,7 +100,16 @@ Rscript -e "sessionInfo()" > manifest/sessionInfo.txt
 Rscript -e "renv::diagnostics()" > manifest/renv_diagnostics.txt
 ```
 
-> TODO: Jos projektissa on yksi “canonical entrypoint” (1–3 skriptiä), listaa ne tähän.
+### Canonical Entrypoints (Primary)
+
+1.  **K1 Main Pipeline**: `R-scripts/K1/K1.7.main.R`
+    *   Ajaa koko K1-analyysin (import -> QC -> analysis -> export).
+    *   `Rscript R-scripts/K1/K1.7.main.R`
+2.  **Smoke Test (Environment)**: `R-scripts/SMOKE/SMOKE_ENV.V1_environment-smoke.R`
+    *   Tarkistaa renv-ympäristön ja kirjoitusoikeudet ilman dataa.
+    *   `Rscript R-scripts/SMOKE/SMOKE_ENV.V1_environment-smoke.R`
+
+> TODO: Vahvista muut pipeline-entrypointit (esim. K3) kun ne on refaktoroitu vastaamaan GEMINI.md -standardeja.
 
 ---
 
