@@ -5,8 +5,11 @@ This directory contains the project-specific configuration for the Gemini CLI ag
 ## `settings.json`
 
 Defines the project baseline:
+
 - **Context**: Always reads `GEMINI.md` first.
-- **Auto-accept**: Safe tools (reading files, listing dirs) and specific "safe" shell commands (`Rscript`, `pytest`, `git status`) are auto-accepted to reduce noise.
+- **Auto-accept**: Safe tools (reading files, listing dirs) and specific "safe"
+  shell commands (`Rscript`, `pytest`, `git status`) are auto-accepted to reduce
+  noise.
 - **Checkpointing**: Enabled for `/restore` capability.
 
 ## `policies/fof-policy.example.toml`
@@ -34,10 +37,12 @@ Defines the security guardrails (ported from Claude Code). Since policies are us
 
 ### Behavior
 
-*   **Denied**: Reading `.env`, `secrets/`, SSH keys.
-*   **Ask User**: `git push`, `rm -rf`, `docker`, `curl`, etc.
-*   **Allowed**: Standard analysis commands (`Rscript`, `python`, `ls`, etc.).
+- **Denied**: Reading `.env`, `secrets/`, SSH keys.
+- **Ask User**: `git push`, `rm -rf`, `docker`, `curl`, etc.
+- **Allowed**: Standard analysis commands (`Rscript`, `python`, `ls`, etc.).
 
 ## Troubleshooting
 
-If you need to edit or allow a specific risky command for one session, use `gemini --approval-mode auto_edit` or approve the specific action in the CLI prompt.
+If you need to edit or allow a specific risky command for one session, use
+`gemini --approval-mode auto_edit` or approve the specific action in the CLI
+prompt.
