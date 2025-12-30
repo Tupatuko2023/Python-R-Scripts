@@ -45,6 +45,10 @@ jobs:
             pip install pandas pytest
           fi
 
+      - name: Install EFI package (editable)
+        run: |
+          python -m pip install -e ./Electronic-Frailty-Index
+
       - name: Run tests (pytest → JUnit XML)
         shell: bash -euo pipefail {0}
         run: |
