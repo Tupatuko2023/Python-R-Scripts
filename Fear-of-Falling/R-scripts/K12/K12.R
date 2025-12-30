@@ -6,70 +6,11 @@
 #          performance battery (PBT) components (HGS, MWS, FTSST, SLS) compared
 #          to the overall composite physical function score
 #
-# Outcome: Multiple (analyzed separately):
-#   - Delta_Composite_Z (composite 12-month change)
-#   - Delta_HGS (hand grip strength change)
-#   - Delta_MWS (maximum walking speed change)
-#   - Delta_FTSST (five times sit-to-stand change, reverse-coded)
-#   - Delta_SLS (single leg stance change)
-# Predictors: FOF_status_f (factor: "Ei FOF"/"FOF")
-# Moderator/interaction: None (main effects across outcomes)
-# Grouping variable: None (separate complete-case datasets per outcome)
-# Covariates: Age, Sex (sex), BMI, MOI_score, diabetes, alzheimer, parkinson,
-#             AVH, previous_falls, psych_score
-#
-# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
-# id, age, sex, BMI, kaatumisenpelkoOn, ToimintaKykySummary0, ToimintaKykySummary2,
-# Puristus0, Puristus2, kavelynopeus_m_sek0, kavelynopeus_m_sek2, Tuoli0, Tuoli2,
-# Seisominen0, Seisominen2, MOIindeksiindeksi, diabetes, alzheimer, parkinson,
-# AVH, kaatuminen, mieliala
-# (Note: PBT may use either baseline+follow-up OR pre-computed change columns)
-#
-# Required vars (analysis df - after standardize_analysis_vars + Delta derivation):
-# id, Age, Sex, BMI, FOF_status_f, Composite_Z0, Delta_Composite_Z, Puristus0,
-# Delta_HGS, kavelynopeus_m_sek0, Delta_MWS, Tuoli0, Delta_FTSST, Seisominen0,
-# Delta_SLS, MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH, kaatuminen,
-# mieliala (mapped to MOI_score, previous_falls, psych_score in dat_* datasets)
-#
-# Mapping (raw -> analysis; keep minimal + explicit):
-# kaatumisenpelkoOn (0/1) -> FOF_status -> FOF_status_f (factor: "Ei FOF"/"FOF")
-# age -> Age
-# sex (0/1) -> Sex -> sex (factor in build_dat_outcome)
-# ToimintaKykySummary0 -> Composite_Z0
-# ToimintaKykySummary2 - ToimintaKykySummary0 -> Delta_Composite_Z
-# Puristus2 - Puristus0 -> Delta_HGS (or use PuristusMuutos if available)
-# kavelynopeus_m_sek2 - kavelynopeus_m_sek0 -> Delta_MWS (or Kävelymuutos)
-# (Tuoli0 - Tuoli2) -> Delta_FTSST, reverse-coded (or -Tuolimuutos)
-# Seisominen2 - Seisominen0 -> Delta_SLS (or TasapainoMuutos)
-# MOIindeksiindeksi -> MOI_score (in dat_*)
-# kaatuminen -> previous_falls (in dat_*)
-# mieliala -> psych_score (in dat_*)
-#
-# Reproducibility:
-# - renv restore/snapshot REQUIRED
-# - seed: N/A (no randomness - no MI, bootstrap, or resampling)
-#
-# Outputs + manifest:
-# - script_label: K12 (canonical)
-# - outputs dir: R-scripts/K12/outputs/K12/  (resolved via init_paths(script_label))
-# - manifest: append 1 row per artifact to manifest/manifest.csv
-#
-# Workflow (tick off; do not skip):
-# 01) Init paths + options + dirs (init_paths)
-# 02) Load raw data (immutable; no edits)
-# 03) Check required raw columns (req_raw_cols)
-# 04) Standardize vars + QC (standardize_analysis_vars + sanity_checks)
-# 05) Derive PBT change scores (Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS)
-# 06) Build outcome-specific complete-case datasets (dat_comp, dat_hgs, dat_mws, dat_fts, dat_sls)
-# 07) Fit base + extended models per outcome (FOF + baseline + covariates)
-# 08) Compile FOF effect estimates across all outcomes
-# 09) Save forest plot comparing FOF effects across outcomes
-# 10) Save tables (all model coefficients + FOF effects summary)
-# 11) Append manifest row per artifact
-# 12) Save sessionInfo to manifest/
-# 13) EOF marker
 # ==============================================================================
 #
+# Activate renv environment if not already loaded
+if (Sys.getenv("RENV_PROJECT") == "") source("renv/activate.R")
+
 suppressPackageStartupMessages({
   library(here)
   library(dplyr)
@@ -224,8 +165,8 @@ analysis_data_rec <- analysis_data_rec %>%
 
     # FTSST (Tuoli): pienempi aika = parempi -> muutoksen merkki käännetään
     Delta_FTSST = case_when(
-      "Tuolimuutos" %in% names(analysis_data_rec) ~ Tuolimuutos * (-1),
-      "Tuoli0" %in% names(analysis_data_rec) & "Tuoli2" %in% names(analysis_data_rec) ~
+      "Tuolimuutos" %in% names(.) & !is.na(Tuolimuutos) ~ Tuolimuutos * (-1),
+      "Tuoli0" %in% names(.) & "Tuoli2" %in% names(.) & !is.na(Tuoli0) & !is.na(Tuoli2) ~
         (Tuoli0 - Tuoli2),  # positiivinen = nopeampi testi
       TRUE ~ NA_real_
     ),

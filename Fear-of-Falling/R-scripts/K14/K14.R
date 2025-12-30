@@ -6,59 +6,11 @@
 #          across demographics, clinical characteristics, self-rated measures,
 #          functional performance, and health behaviors at baseline
 #
-# Outcome: None (descriptive table only, no modeling)
-# Predictors: FOF_status (factor: "nonFOF"/"FOF", grouping variable for table)
-# Moderator/interaction: None
-# Grouping variable: FOF_status (table stratification)
-# Covariates: N/A (all variables presented as descriptives)
-#
-# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
-# kaatumisenpelkoOn, age, sex, BMI, diabetes, alzheimer, parkinson, AVH,
-# koettuterveydentila (or SRH), MOIindeksiindeksi, tupakointi, alkoholi,
-# oma_arvio_liikuntakyky, vaikeus_liikkua_500m (or Vaikeus500m), tasapainovaikeus,
-# kaatuminen, murtumia, PainVAS0, ToimintaKykySummary0
-#
-# Required vars (analysis df - after recoding in script):
-# FOF_status (factor: "nonFOF"/"FOF"), age, sex_factor, BMI, diabetes, alzheimer_dementia,
-# parkinson, AVH, SRH_3class, MOI, smoking, alcohol_3class, SRM_3class,
-# walk500m_3class, balance_diff, fallen, fractures, PainVAS0, Composite_Z0
-#
-# Mapping (raw -> analysis; keep minimal + explicit):
-# kaatumisenpelkoOn (0/1) -> FOF_status (factor: "nonFOF"/"FOF")
-# sex (0/1) -> sex_factor (factor: "female"/"male")
-# koettuterveydentila (0/1/2) -> SRH_3class (factor: "poor"/"moderate"/"good")
-# oma_arvio_liikuntakyky (0/1/2) -> SRM_3class (factor: "weak"/"moderate"/"good")
-# vaikeus_liikkua_500m (0/1/2) -> walk500m_3class (factor: "No"/"Difficulties"/"Cannot")
-# alkoholi (0/1/2) -> alcohol_3class (factor: "No"/"Moderate"/"Large")
-# tupakointi (0/1) -> smoking (factor: "No"/"Yes")
-# alzheimer -> alzheimer_dementia (relabeled for clarity)
-# MOIindeksiindeksi -> MOI (Mikkeli Multimorbidity Index)
-# ToimintaKykySummary0 -> Composite_Z0 (baseline composite function)
-#
-# Reproducibility:
-# - renv restore/snapshot REQUIRED
-# - seed: 20251124 (set for reproducibility, though no randomness in table generation)
-#
-# Outputs + manifest:
-# - script_label: K14 (canonical)
-# - outputs dir: R-scripts/K14/outputs/K14/  (resolved via init_paths(script_label))
-# - manifest: append 1 row per artifact to manifest/manifest.csv
-#
-# Workflow (tick off; do not skip):
-# 01) Init paths + options + dirs (init_paths)
-# 02) Load raw data (immutable; no edits)
-# 03) Check required raw columns (req_raw_cols)
-# 04) Standardize vars + QC (standardize_analysis_vars + sanity_checks)
-# 05) Recode categorical variables for table (FOF_status, sex, SRH, SRM, etc.)
-# 06) Compute summary statistics by FOF group (mean/SD for continuous, n/% for categorical)
-# 07) Test group differences (t-test for continuous, chi-square for categorical)
-# 08) Format Table 1 (include p-values, effect sizes if relevant)
-# 09) Save Table 1 as CSV + formatted Word/HTML table
-# 10) Append manifest row per artifact
-# 11) Save sessionInfo to manifest/
-# 12) EOF marker
 # ==============================================================================
 #
+# Activate renv environment if not already loaded
+if (Sys.getenv("RENV_PROJECT") == "") source("renv/activate.R")
+
 suppressPackageStartupMessages({
   library(here)
   library(dplyr)
@@ -159,8 +111,16 @@ analysis_data_rec <- analysis_data %>%
     
     # Self-rated Health (3-luokkainen taulukkoa varten, Good/Moderate/Bad)
     # Oletus: koettuterveydentila 0 = bad, 1 = moderate, 2 = good
+    SRH_source_var = if ("koettuterveydentila" %in% names(.)) {
+      "koettuterveydentila"
+    } else if ("SRH" %in% names(.)) {
+      warning("Column 'koettuterveydentila' not found, falling back to 'SRH'.")
+      "SRH"
+    } else {
+      stop("Neither 'koettuterveydentila' nor 'SRH' found in the data.")
+    },
     SRH_3class_table = factor(
-      koettuterveydentila,
+      .data[[SRH_source_var]],
       levels = c(2, 1, 0),
       labels = c("Good", "Moderate", "Bad"),
       ordered = TRUE

@@ -6,53 +6,11 @@
 #          physical function specifically in the female subgroup, with age and
 #          BMI adjustment (Sex-stratified ANCOVA)
 #
-# Outcome: Delta_Composite_Z (12-month change in composite physical function)
-# Predictors: FOF_status (factor: "Ei FOF"/"FOF")
-# Moderator/interaction: None (subgroup: Sex == 0/female only)
-# Grouping variable: None (wide format ANCOVA, filtered to women)
-# Covariates: Age, BMI, Composite_Z0 (baseline function), clinical vars
-#
-# Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
-# age, sex, BMI, kaatumisenpelkoOn, ToimintaKykySummary0, ToimintaKykySummary2,
-# MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH
-#
-# Required vars (analysis df - after filtering to sex == 0):
-# Age (from age), Sex (from sex, == 0 for women), BMI, FOF_status (from kaatumisenpelkoOn),
-# ToimintaKykySummary0, ToimintaKykySummary2, Delta_Composite_Z (derived),
-# MOIindeksiindeksi, diabetes, alzheimer, parkinson, AVH
-#
-# Mapping (raw -> analysis; keep minimal + explicit):
-# age -> Age (standardization not shown in K9, may use raw age)
-# sex -> Sex (0 = female, filter to Sex == 0)
-# kaatumisenpelkoOn (0/1) -> FOF_status (factor: "Ei FOF"/"FOF")
-# ToimintaKykySummary0 -> ToimintaKykySummary0 (baseline, used as-is)
-# ToimintaKykySummary2 - ToimintaKykySummary0 -> Delta_Composite_Z
-# MOIindeksiindeksi -> MOIindeksiindeksi (used as-is for multimorbidity adjustment)
-#
-# Reproducibility:
-# - renv restore/snapshot REQUIRED
-# - seed: 20251124 (set for potential future bootstrap, currently no randomness)
-#
-# Outputs + manifest:
-# - script_label: K9 (canonical)
-# - outputs dir: R-scripts/K9/outputs/  (manual creation, no init_paths)
-# - manifest: append 1 row per artifact to manifest/manifest.csv
-#
-# Workflow (tick off; do not skip):
-# 01) Create outputs + manifest dirs manually
-# 02) Load raw data (immutable; no edits)
-# 03) Check required raw columns (req_raw_cols)
-# 04) Filter to women (sex == 0)
-# 05) Map raw -> analysis variables (Age, BMI, FOF_status, Delta_Composite_Z)
-# 06) Check sample size after filtering (n women with complete data)
-# 07) Fit ANCOVA model: Delta_Composite_Z ~ FOF_status + ToimintaKykySummary0 + Age + BMI (+ clinical)
-# 08) Compute emmeans (FOF vs Ei FOF in women)
-# 09) Save forest plot (FOF effect in women vs men comparison if available)
-# 10) Save tables (ANCOVA estimates, emmeans, contrasts)
-# 11) Append manifest row per artifact
-# 12) EOF marker
 # ==============================================================================
 #
+# Activate renv environment if not already loaded
+if (Sys.getenv("RENV_PROJECT") == "") source("renv/activate.R")
+
 suppressPackageStartupMessages({
   library(dplyr)
   library(tidyr)
@@ -400,7 +358,15 @@ model_composite_women <- lm(
 )
 
 # Type III -testit (FOF_status, AgeClass_final, interaktio)
-anova_composite_women <- car::Anova(model_composite_women, type = "III")
+# Lisätään tarkistus alias-kertoimille
+aliased_coeffs <- names(which(is.na(coef(model_composite_women))))
+if (length(aliased_coeffs) > 0) {
+  warning("Aliased coefficients detected in the model: ", paste(aliased_coeffs, collapse=", "),
+          ".\nFalling back to Type II Anova.")
+  anova_composite_women <- car::Anova(model_composite_women, type = "II")
+} else {
+  anova_composite_women <- car::Anova(model_composite_women, type = "III")
+}
 anova_composite_women
 
 # Tidy-taulukko (beta, SE, CI, p)

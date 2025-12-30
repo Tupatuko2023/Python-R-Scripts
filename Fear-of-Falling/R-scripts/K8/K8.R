@@ -1,9 +1,11 @@
 ## KAAOS 8: R Script for ANCOVA Models of Change in Physical Performance by Fear of Falling Status
 ## [K8.R]
+# Activate renv environment if not already loaded
+if (Sys.getenv("RENV_PROJECT") == "") source("renv/activate.R")
 
 ## ANCOVA models of change in physical performance by FOF status,
 ## with moderation by baseline balance problems and walking ability.
-
+#
 # Muuttuuko fyysinen toimintakyky eri tavalla FOF-ryhmissä? Ja riippuuko tämä
 # tasapaino-ongelmista tai kävelyvaikeuksista?
 #
@@ -233,7 +235,7 @@ analysis_data <- analysis_data %>%
       TRUE ~ NA_real_
     ),
     Delta_FTSST = dplyr::case_when(
-      has_var("Tuolimuutos") ~ -Tuolimuutos,            # if recorded as time change, reverse sign
+      has_var("Tuolimuutos") & !is.na(Tuolimuutos) ~ -Tuolimuutos,            # if recorded as time change, reverse sign
       !is.na(FTSST0) & !is.na(FTSST2) ~ (FTSST0 - FTSST2),  # improvement = shorter time
       TRUE ~ NA_real_
     ),
