@@ -103,13 +103,14 @@ manifest_path <- getOption("fof.manifest_path")
 #   - Pain VAS             = PainVAS0 (mm/0–10)
 
 # Determine the source variable for Self-Rated Health
-SRH_source_var <- if ("koettuterveydentila" %in% names(analysis_data)) {
-  "koettuterveydentila"
-} else if ("SRH" %in% names(analysis_data)) {
-  warning("Column 'koettuterveydentila' not found, falling back to 'SRH'.")
-  "SRH"
-} else {
-  stop("Neither 'koettuterveydentila' nor 'SRH' found in the data.")
+srh_candidates <- c("SRH", "koettuterveydentila")
+srh_var <- srh_candidates[srh_candidates %in% names(analysis_data)][1]
+
+if (is.na(srh_var)) {
+  stop("Required variable for Self-Rated Health not found. Expected one of: ",
+       paste(srh_candidates, collapse = ", "))
+} else if (srh_var == "koettuterveydentila") {
+  warning("Using legacy 'koettuterveydentila' as source for SRH. Consider standardizing to 'SRH'.")
 }
 
 analysis_data_rec <- analysis_data %>%
@@ -120,7 +121,7 @@ analysis_data_rec <- analysis_data %>%
       levels = c(0, 1),
       labels = c("nonFOF", "FOF")
     ),
-    
+
     # Sukupuoli: 0 = female, 1 = male
     sex_factor = factor(
       sex,
@@ -132,15 +133,15 @@ analysis_data_rec <- analysis_data %>%
       sex_factor == "male"   ~ 0L,
       TRUE                   ~ NA_integer_
     ),
-    
+
     # Self-rated Health (3-luokkainen taulukkoa varten, Good/Moderate/Bad)
     SRH_3class_table = factor(
-      .data[[SRH_source_var]],
+      .data[[srh_var]],
       levels = c(2, 1, 0),
       labels = c("Good", "Moderate", "Bad"),
       ordered = TRUE
     ),
-    
+
     # Self-Rated Mobility (oma_arvio_liikuntakyky 0–2 -> Good/Moderate/Weak)
     SRM_3class_table = factor(
       oma_arvio_liikuntakyky,
@@ -148,7 +149,7 @@ analysis_data_rec <- analysis_data %>%
       labels = c("Good", "Moderate", "Weak"),
       ordered = TRUE
     ),
-    
+
     # Walking 500 m: 0 = No difficulties, 1 = Difficulties, 2 = Cannot
     Walk500m_3class_table = factor(
       vaikeus_liikkua_500m,
@@ -156,7 +157,7 @@ analysis_data_rec <- analysis_data %>%
       labels = c("No", "Difficulties", "Cannot"),
       ordered = TRUE
     ),
-    
+
     # Alkoholinkäyttö: oletus 0 = No, 1 = Moderate, 2 = Large
     alcohol_3class_table = factor(
       alkoholi,
@@ -164,7 +165,7 @@ analysis_data_rec <- analysis_data %>%
       labels = c("No", "Moderate", "Large"),
       ordered = TRUE
     )
-    
+
     # Muut perusmuuttujat (diabetes, alzheimer, parkinson, AVH, MOIindeksiindeksi,
     # BMI, tupakointi, tasapainovaikeus, kaatuminen, murtumia, PainVAS0)
     # käytetään sellaisenaan.

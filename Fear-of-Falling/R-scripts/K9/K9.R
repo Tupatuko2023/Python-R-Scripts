@@ -377,6 +377,20 @@ aliased_coeffs <- names(which(is.na(coef(model_composite_women))))
 if (length(aliased_coeffs) > 0) {
   warning("Aliased coefficients detected in the model: ", paste(aliased_coeffs, collapse=", "),
           ".\nFalling back to Type II Anova.")
+
+  # Tallenna alias-diagnostiikka
+  alias_info <- stats::alias(model_composite_women)
+  alias_df <- as.data.frame(alias_info$Complete)
+  alias_path <- file.path(outputs_dir, "K9_alias_diagnostics.csv")
+  readr::write_csv(alias_df, alias_path)
+  # Lisää manifestiin (vaatii manifest_row-funktion; oletetaan saatavilla)
+  if (exists("manifest_row") && exists("append_manifest")) {
+     append_manifest(
+        manifest_row(script_label, "alias_diagnostics", file.path(script_label, basename(alias_path)), "diagnostics_csv", notes = "Aliased coefficients found"),
+        manifest_path
+     )
+  }
+
   anova_composite_women <- car::Anova(model_composite_women, type = "II")
 } else {
   anova_composite_women <- car::Anova(model_composite_women, type = "III")
