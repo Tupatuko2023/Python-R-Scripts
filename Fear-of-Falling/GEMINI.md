@@ -73,6 +73,15 @@ sessionInfo()
 * Käytä `set.seed(20251124)` vain kun koodi käyttää satunnaisuutta (MI/bootstrap/resampling).
 * Dokumentoi seed **standard intro** -blokissa.
 
+### R Version Lock-in
+
+The CI environment is pinned to the R version specified in the `Dockerfile` (e.g., `rocker/tidyverse:4.5.1`). This is to ensure a reproducible environment that matches the `renv.lock` file.
+
+**To update the project's R version:**
+1.  Update the `FROM` image tag in the `Dockerfile`.
+2.  Run `renv::snapshot()` in the new R environment to generate an updated `renv.lock`.
+3.  Commit both the `Dockerfile` and `renv.lock` changes together.
+
 ---
 
 ## 5) How to run (standard)
