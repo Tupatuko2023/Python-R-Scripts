@@ -931,39 +931,44 @@ K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal w
 K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.,NA,NA,NA
 K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.,NA,NA,NA
 2025-12-29 07:39:11.154456,K4,K4_Values_2G_Transposed,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K4/outputs/K4_Values_2G_Transposed.csv,46,NA
-"K5.1_MA","table","K5.1_MA/K5.1_MA_tidy_jn_c.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit)"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_jn_summary_all.csv","Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori)"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_eta_sq_partial.csv","Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_effectsize_hedges_g.csv","Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_multiplicity_pvalues.csv","P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_model_r2.csv","Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa"
-"K5.1_MA","plot","K5.1_MA/jn_slope_plot_centered.png","JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty)"
-"K5.1_MA","plot","K5.1_MA/spline_interaction_plot.png","Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty)"
-"K5.1_MA","text","K5.1_MA/results_addendum_finnish.txt","Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_tidy_jn_c.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit)"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_jn_summary_all.csv","Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori)"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_eta_sq_partial.csv","Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_effectsize_hedges_g.csv","Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_multiplicity_pvalues.csv","P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_model_r2.csv","Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa"
-"K5.1_MA","plot","K5.1_MA/jn_slope_plot_centered.png","JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty)"
-"K5.1_MA","plot","K5.1_MA/spline_interaction_plot.png","Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty)"
-"K5.1_MA","text","K5.1_MA/results_addendum_finnish.txt","Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle"
-"K5.2_JN","table","R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot)"
-"K5.2_JN","table","R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv","JN-alueen määrälaskennan yhteenvetotaulukko"
-"K5.2_JN","plot","R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png","JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona"
-"K5.2_JN","table","R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot)"
-"K5.2_JN","table","R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv","JN-alueen määrälaskennan yhteenvetotaulukko"
-"K5.2_JN","plot","R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png","JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_tidy_jn_c.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit)"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_jn_summary_all.csv","Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori)"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_eta_sq_partial.csv","Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_effectsize_hedges_g.csv","Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_multiplicity_pvalues.csv","P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille"
-"K5.1_MA","table","K5.1_MA/K5.1_MA_model_r2.csv","Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa"
-"K5.1_MA","plot","K5.1_MA/jn_slope_plot_centered.png","JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty)"
-"K5.1_MA","plot","K5.1_MA/spline_interaction_plot.png","Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty)"
-"K5.1_MA","text","K5.1_MA/results_addendum_finnish.txt","Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle"
-"K5.2_JN","table","R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv","Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot)"
-"K5.2_JN","table","R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv","JN-alueen määrälaskennan yhteenvetotaulukko"
-"K5.2_JN","plot","R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png","JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona"
+K5.1_MA,table,K5.1_MA/K5.1_MA_tidy_jn_c.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit),NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_jn_summary_all.csv,Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori),NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_eta_sq_partial.csv,Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_effectsize_hedges_g.csv,Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_multiplicity_pvalues.csv,P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_model_r2.csv,Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa,NA,NA,NA
+K5.1_MA,plot,K5.1_MA/jn_slope_plot_centered.png,JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty),NA,NA,NA
+K5.1_MA,plot,K5.1_MA/spline_interaction_plot.png,Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty),NA,NA,NA
+K5.1_MA,text,K5.1_MA/results_addendum_finnish.txt,Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_tidy_jn_c.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit),NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_jn_summary_all.csv,Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori),NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_eta_sq_partial.csv,Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_effectsize_hedges_g.csv,Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_multiplicity_pvalues.csv,P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_model_r2.csv,Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa,NA,NA,NA
+K5.1_MA,plot,K5.1_MA/jn_slope_plot_centered.png,JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty),NA,NA,NA
+K5.1_MA,plot,K5.1_MA/spline_interaction_plot.png,Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty),NA,NA,NA
+K5.1_MA,text,K5.1_MA/results_addendum_finnish.txt,Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle,NA,NA,NA
+K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot),NA,NA,NA
+K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv,JN-alueen määrälaskennan yhteenvetotaulukko,NA,NA,NA
+K5.2_JN,plot,R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png,JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona,NA,NA,NA
+K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot),NA,NA,NA
+K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv,JN-alueen määrälaskennan yhteenvetotaulukko,NA,NA,NA
+K5.2_JN,plot,R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png,JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_tidy_jn_c.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit),NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_jn_summary_all.csv,Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori),NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_eta_sq_partial.csv,Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_effectsize_hedges_g.csv,Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_multiplicity_pvalues.csv,P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_model_r2.csv,Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa,NA,NA,NA
+K5.1_MA,plot,K5.1_MA/jn_slope_plot_centered.png,JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty),NA,NA,NA
+K5.1_MA,plot,K5.1_MA/spline_interaction_plot.png,Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty),NA,NA,NA
+K5.1_MA,text,K5.1_MA/results_addendum_finnish.txt,Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle,NA,NA,NA
+K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot),NA,NA,NA
+K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv,JN-alueen määrälaskennan yhteenvetotaulukko,NA,NA,NA
+K5.2_JN,plot,R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png,JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona,NA,NA,NA
+2025-12-30 09:34:09.277298,SMOKE_ENV,sessionInfo,text_file,R-scripts/SMOKE_ENV/outputs/sessionInfo.txt,NA,Smoke test environment check
+2025-12-30 09:34:12.089578,SMOKE_ENV,renv_status,text_file,R-scripts/SMOKE_ENV/outputs/renv_status.txt,NA,Smoke test renv status
+2025-12-30 10:17:36.269065,K18_QC,qc_variable_standardization_renames,qc_csv,R-scripts/K18_QC/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
+2025-12-30 10:17:36.561697,K18_QC,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18_QC/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
+2025-12-30 10:17:36.665049,K18_QC,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18_QC/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
