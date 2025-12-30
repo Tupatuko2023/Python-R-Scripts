@@ -193,6 +193,16 @@ if (!has_ready_delta && (is.na(Composite_Z0_var) || is.na(Composite_Z2_var))) {
   stop("Could not find either Delta_Composite_Z or a pair of baseline/follow-up composite variables.")
 }
 
+# Robustly derive Tuolimuutos if it doesn't exist
+if (!"Tuolimuutos" %in% names(analysis_data)) {
+  if (all(c("Tuoli0", "Tuoli2") %in% names(analysis_data))) {
+    warning("Deriving 'Tuolimuutos' from 'Tuoli2 - Tuoli0'.")
+    analysis_data$Tuolimuutos <- analysis_data$Tuoli2 - analysis_data$Tuoli0
+  }
+  # Note: script will not fail here, but Delta_FTSST will be NA if derivation is also impossible.
+  # The case_when handles this gracefully.
+}
+
 analysis_data <- analysis_data %>%
   mutate(
     Composite0 = if (!is.na(Composite_Z0_var)) .data[[Composite_Z0_var]] else NA_real_,
