@@ -203,6 +203,12 @@ if (!"Tuolimuutos" %in% names(analysis_data)) {
   # The case_when handles this gracefully.
 }
 
+# Safely ensure TasapainoMuutos exists for case_when logic
+if (!"TasapainoMuutos" %in% names(analysis_data)) {
+  # Try to find candidate from grep if needed, or just set to NA to allow case_when to proceed
+  analysis_data$TasapainoMuutos <- NA_real_
+}
+
 analysis_data <- analysis_data %>%
   mutate(
     Composite0 = if (!is.na(Composite_Z0_var)) .data[[Composite_Z0_var]] else NA_real_,
@@ -274,7 +280,7 @@ analysis_data <- analysis_data %>%
       TRUE ~ NA_real_
     ),
     Delta_SLS = dplyr::case_when(
-      has_var("TasapainoMuutos") ~ TasapainoMuutos,
+      has_var("TasapainoMuutos") & !is.na(TasapainoMuutos) ~ TasapainoMuutos,
       !is.na(SLS0) & !is.na(SLS2) ~ SLS2 - SLS0,
       TRUE ~ NA_real_
     )
