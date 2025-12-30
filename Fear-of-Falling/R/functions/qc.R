@@ -153,7 +153,8 @@ qc_missingness_by_fof_time <- function(df, fof_col, time_col, outcome_col) {
   n_miss <- as.data.frame(with(df, table(df[[fof_col]], df[[time_col]], is.na(df[[outcome_col]]))),
                           stringsAsFactors = FALSE)
   names(n_miss) <- c("FOF_status", "time", "is_na_Composite_Z", "n")
-  n_miss <- n_miss[n_miss$is_na_Composite_Z == "TRUE", c("FOF_status", "time", "n_missing_Composite_Z")]
+  n_miss <- n_miss[n_miss$is_na_Composite_Z == "TRUE", c("FOF_status", "time", "n")]
+  names(n_miss)[3] <- "n_missing_Composite_Z"
 
   merged <- merge(n_rows, n_miss, by = c("FOF_status", "time"), all.x = TRUE)
   merged$n_missing_Composite_Z[is.na(merged$n_missing_Composite_Z)] <- 0

@@ -57,6 +57,7 @@ rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$|qc_)"
    envir = .GlobalEnv)
 
 source(file.path(project_root, "R", "functions", "qc.R"))
+source(file.path(project_root, "R", "functions", "init.R"))
 source(file.path(project_root, "R", "functions", "variable_standardization.R"))
 
 paths <- init_paths(script_label)
@@ -283,15 +284,15 @@ gate <- qc_status_gatekeeper(status_df, file.path(qc_dir, "qc_status_summary.csv
 
 session_path <- file.path(qc_dir, "qc_sessioninfo.txt")
 writeLines(capture.output(sessionInfo()), con = session_path)
-qc_append_manifest(qc_manifest_row(script_label, "qc_sessioninfo",
-                                   qc_relpath(session_path, outputs_dir),
+append_manifest(manifest_row(script_label, "qc_sessioninfo",
+                                   get_relpath(session_path),
                                    "sessionInfo"), manifest_path)
 
 if (requireNamespace("renv", quietly = TRUE)) {
   renv_path <- file.path(qc_dir, "qc_renv_diagnostics.txt")
   writeLines(capture.output(renv::diagnostics()), con = renv_path)
-  qc_append_manifest(qc_manifest_row(script_label, "qc_renv_diagnostics",
-                                     qc_relpath(renv_path, outputs_dir),
+  append_manifest(manifest_row(script_label, "qc_renv_diagnostics",
+                                     get_relpath(renv_path),
                                      "renv diagnostics"), manifest_path)
 }
 
