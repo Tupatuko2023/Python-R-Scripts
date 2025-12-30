@@ -1,7 +1,21 @@
 ## KAAOS 8: R Script for ANCOVA Models of Change in Physical Performance by Fear of Falling Status
 ## [K8.R]
-# Activate renv environment if not already loaded
-if (Sys.getenv("RENV_PROJECT") == "") source(here::here("renv/activate.R"))
+# --- Robust renv activation (base-R only) ---
+if (Sys.getenv("RENV_PROJECT") == "") {
+  # Walk up from the current directory to find the project root
+  dir <- getwd()
+  while (!file.exists(file.path(dir, "renv"))) {
+    parent_dir <- dirname(dir)
+    if (parent_dir == dir) { # Reached filesystem root
+      dir <- NULL
+      break
+    }
+    dir <- parent_dir
+  }
+  if (!is.null(dir) && file.exists(file.path(dir, "renv/activate.R"))) {
+    source(file.path(dir, "renv/activate.R"))
+  }
+}
 
 ## ANCOVA models of change in physical performance by FOF status,
 ## with moderation by baseline balance problems and walking ability.
