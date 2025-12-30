@@ -57,6 +57,12 @@ jobs:
           Rscript -e "if (requireNamespace('lintr', quietly=TRUE)) lintr::lint_dir('Fear-of-Falling')"
 
       # If an R package, run full checks
+      - name: Install rcmdcheck
+        if: hashFiles('Fear-of-Falling/**/DESCRIPTION') != ''
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+
       - name: R CMD check
         if: hashFiles('Fear-of-Falling/**/DESCRIPTION') != ''
         uses: r-lib/actions/check-r-package@v2
