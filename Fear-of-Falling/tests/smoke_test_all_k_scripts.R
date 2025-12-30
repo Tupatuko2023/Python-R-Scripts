@@ -179,6 +179,10 @@ run_one_script <- function(k_name, script_path, timeout_seconds = TIMEOUT_SECOND
     cat("✓", k_name, "completed successfully in", sprintf("%.1f", elapsed), "seconds\n")
   } else {
     cat("✗", k_name, "FAILED (exit:", res$exit_code, ") in", sprintf("%.1f", elapsed), "seconds\n")
+    # Make the error visible directly in the CI log
+    cat("\n--- STDERR for", k_name, "---\n")
+    cat(res$stderr %||% "No stderr content captured.", "\n")
+    cat("--- END STDERR ---\n\n")
   }
   cat("  New outputs created:", length(outputs_new), "\n")
 
