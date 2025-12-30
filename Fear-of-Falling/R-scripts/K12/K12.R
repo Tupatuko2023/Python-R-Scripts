@@ -169,6 +169,11 @@ if (!"Tuolimuutos" %in% names(analysis_data_rec)) {
   }
 }
 
+# Ensure TasapainoMuutos exists so it can be safely referenced in case_when
+if (!"TasapainoMuutos" %in% names(analysis_data_rec)) {
+   analysis_data_rec$TasapainoMuutos <- NA_real_
+}
+
 analysis_data_rec <- analysis_data_rec %>%
   mutate(
     # HGS: positiivinen = parannus

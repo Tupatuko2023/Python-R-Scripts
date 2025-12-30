@@ -123,6 +123,27 @@ walk500m_var <- if ("vaikeus_liikkua_500m" %in% names(analysis_data)) {
   NULL
 }
 
+# Determine alcohol variable (robust candidate selection)
+alcohol_candidates <- c("alkoholi", "alcohol", "alcohol_use", "Alcohol")
+alcohol_var_found <- alcohol_candidates[alcohol_candidates %in% names(analysis_data)][1]
+
+if (is.na(alcohol_var_found)) {
+  # Try grep if not in standard list
+  grep_cands <- grep("alko|alco", names(analysis_data), value = TRUE, ignore.case = TRUE)
+  if (length(grep_cands) > 0) alcohol_var_found <- grep_cands[1]
+}
+
+if (!is.na(alcohol_var_found)) {
+   # Check if it is named 'alkoholi'; if not, alias it
+   if (alcohol_var_found != "alkoholi") {
+      warning("Using '", alcohol_var_found, "' as 'alkoholi'.")
+      analysis_data$alkoholi <- analysis_data[[alcohol_var_found]]
+   }
+} else {
+   warning("Alcohol variable not found. Setting 'alkoholi' to NA.")
+   analysis_data$alkoholi <- NA_integer_
+}
+
 analysis_data_rec <- analysis_data %>%
   mutate(
     # FOF-status: sama määrittely kuin muissa skripteissä (K9/K11/K13)

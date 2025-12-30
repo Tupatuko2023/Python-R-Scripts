@@ -393,7 +393,13 @@ if (length(aliased_coeffs) > 0) {
 
   anova_composite_women <- car::Anova(model_composite_women, type = "II")
 } else {
-  anova_composite_women <- car::Anova(model_composite_women, type = "III")
+  anova_composite_women <- tryCatch({
+    car::Anova(model_composite_women, type = "III")
+  }, error = function(e) {
+    warning("Type III Anova failed despite no obvious aliased coefs (singular fit?): ", e$message, 
+            ".\nFalling back to Type II.")
+    car::Anova(model_composite_women, type = "II")
+  })
 }
 anova_composite_women
 
