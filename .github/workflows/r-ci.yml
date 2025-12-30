@@ -29,39 +29,41 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.rlib.outputs.RLIB }}
-          key: ${{ runner.os }}-r-${{ hashFiles('**/renv.lock', '**/DESCRIPTION', '**/NAMESPACE') }}
+          key: ${{ runner.os }}-r-${{ hashFiles('Fear-of-Falling/renv.lock', 'Fear-of-Falling/**/DESCRIPTION', 'Fear-of-Falling/**/NAMESPACE') }}
           restore-keys: |
             ${{ runner.os }}-r-
 
       # Path A: renv workflow (only if lockfile exists)
       - name: Restore renv
-        if: hashFiles('**/renv.lock') != ''
+        if: hashFiles('Fear-of-Falling/renv.lock') != ''
         uses: r-lib/actions/setup-renv@v2
+        with:
+          working-directory: Fear-of-Falling
 
       # Path B: no renv.lock → use pak
       - name: Install pak
-        if: hashFiles('**/renv.lock') == ''
+        if: hashFiles('Fear-of-Falling/renv.lock') == ''
         run: Rscript -e "install.packages('pak', repos='https://cloud.r-project.org')"
 
       - name: Install dependencies via pak (package projects)
-        if: hashFiles('**/renv.lock') == '' && hashFiles('**/DESCRIPTION') != ''
+        if: hashFiles('Fear-of-Falling/renv.lock') == '' && hashFiles('Fear-of-Falling/**/DESCRIPTION') != ''
         run: Rscript -e "pak::pkg_install('.', dependencies = TRUE)"
 
       # Optional lint for non-package codebases
       - name: Optional lint (non-package only)
-        if: hashFiles('**/DESCRIPTION') == ''
+        if: hashFiles('Fear-of-Falling/**/DESCRIPTION') == ''
         run: |
           Rscript -e "if (!requireNamespace('lintr', quietly=TRUE)) install.packages('lintr', repos='https://cloud.r-project.org')"
-          Rscript -e "if (requireNamespace('lintr', quietly=TRUE)) lintr::lint_dir('.')"
+          Rscript -e "if (requireNamespace('lintr', quietly=TRUE)) lintr::lint_dir('Fear-of-Falling')"
 
       # If an R package, run full checks
       - name: R CMD check
-        if: hashFiles('**/DESCRIPTION') != ''
+        if: hashFiles('Fear-of-Falling/**/DESCRIPTION') != ''
         uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
 
       # Otherwise, do a smoke test and finish successfully
       - name: Smoke tests
-        if: hashFiles('**/DESCRIPTION') == ''
+        if: hashFiles('Fear-of-Falling/**/DESCRIPTION') == ''
         run: "Rscript -e \"print(sessionInfo()); message('Smoke tests completed')\""
