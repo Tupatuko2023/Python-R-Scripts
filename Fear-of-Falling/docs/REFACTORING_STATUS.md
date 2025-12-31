@@ -156,25 +156,25 @@
 
 3. **For each script category:**
 
-   **Main scripts (K*.7.main.R):**
+   **Main scripts (K\*.7.main.R):**
    - Add standard header
    - Derive script_label from --file
    - Call init_paths(script_label)
    - Source subscripts with absolute paths (here::here("R-scripts", ...))
    - No setwd()
 
-   **Data transformation scripts (K*.2, etc.):**
+   **Data transformation scripts (K\*.2, etc.):**
    - Add standard header
    - Define req_cols if applicable
    - Use standardize_analysis_vars() or keep existing logic
    - Document variable mappings
 
-   **Effect size scripts (K*.4):**
+   **Effect size scripts (K\*.4):**
    - Add standard header
    - **CRITICAL:** Add set.seed(20251124) before boot()
    - Document seed in header
 
-   **Export scripts (K*.6):**
+   **Export scripts (K\*.6):**
    - Add standard header
    - Replace write.csv() with save_table_csv_html()
    - Add save_sessioninfo_manifest() at end
@@ -182,12 +182,12 @@
 
    **Pivot scripts (K2, K4):**
    - Add standard header with script_label init
-   - Replace hardcoded input paths with here::here("R-scripts", "K*", "outputs", ...)
+   - Replace hardcoded input paths with here::here("R-scripts", "K\*", "outputs", ...)
    - Use save_table_csv_html() for output
    - Add save_sessioninfo_manifest()
 
 4. **Test incrementally:**
-   - After completing each K* pipeline, run smoke test
+   - After completing each K\* pipeline, run smoke test
    - Verify outputs appear in R-scripts/<K>/outputs/
    - Check manifest.csv has new rows
 
@@ -265,15 +265,15 @@ Located in `R/functions/`:
 
 ## Estimated Total Effort
 
-| Phase | Effort | Status |
-|-------|--------|--------|
-| Documentation (planning, inventory, plan, guide, PR summary) | 4-6 hours | ✅ DONE |
-| K1 refactoring (6 remaining scripts) | 2-4 hours | ⏳ 25% done |
-| K3 refactoring (6 scripts) | 3-5 hours | ⏳ Not started |
-| K2 refactoring (2 scripts) | 1-2 hours | ⏳ Not started |
-| K4 refactoring (1 script) | 0.5-1 hour | ⏳ Not started |
-| Testing & verification | 2-3 hours | ⏳ Not started |
-| **TOTAL** | **12-21 hours** | **~25% complete** |
+| Phase                                                        | Effort          | Status            |
+| ------------------------------------------------------------ | --------------- | ----------------- |
+| Documentation (planning, inventory, plan, guide, PR summary) | 4-6 hours       | ✅ DONE           |
+| K1 refactoring (6 remaining scripts)                         | 2-4 hours       | ⏳ 25% done       |
+| K3 refactoring (6 scripts)                                   | 3-5 hours       | ⏳ Not started    |
+| K2 refactoring (2 scripts)                                   | 1-2 hours       | ⏳ Not started    |
+| K4 refactoring (1 script)                                    | 0.5-1 hour      | ⏳ Not started    |
+| Testing & verification                                       | 2-3 hours       | ⏳ Not started    |
+| **TOTAL**                                                    | **12-21 hours** | **~25% complete** |
 
 ---
 

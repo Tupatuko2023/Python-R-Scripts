@@ -96,7 +96,7 @@ rehabilitation outcomes over 12 years.
 
 ![Patient-ID overlap Venn (3 datasets)](../figures/eFigure7.Overlap_of_Patient_IDs_Across_Datasets.png "Overlap of Patient_IDs across datasets")
 
-*Figure 1.* Patient-ID overlap across DGN_KAIKKI, KERTOMUS_DGN, TIL_TAP. See
+_Figure 1._ Patient-ID overlap across DGN_KAIKKI, KERTOMUS_DGN, TIL_TAP. See
 notebook:
 [`Vennd_Overlap.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/W6.Vennd_Overlap.ipynb).
 
@@ -120,9 +120,9 @@ notebook:
   - Retrieval of BMI mentions (Finnish/English terms), computation from
     height/weight, value filtering, and cohort summaries; dataset merges and
     recomputation functions
-     (([`W22.BMI.1.All_Records_BMI.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W22.BMI.1.All_Records_BMI.ipynb))
-     to
-     ([`W27.BMI.6.Function_2Compute_Combine_BMI_Sum.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W27.BMI.6.Function_2Compute_Combine_BMI_Sum.ipynb))).
+    (([`W22.BMI.1.All_Records_BMI.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W22.BMI.1.All_Records_BMI.ipynb))
+    to
+    ([`W27.BMI.6.Function_2Compute_Combine_BMI_Sum.ipynb`](https://github.com/Tupatuko2023/Python-R-Scripts/blob/main/Electronic-Frailty-Index/BMI/W27.BMI.6.Function_2Compute_Combine_BMI_Sum.ipynb))).
 
 ## Results (2024 Progress)
 
@@ -136,7 +136,7 @@ notebook:
     variable selection for modeling.
 
 ![PhD schedule Gantt](../figures/eFigure1.PhD_Progression_Schedule.png "PhD Project Schedule 2024: Activities and Milestones")
-<br><em>*Figure 2*.</em> PhD project schedule and milestones (2024). Source: Python/Matplotlib Gantt.
+<br><em>_Figure 2_.</em> PhD project schedule and milestones (2024). Source: Python/Matplotlib Gantt.
 
 - **NLP/NER labeling.** Targeted labeling sprints covered **mobility
   (04–06/2024)** and **bathing/dressing (09–10/2024)** domains for ADL
@@ -176,6 +176,7 @@ Frailty Risk Score; ICD-10 — International Classification of Diseases, 10th
 Revision; NLP — Natural Language Processing; NER — Named Entity Recognition.
 
 <!-- markdownlint-disable MD013 -->
+
 ## References
 
 Ambagtsheer, R. C., Shafiabady, N., Dent, E., Seiboth, C., & Beilby, J. (2020).
@@ -394,8 +395,7 @@ mobility impairment: Maintaining ADLs via selection, optimization, and
 compensation. The Gerontologist, 59(3), 559–569. [Remillard 2019][remillard2019]
 
 Searle, S. D., Mitnitski, A., Gahbauer, E. A., Gill, T. M., & Rockwood, K.
-(2008). A standard procedure for creating a frailty index. BMC Geriatrics, 8,
-24. [Searle 2008][searle2008]
+(2008). A standard procedure for creating a frailty index. BMC Geriatrics, 8, 24. [Searle 2008][searle2008]
 
 Tayefi, M., Ngo, P., Chomutare, T., Dalianis, H., Salvi, E., Budrionis, A., &
 Godtliebsen, F. (2021). Challenges and opportunities beyond structured data in
@@ -407,6 +407,7 @@ Ginter, F., & Pyysalo, S. (2019). Multilingual is not enough: BERT for Finnish.
 arXiv. [Virtanen 2019][virtanen2019]
 
 <!-- Link definitions -->
+
 [ambagtsheer2020]: https://doi.org/10.1016/j.ijmedinf.2020.104094
 [bai2021]: https://doi.org/10.1093/ageing/afab106
 [berman2021]: https://doi.org/10.1002/clc.23687
@@ -462,8 +463,7 @@ arXiv. [Virtanen 2019][virtanen2019]
 [mak2023]: https://doi.org/10.1159/000527206
 [mak2022]: https://doi.org/10.1093/gerona/glac069
 [mcisaac2020]: https://doi.org/10.1213/ANE.0000000000004602
-[microsoft2023]:
-    https://learn.microsoft.com/en-us/azure/ai-services/language-service/custom-named-entity-recognition/how-to/tag-data
+[microsoft2023]: https://learn.microsoft.com/en-us/azure/ai-services/language-service/custom-named-entity-recognition/how-to/tag-data
 [niederstrasser2019]: https://doi.org/10.1371/journal.pone.0223799
 [paulson2015]: https://doi.org/10.1080/13607863.2014.986645
 [puls2014]: https://doi.org/10.4244/EIJY14M08_03
@@ -472,4 +472,5 @@ arXiv. [Virtanen 2019][virtanen2019]
 [searle2008]: https://doi.org/10.1186/1471-2318-8-24
 [tayefi2021]: https://doi.org/10.1002/wics.1549
 [virtanen2019]: https://doi.org/10.48550/arXiv.1912.07076
+
 <!-- markdownlint-enable MD013 -->
