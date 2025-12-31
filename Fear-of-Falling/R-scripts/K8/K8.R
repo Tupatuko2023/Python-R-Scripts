@@ -1,7 +1,21 @@
 ## KAAOS 8: R Script for ANCOVA Models of Change in Physical Performance by Fear of Falling Status
 ## [K8.R]
-# Activate renv environment if not already loaded
-if (Sys.getenv("RENV_PROJECT") == "") source("renv/activate.R")
+# --- Robust renv activation (base-R only) ---
+if (Sys.getenv("RENV_PROJECT") == "") {
+  # Walk up from the current directory to find the project root
+  dir <- getwd()
+  while (!file.exists(file.path(dir, "renv"))) {
+    parent_dir <- dirname(dir)
+    if (parent_dir == dir) { # Reached filesystem root
+      dir <- NULL
+      break
+    }
+    dir <- parent_dir
+  }
+  if (!is.null(dir) && file.exists(file.path(dir, "renv/activate.R"))) {
+    source(file.path(dir, "renv/activate.R"))
+  }
+}
 
 ## ANCOVA models of change in physical performance by FOF status,
 ## with moderation by baseline balance problems and walking ability.
@@ -179,6 +193,22 @@ if (!has_ready_delta && (is.na(Composite_Z0_var) || is.na(Composite_Z2_var))) {
   stop("Could not find either Delta_Composite_Z or a pair of baseline/follow-up composite variables.")
 }
 
+# Robustly derive Tuolimuutos if it doesn't exist
+if (!"Tuolimuutos" %in% names(analysis_data)) {
+  if (all(c("Tuoli0", "Tuoli2") %in% names(analysis_data))) {
+    warning("Deriving 'Tuolimuutos' from 'Tuoli2 - Tuoli0'.")
+    analysis_data$Tuolimuutos <- analysis_data$Tuoli2 - analysis_data$Tuoli0
+  }
+  # Note: script will not fail here, but Delta_FTSST will be NA if derivation is also impossible.
+  # The case_when handles this gracefully.
+}
+
+# Safely ensure TasapainoMuutos exists for case_when logic
+if (!"TasapainoMuutos" %in% names(analysis_data)) {
+  # Try to find candidate from grep if needed, or just set to NA to allow case_when to proceed
+  analysis_data$TasapainoMuutos <- NA_real_
+}
+
 analysis_data <- analysis_data %>%
   mutate(
     Composite0 = if (!is.na(Composite_Z0_var)) .data[[Composite_Z0_var]] else NA_real_,
@@ -250,7 +280,7 @@ analysis_data <- analysis_data %>%
       TRUE ~ NA_real_
     ),
     Delta_SLS = dplyr::case_when(
-      has_var("TasapainoMuutos") ~ TasapainoMuutos,
+      has_var("TasapainoMuutos") & !is.na(TasapainoMuutos) ~ TasapainoMuutos,
       !is.na(SLS0) & !is.na(SLS2) ~ SLS2 - SLS0,
       TRUE ~ NA_real_
     )

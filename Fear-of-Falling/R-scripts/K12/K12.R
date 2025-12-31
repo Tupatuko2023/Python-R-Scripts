@@ -8,8 +8,22 @@
 #
 # ==============================================================================
 #
-# Activate renv environment if not already loaded
-if (Sys.getenv("RENV_PROJECT") == "") source("renv/activate.R")
+# --- Robust renv activation (base-R only) ---
+if (Sys.getenv("RENV_PROJECT") == "") {
+  # Walk up from the current directory to find the project root
+  dir <- getwd()
+  while (!file.exists(file.path(dir, "renv"))) {
+    parent_dir <- dirname(dir)
+    if (parent_dir == dir) { # Reached filesystem root
+      dir <- NULL
+      break
+    }
+    dir <- parent_dir
+  }
+  if (!is.null(dir) && file.exists(file.path(dir, "renv/activate.R"))) {
+    source(file.path(dir, "renv/activate.R"))
+  }
+}
 
 suppressPackageStartupMessages({
   library(here)
@@ -145,20 +159,35 @@ analysis_data_rec <- df %>%
 # 03. PBT Changes (HGS, MWS, FTSST, SLS)
 # ==============================================================================
 
+# Robustly derive Tuolimuutos if it doesn't exist
+if (!"Tuolimuutos" %in% names(analysis_data_rec)) {
+  if (all(c("Tuoli0", "Tuoli2") %in% names(analysis_data_rec))) {
+    warning("Deriving 'Tuolimuutos' from 'Tuoli2 - Tuoli0'.")
+    analysis_data_rec$Tuolimuutos <- analysis_data_rec$Tuoli2 - analysis_data_rec$Tuoli0
+  } else {
+    stop("Cannot find or derive 'Tuolimuutos'. Missing 'Tuolimuutos' and also 'Tuoli0'/'Tuoli2'.")
+  }
+}
+
+# Ensure TasapainoMuutos exists so it can be safely referenced in case_when
+if (!"TasapainoMuutos" %in% names(analysis_data_rec)) {
+   analysis_data_rec$TasapainoMuutos <- NA_real_
+}
+
 analysis_data_rec <- analysis_data_rec %>%
   mutate(
     # HGS: positiivinen = parannus
     Delta_HGS = case_when(
-      "PuristusMuutos" %in% names(analysis_data_rec) ~ PuristusMuutos,
-      "Puristus0" %in% names(analysis_data_rec) & "Puristus2" %in% names(analysis_data_rec) ~
+      "PuristusMuutos" %in% names(.) & !is.na(PuristusMuutos) ~ PuristusMuutos,
+      "Puristus0" %in% names(.) & "Puristus2" %in% names(.) & !is.na(Puristus0) & !is.na(Puristus2) ~
         Puristus2 - Puristus0,
       TRUE ~ NA_real_
     ),
 
     # MWS: positiivinen = parannus
     Delta_MWS = case_when(
-      "Kävelymuutos" %in% names(analysis_data_rec) ~ Kävelymuutos,
-      "kavelynopeus_m_sek0" %in% names(analysis_data_rec) & "kavelynopeus_m_sek2" %in% names(analysis_data_rec) ~
+      "Kävelymuutos" %in% names(.) & !is.na(Kävelymuutos) ~ Kävelymuutos,
+      "kavelynopeus_m_sek0" %in% names(.) & "kavelynopeus_m_sek2" %in% names(.) & !is.na(kavelynopeus_m_sek0) & !is.na(kavelynopeus_m_sek2) ~
         kavelynopeus_m_sek2 - kavelynopeus_m_sek0,
       TRUE ~ NA_real_
     ),
@@ -173,8 +202,8 @@ analysis_data_rec <- analysis_data_rec %>%
 
     # SLS (Seisominen): suurempi aika = parempi
     Delta_SLS = case_when(
-      "TasapainoMuutos" %in% names(analysis_data_rec) ~ TasapainoMuutos,
-      "Seisominen0" %in% names(analysis_data_rec) & "Seisominen2" %in% names(analysis_data_rec) ~
+      "TasapainoMuutos" %in% names(.) & !is.na(TasapainoMuutos) ~ TasapainoMuutos,
+      "Seisominen0" %in% names(.) & "Seisominen2" %in% names(.) & !is.na(Seisominen0) & !is.na(Seisominen2) ~
         Seisominen2 - Seisominen0,
       TRUE ~ NA_real_
     ),

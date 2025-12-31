@@ -2,7 +2,7 @@
 # Base image: rocker/tidyverse with R 4.4.2
 # Purpose: Reproducible environment for K6-K16 scripts
 
-FROM rocker/tidyverse:4.4.2
+FROM rocker/tidyverse:4.5.1
 
 # Metadata
 LABEL maintainer="FOF Analysis Team"

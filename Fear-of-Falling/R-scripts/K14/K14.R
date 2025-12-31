@@ -8,8 +8,22 @@
 #
 # ==============================================================================
 #
-# Activate renv environment if not already loaded
-if (Sys.getenv("RENV_PROJECT") == "") source("renv/activate.R")
+# --- Robust renv activation (base-R only) ---
+if (Sys.getenv("RENV_PROJECT") == "") {
+  # Walk up from the current directory to find the project root
+  dir <- getwd()
+  while (!file.exists(file.path(dir, "renv"))) {
+    parent_dir <- dirname(dir)
+    if (parent_dir == dir) { # Reached filesystem root
+      dir <- NULL
+      break
+    }
+    dir <- parent_dir
+  }
+  if (!is.null(dir) && file.exists(file.path(dir, "renv/activate.R"))) {
+    source(file.path(dir, "renv/activate.R"))
+  }
+}
 
 suppressPackageStartupMessages({
   library(here)
@@ -88,6 +102,48 @@ manifest_path <- getOption("fof.manifest_path")
 #   - Fractures            = murtumia (0/1)
 #   - Pain VAS             = PainVAS0 (mm/0–10)
 
+# Determine the source variable for Self-Rated Health
+srh_candidates <- c("SRH", "koettuterveydentila")
+srh_var <- srh_candidates[srh_candidates %in% names(analysis_data)][1]
+
+if (is.na(srh_var)) {
+  stop("Required variable for Self-Rated Health not found. Expected one of: ",
+       paste(srh_candidates, collapse = ", "))
+} else if (srh_var == "koettuterveydentila") {
+  warning("Using legacy 'koettuterveydentila' as source for SRH. Consider standardizing to 'SRH'.")
+}
+
+# Determine the source variable for 500m walk
+walk500m_var <- if ("vaikeus_liikkua_500m" %in% names(analysis_data)) {
+  "vaikeus_liikkua_500m"
+} else if ("Vaikeus500m" %in% names(analysis_data)) {
+  "Vaikeus500m"
+} else {
+  warning("No column found for 500m walk difficulty ('vaikeus_liikkua_500m' or 'Vaikeus500m'). Table section will be NA.")
+  NULL
+}
+
+# Determine alcohol variable (robust candidate selection)
+alcohol_candidates <- c("alkoholi", "alcohol", "alcohol_use", "Alcohol")
+alcohol_var_found <- alcohol_candidates[alcohol_candidates %in% names(analysis_data)][1]
+
+if (is.na(alcohol_var_found)) {
+  # Try grep if not in standard list
+  grep_cands <- grep("alko|alco", names(analysis_data), value = TRUE, ignore.case = TRUE)
+  if (length(grep_cands) > 0) alcohol_var_found <- grep_cands[1]
+}
+
+if (!is.na(alcohol_var_found)) {
+   # Check if it is named 'alkoholi'; if not, alias it
+   if (alcohol_var_found != "alkoholi") {
+      warning("Using '", alcohol_var_found, "' as 'alkoholi'.")
+      analysis_data$alkoholi <- analysis_data[[alcohol_var_found]]
+   }
+} else {
+   warning("Alcohol variable not found. Setting 'alkoholi' to NA.")
+   analysis_data$alkoholi <- NA_integer_
+}
+
 analysis_data_rec <- analysis_data %>%
   mutate(
     # FOF-status: sama määrittely kuin muissa skripteissä (K9/K11/K13)
@@ -96,7 +152,7 @@ analysis_data_rec <- analysis_data %>%
       levels = c(0, 1),
       labels = c("nonFOF", "FOF")
     ),
-    
+
     # Sukupuoli: 0 = female, 1 = male
     sex_factor = factor(
       sex,
@@ -108,24 +164,15 @@ analysis_data_rec <- analysis_data %>%
       sex_factor == "male"   ~ 0L,
       TRUE                   ~ NA_integer_
     ),
-    
+
     # Self-rated Health (3-luokkainen taulukkoa varten, Good/Moderate/Bad)
-    # Oletus: koettuterveydentila 0 = bad, 1 = moderate, 2 = good
-    SRH_source_var = if ("koettuterveydentila" %in% names(.)) {
-      "koettuterveydentila"
-    } else if ("SRH" %in% names(.)) {
-      warning("Column 'koettuterveydentila' not found, falling back to 'SRH'.")
-      "SRH"
-    } else {
-      stop("Neither 'koettuterveydentila' nor 'SRH' found in the data.")
-    },
     SRH_3class_table = factor(
-      .data[[SRH_source_var]],
+      .data[[srh_var]],
       levels = c(2, 1, 0),
       labels = c("Good", "Moderate", "Bad"),
       ordered = TRUE
     ),
-    
+
     # Self-Rated Mobility (oma_arvio_liikuntakyky 0–2 -> Good/Moderate/Weak)
     SRM_3class_table = factor(
       oma_arvio_liikuntakyky,
@@ -133,15 +180,19 @@ analysis_data_rec <- analysis_data %>%
       labels = c("Good", "Moderate", "Weak"),
       ordered = TRUE
     ),
-    
+
     # Walking 500 m: 0 = No difficulties, 1 = Difficulties, 2 = Cannot
-    Walk500m_3class_table = factor(
-      vaikeus_liikkua_500m,
-      levels = c(0, 1, 2),
-      labels = c("No", "Difficulties", "Cannot"),
-      ordered = TRUE
-    ),
-    
+    Walk500m_3class_table = if (!is.null(walk500m_var)) {
+      factor(
+        .data[[walk500m_var]],
+        levels = c(0, 1, 2),
+        labels = c("No", "Difficulties", "Cannot"),
+        ordered = TRUE
+      )
+    } else {
+      factor(NA, levels = c("No", "Difficulties", "Cannot"))
+    },
+
     # Alkoholinkäyttö: oletus 0 = No, 1 = Moderate, 2 = Large
     alcohol_3class_table = factor(
       alkoholi,
@@ -149,7 +200,7 @@ analysis_data_rec <- analysis_data %>%
       labels = c("No", "Moderate", "Large"),
       ordered = TRUE
     )
-    
+
     # Muut perusmuuttujat (diabetes, alzheimer, parkinson, AVH, MOIindeksiindeksi,
     # BMI, tupakointi, tasapainovaikeus, kaatuminen, murtumia, PainVAS0)
     # käytetään sellaisenaan.

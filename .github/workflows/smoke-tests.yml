@@ -33,6 +33,11 @@ jobs:
         run: |
           docker build -t fof-r-analysis:latest .
 
+      - name: Run environment diagnostics
+        run: |
+          docker run --name fof-diagnostics fof-r-analysis:latest R --version
+          docker run fof-r-analysis:latest R -q -e "renv::status(); sessionInfo()"
+
       - name: Run smoke tests
         id: smoke_test
         continue-on-error: true
