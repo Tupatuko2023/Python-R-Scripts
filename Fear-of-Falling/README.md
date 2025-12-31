@@ -105,12 +105,12 @@ K1-K4 scripts provide foundational data processing and transformation pipelines 
 
 ### Pipeline Summary
 
-| Pipeline | Purpose | Input | Output | Run Command |
-|----------|---------|-------|--------|-------------|
-| **K1** | Z-score change analysis | Raw CSV | Z-score change tables | `Rscript R-scripts/K1/K1.7.main.R` |
-| **K3** | Original values analysis | Raw CSV (shares K1.1) | Original value tables | `Rscript R-scripts/K3/K3.7.main.R` |
-| **K2** | Z-score pivot/transpose | K1 outputs | Transposed z-scores | `Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R` |
-| **K4** | Score pivot/transpose | K3 outputs | Transposed scores | `Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R` |
+| Pipeline | Purpose                  | Input                 | Output                | Run Command                                    |
+| -------- | ------------------------ | --------------------- | --------------------- | ---------------------------------------------- |
+| **K1**   | Z-score change analysis  | Raw CSV               | Z-score change tables | `Rscript R-scripts/K1/K1.7.main.R`             |
+| **K3**   | Original values analysis | Raw CSV (shares K1.1) | Original value tables | `Rscript R-scripts/K3/K3.7.main.R`             |
+| **K2**   | Z-score pivot/transpose  | K1 outputs            | Transposed z-scores   | `Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R` |
+| **K4**   | Score pivot/transpose    | K3 outputs            | Transposed scores     | `Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R` |
 
 ### Running K1-K4 (from repo root)
 
@@ -746,7 +746,6 @@ message("Manifest updated: ", manifest_path)
 **Mitä tulkitaan ensisijaisesti:**
 
 - **Interaktio `time:FOF_status`**: kuvaa **ryhmäeroa muutoksessa** baseline→12 kk (FOF vs Ei FOF), kun:
-
   - `FOF_status` referenssi = `Ei FOF`
   - `time` referenssi = `baseline`
   - (tämä varmistetaan ajurissa `factor(levels=...)`)
@@ -763,7 +762,7 @@ message("Manifest updated: ", manifest_path)
 
 **4-haarainen auto-teksti (sama logiikka kuin ajurissa):**
 
-- Aseta `<PRACTICAL_THRESHOLD>` (esim. `0.20`) ja käytä interaktiotermin riviä sellaisenaan (term-name *täsmälleen* taulukosta).
+- Aseta `<PRACTICAL_THRESHOLD>` (esim. `0.20`) ja käytä interaktiotermin riviä sellaisenaan (term-name _täsmälleen_ taulukosta).
 
 1. **Merkittävä negatiivinen (LV ei sisällä 0, β < 0)**
 
@@ -821,7 +820,6 @@ renv::restore(prompt = FALSE)
 
 - Tarkista data: liian vähän havaintoja joissakin time×FOF-soluissa.
 - Kokeile:
-
   - skaalaa jatkuvat kovariaatit (age, BMI) ja/tai
   - raportoi singular fit varoituksena ja tee herkkyysanalyysi (esim.
     yksinkertaisempi kovariaattijoukko).

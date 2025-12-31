@@ -206,7 +206,7 @@ FOF variables:
 
 - `FOF` and/or `FOF_status` (0/1)
 - `FOF_status_f = factor(FOF_status, levels = c(0, 1), labels = c("Ei FOF",
-  "FOF"))`
+"FOF"))`
 
 Minimal required columns to proceed (pick A or B):
 
@@ -222,7 +222,7 @@ Minimal required columns to proceed (pick A or B):
   - functions/ (helpers; e.g., io, checks, modeling)
   - pipeline/ (import -> clean -> model -> report)
 - R-scripts/
-  - Kxx/  (e.g., K01/ K02/ ... /K99/)
+  - Kxx/ (e.g., K01/ K02/ ... /K99/)
     - Kxx.R (or file-tagged scripts like K5.1_MA.V1_name.R)
     - outputs/
 - reports/
@@ -261,7 +261,7 @@ interpreted as 12-month follow-up (Z12) per current naming convention.
    - Primary: mixed model (random intercept for ID):
      `Composite_Z ~ time * FOF_status + age + sex + BMI + (1 | ID)`
      (Implementation note: use the actual ID column name from the dataset,
-      e.g. `(1 | id)` per VERIFIED VARIABLE MAP.)
+     e.g. `(1 | id)` per VERIFIED VARIABLE MAP.)
    - Two-timepoint long change model: Can use `time_f` (0 vs 12) without
      baseline covariate, as baseline is included as an outcome row. This
      approach estimates change via time coefficient while accounting for
@@ -312,10 +312,10 @@ Setup once:
 
 Run a script:
 
-- `Rscript R-scripts/Kxx/Kxx.R`  (generic pattern)
-- `Rscript R-scripts/<K_FOLDER>/<SCRIPT_FILE>.R`  (placeholder form)
+- `Rscript R-scripts/Kxx/Kxx.R` (generic pattern)
+- `Rscript R-scripts/<K_FOLDER>/<SCRIPT_FILE>.R` (placeholder form)
 - Example (file-tagged): `Rscript
-  R-scripts/<K_FOLDER>/<SCRIPT_ID>.V1_short-name.R`
+R-scripts/<K_FOLDER>/<SCRIPT_ID>.V1_short-name.R`
 
 Save environment info:
 

@@ -87,7 +87,7 @@ Non-negotiables (tiivistelmä):
 
 ### R (suositus)
 
-1) Siirry aliprojektin juureen:
+1. Siirry aliprojektin juureen:
 
 ```bash
 cd Python-R-Scripts/Fear-of-Falling
@@ -235,14 +235,12 @@ Periaate:
 ## Data & outputs boundaries
 
 - Data:
-
   - Älä muokkaa raakadataa.
   - Oleta, että data on gitignored ja mahdollisesti salattu (git-crypt tms.).
   - Jos data puuttuu, tee muutokset niin että koodi antaa selkeän virheen ja
     ohjeen (ei "silent fail").
 
 - Outputs:
-
   - Kirjoita tuotetut tiedostot `CLAUDE.md`-ohjeen mukaiseen output-polkuun.
   - Jos käytössä Kxx-konventiot: käytä `R-scripts/<script_label>/outputs/` ja
     kirjaa manifestiin yksi rivi per artefakti (TODO: vahvista).
@@ -263,7 +261,6 @@ Käytännöt:
 
 - Aja komennot VS Coden terminaalista Fear-of-Falling -kansiosta.
 - Jos diagnostiikka ei päivity:
-
   - "Developer: Reload Window"
   - käynnistä R uudelleen
   - varmista että `.lintr` on tässä kansiossa ja että VS Code käyttää tätä
@@ -275,9 +272,9 @@ Commit- ja PR-periaatteet:
 
 - Yksi muutoskokonaisuus per commit.
 - Kuvaavat commit-viestit, esimerkiksi:
-
   - `fix: handle missing input column in K18`
   - `docs: clarify run instructions for Fear-of-Falling`
+
 - Jos muutos voi vaikuttaa tuloksiin, mainitse se näkyvästi ja kerro miten
   vaikutus tarkistettiin.
 

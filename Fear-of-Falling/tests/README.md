@@ -291,15 +291,15 @@ fi
 
 Typical execution times (may vary by system):
 
-| Script | Expected Time | Notes |
-|--------|--------------|-------|
-| K11 | 30-60s | Includes MICE imputation |
-| K12 | 25-45s | Multiple outcome models |
-| K13 | 40-70s | Many interaction models |
-| K14 | 10-20s | Table generation only |
-| K15 | 20-40s | Frailty calculations |
-| K16 | 35-60s | Requires K15 output |
-| **Total** | **~3-5 min** | Full suite |
+| Script    | Expected Time | Notes                    |
+| --------- | ------------- | ------------------------ |
+| K11       | 30-60s        | Includes MICE imputation |
+| K12       | 25-45s        | Multiple outcome models  |
+| K13       | 40-70s        | Many interaction models  |
+| K14       | 10-20s        | Table generation only    |
+| K15       | 20-40s        | Frailty calculations     |
+| K16       | 35-60s        | Requires K15 output      |
+| **Total** | **~3-5 min**  | Full suite               |
 
 ## Support
 

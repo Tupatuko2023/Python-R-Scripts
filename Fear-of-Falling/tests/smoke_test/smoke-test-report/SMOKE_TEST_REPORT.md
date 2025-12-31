@@ -11,23 +11,23 @@
 
 ## SUMMARY
 
-| Script | Status | Exit | Time (s) | Outputs | Error (truncated) |
-|--------|--------|------|----------|---------|-------------------|
-| K1 | ✓ PASS | 0 | 1.4 | 2 | Warning message: There was 1 warning in `summarise()`. ℹ In argument: `p_value = |
-| K2 | ✓ PASS | 0 | 0.8 | 1 | - |
-| K3 | ✓ PASS | 0 | 1.4 | 2 | Warning message: There was 1 warning in `summarise()`. ℹ In argument: `p_value = |
-| K4 | ✓ PASS | 0 | 0.8 | 1 | - |
-| K6 | ✓ PASS | 0 | 5.0 | 8 | Warning message: In grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x |
-| K7 | ✓ PASS | 0 | 9.1 | 10 | Warning messages: 1: In grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$ |
-| K8 | ✗ FAIL | 1 | 1.7 | - | Attaching package: ‘dplyr’  The following objects are masked from ‘package:stats |
-| K9 | ✗ FAIL | 1 | 1.8 | - | Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0. Error in  |
-| K10 | ✓ PASS | 0 | 2.4 | 2 | Attaching package: ‘dplyr’  The following objects are masked from ‘package:stats |
-| K11 | ✗ FAIL | 1 | 3.5 | - | Created DeltaComposite from Delta_Composite_Z. Error in `mutate()` at magrittr/R |
-| K12 | ✗ FAIL | 1 | 1.5 | - | Error in `mutate()` at magrittr/R/pipe.R:136:3: ℹ In argument: `Delta_MWS = case |
-| K13 | ✓ PASS | 0 | 5.7 | 48 | Created DeltaComposite from Delta_Composite_Z. Warning message: One or more pars |
-| K14 | ✗ FAIL | 1 | 1.1 | - | Error in `mutate()` at magrittr/R/pipe.R:136:3: ℹ In argument: `SRH_3class_table |
-| K15 | ✓ PASS | 0 | 2.6 | 19 | K15: Weakness-rajat (sex_Q1): K15: komponenttien jakaumat (table, useNA='ifany') |
-| K16 | ✓ PASS | 0 | 6.9 | 7 | [conflicted] Will prefer dplyr::select over any other package. [conflicted] Will |
+| Script | Status | Exit | Time (s) | Outputs | Error (truncated)                                                                |
+| ------ | ------ | ---- | -------- | ------- | -------------------------------------------------------------------------------- |
+| K1     | ✓ PASS | 0    | 1.4      | 2       | Warning message: There was 1 warning in `summarise()`. ℹ In argument: `p_value = |
+| K2     | ✓ PASS | 0    | 0.8      | 1       | -                                                                                |
+| K3     | ✓ PASS | 0    | 1.4      | 2       | Warning message: There was 1 warning in `summarise()`. ℹ In argument: `p_value = |
+| K4     | ✓ PASS | 0    | 0.8      | 1       | -                                                                                |
+| K6     | ✓ PASS | 0    | 5.0      | 8       | Warning message: In grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x |
+| K7     | ✓ PASS | 0    | 9.1      | 10      | Warning messages: 1: In grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$ |
+| K8     | ✗ FAIL | 1    | 1.7      | -       | Attaching package: ‘dplyr’ The following objects are masked from ‘package:stats  |
+| K9     | ✗ FAIL | 1    | 1.8      | -       | Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0. Error in  |
+| K10    | ✓ PASS | 0    | 2.4      | 2       | Attaching package: ‘dplyr’ The following objects are masked from ‘package:stats  |
+| K11    | ✗ FAIL | 1    | 3.5      | -       | Created DeltaComposite from Delta_Composite_Z. Error in `mutate()` at magrittr/R |
+| K12    | ✗ FAIL | 1    | 1.5      | -       | Error in `mutate()` at magrittr/R/pipe.R:136:3: ℹ In argument: `Delta_MWS = case |
+| K13    | ✓ PASS | 0    | 5.7      | 48      | Created DeltaComposite from Delta_Composite_Z. Warning message: One or more pars |
+| K14    | ✗ FAIL | 1    | 1.1      | -       | Error in `mutate()` at magrittr/R/pipe.R:136:3: ℹ In argument: `SRH_3class_table |
+| K15    | ✓ PASS | 0    | 2.6      | 19      | K15: Weakness-rajat (sex_Q1): K15: komponenttien jakaumat (table, useNA='ifany') |
+| K16    | ✓ PASS | 0    | 6.9      | 7       | [conflicted] Will prefer dplyr::select over any other package. [conflicted] Will |
 
 ---
 
@@ -274,7 +274,7 @@ Execution halted
   ..   low_activity = col_double(),
   ..   weakness = col_double()
   .. )
- - attr(*, "problems")=<externalptr> 
+ - attr(*, "problems")=<externalptr>
 Rows: 300
 Columns: 25
 $ age                    <dbl> 71, 73, 80, 77, 83, 80, 78, 74, 83, 82, 85, 66,…
@@ -688,27 +688,27 @@ intersect, setdiff, setequal, union
 Loa
 
 - **K9** (exit 1): Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0.
-Error in `mutate()` at magrittr/R/pipe.R:136:3:
-ℹ In argument: `Delta_MWS = case_when(...)`.
-Caused by error in `case_when()`:
-!
+  Error in `mutate()` at magrittr/R/pipe.R:136:3:
+  ℹ In argument: `Delta_MWS = case_when(...)`.
+  Caused by error in `case_when()`:
+  !
 - **K11** (exit 1): Created DeltaComposite from Delta_Composite_Z.
-Error in `mutate()` at magrittr/R/pipe.R:136:3:
-ℹ In argument: `Delta_MWS = case_when(...)`.
-Caused by error in `case_when()`:
-! Failed to evaluate the r
+  Error in `mutate()` at magrittr/R/pipe.R:136:3:
+  ℹ In argument: `Delta_MWS = case_when(...)`.
+  Caused by error in `case_when()`:
+  ! Failed to evaluate the r
 - **K12** (exit 1): Error in `mutate()` at magrittr/R/pipe.R:136:3:
-ℹ In argument: `Delta_MWS = case_when(...)`.
-Caused by error in `case_when()`:
-! Failed to evaluate the right-hand side of formula 1.
-Caused by error:
-!
+  ℹ In argument: `Delta_MWS = case_when(...)`.
+  Caused by error in `case_when()`:
+  ! Failed to evaluate the right-hand side of formula 1.
+  Caused by error:
+  !
 - **K14** (exit 1): Error in `mutate()` at magrittr/R/pipe.R:136:3:
-ℹ In argument: `SRH_3class_table = factor(...)`.
-Caused by error:
-! object 'koettuterveydentila' not found
-Backtrace:
-     ▆
+  ℹ In argument: `SRH_3class_table = factor(...)`.
+  Caused by error:
+  ! object 'koettuterveydentila' not found
+  Backtrace:
+  ▆
   1. ├─analysis_data %>% ..
 
 ---

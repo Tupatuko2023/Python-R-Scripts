@@ -195,14 +195,14 @@ grep -c '"K4"' manifest/manifest.csv
 
 ## Risks and Mitigation
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| Output path changes break downstream scripts | Medium | Medium | All paths use `here::here()` + documented in runbook |
-| set.seed() changes bootstrap results slightly | Low | Low | Acceptable - ensures reproducibility going forward |
-| Initial smoke tests fail (missing raw data) | Medium | Low | Documented fallback paths; check data/ and dataset/ dirs |
-| Shared scripts (K1.1, K1.5) cause K3 issues | Medium | High | K3 tested immediately after K1 completion |
-| Manifest.csv grows large | Low | Low | Can archive old rows if needed |
-| K1.2 logic differs from helper | Medium | Medium | Review K1.2 before applying standardize_analysis_vars() |
+| Risk                                          | Likelihood | Impact | Mitigation                                               |
+| --------------------------------------------- | ---------- | ------ | -------------------------------------------------------- |
+| Output path changes break downstream scripts  | Medium     | Medium | All paths use `here::here()` + documented in runbook     |
+| set.seed() changes bootstrap results slightly | Low        | Low    | Acceptable - ensures reproducibility going forward       |
+| Initial smoke tests fail (missing raw data)   | Medium     | Low    | Documented fallback paths; check data/ and dataset/ dirs |
+| Shared scripts (K1.1, K1.5) cause K3 issues   | Medium     | High   | K3 tested immediately after K1 completion                |
+| Manifest.csv grows large                      | Low        | Low    | Can archive old rows if needed                           |
+| K1.2 logic differs from helper                | Medium     | Medium | Review K1.2 before applying standardize_analysis_vars()  |
 
 ### Rollback Plan
 

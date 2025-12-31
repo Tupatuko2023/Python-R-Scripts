@@ -62,12 +62,12 @@ timestamp,script,label,kind,path,n,notes
 
 ## FILE INVENTORY
 
-| File                           | Lines | Description                    |
-|--------------------------------|-------|--------------------------------|
-| `manifest.csv`                 | 388   | New clean manifest (current)   |
-| `manifest_backup_20251221.csv` | 429   | Full backup of original        |
-| `manifest_legacy.csv`          | 42    | Legacy format rows (archived)  |
-| `migrate_manifest.R`           | 48    | Migration script (preserved)   |
+| File                           | Lines | Description                   |
+| ------------------------------ | ----- | ----------------------------- |
+| `manifest.csv`                 | 388   | New clean manifest (current)  |
+| `manifest_backup_20251221.csv` | 429   | Full backup of original       |
+| `manifest_legacy.csv`          | 42    | Legacy format rows (archived) |
+| `migrate_manifest.R`           | 48    | Migration script (preserved)  |
 
 ---
 
@@ -183,17 +183,17 @@ This restores the original manifest from backup.
 
 ### Column Mapping
 
-| Old Position | Old Name    | New Position | New Name   | Action   |
-|--------------|-------------|--------------|------------|----------|
-| 1            | script      | 2            | script     | Kept     |
-| 2            | filepath    | -            | -          | Removed  |
-| 3            | description | -            | -          | Removed  |
-| 4            | timestamp   | 1            | timestamp  | Moved    |
-| 5            | label       | 3            | label      | Kept     |
-| 6            | kind        | 4            | kind       | Kept     |
-| 7            | path        | 5            | path       | Kept     |
-| 8            | n           | 6            | n          | Kept     |
-| 9            | notes       | 7            | notes      | Kept     |
+| Old Position | Old Name    | New Position | New Name  | Action  |
+| ------------ | ----------- | ------------ | --------- | ------- |
+| 1            | script      | 2            | script    | Kept    |
+| 2            | filepath    | -            | -         | Removed |
+| 3            | description | -            | -         | Removed |
+| 4            | timestamp   | 1            | timestamp | Moved   |
+| 5            | label       | 3            | label     | Kept    |
+| 6            | kind        | 4            | kind      | Kept    |
+| 7            | path        | 5            | path      | Kept    |
+| 8            | n           | 6            | n         | Kept    |
+| 9            | notes       | 7            | notes     | Kept    |
 
 ---
 
