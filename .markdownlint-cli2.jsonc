@@ -15,6 +15,9 @@
   },
   "ignores": [
     "node_modules/**",
+    ".gemini/**/*.md",
+    "AGENTS.md",
+    "CLAUDE_PERMISSIONS_SETUP.md",
     "Fear-of-Falling/**/*.md",
     "Electronic-Frailty-Index/report/**/*.md"
   ]
