@@ -14,7 +14,8 @@
     "MD060": false
   },
   "ignores": [
-    "Fear-of-Falling/**",
-    "Electronic-Frailty-Index/**"
+    "node_modules/**",
+    "Fear-of-Falling/**/*.md",
+    "Electronic-Frailty-Index/report/**/*.md"
   ]
 }
