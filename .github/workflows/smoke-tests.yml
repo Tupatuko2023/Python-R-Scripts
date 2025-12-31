@@ -6,10 +6,16 @@ on:
     paths:
       - 'Fear-of-Falling/**'
       - '.github/workflows/smoke-tests.yml'
+    paths-ignore:
+      - 'Fear-of-Falling/**/*.md'
+      - 'Fear-of-Falling/.pre-commit-config.yaml'
   pull_request:
     branches: [ main ]
     paths:
       - 'Fear-of-Falling/**'
+    paths-ignore:
+      - 'Fear-of-Falling/**/*.md'
+      - 'Fear-of-Falling/.pre-commit-config.yaml'
   workflow_dispatch:  # Allow manual triggers
 
 jobs:

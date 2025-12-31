@@ -2,7 +2,23 @@ name: r-ci
 
 on:
   push:
+    paths:
+      - 'Fear-of-Falling/**/*.R'
+      - 'Fear-of-Falling/**/*.r'
+      - 'Fear-of-Falling/renv.lock'
+      - 'Fear-of-Falling/renv/**'
+      - '.github/workflows/r-ci.yml'
+    paths-ignore:
+      - '**/*.md'
   pull_request:
+    paths:
+      - 'Fear-of-Falling/**/*.R'
+      - 'Fear-of-Falling/**/*.r'
+      - 'Fear-of-Falling/renv.lock'
+      - 'Fear-of-Falling/renv/**'
+      - '.github/workflows/r-ci.yml'
+    paths-ignore:
+      - '**/*.md'
 
 jobs:
   r-ci:
