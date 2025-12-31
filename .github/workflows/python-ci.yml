@@ -2,7 +2,31 @@ name: python-ci
 
 on:
   push:
+    paths:
+      - 'Electronic-Frailty-Index/**/*.py'
+      - 'Electronic-Frailty-Index/**/requirements*.txt'
+      - 'Electronic-Frailty-Index/**/pyproject.toml'
+      - 'Electronic-Frailty-Index/**/setup.cfg'
+      - 'Electronic-Frailty-Index/**/setup.py'
+      - '**/*.py'
+      - '**/requirements*.txt'
+      - '**/pyproject.toml'
+      - '.github/workflows/python-ci.yml'
+    paths-ignore:
+      - '**/*.md'
   pull_request:
+    paths:
+      - 'Electronic-Frailty-Index/**/*.py'
+      - 'Electronic-Frailty-Index/**/requirements*.txt'
+      - 'Electronic-Frailty-Index/**/pyproject.toml'
+      - 'Electronic-Frailty-Index/**/setup.cfg'
+      - 'Electronic-Frailty-Index/**/setup.py'
+      - '**/*.py'
+      - '**/requirements*.txt'
+      - '**/pyproject.toml'
+      - '.github/workflows/python-ci.yml'
+    paths-ignore:
+      - '**/*.md'
 
 jobs:
   tests:

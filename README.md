@@ -28,6 +28,72 @@ python src/efi/cli.py \
 
 See [DISCLAIMER.md](DISCLAIMER.md). No PHI or PII in this repository.
 
+## Developer workflows
+
+### Markdown formatting & linting
+
+All Markdown files are checked for formatting (Prettier) and linting (markdownlint-cli2)
+in CI. **CI runs checks only** — it will not auto-fix your files.
+
+**Local setup:**
+
+```bash
+# Install dependencies
+npm ci
+
+# Format all Markdown files (fixes Prettier issues)
+npx prettier --write "**/*.md"
+
+# Auto-fix markdownlint violations
+npx markdownlint-cli2 --fix "**/*.md"
+
+# Check without fixing (same as CI)
+npx prettier --check "**/*.md"
+npx markdownlint-cli2 "**/*.md"
+```
+
+**Pre-commit hooks (recommended):**
+
+Install pre-commit to auto-format and auto-fix before each commit:
+
+```bash
+# Install pre-commit (requires Python)
+pip install pre-commit
+
+# Install hooks
+pre-commit install
+
+# Run manually on all files
+pre-commit run --all-files
+```
+
+**When CI fails:**
+
+If the "Lint Markdown" check fails on your PR:
+
+1. Run locally: `npx prettier --write "**/*.md"`
+2. Run locally: `npx markdownlint-cli2 --fix "**/*.md"`
+3. Fix any remaining violations manually (check error messages)
+4. Verify: `npx prettier --check "**/*.md" && npx markdownlint-cli2 "**/*.md"`
+5. Commit and push
+
+**Common violations:**
+
+- **MD040**: Missing language in code blocks → Add language tag (e.g., ` ```bash `)
+- **MD013**: Line too long → Break lines or disable for specific sections
+- **MD029**: Ordered list numbering → Use sequential numbers or disable
+
+### CI optimization
+
+CI workflows use path filters to run only when relevant files change:
+
+- **Lint Markdown**: Runs on `.md`, `.prettierrc`, `.markdownlint-cli2.jsonc`, `package.json`
+- **Python CI**: Runs on `**/*.py`, `**/requirements*.txt`, `**/pyproject.toml`
+- **R CI**: Runs on `**/*.R`, `renv.lock`, `renv/**`
+- **Smoke Tests**: Runs on `Fear-of-Falling/**` (except `.md` files)
+
+Docs-only changes skip expensive test runs, saving CI minutes.
+
 ## Layout (high level)
 
 ```text
