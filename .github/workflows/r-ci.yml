@@ -34,6 +34,10 @@ jobs:
             ${{ runner.os }}-r-
 
       # Path A: Fear-of-Falling renv workflow (scripts repo)
+      - name: Install renv (if missing)
+        if: hashFiles('Fear-of-Falling/renv.lock') != ''
+        run: Rscript -e "if (!requireNamespace('renv', quietly=TRUE)) install.packages('renv', repos='https://cloud.r-project.org')"
+
       - name: Restore renv (Fear-of-Falling)
         if: hashFiles('Fear-of-Falling/renv.lock') != ''
         run: Rscript -e "setwd('Fear-of-Falling'); renv::restore(prompt = FALSE)"
