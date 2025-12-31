@@ -91,7 +91,7 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 6. Between-group t-test for Change
 7. Between-group t-test for Follow_up
 
-**Output:** Multiple objects (baseline_stats, change_stats, follow_up_stats, p_values_*)
+**Output:** Multiple objects (baseline*stats, change_stats, follow_up_stats, p_values*\*)
 
 ### 4. K3.4.effect_sizes.R (Cohen's d) ✅
 
@@ -313,14 +313,14 @@ tail -20 manifest/manifest.csv
 
 ## K1 vs K3 Comparison
 
-| Aspect | K1 Pipeline | K3 Pipeline |
-|--------|-------------|-------------|
-| **Analysis focus** | Z-score changes | Original test values |
-| **Data input (K*.2)** | z_kavelynopeus0/2, z_Tuoli0/2, etc. | tuoliltanousu0/2, kavelynopeus_m_sek0/2, etc. |
-| **Shared scripts** | K1.1 (data import), K1.5 (skewness/kurtosis) | Same (sources from K1/) |
-| **Test types** | MWS, FTSST, SLS, HGS (z-scores) | FTSST, MWS, SLS, HGS, VAS (original units) |
-| **Output file** | K1_Z_Score_Change_2G.csv | K3_Values_2G.csv |
-| **Structure** | 7 scripts (K1.1-K1.7) | 5 scripts (K3.2-K3.7, plus 2 shared) |
+| Aspect                 | K1 Pipeline                                  | K3 Pipeline                                   |
+| ---------------------- | -------------------------------------------- | --------------------------------------------- |
+| **Analysis focus**     | Z-score changes                              | Original test values                          |
+| **Data input (K\*.2)** | z_kavelynopeus0/2, z_Tuoli0/2, etc.          | tuoliltanousu0/2, kavelynopeus_m_sek0/2, etc. |
+| **Shared scripts**     | K1.1 (data import), K1.5 (skewness/kurtosis) | Same (sources from K1/)                       |
+| **Test types**         | MWS, FTSST, SLS, HGS (z-scores)              | FTSST, MWS, SLS, HGS, VAS (original units)    |
+| **Output file**        | K1_Z_Score_Change_2G.csv                     | K3_Values_2G.csv                              |
+| **Structure**          | 7 scripts (K1.1-K1.7)                        | 5 scripts (K3.2-K3.7, plus 2 shared)          |
 
 **Key difference:** K3 uses raw test values (seconds, m/s, etc.) while K1 uses standardized z-scores. Both pipelines follow identical CLAUDE.md conventions.
 

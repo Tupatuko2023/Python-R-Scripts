@@ -115,29 +115,29 @@ confusion and data misalignment.
 
 ### Current header positions
 
-| Position | Column Name  | Used by manifest_row()? |
-|----------|--------------|-------------------------|
-| 1        | script       | ✅ Yes (position 2)     |
-| 2        | filepath     | ❌ No (legacy)          |
-| 3        | description  | ❌ No (legacy)          |
-| 4        | timestamp    | ✅ Yes (position 1)     |
-| 5        | label        | ✅ Yes (position 3)     |
-| 6        | kind         | ✅ Yes (position 4)     |
-| 7        | path         | ✅ Yes (position 5)     |
-| 8        | n            | ✅ Yes (position 6)     |
-| 9        | notes        | ✅ Yes (position 7)     |
+| Position | Column Name | Used by manifest_row()? |
+| -------- | ----------- | ----------------------- |
+| 1        | script      | ✅ Yes (position 2)     |
+| 2        | filepath    | ❌ No (legacy)          |
+| 3        | description | ❌ No (legacy)          |
+| 4        | timestamp   | ✅ Yes (position 1)     |
+| 5        | label       | ✅ Yes (position 3)     |
+| 6        | kind        | ✅ Yes (position 4)     |
+| 7        | path        | ✅ Yes (position 5)     |
+| 8        | n           | ✅ Yes (position 6)     |
+| 9        | notes       | ✅ Yes (position 7)     |
 
 ### Correct order for manifest_row()
 
-| Position | Column Name  | Description                      |
-|----------|--------------|----------------------------------|
-| 1        | timestamp    | ISO 8601 timestamp               |
-| 2        | script       | Script ID (K11, K12, etc.)       |
-| 3        | label        | Artifact label                   |
-| 4        | kind         | Artifact type                    |
-| 5        | path         | Full file path                   |
-| 6        | n            | Sample size (integer or NA)      |
-| 7        | notes        | Optional notes (character or NA) |
+| Position | Column Name | Description                      |
+| -------- | ----------- | -------------------------------- |
+| 1        | timestamp   | ISO 8601 timestamp               |
+| 2        | script      | Script ID (K11, K12, etc.)       |
+| 3        | label       | Artifact label                   |
+| 4        | kind        | Artifact type                    |
+| 5        | path        | Full file path                   |
+| 6        | n           | Sample size (integer or NA)      |
+| 7        | notes       | Optional notes (character or NA) |
 
 ---
 

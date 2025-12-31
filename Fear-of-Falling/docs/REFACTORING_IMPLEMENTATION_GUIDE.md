@@ -89,7 +89,7 @@ For each K1-K4 script, apply these changes:
 ### 3. Path Management
 
 - [ ] Replace hardcoded paths with `here::here()` or init_paths results
-- [ ] For main scripts (K*.7.main.R): Call `init_paths(script_label)` and source helpers
+- [ ] For main scripts (K\*.7.main.R): Call `init_paths(script_label)` and source helpers
 - [ ] For subscripts: Use paths from parent environment (set by main script)
 - [ ] Remove all `setwd()` calls
 
