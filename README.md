@@ -10,6 +10,10 @@ workflows. Each subfolder is a standalone project with its own docs.
 
 - [Electronic Frailty Index](Electronic-Frailty-Index/README.md)
 
+## Development setup
+
+- **Windows**: [GitHub CLI (gh) setup guide](docs/SETUP_GITHUB_CLI.md)
+
 ## Quick start
 
 ```bash
