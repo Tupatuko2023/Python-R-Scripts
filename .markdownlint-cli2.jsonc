@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/schema/markdownlint-cli2-config-schema.json",
   "config": {
     "default": true,
     "MD013": {
@@ -11,5 +12,9 @@
     "MD033": false,
     "MD041": false,
     "MD060": false
-  }
+  },
+  "ignores": [
+    "Fear-of-Falling/**",
+    "Electronic-Frailty-Index/**"
+  ]
 }
