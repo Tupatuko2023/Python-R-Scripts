@@ -24,20 +24,20 @@ All K1-K4 R scripts in the Fear-of-Falling repository have been successfully ref
 
 ### By Pipeline
 
-| Pipeline | Scripts | Purpose | Lines Refactored | Completion |
-|----------|---------|---------|------------------|------------|
-| **K1** | 7 scripts | Z-Score Analysis (Baseline → Follow-up) | ~800 | ✅ Complete |
-| **K2** | 2 scripts | Z-Score Transpose (Long → Wide) | ~350 | ✅ Complete |
-| **K3** | 5 scripts | Original Values Analysis | ~750 | ✅ Complete |
-| **K4** | 1 script | Original Values Transpose | ~200 | ✅ Complete |
-| **TOTAL** | **15 scripts** | **Complete FOF Analysis Suite** | **~2,100** | **✅ 100%** |
+| Pipeline  | Scripts        | Purpose                                 | Lines Refactored | Completion  |
+| --------- | -------------- | --------------------------------------- | ---------------- | ----------- |
+| **K1**    | 7 scripts      | Z-Score Analysis (Baseline → Follow-up) | ~800             | ✅ Complete |
+| **K2**    | 2 scripts      | Z-Score Transpose (Long → Wide)         | ~350             | ✅ Complete |
+| **K3**    | 5 scripts      | Original Values Analysis                | ~750             | ✅ Complete |
+| **K4**    | 1 script       | Original Values Transpose               | ~200             | ✅ Complete |
+| **TOTAL** | **15 scripts** | **Complete FOF Analysis Suite**         | **~2,100**       | **✅ 100%** |
 
 ### Shared Scripts
 
-| Script | Used By | Purpose |
-|--------|---------|---------|
-| **K1.1.data_import.R** | K1, K3 | Load raw data from KaatumisenPelko.csv |
-| **K1.5.kurtosis_skewness.R** | K1, K3 | Distribution interpretation functions |
+| Script                       | Used By | Purpose                                |
+| ---------------------------- | ------- | -------------------------------------- |
+| **K1.1.data_import.R**       | K1, K3  | Load raw data from KaatumisenPelko.csv |
+| **K1.5.kurtosis_skewness.R** | K1, K3  | Distribution interpretation functions  |
 
 ---
 
@@ -326,14 +326,14 @@ tail -20 manifest/manifest.csv
 
 ## Output File Summary
 
-| Pipeline | Output File | Location | Rows | Columns | Format | Manifest |
-|----------|-------------|----------|------|---------|--------|----------|
-| K1 | K1_Z_Score_Change_2G.csv | R-scripts/K1/outputs/ | ~8 | 44 | Long | ✅ |
-| K1 | sessioninfo_K1.txt | R-scripts/K1/outputs/ | N/A | N/A | Text | ✅ |
-| K2 | K2_Z_Score_Change_2G_Transposed.csv | R-scripts/K2/outputs/ | ~44 | 9 | Wide | ✅ |
-| K3 | K3_Values_2G.csv | R-scripts/K3/outputs/ | ~10 | 44 | Long | ✅ |
-| K3 | sessioninfo_K3.txt | R-scripts/K3/outputs/ | N/A | N/A | Text | ✅ |
-| K4 | K4_Values_2G_Transposed.csv | R-scripts/K4/outputs/ | ~44 | 11 | Wide | ✅ |
+| Pipeline | Output File                         | Location              | Rows | Columns | Format | Manifest |
+| -------- | ----------------------------------- | --------------------- | ---- | ------- | ------ | -------- |
+| K1       | K1_Z_Score_Change_2G.csv            | R-scripts/K1/outputs/ | ~8   | 44      | Long   | ✅       |
+| K1       | sessioninfo_K1.txt                  | R-scripts/K1/outputs/ | N/A  | N/A     | Text   | ✅       |
+| K2       | K2_Z_Score_Change_2G_Transposed.csv | R-scripts/K2/outputs/ | ~44  | 9       | Wide   | ✅       |
+| K3       | K3_Values_2G.csv                    | R-scripts/K3/outputs/ | ~10  | 44      | Long   | ✅       |
+| K3       | sessioninfo_K3.txt                  | R-scripts/K3/outputs/ | N/A  | N/A     | Text   | ✅       |
+| K4       | K4_Values_2G_Transposed.csv         | R-scripts/K4/outputs/ | ~44  | 11      | Wide   | ✅       |
 
 **Note:** Row/column counts are approximate and depend on actual data.
 
@@ -343,20 +343,20 @@ tail -20 manifest/manifest.csv
 
 ### Finnish → English Mapping
 
-| Finnish | English | Abbrev | Description |
-|---------|---------|--------|-------------|
-| Kävelynopeus | Maximal Walking Speed | MWS | Walking speed (m/s) |
-| Tuoliltanousu | Five Times Sit-to-Stand Test | FTSST | Chair stand time (s) |
-| Seisominen | Single Leg Stance | SLS | Balance time (s) |
-| Puristusvoima | Hand Grip Strength | HGS | Grip strength (kg) |
-| PainVAS | Visual Analogue Scale | VAS | Pain intensity (0-10) |
+| Finnish       | English                      | Abbrev | Description           |
+| ------------- | ---------------------------- | ------ | --------------------- |
+| Kävelynopeus  | Maximal Walking Speed        | MWS    | Walking speed (m/s)   |
+| Tuoliltanousu | Five Times Sit-to-Stand Test | FTSST  | Chair stand time (s)  |
+| Seisominen    | Single Leg Stance            | SLS    | Balance time (s)      |
+| Puristusvoima | Hand Grip Strength           | HGS    | Grip strength (kg)    |
+| PainVAS       | Visual Analogue Scale        | VAS    | Pain intensity (0-10) |
 
 ### FOF Status Encoding
 
-| kaatumisenpelkoOn | Label | Description |
-|-------------------|-------|-------------|
-| 0 | Without_FOF | No fear of falling |
-| 1 | With_FOF | Fear of falling present |
+| kaatumisenpelkoOn | Label       | Description             |
+| ----------------- | ----------- | ----------------------- |
+| 0                 | Without_FOF | No fear of falling      |
+| 1                 | With_FOF    | Fear of falling present |
 
 ---
 

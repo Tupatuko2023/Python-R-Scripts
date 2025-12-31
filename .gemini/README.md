@@ -18,22 +18,25 @@ Defines the security guardrails (ported from Claude Code). Since policies are us
 
 ### Installation
 
-1.  Copy the template to your global Gemini policies directory:
-    ```bash
-    # Windows (PowerShell)
-    mkdir -Force ~/.gemini/policies
-    copy .gemini/policies/fof-policy.example.toml ~/.gemini/policies/fof-policy.toml
-    ```
-    ```bash
-    # macOS/Linux
-    mkdir -p ~/.gemini/policies
-    cp .gemini/policies/fof-policy.example.toml ~/.gemini/policies/fof-policy.toml
-    ```
+1. Copy the template to your global Gemini policies directory:
 
-2.  Verify active settings in the CLI:
-    ```
-    /settings
-    ```
+   ```bash
+   # Windows (PowerShell)
+   mkdir -Force ~/.gemini/policies
+   copy .gemini/policies/fof-policy.example.toml ~/.gemini/policies/fof-policy.toml
+   ```
+
+   ```bash
+   # macOS/Linux
+   mkdir -p ~/.gemini/policies
+   cp .gemini/policies/fof-policy.example.toml ~/.gemini/policies/fof-policy.toml
+   ```
+
+2. Verify active settings in the CLI:
+
+   ```text
+   /settings
+   ```
 
 ### Behavior
 

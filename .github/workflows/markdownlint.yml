@@ -1,13 +1,13 @@
-name: markdownlint
+name: Lint Markdown
 
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
-    paths: [ "**/*.md", ".markdownlint.*", "package.json" ]
+    branches: ["main"]
+    paths: ["**/*.md", ".markdownlint.*", ".prettierrc", "package.json"]
   pull_request:
-    branches: [ "main" ]
-    paths: [ "**/*.md", ".markdownlint.*", "package.json" ]
+    branches: ["main"]
+    paths: ["**/*.md", ".markdownlint.*", ".prettierrc", "package.json"]
 
 jobs:
   lint:
@@ -18,10 +18,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: "20"
 
-      - name: Install dependencies (if any)
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run markdownlint via npm script
-        run: npm run lint:md
+      - name: Check Prettier formatting
+        run: npx prettier --check "**/*.md"
+
+      - name: Run markdownlint
+        run: npx markdownlint-cli2 "**/*.md"

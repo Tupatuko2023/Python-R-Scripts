@@ -11,23 +11,23 @@
 
 ## SUMMARY
 
-| Script | Status | Exit | Time (s) | Outputs | Error (truncated) |
-|--------|--------|------|----------|---------|-------------------|
-| K1 | ✗ FAIL | 1 | 0.7 | - | Error in load_raw_data("KaatumisenPelko.csv") :    Raw data file not found. Trie |
-| K2 | ✗ FAIL | 1 | 0.6 | - | Error: K1 output file not found: /project/R-scripts/K1/outputs/K1_Z_Score_Change |
-| K3 | ✗ FAIL | 1 | 0.6 | - | Error in load_raw_data("KaatumisenPelko.csv") :    Raw data file not found. Trie |
-| K4 | ✗ FAIL | 1 | 0.6 | - | Error: K3 output file not found: /project/R-scripts/K3/outputs/K3_Values_2G.csv  |
-| K6 | ✓ PASS | 0 | 4.8 | 8 | Warning messages: 1: Removed 9 rows containing non-finite outside the scale rang |
-| K7 | ✓ PASS | 0 | 7.5 | 10 | Warning messages: 1: In grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$ |
-| K8 | ✓ PASS | 0 | 5.0 | 14 | Attaching package: ‘dplyr’  The following objects are masked from ‘package:stats |
-| K9 | ✓ PASS | 0 | 3.3 | 11 | Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0. Warning m |
-| K10 | ✓ PASS | 0 | 2.5 | 2 | Attaching package: ‘dplyr’  The following objects are masked from ‘package:stats |
-| K11 | ✓ PASS | 0 | 9.3 | 51 | Created DeltaComposite from Delta_Composite_Z. Warning message: One or more pars |
-| K12 | ✓ PASS | 0 | 3.2 | 5 | - |
-| K13 | ✗ FAIL | 1 | 3.4 | 24 | Created DeltaComposite from Delta_Composite_Z. Error in ggplot(simple_slopes_age |
-| K14 | ✓ PASS | 0 | 1.4 | 3 | K14: baseline table by FOF-status tallennettu ja manifest päivitetty. Warning me |
-| K15 | ✓ PASS | 0 | 3.0 | 19 | K15: Weakness-rajat (sex_Q1): K15: komponenttien jakaumat (table, useNA='ifany') |
-| K16 | ✓ PASS | 0 | 6.6 | 7 | [conflicted] Will prefer dplyr::select over any other package. [conflicted] Will |
+| Script | Status | Exit | Time (s) | Outputs | Error (truncated)                                                                |
+| ------ | ------ | ---- | -------- | ------- | -------------------------------------------------------------------------------- |
+| K1     | ✗ FAIL | 1    | 0.7      | -       | Error in load_raw_data("KaatumisenPelko.csv") : Raw data file not found. Trie    |
+| K2     | ✗ FAIL | 1    | 0.6      | -       | Error: K1 output file not found: /project/R-scripts/K1/outputs/K1_Z_Score_Change |
+| K3     | ✗ FAIL | 1    | 0.6      | -       | Error in load_raw_data("KaatumisenPelko.csv") : Raw data file not found. Trie    |
+| K4     | ✗ FAIL | 1    | 0.6      | -       | Error: K3 output file not found: /project/R-scripts/K3/outputs/K3_Values_2G.csv  |
+| K6     | ✓ PASS | 0    | 4.8      | 8       | Warning messages: 1: Removed 9 rows containing non-finite outside the scale rang |
+| K7     | ✓ PASS | 0    | 7.5      | 10      | Warning messages: 1: In grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$ |
+| K8     | ✓ PASS | 0    | 5.0      | 14      | Attaching package: ‘dplyr’ The following objects are masked from ‘package:stats  |
+| K9     | ✓ PASS | 0    | 3.3      | 11      | Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0. Warning m |
+| K10    | ✓ PASS | 0    | 2.5      | 2       | Attaching package: ‘dplyr’ The following objects are masked from ‘package:stats  |
+| K11    | ✓ PASS | 0    | 9.3      | 51      | Created DeltaComposite from Delta_Composite_Z. Warning message: One or more pars |
+| K12    | ✓ PASS | 0    | 3.2      | 5       | -                                                                                |
+| K13    | ✗ FAIL | 1    | 3.4      | 24      | Created DeltaComposite from Delta_Composite_Z. Error in ggplot(simple_slopes_age |
+| K14    | ✓ PASS | 0    | 1.4      | 3       | K14: baseline table by FOF-status tallennettu ja manifest päivitetty. Warning me |
+| K15    | ✓ PASS | 0    | 3.0      | 19      | K15: Weakness-rajat (sex_Q1): K15: komponenttien jakaumat (table, useNA='ifany') |
+| K16    | ✓ PASS | 0    | 6.6      | 7       | [conflicted] Will prefer dplyr::select over any other package. [conflicted] Will |
 
 ---
 
@@ -44,7 +44,7 @@
 **STDERR:**
 
 ```
-Error in load_raw_data("KaatumisenPelko.csv") : 
+Error in load_raw_data("KaatumisenPelko.csv") :
   Raw data file not found. Tried:
   - /project/data/raw/KaatumisenPelko.csv
   - /project/dataset/KaatumisenPelko.csv
@@ -58,10 +58,10 @@ Execution halted
 ================================================================================
 K1 Pipeline - Longitudinal Analysis: Z-Score Change by FOF Status
 ================================================================================
-Script label: K1 
-Outputs dir: /project/R-scripts/K1/outputs 
-Manifest: /project/manifest/manifest.csv 
-Project root: /project 
+Script label: K1
+Outputs dir: /project/R-scripts/K1/outputs
+Manifest: /project/manifest/manifest.csv
+Project root: /project
 ================================================================================
 
 [Step 1/6] Data Import...
@@ -91,10 +91,10 @@ Execution halted
 ================================================================================
 K2 Script - Z-Score Change Data Transpose (2 Groups)
 ================================================================================
-Script label: K2 
-Outputs dir: /project/R-scripts/K2/outputs 
-Manifest: /project/manifest/manifest.csv 
-Project root: /project 
+Script label: K2
+Outputs dir: /project/R-scripts/K2/outputs
+Manifest: /project/manifest/manifest.csv
+Project root: /project
 ================================================================================
 
 Loading K1 output data...
@@ -113,7 +113,7 @@ Loading K1 output data...
 **STDERR:**
 
 ```
-Error in load_raw_data("KaatumisenPelko.csv") : 
+Error in load_raw_data("KaatumisenPelko.csv") :
   Raw data file not found. Tried:
   - /project/data/raw/KaatumisenPelko.csv
   - /project/dataset/KaatumisenPelko.csv
@@ -127,10 +127,10 @@ Execution halted
 ================================================================================
 K3 Pipeline - Longitudinal Analysis: Original Values by FOF Status
 ================================================================================
-Script label: K3 
-Outputs dir: /project/R-scripts/K3/outputs 
-Manifest: /project/manifest/manifest.csv 
-Project root: /project 
+Script label: K3
+Outputs dir: /project/R-scripts/K3/outputs
+Manifest: /project/manifest/manifest.csv
+Project root: /project
 ================================================================================
 
 [Step 1/6] Data Import (SHARED from K1)...
@@ -160,10 +160,10 @@ Execution halted
 ================================================================================
 K4 Script - Original Values Data Transpose (2 Groups)
 ================================================================================
-Script label: K4 
-Outputs dir: /project/R-scripts/K4/outputs 
-Manifest: /project/manifest/manifest.csv 
-Project root: /project 
+Script label: K4
+Outputs dir: /project/R-scripts/K4/outputs
+Manifest: /project/manifest/manifest.csv
+Project root: /project
 ================================================================================
 
 Loading K3 output data...
@@ -376,7 +376,7 @@ Loading K3 output data...
 
 ```
 Created DeltaComposite from Delta_Composite_Z.
-Error in ggplot(simple_slopes_age, aes(x = age, y = estimate, ymin = conf.low,  : 
+Error in ggplot(simple_slopes_age, aes(x = age, y = estimate, ymin = conf.low,  :
   could not find function "ggplot"
 Execution halted
 ```
@@ -387,15 +387,15 @@ Execution halted
 # A tibble: 1 × 2
 ```
 
-  n n_complete_primary
+n n_complete_primary
 
 ```
   <int>              <int>
 1   276                276
  Factor w/ 2 levels "female","male": 1 1 1 1 1 1 1 1 1 1 ...
 
-female   male 
-   252     24 
+female   male
+   252     24
 tibble [266 × 21] (S3: tbl_df/tbl/data.frame)
  $ id                    : int [1:266] 553 198 648 806 451 208 791 292 406 645 ...
  $ Delta_Composite_Z     : num [1:266] -0.0219 0.0396 0.1481 0.0696 0.1913 ...
@@ -420,24 +420,24 @@ tibble [266 × 21] (S3: tbl_df/tbl/data.frame)
  $ SRM_3class            : Ord.factor w/ 3 levels "poor"<"fair"<..: 2 2 3 3 3 2 2 1 1 2 ...
 ```
 
-  Min.    1st Qu.     Median       Mean    3rd Qu.       Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--12.744361  -4.744361   0.255639  -0.001745   4.255639  18.255639 
+-12.744361  -4.744361   0.255639  -0.001745   4.255639  18.255639
 ```
 
- Min.   1st Qu.    Median      Mean   3rd Qu.      Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--13.06969  -3.01695  -0.05476   0.06508   3.03736  15.01336 
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--8.1513 -2.1513 -0.1513  0.1188  1.8487  6.8487 
+-13.06969  -3.01695  -0.05476   0.06508   3.03736  15.01336
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+-8.1513 -2.1513 -0.1513  0.1188  1.8487  6.8487
 ```
 
-Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--3.96442 -2.46442  1.03558  0.01026  2.03558  6.03558 
+-3.96442 -2.46442  1.03558  0.01026  2.03558  6.03558
 # A tibble: 0 × 2
 # ℹ 2 variables: moderator <chr>, results_line <chr>
 # A tibble: 4 × 9
@@ -448,8 +448,8 @@ Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
 3 SRM_i… SRM_3cla… FOF_…   0.0563     0.181     0.310  0.757   -0.301      0.414
 4 SRM_i… SRM_3cla… FOF_…   0.241      0.131     1.85   0.0663  -0.0163     0.499
 # A tibble: 4 × 3
-  moderator  term                       results_line                            
-  <chr>      <chr>                      <chr>                                   
+  moderator  term                       results_line
+  <chr>      <chr>                      <chr>
 1 SRH_3class FOF_statusFOF:SRH_3class.L FOF × SRH_3class: β = -0.226, 95 % LV -…
 2 SRH_3class FOF_statusFOF:SRH_3class.Q FOF × SRH_3class: β = -0.018, 95 % LV -…
 3 SRM_3class FOF_statusFOF:SRM_3class.L FOF × SRM_3class: β = 0.056, 95 % LV -0…
@@ -534,22 +534,22 @@ Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
   Raw data file not found. Tried:
   - /project/data/raw/KaatumisenPelko.csv
   - /project/dataset/KaatumisenPelko.csv
-Calls: source -> withVisible -> ev
+    Calls: source -> withVisible -> ev
 - **K2** (exit 1): Error: K1 output file not found: /project/R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv
-Please run K1 pipeline first: Rscript R-scripts/K1/K1.7.main.R
-Execution halted
+  Please run K1 pipeline first: Rscript R-scripts/K1/K1.7.main.R
+  Execution halted
 - **K3** (exit 1): Error in load_raw_data("KaatumisenPelko.csv") :
   Raw data file not found. Tried:
   - /project/data/raw/KaatumisenPelko.csv
   - /project/dataset/KaatumisenPelko.csv
-Calls: source -> withVisible -> ev
+    Calls: source -> withVisible -> ev
 - **K4** (exit 1): Error: K3 output file not found: /project/R-scripts/K3/outputs/K3_Values_2G.csv
-Please run K3 pipeline first: Rscript R-scripts/K3/K3.7.main.R
-Execution halted
+  Please run K3 pipeline first: Rscript R-scripts/K3/K3.7.main.R
+  Execution halted
 - **K13** (exit 1): Created DeltaComposite from Delta_Composite_Z.
-Error in ggplot(simple_slopes_age, aes(x = age, y = estimate, ymin = conf.low,  :
+  Error in ggplot(simple_slopes_age, aes(x = age, y = estimate, ymin = conf.low, :
   could not find function "ggplot"
-Execution halted
+  Execution halted
 
 ---
 

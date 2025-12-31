@@ -660,17 +660,20 @@ For each Kx pipeline:
 
 Add K1-K4 runbook section to README.md:
 
-```markdown
+````markdown
 ## Running K1-K4 Analysis Pipelines
 
 ### Prerequisites
+
 - R environment with renv
 - Run `renv::restore()` to install dependencies
 
 ### K1: Z-Score Change Analysis
+
 ```bash
 Rscript R-scripts/K1/K1.7.main.R
 ```
+````
 
 Outputs: `R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv`
 
@@ -765,3 +768,4 @@ If refactoring causes issues:
 ---
 
 **End of Refactoring Plan**
+```

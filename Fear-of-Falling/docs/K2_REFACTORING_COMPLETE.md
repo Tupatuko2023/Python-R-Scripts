@@ -263,7 +263,7 @@ Follow_up_d  | 0.25            | 0.42         | 0.18            | 0.35         |
 ### Test Name Mapping
 
 | Original (Finnish) | FOF=0 (No FOF)    | FOF=1 (With FOF) |
-|--------------------|-------------------|------------------|
+| ------------------ | ----------------- | ---------------- |
 | Kävelynopeus       | MWS_Without_FOF   | MWS_With_FOF     |
 | Puristusvoima      | HGS_Without_FOF   | HGS_With_FOF     |
 | Seisominen         | SLS_Without_FOF   | SLS_With_FOF     |

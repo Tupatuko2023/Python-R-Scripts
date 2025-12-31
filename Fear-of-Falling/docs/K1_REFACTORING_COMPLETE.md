@@ -99,7 +99,7 @@ req_cols <- c("NRO", "kaatumisenpelkoOn",
 6. Between-group t-test for Change
 7. Between-group t-test for Follow_up
 
-**Output:** Multiple objects (baseline_stats, change_stats, follow_up_stats, p_values_*)
+**Output:** Multiple objects (baseline*stats, change_stats, follow_up_stats, p_values*\*)
 
 ### 5. K1.4.effect_sizes.R (Cohen's d) ✅
 

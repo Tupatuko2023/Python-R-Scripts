@@ -26,6 +26,7 @@ Successfully configured two-tier Claude Code permission system for safe workflow
 Conservative baseline guardrails committed to repository.
 
 **Configuration:**
+
 - `defaultMode`: `"default"` - Require explicit permission for all operations
 - `ask`: Risky operations that require human approval
 - `deny`: Sensitive files that should never be read
@@ -62,26 +63,33 @@ Conservative baseline guardrails committed to repository.
 Developer productivity template. Copy to `.claude/settings.local.json` to activate.
 
 **Configuration:**
+
 - `defaultMode`: `"acceptEdits"` - Auto-approve file edits for speed
 - `allow`: Common safe operations that don't require permission
 
 **Allow Rules (26 patterns):**
 
+<!-- markdownlint-disable MD029 -->
+
 **R Analysis (7 patterns):**
+
 1. `Bash(Rscript *)` - **Why:** Primary R script execution (from repo docs: K1-K18 scripts)
 2. `Bash(R -q -e *)` - **Why:** R one-liners for renv operations (from repo docs: renv::restore)
 3. `Bash(R -q --vanilla -e *)` - **Why:** Clean R environment for reproducibility checks
 4. `Bash(Rscript -e *)` - **Why:** R expressions from command line
 
 **Python Analysis (3 patterns):**
+
 5. `Bash(python *)` - **Why:** Python script execution (from repo docs: EFI CLI)
 6. `Bash(python3 *)` - **Why:** Explicit Python 3 execution
 7. `Bash(pytest *)` - **Why:** Test suite execution (from repo docs: tests/)
 
 **Build/Task Runners (1 pattern):**
+
 8. `Bash(make *)` - **Why:** Makefile targets for builds and tasks
 
 **File Operations - Read Only (8 patterns):**
+
 9. `Bash(ls *)` + `Bash(ls:*)` - **Why:** Directory listing; completely safe
 10. `Bash(cat *)` + `Bash(cat:*)` - **Why:** File content viewing; read-only
 11. `Bash(find *)` - **Why:** File searching; read-only
@@ -89,17 +97,20 @@ Developer productivity template. Copy to `.claude/settings.local.json` to activa
 13. `Bash(grep *)` + `Bash(grep:*)` - **Why:** Text search; read-only
 
 **Git - Read Only (6 patterns):**
+
 14. `Bash(git status *)` + `Bash(git status:*)` - **Why:** Repository status; read-only
 15. `Bash(git diff *)` + `Bash(git diff:*)` - **Why:** Show changes; read-only
 16. `Bash(git log *)` + `Bash(git log:*)` - **Why:** Commit history; read-only
 17. `Bash(git show *)` - **Why:** Show commit details; read-only
 
 **Utilities (5 patterns):**
+
 18. `Bash(pwd *)` - **Why:** Print working directory; informational
 19. `Bash(echo *)` - **Why:** Output text; harmless
 20. `Bash(test *)` + `Bash(test:*)` - **Why:** Shell test conditions; read-only checks
 
 **CI/CD Tools (5 patterns):**
+
 21. `Bash(npx markdownlint-cli2:*)` - **Why:** Linting tool (used in pre-commit hooks)
 22. `Bash(gh run list:*)` - **Why:** GitHub Actions workflow listing; read-only
 23. `Bash(gh run watch:*)` - **Why:** Watch workflow execution; read-only
@@ -107,9 +118,13 @@ Developer productivity template. Copy to `.claude/settings.local.json` to activa
 25. `Bash(gh run download:*)` - **Why:** Download workflow artifacts; safe
 
 **System Paths (1 pattern):**
+
 26. `Read(//tmp/claude/C--GitWork-Python-R-Scripts/tasks/**)` - **Why:** Claude task output files; safe to read
 
+<!-- markdownlint-enable MD029 -->
+
 **NOT Allowed (Inherited from Project Settings):**
+
 - `git push` / `git commit` - Require explicit approval (ask)
 - `rm -rf` / `rm -r` - Require explicit approval (ask)
 - `curl` / `wget` - Require explicit approval (ask)
@@ -120,7 +135,7 @@ Developer productivity template. Copy to `.claude/settings.local.json` to activa
 
 ## File Structure
 
-```
+```text
 .claude/
 ├── settings.json                    # Project-level (committed)
 ├── settings.local.json              # Developer-specific (gitignored)
@@ -132,11 +147,13 @@ Developer productivity template. Copy to `.claude/settings.local.json` to activa
 ## Setup Instructions for Developers
 
 1. **Copy the example to create your local settings:**
+
    ```bash
    cp .claude/settings.local.json.example .claude/settings.local.json
    ```
 
 2. **Verify git ignores your local settings:**
+
    ```bash
    git status  # .claude/settings.local.json should NOT appear
    ```
@@ -265,7 +282,7 @@ index eaa9e2a..2f3e78a 100644
 
 ## Permission Flow
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │ Claude Code receives command                        │
 └─────────────────┬───────────────────────────────────┘
@@ -295,7 +312,8 @@ index eaa9e2a..2f3e78a 100644
 
 ## Examples
 
-### Auto-approved (from local allow list):
+### Auto-approved (from local allow list)
+
 ```bash
 Rscript R-scripts/K1/K1.7.main.R        # ✓ Allowed
 R -q -e 'renv::restore()'               # ✓ Allowed
@@ -306,7 +324,8 @@ git diff HEAD~1                         # ✓ Allowed
 ls -la data/                            # ✓ Allowed
 ```
 
-### Requires approval (from project ask list):
+### Requires approval (from project ask list)
+
 ```bash
 git push origin main                    # ⚠ Ask user
 git reset --hard HEAD~1                 # ⚠ Ask user
@@ -315,7 +334,8 @@ curl https://example.com/script.sh      # ⚠ Ask user
 docker run -it ubuntu                   # ⚠ Ask user
 ```
 
-### Denied (from project deny list):
+### Denied (from project deny list)
+
 ```bash
 cat .env                                # ✗ Denied
 cat secrets/api_key.txt                 # ✗ Denied
@@ -327,16 +347,20 @@ cat ~/.aws/credentials                  # ✗ Denied
 
 ## Customization
 
-### To allow additional safe operations:
+### To allow additional safe operations
+
 Edit `.claude/settings.local.json` (NOT committed) and add to the `allow` array:
+
 ```json
 "allow": [
   "Bash(your-safe-command *)"
 ]
 ```
 
-### To add more guardrails:
+### To add more guardrails
+
 Edit `.claude/settings.json` (committed, shared) and add to `ask` or `deny`:
+
 ```json
 "ask": [
   "Bash(git commit:*)"  // Example: require approval for commits
@@ -350,6 +374,7 @@ Edit `.claude/settings.json` (committed, shared) and add to `ask` or `deny`:
 **Task:** K00-claude-permissions ✓
 
 **Acceptance Criteria:**
+
 - ✓ `.claude/settings.json` with conservative baseline
 - ✓ `.claude/settings.local.json.example` committed as template
 - ✓ `.claude/settings.local.json` gitignored
