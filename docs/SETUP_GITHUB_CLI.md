@@ -36,11 +36,13 @@ Jos saat virheilmoituksen, `gh.exe` ei ole `PATH`:ssa. Älä arvaa. Selvitä til
 Get-Command gh
 echo $env:Path
 ```
+
 **CMD:**
 ```cmd
 where gh
 echo %PATH%
 ```
+
 **Tulkinta:** Jos `Get-Command` tai `where` ei löydä mitään, tarkista `Path`-tulosteesta, puuttuuko GitHub CLI:n asennuskansio sieltä.
 
 ### Ratkaisu A: PATH-korjaus (jos tiedät asennuskansion)
