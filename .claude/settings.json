@@ -7,7 +7,7 @@
       "Bash(git clean:*)",
       "Bash(rm -rf:*)",
       "Bash(rm -r:*)",
-      "Bash(mv *:**/.*)",
+      "Bash(mv:*)",
       "Bash(curl:*)",
       "Bash(wget:*)",
       "Bash(docker:*)",
