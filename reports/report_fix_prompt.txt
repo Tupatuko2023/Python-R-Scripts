@@ -1,0 +1,34 @@
+Report: fix_prompt.txt Task
+
+Objective
+- Review and harden fof-preflight and fof-qc-summarizer skills against FOF conventions.
+- Reduce false pass/false fail risk for Required vars parsing, output discipline checks, and privacy guardrails.
+- Keep changes minimal and fail-closed when rules cannot be verified.
+
+Key changes
+- fof-preflight: Required vars parsing handles comma-separated and bullet-per-line forms; ambiguous lines fail closed.
+- fof-preflight: Required vars vs req_cols comparison is now order-sensitive and 1:1.
+- fof-preflight: outputs/ heuristic accepts outputs_dir/init_paths usage; otherwise fails with explicit reason.
+- fof-qc-summarizer: skip_name uses safer word-boundary patterns (no substring "id" overreach).
+- fof-qc-summarizer: init.R discovered dynamically by scanning for manifest helpers.
+- fof-qc-summarizer: manifest header mismatch now reports observed header and fails closed.
+- fof-qc-summarizer: script label configurable via --script-label.
+- Documentation: fof-qc-summarizer SKILL.md notes dynamic init.R discovery.
+
+Files touched
+- .codex/skills/fof-preflight/scripts/preflight.py
+- .codex/skills/fof-qc-summarizer/scripts/qc_summarize.R
+- .codex/skills/fof-qc-summarizer/SKILL.md
+
+Smoke tests (no data)
+- python .codex/skills/fof-preflight/scripts/preflight.py --help
+- python .codex/skills/fof-preflight/scripts/preflight.py
+- Rscript .codex/skills/fof-qc-summarizer/scripts/qc_summarize.R --help
+- Rscript .codex/skills/fof-qc-summarizer/scripts/qc_summarize.R  (expected fail if QC outputs missing)
+
+Privacy guard (synthetic)
+- Run qc_summarize.R against a temp qc_dir containing a file with id column to ensure it is skipped and no id values are printed.
+
+Notes
+- All changes are fail-closed and do not touch data or QC inputs.
+- Manifest writing only proceeds after header validation and helper discovery.
