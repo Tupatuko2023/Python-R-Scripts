@@ -41,6 +41,7 @@ node_modules/
 .gitattributes.bak.*
 !.markdownlint*out/
 out/
+/repo_audit/
 
 # Fear-of-Falling local workspaces and outputs
 Fear-of-Falling/*.RData
