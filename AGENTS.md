@@ -95,6 +95,11 @@ Notes:
 - If scripts depend on working directory, run them from the subproject root
   (example: `Fear-of-Falling/`) and keep relative paths stable.
 
+## Skill workflow
+
+For Fear-of-Falling refactors or bugfixes: run `fof-preflight` -> run K18 QC ->
+run `fof-qc-summarizer` -> then proceed to modeling.
+
 ## Lint/Format
 
 ### Python

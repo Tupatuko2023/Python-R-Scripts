@@ -1,0 +1,36 @@
+Acceptance Memo — C3fix (Path B)
+
+Environment
+- OS/Env:
+- Rscript version:
+- Repo root:
+- Working dir:
+
+Commands run (with exit codes)
+- preflight:
+  command:
+  exit:
+- K18 QC:
+  command:
+  exit:
+- qc_summarizer:
+  command:
+  exit:
+
+Artifacts
+- qc_dir exists: yes/no
+- qc_summary.csv created: yes/no (path)
+- qc_summary.txt created: yes/no (path)
+
+Manifest
+- tail-20 captured: yes/no
+- new rows count:
+- label/kind/path sane: yes/no
+
+Privacy
+- id columns in qc_summary.*: yes/no
+- id values leaked: yes/no
+
+Overall
+- PASS/FAIL:
+- Notes:
