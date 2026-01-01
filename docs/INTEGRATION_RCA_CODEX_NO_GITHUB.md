@@ -35,6 +35,7 @@ The Codex runtime is running with network egress disabled, which prevents any ou
 - DNS failure (`NXDOMAIN`, `SERVFAIL`): network/DNS blocked or proxy required.
 - TLS handshake failure (`certificate verify failed`, `handshake failure`): MITM/proxy CA trust issue.
 - Timeout / connection refused: egress blocked or proxy missing.
+- HTTPS routed to `127.0.0.1` proxy and fails: forced proxy policy or local proxy misconfiguration.
 - HTTP 401: auth missing/invalid token.
 - HTTP 403: scope missing, SSO/SAML not authorized, IP allowlist, or rate limit.
 - HTTP 404 on private repo: repo not visible to token/app installation.
@@ -162,6 +163,7 @@ Run `RUN_NETWORK_TESTS=1 scripts/diag_network_github.sh` after explicit approval
 - Result: `CODEX_SANDBOX_NETWORK_DISABLED` / `SBX_NONET_ACTIVE` detected, exit_code=10.
 - Network tests did not run; no secrets were printed.
 - Recommendation: use `scripts/diag_network_github.ps1` on this host or run the bash script in WSL/Git Bash if allowed.
+- Push attempt failure: `github.com:443` via `127.0.0.1` proxy failed; captured in `repo_audit/push_failure_evidence.txt`.
 
 ## Diagnostic script
 Use `scripts/diag_network_github.sh` to collect transport-layer evidence without printing secrets.

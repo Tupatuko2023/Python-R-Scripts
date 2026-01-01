@@ -51,6 +51,7 @@
 ## Outcome-explaining delta
 - Codex has tooling available but cannot make outbound network calls due to sandbox egress disablement.
 - Claude likely had egress enabled or a GitHub-specific connector; evidence needed to confirm.
+ - Push attempt evidence: HTTPS routed via `127.0.0.1` proxy failed, consistent with restricted egress.
 
 ## Claude details required (not provided yet)
 - Tooling used (web browsing, GitHub integration, API connector).
