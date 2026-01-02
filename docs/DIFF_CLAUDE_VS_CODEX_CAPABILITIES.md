@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Claude vs Codex: capability and policy comparison
 
 ## Evidence-based facts (Codex)
