@@ -886,3 +886,58 @@ renv::restore(prompt = FALSE)
 - Tulkinta "FOF-ryhmän muutos vs Ei FOF-ryhmän muutos" edellyttää, että
   referenssitasot ovat `time = baseline` ja `FOF_status = Ei FOF` (ajurissa
   `factor(levels=...)`).
+
+## Termux + proot (Rscript)
+
+Jos ajat tätä projektia Androidin Termuxissa, **natiivissa Termuxissa** `Rscript` voi puuttua (esim. repo-/jakelukanavaerojen vuoksi). Tällöin suositeltu ja toistettava ratkaisu on ajaa kaikki R-ajot **proot-distro Ubuntu/Debian** -ympäristössä, jossa `/usr/bin/Rscript` on saatavilla.
+
+### Nopea tarkistus (ympäristö + Rscript)
+
+Aja tämä siinä shellissä missä yrität käyttää R:ää:
+
+```sh
+echo "PREFIX=$PREFIX"
+command -v Rscript || true
+Rscript --version || true
+```
+
+Jos `Rscript` puuttuu natiivissa Termuxissa (PREFIX yleensä `/data/data/com.termux/files/usr`), standardoi prootiin.
+
+### Proot (suositus) – asenna ja lukitse Rscript
+
+Kirjaudu prootiin ja varmista R:
+
+```sh
+proot-distro login ubuntu
+apt-get update -y
+apt-get install -y r-base
+command -v Rscript
+/usr/bin/Rscript --version
+```
+
+Lukitse käyttö aina tähän binääriin:
+
+```sh
+export RSCRIPT_BIN=/usr/bin/Rscript
+$RSCRIPT_BIN --version
+```
+
+**Huom:** login shellit eivät aina sourcea `~/.bashrc`:ia. Jos haluat tehdä `RSCRIPT_BIN`-muuttujasta pysyvän prootissa, lisää se sekä `~/.bashrc` että `~/.bash_profile` -tiedostoihin proot-ympäristössä:
+
+```sh
+echo 'export RSCRIPT_BIN=/usr/bin/Rscript' >> ~/.bashrc
+echo 'export RSCRIPT_BIN=/usr/bin/Rscript' >> ~/.bash_profile
+```
+
+### RSCRIPT gate (käytä ennen jokaista R-ajoa)
+
+```sh
+echo "Rscript=$(command -v Rscript || true)"
+Rscript --version || { echo "FATAL: Rscript missing in this environment"; exit 1; }
+```
+
+### Esimerkkiajo (proot + bash -lc)
+
+```sh
+proot-distro login ubuntu -- bash -lc 'cd /data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling && $RSCRIPT_BIN --version'
+```
