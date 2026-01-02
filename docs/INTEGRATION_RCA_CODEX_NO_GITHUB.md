@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # RCA: Codex cannot check GitHub Actions runs/logs/API
 
 ## Executive summary
