@@ -28,10 +28,10 @@ The obstacle is purely environment configuration.
 
 ### Failure Pattern
 
-| Scripts | Missing Package | Error Location |
-|---------|----------------|----------------|
-| K6-K10  | `dplyr`        | `library(dplyr)` |
-| K11-K16 | `here`         | `library(here)` |
+| Scripts | Missing Package | Error Location   |
+| ------- | --------------- | ---------------- |
+| K6-K10  | `dplyr`         | `library(dplyr)` |
+| K11-K16 | `here`          | `library(here)`  |
 
 All scripts failed immediately when attempting to load required packages,
 preventing any actual code execution or testing.
@@ -439,12 +439,12 @@ After resolving package issues:
 
 ## Files Generated
 
-| File | Purpose | Status |
-|------|---------|--------|
+| File                          | Purpose               | Status     |
+| ----------------------------- | --------------------- | ---------- |
 | `SMOKE_TEST_REPORT_K6_K16.md` | Detailed test results | ✅ Created |
-| `smoke_test_output.log` | Console output | ✅ Created |
-| `tests/smoke_test_k6_k16.R` | Test runner script | ✅ Created |
-| `ENVIRONMENT_SETUP_ISSUES.md` | This document | ✅ Created |
+| `smoke_test_output.log`       | Console output        | ✅ Created |
+| `tests/smoke_test_k6_k16.R`   | Test runner script    | ✅ Created |
+| `ENVIRONMENT_SETUP_ISSUES.md` | This document         | ✅ Created |
 
 ---
 

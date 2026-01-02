@@ -5,38 +5,38 @@
 
 ## Implementation Comparison
 
-| Feature | K1 | K2 | K3 | K4 |
-|---------|----|----|----|----|
-| **Structure** | Modular (7 scripts) + 1 monolithic | 2 standalone scripts | Modular (5 scripts) | 1 standalone script |
-| **Entry Point** | K1.7.main.R | Direct execution | K3.7.main.R | Direct execution |
-| **Purpose** | Z-score change analysis | Z-score data transformation | Original values analysis | Score data transformation |
-| **Input Data** | Raw CSV (dataset/KaatumisenPelko.csv) | K1 output CSV | Raw CSV (reuses K1.1) | K3 output CSV |
-| **Output Location** | `tables/` (legacy) | `tables/` (legacy) | `tables/` (legacy) | `tables/` (legacy) |
-| **Path Management** | `here::here()` + `setwd()` | Hardcoded `C:/Users/...` | Hardcoded `C:/Users/...` | Hardcoded `C:/Users/...` |
-| **Standard Header** | ❌ No | ❌ No | ❌ No | ❌ No |
-| **init_paths()** | ❌ No | ❌ No | ❌ No | ❌ No |
-| **req_cols check** | ❌ No | ❌ No | ❌ No | ❌ No |
-| **Manifest logging** | ❌ No | ❌ No | ❌ No | ❌ No |
-| **set.seed()** | ❌ No (but uses boot) | N/A (no randomness) | ❌ No (but uses boot) | N/A (no randomness) |
-| **Uses R/functions/** | ❌ No | ❌ No | ❌ No | ❌ No |
-| **Shared Scripts** | K1.1, K1.5 (sourced by K3) | None | Reuses K1.1, K1.5 | None |
-| **Bootstrap CI** | ✅ Yes (K1.4) | ❌ No | ✅ Yes (K3.4) | ❌ No |
-| **Libraries** | tidyverse, boot, moments, broom, haven | dplyr, tidyr, readr, tibble | tidyverse, boot, moments, broom | dplyr, tidyr, readr, tibble |
+| Feature               | K1                                     | K2                          | K3                              | K4                          |
+| --------------------- | -------------------------------------- | --------------------------- | ------------------------------- | --------------------------- |
+| **Structure**         | Modular (7 scripts) + 1 monolithic     | 2 standalone scripts        | Modular (5 scripts)             | 1 standalone script         |
+| **Entry Point**       | K1.7.main.R                            | Direct execution            | K3.7.main.R                     | Direct execution            |
+| **Purpose**           | Z-score change analysis                | Z-score data transformation | Original values analysis        | Score data transformation   |
+| **Input Data**        | Raw CSV (dataset/KaatumisenPelko.csv)  | K1 output CSV               | Raw CSV (reuses K1.1)           | K3 output CSV               |
+| **Output Location**   | `tables/` (legacy)                     | `tables/` (legacy)          | `tables/` (legacy)              | `tables/` (legacy)          |
+| **Path Management**   | `here::here()` + `setwd()`             | Hardcoded `C:/Users/...`    | Hardcoded `C:/Users/...`        | Hardcoded `C:/Users/...`    |
+| **Standard Header**   | ❌ No                                  | ❌ No                       | ❌ No                           | ❌ No                       |
+| **init_paths()**      | ❌ No                                  | ❌ No                       | ❌ No                           | ❌ No                       |
+| **req_cols check**    | ❌ No                                  | ❌ No                       | ❌ No                           | ❌ No                       |
+| **Manifest logging**  | ❌ No                                  | ❌ No                       | ❌ No                           | ❌ No                       |
+| **set.seed()**        | ❌ No (but uses boot)                  | N/A (no randomness)         | ❌ No (but uses boot)           | N/A (no randomness)         |
+| **Uses R/functions/** | ❌ No                                  | ❌ No                       | ❌ No                           | ❌ No                       |
+| **Shared Scripts**    | K1.1, K1.5 (sourced by K3)             | None                        | Reuses K1.1, K1.5               | None                        |
+| **Bootstrap CI**      | ✅ Yes (K1.4)                          | ❌ No                       | ✅ Yes (K3.4)                   | ❌ No                       |
+| **Libraries**         | tidyverse, boot, moments, broom, haven | dplyr, tidyr, readr, tibble | tidyverse, boot, moments, broom | dplyr, tidyr, readr, tibble |
 
 ---
 
 ## Refactoring Priority Matrix
 
-| Priority | Script | Complexity | Impact | Dependencies | Effort |
-|----------|--------|------------|--------|--------------|--------|
-| **1** | K1.7.main.R | Medium | High | None (K1 is foundation) | Medium |
-| **2** | K1.1-K1.6 | Low-Medium | High | Used by K1.7 and K3.7 | Low-Medium |
-| **3** | K3.7.main.R | Medium | Medium | Depends on K1.1, K1.5 | Medium |
-| **4** | K3.2-K3.6 | Low-Medium | Medium | Used by K3.7 | Low-Medium |
-| **5** | K2.Z_Score_C_Pivot_2G.R | Low | Low | Depends on K1 output | Low |
-| **6** | K2.KAAOS-Z_Score_C_Pivot_2R.R | Low | Low | Independent | Low |
-| **7** | K4.A_Score_C_Pivot_2G.R | Low | Low | Depends on K3 output | Low |
-| **8** | K1.Z_Score_Change_2G_v4.R | High | Low | Duplicate of K1.7 pipeline | Consider deprecating |
+| Priority | Script                        | Complexity | Impact | Dependencies               | Effort               |
+| -------- | ----------------------------- | ---------- | ------ | -------------------------- | -------------------- |
+| **1**    | K1.7.main.R                   | Medium     | High   | None (K1 is foundation)    | Medium               |
+| **2**    | K1.1-K1.6                     | Low-Medium | High   | Used by K1.7 and K3.7      | Low-Medium           |
+| **3**    | K3.7.main.R                   | Medium     | Medium | Depends on K1.1, K1.5      | Medium               |
+| **4**    | K3.2-K3.6                     | Low-Medium | Medium | Used by K3.7               | Low-Medium           |
+| **5**    | K2.Z_Score_C_Pivot_2G.R       | Low        | Low    | Depends on K1 output       | Low                  |
+| **6**    | K2.KAAOS-Z_Score_C_Pivot_2R.R | Low        | Low    | Independent                | Low                  |
+| **7**    | K4.A_Score_C_Pivot_2G.R       | Low        | Low    | Depends on K3 output       | Low                  |
+| **8**    | K1.Z_Score_Change_2G_v4.R     | High       | Low    | Duplicate of K1.7 pipeline | Consider deprecating |
 
 ---
 
@@ -118,14 +118,14 @@ save_table_csv_html(df_transposed, "K2_Z_Score_Change_2G_Transposed",
 
 ## Repetition Analysis (DRY Violations)
 
-| Repeated Code | Location | Solution |
-|---------------|----------|----------|
-| Library loading (tidyverse, boot, etc.) | All K1.*, K3.* scripts | ✅ Already centralized in K1.7/K3.7 main scripts |
-| Data import (KaatumisenPelko.csv) | K1.1, K3 (reuses K1.1) | ✅ Already shared via K1.1 |
-| Kurtosis/skewness functions | K1.5, K3 (reuses K1.5) | ✅ Already shared via K1.5 |
-| FOF recoding logic | K2, K4 (test name transformations) | Consider creating `recode_fof_tests()` helper |
-| Transpose logic | K2, K4 | Consider creating `pivot_by_fof()` helper |
-| write.csv + message pattern | K1.6, K3.6 | ✅ Use `save_table_csv_html()` from reporting.R |
+| Repeated Code                           | Location                           | Solution                                         |
+| --------------------------------------- | ---------------------------------- | ------------------------------------------------ |
+| Library loading (tidyverse, boot, etc.) | All K1._, K3._ scripts             | ✅ Already centralized in K1.7/K3.7 main scripts |
+| Data import (KaatumisenPelko.csv)       | K1.1, K3 (reuses K1.1)             | ✅ Already shared via K1.1                       |
+| Kurtosis/skewness functions             | K1.5, K3 (reuses K1.5)             | ✅ Already shared via K1.5                       |
+| FOF recoding logic                      | K2, K4 (test name transformations) | Consider creating `recode_fof_tests()` helper    |
+| Transpose logic                         | K2, K4                             | Consider creating `pivot_by_fof()` helper        |
+| write.csv + message pattern             | K1.6, K3.6                         | ✅ Use `save_table_csv_html()` from reporting.R  |
 
 ---
 

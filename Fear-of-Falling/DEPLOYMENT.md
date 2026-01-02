@@ -72,7 +72,6 @@ committed.
    immediately.
 
 4. **Use a secret management system**: For production, consider using:
-
    - AWS Secrets Manager
    - Azure Key Vault
    - HashiCorp Vault

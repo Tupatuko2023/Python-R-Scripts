@@ -18,12 +18,12 @@
 
 **vs Manual Setup:**
 
-| Aspect | Manual Setup | Docker |
-|--------|-------------|--------|
-| Setup time | 30-60 min | 15 min (one-time) |
-| Success rate | ~70% (system issues) | 100% |
-| Reproducibility | Medium | Perfect |
-| Maintenance | High | Low |
+| Aspect          | Manual Setup         | Docker            |
+| --------------- | -------------------- | ----------------- |
+| Setup time      | 30-60 min            | 15 min (one-time) |
+| Success rate    | ~70% (system issues) | 100%              |
+| Reproducibility | Medium               | Perfect           |
+| Maintenance     | High                 | Low               |
 
 ---
 
@@ -426,8 +426,8 @@ docker-compose build --no-cache
 ```yaml
 volumes:
   - .:/project
-  - ./data/external:/data/external:ro  # Read-only data
-  - ~/custom-outputs:/outputs  # Custom output location
+  - ./data/external:/data/external:ro # Read-only data
+  - ~/custom-outputs:/outputs # Custom output location
 ```
 
 ### Use Different Data Files
@@ -594,17 +594,17 @@ docker load < fof-r-analysis.tar.gz
 
 ## Comparison with Other Options
 
-| Feature | Docker | renv Manual | System R |
-|---------|--------|-------------|----------|
-| Setup time | 15 min (one-time) | 30-60 min | 5 min |
-| Success rate | 100% | 70% | 50% |
-| Reproducibility | Perfect | Good | Poor |
-| Platform independence | Yes | No | No |
-| Package version lock | Yes | Yes | No |
-| Isolated environment | Yes | Partial | No |
-| CI/CD ready | Yes | Difficult | No |
-| Disk space | 5 GB | 2 GB | 1 GB |
-| Learning curve | Medium | Low | Low |
+| Feature               | Docker            | renv Manual | System R |
+| --------------------- | ----------------- | ----------- | -------- |
+| Setup time            | 15 min (one-time) | 30-60 min   | 5 min    |
+| Success rate          | 100%              | 70%         | 50%      |
+| Reproducibility       | Perfect           | Good        | Poor     |
+| Platform independence | Yes               | No          | No       |
+| Package version lock  | Yes               | Yes         | No       |
+| Isolated environment  | Yes               | Partial     | No       |
+| CI/CD ready           | Yes               | Difficult   | No       |
+| Disk space            | 5 GB              | 2 GB        | 1 GB     |
+| Learning curve        | Medium            | Low         | Low      |
 
 **Recommendation:** Use Docker for production and collaboration, use manual renv for quick local development.
 

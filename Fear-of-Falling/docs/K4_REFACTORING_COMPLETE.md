@@ -226,7 +226,7 @@ Follow_up_d  | 0.25            | 0.42         | 0.18            | 0.35         |
 ### Test Name Mapping
 
 | Original (Finnish) | English | FOF=0 (No FOF)    | FOF=1 (With FOF) |
-|--------------------|---------|-------------------|------------------|
+| ------------------ | ------- | ----------------- | ---------------- |
 | Kävelynopeus       | MWS     | MWS_Without_FOF   | MWS_With_FOF     |
 | Puristusvoima      | HGS     | HGS_Without_FOF   | HGS_With_FOF     |
 | Seisominen         | SLS     | SLS_Without_FOF   | SLS_With_FOF     |
@@ -265,15 +265,15 @@ K4 Script (K4.A_Score_C_Pivot_2G.R)
 
 ## K2 vs K4 Comparison
 
-| Aspect | K2 (Z-Score Transpose) | K4 (Original Values Transpose) |
-|--------|------------------------|--------------------------------|
-| **Input** | K1_Z_Score_Change_2G.csv | K3_Values_2G.csv |
-| **Data type** | Standardized z-scores | Original test values (m/s, s, kg, mm) |
-| **Tests** | MWS, FTSST, SLS, HGS (4 tests) | MWS, FTSST, SLS, HGS, VAS (5 tests) |
-| **Columns** | 9 (Parameter + 4×2 groups) | 11 (Parameter + 5×2 groups) |
-| **Use case** | Comparing standardized performance | Reporting actual performance values |
-| **Output** | K2_Z_Score_Change_2G_Transposed.csv | K4_Values_2G_Transposed.csv |
-| **Logic** | Identical transformation logic | Identical transformation logic |
+| Aspect        | K2 (Z-Score Transpose)              | K4 (Original Values Transpose)        |
+| ------------- | ----------------------------------- | ------------------------------------- |
+| **Input**     | K1_Z_Score_Change_2G.csv            | K3_Values_2G.csv                      |
+| **Data type** | Standardized z-scores               | Original test values (m/s, s, kg, mm) |
+| **Tests**     | MWS, FTSST, SLS, HGS (4 tests)      | MWS, FTSST, SLS, HGS, VAS (5 tests)   |
+| **Columns**   | 9 (Parameter + 4×2 groups)          | 11 (Parameter + 5×2 groups)           |
+| **Use case**  | Comparing standardized performance  | Reporting actual performance values   |
+| **Output**    | K2_Z_Score_Change_2G_Transposed.csv | K4_Values_2G_Transposed.csv           |
+| **Logic**     | Identical transformation logic      | Identical transformation logic        |
 
 **Key difference:** K4 includes VAS (pain scale) which is present in K3 but not in K1 output.
 

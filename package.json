@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "format:md": "npx prettier --write \"**/*.md\"",
+    "format:md:check": "npx prettier --check \"**/*.md\"",
+    "fix:md": "npx markdownlint-cli2 --fix \"**/*.md\" \"!node_modules\" \"!**/.git/**\" \"!**/renv/**\"",
     "lint:md": "npx markdownlint-cli2 \"**/*.md\" \"!node_modules\" \"!**/.git/**\" \"!**/renv/**\"",
-    "lint:md:fix": "npx markdownlint-cli2 --fix \"**/*.md\" \"!node_modules\" \"!**/.git/**\" \"!**/renv/**\"",
     "lint:md:file": "npx markdownlint-cli2"
   },
   "repository": {
@@ -22,6 +24,8 @@
   "homepage": "https://github.com/Tupatuko2023/Python-R-Scripts#readme",
   "devDependencies": {
     "husky": "^9.1.7",
-    "markdownlint-cli2": "^0.18.1"
+    "markdownlint": "^0.40.0",
+    "markdownlint-cli2": "^0.20.0",
+    "prettier": "^3.7.4"
   }
 }
