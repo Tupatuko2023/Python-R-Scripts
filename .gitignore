@@ -55,3 +55,6 @@ Fear-of-Falling/R-scripts/**/outputs/
 !.gemini/README.md
 !.gemini/policies/
 .claude/settings.local.json
+
+# local agent prompts
+prompts/
