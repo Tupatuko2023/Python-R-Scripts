@@ -80,19 +80,19 @@ A comprehensive smoke test was executed on all K6-K16 R scripts to verify:
 
 ### Scripts Tested: 11 (K6-K16)
 
-| Script | Status | Issue | Resolution |
-|--------|--------|-------|------------|
+| Script | Status  | Issue           | Resolution       |
+| ------ | ------- | --------------- | ---------------- |
 | K6     | ❌ FAIL | Missing `dplyr` | Install packages |
 | K7     | ❌ FAIL | Missing `dplyr` | Install packages |
 | K8     | ❌ FAIL | Missing `dplyr` | Install packages |
 | K9     | ❌ FAIL | Missing `dplyr` | Install packages |
 | K10    | ❌ FAIL | Missing `dplyr` | Install packages |
-| K11    | ❌ FAIL | Missing `here` | Install packages |
-| K12    | ❌ FAIL | Missing `here` | Install packages |
-| K13    | ❌ FAIL | Missing `here` | Install packages |
-| K14    | ❌ FAIL | Missing `here` | Install packages |
-| K15    | ❌ FAIL | Missing `here` | Install packages |
-| K16    | ❌ FAIL | Missing `here` | Install packages |
+| K11    | ❌ FAIL | Missing `here`  | Install packages |
+| K12    | ❌ FAIL | Missing `here`  | Install packages |
+| K13    | ❌ FAIL | Missing `here`  | Install packages |
+| K14    | ❌ FAIL | Missing `here`  | Install packages |
+| K15    | ❌ FAIL | Missing `here`  | Install packages |
+| K16    | ❌ FAIL | Missing `here`  | Install packages |
 
 **Summary:** 0 passed, 11 failed (100% due to missing packages)
 
@@ -382,28 +382,28 @@ cat SMOKE_TEST_REPORT_K6_K16.md
 
 ### Core Documents
 
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| `SMOKE_TEST_SUMMARY.md` | Overview (this file) | Everyone |
-| `ENVIRONMENT_SETUP_ISSUES.md` | Detailed analysis | Developers |
-| `TROUBLESHOOTING_RENV.md` | Step-by-step fixes | Users |
-| `SMOKE_TEST_REPORT_K6_K16.md` | Test results | QA/Testing |
+| Document                      | Purpose              | Audience   |
+| ----------------------------- | -------------------- | ---------- |
+| `SMOKE_TEST_SUMMARY.md`       | Overview (this file) | Everyone   |
+| `ENVIRONMENT_SETUP_ISSUES.md` | Detailed analysis    | Developers |
+| `TROUBLESHOOTING_RENV.md`     | Step-by-step fixes   | Users      |
+| `SMOKE_TEST_REPORT_K6_K16.md` | Test results         | QA/Testing |
 
 ### Technical Files
 
-| File | Purpose |
-|------|---------|
-| `tests/smoke_test_k6_k16.R` | Test runner script |
-| `manifest/MIGRATION_LOG.md` | Manifest changes log |
-| `manifest/MANIFEST_STRUCTURE_REPORT.md` | Verification report |
+| File                                    | Purpose              |
+| --------------------------------------- | -------------------- |
+| `tests/smoke_test_k6_k16.R`             | Test runner script   |
+| `manifest/MIGRATION_LOG.md`             | Manifest changes log |
+| `manifest/MANIFEST_STRUCTURE_REPORT.md` | Verification report  |
 
 ### Logs
 
-| File | Content |
-|------|---------|
+| File                    | Content                      |
+| ----------------------- | ---------------------------- |
 | `smoke_test_output.log` | Console output from test run |
-| Task `ba373e2` output | Background task log |
-| Task `bcdfe49` output | renv restore attempt log |
+| Task `ba373e2` output   | Background task log          |
+| Task `bcdfe49` output   | renv restore attempt log     |
 
 ---
 

@@ -487,13 +487,13 @@ renv::upgrade()
 
 ## Quick Reference
 
-| Problem | Quick Fix | Time |
-|---------|-----------|------|
-| Missing dplyr/here | `install.packages(c("dplyr","here"))` | 2 min |
-| gdtools fails | `install.packages(setdiff(all, "gdtools"))` | 5 min |
-| Slow restore | `options(Ncpus=4); renv::restore()` | 15 min |
-| Permission error | Run R as Administrator | 1 min |
-| Total failure | Use Docker or Option 2 from main doc | 30 min |
+| Problem            | Quick Fix                                   | Time   |
+| ------------------ | ------------------------------------------- | ------ |
+| Missing dplyr/here | `install.packages(c("dplyr","here"))`       | 2 min  |
+| gdtools fails      | `install.packages(setdiff(all, "gdtools"))` | 5 min  |
+| Slow restore       | `options(Ncpus=4); renv::restore()`         | 15 min |
+| Permission error   | Run R as Administrator                      | 1 min  |
+| Total failure      | Use Docker or Option 2 from main doc        | 30 min |
 
 ---
 

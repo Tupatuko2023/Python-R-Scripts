@@ -147,13 +147,13 @@ docker-compose build --no-cache
 
 ## Why Docker?
 
-| Without Docker | With Docker |
-|----------------|-------------|
-| ❌ "Works on my machine" | ✅ Works everywhere |
-| ❌ Package conflicts | ✅ Isolated environment |
-| ❌ Manual setup (30-60 min) | ✅ Automatic setup (15 min) |
-| ❌ Different versions | ✅ Exact versions locked |
-| ❌ System dependency hell | ✅ All dependencies included |
+| Without Docker              | With Docker                  |
+| --------------------------- | ---------------------------- |
+| ❌ "Works on my machine"    | ✅ Works everywhere          |
+| ❌ Package conflicts        | ✅ Isolated environment      |
+| ❌ Manual setup (30-60 min) | ✅ Automatic setup (15 min)  |
+| ❌ Different versions       | ✅ Exact versions locked     |
+| ❌ System dependency hell   | ✅ All dependencies included |
 
 ---
 

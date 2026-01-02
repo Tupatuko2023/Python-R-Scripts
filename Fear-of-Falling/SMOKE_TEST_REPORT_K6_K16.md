@@ -9,21 +9,21 @@
 
 ## SUMMARY
 
-| Script | Status | Time (s) | Outputs | Error |
-|--------|--------|----------|---------|-------|
-| K6 | ✓ PASS | N/A | - | Warning: Using `size` aesthetic for lines was depr |
-| K6 | ✓ PASS | N/A | - | Warning: Please use `linewidth` instead. |
-| K7 | ✓ PASS | N/A | - | Warning: The `fatten` argument of `geom_pointrange |
-| K7 | ✓ PASS | N/A | - | Warning: Please use the `size` aesthetic instead. |
-| K8 | ✓ PASS | N/A | - | Warning: Some FOF_status x Balance_problem cells h |
-| K9 | ✓ PASS | 5.3 | - | - |
-| K10 | ✓ PASS | 5.0 | - | - |
-| K11 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
-| K12 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
-| K13 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
-| K14 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
-| K15 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
-| K16 | ✓ PASS | N/A | - | Warning: One or more parsing issues, call `problem |
+| Script | Status | Time (s) | Outputs | Error                                              |
+| ------ | ------ | -------- | ------- | -------------------------------------------------- |
+| K6     | ✓ PASS | N/A      | -       | Warning: Using `size` aesthetic for lines was depr |
+| K6     | ✓ PASS | N/A      | -       | Warning: Please use `linewidth` instead.           |
+| K7     | ✓ PASS | N/A      | -       | Warning: The `fatten` argument of `geom_pointrange |
+| K7     | ✓ PASS | N/A      | -       | Warning: Please use the `size` aesthetic instead.  |
+| K8     | ✓ PASS | N/A      | -       | Warning: Some FOF_status x Balance_problem cells h |
+| K9     | ✓ PASS | 5.3      | -       | -                                                  |
+| K10    | ✓ PASS | 5.0      | -       | -                                                  |
+| K11    | ✓ PASS | N/A      | -       | Warning: One or more parsing issues, call `problem |
+| K12    | ✓ PASS | N/A      | -       | Warning: One or more parsing issues, call `problem |
+| K13    | ✓ PASS | N/A      | -       | Warning: One or more parsing issues, call `problem |
+| K14    | ✓ PASS | N/A      | -       | Warning: One or more parsing issues, call `problem |
+| K15    | ✓ PASS | N/A      | -       | Warning: One or more parsing issues, call `problem |
+| K16    | ✓ PASS | N/A      | -       | Warning: One or more parsing issues, call `problem |
 
 ---
 

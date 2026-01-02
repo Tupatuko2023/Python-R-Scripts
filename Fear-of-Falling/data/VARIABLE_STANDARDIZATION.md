@@ -8,12 +8,12 @@ Varmistaa, että analyysikoodi (`Composite_Z ~ time * FOF_status ...`) toimii en
 
 ## Sarakkeet
 
-* **canonical_name**: Analyysissa käytettävä standardinimi (vastaa `docs/ANALYSIS_PLAN.md`).
-* **alias**: Datan mahdollinen sarakenimi, joka halutaan käsitellä.
-* **priority**: Konfliktinratkaisu (pienempi numero voittaa, jos logiikkaa laajennetaan; nyt pääosin informatiivinen).
-* **action**:
-  * `rename_to_canonical`: Uudelleennimeä sarake automaattisesti ja turvallisesti.
-  * `verify`: Pysäytä ajo (STOP), jos tämä alias löytyy. Vaatii ihmisen hyväksynnän (muuta CSV:ssä action -> rename_to_canonical tai korjaa ETL-putki).
+- **canonical_name**: Analyysissa käytettävä standardinimi (vastaa `docs/ANALYSIS_PLAN.md`).
+- **alias**: Datan mahdollinen sarakenimi, joka halutaan käsitellä.
+- **priority**: Konfliktinratkaisu (pienempi numero voittaa, jos logiikkaa laajennetaan; nyt pääosin informatiivinen).
+- **action**:
+  - `rename_to_canonical`: Uudelleennimeä sarake automaattisesti ja turvallisesti.
+  - `verify`: Pysäytä ajo (STOP), jos tämä alias löytyy. Vaatii ihmisen hyväksynnän (muuta CSV:ssä action -> rename_to_canonical tai korjaa ETL-putki).
 
 ## Konfliktit (Conflict Check)
 

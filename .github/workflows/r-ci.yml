@@ -2,7 +2,21 @@ name: r-ci
 
 on:
   push:
+    paths:
+      - 'Fear-of-Falling/**/*.R'
+      - 'Fear-of-Falling/**/*.r'
+      - 'Fear-of-Falling/renv.lock'
+      - 'Fear-of-Falling/renv/**'
+      - '.github/workflows/r-ci.yml'
+      - '!**/*.md'
   pull_request:
+    paths:
+      - 'Fear-of-Falling/**/*.R'
+      - 'Fear-of-Falling/**/*.r'
+      - 'Fear-of-Falling/renv.lock'
+      - 'Fear-of-Falling/renv/**'
+      - '.github/workflows/r-ci.yml'
+      - '!**/*.md'
 
 jobs:
   r-ci:
@@ -29,39 +43,24 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.rlib.outputs.RLIB }}
-          key: ${{ runner.os }}-r-${{ hashFiles('**/renv.lock', '**/DESCRIPTION', '**/NAMESPACE') }}
+          key: ${{ runner.os }}-r-${{ hashFiles('Fear-of-Falling/renv.lock') }}
           restore-keys: |
             ${{ runner.os }}-r-
 
-      # Path A: renv workflow (only if lockfile exists)
-      - name: Restore renv
-        if: hashFiles('**/renv.lock') != ''
-        uses: r-lib/actions/setup-renv@v2
+      # Path A: Fear-of-Falling renv workflow (scripts repo)
+      - name: Install renv (if missing)
+        if: hashFiles('Fear-of-Falling/renv.lock') != ''
+        run: Rscript -e "if (!requireNamespace('renv', quietly=TRUE)) install.packages('renv', repos='https://cloud.r-project.org')"
 
-      # Path B: no renv.lock → use pak
-      - name: Install pak
-        if: hashFiles('**/renv.lock') == ''
-        run: Rscript -e "install.packages('pak', repos='https://cloud.r-project.org')"
+      - name: Restore renv (Fear-of-Falling)
+        if: hashFiles('Fear-of-Falling/renv.lock') != ''
+        run: Rscript -e "setwd('Fear-of-Falling'); renv::restore(prompt = FALSE)"
 
-      - name: Install dependencies via pak (package projects)
-        if: hashFiles('**/renv.lock') == '' && hashFiles('**/DESCRIPTION') != ''
-        run: Rscript -e "pak::pkg_install('.', dependencies = TRUE)"
-
-      # Optional lint for non-package codebases
-      - name: Optional lint (non-package only)
-        if: hashFiles('**/DESCRIPTION') == ''
-        run: |
-          Rscript -e "if (!requireNamespace('lintr', quietly=TRUE)) install.packages('lintr', repos='https://cloud.r-project.org')"
-          Rscript -e "if (requireNamespace('lintr', quietly=TRUE)) lintr::lint_dir('.')"
-
-      # If an R package, run full checks
-      - name: R CMD check
-        if: hashFiles('**/DESCRIPTION') != ''
-        uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
+      - name: R env diagnostics (Fear-of-Falling)
+        if: hashFiles('Fear-of-Falling/renv.lock') != ''
+        run: Rscript -e "setwd('Fear-of-Falling'); print(sessionInfo()); renv::diagnostics()"
 
       # Otherwise, do a smoke test and finish successfully
       - name: Smoke tests
-        if: hashFiles('**/DESCRIPTION') == ''
+        if: hashFiles('Fear-of-Falling/renv.lock') == ''
         run: "Rscript -e \"print(sessionInfo()); message('Smoke tests completed')\""

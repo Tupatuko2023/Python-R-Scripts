@@ -139,15 +139,15 @@ All fixes verified and tested:
 
 ## Test Execution Times
 
-| Script | Time (seconds) | Status |
-|--------|---------------|--------|
-| K11    | 9.7           | ✓ PASS |
-| K12    | 1.3           | ✓ PASS |
-| K13    | 5.7           | ✓ PASS |
-| K14    | 0.6           | ✓ PASS |
-| K15    | 2.3           | ✓ PASS |
-| K16    | N/A           | ✗ FAIL |
-| **Total** | **~20s** | **5/6** |
+| Script    | Time (seconds) | Status  |
+| --------- | -------------- | ------- |
+| K11       | 9.7            | ✓ PASS  |
+| K12       | 1.3            | ✓ PASS  |
+| K13       | 5.7            | ✓ PASS  |
+| K14       | 0.6            | ✓ PASS  |
+| K15       | 2.3            | ✓ PASS  |
+| K16       | N/A            | ✗ FAIL  |
+| **Total** | **~20s**       | **5/6** |
 
 ## Output Verification
 

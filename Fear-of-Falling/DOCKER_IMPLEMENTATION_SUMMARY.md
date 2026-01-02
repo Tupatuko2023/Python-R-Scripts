@@ -10,21 +10,21 @@
 
 ### Core Docker Files
 
-| File | Purpose | Status |
-|------|---------|--------|
-| `Dockerfile` | R environment image definition | ✅ Created |
-| `docker-compose.yml` | Service orchestration | ✅ Created |
-| `.dockerignore` | Build optimization | ✅ Created |
-| `docker-run.sh` | Helper script (Linux/Mac) | ✅ Created |
-| `docker-run.bat` | Helper script (Windows) | ✅ Created |
+| File                 | Purpose                        | Status     |
+| -------------------- | ------------------------------ | ---------- |
+| `Dockerfile`         | R environment image definition | ✅ Created |
+| `docker-compose.yml` | Service orchestration          | ✅ Created |
+| `.dockerignore`      | Build optimization             | ✅ Created |
+| `docker-run.sh`      | Helper script (Linux/Mac)      | ✅ Created |
+| `docker-run.bat`     | Helper script (Windows)        | ✅ Created |
 
 ### Documentation
 
-| File | Purpose | Audience |
-|------|---------|----------|
-| `DOCKER_QUICKSTART.md` | 5-minute guide | All users |
-| `DOCKER_SETUP.md` | Comprehensive manual | Advanced users |
-| `DOCKER_IMPLEMENTATION_SUMMARY.md` | This file | Project team |
+| File                               | Purpose              | Audience       |
+| ---------------------------------- | -------------------- | -------------- |
+| `DOCKER_QUICKSTART.md`             | 5-minute guide       | All users      |
+| `DOCKER_SETUP.md`                  | Comprehensive manual | Advanced users |
+| `DOCKER_IMPLEMENTATION_SUMMARY.md` | This file            | Project team   |
 
 ---
 
@@ -197,13 +197,13 @@ docker-run.bat all
 
 ### Reproducibility
 
-| Aspect | Manual Setup | Docker |
-|--------|-------------|--------|
-| R version | May vary | Fixed (4.4.2) |
-| Package versions | May vary | Fixed (renv.lock) |
-| System libs | Platform dependent | Identical everywhere |
-| Setup steps | Manual, error-prone | Automated, reliable |
-| "Works on my machine" | Common problem | Impossible (same container) |
+| Aspect                | Manual Setup        | Docker                      |
+| --------------------- | ------------------- | --------------------------- |
+| R version             | May vary            | Fixed (4.4.2)               |
+| Package versions      | May vary            | Fixed (renv.lock)           |
+| System libs           | Platform dependent  | Identical everywhere        |
+| Setup steps           | Manual, error-prone | Automated, reliable         |
+| "Works on my machine" | Common problem      | Impossible (same container) |
 
 ### Ease of Use
 
@@ -342,16 +342,16 @@ docker run myregistry/fof-analysis:v1.0 Rscript R-scripts/K11/K11.R
 
 ## Troubleshooting Quick Reference
 
-| Issue | Quick Fix |
-|-------|-----------|
-| Docker not found | Install Docker Desktop |
-| Build fails | Check internet connection, retry |
-| Build slow | Normal (15 min), use coffee break |
-| Script fails | Check script-specific errors (not Docker) |
-| Outputs not saved | Check volume mounts: `docker-compose config` |
+| Issue                     | Quick Fix                                                 |
+| ------------------------- | --------------------------------------------------------- |
+| Docker not found          | Install Docker Desktop                                    |
+| Build fails               | Check internet connection, retry                          |
+| Build slow                | Normal (15 min), use coffee break                         |
+| Script fails              | Check script-specific errors (not Docker)                 |
+| Outputs not saved         | Check volume mounts: `docker-compose config`              |
 | Permission issues (Linux) | Add user to docker group: `sudo usermod -aG docker $USER` |
-| Out of space | Clean up: `docker system prune -a` |
-| Want fresh build | `docker-compose build --no-cache` |
+| Out of space              | Clean up: `docker system prune -a`                        |
+| Want fresh build          | `docker-compose build --no-cache`                         |
 
 **Full guide:** See `DOCKER_SETUP.md`
 

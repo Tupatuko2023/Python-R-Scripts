@@ -1,7 +1,7 @@
-import os
-import pandas as pd
 from pathlib import Path
-from subprocess import run, CalledProcessError
+from subprocess import run
+
+import pandas as pd
 
 def test_cli_produces_scores(tmp_path):
     # Input
@@ -13,8 +13,10 @@ def test_cli_produces_scores(tmp_path):
     )
     out = tmp_path / "scores.csv"
     # Run
+    repo_root = Path(__file__).resolve().parents[1]
+    cli_path = repo_root / "Electronic-Frailty-Index" / "src" / "efi" / "cli.py"
     r = run(
-        ["python", "src/efi/cli.py", "--input", str(inp), "--out", str(out)],
+        ["python", str(cli_path), "--input", str(inp), "--out", str(out)],
         capture_output=True,
         text=True,
     )

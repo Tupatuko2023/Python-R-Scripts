@@ -11,23 +11,23 @@
 
 ## SUMMARY
 
-| Script | Status | Exit | Time (s) | Outputs | Error (truncated) |
-|--------|--------|------|----------|---------|-------------------|
-| K1 | ✗ FAIL | 1 | 0.2 | - | Error: '\.' is an unrecognized escape in character string (<input>:2:9) Executio |
-| K2 | ✗ FAIL | 1 | 0.7 | - | Error: K1 output file not found: /project/R-scripts/K1/outputs/K1_Z_Score_Change |
-| K3 | ✗ FAIL | 1 | 0.2 | - | Error: '\.' is an unrecognized escape in character string (<input>:2:9) Executio |
-| K4 | ✗ FAIL | 1 | 0.6 | - | Error: K3 output file not found: /project/R-scripts/K3/outputs/K3_Values_2G.csv  |
-| K6 | ✓ PASS | 0 | 4.5 | 8 | Warning messages: 1: Removed 9 rows containing non-finite outside the scale rang |
-| K7 | ✓ PASS | 0 | 7.0 | 10 | Warning messages: 1: In grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$ |
-| K8 | ✓ PASS | 0 | 4.7 | 14 | Attaching package: ‘dplyr’  The following objects are masked from ‘package:stats |
-| K9 | ✓ PASS | 0 | 3.1 | 11 | Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0. Warning m |
-| K10 | ✓ PASS | 0 | 2.3 | 2 | Attaching package: ‘dplyr’  The following objects are masked from ‘package:stats |
-| K11 | ✓ PASS | 0 | 8.3 | 51 | Created DeltaComposite from Delta_Composite_Z. Warning message: One or more pars |
-| K12 | ✗ FAIL | 1 | 2.0 | 3 | Error in ggplot(fof_plot_data, aes(x = estimate, y = outcome, xmin = conf.low,   |
-| K13 | ✗ FAIL | 1 | 3.0 | 22 | Created DeltaComposite from Delta_Composite_Z. Error in emmeans(mod_age_int_ext, |
-| K14 | ✓ PASS | 0 | 1.4 | 3 | K14: baseline table by FOF-status tallennettu ja manifest päivitetty. Warning me |
-| K15 | ✗ FAIL | 1 | 1.9 | 16 | K15: Weakness-rajat (sex_Q1): K15: komponenttien jakaumat (table, useNA='ifany') |
-| K16 | ✓ PASS | 0 | 7.9 | 24 | [conflicted] Will prefer dplyr::select over any other package. [conflicted] Will |
+| Script | Status | Exit | Time (s) | Outputs | Error (truncated)                                                                |
+| ------ | ------ | ---- | -------- | ------- | -------------------------------------------------------------------------------- |
+| K1     | ✗ FAIL | 1    | 0.2      | -       | Error: '\.' is an unrecognized escape in character string (<input>:2:9) Executio |
+| K2     | ✗ FAIL | 1    | 0.7      | -       | Error: K1 output file not found: /project/R-scripts/K1/outputs/K1_Z_Score_Change |
+| K3     | ✗ FAIL | 1    | 0.2      | -       | Error: '\.' is an unrecognized escape in character string (<input>:2:9) Executio |
+| K4     | ✗ FAIL | 1    | 0.6      | -       | Error: K3 output file not found: /project/R-scripts/K3/outputs/K3_Values_2G.csv  |
+| K6     | ✓ PASS | 0    | 4.5      | 8       | Warning messages: 1: Removed 9 rows containing non-finite outside the scale rang |
+| K7     | ✓ PASS | 0    | 7.0      | 10      | Warning messages: 1: In grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$ |
+| K8     | ✓ PASS | 0    | 4.7      | 14      | Attaching package: ‘dplyr’ The following objects are masked from ‘package:stats  |
+| K9     | ✓ PASS | 0    | 3.1      | 11      | Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0. Warning m |
+| K10    | ✓ PASS | 0    | 2.3      | 2       | Attaching package: ‘dplyr’ The following objects are masked from ‘package:stats  |
+| K11    | ✓ PASS | 0    | 8.3      | 51      | Created DeltaComposite from Delta_Composite_Z. Warning message: One or more pars |
+| K12    | ✗ FAIL | 1    | 2.0      | 3       | Error in ggplot(fof_plot_data, aes(x = estimate, y = outcome, xmin = conf.low,   |
+| K13    | ✗ FAIL | 1    | 3.0      | 22      | Created DeltaComposite from Delta_Composite_Z. Error in emmeans(mod_age_int_ext, |
+| K14    | ✓ PASS | 0    | 1.4      | 3       | K14: baseline table by FOF-status tallennettu ja manifest päivitetty. Warning me |
+| K15    | ✗ FAIL | 1    | 1.9      | 16      | K15: Weakness-rajat (sex_Q1): K15: komponenttien jakaumat (table, useNA='ifany') |
+| K16    | ✓ PASS | 0    | 7.9      | 24      | [conflicted] Will prefer dplyr::select over any other package. [conflicted] Will |
 
 ---
 
@@ -72,10 +72,10 @@ Execution halted
 ================================================================================
 K2 Script - Z-Score Change Data Transpose (2 Groups)
 ================================================================================
-Script label: K2 
-Outputs dir: /project/R-scripts/K2/outputs 
-Manifest: /project/manifest/manifest.csv 
-Project root: /project 
+Script label: K2
+Outputs dir: /project/R-scripts/K2/outputs
+Manifest: /project/manifest/manifest.csv
+Project root: /project
 ================================================================================
 
 Loading K1 output data...
@@ -122,10 +122,10 @@ Execution halted
 ================================================================================
 K4 Script - Original Values Data Transpose (2 Groups)
 ================================================================================
-Script label: K4 
-Outputs dir: /project/R-scripts/K4/outputs 
-Manifest: /project/manifest/manifest.csv 
-Project root: /project 
+Script label: K4
+Outputs dir: /project/R-scripts/K4/outputs
+Manifest: /project/manifest/manifest.csv
+Project root: /project
 ================================================================================
 
 Loading K3 output data...
@@ -298,7 +298,7 @@ Loading K3 output data...
 **STDERR:**
 
 ```
-Error in ggplot(fof_plot_data, aes(x = estimate, y = outcome, xmin = conf.low,  : 
+Error in ggplot(fof_plot_data, aes(x = estimate, y = outcome, xmin = conf.low,  :
   could not find function "ggplot"
 Execution halted
 ```
@@ -309,7 +309,7 @@ Execution halted
 # A tibble: 1 × 2
 ```
 
-  n n_complete_primary
+n n_complete_primary
 
 ```
   <int>              <int>
@@ -317,38 +317,38 @@ Execution halted
 $Composite
 ```
 
-Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--2.93435 -0.30983  0.05731  0.03261  0.42540  1.78141 
+-2.93435 -0.30983  0.05731  0.03261  0.42540  1.78141
 
 $HGS
 ```
 
-Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--30.5000  -1.5000   0.0000   0.3446   2.0000  16.0000 
+-30.5000  -1.5000   0.0000   0.3446   2.0000  16.0000
 
 $MWS
 ```
 
-Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--2.94872 -0.10017  0.00000  0.01052  0.14885  1.16590 
+-2.94872 -0.10017  0.00000  0.01052  0.14885  1.16590
 
 $FTSST
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--52.900  -1.275   1.355   1.286   4.475  40.000 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+-52.900  -1.275   1.355   1.286   4.475  40.000
 
 $SLS
 ```
 
-Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--40.0000  -2.0000   0.0000  -0.3159   0.6500  36.5000 
+-40.0000  -2.0000   0.0000  -0.3159   0.6500  36.5000
 ```
 
 ---
@@ -390,7 +390,7 @@ Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
 
 ```
 Created DeltaComposite from Delta_Composite_Z.
-Error in emmeans(mod_age_int_ext, ~FOF_status | age_c, at = list(age_c = age_c_values)) : 
+Error in emmeans(mod_age_int_ext, ~FOF_status | age_c, at = list(age_c = age_c_values)) :
   could not find function "emmeans"
 Execution halted
 ```
@@ -401,15 +401,15 @@ Execution halted
 # A tibble: 1 × 2
 ```
 
-  n n_complete_primary
+n n_complete_primary
 
 ```
   <int>              <int>
 1   276                276
  Factor w/ 2 levels "female","male": 1 1 1 1 1 1 1 1 1 1 ...
 
-female   male 
-   252     24 
+female   male
+   252     24
 tibble [266 × 21] (S3: tbl_df/tbl/data.frame)
  $ id                    : int [1:266] 553 198 648 806 451 208 791 292 406 645 ...
  $ Delta_Composite_Z     : num [1:266] -0.0219 0.0396 0.1481 0.0696 0.1913 ...
@@ -434,24 +434,24 @@ tibble [266 × 21] (S3: tbl_df/tbl/data.frame)
  $ SRM_3class            : Ord.factor w/ 3 levels "poor"<"fair"<..: 2 2 3 3 3 2 2 1 1 2 ...
 ```
 
-  Min.    1st Qu.     Median       Mean    3rd Qu.       Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--12.744361  -4.744361   0.255639  -0.001745   4.255639  18.255639 
+-12.744361  -4.744361   0.255639  -0.001745   4.255639  18.255639
 ```
 
- Min.   1st Qu.    Median      Mean   3rd Qu.      Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--13.06969  -3.01695  -0.05476   0.06508   3.03736  15.01336 
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--8.1513 -2.1513 -0.1513  0.1188  1.8487  6.8487 
+-13.06969  -3.01695  -0.05476   0.06508   3.03736  15.01336
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+-8.1513 -2.1513 -0.1513  0.1188  1.8487  6.8487
 ```
 
-Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
+Min. 1st Qu. Median Mean 3rd Qu. Max.
 
 ```
--3.96442 -2.46442  1.03558  0.01026  2.03558  6.03558 
+-3.96442 -2.46442  1.03558  0.01026  2.03558  6.03558
 # A tibble: 0 × 2
 # ℹ 2 variables: moderator <chr>, results_line <chr>
 # A tibble: 4 × 9
@@ -462,8 +462,8 @@ Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
 3 SRM_i… SRM_3cla… FOF_…   0.0563     0.181     0.310  0.757   -0.301      0.414
 4 SRM_i… SRM_3cla… FOF_…   0.241      0.131     1.85   0.0663  -0.0163     0.499
 # A tibble: 4 × 3
-  moderator  term                       results_line                            
-  <chr>      <chr>                      <chr>                                   
+  moderator  term                       results_line
+  <chr>      <chr>                      <chr>
 1 SRH_3class FOF_statusFOF:SRH_3class.L FOF × SRH_3class: β = -0.226, 95 % LV -…
 2 SRH_3class FOF_statusFOF:SRH_3class.Q FOF × SRH_3class: β = -0.018, 95 % LV -…
 3 SRM_3class FOF_statusFOF:SRM_3class.L FOF × SRM_3class: β = 0.056, 95 % LV -0…
@@ -524,7 +524,7 @@ K15: komponenttien jakaumat (table, useNA='ifany'):
 K15: SENSITIIVISYYSVERSIOT - low_activity komponentit:
 
 K15: SENSITIIVISYYSVERSIOT - frailty kategoriat:
-Error in ggplot(analysis_data %>% filter(!is.na(FOF_status_factor), !is.na(frailty_cat_3)),  : 
+Error in ggplot(analysis_data %>% filter(!is.na(FOF_status_factor), !is.na(frailty_cat_3)),  :
   could not find function "ggplot"
 Execution halted
 ```
@@ -535,7 +535,7 @@ Execution halted
 # A tibble: 1 × 2
 ```
 
-  n n_complete_primary
+n n_complete_primary
 
 ```
   <int>              <int>
@@ -546,42 +546,43 @@ Execution halted
 1 female         14
 2 male           23
 
-   0    1 <NA> 
- 212   61    3 
+   0    1 <NA>
+ 212   61    3
 
-   0    1 <NA> 
- 199   53   24 
+   0    1 <NA>
+ 199   53   24
 
-  0   1 
- 63 213 
+  0   1
+ 63 213
 
-   0    1 <NA> 
- 243   23   10 
+   0    1 <NA>
+ 243   23   10
 
-  0   1 
-106 170 
+  0   1
+106 170
 
-  0   1 
-158 118 
+  0   1
+158 118
 
-   robust pre-frail     frail      <NA> 
+   robust pre-frail     frail      <NA>
 ```
 
-   42       126        82        26
+42 126 82 26
 
 ```
-   robust pre-frail     frail      <NA> 
+   robust pre-frail     frail      <NA>
 ```
 
-   75        97        78        26
+75 97 78 26
 
 ```
-   robust pre-frail     frail      <NA> 
+   robust pre-frail     frail      <NA>
 ```
 
-  109        76        65        26
+109 76 65 26
 
 ```
+
 ```
 
 ---
@@ -628,24 +629,24 @@ Execution halted
 ### Failed scripts
 
 - **K1** (exit 1): Error: '\.' is an unrecognized escape in character string (<input>:2:9)
-Execution halted
+  Execution halted
 - **K2** (exit 1): Error: K1 output file not found: /project/R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv
-Please run K1 pipeline first: Rscript R-scripts/K1/K1.7.main.R
-Execution halted
+  Please run K1 pipeline first: Rscript R-scripts/K1/K1.7.main.R
+  Execution halted
 - **K3** (exit 1): Error: '\.' is an unrecognized escape in character string (<input>:2:9)
-Execution halted
+  Execution halted
 - **K4** (exit 1): Error: K3 output file not found: /project/R-scripts/K3/outputs/K3_Values_2G.csv
-Please run K3 pipeline first: Rscript R-scripts/K3/K3.7.main.R
-Execution halted
-- **K12** (exit 1): Error in ggplot(fof_plot_data, aes(x = estimate, y = outcome, xmin = conf.low,  :
+  Please run K3 pipeline first: Rscript R-scripts/K3/K3.7.main.R
+  Execution halted
+- **K12** (exit 1): Error in ggplot(fof_plot_data, aes(x = estimate, y = outcome, xmin = conf.low, :
   could not find function "ggplot"
-Execution halted
+  Execution halted
 - **K13** (exit 1): Created DeltaComposite from Delta_Composite_Z.
-Error in emmeans(mod_age_int_ext, ~FOF_status | age_c, at = list(age_c = age_c_values)) :
+  Error in emmeans(mod_age_int_ext, ~FOF_status | age_c, at = list(age_c = age_c_values)) :
   could not find function "emmeans"
-Execution halted
+  Execution halted
 - **K15** (exit 1): K15: Weakness-rajat (sex_Q1):
-K15: komponenttien jakaumat (table, useNA='ifany'):
+  K15: komponenttien jakaumat (table, useNA='ifany'):
 
 K15: SENSITIIVISYYSVERSIOT - low_activity komponentit:
 

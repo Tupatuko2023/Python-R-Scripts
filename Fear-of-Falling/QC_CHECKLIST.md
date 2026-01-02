@@ -1,4 +1,3 @@
-
 # QC_CHECKLIST.md — FOF_status × time (baseline → 12m) mixed-malliputken pakolliset QC-tarkistukset
 
 **Context:** This checklist supports the Official Analysis Plan:
@@ -27,9 +26,9 @@ Rscript R-scripts/K18/K18_QC.V1_qc-run.R \
 
 **CLI arguments:**
 
-* `--data` (required): path to analysis dataset
-* `--shape` (optional): AUTO (default) | LONG | WIDE
-* `--dict` (optional): path to data dictionary (default: `data/data_dictionary.csv`)
+- `--data` (required): path to analysis dataset
+- `--shape` (optional): AUTO (default) | LONG | WIDE
+- `--dict` (optional): path to data dictionary (default: `data/data_dictionary.csv`)
 
 QC-artefaktit kirjoitetaan polkuun `R-scripts/K18/outputs/K18_QC/qc/` ja
 
@@ -37,13 +36,13 @@ manifestiin lisätään yksi rivi per artefakti.
 
 Aja QC aina:
 
-1) **Ennen mallinnusta** (ennen `analysis_mixed_workflow()` / `lmer()`):
+1. **Ennen mallinnusta** (ennen `analysis_mixed_workflow()` / `lmer()`):
    varmistetaan datan rakenne, koodaukset, puuttuvat ja perusjakaumat.
 
-2) **Ennen raportointia**: varmistetaan, että raportoitavat n:t ja aikatasot
+2. **Ennen raportointia**: varmistetaan, että raportoitavat n:t ja aikatasot
    vastaavat analyysidataa (ei “silent recoding”/droppeja).
 
-3) **Refaktoroinnin / korjausten jälkeen**: jokaisen koodimuutoksen (data prep,
+3. **Refaktoroinnin / korjausten jälkeen**: jokaisen koodimuutoksen (data prep,
    pivot, recode, join) jälkeen QC uudelleen ja artefaktit talteen.
 
 ---
@@ -57,22 +56,22 @@ Datan tulee olla **long**-muodossa siten, että jokainen rivi on yhden henkilön
 
 **Pakolliset sarakkeet (minimi):**
 
-* `id` (integer/character; yksilötunniste)
+- `id` (integer/character; yksilötunniste)
 
-* `time` (factor tai numeerinen; **tasot baseline ja 12m** tai koodaus {0,1})
+- `time` (factor tai numeerinen; **tasot baseline ja 12m** tai koodaus {0,1})
 
-* `FOF_status` (0/1 tai 2-tasoinen factor; **ei hiljaista uudelleenkoodausta**)
+- `FOF_status` (0/1 tai 2-tasoinen factor; **ei hiljaista uudelleenkoodausta**)
 
-* `Composite_Z` (numeric; fyysisen toimintakyvyn yhdistelmä-z)
+- `Composite_Z` (numeric; fyysisen toimintakyvyn yhdistelmä-z)
 
 ### Jos data on wide
 
 Jos saatavilla on wide-muotoisia sarakkeita (esim. `Composite_Z0`,
 `Composite_Z2` tms.), QC:n pitää joko:
 
-* (A) varmistaa, että ne voidaan pivottaa longiksi ilman rivien häviämistä, tai
+- (A) varmistaa, että ne voidaan pivottaa longiksi ilman rivien häviämistä, tai
 
-* (B) estää mallin ajo, kunnes long-data on tuotettu ja validoitu.
+- (B) estää mallin ajo, kunnes long-data on tuotettu ja validoitu.
 
 ### Delta-muuttuja (jos käytössä)
 
@@ -95,26 +94,26 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 ### 0) Variable Standardization (Pre-check)
 
-* **Check name:** Sarakenimien standardointi
-* **What it verifies:** Datan sarakenimet muutetaan kanoniseen muotoon
+- **Check name:** Sarakenimien standardointi
+- **What it verifies:** Datan sarakenimet muutetaan kanoniseen muotoon
   (`data/VARIABLE_STANDARDIZATION.csv` mukaan).
-* **Conflict Check:** Pysäyttää ajon, jos löytyy useita sarakkeita, jotka
+- **Conflict Check:** Pysäyttää ajon, jos löytyy useita sarakkeita, jotka
   mappautuvat samaan kanoniseen nimeen (esim. `id` ja `ID`).
-* **Verify Gate:** Pysäyttää ajon, jos löytyy alias, jonka action on `verify`
+- **Verify Gate:** Pysäyttää ajon, jos löytyy alias, jonka action on `verify`
   (vaatii ihmisen hyväksynnän/muutoksen renameksi).
-* **Artifacts to save:**
-  * `qc_variable_standardization_renames.csv`
-  * `qc_variable_standardization_verify_hits.csv`
-  * `qc_variable_standardization_conflicts.csv`
+- **Artifacts to save:**
+  - `qc_variable_standardization_renames.csv`
+  - `qc_variable_standardization_verify_hits.csv`
+  - `qc_variable_standardization_conflicts.csv`
 
 ---
 
 ### 0.5) Profile snapshot
 
-* **Check name:** Profile snapshot
-* **What it verifies:** Captures dataset dimensions (nrow, ncol, column names) for audit trail.
-* **Artifacts to save:**
-  * `qc_profile.csv`
+- **Check name:** Profile snapshot
+- **What it verifies:** Captures dataset dimensions (nrow, ncol, column names) for audit trail.
+- **Artifacts to save:**
+  - `qc_profile.csv`
 
 **Note:** This is an informational artifact, not a pass/fail check.
 
@@ -122,12 +121,12 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 ### 1) Saraketyypit (types)
 
-* **Check name:** Saraketyypit
+- **Check name:** Saraketyypit
 
-* **What it verifies:** `id`, `time`, `FOF_status`, `Composite_Z` löytyvät ja
+- **What it verifies:** `id`, `time`, `FOF_status`, `Composite_Z` löytyvät ja
   ovat odotettua tyyppiä (ei list/complex; Composite_Z numeric).
 
-* **How to run (base R):**
+- **How to run (base R):**
 
   ```r
 
@@ -174,6 +173,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
   write.csv(status,   "R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_types_status.csv", row.names = FALSE)
 
   write.csv(types_df, "R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_types.csv", row.names = FALSE)
+  ```
 
 ````
 
@@ -1044,3 +1044,4 @@ Minimal required columns to proceed (pick A or B):
 ```  - sessionInfo.txt
 
   - renv.lock
+````
