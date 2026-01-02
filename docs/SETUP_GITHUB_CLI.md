@@ -16,7 +16,7 @@ Get-Command gh
 
 **Odotettu tulos:**
 
-- `gh --version`: Tulostaa versionumeron (esim. `gh version 2.40.0 ...`).
+- `gh --version`: Tulostaa versionumeron (esim. `gh version 2.40.0`).
 - `Get-Command gh`: Tulostaa polun, jossa `gh.exe` sijaitsee (esim. `C:\Program Files\GitHub CLI\gh.exe`).
 
 ### CMD (Command Prompt)

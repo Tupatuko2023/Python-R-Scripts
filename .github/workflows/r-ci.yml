@@ -8,8 +8,7 @@ on:
       - 'Fear-of-Falling/renv.lock'
       - 'Fear-of-Falling/renv/**'
       - '.github/workflows/r-ci.yml'
-    paths-ignore:
-      - '**/*.md'
+      - '!**/*.md'
   pull_request:
     paths:
       - 'Fear-of-Falling/**/*.R'
@@ -17,8 +16,7 @@ on:
       - 'Fear-of-Falling/renv.lock'
       - 'Fear-of-Falling/renv/**'
       - '.github/workflows/r-ci.yml'
-    paths-ignore:
-      - '**/*.md'
+      - '!**/*.md'
 
 jobs:
   r-ci:

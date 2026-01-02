@@ -41,6 +41,10 @@ node_modules/
 .gitattributes.bak.*
 !.markdownlint*out/
 out/
+/repo_audit/
+*.bundle.lock
+rca-codex-egress.bundle
+repo_audit_staged_diff_full.txt
 
 # Fear-of-Falling local workspaces and outputs
 Fear-of-Falling/*.RData
@@ -55,6 +59,7 @@ Fear-of-Falling/R-scripts/**/outputs/
 !.gemini/README.md
 !.gemini/policies/
 .claude/settings.local.json
+repo_audit_staged_diff_full.txt
 
 # local agent prompts
 prompts/
