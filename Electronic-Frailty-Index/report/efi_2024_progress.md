@@ -61,11 +61,15 @@ labeling outputs as 2024. [TODO]
 
 ## NLP Pipeline (condensed)
 
+<!-- markdownlint-disable MD013 -->
+
 | Stage          | Input -> Output            | Checks                                                                       |
 | -------------- | -------------------------- | ---------------------------------------------------------------------------- |
 | Labeling / QA  | Free text -> Labeled spans | Double label + adjudication                                                  |
 | Modeling       | Labeled -> NER model       | [TODO: model details]                                                        |
 | Eval / Linkage | Test -> P/R/F1, HRs        | Target F1 > 0.80; HRs outperform ICD-10 baselines for falls and incontinence |
+
+<!-- markdownlint-enable MD013 -->
 
 ## Experiments Log (excerpt)
 
