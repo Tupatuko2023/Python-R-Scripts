@@ -19,8 +19,15 @@ command -v proot-distro >/dev/null 2>&1 || {
 }
 test -f "$QC_SKILL_R" || { echo "FATAL: missing qc_summarize.R at: $QC_SKILL_R"; exit 1; }
 
-# Ensure PRoot Debian exists (install step is safe if already installed).
-if ! proot-distro list 2>/dev/null | grep -q '^debian'; then
+# Ensure PRoot Debian exists (robust check; do not fail on "already installed").
+has_debian() {
+  proot-distro list 2>/dev/null | tr -d '\r' | grep -Eqi '^[[:space:]]*debian([[:space:]]|$)'
+}
+
+DEBIAN_ROOTFS_DIR="${HOME}/.proot-distro/installed-rootfs/debian"
+if has_debian || [ -d "$DEBIAN_ROOTFS_DIR" ]; then
+  echo "INFO: proot debian already installed"
+else
   echo "INFO: proot debian not found; installing..."
   proot-distro install debian
 fi
