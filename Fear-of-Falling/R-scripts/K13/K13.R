@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # ==============================================================================
-# K13 - FOF × Age/BMI/Sex interactions on functional change
+# K13 - FOF ?? Age/BMI/Sex interactions on functional change
 # File tag: K13.R
 # Purpose: Tests whether the association between FOF and 12-month change in
 #          composite physical function varies by age, BMI, or sex through
@@ -9,7 +9,7 @@
 # Outcome: Delta_Composite_Z (12-month change in composite physical function)
 # Predictors: FOF_status_f (factor: "Ei FOF"/"FOF")
 # Moderator/interaction: Age (continuous), BMI (continuous), Sex_f (factor: "female"/"male")
-#                        Tested: FOF × Age, FOF × BMI, FOF × Sex, FOF × Age × Sex
+#                        Tested: FOF ?? Age, FOF ?? BMI, FOF ?? Sex, FOF ?? Age ?? Sex
 # Grouping variable: None (wide format ANCOVA with interactions)
 # Covariates: Composite_Z0 (baseline function), MOI_score, diabetes, alzheimer,
 #             parkinson, AVH, previous_falls, psych_score
@@ -49,7 +49,7 @@
 # 04) Standardize vars + QC (standardize_analysis_vars + sanity_checks)
 # 05) Check required analysis columns (req_analysis_cols)
 # 06) Prepare analysis dataset (derive MOI_score, previous_falls, psych_score)
-# 07) Fit interaction models: FOF × Age, FOF × BMI, FOF × Sex, FOF × Age × Sex
+# 07) Fit interaction models: FOF ?? Age, FOF ?? BMI, FOF ?? Sex, FOF ?? Age ?? Sex
 # 08) Compute emmeans at key moderator values (Age quartiles, BMI tertiles, by Sex)
 # 09) Test interaction significance (Type III ANOVA)
 # 10) Save interaction plots (emmeans by moderator level)
@@ -121,10 +121,10 @@ manifest_path <- getOption("fof.manifest_path")
 # 02. Data Preparation
 # ==============================================================================
 
-# Lisätään tarvittavat kovariaatit (df on jo standardisoitu)
+# Lis??t????n tarvittavat kovariaatit (df on jo standardisoitu)
 analysis_data_rec <- df %>%
   mutate(
-    # Ikäluokat
+    # Ik??luokat
     AgeClass = case_when(
       Age < 65                 ~ "65_74",
       Age >= 65 & Age <= 74    ~ "65_74",
@@ -163,7 +163,7 @@ if (has_DeltaComposite) {
   message("Created DeltaComposite from Delta_Composite_Z.")
 
 } else {
-  # lasketaan muutos komposiitista kuten K11:ssä
+  # lasketaan muutos komposiitista kuten K11:ss??
   analysis_data_rec <- analysis_data_rec %>%
     mutate(DeltaComposite = ToimintaKykySummary2 - ToimintaKykySummary0)
   message("Created DeltaComposite as ToimintaKykySummary2 - ToimintaKykySummary0.")
@@ -174,17 +174,17 @@ analysis_data_rec <- analysis_data_rec %>%
   mutate(
     Composite_Z0      = ToimintaKykySummary0,
     Delta_Composite_Z = DeltaComposite,
-    # käytä mieluummin tätä kuin sex_factor:ia
+    # k??yt?? mieluummin t??t?? kuin sex_factor:ia
     sex = factor(
       sex,
       levels = c(0, 1),
-      labels = c("female", "male")
+      labels = c("Level 0", "Level 1")
     ),
     MOI_score = MOIindeksiindeksi
   )
 
 # ---------------------------------------------------------------
-# Lisämoderaattorit: MOI_c, SRH_3class, SRM_3class, PainVAS0_c
+# Lis??moderaattorit: MOI_c, SRH_3class, SRM_3class, PainVAS0_c
 # ---------------------------------------------------------------
 
 analysis_data_rec <- analysis_data_rec %>%
@@ -193,10 +193,10 @@ analysis_data_rec <- analysis_data_rec %>%
     MOI_score = MOIindeksiindeksi,
     MOI_c = MOI_score - mean(MOI_score, na.rm = TRUE),
 
-    # Keskitetty kipu (0–10 VAS)
+    # Keskitetty kipu (0???10 VAS)
     PainVAS0_c = PainVAS0 - mean(PainVAS0, na.rm = TRUE),
 
-    # SRH 3-luokkainen (oletus: 0 = huono, 1 = kohtalainen, 2 = hyvä)
+    # SRH 3-luokkainen (oletus: 0 = huono, 1 = kohtalainen, 2 = hyv??)
     SRH_3class = factor(
       SRH,
       levels = c(0, 1, 2),
@@ -204,7 +204,7 @@ analysis_data_rec <- analysis_data_rec %>%
       ordered = TRUE
     ),
 
-    # SRM 3-luokkainen (oma_arvio_liikuntakyky, 0–2)
+    # SRM 3-luokkainen (oma_arvio_liikuntakyky, 0???2)
     SRM_3class = factor(
       oma_arvio_liikuntakyky,
       levels = c(0, 1, 2),
@@ -253,7 +253,7 @@ dat_fof <- analysis_data_rec %>%
 
 str(dat_fof)
 
-## 4.2 Keskitetyt ikä- ja BMI-muuttujat + complete-case interaktioanalyyseihin
+## 4.2 Keskitetyt ik??- ja BMI-muuttujat + complete-case interaktioanalyyseihin
 
 age_mean <- mean(dat_fof$age, na.rm = TRUE)
 bmi_mean <- mean(dat_fof$BMI, na.rm = TRUE)
@@ -285,13 +285,13 @@ summary(dat_int_cc$PainVAS0_c)
 # 03. Lineaariset Interaktiomallit (Laajennetut)
 # ==============================================================================
 
-##   Kaikki mallit ovat eksploratiivisia, ja sisältävät:
-##   - FOF_status päävaikutuksena
-## - FOF_status × moderaattori (ikä, BMI, sukupuoli)
+##   Kaikki mallit ovat eksploratiivisia, ja sis??lt??v??t:
+##   - FOF_status p????vaikutuksena
+## - FOF_status ?? moderaattori (ik??, BMI, sukupuoli)
 ## - Perussetti kovariaatteja: Composite_Z0, age_c/BMI_c/sex (riippuen mallista),
 ## MOI_score, diabetes, alzheimer, parkinson, AVH, previous_falls, psych_score.
 
-## 5.1 FOF × age_c -interaktio
+## 5.1 FOF ?? age_c -interaktio
 
 mod_age_int_ext <- lm(
   Delta_Composite_Z ~ FOF_status * age_c +
@@ -303,7 +303,7 @@ mod_age_int_ext <- lm(
   data = dat_int_cc
 )
 
-## 5.2 FOF × BMI_c -interaktio
+## 5.2 FOF ?? BMI_c -interaktio
 
 mod_BMI_int_ext <- lm(
   Delta_Composite_Z ~ FOF_status * BMI_c +
@@ -315,7 +315,7 @@ mod_BMI_int_ext <- lm(
   data = dat_int_cc
 )
 
-## 5.3 FOF × sex -interaktio
+## 5.3 FOF ?? sex -interaktio
 
 mod_sex_int_ext <- lm(
   Delta_Composite_Z ~ FOF_status * sex +
@@ -327,8 +327,8 @@ mod_sex_int_ext <- lm(
   data = dat_int_cc
 )
 
-##(Valinnainen) yhdistelmämalli, jos haluat kaikki interaktiot samaan malliin:
-##   Huom. erittäin eksploratiivinen ja alttiimpi tehon puutteelle ylisäätämisen takia.
+##(Valinnainen) yhdistelm??malli, jos haluat kaikki interaktiot samaan malliin:
+##   Huom. eritt??in eksploratiivinen ja alttiimpi tehon puutteelle ylis????t??misen takia.
 
 mod_all_int_ext <- lm(
   Delta_Composite_Z ~
@@ -342,7 +342,7 @@ mod_all_int_ext <- lm(
   data = dat_int_cc
 )
 
-# 5.4 FOF × MOI_c (osteroporoosiriski moderaattorina)
+# 5.4 FOF ?? MOI_c (osteroporoosiriski moderaattorina)
 mod_MOI_int_ext <- lm(
   Delta_Composite_Z ~ FOF_status * MOI_c +
     age_c + BMI_c + sex +
@@ -353,7 +353,7 @@ mod_MOI_int_ext <- lm(
   data = dat_int_cc
 )
 
-# 5.5 FOF × PainVAS0_c (kipu moderaattorina)
+# 5.5 FOF ?? PainVAS0_c (kipu moderaattorina)
 mod_Pain_int_ext <- lm(
   Delta_Composite_Z ~ FOF_status * PainVAS0_c +
     age_c + BMI_c + sex +
@@ -365,7 +365,7 @@ mod_Pain_int_ext <- lm(
   data = dat_int_cc
 )
 
-# 5.6 FOF × SRH_3class (itsearvioitu terveys moderaattorina)
+# 5.6 FOF ?? SRH_3class (itsearvioitu terveys moderaattorina)
 mod_SRH_int_ext <- lm(
   Delta_Composite_Z ~ FOF_status * SRH_3class +
     age_c + BMI_c + sex +
@@ -377,7 +377,7 @@ mod_SRH_int_ext <- lm(
   data = dat_int_cc
 )
 
-# 5.7 FOF × SRM_3class (itsearvioitu liikuntakyky moderaattorina)
+# 5.7 FOF ?? SRM_3class (itsearvioitu liikuntakyky moderaattorina)
 mod_SRM_int_ext <- lm(
   Delta_Composite_Z ~ FOF_status * SRM_3class +
     age_c + BMI_c + sex +
@@ -416,7 +416,7 @@ save_table_csv_html(tidy_Pain, "lm_Pain_int_extended_full")
 save_table_csv_html(tidy_SRH,  "lm_SRH_int_extended_full")
 save_table_csv_html(tidy_SRM,  "lm_SRM_int_extended_full")
 
-## Tallennetaan täyden mallin kertoimet (voi helpottaa tarkastelua)
+## Tallennetaan t??yden mallin kertoimet (voi helpottaa tarkastelua)
 
 save_table_csv_html(tidy_age, "lm_age_int_extended_full")
 save_table_csv_html(tidy_BMI, "lm_BMI_int_extended_full")
@@ -424,7 +424,7 @@ save_table_csv_html(tidy_sex, "lm_sex_int_extended_full")
 save_table_csv_html(tidy_all, "lm_all_int_extended_full")
 
 ## 6.1 Kiinnostavat FOF- ja interaktiotermit
-### (Käytämme eksplisiittisiä termiä nimiä taulukko–teksti -yhtenäisyyden varmistamiseksi)
+### (K??yt??mme eksplisiittisi?? termi?? nimi?? taulukko???teksti -yhten??isyyden varmistamiseksi)
 
 fof_terms_age <- tidy_age %>%
   filter(term %in% c("FOF_status1", "FOF_status1:age_c"))
@@ -435,7 +435,7 @@ fof_terms_BMI <- tidy_BMI %>%
 fof_terms_sex <- tidy_sex %>%
   filter(term %in% c("FOF_status1", "FOF_status1:sex1"))
 
-## 6.2 Interaktiokooste: yksi rivi per moderaattori (FOF × moderaattori)
+## 6.2 Interaktiokooste: yksi rivi per moderaattori (FOF ?? moderaattori)
 
 tab_interactions_overview <- bind_rows(
   fof_terms_age %>% filter(term == "FOF_status1:age_c") %>%
@@ -485,10 +485,10 @@ save_table_csv_html(tab_interactions_symptoms, "FOF_interaction_effects_symptoms
 results_symptoms_sentences <- tab_interactions_symptoms %>%
   mutate(
     results_line = paste0(
-      "FOF × ", moderator, ": β = ",
+      "FOF ?? ", moderator, ": ?? = ",
       sprintf("%.3f", estimate),
       ", 95 % LV ",
-      sprintf("%.3f", conf.low), " – ",
+      sprintf("%.3f", conf.low), " ??? ",
       sprintf("%.3f", conf.high),
       ", p = ", sprintf("%.3f", p.value)
     )
@@ -524,10 +524,10 @@ tab_interactions_SRH_SRM
 results_SRH_SRM_sentences <- tab_interactions_SRH_SRM %>%
   mutate(
     results_line = paste0(
-      "FOF × ", moderator, ": β = ",
+      "FOF ?? ", moderator, ": ?? = ",
       sprintf("%.3f", estimate),
       ", 95 % LV ",
-      sprintf("%.3f", conf.low), " – ",
+      sprintf("%.3f", conf.low), " ??? ",
       sprintf("%.3f", conf.high),
       ", p = ", sprintf("%.3f", p.value)
     )
@@ -539,7 +539,7 @@ results_SRH_SRM_sentences
 
 
 
-## 6.3 (Valinnainen) standardoidut kertoimet: etsitään FOF × moderaattori -parametrit
+## 6.3 (Valinnainen) standardoidut kertoimet: etsit????n FOF ?? moderaattori -parametrit
 
 get_std_interactions <- function(fit, moderator_label, model_label) {
   std_tab <- tryCatch(
@@ -557,7 +557,7 @@ get_std_interactions <- function(fit, moderator_label, model_label) {
 
   if (is.null(std_tab)) return(NULL)
 
-##  effectsize nimeää parametrin muodossa "FOF status [1] * age_c" tms.
+##  effectsize nime???? parametrin muodossa "FOF status [1] * age_c" tms.
 
   std_int <- std_tab %>%
     dplyr::filter(grepl("FOF", .data$Parameter) & grepl(moderator_label, .data$Parameter)) %>%
@@ -580,10 +580,10 @@ if (nrow(tab_std_interactions) > 0) {
 }
 
 # ==============================================================================
-# 05. Simple Slopes: FOF-Efekti Eri Ikä-/BMI-Tasoilla ja Sukupuolittain
+# 05. Simple Slopes: FOF-Efekti Eri Ik??-/BMI-Tasoilla ja Sukupuolittain
 # ==============================================================================
 
-## 5.1 FOF × age_c: FOF-efekti eri ikätasoilla
+## 5.1 FOF ?? age_c: FOF-efekti eri ik??tasoilla
 
 age_c_values <- c(-10, 0, 10) # noin 10 vuoden erot centered-asteikolla
 age_values <- age_c_values + age_mean
@@ -625,9 +625,9 @@ plot_FOFxAge <- ggplot2::ggplot(
   ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
   ggplot2::geom_pointrange() +
   ggplot2::labs(
-    x = "Ikä (vuotta)",
-    y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
-    title = "FOF × ikä: FOF-efekti eri ikätasoilla"
+    x = "Ik?? (vuotta)",
+    y = "FOF-efekti Delta_Composite_Z:????n (kerroin, FOF vs nonFOF)",
+    title = "FOF ?? ik??: FOF-efekti eri ik??tasoilla"
   ) +
   ggplot2::theme_minimal()
 
@@ -637,7 +637,7 @@ ggplot2::ggsave(
   width = 7, height = 4, dpi = 300
 )
 
-## 7.2 FOF × BMI_c: FOF-efekti eri BMI-tasoilla
+## 7.2 FOF ?? BMI_c: FOF-efekti eri BMI-tasoilla
 
 BMI_c_values <- c(-5, 0, 5)
 BMI_values <- BMI_c_values + bmi_mean
@@ -679,9 +679,9 @@ plot_FOFxBMI <- ggplot2::ggplot(
   ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
   ggplot2::geom_pointrange() +
   ggplot2::labs(
-    x = "BMI (kg/m²)",
-    y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
-    title = "FOF × BMI: FOF-efekti eri BMI-tasoilla"
+    x = "BMI (kg/m??)",
+    y = "FOF-efekti Delta_Composite_Z:????n (kerroin, FOF vs nonFOF)",
+    title = "FOF ?? BMI: FOF-efekti eri BMI-tasoilla"
   ) +
   ggplot2::theme_minimal()
 
@@ -691,7 +691,7 @@ ggplot2::ggsave(
   width = 7, height = 4, dpi = 300
 )
 
-## 7.3 FOF × sex: FOF-efekti erikseen naisilla ja miehillä
+## 7.3 FOF ?? sex: FOF-efekti erikseen naisilla ja miehill??
 
 emm_sex <- emmeans(
   mod_sex_int_ext,
@@ -728,8 +728,8 @@ plot_FOFxSex <- ggplot2::ggplot(
   ggplot2::geom_pointrange() +
   ggplot2::labs(
     x = "Sukupuoli",
-    y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
-    title = "FOF × sukupuoli: FOF-efekti naisilla vs miehillä"
+    y = "FOF-efekti Delta_Composite_Z:????n (kerroin, FOF vs nonFOF)",
+    title = "FOF ?? sukupuoli: FOF-efekti naisilla vs miehill??"
   ) +
   ggplot2::theme_minimal()
 
@@ -740,9 +740,9 @@ ggplot2::ggsave(
 )
 
 
-## 7.4 FOF × MOI_c
+## 7.4 FOF ?? MOI_c
 
-MOI_c_values <- c(-2, 0, 2)  # noin 2 pistettä alle/yläpuolelle keskiarvon
+MOI_c_values <- c(-2, 0, 2)  # noin 2 pistett?? alle/yl??puolelle keskiarvon
 emm_MOI <- emmeans(
   mod_MOI_int_ext,
   ~ FOF_status | MOI_c,
@@ -781,8 +781,8 @@ plot_FOFxMOI <- ggplot2::ggplot(
   ggplot2::geom_pointrange() +
   ggplot2::labs(
     x = "MOI-score",
-    y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
-    title = "FOF × MOI: FOF-efekti eri osteoporoosiriskitasoilla"
+    y = "FOF-efekti Delta_Composite_Z:????n (kerroin, FOF vs nonFOF)",
+    title = "FOF ?? MOI: FOF-efekti eri osteoporoosiriskitasoilla"
   ) +
   ggplot2::theme_minimal()
 
@@ -792,7 +792,7 @@ ggplot2::ggsave(
   width    = 7, height = 4, dpi = 300
 )
 
-## 7.5 FOF × PainVAS0_c
+## 7.5 FOF ?? PainVAS0_c
 
 Pain_c_values <- c(-2, 0, 2)  # ~2 VAS-pisteen ero
 emm_Pain <- emmeans(
@@ -832,9 +832,9 @@ plot_FOFxPain <- ggplot2::ggplot(
   ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
   ggplot2::geom_pointrange() +
   ggplot2::labs(
-    x = "Kipu VAS 0–10",
-    y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
-    title = "FOF × kipu: FOF-efekti eri kiputasoilla"
+    x = "Kipu VAS 0???10",
+    y = "FOF-efekti Delta_Composite_Z:????n (kerroin, FOF vs nonFOF)",
+    title = "FOF ?? kipu: FOF-efekti eri kiputasoilla"
   ) +
   ggplot2::theme_minimal()
 
@@ -845,7 +845,7 @@ ggplot2::ggsave(
 )
 
 
-## 7.6 FOF × SRH_3class ja FOF × SRM_3class
+## 7.6 FOF ?? SRH_3class ja FOF ?? SRM_3class
 
 # SRH (itsearvioitu terveys)
 emm_SRH <- emmeans(
@@ -883,8 +883,8 @@ plot_FOFxSRH <- ggplot2::ggplot(
   ggplot2::geom_pointrange() +
   ggplot2::labs(
     x = "Itsearvioitu terveys (SRH)",
-    y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
-    title = "FOF × SRH: FOF-efekti eri terveyden itsearvioissa"
+    y = "FOF-efekti Delta_Composite_Z:????n (kerroin, FOF vs nonFOF)",
+    title = "FOF ?? SRH: FOF-efekti eri terveyden itsearvioissa"
   ) +
   ggplot2::theme_minimal()
 
@@ -930,8 +930,8 @@ plot_FOFxSRM <- ggplot2::ggplot(
   ggplot2::geom_pointrange() +
   ggplot2::labs(
     x = "Itsearvioitu liikuntakyky (SRM)",
-    y = "FOF-efekti Delta_Composite_Z:ään (kerroin, FOF vs nonFOF)",
-    title = "FOF × SRM: FOF-efekti eri liikuntakyvyn itsearvioissa"
+    y = "FOF-efekti Delta_Composite_Z:????n (kerroin, FOF vs nonFOF)",
+    title = "FOF ?? SRM: FOF-efekti eri liikuntakyvyn itsearvioissa"
   ) +
   ggplot2::theme_minimal()
 
@@ -978,46 +978,46 @@ plot(mod_sex_int_ext, which = 1)
 interpret_interaction <- function(moderator_label, est, lwr, upr, p_value) {
   ci_width <- upr - lwr
 
-  # Pieni helper kuvaamaan LV:n leveyttä
+  # Pieni helper kuvaamaan LV:n leveytt??
   ci_band <- dplyr::case_when(
     ci_width <= 0.20 ~ "suhteellisen kapea",
-    ci_width <= 0.50 ~ "kohtalaisen leveä",
+    ci_width <= 0.50 ~ "kohtalaisen leve??",
     TRUE             ~ "laaja"
   )
 
   # 4-haarainen logiikka
   if (!is.na(p_value) && p_value < 0.05 && est > 0) {
     paste0(
-      "Merkitsevä positiivinen FOF × ", moderator_label,
-      " -interaktio (β = ", round(est, 2),
-      ", 95 % LV ", round(lwr, 2), "–", round(upr, 2), "). ",
+      "Merkitsev?? positiivinen FOF ?? ", moderator_label,
+      " -interaktio (?? = ", round(est, 2),
+      ", 95 % LV ", round(lwr, 2), "???", round(upr, 2), "). ",
       "Korkeampi ", moderator_label, "."
     )
   } else if (!is.na(p_value) && p_value < 0.05 && est < 0) {
     paste0(
-      "Merkitsevä negatiivinen FOF × ", moderator_label,
-      " -interaktio (β = ", round(est, 2),
-      ", 95 % LV ", round(lwr, 2), "–", round(upr, 2), "). ",
+      "Merkitsev?? negatiivinen FOF ?? ", moderator_label,
+      " -interaktio (?? = ", round(est, 2),
+      ", 95 % LV ", round(lwr, 2), "???", round(upr, 2), "). ",
       "Korkeampi ", moderator_label, "."
     )
   } else if (ci_width <= 0.20) {
     paste0(
-      "Ei-merkitsevä FOF × ", moderator_label,
-      " -interaktio (β = ", round(est, 2),
-      ", 95 % LV ", round(lwr, 2), "–", round(upr, 2),
+      "Ei-merkitsev?? FOF ?? ", moderator_label,
+      " -interaktio (?? = ", round(est, 2),
+      ", 95 % LV ", round(lwr, 2), "???", round(upr, 2),
       ", LV ", ci_band, "). ",
-      "LV:n perusteella mahdollinen moderoiva vaikutus näyttää olevan korkeintaan pieni. ",
-      "Tämä tukee tulkintaa, että FOF:n vaikutus Delta_Composite_Z:ään ei juuri riipu ",
+      "LV:n perusteella mahdollinen moderoiva vaikutus n??ytt???? olevan korkeintaan pieni. ",
+      "T??m?? tukee tulkintaa, ett?? FOF:n vaikutus Delta_Composite_Z:????n ei juuri riipu ",
       moderator_label, "-tasosta."
     )
   } else {
     paste0(
-      "Ei-merkitsevä FOF × ", moderator_label,
-      " -interaktio (β = ", round(est, 2),
-      ", 95 % LV ", round(lwr, 2), "–", round(upr, 2),
+      "Ei-merkitsev?? FOF ?? ", moderator_label,
+      " -interaktio (?? = ", round(est, 2),
+      ", 95 % LV ", round(lwr, 2), "???", round(upr, 2),
       ", LV ", ci_band, "). ",
-      "Laaja LV tekee tuloksesta epävarman; data ei sulje pois pieniä tai kohtalaisia ",
-      "moderaatiovaikutuksia. Koska interaktioanalyyseja on useita, yksittäisiä p-arvoja ",
+      "Laaja LV tekee tuloksesta ep??varman; data ei sulje pois pieni?? tai kohtalaisia ",
+      "moderaatiovaikutuksia. Koska interaktioanalyyseja on useita, yksitt??isi?? p-arvoja ",
       "ei tule ylitulkita."
     )
   }
@@ -1025,7 +1025,7 @@ interpret_interaction <- function(moderator_label, est, lwr, upr, p_value) {
 
 ## 7.2 Automaattiset tulkinnat kaikille moderaattoreille
 
-# Yhdistetään kaikki interaktiotaulukot samaan nippuun
+# Yhdistet????n kaikki interaktiotaulukot samaan nippuun
 tab_interactions_all <- dplyr::bind_rows(
   tab_interactions_overview,   # age_c, BMI_c, sex
   tab_interactions_symptoms,   # MOI_c, PainVAS0_c
@@ -1047,10 +1047,10 @@ print(interaction_interpretations)
 results_sentences <- interaction_interpretations %>%
   mutate(
     results_line = paste0(
-      "FOF × ", moderator, ": β = ",
+      "FOF ?? ", moderator, ": ?? = ",
       sprintf("%.3f", estimate),
       ", 95 % LV ",
-      sprintf("%.3f", conf.low), " – ",
+      sprintf("%.3f", conf.low), " ??? ",
       sprintf("%.3f", conf.high),
       ", p = ", sprintf("%.3f", p.value)
     )
@@ -1066,19 +1066,19 @@ results_sentences
 clinical_summary_template <- c(
   "Kliininen tulkinta (luonnos, muokkaa lopullisten estimaattien mukaan):",
   "",
-  "- Nämä interaktioanalyysit (ikä, BMI, sukupuoli, osteoporoosiriski-indeksi, kipu, ",
-  "  itsearvioitu terveys ja itsearvioitu liikuntakyky) ovat eksploratiivisia, eikä ",
+  "- N??m?? interaktioanalyysit (ik??, BMI, sukupuoli, osteoporoosiriski-indeksi, kipu, ",
+  "  itsearvioitu terveys ja itsearvioitu liikuntakyky) ovat eksploratiivisia, eik?? ",
   "  p-arvoja tule tulkita ilman monen testin riskin huomioimista.",
-  "- Mikäli FOF × moderaattori -termit (FOF × age_c, FOF × BMI_c, FOF × sex, ",
-  "  FOF × MOI_c, FOF × PainVAS0_c, FOF × SRH_3class, FOF × SRM_3class) ovat ",
-  "  johdonmukaisesti pieniä ja 95 % LV:t melko kapeita ja sisältävät nollan, ",
-  "  voidaan alustavasti todeta, ettei FOF:n vaikutus Delta_Composite_Z:ään näytä ",
-  "  systemaattisesti riippuvan iästä, BMI:stä, sukupuolesta, kivusta, ",
-  "  itsearvioidusta terveydentilasta tai itsearvioidusta liikuntakyvystä tässä ",
+  "- Mik??li FOF ?? moderaattori -termit (FOF ?? age_c, FOF ?? BMI_c, FOF ?? sex, ",
+  "  FOF ?? MOI_c, FOF ?? PainVAS0_c, FOF ?? SRH_3class, FOF ?? SRM_3class) ovat ",
+  "  johdonmukaisesti pieni?? ja 95 % LV:t melko kapeita ja sis??lt??v??t nollan, ",
+  "  voidaan alustavasti todeta, ettei FOF:n vaikutus Delta_Composite_Z:????n n??yt?? ",
+  "  systemaattisesti riippuvan i??st??, BMI:st??, sukupuolesta, kivusta, ",
+  "  itsearvioidusta terveydentilasta tai itsearvioidusta liikuntakyvyst?? t??ss?? ",
   "  aineistossa.",
-  "- Jos jokin interaktioista osoittaa selkeää trendiä (esim. suurempi FOF-efekti ",
-  "  tietyllä kiputasolla tai heikommassa itsearvioidussa liikuntakyvyssä), sitä ",
-  "  tulee korostaa vain hypoteesigeneratiivisena löydöksenä, joka vaatii ",
+  "- Jos jokin interaktioista osoittaa selke???? trendi?? (esim. suurempi FOF-efekti ",
+  "  tietyll?? kiputasolla tai heikommassa itsearvioidussa liikuntakyvyss??), sit?? ",
+  "  tulee korostaa vain hypoteesigeneratiivisena l??yd??ksen??, joka vaatii ",
   "  vahvistusta jatkotutkimuksessa."
 )
 

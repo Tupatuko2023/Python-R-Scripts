@@ -62,3 +62,6 @@ SMOKE_TEST_REPORT_*.md
 
 # Testing mock data (generated in CI, don't commit)
 data/testing/mock_*.csv
+
+# Local audit logs
+repo_audit/
