@@ -40,7 +40,7 @@ else
   run_proot_distro install debian
 fi
 
-proot-distro login debian --termux-home -- bash -lc "
+run_proot_distro login debian --termux-home -- bash -lc "
 set -euo pipefail
 
 cd '$FOF_ROOT' || exit 1
