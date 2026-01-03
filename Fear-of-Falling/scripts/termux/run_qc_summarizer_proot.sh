@@ -1,4 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# If invoked via sh/dash, re-exec under bash to support pipefail.
+if [ -z "${BASH_VERSION:-}" ]; then
+  exec /data/data/com.termux/files/usr/bin/bash "$0" "$@"
+fi
+
 set -euo pipefail
 
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"

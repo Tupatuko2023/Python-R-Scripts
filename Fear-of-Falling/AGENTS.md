@@ -16,7 +16,7 @@ Aja tämän aliprojektin komennot aina kansiosta:
 - `Python-R-Scripts/Fear-of-Falling/`
 
 Termux runner (repojuuresta):
-`sh scripts/termux/run_qc_summarizer_proot.sh`
+`bash scripts/termux/run_qc_summarizer_proot.sh`
 Note: runner is portable (no hardcoded paths); it derives the Fear-of-Falling repo root from the script location.
 
 Varmista working directory ennen ajoa:

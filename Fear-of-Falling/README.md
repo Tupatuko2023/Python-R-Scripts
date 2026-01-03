@@ -22,7 +22,7 @@ ja kirjaavat ne `manifest/manifest.csv`-tiedostoon (1 rivi per artefakti).
 
 ## Termux runner (Android)
 
-Termux runner: `sh scripts/termux/run_qc_summarizer_proot.sh`
+Termux runner: `bash scripts/termux/run_qc_summarizer_proot.sh`
 Note: runner is portable (no hardcoded paths); it derives the Fear-of-Falling repo root from the script location.
 
 ## Prerequisites
