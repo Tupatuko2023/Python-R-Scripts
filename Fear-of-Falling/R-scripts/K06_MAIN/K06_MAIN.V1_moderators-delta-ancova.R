@@ -164,6 +164,28 @@ dat <- raw_data %>%
     SRM = oma_arvio_liikuntakyky
   )
 
+bad_srh <- setdiff(stats::na.omit(unique(dat$SRH)), 0:2)
+if (length(bad_srh) > 0L) {
+  stop(
+    "Unexpected SRH code(s) detected: ",
+    paste(bad_srh, collapse = ", "),
+    ". Expected values are 0, 1, 2 or NA."
+  )
+}
+
+bad_srm <- setdiff(stats::na.omit(unique(dat$SRM)), 0:2)
+if (length(bad_srm) > 0L) {
+  stop(
+    "Unexpected SRM code(s) detected: ",
+    paste(bad_srm, collapse = ", "),
+    ". Expected values are 0, 1, 2 or NA."
+  )
+}
+
+if (all(is.na(dat$PainVAS0))) {
+  stop("PainVAS0 is entirely missing; cannot compute tertiles for PainVAS0_G2.")
+}
+
 pain_tertiles <- quantile(dat$PainVAS0, probs = c(1 / 3, 2 / 3), na.rm = TRUE)
 
 dat <- dat %>%
@@ -301,6 +323,10 @@ save_model_tbl <- function(tbl, label) {
 dat_cc_pain <- dat_cc_base %>%
   filter(!is.na(PainVAS0))
 
+if (!nrow(dat_cc_pain)) {
+  stop("No complete-case data available for PainVAS0 continuous model (dat_cc_pain).")
+}
+
 fit_pain <- lm(
   Delta_Composite_Z ~ FOF_status_f * PainVAS0 + Composite_Z0 + age + sex + BMI,
   data = dat_cc_pain
@@ -312,6 +338,10 @@ save_model_tbl(coef_pain, "fit_ancova_delta_pain_continuous_coefficients")
 # --- Model 2: PainVAS0 dichotomized -----------------------------------------
 dat_cc_pain_g2 <- dat_cc_base %>%
   filter(!is.na(PainVAS0_G2))
+
+if (!nrow(dat_cc_pain_g2)) {
+  stop("No complete-case data available for PainVAS0 dichotomized model (dat_cc_pain_g2).")
+}
 
 fit_pain_g2 <- lm(
   Delta_Composite_Z ~ FOF_status_f * PainVAS0_G2 + Composite_Z0 + age + sex + BMI,
@@ -332,6 +362,10 @@ save_model_tbl(ctr_pain_g2, "emmeans_contrast_pain_g2")
 dat_cc_srh <- dat_cc_base %>%
   filter(!is.na(SRH_3class))
 
+if (!nrow(dat_cc_srh)) {
+  stop("No complete-case data available for SRH model (dat_cc_srh).")
+}
+
 fit_srh <- lm(
   Delta_Composite_Z ~ FOF_status_f * SRH_3class + Composite_Z0 + age + sex + BMI,
   data = dat_cc_srh
@@ -350,6 +384,10 @@ save_model_tbl(ctr_srh, "emmeans_contrast_srh_3class")
 # --- Model 4: SRM 3-class ---------------------------------------------------
 dat_cc_srm <- dat_cc_base %>%
   filter(!is.na(SRM_3class))
+
+if (!nrow(dat_cc_srm)) {
+  stop("No complete-case data available for SRM model (dat_cc_srm).")
+}
 
 fit_srm <- lm(
   Delta_Composite_Z ~ FOF_status_f * SRM_3class + Composite_Z0 + age + sex + BMI,
