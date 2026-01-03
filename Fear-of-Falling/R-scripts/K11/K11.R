@@ -170,7 +170,7 @@ if (DEBUG) {
 
 # --- Analysis dataset for modeling (one place, one truth) ----
 
-# Poimi lisäkovariaatit raakadatan nimillä ja liitä df:ään id:n mukaan
+# Poimi lis??kovariaatit raakadatan nimill?? ja liit?? df:????n id:n mukaan
 
 dat_fof <- df %>%
   mutate(
@@ -178,7 +178,7 @@ dat_fof <- df %>%
     psych_score    = as.numeric(mieliala),
     previous_falls = as.numeric(kaatuminen),
     
-    Sex_f = factor(Sex, levels = c(0, 1), labels = c("female", "male")),
+    Sex_f = factor(Sex, levels = c(0, 1), labels = c("Level 0", "Level 1")),
     
     AgeClass = case_when(
       Age < 75 ~ "65_74",
@@ -199,7 +199,7 @@ dat_fof <- df %>%
 
 dat_fof <- dat_fof %>%
   mutate(
-    Sex_f = factor(Sex, levels = c(0,1), labels = c("female","male")),
+    Sex_f = factor(Sex, levels = c(0,1), labels = c("Level 0", "Level 1")),
     FOF_status_f = factor(FOF_status, levels = c(0,1), labels = c("Ei FOF","FOF"))
   )
 
@@ -212,16 +212,16 @@ glimpse(dat_fof)
 
 # 3.1 Outcome variables: Composite change
 
-# Tarkistetaan ensin, mitä sarakkeita on
+# Tarkistetaan ensin, mit?? sarakkeita on
 has_DeltaComposite    <- "DeltaComposite" %in% names(dat_fof)
 has_DeltaComposite_Z  <- "Delta_Composite_Z" %in% names(dat_fof)
 
 if (has_DeltaComposite) {
-  # Käytä valmista saraketta sellaisenaan
+  # K??yt?? valmista saraketta sellaisenaan
   message("Using existing DeltaComposite column.")
   
 } else if (has_DeltaComposite_Z) {
-  # Luo DeltaComposite tästä
+  # Luo DeltaComposite t??st??
   dat_fof <- dat_fof %>%
     mutate(DeltaComposite = Delta_Composite_Z)
   message("Created DeltaComposite from Delta_Composite_Z.")
@@ -252,7 +252,7 @@ dat_fof <- dat_fof %>%
       NA_real_
     ),
 
-    # FTSST (Tuoli): pienempi aika = parempi -> muutoksen merkki käännetään
+    # FTSST (Tuoli): pienempi aika = parempi -> muutoksen merkki k????nnet????n
     Delta_FTSST = if_else(
       !is.na(Tuoli0) & !is.na(Tuoli2),
       Tuoli0 - Tuoli2,  # positiivinen = nopeampi testi
@@ -278,7 +278,7 @@ dat_fof <- df %>%
     Delta_Composite_Z,
     Age,
     BMI,
-    Sex_f = factor(Sex, levels = c(0,1), labels = c("female","male")),
+    Sex_f = factor(Sex, levels = c(0,1), labels = c("Level 0", "Level 1")),
     FOF_status_f = factor(FOF_status, levels = c(0,1), labels = c("Ei FOF","FOF")),
     diabetes = diabetes,
     alzheimer = alzheimer,
@@ -408,7 +408,7 @@ set.seed(20251124)
 dat_fof <- dat_fof %>%
   mutate(
     FOF_status = as.integer(FOF_status_f == "FOF"),
-    sex        = as.integer(Sex_f == "male")
+    sex        = as.integer(Sex_f == "Level 1")
   )
 
 # Valitse MICE-imputointiin mukaan otettavat muuttujat
@@ -454,7 +454,7 @@ pred <- ini$predictorMatrix
 # Ei imputoida lopputulosta (Delta_Composite_Z)
 pred["Delta_Composite_Z", ] <- 0
 
-# Varsinainen imputointi, esim. 20 imputoitua datasettiä
+# Varsinainen imputointi, esim. 20 imputoitua datasetti??
 imp <- mice::mice(
   mice_data,
   m = 20,
@@ -544,12 +544,12 @@ mod_ord <- polr(
 
 summary(mod_ord)
 
-# Kertoimet ja luottamusvälit OR-muodossa
+# Kertoimet ja luottamusv??lit OR-muodossa
 (ctab <- coef(summary(mod_ord)))
 
-ci <- confint(mod_ord)  # luottamusvälit log-asteikolla
+ci <- confint(mod_ord)  # luottamusv??lit log-asteikolla
 OR  <- exp(cbind(Estimate = coef(mod_ord), ci))
-OR  # hae tästä FOF-rivi
+OR  # hae t??st?? FOF-rivi
 
 # ==============================================================================
 # 08. Subgroup Analysis by Age Quartiles
@@ -610,7 +610,7 @@ p_by_quartile <- dat_fof %>%
 p_by_quartile
 
 
-# 8.4 Model with FOF × Age quartile interaction
+# 8.4 Model with FOF ?? Age quartile interaction
 
 mod_resp_Age_int <- glm(
   responder ~ FOF_status * Age_quartile + Composite_Z0 + Age + BMI + sex,
@@ -618,14 +618,14 @@ mod_resp_Age_int <- glm(
   family = binomial(link = "logit")
 )
 
-# A) Globaalit p-arvot (mm. interaktio: muuttuuko FOF-efekti iän mukaan?)
+# A) Globaalit p-arvot (mm. interaktio: muuttuuko FOF-efekti i??n mukaan?)
 Anova(mod_resp_Age_int, type = "III")
 
-# B) FOF vs nonFOF -vertailu kussakin ikäkvartiilissa (OR + p-arvo)
+# B) FOF vs nonFOF -vertailu kussakin ik??kvartiilissa (OR + p-arvo)
 emm_fof_by_age <- emmeans(
   mod_resp_Age_int,
   ~ FOF_status | Age_quartile,
-  type = "response"     # antaa myös todennäköisyyksiä
+  type = "response"     # antaa my??s todenn??k??isyyksi??
 )
 
 contr_fof_by_age <- contrast(
@@ -640,7 +640,7 @@ summary(contr_fof_by_age, infer = TRUE, type = "response")
 
 # 8.5 P-values for plotting
 
-# Oleta, että p_by_quartile on laskettu tämän tyyppisenä:
+# Oleta, ett?? p_by_quartile on laskettu t??m??n tyyppisen??:
 # Age_quartile, test_type, p_value
 
 sig_df <- responder_by_Age_fof %>%
@@ -653,15 +653,15 @@ sig_df <- responder_by_Age_fof %>%
   ) %>%
   ungroup() %>%
   mutate(
-    # lisätään pieni marginaali tekstille
+    # lis??t????n pieni marginaali tekstille
     y_label = y_max + 0.05,
-    # mitä näytetään: tähdet tai p-arvo
+    # mit?? n??ytet????n: t??hdet tai p-arvo
     label = dplyr::case_when(
       p_value < 0.001 ~ "***",
       p_value < 0.01  ~ "**",
       p_value < 0.05  ~ "*",
       p_value < 0.10  ~ paste0("p = ", round(p_value, 2)),  # esim. p = 0.08
-      TRUE            ~ ""                                 # ei näytetä mitään
+      TRUE            ~ ""                                 # ei n??ytet?? mit????n
     )
   )
 
@@ -679,9 +679,9 @@ plot_responder_osuus <- ggplot(responder_by_Age_fof,
     limits = c(0, 1)
   ) +
   labs(
-    x    = "Ikäkvartiili",
+    x    = "Ik??kvartiili",
     fill = "FOF-status",
-    title = "Responder-osuus iän kvartiileittain FOF/nonFOF mukaan"
+    title = "Responder-osuus i??n kvartiileittain FOF/nonFOF mukaan"
   ) +
   theme_minimal()
 
@@ -702,21 +702,21 @@ plot_responderosuus_per <- ggplot(responder_by_Age_fof,
     labels = scales::percent_format(accuracy = 1)
   ) +
   labs(
-    x    = "Ikäkvartiili",
+    x    = "Ik??kvartiili",
     fill = "FOF-status",
-    title = "Responder-osuus iän kvartiileittain FOF/nonFOF mukaan"
+    title = "Responder-osuus i??n kvartiileittain FOF/nonFOF mukaan"
   ) +
   theme_minimal()
 
-# Sama kuva + p-arvo-/tähtitekstit ikäkvartiilin päälle
+# Sama kuva + p-arvo-/t??htitekstit ik??kvartiilin p????lle
 plot_responderosuus_per_annot <- plot_responderosuus_per +
   geom_text(
     data = sig_df %>% filter(label != ""),
     aes(x = Age_quartile, y = y_label, label = label),
     inherit.aes = FALSE,
-    vjust = 0   # teksti hieman pisteen yläpuolelle
+    vjust = 0   # teksti hieman pisteen yl??puolelle
   ) +
-  # pieni lisävaraa y-akselille, jos tarvitsee
+  # pieni lis??varaa y-akselille, jos tarvitsee
   coord_cartesian(ylim = c(0, 1.05))
 
 # Tallenna
@@ -737,7 +737,7 @@ mod_lm <- lm(
   data = dat_fof
 )
 
-# Esim. Breusch–Pagan heteroskedastisuustesti
+# Esim. Breusch???Pagan heteroskedastisuustesti
 library(lmtest)
 bptest(mod_lm, ~ FOF_status, data = dat_fof)
 
@@ -756,7 +756,7 @@ mod_gls_het <- gls(
 
 anova(mod_gls_hom, mod_gls_het)  # testaa, parantaako heteroskedastisuus sovitusta
 
-# Arvioidut residuaalivarianssit ryhmittäin
+# Arvioidut residuaalivarianssit ryhmitt??in
 summary(mod_gls_het)$modelStruct$varStruct
 
 # 9.2 Quantile regression
@@ -785,7 +785,7 @@ summary(mod_rq_25)
 summary(mod_rq_50)
 summary(mod_rq_75)
 
-# Esim. kerää FOF_status-kertoimet taulukkoon
+# Esim. ker???? FOF_status-kertoimet taulukkoon
 
 get_fof <- function(fit) {
   cf <- summary(fit)$coefficients
@@ -793,7 +793,7 @@ get_fof <- function(fit) {
   # etsi rivi, joka alkaa "FOF_status"
   rn <- rownames(cf)
   idx <- grep("^FOF_status", rn)
-  if (length(idx) == 0) stop("FOF-termiä ei löytynyt. Rownames: ", paste(rn, collapse=", "))
+  if (length(idx) == 0) stop("FOF-termi?? ei l??ytynyt. Rownames: ", paste(rn, collapse=", "))
   
   term <- rn[idx[1]]
   
@@ -833,7 +833,7 @@ Age_quartile_summary <- dat_fof %>%
     .groups    = "drop"
   )
 
-# Ikäjakaumat kvartaaleittain: montako kutakin ikää per kvartiili
+# Ik??jakaumat kvartaaleittain: montako kutakin ik???? per kvartiili
 Age_quartile_Age_counts <- dat_fof %>%
   group_by(Age_quartile, Age) %>%
   summarise(
@@ -881,7 +881,7 @@ save_table_csv_html(tab_std_ext, "lm_extended_standardized")
 
 # 10.3 MICE imputed models
 
-# Huom: seuraavat oli jo tehty aiemmin skriptissä:
+# Huom: seuraavat oli jo tehty aiemmin skriptiss??:
 # md_pattern_df
 # tab_base_imp
 # tab_ext_imp
@@ -918,13 +918,13 @@ OR_df <- as.data.frame(OR) %>%
 save_table_csv_html(ctab_df, "ordinal_polr_coefficients")
 save_table_csv_html(OR_df,   "ordinal_polr_OR")
 
-# Responder-osuudet ikäkvartiileittain ja FOF-statuksen mukaan
+# Responder-osuudet ik??kvartiileittain ja FOF-statuksen mukaan
 save_table_csv_html(responder_by_Age_fof, "responder_by_Age_and_FOF")
 
 # Kvartiilikohtaiset p-arvot (Chi-square/Fisher)
 save_table_csv_html(p_by_quartile, "responder_pvalues_by_Age_quartile")
 
-# emmeans: FOF vs nonFOF per ikäkvartiili (OR + CI)
+# emmeans: FOF vs nonFOF per ik??kvartiili (OR + CI)
 contr_fof_by_Age_df <- as.data.frame(
   summary(contr_fof_by_age, infer = TRUE, type = "response")
 )
@@ -934,7 +934,7 @@ save_table_csv_html(contr_fof_by_Age_df, "emmeans_FOF_vs_nonFOF_by_agequartile")
 
 # 10.5 Distributional and quantile regression results
 
-# Breusch–Pagan heteroskedastisuustesti
+# Breusch???Pagan heteroskedastisuustesti
 bp <- bptest(mod_lm, ~ FOF_status, data = dat_fof)
 
 bp_df <- data.frame(
@@ -949,24 +949,24 @@ save_table_csv_html(bp_df, "BP_test_FOF_status")
 gls_comp <- as.data.frame(anova(mod_gls_hom, mod_gls_het))
 save_table_csv_html(gls_comp, "gls_hom_vs_het_comparison")
 
-# Residuaalivarianssien suhteet FOF-ryhmittäin
+# Residuaalivarianssien suhteet FOF-ryhmitt??in
 var_struct <- summary(mod_gls_het)$modelStruct$varStruct
 
-# Poimitaan varIdent-kertoimet (ei sisällä baseline-ryhmää, jonka kerroin = 1)
+# Poimitaan varIdent-kertoimet (ei sis??ll?? baseline-ryhm????, jonka kerroin = 1)
 var_coefs <- coef(var_struct, unconstrained = FALSE)
 
 # FOF-status -faktorin tasot datasta
 var_levels <- levels(dat_fof$FOF_status)
 
-# Baseline-ryhmä on se taso, jota ei ole var_coefs-nimissä
+# Baseline-ryhm?? on se taso, jota ei ole var_coefs-nimiss??
 baseline_level <- setdiff(var_levels, names(var_coefs))
 
-# Jos jostain syystä baselinea ei löydy, oletetaan ensimmäinen taso
+# Jos jostain syyst?? baselinea ei l??ydy, oletetaan ensimm??inen taso
 if (length(baseline_level) == 0) {
   baseline_level <- var_levels[1]
 }
 
-# Kootaan täysi suhteiden vektori: baseline = 1, muut = coef(var_struct)
+# Kootaan t??ysi suhteiden vektori: baseline = 1, muut = coef(var_struct)
 ratios_full <- c(1, as.numeric(var_coefs))
 names(ratios_full) <- c(baseline_level, names(var_coefs))
 

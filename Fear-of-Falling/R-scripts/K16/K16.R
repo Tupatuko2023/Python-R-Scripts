@@ -10,7 +10,7 @@
 # Outcome: Delta_Composite_Z (ANCOVA), Composite_Z over time (mixed models)
 # Predictors: FOF_status (factor: "nonFOF"/"FOF")
 # Moderator/interaction: None (frailty as covariate/confounder, not moderator)
-#                        Exploratory: FOF × frailty_cat_3 interaction
+#                        Exploratory: FOF ?? frailty_cat_3 interaction
 # Grouping variable: ID (for mixed models random effects)
 # Covariates: age, sex, BMI, frailty_cat_3 (or frailty_score_3)
 #             NOTE: Primary mixed models use time_f (0 vs 12) without baseline covariate,
@@ -53,7 +53,7 @@
 # 06) Prepare long-format data for mixed models (Composite_Z at time 0 and 12; time_f factor)
 # 07) Fit primary ANCOVA models: baseline (no frailty), frailty_cat_3, frailty_score_3
 # 08) Fit primary mixed models (time_f * FOF, no baseline covariate): baseline (no frailty), frailty_cat_3, frailty_score_3
-# 09) Fit exploratory interaction models: FOF × frailty_cat_3 (ANCOVA + mixed)
+# 09) Fit exploratory interaction models: FOF ?? frailty_cat_3 (ANCOVA + mixed)
 # 10) Fit sensitivity analyses: frailty_cat_3_obj, frailty_cat_3_2plus
 # 11) Create formatted tables (ANCOVA + mixed results, model comparisons, sensitivity)
 # 12) Create visualizations (frailty effects coefficient plot, predicted trajectories at 0 and 12 months)
@@ -149,7 +149,7 @@ if (!exists("analysis_data")) {
 
   if (file.exists(k15_rdata)) {
     load(k15_rdata)
-    message("✓ Loaded analysis_data from: ", k15_rdata)
+    message("??? Loaded analysis_data from: ", k15_rdata)
   } else {
     # Run K15.R to generate the data
     message("Running K15.R to generate frailty variables...")
@@ -166,7 +166,7 @@ if (!("ID" %in% names(analysis_data))) {
   } else if ("NRO" %in% names(analysis_data)) {
     analysis_data <- analysis_data %>% mutate(ID = NRO)
   } else {
-    stop("K16: ID puuttuu eikä löytynyt Jnro/NRO-korviketta.")
+    stop("K16: ID puuttuu eik?? l??ytynyt Jnro/NRO-korviketta.")
   }
 }
 
@@ -175,7 +175,7 @@ if (!("Composite_Z0" %in% names(analysis_data))) {
   if ("ToimintaKykySummary0" %in% names(analysis_data)) {
     analysis_data <- analysis_data %>% mutate(Composite_Z0 = ToimintaKykySummary0)
   } else {
-    stop("K16: Composite_Z0 puuttuu eikä löytynyt ToimintaKykySummary0-korviketta.")
+    stop("K16: Composite_Z0 puuttuu eik?? l??ytynyt ToimintaKykySummary0-korviketta.")
   }
 }
 
@@ -183,7 +183,7 @@ if (!("Composite_Z12" %in% names(analysis_data))) {
   if ("ToimintaKykySummary2" %in% names(analysis_data)) {
     analysis_data <- analysis_data %>% mutate(Composite_Z12 = ToimintaKykySummary2)
   } else {
-    stop("K16: Composite_Z12 puuttuu eikä löytynyt ToimintaKykySummary2-korviketta.")
+    stop("K16: Composite_Z12 puuttuu eik?? l??ytynyt ToimintaKykySummary2-korviketta.")
   }
 }
 
@@ -217,25 +217,25 @@ analysis_data <- analysis_data %>%
 table(analysis_data$frailty_cat_3, useNA="ifany")
 
 
-# Frailty continuous score: K15 tuottaa frailty_count_3 -> käytetään sitä score:na
+# Frailty continuous score: K15 tuottaa frailty_count_3 -> k??ytet????n sit?? score:na
 if (!("frailty_score_3" %in% names(analysis_data))) {
   if ("frailty_count_3" %in% names(analysis_data)) {
     analysis_data <- analysis_data %>% mutate(frailty_score_3 = as.numeric(frailty_count_3))
   } else {
-    stop("K16: frailty_score_3 puuttuu eikä löytynyt frailty_count_3-korviketta.")
+    stop("K16: frailty_score_3 puuttuu eik?? l??ytynyt frailty_count_3-korviketta.")
   }
 }
 
 
 
-# Käytä K15:n valmista faktorimuuttujaa (nonFOF/FOF)
+# K??yt?? K15:n valmista faktorimuuttujaa (nonFOF/FOF)
 # FOF_status: oletus 0 = nonFOF, 1 = FOF
 
 if ("FOF_status_factor" %in% names(analysis_data)) {
   analysis_data <- analysis_data %>%
     mutate(FOF_status = droplevels(FOF_status_factor))
 } else {
-  # fallback (jos factor puuttuu): tunnista myös "nonFOF"
+  # fallback (jos factor puuttuu): tunnista my??s "nonFOF"
   analysis_data <- analysis_data %>%
     mutate(
       FOF_status = trimws(as.character(FOF_status)),
@@ -260,15 +260,15 @@ analysis_data <- analysis_data %>%
     sex = factor(sex)
   )
 
-# 1) Mitä FOF_status on koko datassa nyt?
+# 1) Mit?? FOF_status on koko datassa nyt?
 print(table(analysis_data$FOF_status, useNA = "ifany"))
 
-# 2) Mitkä olivat alkuperäiset FOF-arvot ennen recodea? (jos et tallettanut, tee nyt seuraavalla ajolla)
-analysis_data$FOF_raw <- analysis_data$FOF_status  # tee tämä ENNEN recodea
+# 2) Mitk?? olivat alkuper??iset FOF-arvot ennen recodea? (jos et tallettanut, tee nyt seuraavalla ajolla)
+analysis_data$FOF_raw <- analysis_data$FOF_status  # tee t??m?? ENNEN recodea
 print(table(analysis_data$FOF_raw, useNA="ifany"))
 print(sort(unique(as.character(analysis_data$FOF_raw))))
 
-# 3) Kuinka moni on complete-case per ryhmä?
+# 3) Kuinka moni on complete-case per ryhm???
 cc_flag <- complete.cases(
   analysis_data[, c("Composite_Z0","Composite_Z12","age","sex","BMI","FOF_status")]
 )
@@ -291,7 +291,7 @@ if (length(missing_vars) > 0) {
   stop("Missing required variables: ", paste(missing_vars, collapse = ", "))
 }
 
-message("✓ All required frailty variables present")
+message("??? All required frailty variables present")
 message("  - frailty_cat_3: ", sum(!is.na(analysis_data$frailty_cat_3)), " valid cases")
 message("  - frailty_cat_3_obj: ", sum(!is.na(analysis_data$frailty_cat_3_obj)), " valid cases")
 message("  - frailty_cat_3_2plus: ", sum(!is.na(analysis_data$frailty_cat_3_2plus)), " valid cases")
@@ -359,16 +359,16 @@ stopifnot(
   "time_f must have exactly 2 levels: 0 and 12" =
     all(levels(analysis_long$time_f) == c("0", "12"))
 )
-message("✓ time_f levels verified: 0 and 12 months")
+message("??? time_f levels verified: 0 and 12 months")
 
 # Verify Composite_Z12 source
 message("Sanity check: Composite_Z12 derived from ToimintaKykySummary2...")
 stopifnot(
   "Composite_Z12 must exist" = "Composite_Z12" %in% names(analysis_data)
 )
-message("✓ Composite_Z12 confirmed as 12-month follow-up")
+message("??? Composite_Z12 confirmed as 12-month follow-up")
 
-message("✓ Data preparation complete")
+message("??? Data preparation complete")
 message("  - Wide format (ANCOVA): ", nrow(analysis_data), " participants")
 message("  - Long format (Mixed models): ", nrow(analysis_long), " observations")
 
@@ -378,7 +378,7 @@ message("  - Long format (Mixed models): ", nrow(analysis_long), " observations"
 
 message("\n03) Running primary ANCOVA models (Delta-analysis)...")
 
-# varmista että score on olemassa ja numeerinen
+# varmista ett?? score on olemassa ja numeerinen
 analysis_data <- analysis_data %>%
   mutate(frailty_score_3 = as.numeric(frailty_score_3))
 
@@ -431,7 +431,7 @@ mod_delta_frailty  <- lm(Delta_Composite_Z ~ FOF_status + frailty_cat_3 + Compos
 mod_delta_frailty_cont <- lm(Delta_Composite_Z ~ FOF_status + frailty_score_3 + Composite_Z0 + age + sex + BMI,
                              data = dat_delta)
 
-message("✓ ANCOVA models fitted")
+message("??? ANCOVA models fitted")
 
 # Extract and format results
 ancova_results <- list(
@@ -485,7 +485,7 @@ mod_mixed_frailty_cont <- lmer(
   REML = TRUE
 )
 
-message("✓ Mixed models fitted")
+message("??? Mixed models fitted")
 
 # Sanity check: verify primary mixed model terms
 message("Sanity check: verifying primary mixed model fixed effects...")
@@ -507,7 +507,7 @@ if (length(unexpected_terms) > 0 && any(grepl("Composite_Z0_baseline", unexpecte
        "Primary model should NOT include baseline covariate. ",
        "Unexpected terms: ", paste(unexpected_terms, collapse = ", "))
 }
-message("✓ Primary model terms verified (time_f12, FOF_statusFOF, time_f12:FOF_statusFOF, frailty)")
+message("??? Primary model terms verified (time_f12, FOF_statusFOF, time_f12:FOF_statusFOF, frailty)")
 message("  - No Composite_Z0_baseline in primary model (as expected)")
 
 # Extract and format results
@@ -533,20 +533,20 @@ mixed_comparison <- data.frame(
 
 message("\n05) Running exploratory interaction models...")
 
-# 7.1 ANCOVA with FOF × frailty interaction
+# 7.1 ANCOVA with FOF ?? frailty interaction
 mod_delta_interaction <- lm(
   Delta_Composite_Z ~ FOF_status * frailty_cat_3 + Composite_Z0 + age + sex + BMI,
   data = analysis_data
 )
 
-# 7.2 Mixed model with time × FOF × frailty interaction
+# 7.2 Mixed model with time ?? FOF ?? frailty interaction
 mod_mixed_interaction <- lmer(
   Composite_Z ~ time_f * FOF_status * frailty_cat_3 + age + sex + BMI + (1 | ID),
   data = analysis_long,
   REML = TRUE
 )
 
-message("✓ Interaction models fitted")
+message("??? Interaction models fitted")
 
 # Extract results
 interaction_results <- list(
@@ -584,7 +584,7 @@ mod_mixed_sens_strict <- lmer(
   REML = TRUE
 )
 
-message("✓ Sensitivity analyses complete")
+message("??? Sensitivity analyses complete")
 
 # Extract sensitivity results
 sensitivity_results <- list(
@@ -611,7 +611,7 @@ ancova_primary_table <- ancova_results$frailty_cat %>%
                   "Composite_Z0" = "Baseline Composite Z",
                   "age" = "Age (years)",
                   "sexmale" = "Sex (Male vs. Female)",
-                  "BMI" = "BMI (kg/m²)"),
+                  "BMI" = "BMI (kg/m??)"),
     CI = paste0("[", sprintf("%.3f", conf.low), ", ", sprintf("%.3f", conf.high), "]"),
     p_formatted = case_when(
       p.value < 0.001 ~ "<0.001",
@@ -623,7 +623,7 @@ ancova_primary_table <- ancova_results$frailty_cat %>%
          CI, t = statistic, p = p_formatted)
 
 ft_ancova_primary <- flextable(ancova_primary_table) %>%
-  set_caption("ANCOVA Results: Change in Composite Physical Function (Δ-score) with Frailty Adjustment") %>%
+  set_caption("ANCOVA Results: Change in Composite Physical Function (??-score) with Frailty Adjustment") %>%
   autofit() %>%
   theme_booktabs()
 
@@ -638,8 +638,8 @@ mixed_primary_table <- mixed_results$frailty_cat %>%
                   "frailty_cat_3Frail" = "Frail (vs. Robust)",
                   "age" = "Age (years)",
                   "sexmale" = "Sex (Male vs. Female)",
-                  "BMI" = "BMI (kg/m²)",
-                  "time_f12:FOF_statusFOF" = "Time (12 months) × FOF"),
+                  "BMI" = "BMI (kg/m??)",
+                  "time_f12:FOF_statusFOF" = "Time (12 months) ?? FOF"),
     CI = paste0("[", sprintf("%.3f", conf.low), ", ", sprintf("%.3f", conf.high), "]"),
     p_formatted = case_when(
       p.value < 0.001 ~ "<0.001",
@@ -670,7 +670,7 @@ ft_mixed_comparison <- flextable(mixed_comparison) %>%
 
 # 9.4 Sensitivity analysis summary
 sensitivity_summary <- data.frame(
-  Analysis = c("Primary (Combined)", "Sensitivity: Objective-only", "Sensitivity: Strict (≥2)"),
+  Analysis = c("Primary (Combined)", "Sensitivity: Objective-only", "Sensitivity: Strict (???2)"),
   ANCOVA_AIC = c(AIC(mod_delta_frailty), AIC(mod_delta_sens_obj), AIC(mod_delta_sens_strict)),
   Mixed_AIC = c(AIC(mod_mixed_frailty), AIC(mod_mixed_sens_obj), AIC(mod_mixed_sens_strict)),
   ANCOVA_R2 = c(summary(mod_delta_frailty)$r.squared,
@@ -714,7 +714,7 @@ append_manifest(
   getOption("fof.manifest_path")
 )
 
-message("✓ Saved tables: ", docx_path)
+message("??? Saved tables: ", docx_path)
 
 # Save model objects
 model_list <- list(
@@ -746,7 +746,7 @@ append_manifest(
   getOption("fof.manifest_path")
 )
 
-message("✓ Saved model objects: ", rdata_path)
+message("??? Saved model objects: ", rdata_path)
 
 # ==============================================================================
 # 09. Create Visualization
@@ -774,7 +774,7 @@ p_frailty_coefs <- ggplot(frailty_coefs, aes(x = term, y = estimate, color = Mod
     title = "Frailty Effects on Physical Function",
     subtitle = "Coefficient estimates with 95% confidence intervals",
     x = "Frailty Category (vs. Robust)",
-    y = "Effect Size (β coefficient)"
+    y = "Effect Size (?? coefficient)"
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
@@ -792,7 +792,7 @@ append_manifest(
   getOption("fof.manifest_path")
 )
 
-message("✓ Saved plot: K16_frailty_effects_plot.png")
+message("??? Saved plot: K16_frailty_effects_plot.png")
 
 # 11.2 Predicted trajectories by frailty status  ---- FIXED ----
 
@@ -824,7 +824,7 @@ stopifnot(
 
 pred_data$predicted <- predict(mod_mixed_frailty, newdata = pred_data, re.form = NA)
 
-# 4) piirrä
+# 4) piirr??
 pred_data <- pred_data %>%
   mutate(FOF_label = dplyr::recode(as.character(FOF_status),
                                    "nonFOF" = "No FOF",
@@ -860,7 +860,7 @@ append_manifest(
   getOption("fof.manifest_path")
 )
 
-message("✓ Saved plot: K16_predicted_trajectories.png")
+message("??? Saved plot: K16_predicted_trajectories.png")
 
 # ==============================================================================
 # 10. Generate Results Text
@@ -888,7 +888,7 @@ frailty_prefrail_mixed  <- get_term(mixed_results$frailty_cat, "frailty_cat_3.*P
 frailty_frail_mixed     <- get_term(mixed_results$frailty_cat, "frailty_cat_3.*Frail", effect_fixed = TRUE)
 
 
-# Calculate R² change
+# Calculate R?? change
 r2_baseline <- summary(mod_delta_baseline)$r.squared
 r2_frailty <- summary(mod_delta_frailty)$r.squared
 r2_change <- r2_frailty - r2_baseline
@@ -899,7 +899,7 @@ p_txt <- function(p){
 }
 
 sig_en <- ifelse(fof_effect_ancova$p.value < 0.05, "significantly", "not significantly")
-sig_fi <- ifelse(fof_effect_ancova$p.value < 0.05, "merkitsevästi", "ei-merkitsevästi")
+sig_fi <- ifelse(fof_effect_ancova$p.value < 0.05, "merkitsev??sti", "ei-merkitsev??sti")
 
 
 
@@ -937,13 +937,13 @@ results_text_en <- paste0(
                 paste("=", sprintf("%.3f", frailty_frail_ancova$p.value)),
                 paste("=", sprintf("%.2f", frailty_frail_ancova$p.value)))), ").\n\n",
 
-  "Adding frailty to the model improved explanatory power (ΔR² = ",
-  sprintf("%.3f", r2_change), ", from R² = ", sprintf("%.3f", r2_baseline),
-  " to R² = ", sprintf("%.3f", r2_frailty), ").\n\n",
+  "Adding frailty to the model improved explanatory power (??R?? = ",
+  sprintf("%.3f", r2_change), ", from R?? = ", sprintf("%.3f", r2_baseline),
+  " to R?? = ", sprintf("%.3f", r2_frailty), ").\n\n",
 
   "Primary Mixed Model Results (Longitudinal Analysis)\n",
   "---------------------------------------------------\n",
-  "The time × FOF interaction remained ",
+  "The time ?? FOF interaction remained ",
   ifelse(fof_time_mixed$p.value < 0.05, "significant", "non-significant"),
   " after frailty adjustment (B = ", sprintf("%.3f", fof_time_mixed$estimate),
   ", 95% CI [", sprintf("%.3f", fof_time_mixed$conf.low), ", ",
@@ -968,7 +968,7 @@ results_text_en <- paste0(
   "Results remained consistent across alternative frailty definitions:\n",
   "- Objective-only frailty (AIC = ", sprintf("%.1f", AIC(mod_delta_sens_obj)),
   " vs. primary AIC = ", sprintf("%.1f", AIC(mod_delta_frailty)), ")\n",
-  "- Strict frailty (≥2 indicators; AIC = ", sprintf("%.1f", AIC(mod_delta_sens_strict)),
+  "- Strict frailty (???2 indicators; AIC = ", sprintf("%.1f", AIC(mod_delta_sens_strict)),
   " vs. primary AIC = ", sprintf("%.1f", AIC(mod_delta_frailty)), ")\n\n",
 
   "These findings suggest that FOF effects on physical function decline are ",
@@ -980,18 +980,18 @@ results_text_en <- paste0(
 results_text_fi <- paste0(
   "TULOKSET: Haurauskorjattu analyysi\n",
   "===================================\n\n",
-  "Primääri ANCOVA-tulokset (Muutosanalyysi)\n",
+  "Prim????ri ANCOVA-tulokset (Muutosanalyysi)\n",
   "------------------------------------------\n",
-  "Fyysisen haurausstatuksen huomioimisen jälkeen kaatumisen pelko (FOF) oli ",
-  sig_fi, " yhteydessä fyysisen suorituskyvyn heikkenemiseen (B = ",
+  "Fyysisen haurausstatuksen huomioimisen j??lkeen kaatumisen pelko (FOF) oli ",
+  sig_fi, " yhteydess?? fyysisen suorituskyvyn heikkenemiseen (B = ",
   sprintf("%.3f", fof_effect_ancova$estimate), ", 95% LV [",
   sprintf("%.3f", fof_effect_ancova$conf.low), ", ",
   sprintf("%.3f", fof_effect_ancova$conf.high), "], p ",
   p_txt(fof_effect_ancova$p.value), ").\n\n",
 
-  "Haurausstatuksella oli itsenäinen yhteys fyysisen suorituskyvyn muutokseen:\n",
+  "Haurausstatuksella oli itsen??inen yhteys fyysisen suorituskyvyn muutokseen:\n",
   "- Esihauraat osallistujat (vs. robustit) osoittivat ",
-  ifelse(frailty_prefrail_ancova$estimate < 0, "suurempaa heikkenemistä", "vähäisempää heikkenemistä"),
+  ifelse(frailty_prefrail_ancova$estimate < 0, "suurempaa heikkenemist??", "v??h??isemp???? heikkenemist??"),
   " (B = ", sprintf("%.3f", frailty_prefrail_ancova$estimate),
   ", 95% LV [", sprintf("%.3f", frailty_prefrail_ancova$conf.low), ", ",
   sprintf("%.3f", frailty_prefrail_ancova$conf.high), "], p ",
@@ -999,50 +999,50 @@ results_text_fi <- paste0(
          paste("=", sprintf("%.3f", frailty_prefrail_ancova$p.value))), ").\n",
 
   "- Hauraat osallistujat (vs. robustit) osoittivat ",
-  ifelse(frailty_frail_ancova$estimate < 0, "suurempaa heikkenemistä", "vähäisempää heikkenemistä"),
+  ifelse(frailty_frail_ancova$estimate < 0, "suurempaa heikkenemist??", "v??h??isemp???? heikkenemist??"),
   " (B = ", sprintf("%.3f", frailty_frail_ancova$estimate),
   ", 95% LV [", sprintf("%.3f", frailty_frail_ancova$conf.low), ", ",
   sprintf("%.3f", frailty_frail_ancova$conf.high), "], p ",
   ifelse(frailty_frail_ancova$p.value < 0.001, "< 0.001",
          paste("=", sprintf("%.3f", frailty_frail_ancova$p.value))), ").\n\n",
 
-  "Haurausmuuttujan lisääminen malliin paransi selitysvoimaa (ΔR² = ",
-  sprintf("%.3f", r2_change), ", R²:stä ", sprintf("%.3f", r2_baseline),
-  " → R² = ", sprintf("%.3f", r2_frailty), ").\n\n",
+  "Haurausmuuttujan lis????minen malliin paransi selitysvoimaa (??R?? = ",
+  sprintf("%.3f", r2_change), ", R??:st?? ", sprintf("%.3f", r2_baseline),
+  " ??? R?? = ", sprintf("%.3f", r2_frailty), ").\n\n",
 
-  "Primääri sekamallin tulokset (Pitkittäisanalyysi)\n",
+  "Prim????ri sekamallin tulokset (Pitkitt??isanalyysi)\n",
   "--------------------------------------------------\n",
-  "Aika × FOF -yhdysvaikutus säilyi ",
-  ifelse(fof_time_mixed$p.value < 0.05, "merkittävänä", "ei-merkittävänä"),
-  " haurauskorjauksen jälkeen (B = ", sprintf("%.3f", fof_time_mixed$estimate),
+  "Aika ?? FOF -yhdysvaikutus s??ilyi ",
+  ifelse(fof_time_mixed$p.value < 0.05, "merkitt??v??n??", "ei-merkitt??v??n??"),
+  " haurauskorjauksen j??lkeen (B = ", sprintf("%.3f", fof_time_mixed$estimate),
   ", 95% LV [", sprintf("%.3f", fof_time_mixed$conf.low), ", ",
   sprintf("%.3f", fof_time_mixed$conf.high), "], p ",
   ifelse(fof_time_mixed$p.value < 0.001, "< 0.001",
          paste("=", sprintf("%.3f", fof_time_mixed$p.value))), "), ",
-  "mikä osoittaa että FOF:iin liittyvä heikkeneminen on riippumatonta lähtötason hauraudesta.\n\n",
+  "mik?? osoittaa ett?? FOF:iin liittyv?? heikkeneminen on riippumatonta l??ht??tason hauraudesta.\n\n",
 
-  "Hauraudella oli pääefektejä fyysisen toimintakyvyn tasoihin:\n",
-  "- Esihauras status oli yhteydessä matalampaan toimintakykyyn (B = ",
+  "Hauraudella oli p????efektej?? fyysisen toimintakyvyn tasoihin:\n",
+  "- Esihauras status oli yhteydess?? matalampaan toimintakykyyn (B = ",
   sprintf("%.3f", frailty_prefrail_mixed$estimate), ", p ",
   ifelse(frailty_prefrail_mixed$p.value < 0.001, "< 0.001",
          paste("=", sprintf("%.3f", frailty_prefrail_mixed$p.value))), ").\n",
 
-  "- Hauras status oli yhteydessä matalampaan toimintakykyyn (B = ",
+  "- Hauras status oli yhteydess?? matalampaan toimintakykyyn (B = ",
   sprintf("%.3f", frailty_frail_mixed$estimate), ", p ",
   ifelse(frailty_frail_mixed$p.value < 0.001, "< 0.001",
          paste("=", sprintf("%.3f", frailty_frail_mixed$p.value))), ").\n\n",
 
   "Herkkyysanalyysit\n",
   "-----------------\n",
-  "Tulokset pysyivät johdonmukaisina vaihtoehtoisten haurausmääritysten kanssa:\n",
+  "Tulokset pysyiv??t johdonmukaisina vaihtoehtoisten haurausm????ritysten kanssa:\n",
   "- Vain objektiivinen hauraus (AIC = ", sprintf("%.1f", AIC(mod_delta_sens_obj)),
-  " vs. primääri AIC = ", sprintf("%.1f", AIC(mod_delta_frailty)), ")\n",
-  "- Tiukka hauraus (≥2 indikaattoria; AIC = ", sprintf("%.1f", AIC(mod_delta_sens_strict)),
-  " vs. primääri AIC = ", sprintf("%.1f", AIC(mod_delta_frailty)), ")\n\n",
+  " vs. prim????ri AIC = ", sprintf("%.1f", AIC(mod_delta_frailty)), ")\n",
+  "- Tiukka hauraus (???2 indikaattoria; AIC = ", sprintf("%.1f", AIC(mod_delta_sens_strict)),
+  " vs. prim????ri AIC = ", sprintf("%.1f", AIC(mod_delta_frailty)), ")\n\n",
 
-  "Nämä tulokset viittaavat siihen, että kaatumisen pelon vaikutukset fyysisen ",
-  "suorituskyvyn heikkenemiseen ovat riippumattomia lähtötason haurausstatuksesta, ",
-  "ja molemmat tekijät osoittavat erilliset kontribuutiot kotona asuvien ikääntyneiden ",
+  "N??m?? tulokset viittaavat siihen, ett?? kaatumisen pelon vaikutukset fyysisen ",
+  "suorituskyvyn heikkenemiseen ovat riippumattomia l??ht??tason haurausstatuksesta, ",
+  "ja molemmat tekij??t osoittavat erilliset kontribuutiot kotona asuvien ik????ntyneiden ",
   "toimintakykytrajektoreihin.\n"
 )
 
@@ -1060,7 +1060,7 @@ append_manifest(
   getOption("fof.manifest_path")
 )
 
-message("✓ Saved English Results: ", results_en_path)
+message("??? Saved English Results: ", results_en_path)
 
 results_fi_path <- file.path(output_dir, "K16_Results_FI.txt")
 writeLines(results_text_fi, results_fi_path)
@@ -1075,7 +1075,7 @@ append_manifest(
   getOption("fof.manifest_path")
 )
 
-message("✓ Saved Finnish Results: ", results_fi_path)
+message("??? Saved Finnish Results: ", results_fi_path)
 
 # ==============================================================================
 # 11. Summary
@@ -1086,20 +1086,20 @@ message("K16 ANALYSIS COMPLETE")
 message(strrep("=", 80))
 message("\nKey Findings:")
 fof_sig <- ifelse(fof_effect_ancova$p.value < 0.05, "significant", "non-significant")
-message("✓ FOF effect after frailty adjustment (ANCOVA B = ",
+message("??? FOF effect after frailty adjustment (ANCOVA B = ",
         sprintf("%.3f", fof_effect_ancova$estimate[1]),
         ", p ", p_txt(fof_effect_ancova$p.value[1]),
         "; ", fof_sig, ")")
-message("✓ Frailty shows independent effects on physical function")
-message("✓ Adding frailty improved model fit (ΔR² = ", sprintf("%.3f", r2_change), ")")
-message("✓ Results robust across sensitivity analyses")
+message("??? Frailty shows independent effects on physical function")
+message("??? Adding frailty improved model fit (??R?? = ", sprintf("%.3f", r2_change), ")")
+message("??? Results robust across sensitivity analyses")
 message("\nOutputs saved to: ", output_dir)
-message("✓ Model tables (Word): K16_frailty_models_tables.docx")
-message("✓ Model objects (RData): K16_all_models.RData")
-message("✓ Coefficient plot: K16_frailty_effects_plot.png")
-message("✓ Trajectory plot: K16_predicted_trajectories.png")
-message("✓ Results text (EN): K16_Results_EN.txt")
-message("✓ Results text (FI): K16_Results_FI.txt")
+message("??? Model tables (Word): K16_frailty_models_tables.docx")
+message("??? Model objects (RData): K16_all_models.RData")
+message("??? Coefficient plot: K16_frailty_effects_plot.png")
+message("??? Trajectory plot: K16_predicted_trajectories.png")
+message("??? Results text (EN): K16_Results_EN.txt")
+message("??? Results text (FI): K16_Results_FI.txt")
 message(strrep("=", 80), "\n")
 
 # End of K16.R

@@ -892,6 +892,39 @@ renv::restore(prompt = FALSE)
   referenssitasot ovat `time = baseline` ja `FOF_status = Ei FOF` (ajurissa
   `factor(levels=...)`).
 
+## How to Reproduce Analysis (2026 Update)
+
+This repository contains a full R analysis pipeline. To reproduce results:
+
+1.  **Environment:** Ensure R and `renv` are installed. Run `renv::restore()` to install dependencies.
+2.  **Data:** Ensure `data/external/KaatumisenPelko.csv` is present.
+3.  **Run Pipeline:** Execute scripts in order (from repo root):
+    ```bash
+    # 1. Base Processing
+    Rscript R-scripts/K1/K1.7.main.R
+    Rscript R-scripts/K2/K2.Z_Score_C_Pivot_2G.R
+    Rscript R-scripts/K3/K3.7.main.R
+    Rscript R-scripts/K4/K4.A_Score_C_Pivot_2G.R
+
+    # 2. Descriptives & Frailty
+    Rscript R-scripts/K14/K14.R
+    Rscript R-scripts/K15/K15.R
+
+    # 3. Primary Models
+    Rscript R-scripts/K11/K11.R  # ANCOVA
+    Rscript R-scripts/K13/K13.R  # Interactions
+    Rscript R-scripts/K16/K16.R  # Mixed Models
+    ```
+
+### Outputs
+Results are saved in `R-scripts/<K_ID>/outputs/`. See `docs/RESULTS_RUN_SUMMARY.md` for details.
+
+### Notes
+- **Sex Variable:** Reported as Level 0/1 due to missing codebook.
+- **R-Tools:** Requires RTools 4.x on Windows for package compilation.
+
+---
+
 ## Termux + proot (Rscript)
 
 Jos ajat tätä projektia Androidin Termuxissa, **natiivissa Termuxissa** `Rscript` voi puuttua (esim. repo-/jakelukanavaerojen vuoksi). Tällöin suositeltu ja toistettava ratkaisu on ajaa kaikki R-ajot **proot-distro Ubuntu/Debian** -ympäristössä, jossa `/usr/bin/Rscript` on saatavilla.
