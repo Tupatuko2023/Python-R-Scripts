@@ -219,6 +219,19 @@ fof_out <- qc_fof_levels(df_long, "FOF_status", fof_allowed)
 qc_write_csv(fof_out, file.path(qc_dir, "qc_fof_levels.csv"), script_label,
              manifest_path, outputs_dir, notes = "FOF_status levels")
 
+time_details <- paste0(
+  "observed_raw=", time_out$status$observed_raw[[1]],
+  ";observed_canonical=", time_out$status$observed_canonical[[1]],
+  ";expected_raw=", time_out$status$expected_raw[[1]],
+  ";expected_canonical=", time_out$status$expected_canonical[[1]]
+)
+fof_details <- paste0(
+  "observed_raw=", fof_out$observed_raw[[1]],
+  ";observed_canonical=", fof_out$observed_canonical[[1]],
+  ";expected_raw=", fof_out$expected_raw[[1]],
+  ";expected_canonical=", fof_out$expected_canonical[[1]]
+)
+
 miss_overall <- qc_missingness_overall(df_long, req_cols)
 qc_write_csv(miss_overall, file.path(qc_dir, "qc_missingness_overall.csv"), script_label,
              manifest_path, outputs_dir, notes = "Missingness overall")
@@ -271,8 +284,8 @@ status_df <- data.frame(
   details = c(
     if (length(types_out$missing_cols) > 0) paste(types_out$missing_cols, collapse = ";") else "",
     paste0("n_dup_id_time=", id_out$summary$n_dup_id_time[[1]]),
-    paste0("observed=", time_out$status$observed[[1]]),
-    paste0("observed=", fof_out$observed_levels[[1]]),
+    time_details,
+    fof_details,
     if (isTRUE(delta_out$applicable[[1]])) paste0("n_mismatch=", delta_out$n_mismatch[[1]]) else "not_applicable",
     paste0("n_nonfinite=", outcome_summary$n_nonfinite[[1]])
   ),
