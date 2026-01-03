@@ -21,7 +21,7 @@ test -f "$QC_SKILL_R" || { echo "FATAL: missing qc_summarize.R at: $QC_SKILL_R";
 
 # Ensure PRoot Debian exists (robust check; do not fail on "already installed").
 run_proot_distro() {
-  (unset SHELLOPTS; set +u; proot-distro "$@")
+  env -u SHELLOPTS bash -c 'set +u; proot-distro "$@"' _ "$@"
 }
 
 has_debian() {
