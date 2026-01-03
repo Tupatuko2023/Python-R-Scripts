@@ -20,10 +20,14 @@ command -v proot-distro >/dev/null 2>&1 || {
 test -f "$QC_SKILL_R" || { echo "FATAL: missing qc_summarize.R at: $QC_SKILL_R"; exit 1; }
 
 # Ensure PRoot Debian exists (robust check; do not fail on "already installed").
+run_proot_distro() {
+  (unset SHELLOPTS; set +u; proot-distro "$@")
+}
+
 has_debian() {
-  proot-distro list --verbose 2>/dev/null | tr -d '\r' | awk '
-    $1=="Alias:" && $2=="debian" {in=1}
-    in && $1=="Installed:" && $2=="yes" {print "yes"; exit}
+  run_proot_distro list --verbose 2>/dev/null | tr -d '\r' | awk '
+    $1=="Alias:" && $2=="debian" {found=1}
+    found && $1=="Installed:" && $2=="yes" {print "yes"; exit}
   ' | grep -q yes
 }
 
@@ -33,7 +37,7 @@ if has_debian || [ -d "$DEBIAN_ROOTFS_DIR_HOME" ] || [ -d "$DEBIAN_ROOTFS_DIR_TE
   echo "INFO: proot debian already installed"
 else
   echo "INFO: proot debian not found; installing..."
-  proot-distro install debian
+  run_proot_distro install debian
 fi
 
 proot-distro login debian --termux-home -- bash -lc "
