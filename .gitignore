@@ -60,3 +60,6 @@ Fear-of-Falling/R-scripts/**/outputs/
 !.gemini/policies/
 .claude/settings.local.json
 repo_audit_staged_diff_full.txt
+
+# local agent prompts
+prompts/

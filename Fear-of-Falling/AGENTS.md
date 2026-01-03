@@ -15,6 +15,10 @@ Aja tämän aliprojektin komennot aina kansiosta:
 
 - `Python-R-Scripts/Fear-of-Falling/`
 
+Termux runner (repojuuresta):
+`sh scripts/termux/run_qc_summarizer_proot.sh`
+Note: runner is portable (no hardcoded paths); it derives the Fear-of-Falling repo root from the script location.
+
 Varmista working directory ennen ajoa:
 
 - Shell (macOS/Linux/WSL/Git Bash): `pwd`
@@ -304,3 +308,11 @@ Raportoi aina vastauksessa:
   ajopolku (pyproject/requirements).
 - TODO: lisää tieto, mitä tiedostoja ei saa muuttaa (esim. lukitut raportit,
   prereg, tms.), jos sellaisia on.
+
+## Termux runner note (Rscript)
+
+Jos ajat agenttia Android Termuxissa ja `Rscript` puuttuu natiivista Termuxista, aja kaikki R-komennot proot-ympäristössä ja käytä aina `/usr/bin/Rscript` (esim. `RSCRIPT_BIN=/usr/bin/Rscript`). Suositeltu malli:
+
+```sh
+proot-distro login ubuntu -- bash -lc 'cd /data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling && $RSCRIPT_BIN --version'
+```
