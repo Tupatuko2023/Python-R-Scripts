@@ -21,7 +21,23 @@ test -f "$QC_SKILL_R" || { echo "FATAL: missing qc_summarize.R at: $QC_SKILL_R";
 
 # Ensure PRoot Debian exists (robust check; do not fail on "already installed").
 run_proot_distro() {
-  env -u SHELLOPTS bash -c 'set +u; proot-distro "$@"' _ "$@"
+  local pd errfile tmp
+  pd="$(command -v proot-distro)"
+  errfile="/data/data/com.termux/files/usr/tmp/proot-distro.err"
+  if env -u SHELLOPTS "$pd" "$@" 2>"$errfile"; then
+    return 0
+  fi
+
+  if grep -q "unbound variable" "$errfile"; then
+    tmp="$(mktemp)"
+    sed 's/set -e -u/set -e/' "$pd" > "$tmp"
+    env -u SHELLOPTS bash "$tmp" "$@"
+    rm -f "$tmp"
+    return $?
+  fi
+
+  cat "$errfile" >&2
+  return 1
 }
 
 has_debian() {
