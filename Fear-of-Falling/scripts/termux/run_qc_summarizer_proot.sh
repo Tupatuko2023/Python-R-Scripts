@@ -59,6 +59,8 @@ fi
 run_proot_distro login debian --termux-home -- bash -lc "
 set -euo pipefail
 
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 cd '$FOF_ROOT' || exit 1
 
 echo '=== RSCRIPT gate ==='
