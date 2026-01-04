@@ -127,9 +127,27 @@ dat_fof <- df %>%
   mutate(
     MOI_score = as.numeric(MOIindeksiindeksi),
     psych_score = as.numeric(mieliala),
-    previous_falls = as.numeric(kaatuminen),
+    previous_falls = as.numeric(kaatuminen)
+  ) %>%
+  {
+    bad_sex <- setdiff(stats::na.omit(unique(.$Sex)), c(0, 1))
+    if (length(bad_sex) > 0L) {
+      stop("Unexpected Sex code(s): ", paste(bad_sex, collapse = ", "), ". Expected 0/1 or NA.")
+    }
+    bad_fof <- setdiff(stats::na.omit(unique(.$FOF_status)), c(0, 1))
+    if (length(bad_fof) > 0L) {
+      stop("Unexpected FOF_status code(s): ", paste(bad_fof, collapse = ", "), ". Expected 0/1 or NA.")
+    }
+    .
+  } %>%
+  mutate(
     Sex_f = factor(Sex, levels = c(0, 1), labels = c("female", "male")),
-    FOF_status_f = factor(FOF_status, levels = c(0, 1), labels = c("Ei FOF", "FOF"))
+    FOF_status_f = factor(FOF_status, levels = c(0, 1), labels = c("Ei FOF", "FOF")),
+    diabetes_f = factor(diabetes, levels = c(0, 1), labels = c("No", "Yes")),
+    alzheimer_f = factor(alzheimer, levels = c(0, 1), labels = c("No", "Yes")),
+    parkinson_f = factor(parkinson, levels = c(0, 1), labels = c("No", "Yes")),
+    AVH_f = factor(AVH, levels = c(0, 1), labels = c("No", "Yes")),
+    previous_falls_f = factor(previous_falls, levels = c(0, 1), labels = c("No", "Yes"))
   ) %>%
   filter(
     !is.na(Composite_Z0), !is.na(Composite_Z2), !is.na(Delta_Composite_Z),
@@ -177,7 +195,7 @@ append_manifest(
 # --- Extended model ----------------------------------------------------------
 mod_ext <- lm(
   Delta_Composite_Z ~ FOF_status_f + Composite_Z0 + Age + Sex_f + BMI +
-    MOI_score + diabetes + alzheimer + parkinson + AVH + previous_falls + psych_score,
+    MOI_score + diabetes_f + alzheimer_f + parkinson_f + AVH_f + previous_falls_f + psych_score,
   data = dat_fof
 )
 
