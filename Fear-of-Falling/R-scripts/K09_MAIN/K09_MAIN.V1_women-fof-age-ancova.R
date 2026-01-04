@@ -182,10 +182,10 @@ dat <- raw_data %>%
   mutate(
     sex_factor = factor(sex, levels = c(0, 1), labels = c("female", "male")),
     AgeClass = case_when(
-      age < 65 ~ "65_74",
       age >= 65 & age <= 74 ~ "65_74",
       age >= 75 & age <= 84 ~ "75_84",
       age >= 85 ~ "85plus",
+      age < 65 ~ NA_character_,
       TRUE ~ NA_character_
     ),
     AgeClass = factor(AgeClass, levels = c("65_74", "75_84", "85plus"), ordered = TRUE),
@@ -193,8 +193,9 @@ dat <- raw_data %>%
   )
 
 data_women <- dat %>% filter(sex_factor == "female")
-data_men <- dat %>% filter(sex_factor == "male")
-
+if (any(!is.na(dat$age) & dat$age < 65)) {
+  warning("Age < 65 detected; AgeClass set to NA for these rows.")
+}
 cell_counts_women <- data_women %>%
   count(FOF_status, AgeClass) %>%
   arrange(AgeClass, FOF_status)
@@ -233,22 +234,6 @@ append_manifest(
     path = get_relpath(cell_counts_women_final_path),
     kind = "table_csv",
     n = nrow(cell_counts_women_final)
-  ),
-  manifest_path
-)
-
-cell_counts_men <- data_men %>%
-  count(FOF_status, AgeClass) %>%
-  arrange(AgeClass, FOF_status)
-cell_counts_men_path <- file.path(outputs_dir, paste0(script_label, "_cell_counts_men_ageclass.csv"))
-save_table_csv(cell_counts_men, cell_counts_men_path)
-append_manifest(
-  manifest_row(
-    script = script_label,
-    label = "cell_counts_men_ageclass",
-    path = get_relpath(cell_counts_men_path),
-    kind = "table_csv",
-    n = nrow(cell_counts_men)
   ),
   manifest_path
 )
@@ -348,7 +333,7 @@ append_manifest(
   manifest_path
 )
 
-if (any(!is.na(analysis_women$neuro_any))) {
+if (dplyr::n_distinct(analysis_women$neuro_any, na.rm = TRUE) > 1) {
   model_neuro <- lm(
     DeltaComposite ~ FOF_status * AgeClass_final +
       neuro_any +
@@ -369,6 +354,8 @@ if (any(!is.na(analysis_women$neuro_any))) {
     ),
     manifest_path
   )
+} else {
+  warning("Skipping neuro_any-adjusted model: neuro_any has <=1 distinct non-missing value in complete-case data.")
 }
 
 txt_path <- file.path(outputs_dir, paste0(script_label, "_summary.txt"))
