@@ -192,12 +192,13 @@ format_pvalue <- function(p) {
 }
 
 format_mean_sd <- function(x, group, digits = 1) {
-  idx <- !is.na(x) & !is.na(group)
+  lvls <- levels(group)
+  out <- setNames(rep("", length(lvls)), lvls)
+  idx <- !is.na(group) & !is.na(x)
+  if (!any(idx)) return(out)
   x_use <- x[idx]
-  g_use <- droplevels(group[idx])
-  if (length(x_use) == 0L) return(setNames(c("", ""), levels(group)))
-  out <- setNames(character(length(levels(g_use))), levels(g_use))
-  for (lvl in levels(g_use)) {
+  g_use <- group[idx]
+  for (lvl in lvls) {
     x_g <- x_use[g_use == lvl]
     if (length(x_g) == 0L) {
       out[lvl] <- ""
@@ -211,11 +212,13 @@ format_mean_sd <- function(x, group, digits = 1) {
 }
 
 format_n_pct <- function(x, group, event = 1L) {
-  idx <- !is.na(x) & !is.na(group)
+  lvls <- levels(group)
+  out <- setNames(rep("", length(lvls)), lvls)
+  idx <- !is.na(group) & !is.na(x)
+  if (!any(idx)) return(out)
   x_use <- x[idx]
-  g_use <- droplevels(group[idx])
-  out <- setNames(character(length(levels(g_use))), levels(g_use))
-  for (lvl in levels(g_use)) {
+  g_use <- group[idx]
+  for (lvl in lvls) {
     mask <- g_use == lvl
     denom <- sum(mask)
     if (denom == 0L) {
@@ -294,7 +297,13 @@ make_multicat_rows_with_level_p <- function(data, var_name, header_label,
     ungroup()
   get_cell <- function(level_value, fof_value) {
     row <- tab %>% filter(level == level_value, FOF_status == fof_value)
-    if (nrow(row) == 0L || row$denom[1] == 0L) "0(0)" else paste0(row$n[1], "(", row$pct[1], ")")
+    if (nrow(row) == 0L) {
+      return("")
+    }
+    if (row$denom[1] == 0L) {
+      return("0(0)")
+    }
+    paste0(row$n[1], "(", row$pct[1], ")")
   }
   header_sums <- tab %>%
     group_by(FOF_status) %>%
@@ -366,9 +375,17 @@ tab_age <- tibble(
   P_value     = format_pvalue(p_age)
 )
 
+disease_nonmiss <- with(
+  analysis_data_rec,
+  !is.na(diabetes) | !is.na(alzheimer) | !is.na(parkinson) | !is.na(AVH)
+)
 any_disease <- with(
   analysis_data_rec,
-  (diabetes == 1) | (alzheimer == 1) | (parkinson == 1) | (AVH == 1)
+  ifelse(
+    !disease_nonmiss,
+    NA,
+    (diabetes == 1) | (alzheimer == 1) | (parkinson == 1) | (AVH == 1)
+  )
 )
 vals_any_disease <- format_n_pct(as.integer(any_disease), analysis_data_rec$FOF_status, event = 1L)
 p_any_disease <- fun_pvalue_cat(as.integer(any_disease), analysis_data_rec$FOF_status)
