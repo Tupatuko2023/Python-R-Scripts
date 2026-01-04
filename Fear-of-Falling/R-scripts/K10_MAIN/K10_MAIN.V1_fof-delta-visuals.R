@@ -244,8 +244,16 @@ raw_summary <- analysis_data_cc %>%
     sd_delta = sd(Delta_Composite_Z, na.rm = TRUE),
     n = sum(!is.na(Delta_Composite_Z)),
     se_delta = sd_delta / sqrt(n),
-    lower = mean_delta - qt(0.975, df = n - 1) * se_delta,
-    upper = mean_delta + qt(0.975, df = n - 1) * se_delta,
+    lower = ifelse(
+      n > 1,
+      mean_delta - qt(0.975, df = n - 1) * se_delta,
+      NA_real_
+    ),
+    upper = ifelse(
+      n > 1,
+      mean_delta + qt(0.975, df = n - 1) * se_delta,
+      NA_real_
+    ),
     .groups = "drop"
   )
 
