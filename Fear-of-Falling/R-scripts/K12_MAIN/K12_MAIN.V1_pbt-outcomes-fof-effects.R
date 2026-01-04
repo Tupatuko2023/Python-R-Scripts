@@ -251,7 +251,7 @@ fit_models_for_outcome <- function(dat, outcome, baseline_var, outcome_label) {
     },
     error = function(e) {
       tibble::tibble(
-        Parameter = "FOF_statusFOF",
+        Parameter = "FOF_status_fFOF",
         Std_Coefficient = NA_real_,
         CI_low = NA_real_,
         CI_high = NA_real_,
