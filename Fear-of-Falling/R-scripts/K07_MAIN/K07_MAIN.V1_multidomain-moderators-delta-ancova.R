@@ -174,12 +174,13 @@ if (has_zero_srm && has_three_srm) {
 }
 srm_scheme <- if (has_zero_srm) "012" else if (has_three_srm) "123" else "text"
 
+walk_vals_chr <- unique(as.character(stats::na.omit(raw_data$Vaikeus500m)))
 allowed_walk <- c(
-  0, 1, 2, "0", "1", "2",
+  "0", "1", "2",
   "Ei vaikeuksia", "Jonkin verran", "Ei pysty",
   "no difficulty", "some difficulty", "unable"
 )
-bad_walk <- setdiff(stats::na.omit(unique(raw_data$Vaikeus500m)), allowed_walk)
+bad_walk <- setdiff(walk_vals_chr, allowed_walk)
 if (length(bad_walk) > 0L) {
   stop(
     "Unexpected Vaikeus500m code(s) detected: ",
