@@ -147,8 +147,6 @@ analysis_data_rec <- df %>%
     MOI_score = as.numeric(MOIindeksiindeksi),
     previous_falls = as.numeric(kaatuminen),
     psych_score = as.numeric(mieliala),
-    MOI_c = MOI_score - mean(MOI_score, na.rm = TRUE),
-    PainVAS0_c = PainVAS0 - mean(PainVAS0, na.rm = TRUE),
     SRH_3class = factor(
       SRH,
       levels = c(0, 1, 2),
@@ -173,27 +171,40 @@ dat_fof <- analysis_data_rec %>%
     !is.na(FOF_status_f)
   ) %>%
   mutate(
-    FOF_status_f = stats::relevel(FOF_status_f, ref = "Ei FOF"),
-    age_c = Age - mean(Age, na.rm = TRUE),
-    BMI_c = BMI - mean(BMI, na.rm = TRUE)
+    FOF_status_f = stats::relevel(FOF_status_f, ref = "Ei FOF")
   )
 
 if (!nrow(dat_fof)) {
   stop("No complete-case data available for K13 interactions.")
 }
 
-dat_int_cc <- dat_fof %>%
-  filter(
-    !is.na(MOI_score),
-    !is.na(diabetes),
-    !is.na(alzheimer),
-    !is.na(parkinson),
-    !is.na(AVH),
-    !is.na(previous_falls),
-    !is.na(psych_score),
-    !is.na(PainVAS0),
-    !is.na(SRH),
-    !is.na(oma_arvio_liikuntakyky)
+vars_cc_demographic <- c(
+  "Delta_Composite_Z", "Composite_Z0", "Age", "BMI", "Sex_f", "FOF_status_f", "MOI_score"
+)
+dat_int_cc_demographic <- dat_fof %>%
+  filter(stats::complete.cases(dplyr::across(dplyr::all_of(vars_cc_demographic)))) %>%
+  mutate(
+    age_c = Age - mean(Age, na.rm = TRUE),
+    BMI_c = BMI - mean(BMI, na.rm = TRUE),
+    MOI_c = MOI_score - mean(MOI_score, na.rm = TRUE)
+  )
+
+if (!nrow(dat_int_cc_demographic)) {
+  stop("No complete-case data available for K13 demographic interaction models.")
+}
+
+vars_cc_symptom_extra <- c(
+  "diabetes", "alzheimer", "parkinson", "AVH", "previous_falls", "psych_score",
+  "PainVAS0", "SRH", "oma_arvio_liikuntakyky"
+)
+vars_cc_symptom <- unique(c(vars_cc_demographic, vars_cc_symptom_extra))
+dat_int_cc_symptom <- dat_fof %>%
+  filter(stats::complete.cases(dplyr::across(dplyr::all_of(vars_cc_symptom)))) %>%
+  mutate(
+    age_c = Age - mean(Age, na.rm = TRUE),
+    BMI_c = BMI - mean(BMI, na.rm = TRUE),
+    MOI_c = MOI_score - mean(MOI_score, na.rm = TRUE),
+    PainVAS0_c = PainVAS0 - mean(PainVAS0, na.rm = TRUE)
   )
 
 fit_int_model <- function(formula_str, data, label) {
@@ -205,42 +216,42 @@ fit_int_model <- function(formula_str, data, label) {
 
 mod_age <- fit_int_model(
   "Delta_Composite_Z ~ FOF_status_f * age_c + BMI_c + Sex_f + Composite_Z0 + MOI_score + diabetes + alzheimer + parkinson + AVH + previous_falls + psych_score",
-  dat_int_cc,
+  dat_int_cc_demographic,
   "age_int_ext"
 )
 mod_BMI <- fit_int_model(
   "Delta_Composite_Z ~ FOF_status_f * BMI_c + age_c + Sex_f + Composite_Z0 + MOI_score + diabetes + alzheimer + parkinson + AVH + previous_falls + psych_score",
-  dat_int_cc,
+  dat_int_cc_demographic,
   "BMI_int_ext"
 )
 mod_sex <- fit_int_model(
   "Delta_Composite_Z ~ FOF_status_f * Sex_f + age_c + BMI_c + Composite_Z0 + MOI_score + diabetes + alzheimer + parkinson + AVH + previous_falls + psych_score",
-  dat_int_cc,
+  dat_int_cc_demographic,
   "sex_int_ext"
 )
 mod_all <- fit_int_model(
   "Delta_Composite_Z ~ FOF_status_f * age_c + FOF_status_f * BMI_c + FOF_status_f * Sex_f + Composite_Z0 + MOI_score + diabetes + alzheimer + parkinson + AVH + previous_falls + psych_score",
-  dat_int_cc,
+  dat_int_cc_demographic,
   "all_int_ext"
 )
 mod_MOI <- fit_int_model(
   "Delta_Composite_Z ~ FOF_status_f * MOI_c + age_c + BMI_c + Sex_f + Composite_Z0 + diabetes + alzheimer + parkinson + AVH + previous_falls + psych_score + PainVAS0_c + SRH_3class + SRM_3class",
-  dat_int_cc,
+  dat_int_cc_symptom,
   "MOI_int_ext"
 )
 mod_Pain <- fit_int_model(
   "Delta_Composite_Z ~ FOF_status_f * PainVAS0_c + age_c + BMI_c + Sex_f + Composite_Z0 + MOI_c + diabetes + alzheimer + parkinson + AVH + previous_falls + psych_score + SRH_3class + SRM_3class",
-  dat_int_cc,
+  dat_int_cc_symptom,
   "Pain_int_ext"
 )
 mod_SRH <- fit_int_model(
   "Delta_Composite_Z ~ FOF_status_f * SRH_3class + age_c + BMI_c + Sex_f + Composite_Z0 + MOI_c + PainVAS0_c + diabetes + alzheimer + parkinson + AVH + previous_falls + psych_score + SRM_3class",
-  dat_int_cc,
+  dat_int_cc_symptom,
   "SRH_int_ext"
 )
 mod_SRM <- fit_int_model(
   "Delta_Composite_Z ~ FOF_status_f * SRM_3class + age_c + BMI_c + Sex_f + Composite_Z0 + MOI_c + PainVAS0_c + diabetes + alzheimer + parkinson + AVH + previous_falls + psych_score + SRH_3class",
-  dat_int_cc,
+  dat_int_cc_symptom,
   "SRM_int_ext"
 )
 
@@ -256,17 +267,17 @@ append_manifest(
   manifest_path
 )
 
-extract_interactions <- function(tidy_tbl, pattern, moderator, model_label) {
+extract_interactions <- function(tidy_tbl, moderator, model_label) {
   tidy_tbl %>%
-    filter(grepl(pattern, term)) %>%
+    filter(grepl("FOF_status_f", term), grepl(moderator, term), grepl(":", term)) %>%
     mutate(moderator = moderator, model = model_label) %>%
     select(model, moderator, term, estimate, std.error, statistic, p.value, conf.low, conf.high)
 }
 
 tab_overview <- bind_rows(
-  extract_interactions(mod_age$tidy, "FOF_status_fFOF:age_c", "age_c", "age_int_ext"),
-  extract_interactions(mod_BMI$tidy, "FOF_status_fFOF:BMI_c", "BMI_c", "BMI_int_ext"),
-  extract_interactions(mod_sex$tidy, "FOF_status_fFOF:Sex_f", "sex", "sex_int_ext")
+  extract_interactions(mod_age$tidy, moderator = "age_c", model_label = "age_int_ext"),
+  extract_interactions(mod_BMI$tidy, moderator = "BMI_c", model_label = "BMI_int_ext"),
+  extract_interactions(mod_sex$tidy, moderator = "Sex_f", model_label = "sex_int_ext")
 )
 save_table_csv(tab_overview, file.path(outputs_dir, "FOF_interaction_effects_overview.csv"))
 append_manifest(
@@ -277,8 +288,8 @@ append_manifest(
 )
 
 tab_symptoms <- bind_rows(
-  extract_interactions(mod_MOI$tidy, "FOF_status_fFOF:MOI_c", "MOI_c", "MOI_int_ext"),
-  extract_interactions(mod_Pain$tidy, "FOF_status_fFOF:PainVAS0_c", "PainVAS0_c", "Pain_int_ext")
+  extract_interactions(mod_MOI$tidy, moderator = "MOI_c", model_label = "MOI_int_ext"),
+  extract_interactions(mod_Pain$tidy, moderator = "PainVAS0_c", model_label = "Pain_int_ext")
 )
 save_table_csv(tab_symptoms, file.path(outputs_dir, "FOF_interaction_effects_symptoms.csv"))
 append_manifest(
@@ -289,8 +300,8 @@ append_manifest(
 )
 
 tab_srh_srm <- bind_rows(
-  extract_interactions(mod_SRH$tidy, "FOF_status_fFOF:SRH_3class", "SRH_3class", "SRH_int_ext"),
-  extract_interactions(mod_SRM$tidy, "FOF_status_fFOF:SRM_3class", "SRM_3class", "SRM_int_ext")
+  extract_interactions(mod_SRH$tidy, moderator = "SRH_3class", model_label = "SRH_int_ext"),
+  extract_interactions(mod_SRM$tidy, moderator = "SRM_3class", model_label = "SRM_int_ext")
 )
 save_table_csv(tab_srh_srm, file.path(outputs_dir, "FOF_interaction_effects_SRH_SRM.csv"))
 append_manifest(
@@ -304,7 +315,7 @@ simple_slopes <- function(fit, moderator, at_list, label) {
   emm <- emmeans::emmeans(fit, as.formula(paste0("~ FOF_status_f | ", moderator)), at = at_list)
   ctr <- emmeans::contrast(emm, method = "revpairwise", by = moderator, adjust = "none")
   out <- as.data.frame(summary(ctr, infer = TRUE)) %>%
-    mutate(effect = "FOF (FOF vs nonFOF)", moderator = moderator, label = label) %>%
+    mutate(effect = paste0("FOF (", contrast, ")"), moderator = moderator, label = label) %>%
     rename(conf.low = lower.CL, conf.high = upper.CL)
   out
 }
@@ -354,7 +365,8 @@ txt_path <- file.path(outputs_dir, paste0(script_label, "_summary.txt"))
 writeLines(
   c(
     "K13_MAIN FOF interaction models",
-    paste0("N complete-case: ", nrow(dat_int_cc)),
+    paste0("N complete-case demographic: ", nrow(dat_int_cc_demographic)),
+    paste0("N complete-case symptom: ", nrow(dat_int_cc_symptom)),
     "Models: FOF × age_c, FOF × BMI_c, FOF × Sex_f, FOF × MOI_c, FOF × PainVAS0_c, FOF × SRH_3class, FOF × SRM_3class",
     "See CSV outputs for interaction tables and simple slopes."
   ),
