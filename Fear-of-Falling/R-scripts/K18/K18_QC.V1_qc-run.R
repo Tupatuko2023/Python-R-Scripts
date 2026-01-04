@@ -80,7 +80,7 @@ manifest_path <- getOption("fof.manifest_path")
 # but K18 for init_paths to get correct outputs_dir
 manifest_script_label <- "K18_QC"
 
-qc_dir <- file.path(outputs_dir, "K18_QC", "qc")
+qc_dir <- file.path(outputs_dir, manifest_script_label, "qc")
 dir.create(qc_dir, recursive = TRUE, showWarnings = FALSE)
 
 get_arg <- function(flag, default = NULL) {
@@ -209,7 +209,7 @@ id_out <- qc_id_integrity_long(df_long, "id", "time")
 qc_write_csv(id_out$summary, file.path(qc_dir, "qc_uniqueness.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Uniqueness of (id,time)")
 qc_write_csv(id_out$coverage, file.path(qc_dir, "qc_id_timepoint_coverage_dist.csv"),
-             script_label, manifest_path, outputs_dir, notes = "ID timepoint coverage distribution")
+             manifest_script_label, manifest_path, outputs_dir, notes = "ID timepoint coverage distribution")
 
 time_allowed <- NULL
 time_row <- dd[dd$variable == "time", , drop = FALSE]
@@ -235,12 +235,18 @@ fof_out <- qc_fof_levels(df_long, "FOF_status", fof_allowed)
 qc_write_csv(fof_out, file.path(qc_dir, "qc_fof_levels.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "FOF_status levels")
 
+if (nrow(time_out$status) == 0) {
+  stop("QC FAIL: time_out$status is empty; cannot construct time_details.", call. = FALSE)
+}
 time_details <- paste0(
   "observed_raw=", time_out$status$observed_raw[[1]],
   ";observed_canonical=", time_out$status$observed_canonical[[1]],
   ";expected_raw=", time_out$status$expected_raw[[1]],
   ";expected_canonical=", time_out$status$expected_canonical[[1]]
 )
+if (nrow(fof_out) == 0) {
+  stop("QC FAIL: fof_out is empty; cannot construct fof_details.", call. = FALSE)
+}
 fof_details <- paste0(
   "observed_raw=", fof_out$observed_raw[[1]],
   ";observed_canonical=", fof_out$observed_canonical[[1]],
