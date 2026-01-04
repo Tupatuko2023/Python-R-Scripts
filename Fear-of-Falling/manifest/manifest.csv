@@ -1294,3 +1294,30 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2026-01-04 19:08:50.335653,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
 2026-01-04 19:08:50.574463,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
 2026-01-04 19:08:50.843768,K16,sessioninfo,sessioninfo,R-scripts/K16/outputs/sessioninfo_K16.txt,NA,NA
+2026-01-04 19:45:45.729474,SMOKE_ENV,sessionInfo,text_file,R-scripts/SMOKE_ENV/outputs/sessionInfo.txt,NA,Smoke test environment check
+2026-01-04 19:45:52.058817,SMOKE_ENV,renv_status,text_file,R-scripts/SMOKE_ENV/outputs/renv_status.txt,NA,Smoke test renv status
+2026-01-04 19:46:01.800004,K15,K15_frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
+2026-01-04 19:46:02.205488,K15,K15_frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
+2026-01-04 19:46:02.455549,K15,K15_frailty_cat_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv,NA,NA
+2026-01-04 19:46:02.698176,K15,K15_frailty_cat_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_3_overall.html,NA,NA
+2026-01-04 19:46:02.952338,K15,K15_frailty_count_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_4_overall.csv,NA,NA
+2026-01-04 19:46:03.214814,K15,K15_frailty_count_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_4_overall.html,NA,NA
+2026-01-04 19:46:03.461191,K15,K15_frailty_cat_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv,NA,NA
+2026-01-04 19:46:03.70635,K15,K15_frailty_cat_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_4_overall.html,NA,NA
+2026-01-04 19:46:04.011003,K15,K15_frailty_cat3_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.csv,NA,NA
+2026-01-04 19:46:04.271259,K15,K15_frailty_cat3_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.html,NA,NA
+2026-01-04 19:46:04.568454,K15,K15_frailty_cat4_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.csv,NA,NA
+2026-01-04 19:46:04.821723,K15,K15_frailty_cat4_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.html,NA,NA
+2026-01-04 19:46:05.32623,K15,K15_chisq_FOF_by_frailty_cat3,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.csv,NA,NA
+2026-01-04 19:46:05.589057,K15,K15_chisq_FOF_by_frailty_cat3,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.html,NA,NA
+2026-01-04 19:46:05.841136,K15,K15_chisq_FOF_by_frailty_cat4,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.csv,NA,NA
+2026-01-04 19:46:06.085612,K15,K15_chisq_FOF_by_frailty_cat4,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.html,NA,NA
+2026-01-04 19:46:07.748649,K15,K15_frailty_cat3_by_FOF,figure_png,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.png,NA,Stacked proportion plot: frailty_cat_3 distribution by FOF-status.
+2026-01-04 19:46:08.142407,K15,sessioninfo,sessioninfo,R-scripts/K15/outputs/sessioninfo_K15.txt,NA,NA
+2026-01-04 19:46:28.530185,K16,Frailty-adjusted model results tables,table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx,276,NA
+2026-01-04 19:46:29.598037,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-01-04 19:46:31.326593,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-01-04 19:46:33.142449,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-01-04 19:46:33.655976,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-01-04 19:46:34.170505,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-01-04 19:46:34.853767,K16,sessioninfo,sessioninfo,R-scripts/K16/outputs/sessioninfo_K16.txt,NA,NA
