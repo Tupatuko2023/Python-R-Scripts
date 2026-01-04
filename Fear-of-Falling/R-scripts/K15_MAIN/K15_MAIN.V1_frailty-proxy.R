@@ -78,17 +78,6 @@ if (length(missing_cols) > 0) {
   stop("Missing required columns: ", paste(missing_cols, collapse = ", "))
 }
 
-srh_var <- if ("koettuterveydentila" %in% names(raw_data)) {
-  "koettuterveydentila"
-} else if ("SRH" %in% names(raw_data)) {
-  "SRH"
-} else {
-  ""
-}
-if (srh_var == "") {
-  stop("Neither 'koettuterveydentila' nor 'SRH' found in the data.")
-}
-
 # --- Standardize + QC --------------------------------------------------------
 df <- standardize_analysis_vars(raw_data)
 qc <- sanity_checks(df)
@@ -109,9 +98,14 @@ append_manifest(
 gait_cut_m_per_sec <- 0.8
 low_BMI_threshold <- 21
 
-analysis_data <- raw_data %>%
+analysis_data <- df %>%
   mutate(
-    FOF_status = if_else(kaatumisenpelkoOn == 1, 1L, 0L),
+    FOF_status = case_when(
+      is.na(kaatumisenpelkoOn) ~ NA_integer_,
+      kaatumisenpelkoOn == 1 ~ 1L,
+      kaatumisenpelkoOn == 0 ~ 0L,
+      TRUE ~ NA_integer_
+    ),
     FOF_status_factor = factor(FOF_status, levels = c(0, 1), labels = c("nonFOF", "FOF")),
     sex_factor = factor(sex, levels = c(0, 1), labels = c("female", "male")),
     Puristus0_clean = if_else(!is.na(Puristus0) & Puristus0 <= 0, NA_real_, Puristus0)
@@ -140,6 +134,7 @@ analysis_data <- analysis_data %>%
       is.na(oma_arvio_liikuntakyky) & is.na(kaatuminen) & is.na(PainVAS0) ~ NA_integer_,
       oma_arvio_liikuntakyky %in% c(0, 1) ~ 1L,
       kaatuminen == 1 ~ 1L,
+      is.na(oma_arvio_liikuntakyky) | is.na(kaatuminen) | is.na(PainVAS0) ~ NA_integer_,
       TRUE ~ 0L
     ),
     frailty_low_BMI = case_when(
