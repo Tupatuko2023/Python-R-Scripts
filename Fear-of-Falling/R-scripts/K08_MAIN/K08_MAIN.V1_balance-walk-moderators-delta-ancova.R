@@ -220,6 +220,8 @@ dat <- dat %>%
                               levels = c("no_difficulty", "difficulty_or_unable")),
     Delta_HGS = ifelse(!is.na(HGS0) & !is.na(HGS2), HGS2 - HGS0, NA_real_),
     Delta_MWS = ifelse(!is.na(MWS0) & !is.na(MWS2), MWS2 - MWS0, NA_real_),
+    # NOTE: FTSST lower (faster) is better; define delta as baseline - follow-up
+    # so improvement is positive.
     Delta_FTSST = ifelse(!is.na(FTSST0) & !is.na(FTSST2), FTSST0 - FTSST2, NA_real_),
     Delta_SLS = ifelse(!is.na(SLS0) & !is.na(SLS2), SLS2 - SLS0, NA_real_)
   )
@@ -349,17 +351,17 @@ run_ancova <- function(data, outcome, baseline, moderator) {
   dat_model <- data %>%
     select(FOF_status_f, all_of(c(outcome, baseline, moderator, "age", "sex", "BMI"))) %>%
     filter(
-      !is.na(FOF_status_f),
       !is.na(.data[[outcome]]),
       !is.na(.data[[baseline]]),
-      !is.na(.data[[moderator]]),
-      !is.na(age),
-      !is.na(sex),
-      !is.na(BMI)
+      !is.na(.data[[moderator]])
     )
 
   if (!nrow(dat_model)) {
-    stop("No complete-case data available for outcome ", outcome, " with moderator ", moderator, ".")
+    warning(
+      "Skipping outcome ", outcome, " with moderator ", moderator,
+      ": no complete-case rows after filtering on outcome/moderator."
+    )
+    return(NULL)
   }
 
   formula_txt <- paste0(
@@ -395,6 +397,9 @@ for (G in G_vars) {
   for (out in available_outcomes) {
     bl <- baseline_map[[out]]
     res <- run_ancova(dat_cc_base, outcome = out, baseline = bl, moderator = G)
+    if (is.null(res)) {
+      next
+    }
 
     save_model_tbl(res$coef, paste0("fit_ancova_", out, "_", G, "_coefficients"))
     save_model_tbl(res$emmeans, paste0("emmeans_", out, "_", G))
@@ -410,6 +415,7 @@ writeLines(
     paste0("Outcomes modeled: ", paste(available_outcomes, collapse = ", ")),
     "Moderators: Balance_problem, Walk500m_G_final",
     "Models: Delta_outcome ~ FOF_status * moderator + baseline + age + sex + BMI",
+    "Note: FTSST delta is baseline − follow-up (improvement = positive).",
     "See CSV outputs for coefficients and emmeans/contrasts."
   ),
   con = txt_path
