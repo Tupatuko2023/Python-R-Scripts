@@ -42,8 +42,20 @@ script_base <- if (length(file_arg) > 0) {
   "K18_QC"
 }
 
-script_label <- sub("\\.V.*$", "", script_base)
-if (is.na(script_label) || script_label == "") script_label <- "K18_QC"
+# Prefer script_label from parent directory (e.g., R-scripts/K18/...) to enforce output discipline.
+script_label <- if (length(file_arg) > 0) {
+  script_dir <- dirname(sub("^--file=", "", file_arg[1]))
+  parent_dir <- basename(normalizePath(script_dir, winslash = "/", mustWork = FALSE))
+  if (grepl("^K[0-9]+$", parent_dir)) {
+    parent_dir
+  } else {
+    # Fallback: legacy behavior from filename (e.g., K18_QC.V1_qc-run -> K18_QC)
+    label <- sub("\\.V.*$", "", script_base)
+    if (is.na(label) || label == "") "K18_QC" else label
+  }
+} else {
+  "K18_QC"
+}
 
 script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[1]) else ""
 project_root <- if (nzchar(script_path)) {
@@ -64,7 +76,11 @@ paths <- init_paths(script_label)
 outputs_dir   <- getOption("fof.outputs_dir")
 manifest_path <- getOption("fof.manifest_path")
 
-qc_dir <- file.path(outputs_dir, script_label, "qc")
+# For QC scripts, use K18_QC as manifest script label (canonical per header)
+# but K18 for init_paths to get correct outputs_dir
+manifest_script_label <- "K18_QC"
+
+qc_dir <- file.path(outputs_dir, manifest_script_label, "qc")
 dir.create(qc_dir, recursive = TRUE, showWarnings = FALSE)
 
 get_arg <- function(flag, default = NULL) {
@@ -180,20 +196,20 @@ profile <- data.frame(
   n_cols = ncol(df_long),
   stringsAsFactors = FALSE
 )
-qc_write_csv(profile, file.path(qc_dir, "qc_profile.csv"), script_label, manifest_path, outputs_dir,
+qc_write_csv(profile, file.path(qc_dir, "qc_profile.csv"), manifest_script_label, manifest_path, outputs_dir,
              notes = "QC profile")
 
 types_out <- qc_types(df_long, req_cols)
-qc_write_csv(types_out$status, file.path(qc_dir, "qc_types_status.csv"), script_label,
+qc_write_csv(types_out$status, file.path(qc_dir, "qc_types_status.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Required columns + types status")
-qc_write_csv(types_out$types, file.path(qc_dir, "qc_types.csv"), script_label,
+qc_write_csv(types_out$types, file.path(qc_dir, "qc_types.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Required columns types")
 
 id_out <- qc_id_integrity_long(df_long, "id", "time")
-qc_write_csv(id_out$summary, file.path(qc_dir, "qc_uniqueness.csv"), script_label,
+qc_write_csv(id_out$summary, file.path(qc_dir, "qc_uniqueness.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Uniqueness of (id,time)")
 qc_write_csv(id_out$coverage, file.path(qc_dir, "qc_id_timepoint_coverage_dist.csv"),
-             script_label, manifest_path, outputs_dir, notes = "ID timepoint coverage distribution")
+             manifest_script_label, manifest_path, outputs_dir, notes = "ID timepoint coverage distribution")
 
 time_allowed <- NULL
 time_row <- dd[dd$variable == "time", , drop = FALSE]
@@ -203,9 +219,9 @@ if (nrow(time_row) > 0) {
   time_allowed <- time_allowed[time_allowed %in% c("baseline", "12m", "m12")]
 }
 time_out <- qc_time_levels(df_long, "time", time_allowed)
-qc_write_csv(time_out$levels, file.path(qc_dir, "qc_time_levels.csv"), script_label,
+qc_write_csv(time_out$levels, file.path(qc_dir, "qc_time_levels.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Observed time levels")
-qc_write_csv(time_out$status, file.path(qc_dir, "qc_time_levels_status.csv"), script_label,
+qc_write_csv(time_out$status, file.path(qc_dir, "qc_time_levels_status.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Time levels status")
 
 fof_allowed <- NULL
@@ -216,15 +232,21 @@ if (nrow(fof_row) > 0) {
   fof_allowed <- fof_allowed[fof_allowed %in% c("nonFOF", "FOF", "0", "1")]
 }
 fof_out <- qc_fof_levels(df_long, "FOF_status", fof_allowed)
-qc_write_csv(fof_out, file.path(qc_dir, "qc_fof_levels.csv"), script_label,
+qc_write_csv(fof_out, file.path(qc_dir, "qc_fof_levels.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "FOF_status levels")
 
+if (nrow(time_out$status) == 0) {
+  stop("QC FAIL: time_out$status is empty; cannot construct time_details.", call. = FALSE)
+}
 time_details <- paste0(
   "observed_raw=", time_out$status$observed_raw[[1]],
   ";observed_canonical=", time_out$status$observed_canonical[[1]],
   ";expected_raw=", time_out$status$expected_raw[[1]],
   ";expected_canonical=", time_out$status$expected_canonical[[1]]
 )
+if (nrow(fof_out) == 0) {
+  stop("QC FAIL: fof_out is empty; cannot construct fof_details.", call. = FALSE)
+}
 fof_details <- paste0(
   "observed_raw=", fof_out$observed_raw[[1]],
   ";observed_canonical=", fof_out$observed_canonical[[1]],
@@ -233,22 +255,22 @@ fof_details <- paste0(
 )
 
 miss_overall <- qc_missingness_overall(df_long, req_cols)
-qc_write_csv(miss_overall, file.path(qc_dir, "qc_missingness_overall.csv"), script_label,
+qc_write_csv(miss_overall, file.path(qc_dir, "qc_missingness_overall.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Missingness overall")
 
 miss_group <- qc_missingness_by_fof_time(df_long, "FOF_status", "time", "Composite_Z")
-qc_write_csv(miss_group, file.path(qc_dir, "qc_missingness_by_fof_time.csv"), script_label,
+qc_write_csv(miss_group, file.path(qc_dir, "qc_missingness_by_fof_time.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Missingness by FOF_status x time")
 
 delta_out <- qc_delta_check_optional(df_raw, "id", "composite_z0", "composite_z12",
                                      "delta_composite_z", tol = 1e-8)
-qc_write_csv(delta_out, file.path(qc_dir, "qc_delta_check.csv"), script_label,
+qc_write_csv(delta_out, file.path(qc_dir, "qc_delta_check.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Delta check (optional)")
 
 outcome_summary <- qc_outcome_summary(df_long, "Composite_Z")
-qc_write_csv(outcome_summary, file.path(qc_dir, "qc_outcome_summary.csv"), script_label,
+qc_write_csv(outcome_summary, file.path(qc_dir, "qc_outcome_summary.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Outcome summary")
-qc_write_png(file.path(qc_dir, "qc_outcome_hist.png"), script_label,
+qc_write_png(file.path(qc_dir, "qc_outcome_hist.png"), manifest_script_label,
              manifest_path, outputs_dir, plot_fn = function() {
                x <- df_long$Composite_Z
                if (!is.numeric(x)) x <- suppressWarnings(as.numeric(x))
@@ -268,7 +290,7 @@ row_watch <- data.frame(
   n_missing_Composite_Z = sum(is.na(df_long$Composite_Z)),
   stringsAsFactors = FALSE
 )
-qc_write_csv(row_watch, file.path(qc_dir, "qc_row_id_watch.csv"), script_label,
+qc_write_csv(row_watch, file.path(qc_dir, "qc_row_id_watch.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Row/id watch")
 
 status_df <- data.frame(
@@ -297,14 +319,14 @@ gate <- qc_status_gatekeeper(status_df, file.path(qc_dir, "qc_status_summary.csv
 
 session_path <- file.path(qc_dir, "qc_sessioninfo.txt")
 writeLines(capture.output(sessionInfo()), con = session_path)
-append_manifest(manifest_row(script_label, "qc_sessioninfo",
+append_manifest(manifest_row(manifest_script_label, "qc_sessioninfo",
                                    get_relpath(session_path),
                                    "sessionInfo"), manifest_path)
 
 if (requireNamespace("renv", quietly = TRUE)) {
   renv_path <- file.path(qc_dir, "qc_renv_diagnostics.txt")
   writeLines(capture.output(renv::diagnostics()), con = renv_path)
-  append_manifest(manifest_row(script_label, "qc_renv_diagnostics",
+  append_manifest(manifest_row(manifest_script_label, "qc_renv_diagnostics",
                                      get_relpath(renv_path),
                                      "renv diagnostics"), manifest_path)
 }
