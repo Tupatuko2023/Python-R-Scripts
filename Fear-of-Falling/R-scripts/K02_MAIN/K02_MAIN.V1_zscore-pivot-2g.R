@@ -58,13 +58,17 @@ cat("===========================================================================
 req_cols <- c("kaatumisenpelkoOn", "Test")
 
 cat("Loading K01 output data...\n")
-k01_output_path <- here::here("R-scripts", "K01_MAIN", "outputs", "K1_Z_Score_Change_2G.csv")
-if (!file.exists(k01_output_path)) {
-  stop("K01 output file not found: ", k01_output_path, "\n",
+k01_out_path <- if (exists("paths") && is.list(paths) && ("root_dir" %in% names(paths))) {
+  file.path(paths$root_dir, "R-scripts", "K01_MAIN", "outputs", "K1_Z_Score_Change_2G.csv")
+} else {
+  here::here("R-scripts", "K01_MAIN", "outputs", "K1_Z_Score_Change_2G.csv")
+}
+if (!file.exists(k01_out_path)) {
+  stop("K01 output file not found: ", k01_out_path, "\n",
        "Please run K01_MAIN first: Rscript R-scripts/K01_MAIN/K01_MAIN.V1_zscore-change.R")
 }
 
-df <- read_csv(k01_output_path, show_col_types = FALSE)
+df <- read_csv(k01_out_path, show_col_types = FALSE)
 cat("  K01 data loaded:", nrow(df), "rows,", ncol(df), "columns\n")
 
 # Verify required columns exist
@@ -78,12 +82,20 @@ cat("  Required columns present: TRUE\n")
 cat("\nRecoding test names by FOF status...\n")
 df <- df %>%
   mutate(Test = case_when(
+    Test == "MWS" & kaatumisenpelkoOn == 0 ~ "MWS_Without_FOF",
+    Test == "MWS" & kaatumisenpelkoOn == 1 ~ "MWS_With_FOF",
     Test == "Kävelynopeus" & kaatumisenpelkoOn == 0 ~ "MWS_Without_FOF",
     Test == "Kävelynopeus" & kaatumisenpelkoOn == 1 ~ "MWS_With_FOF",
+    Test == "HGS" & kaatumisenpelkoOn == 0 ~ "HGS_Without_FOF",
+    Test == "HGS" & kaatumisenpelkoOn == 1 ~ "HGS_With_FOF",
     Test == "Puristusvoima" & kaatumisenpelkoOn == 0 ~ "HGS_Without_FOF",
     Test == "Puristusvoima" & kaatumisenpelkoOn == 1 ~ "HGS_With_FOF",
+    Test == "SLS" & kaatumisenpelkoOn == 0 ~ "SLS_Without_FOF",
+    Test == "SLS" & kaatumisenpelkoOn == 1 ~ "SLS_With_FOF",
     Test == "Seisominen" & kaatumisenpelkoOn == 0 ~ "SLS_Without_FOF",
     Test == "Seisominen" & kaatumisenpelkoOn == 1 ~ "SLS_With_FOF",
+    Test == "FTSST" & kaatumisenpelkoOn == 0 ~ "FTSST_Without_FOF",
+    Test == "FTSST" & kaatumisenpelkoOn == 1 ~ "FTSST_With_FOF",
     Test == "Tuoliltanousu" & kaatumisenpelkoOn == 0 ~ "FTSST_Without_FOF",
     Test == "Tuoliltanousu" & kaatumisenpelkoOn == 1 ~ "FTSST_With_FOF",
     TRUE ~ Test
@@ -96,8 +108,18 @@ df <- df %>% rename(Performance_Test = Test)
 cat("  Removing kaatumisenpelkoOn column (info now in test names)...\n")
 df <- df %>% select(-kaatumisenpelkoOn)
 
-# Ensure Performance_Test values are unique
-df <- df %>% mutate(Performance_Test = make.unique(as.character(Performance_Test)))
+# Ensure Performance_Test values are unique (fail-fast; do not mask upstream issues)
+df <- df %>% mutate(Performance_Test = as.character(Performance_Test))
+dup_tab <- df %>%
+  dplyr::count(Performance_Test, name = "n") %>%
+  dplyr::filter(.data$n > 1L)
+if (nrow(dup_tab) > 0L) {
+  stop(
+    "Duplicate Performance_Test labels detected in K01-derived input. ",
+    "Expected one row per test label. Duplicates: ",
+    paste0(dup_tab$Performance_Test, " (n=", dup_tab$n, ")", collapse = "; ")
+  )
+}
 
 # Transpose the data frame
 cat("\nTransposing data frame...\n")
@@ -111,26 +133,7 @@ cat("  Transposed structure:\n")
 cat("    Rows (parameters):", nrow(df_transposed), "\n")
 cat("    Columns (tests + Parameter):", ncol(df_transposed), "\n")
 
-# Rename transposed columns for clarity (legacy naming)
-if ("FTSST" %in% names(df_transposed)) {
-  df_transposed <- df_transposed %>%
-    rename(
-      FTSST_Without_FOF = "FTSST",
-      HGS_Without_FOF   = "HGS",
-      MWS_Without_FOF   = "MWS",
-      SLS_Without_FOF   = "SLS"
-    )
-}
-
-if ("FTSST.1" %in% names(df_transposed)) {
-  df_transposed <- df_transposed %>%
-    rename(
-      FTSST_With_FOF = "FTSST.1",
-      HGS_With_FOF   = "HGS.1",
-      MWS_With_FOF   = "MWS.1",
-      SLS_With_FOF   = "SLS.1"
-    )
-}
+# NOTE: Legacy rename block removed; output already uses *_With/Without_FOF labels.
 
 # Preview transposed table
 cat("\nTransposed table preview (first 10 rows):\n")
