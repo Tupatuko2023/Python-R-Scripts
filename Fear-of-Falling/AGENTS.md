@@ -288,6 +288,18 @@ Raportoi aina vastauksessa:
 - Miten ajoit ja validoit (komennot).
 - Mahdolliset riskit ja rajoitteet.
 
+## QC Workflow (K18)
+
+K18 QC stop-the-line validation workflow on dokumentoitu erikseen:
+
+- **Runbook:** `../reports/K18_QC_runbook.md`
+- **Workflow:** Preflight → K18 QC → QC Summarizer → Evidence Gates → PR
+- **Skills:**
+  - `../.codex/skills/fof-preflight/` (diff-aware guardrails, fail-closed)
+  - `../.codex/skills/fof-qc-summarizer/` (aggregate-only QC summary)
+
+Käytä runbookia kun teet K18 QC -muutoksia tai validoit QC-artefakteja.
+
 ## TODOs for maintainers (täytä kun tarkistat reposta)
 
 - TODO: listaa tämän aliprojektin tärkeimmät entrypointit (1-3 skriptiä) ja
