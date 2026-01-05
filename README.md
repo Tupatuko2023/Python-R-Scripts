@@ -83,6 +83,35 @@ If the "Lint Markdown" check fails on your PR:
 - **MD013**: Line too long → Break lines or disable for specific sections
 - **MD029**: Ordered list numbering → Use sequential numbers or disable
 
+### PowerShell Setup
+
+For convenience, you can configure your PowerShell profile to automatically `cd` into this
+repository root when opening a new terminal.
+
+**Auto-cd & Disable Switch:**
+
+If configured, the profile checks for `FOF_SKIP_CD`. To bypass auto-cd for a session:
+
+```powershell
+$env:FOF_SKIP_CD='1'
+```
+
+To disable permanently (affects new windows):
+
+```powershell
+setx FOF_SKIP_CD 1
+```
+
+To re-enable: `setx FOF_SKIP_CD 0` or remove the variable.
+
+**Rollback (if needed):**
+
+To revert the profile change, run this one-liner:
+
+```powershell
+$dir=Split-Path -LiteralPath $PROFILE; $leaf=Split-Path -Leaf $PROFILE; $latest=Get-ChildItem -LiteralPath $dir -Filter "$leaf.bak-*" | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if($latest){Copy-Item -LiteralPath $latest.FullName -Destination $PROFILE -Force; "Restored from $($latest.Name)"} else {"No backup found."}
+```
+
 ### CI optimization
 
 CI workflows use path filters to run only when relevant files change:
