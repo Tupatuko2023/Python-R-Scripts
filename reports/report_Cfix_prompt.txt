@@ -1,0 +1,35 @@
+Report: Cfix_prompt.txt Task
+
+Objective
+- Validate hardened skills with no-data and (if available) QC-data tests.
+- Confirm preflight fail-closed behavior for guardrails.
+- Confirm qc-summarizer aggregates only and logs manifest correctly.
+
+What was tested
+- preflight --help: OK (exit 0).
+- preflight on current diff: PASS (no changes).
+- Negative test (Required vars mismatch): FAIL as expected.
+- Negative test (Required vars header missing): FAIL as expected.
+- QC outputs presence check: missing (qc_dir not found).
+- qc_summarize tests: blocked (Rscript not available in environment).
+
+Results
+- preflight behavior is fail-closed for Required vars violations.
+- Output-discipline parsing hardened to avoid false failures on comment separators.
+- QC summarizer tests and manifest append verification are pending due to missing Rscript and QC outputs.
+
+Blockers / gaps
+- Rscript not installed in current environment.
+- QC outputs directory missing (K18 QC not run here).
+- data/ guardrail negative test requires modifying a tracked file; not executed here.
+
+Commands to reproduce (from Fear-of-Falling)
+- python ../.codex/skills/fof-preflight/scripts/preflight.py --help
+- python ../.codex/skills/fof-preflight/scripts/preflight.py
+- Rscript ../.codex/skills/fof-qc-summarizer/scripts/qc_summarize.R --help
+- Rscript ../.codex/skills/fof-qc-summarizer/scripts/qc_summarize.R
+- test -d R-scripts/K18/outputs/K18_QC/qc && echo qc_dir_exists || echo qc_dir_missing
+
+Notes
+- No data or QC inputs were modified.
+- Once Rscript + QC outputs are available, run qc_summarize and verify qc_summary.* and manifest rows.

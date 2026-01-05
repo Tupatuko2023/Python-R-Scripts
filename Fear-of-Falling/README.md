@@ -20,6 +20,11 @@ ja kirjaavat ne `manifest/manifest.csv`-tiedostoon (1 rivi per artefakti).
 
 ---
 
+## Termux runner (Android)
+
+Termux runner: `bash scripts/termux/run_qc_summarizer_proot.sh`
+Note: runner is portable (no hardcoded paths); it derives the Fear-of-Falling repo root from the script location.
+
 ## Prerequisites
 
 **Tarvitset:**
@@ -89,6 +94,49 @@ test -f "R-scripts/run_mixed_fof_time.R" && Rscript "R-scripts/run_mixed_fof_tim
 # HUOM: tarkista että output_dir noudattaa CLAUDE.md Output discipline -polkua
 Rscript R-scripts/run_mixed_fof_time.R --data "<DATA_PATH_OR_OBJECT>" --out "R-scripts/<K_FOLDER>/outputs/<script_label>"
 ```
+
+---
+
+## Troubleshooting (QC)
+
+### K18_QC: PASS criteria
+QC is considered PASS when `qc_status_summary.csv` shows:
+- `time_levels = TRUE`
+- `fof_levels  = TRUE`
+- `overall_pass = TRUE`
+
+And the `details` field includes:
+`observed_raw`, `observed_canonical`, `expected_raw`, `expected_canonical`.
+
+Expected file:
+- `R-scripts/K18_QC/outputs/K18_QC/qc/qc_status_summary.csv`
+
+### Common failure modes (time / FOF)
+If QC fails with:
+- `time_levels` showing observed levels like `baseline;12m` while expected includes `baseline;m12;12m`
+- `fof_levels` showing observed `0;1` while expected includes `nonFOF;FOF`
+
+...the issue is usually synonyms/coding differences, not corrupted data.
+
+Fix: ensure QC normalizes (canonicalizes) common synonyms:
+- time: `12m`, `m12`, `12`, `t12`, `1` -> `m12`; baseline aliases -> `baseline`
+- FOF: `0`/`nonfof` -> `nonFOF`; `1`/`fof` -> `FOF`
+
+### Running K18_QC
+From the Fear-of-Falling subproject root:
+
+```bash
+cd /data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling
+R -q -e 'renv::restore(prompt=FALSE)'
+Rscript R-scripts/K18/K18_QC.V1_qc-run.R --data "data/external/KaatumisenPelko.csv"
+```
+
+Notes on output paths:
+
+QC artifacts are written under:
+`R-scripts/K18_QC/outputs/K18_QC/qc/`
+
+If you have legacy outputs elsewhere, remove them (untracked) to avoid confusion.
 
 ---
 
@@ -843,3 +891,58 @@ renv::restore(prompt = FALSE)
 - Tulkinta "FOF-ryhmän muutos vs Ei FOF-ryhmän muutos" edellyttää, että
   referenssitasot ovat `time = baseline` ja `FOF_status = Ei FOF` (ajurissa
   `factor(levels=...)`).
+
+## Termux + proot (Rscript)
+
+Jos ajat tätä projektia Androidin Termuxissa, **natiivissa Termuxissa** `Rscript` voi puuttua (esim. repo-/jakelukanavaerojen vuoksi). Tällöin suositeltu ja toistettava ratkaisu on ajaa kaikki R-ajot **proot-distro Ubuntu/Debian** -ympäristössä, jossa `/usr/bin/Rscript` on saatavilla.
+
+### Nopea tarkistus (ympäristö + Rscript)
+
+Aja tämä siinä shellissä missä yrität käyttää R:ää:
+
+```sh
+echo "PREFIX=$PREFIX"
+command -v Rscript || true
+Rscript --version || true
+```
+
+Jos `Rscript` puuttuu natiivissa Termuxissa (PREFIX yleensä `/data/data/com.termux/files/usr`), standardoi prootiin.
+
+### Proot (suositus) – asenna ja lukitse Rscript
+
+Kirjaudu prootiin ja varmista R:
+
+```sh
+proot-distro login ubuntu
+apt-get update -y
+apt-get install -y r-base
+command -v Rscript
+/usr/bin/Rscript --version
+```
+
+Lukitse käyttö aina tähän binääriin:
+
+```sh
+export RSCRIPT_BIN=/usr/bin/Rscript
+$RSCRIPT_BIN --version
+```
+
+**Huom:** login shellit eivät aina sourcea `~/.bashrc`:ia. Jos haluat tehdä `RSCRIPT_BIN`-muuttujasta pysyvän prootissa, lisää se sekä `~/.bashrc` että `~/.bash_profile` -tiedostoihin proot-ympäristössä:
+
+```sh
+echo 'export RSCRIPT_BIN=/usr/bin/Rscript' >> ~/.bashrc
+echo 'export RSCRIPT_BIN=/usr/bin/Rscript' >> ~/.bash_profile
+```
+
+### RSCRIPT gate (käytä ennen jokaista R-ajoa)
+
+```sh
+echo "Rscript=$(command -v Rscript || true)"
+Rscript --version || { echo "FATAL: Rscript missing in this environment"; exit 1; }
+```
+
+### Esimerkkiajo (proot + bash -lc)
+
+```sh
+proot-distro login ubuntu -- bash -lc 'cd /data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling && $RSCRIPT_BIN --version'
+```
