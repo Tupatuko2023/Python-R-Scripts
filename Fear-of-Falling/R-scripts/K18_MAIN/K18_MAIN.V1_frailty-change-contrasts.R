@@ -81,8 +81,7 @@ script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
 if (is.na(script_label) || script_label == "") script_label <- "K18"
 
 # Source helper functions (io, checks, modeling, reporting)
-rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
-   envir = .GlobalEnv)
+# NOTE: Avoid mutating .GlobalEnv in analysis scripts (safer for sourcing/interactive use).
 
 source(here("R","functions","io.R"))
 source(here("R","functions","checks.R"))
@@ -154,6 +153,18 @@ conflicted::conflict_prefer("lmer", "lmerTest")
 p_fmt <- function(p) {
   ifelse(is.na(p), NA_character_,
          ifelse(p < 0.001, "< 0.001", sprintf("%.3f", p)))
+}
+
+# Normalize emmeans CI columns to lower.CL / upper.CL
+normalize_emm_ci_cols <- function(df) {
+  if (!is.data.frame(df)) df <- as.data.frame(df)
+  if (!("lower.CL" %in% names(df)) && ("asymp.LCL" %in% names(df))) {
+    df$lower.CL <- df$asymp.LCL
+  }
+  if (!("upper.CL" %in% names(df)) && ("asymp.UCL" %in% names(df))) {
+    df$upper.CL <- df$asymp.UCL
+  }
+  df
 }
 
 # Confidence interval formatting
@@ -547,7 +558,9 @@ dd_frailty_M1 <- contrast(
   adjust = primary_adjust
 )
 
-dd_frailty_M1_df <- as.data.frame(summary(dd_frailty_M1, infer = TRUE))
+dd_frailty_M1_df <- normalize_emm_ci_cols(
+  as.data.frame(summary(dd_frailty_M1, infer = TRUE))
+)
 names(dd_frailty_M1_df)[names(dd_frailty_M1_df) == "frailty_cat_3_pairwise"] <- "contrast"
 
 # --- HARD QA GUARDS (fail fast) ---
@@ -571,7 +584,9 @@ emm_M1_time_fof <- emmeans(mod_M1, ~ time_f * FOF_status)
 dd_fof_M1 <- contrast(emm_M1_time_fof,
                       method = list("FOF ΔΔ (time×FOF interaction)" = c(1, -1, -1, 1)),
                       adjust = "none")
-dd_fof_M1_df <- as.data.frame(summary(dd_fof_M1, infer = TRUE))
+dd_fof_M1_df <- normalize_emm_ci_cols(
+  as.data.frame(summary(dd_fof_M1, infer = TRUE))
+)
 
 message("✓ PRIMARY contrasts computed (M1)")
 
@@ -589,12 +604,16 @@ emm_M2 <- emmeans(mod_M2, ~ time_f | frailty_cat_3 * FOF_status)
 chg_M2 <- contrast(emm_M2,
                    method = list("12-0" = c(-1, 1)),
                    by = c("frailty_cat_3", "FOF_status"))
-chg_M2_df <- as.data.frame(summary(chg_M2, infer = TRUE))
+chg_M2_df <- normalize_emm_ci_cols(
+  as.data.frame(summary(chg_M2, infer = TRUE))
+)
 
 # E2: ΔΔ frailty STRATIFIED by FOF (exploratory)
 message("  E2: Computing EXPLORATORY ΔΔ frailty (stratified by FOF; Holm adjustment)...")
 dd_frailty_M2 <- contrast(chg_M2, method = "pairwise", by = "FOF_status", adjust = exploratory_adjust)
-dd_frailty_M2_df <- as.data.frame(summary(dd_frailty_M2, infer = TRUE))
+dd_frailty_M2_df <- normalize_emm_ci_cols(
+  as.data.frame(summary(dd_frailty_M2, infer = TRUE))
+)
 
 # E3: ΔΔ FOF STRATIFIED by frailty (exploratory)
 message("  E3: Computing EXPLORATORY ΔΔ FOF (stratified by frailty; Holm adjustment)...")
@@ -610,7 +629,9 @@ dd_fof_M2 <- contrast(emm_M2_time_fof_frailty,
                       method = list("FOF ΔΔ (time×FOF interaction)" = c(1, -1, -1, 1)),
                       by = "frailty_cat_3",
                       adjust = exploratory_adjust)
-dd_fof_M2_df <- as.data.frame(summary(dd_fof_M2, infer = TRUE))
+dd_fof_M2_df <- normalize_emm_ci_cols(
+  as.data.frame(summary(dd_fof_M2, infer = TRUE))
+)
 
 message("✓ EXPLORATORY contrasts computed (M2)")
 
@@ -706,14 +727,11 @@ message("  - Creating Table P2 (PRIMARY ΔΔ frailty - common)...")
 
 # Check which CI column names are present (depends on contrast method)
 has_lower_CL <- "lower.CL" %in% names(dd_frailty_M1_df)
-has_asymp_LCL <- "asymp.LCL" %in% names(dd_frailty_M1_df)
 
 table_P2 <- dd_frailty_M1_df %>%
   mutate(
     CI = if (has_lower_CL) {
       ci_fmt(lower.CL, upper.CL)
-    } else if (has_asymp_LCL) {
-      ci_fmt(asymp.LCL, asymp.UCL)
     } else {
       "CI not available"
     },
@@ -1006,9 +1024,8 @@ plot_data_primary_dd_frailty <- dd_frailty_M1_df %>%
     Group = "Common across FOF",
     Label = gsub("\\(|\\)", "", contrast),
     p_text = p_fmt(p.value),
-    # Handle both column naming conventions
-    LCL = if ("lower.CL" %in% names(.)) lower.CL else if ("asymp.LCL" %in% names(.)) asymp.LCL else NA,
-    UCL = if ("upper.CL" %in% names(.)) upper.CL else if ("asymp.UCL" %in% names(.)) asymp.UCL else NA
+    LCL = lower.CL,
+    UCL = upper.CL
   ) %>%
   select(Type, Group, Label, estimate, LCL, UCL, p.value, p_text) %>%
   rename(lower.CL = LCL, upper.CL = UCL)
@@ -1298,9 +1315,8 @@ results_text_en <- paste0(results_text_en, "\n",
 # Add PRIMARY ΔΔ frailty (common)
 for (i in 1:nrow(dd_frailty_M1_df)) {
   row <- dd_frailty_M1_df[i, ]
-  # Handle both column naming conventions
-  lcl <- if("lower.CL" %in% names(row)) row$lower.CL else if("asymp.LCL" %in% names(row)) row$asymp.LCL else NA
-  ucl <- if("upper.CL" %in% names(row)) row$upper.CL else if("asymp.UCL" %in% names(row)) row$asymp.UCL else NA
+  lcl <- row$lower.CL
+  ucl <- row$upper.CL
   results_text_en <- paste0(results_text_en,
     sprintf("  %s: ΔΔ = %.3f (95%% CI %s, p %s)\n",
             row$contrast, row$estimate,
@@ -1349,9 +1365,8 @@ results_text_en <- paste0(results_text_en, "\n",
 # Add EXPLORATORY ΔΔ frailty (stratified)
 for (i in 1:nrow(dd_frailty_M2_df)) {
   row <- dd_frailty_M2_df[i, ]
-  # Check if columns exist
-  lcl <- if("lower.CL" %in% names(row)) row$lower.CL else row$asymp.LCL
-  ucl <- if("upper.CL" %in% names(row)) row$upper.CL else row$asymp.UCL
+  lcl <- row$lower.CL
+  ucl <- row$upper.CL
   results_text_en <- paste0(results_text_en,
     sprintf("  %s (in %s): ΔΔ = %.3f (95%% CI %s, p %s)\n",
             row$contrast, row$FOF_status, row$estimate,
@@ -1367,9 +1382,8 @@ results_text_en <- paste0(results_text_en, "\n",
 # Add EXPLORATORY ΔΔ FOF (stratified)
 for (i in 1:nrow(dd_fof_M2_df)) {
   row <- dd_fof_M2_df[i, ]
-  # Check if columns exist
-  lcl <- if("lower.CL" %in% names(row)) row$lower.CL else row$asymp.LCL
-  ucl <- if("upper.CL" %in% names(row)) row$upper.CL else row$asymp.UCL
+  lcl <- row$lower.CL
+  ucl <- row$upper.CL
   results_text_en <- paste0(results_text_en,
     sprintf("  %s (in %s): ΔΔ = %.3f (95%% CI %s, p %s)\n",
             row$contrast, row$frailty_cat_3, row$estimate,
