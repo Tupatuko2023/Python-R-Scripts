@@ -88,6 +88,17 @@ manifest_path <- getOption("fof.manifest_path")
 #   - Fractures            = murtumia (0/1)
 #   - Pain VAS             = PainVAS0 (mm/0–10)
 
+# Self-rated Health (3-luokkainen taulukkoa varten, Good/Moderate/Bad)
+# Oletus: koettuterveydentila 0 = bad, 1 = moderate, 2 = good
+SRH_source_var <- if ("koettuterveydentila" %in% names(analysis_data)) {
+  "koettuterveydentila"
+} else if ("SRH" %in% names(analysis_data)) {
+  warning("Column 'koettuterveydentila' not found, falling back to 'SRH'.")
+  "SRH"
+} else {
+  stop("Neither 'koettuterveydentila' nor 'SRH' found in the data.")
+}
+
 analysis_data_rec <- analysis_data %>%
   mutate(
     # FOF-status: sama määrittely kuin muissa skripteissä (K9/K11/K13)
@@ -109,16 +120,6 @@ analysis_data_rec <- analysis_data %>%
       TRUE                   ~ NA_integer_
     ),
     
-    # Self-rated Health (3-luokkainen taulukkoa varten, Good/Moderate/Bad)
-    # Oletus: koettuterveydentila 0 = bad, 1 = moderate, 2 = good
-    SRH_source_var = if ("koettuterveydentila" %in% names(.)) {
-      "koettuterveydentila"
-    } else if ("SRH" %in% names(.)) {
-      warning("Column 'koettuterveydentila' not found, falling back to 'SRH'.")
-      "SRH"
-    } else {
-      stop("Neither 'koettuterveydentila' nor 'SRH' found in the data.")
-    },
     SRH_3class_table = factor(
       .data[[SRH_source_var]],
       levels = c(2, 1, 0),

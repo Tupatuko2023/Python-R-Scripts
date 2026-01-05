@@ -41,7 +41,7 @@ jobs:
         id: smoke_test
         continue-on-error: true
         run: |
-          docker run --name fof-test fof-r-analysis:latest \
+          docker run --name fof-test -e MOCK_MODE=true fof-r-analysis:latest \
             Rscript tests/smoke_test_all_k_scripts.R
 
       - name: Extract smoke test report
