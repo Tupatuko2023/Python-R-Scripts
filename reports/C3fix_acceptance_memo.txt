@@ -125,3 +125,19 @@ K18 QC blocker resolved. FOF task packet acceptance criteria met:
 
 **Approved for merge:** YES
 **Signed:** Claude Sonnet 4.5 (2026-01-03)
+
+---
+
+## Postmortem Note (2026-01-05)
+
+**Issue:** Agent initially reported "32 files changed, +7965/-37" after merge, contradicting GitHub PR #49 view showing "3 files changed, +271/-59".
+
+**Root Cause:** The "32 files" output came from `git pull` fast-forward after `gh pr merge`, which synced local main with remote main including multiple prior PRs (#50-54), not just PR #49.
+
+**Verification:** Merge commit 909f534 confirmed clean via:
+- `gh pr view 49 --json files` → 3 files
+- `git show --stat 909f534` → 3 files changed, 271 insertions(+), 59 deletions(-)
+
+**Resolution:** No scope creep occurred. PR #49 contained only K18 QC fixes as intended. No revert needed.
+
+**Lesson Learned:** Always verify merge scope from merge commit SHA directly (`git show --stat MERGE_SHA`), not from git pull output which may include unrelated changes.
