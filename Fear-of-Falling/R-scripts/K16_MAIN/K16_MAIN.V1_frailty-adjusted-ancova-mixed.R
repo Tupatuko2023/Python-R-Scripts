@@ -117,19 +117,26 @@ if (!("sex" %in% names(analysis_data)) && "Sex" %in% names(analysis_data)) {
   analysis_data <- analysis_data %>% mutate(sex = Sex)
 }
 
+if (!("FOF_status" %in% names(analysis_data)) &&
+    !("FOF_status_factor" %in% names(analysis_data))) {
+  stop("Missing required FOF column: expected either 'FOF_status' or ",
+       "'FOF_status_factor' in analysis_data.")
+}
+
+fof_raw <- if ("FOF_status_factor" %in% names(analysis_data)) {
+  analysis_data$FOF_status_factor
+} else {
+  analysis_data$FOF_status
+}
+
 analysis_data <- analysis_data %>%
   mutate(
     FOF_status = dplyr::case_when(
-      is.na(FOF_status) ~ NA_character_,
-      FOF_status %in% c(0, "0") ~ "nonFOF",
-      FOF_status %in% c(1, "1") ~ "FOF",
-      TRUE ~ as.character(FOF_status)
+      is.na(fof_raw) ~ NA_character_,
+      fof_raw %in% c(0, "0", "nonFOF", "Ei FOF", "No FOF") ~ "nonFOF",
+      fof_raw %in% c(1, "1", "FOF") ~ "FOF",
+      TRUE ~ as.character(fof_raw)
     ),
-    FOF_status = if ("FOF_status_factor" %in% names(analysis_data)) {
-      as.character(FOF_status_factor)
-    } else {
-      FOF_status
-    },
     FOF_status = factor(FOF_status, levels = c("nonFOF", "FOF")),
     sex = case_when(
       sex %in% c(0, "0", "female", "Female", "F") ~ "female",
@@ -296,8 +303,16 @@ save_table_csv_html(mixed_results$frailty_cont, "mixed_frailty_cont", n = nrow(m
 
 mixed_comp <- data.frame(
   Model = c("Baseline (no frailty)", "Frailty categorical", "Frailty continuous"),
-  AIC = c(AIC(mod_mixed_baseline), AIC(mod_mixed_frailty), AIC(mod_mixed_frailty_cont)),
-  BIC = c(BIC(mod_mixed_baseline), BIC(mod_mixed_frailty), BIC(mod_mixed_frailty_cont))
+  AIC = c(
+    AIC(update(mod_mixed_baseline, REML = FALSE)),
+    AIC(update(mod_mixed_frailty, REML = FALSE)),
+    AIC(update(mod_mixed_frailty_cont, REML = FALSE))
+  ),
+  BIC = c(
+    BIC(update(mod_mixed_baseline, REML = FALSE)),
+    BIC(update(mod_mixed_frailty, REML = FALSE)),
+    BIC(update(mod_mixed_frailty_cont, REML = FALSE))
+  )
 )
 save_table_csv_html(mixed_comp, "mixed_model_comparison", n = nrow(mixed_comp))
 
