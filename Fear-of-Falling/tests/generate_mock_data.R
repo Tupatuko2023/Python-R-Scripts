@@ -71,12 +71,16 @@ mock_data <- tibble(
   tuoliltanousu2 = round(rnorm(n, mean = 14.5, sd = 5), 1),
   Tuoli0 = round(rnorm(n, mean = 15, sd = 5), 1),
   Tuoli2 = round(rnorm(n, mean = 14.5, sd = 5), 1),
+  # Change in chair stand time (mock-only derived column for K8/K12)
+  Tuolimuutos = round(rnorm(n, mean = -0.5, sd = 2), 1),
 
   # Single leg stand (seconds) - English and Finnish names
   SLS0 = round(rnorm(n, mean = 8, sd = 6), 1),
   SLS2 = round(rnorm(n, mean = 8.5, sd = 6), 1),
   Seisominen0 = round(rnorm(n, mean = 8, sd = 6), 1),
   Seisominen2 = round(rnorm(n, mean = 8.5, sd = 6), 1),
+  # Change in balance test (mock-only derived column for K8/K12)
+  TasapainoMuutos = round(rnorm(n, mean = 0.5, sd = 2), 1),
 
   # Hand grip strength (kg) - English and Finnish names
   HGS0 = round(rnorm(n, mean = 22, sd = 6), 1),
@@ -97,6 +101,8 @@ mock_data <- tibble(
 
   # Previous falls
   kaatuminen = sample(0:1, n, replace = TRUE, prob = c(0.4, 0.6)),
+  # Fractures (0=no, 1=yes)
+  murtumia = sample(0:1, n, replace = TRUE, prob = c(0.85, 0.15)),
 
   # Psychological/mood score
   mieliala = sample(0:3, n, replace = TRUE),
@@ -108,14 +114,24 @@ mock_data <- tibble(
 
   # Self-rated health (ordinal: 0=poor, 1=fair, 2=good)
   SRH = sample(0:2, n, replace = TRUE, prob = c(0.2, 0.5, 0.3)),
+  # Explicit Finnish column for K14
+  koettuterveydentila = sample(0:2, n, replace = TRUE, prob = c(0.2, 0.5, 0.3)),
 
   # Self-rated mobility (ordinal: 0=poor, 1=fair, 2=good)
   oma_arvio_liikuntakyky = sample(0:2, n, replace = TRUE, prob = c(0.2, 0.5, 0.3)),
+
+  # Health behaviors
+  # Alcohol use (0=none, 1=moderate, 2=heavy)
+  alkoholi = sample(0:2, n, replace = TRUE, prob = c(0.4, 0.5, 0.1)),
+  # Smoking (0=no, 1=yes)
+  tupakointi = sample(0:1, n, replace = TRUE, prob = c(0.8, 0.2)),
 
   # === Walking difficulty (for K7/K8 scripts) ===
   # 500m walking difficulty (0=no, 1=some, 2=much, 3=cannot) - English and Finnish
   Walk500m = sample(0:3, n, replace = TRUE, prob = c(0.4, 0.3, 0.2, 0.1)),
   Vaikeus500m = sample(0:3, n, replace = TRUE, prob = c(0.4, 0.3, 0.2, 0.1)),
+  # Explicit Finnish column for K14
+  vaikeus_liikkua_500m = sample(0:2, n, replace = TRUE, prob = c(0.5, 0.3, 0.2)),
 
   # Maximum walking distance (meters)
   maxkävelymatka = round(rnorm(n, mean = 500, sd = 200)),

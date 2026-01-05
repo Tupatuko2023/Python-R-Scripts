@@ -351,22 +351,82 @@ nrow(analysis_women_composite)
 
 # 8.2 ANCOVA-MALLI --------------------------------------------------------
 
-model_composite_women <- lm(
-  DeltaComposite ~ FOF_status * AgeClass_final +
-    ToimintaKykySummary0 + BMI + MOIindeksiindeksi + diabetes,
-  data = analysis_women_composite
-)
+# Helper to check predictors
+check_predictors_validity <- function(df, preds) {
+  valid <- c()
+  for (p in preds) {
+    if (!p %in% names(df)) {
+      warning(paste("Predictor missing:", p))
+      next
+    }
+    x <- df[[p]]
+    if (all(is.na(x))) {
+      warning(paste("Predictor all NA:", p))
+      next
+    }
+    if (is.numeric(x) && var(x, na.rm = TRUE) == 0) {
+      warning(paste("Predictor zero variance:", p))
+      next
+    }
+    if ((is.factor(x) || is.character(x)) && length(unique(na.omit(x))) < 2) {
+      warning(paste("Predictor <2 levels:", p))
+      next
+    }
+    valid <- c(valid, p)
+  }
+  return(valid)
+}
+
+# Potential predictors (covariates only, main effects forced)
+candidate_covars <- c("ToimintaKykySummary0", "BMI", "MOIindeksiindeksi", "diabetes")
+valid_covars <- check_predictors_validity(analysis_women_composite, candidate_covars)
+
+# Construct formula: Force FOF_status * AgeClass_final, add valid covariates
+# This ensures the primary research question is always addressed.
+f_str <- "DeltaComposite ~ FOF_status * AgeClass_final"
+
+if (length(valid_covars) > 0) {
+  f_str <- paste(f_str, "+", paste(valid_covars, collapse = " + "))
+}
+
+message("Model formula: ", f_str)
+model_composite_women <- lm(as.formula(f_str), data = analysis_women_composite)
 
 # Type III -testit (FOF_status, AgeClass_final, interaktio)
-# Lisätään tarkistus alias-kertoimille
-aliased_coeffs <- names(which(is.na(coef(model_composite_women))))
-if (length(aliased_coeffs) > 0) {
-  warning("Aliased coefficients detected in the model: ", paste(aliased_coeffs, collapse=", "),
-          ".\nFalling back to Type II Anova.")
-  anova_composite_women <- car::Anova(model_composite_women, type = "II")
-} else {
-  anova_composite_women <- car::Anova(model_composite_women, type = "III")
-}
+# Safely run Anova with alias checking and Type II fallback
+anova_composite_women <- tryCatch({
+  car::Anova(model_composite_women, type = "III")
+}, error = function(e) {
+  msg <- conditionMessage(e)
+  warning("Anova (Type III) failed: ", msg)
+  
+  if (grepl("aliased|singular", msg, ignore.case = TRUE)) {
+    message("Printing alias info:")
+    print(alias(model_composite_women))
+  }
+
+  # Fallback 1: Try Type II Anova
+  message("Attempting fallback to Type II Anova...")
+  tryCatch({
+    car::Anova(model_composite_women, type = "II")
+  }, error = function(e2) {
+    warning("Anova (Type II) also failed: ", conditionMessage(e2))
+    
+    # Fallback 2: create a dummy table ONLY if MOCK_MODE is enabled
+    # This prevents production runs from silently masking real errors
+    if (Sys.getenv("MOCK_MODE") == "true") {
+      warning("Generating dummy Anova table (MOCK_MODE=true)")
+      dummy_res <- as.data.frame(matrix(NA, nrow=1, ncol=4))
+      colnames(dummy_res) <- c("Sum Sq", "Df", "F value", "Pr(>F)")
+      rownames(dummy_res) <- "Model_Failed_Approximation"
+      class(dummy_res) <- c("anova", "data.frame")
+      return(dummy_res)
+    } else {
+      stop("Anova failed (Type III and II). Enable MOCK_MODE=true to fallback to dummy output.")
+    }
+  })
+})
+
 anova_composite_women
 
 # Tidy-taulukko (beta, SE, CI, p)
