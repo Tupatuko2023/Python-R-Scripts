@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # C3FIX Acceptance Memo: K18 QC Guardrail Corrections
 
 **Date:** 2026-01-03

@@ -90,36 +90,83 @@ qc_id_integrity_long <- function(df, id_col, time_col) {
 }
 
 qc_time_levels <- function(df, time_col, expected_levels = NULL) {
-  time_levels <- sort(unique(df[[time_col]]))
+  normalize_time <- function(x) {
+    x_chr <- tolower(trimws(as.character(x)))
+    x_chr <- ifelse(x_chr %in% c("baseline", "base", "bl", "t0", "0"), "baseline", x_chr)
+    x_chr <- ifelse(x_chr %in% c("m12", "12m", "12", "t12", "1"), "m12", x_chr)
+    x_chr
+  }
+  drop_empty <- function(x) {
+    x <- x[!is.na(x) & nzchar(x)]
+    x
+  }
+
+  time_levels_raw <- sort(unique(df[[time_col]]))
+  time_levels_raw_chr <- drop_empty(as.character(time_levels_raw))
+  time_levels_canon <- sort(unique(drop_empty(normalize_time(time_levels_raw_chr))))
+
+  expected_raw <- if (is.null(expected_levels)) character(0) else expected_levels
+  expected_raw_chr <- drop_empty(as.character(expected_raw))
+  expected_canon <- sort(unique(drop_empty(normalize_time(expected_raw_chr))))
+
+  expected_present <- length(expected_raw_chr) > 0
   ok <- TRUE
-  expected <- ""
-  if (!is.null(expected_levels) && length(expected_levels) > 0) {
-    expected <- paste(expected_levels, collapse = ";")
-    ok <- all(time_levels %in% expected_levels) && all(expected_levels %in% time_levels)
+  if (expected_present) {
+    ok <- all(time_levels_canon %in% expected_canon) && all(expected_canon %in% time_levels_canon)
   }
   if (!ok) {
-    ok <- all(time_levels %in% c(0, 1, "0", "1")) && length(time_levels) == 2
+    ok <- length(time_levels_canon) == 2 && all(time_levels_canon %in% c("baseline", "m12"))
   }
   status <- data.frame(
     check = "time_levels",
-    observed = paste(time_levels, collapse = ";"),
-    expected = expected,
+    observed = paste(time_levels_raw_chr, collapse = ";"),
+    expected = paste(expected_raw_chr, collapse = ";"),
+    observed_raw = paste(time_levels_raw_chr, collapse = ";"),
+    observed_canonical = paste(time_levels_canon, collapse = ";"),
+    expected_raw = paste(expected_raw_chr, collapse = ";"),
+    expected_canonical = paste(expected_canon, collapse = ";"),
     ok = ok,
     stringsAsFactors = FALSE
   )
-  list(levels = data.frame(time_level = time_levels), status = status)
+  list(levels = data.frame(time_level = time_levels_raw_chr), status = status)
 }
 
 qc_fof_levels <- function(df, fof_col, expected_levels = NULL) {
-  vals <- sort(unique(df[[fof_col]]))
-  ok <- length(vals) == 2
-  if (!is.null(expected_levels) && length(expected_levels) > 0) {
-    ok <- ok && all(vals %in% expected_levels)
+  normalize_fof <- function(x) {
+    x_chr <- tolower(trimws(as.character(x)))
+    x_chr <- ifelse(x_chr %in% c("0", "nonfof"), "nonFOF", x_chr)
+    x_chr <- ifelse(x_chr %in% c("1", "fof"), "FOF", x_chr)
+    x_chr
+  }
+  drop_empty <- function(x) {
+    x <- x[!is.na(x) & nzchar(x)]
+    x
+  }
+
+  vals_raw <- sort(unique(df[[fof_col]]))
+  vals_raw_chr <- drop_empty(as.character(vals_raw))
+  vals_canon <- sort(unique(drop_empty(normalize_fof(vals_raw_chr))))
+
+  expected_raw <- if (is.null(expected_levels)) character(0) else expected_levels
+  expected_raw_chr <- drop_empty(as.character(expected_raw))
+  expected_canon <- sort(unique(drop_empty(normalize_fof(expected_raw_chr))))
+
+  expected_present <- length(expected_raw_chr) > 0
+  ok <- length(vals_canon) == 2
+  if (expected_present) {
+    ok <- ok && all(vals_canon %in% expected_canon) && all(expected_canon %in% vals_canon)
+  }
+  if (!ok) {
+    ok <- length(vals_canon) == 2 && all(vals_canon %in% c("nonFOF", "FOF"))
   }
   data.frame(
     check = "fof_levels",
-    observed_levels = paste(vals, collapse = ";"),
-    n_levels = length(vals),
+    observed_levels = paste(vals_raw_chr, collapse = ";"),
+    observed_raw = paste(vals_raw_chr, collapse = ";"),
+    observed_canonical = paste(vals_canon, collapse = ";"),
+    expected_raw = paste(expected_raw_chr, collapse = ";"),
+    expected_canonical = paste(expected_canon, collapse = ";"),
+    n_levels = length(vals_raw_chr),
     ok = ok,
     stringsAsFactors = FALSE
   )
