@@ -53,23 +53,40 @@ cat("Manifest:", manifest_path, "\n")
 cat("Project root:", here::here(), "\n")
 cat("================================================================================\n\n")
 
-cat("[Step 1/6] Data Import (shared from K1)...\n")
-source(here::here("R-scripts", "K1", "K1.1.data_import.R"))
+# Fail-fast wrapper for pipeline step scripts
+run_step <- function(label, path) {
+  cat(sprintf("\n=== [%s] source: %s ===\n", label, path))
+  tryCatch(
+    {
+      source(path, local = FALSE)
+      TRUE
+    },
+    error = function(e) {
+      message("FATAL: step failed: ", label)
+      message("  path: ", path)
+      message("  error: ", conditionMessage(e))
+      quit(status = 1, save = "no")
+    }
+  )
+}
 
-cat("[Step 2/6] Data Transformation (original values)...\n")
-source(here::here("R-scripts", "K3", "K3.2.data_transformation.R"))
+run_step("Step 1/6 Data Import (shared from K1)",
+         here::here("R-scripts", "K1", "K1.1.data_import.R"))
 
-cat("[Step 3/6] Statistical Analysis...\n")
-source(here::here("R-scripts", "K3", "K3.3.statistical_analysis.R"))
+run_step("Step 2/6 Data Transformation (original values)",
+         here::here("R-scripts", "K3", "K3.2.data_transformation.R"))
 
-cat("[Step 4/6] Effect Size Calculations...\n")
-source(here::here("R-scripts", "K3", "K3.4.effect_sizes.R"))
+run_step("Step 3/6 Statistical Analysis",
+         here::here("R-scripts", "K3", "K3.3.statistical_analysis.R"))
 
-cat("[Step 5/6] Distributional Checks (shared from K1)...\n")
-source(here::here("R-scripts", "K1", "K1.5.kurtosis_skewness.R"))
+run_step("Step 4/6 Effect Size Calculations",
+         here::here("R-scripts", "K3", "K3.4.effect_sizes.R"))
 
-cat("[Step 6/6] Combine Results & Export...\n")
-source(here::here("R-scripts", "K3", "K3.6.results_export.R"))
+run_step("Step 5/6 Distributional Checks (shared from K1)",
+         here::here("R-scripts", "K1", "K1.5.kurtosis_skewness.R"))
+
+run_step("Step 6/6 Combine Results & Export",
+         here::here("R-scripts", "K3", "K3.6.results_export.R"))
 
 cat("\n================================================================================\n")
 cat("K03 Pipeline completed successfully.\n")
