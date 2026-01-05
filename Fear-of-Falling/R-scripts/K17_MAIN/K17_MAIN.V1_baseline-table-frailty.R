@@ -100,11 +100,6 @@ srh_source_var <- if ("koettuterveydentila" %in% names(raw_data)) {
   stop("Neither 'koettuterveydentila' nor 'SRH' found in the data.")
 }
 
-# --- Standardize + QC --------------------------------------------------------
-df <- standardize_analysis_vars(raw_data)
-qc <- sanity_checks(df)
-print(qc)
-
 # --- Minimal QC: missingness by FOF -----------------------------------------
 qc_missingness <- raw_data %>%
   mutate(FOF_status = kaatumisenpelkoOn) %>%
@@ -437,6 +432,7 @@ make_multicat_rows_with_level_p <- function(data, var_name, header_label,
                                             group0 = group0_lvl, group1 = group1_lvl) {
   f <- data[[var_name]]
   g <- data$FOF_status
+  df_full <- data %>% filter(!is.na(.data$FOF_status))
   idx <- !is.na(f) & !is.na(g)
   f_use <- droplevels(f[idx])
   g_use <- droplevels(g[idx])
@@ -463,9 +459,9 @@ make_multicat_rows_with_level_p <- function(data, var_name, header_label,
     }
     paste0(row$n[1], "(", row$pct[1], ")")
   }
-  header_sums <- tab %>%
-    group_by(FOF_status) %>%
-    summarise(n_total = sum(n), .groups = "drop")
+  header_sums <- df_full %>%
+    dplyr::group_by(FOF_status) %>%
+    dplyr::summarise(n_total = dplyr::n(), .groups = "drop")
   get_header_cell <- function(fof_value) {
     row <- header_sums %>% filter(FOF_status == fof_value)
     if (nrow(row) == 0L || is.na(row$n_total[1]) || row$n_total[1] == 0L) "" else paste0(row$n_total[1], "(100)")
