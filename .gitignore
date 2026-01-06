@@ -1,65 +1,7 @@
-# Windows ja Office
-Thumbs.db
-desktop.ini
-~$*
-*.tmp
-
-# OneDrive satunnaiset lukitusj?ljet
-*.lnk
-# IDE/editori
-.vscode/
-.ipynb_checkpoints/
-.Rhistory
-.Rproj.user/
-.DS_Store
-
-# Build ja väliaikaiset
-*_cache/
-.quarto/
-_site/
-*.log
-.vscode/
-.ipynb_checkpoints/
-.Rhistory
-.Rproj.user/
-.DS_Store
-*_cache/
-.quarto/
-_site/
-*.log
-!.github/
-!.github/workflows/
-
-!.github/
-!.github/workflows/
-
-efi_*.ps1
-
-!.github/
-!.github/workflows/
-node_modules/
-.gitattributes.bak.*
-!.markdownlint*out/
-out/
-/repo_audit/
-*.bundle.lock
-rca-codex-egress.bundle
-repo_audit_staged_diff_full.txt
-
-# Fear-of-Falling local workspaces and outputs
-Fear-of-Falling/*.RData
-Fear-of-Falling/*.Rdata
-Fear-of-Falling/R-scripts/**/*.RData
-Fear-of-Falling/R-scripts/**/*.Rdata
-Fear-of-Falling/R-scripts/**/outputs/
-
-# Gemini and Claude local workspaces
-.gemini/*
-!.gemini/settings.json
-!.gemini/README.md
-!.gemini/policies/
-.claude/settings.local.json
-repo_audit_staged_diff_full.txt
-
-# local agent prompts
-prompts/
+# Agent/Audit artifacts (generated; do not commit)
+Fear-of-Falling/repo_audit/
+Fear-of-Falling/tests/smoke_test/logs_*/
+SMOKE_TEST_REPORT*.md
+Fear-of-Falling/SMOKE_TEST_REPORT*.md
+Fear-of-Falling/docs/DELIVERY_NOTE.md
+Microsoft.PowerShell_profile.ps1
