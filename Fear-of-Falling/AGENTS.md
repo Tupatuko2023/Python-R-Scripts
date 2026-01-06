@@ -61,6 +61,41 @@ merkitse TODO ja etsi oikea paikka):
   ja yksi manifest-rivi per artefakti.
 - Kerro aina mitä validoit ja millä komennoilla.
 
+## Agent Playbook (FOF-scope)
+
+Subproject root (repo-relative):
+
+- `analysis/modules/Python-R-Scripts/Fear-of-Falling/`
+- Makefile: `analysis/modules/Python-R-Scripts/Fear-of-Falling/Makefile`
+
+### Skill selection (Makefile first)
+
+- Käytä Makefilea ensisijaisena ajopolun lähteenä, aina tästä aliprojektista.
+- Aja aina `make -n <target>` ennen `make <target>`.
+- Älä aja `clean`, `clean-outputs` tai mitään `clean*`-targetteja.
+- Älä aseta `CLEAN_OUTPUTS=1`.
+
+### Reporting template (täytä vastaus)
+
+- I will run: `cd analysis/modules/Python-R-Scripts/Fear-of-Falling/ && make -n <target>` because Makefile on ainoa ajopolun lähde tässä aliprojektissa.
+- I ran: `<commands>` (listaa kaikki ajot järjestyksessä).
+- Result: `<lyhyt yhteenveto, onnistui/epäonnistui + virheet>`.
+- Outputs: `<polut>` ja `manifest/manifest.csv`-rivit (jos syntyi).
+- Risks/notes: `<vaikutus tuloksiin / rajoitteet>`.
+
+### Logging and minimal diffs
+
+- Pidä muutokset minimissä ja kohdistettuina yhteen tarkoitukseen.
+- Kirjaa aina ajokomennot ja dry-run-komennot.
+- Älä koske raakadataan tai `renv.lock`-tiedostoon ilman pyyntöä.
+- `renv::restore()` vain eksplisiittisellä pyynnöllä tai `make setup-r` kun pyydetty.
+
+### Commit and PR policy
+
+- Yksi muutoskokonaisuus per commit.
+- PR-kuvauksessa: mitä muuttui, miten validoitiin, riskit.
+- Älä sisällytä generoituja outputteja ilman erillistä pyyntöä.
+
 ## Project-specific source of truth (CLAUDE.md)
 
 - `CLAUDE.md` on tämän aliprojektin lopullinen ohje Kxx-konventioille ja
