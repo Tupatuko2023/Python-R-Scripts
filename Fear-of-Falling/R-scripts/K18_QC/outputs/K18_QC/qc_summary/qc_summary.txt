@@ -1,0 +1,22 @@
+QC summary (aggregate only)
+Artifacts summarized: 15
+
+- qc_delta_check: INFO (n_rows=1, n_issues=NA)
+- qc_fof_levels: PASS (n_rows=1, n_issues=0)
+- qc_id_timepoint_coverage_dist: INFO (n_rows=1, n_issues=NA)
+- qc_missingness_by_fof_time: INFO (n_rows=4, n_issues=NA)
+- qc_missingness_overall: INFO (n_rows=4, n_issues=NA)
+- qc_outcome_summary: INFO (n_rows=1, n_issues=NA)
+- qc_profile: INFO (n_rows=1, n_issues=NA)
+- qc_status_summary: PASS (n_rows=6, n_issues=0)
+- qc_time_levels_status: PASS (n_rows=1, n_issues=0)
+- qc_time_levels: INFO (n_rows=2, n_issues=NA)
+- qc_types_status: PASS (n_rows=1, n_issues=0)
+- qc_types: INFO (n_rows=4, n_issues=NA)
+- qc_variable_standardization_conflicts: INFO (n_rows=0, n_issues=NA)
+- qc_variable_standardization_renames: INFO (n_rows=3, n_issues=NA)
+- qc_variable_standardization_verify_hits: INFO (n_rows=0, n_issues=NA)
+
+Warnings:
+- SKIP filename (privacy): qc_row_id_watch.csv
+- SKIP id columns: qc_uniqueness.csv

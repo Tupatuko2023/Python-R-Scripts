@@ -1,0 +1,10 @@
+diff --git a/Fear-of-Falling/manifest/manifest.csv b/Fear-of-Falling/manifest/manifest.csv
+index f0dbe70..c5c1a0c 100644
+--- a/Fear-of-Falling/manifest/manifest.csv
++++ b/Fear-of-Falling/manifest/manifest.csv
+@@ -1195,3 +1195,5 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
+ 2026-01-02 16:46:30.32605,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+ 2026-01-02 16:51:51.803748,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+ 2026-01-02 16:51:52.414844,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
++2026-01-03 12:39:17.380152,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
++2026-01-03 12:39:17.994165,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only

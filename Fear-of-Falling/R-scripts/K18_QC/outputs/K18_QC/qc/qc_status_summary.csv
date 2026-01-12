@@ -1,0 +1,7 @@
+"check","ok","details","overall_pass"
+"types",TRUE,"",TRUE
+"id_integrity",TRUE,"n_dup_id_time=0",TRUE
+"time_levels",TRUE,"observed_raw=12m;baseline;observed_canonical=baseline;m12;expected_raw=baseline;m12;12m;expected_canonical=baseline;m12",TRUE
+"fof_levels",TRUE,"observed_raw=0;1;observed_canonical=FOF;nonFOF;expected_raw=nonFOF;FOF;expected_canonical=FOF;nonFOF",TRUE
+"delta_check",TRUE,"not_applicable",TRUE
+"outcome_nonfinite",TRUE,"n_nonfinite=0",TRUE

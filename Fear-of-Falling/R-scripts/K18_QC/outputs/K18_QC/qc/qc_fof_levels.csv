@@ -1,0 +1,2 @@
+"check","observed_levels","observed_raw","observed_canonical","expected_raw","expected_canonical","n_levels","ok"
+"fof_levels","0;1","0;1","FOF;nonFOF","nonFOF;FOF","FOF;nonFOF",2,TRUE

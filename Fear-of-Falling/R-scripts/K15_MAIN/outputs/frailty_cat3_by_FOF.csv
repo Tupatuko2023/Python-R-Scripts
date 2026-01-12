@@ -1,0 +1,7 @@
+FOF_status_factor,frailty_cat_3,n,pct
+nonFOF,robust,5,6.8
+nonFOF,pre-frail,41,56.2
+nonFOF,frail,27,37
+FOF,robust,9,5.1
+FOF,pre-frail,95,53.7
+FOF,frail,73,41.2
