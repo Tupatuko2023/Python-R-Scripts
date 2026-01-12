@@ -1,0 +1,2 @@
+"check","observed","expected","observed_raw","observed_canonical","expected_raw","expected_canonical","ok"
+"time_levels","12m;baseline","baseline;m12;12m","12m;baseline","baseline;m12","baseline;m12;12m","baseline;m12",TRUE

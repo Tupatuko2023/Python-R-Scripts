@@ -1,0 +1,313 @@
+Diagnostics Report [renv 1.1.5]
+===============================
+
+# /etc/lsb-release -----------------------------------------------------------
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=25.10
+DISTRIB_CODENAME=questing
+DISTRIB_DESCRIPTION="Ubuntu 25.10"
+
+# /etc/os-release ------------------------------------------------------------
+PRETTY_NAME="Ubuntu 25.10"
+NAME="Ubuntu"
+VERSION_ID="25.10"
+VERSION="25.10 (Questing Quokka)"
+VERSION_CODENAME=questing
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=questing
+LOGO=ubuntu-logo
+
+
+# Session Info ---------------------------------------------------------------
+R version 4.5.1 (2025-06-13)
+Platform: aarch64-unknown-linux-gnu
+Running under: Ubuntu 25.10
+
+Matrix products: default
+BLAS:   /usr/lib/aarch64-linux-gnu/blas/libblas.so.3.12.1 
+LAPACK: /usr/lib/aarch64-linux-gnu/lapack/liblapack.so.3.12.1;  LAPACK version 3.12.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: Etc/UTC
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base     
+
+other attached packages:
+[1] dplyr_1.1.4  readr_2.1.5  tibble_3.3.0 here_1.0.2  
+
+loaded via a namespace (and not attached):
+ [1] R6_2.6.1         bit_4.6.0        tidyselect_1.2.1 tzdb_0.5.0      
+ [5] magrittr_2.0.4   glue_1.8.0       parallel_4.5.1   pkgconfig_2.0.3 
+ [9] bit64_4.6.0-1    generics_0.1.4   lifecycle_1.0.4  cli_3.6.5       
+[13] vctrs_0.6.5      renv_1.1.5       compiler_4.5.1   rprojroot_2.1.1 
+[17] tools_4.5.1      hms_1.1.3        pillar_1.11.1    crayon_1.5.3    
+[21] rlang_1.1.6      vroom_1.6.6     
+
+# Project --------------------------------------------------------------------
+Project path: "/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling"
+
+# Status ---------------------------------------------------------------------
+The following package(s) are used in this project, but are not installed:
+- marginaleffects
+- partR2
+- R.utils
+- testthat
+
+See `?renv::status` for advice on resolving these issues.
+
+# Packages -------------------------------------------------------------------
+                      Library Source    Lockfile Source Path Dependency
+Deriv                   4.2.0   RSPM       4.2.0   CRAN  [1]   indirect
+Formula                 1.2-5   RSPM       1.2-5   CRAN  [1]   indirect
+KernSmooth            2.23-26   CRAN        <NA>   <NA>  [2]       <NA>
+MASS                   7.3-65   CRAN      7.3-65   CRAN  [2]     direct
+Matrix                  1.7-3   CRAN       1.7-3   CRAN  [2]   indirect
+MatrixModels            0.5-4   RSPM       0.5-4   CRAN  [1]   indirect
+R.utils                  <NA>   <NA>        <NA>   <NA> <NA>     direct
+R6                      2.6.1   RSPM       2.6.1   CRAN  [1]   indirect
+RColorBrewer            1.1-3   RSPM       1.1-3   CRAN  [1]   indirect
+Rcpp                    1.1.0   RSPM       1.1.0   CRAN  [1]   indirect
+RcppEigen           0.3.4.0.2   RSPM   0.3.4.0.2   CRAN  [1]   indirect
+Rdpack                  2.6.4   RSPM       2.6.4   CRAN  [1]   indirect
+S7                      0.2.0   RSPM       0.2.0   CRAN  [1]   indirect
+SparseM                1.84-2   RSPM      1.84-2   CRAN  [1]   indirect
+abind                   1.4-8   RSPM       1.4-8   CRAN  [1]   indirect
+askpass                 1.2.1   RSPM       1.2.1   CRAN  [1]   indirect
+backports               1.5.0   RSPM       1.5.0   CRAN  [1]   indirect
+base64enc               0.1-3   RSPM       0.1-3   CRAN  [1]   indirect
+bayestestR             0.17.0   RSPM      0.17.0   CRAN  [1]   indirect
+bit                     4.6.0   RSPM       4.6.0   CRAN  [1]   indirect
+bit64                 4.6.0-1   RSPM     4.6.0-1   CRAN  [1]   indirect
+boot                   1.3-32   RSPM      1.3-32   CRAN  [1]     direct
+broom                  1.0.10   RSPM      1.0.10   CRAN  [1]     direct
+broom.mixed           0.2.9.6   RSPM     0.2.9.6   CRAN  [1]     direct
+bslib                   0.9.0   RSPM       0.9.0   CRAN  [1]   indirect
+cachem                  1.1.0   RSPM       1.1.0   CRAN  [1]   indirect
+car                     3.1-3   RSPM       3.1-3   CRAN  [1]     direct
+carData                 3.0-5   RSPM       3.0-5   CRAN  [1]   indirect
+class                  7.3-23   CRAN        <NA>   <NA>  [2]       <NA>
+cli                     3.6.5   RSPM       3.6.5   CRAN  [1]   indirect
+clipr                   0.8.0   RSPM       0.8.0   CRAN  [1]   indirect
+cluster               2.1.8.1   CRAN        <NA>   <NA>  [2]       <NA>
+coda                 0.19-4.1   RSPM    0.19-4.1   CRAN  [1]   indirect
+codetools              0.2-20   CRAN      0.2-20   CRAN  [2]   indirect
+compiler                 <NA>   <NA>        <NA>   <NA>  [2]   indirect
+conflicted              1.2.0   RSPM       1.2.0   CRAN  [1]     direct
+cowplot                 1.2.0   RSPM       1.2.0   CRAN  [1]   indirect
+cpp11                   0.5.2   RSPM       0.5.2   CRAN  [1]   indirect
+crayon                  1.5.3   RSPM       1.5.3   CRAN  [1]   indirect
+data.table             1.17.8   RSPM      1.17.8   CRAN  [1]   indirect
+datawizard              1.3.0   RSPM       1.3.0   CRAN  [1]   indirect
+digest                 0.6.37   RSPM      0.6.37   CRAN  [1]   indirect
+doBy                    4.7.0   RSPM       4.7.0   CRAN  [1]   indirect
+dplyr                   1.1.4   RSPM       1.1.4   CRAN  [1]     direct
+effectsize              1.0.1   RSPM       1.0.1   CRAN  [1]     direct
+emmeans                 2.0.0   RSPM       2.0.0   CRAN  [1]     direct
+estimability            1.5.1   RSPM       1.5.1   CRAN  [1]   indirect
+evaluate                1.0.5   RSPM       1.0.5   CRAN  [1]   indirect
+farver                  2.1.2   RSPM       2.1.2   CRAN  [1]   indirect
+fastmap                 1.2.0   RSPM       1.2.0   CRAN  [1]   indirect
+flextable              0.9.10   RSPM      0.9.10   CRAN  [1]     direct
+fontBitstreamVera       0.1.1   RSPM       0.1.1   CRAN  [1]   indirect
+fontLiberation          0.1.0   RSPM       0.1.0   CRAN  [1]   indirect
+fontawesome             0.5.3   RSPM       0.5.3   CRAN  [1]   indirect
+fontquiver              0.2.1   RSPM       0.2.1   CRAN  [1]   indirect
+forcats                 1.0.1   RSPM       1.0.1   CRAN  [1]     direct
+foreach                 1.5.2   RSPM       1.5.2   CRAN  [1]   indirect
+foreign                0.8-90   CRAN        <NA>   <NA>  [2]       <NA>
+fs                      1.6.6   RSPM       1.6.6   CRAN  [1]   indirect
+furrr                   0.3.1   RSPM       0.3.1   CRAN  [1]   indirect
+future                 1.68.0   RSPM      1.68.0   CRAN  [1]   indirect
+gdtools                 0.4.4   RSPM       0.4.4   CRAN  [1]   indirect
+generics                0.1.4   RSPM       0.1.4   CRAN  [1]   indirect
+ggplot2                 4.0.0   RSPM       4.0.0   CRAN  [1]     direct
+glmnet                 4.1-10   RSPM      4.1-10   CRAN  [1]   indirect
+globals                0.18.0   RSPM      0.18.0   CRAN  [1]   indirect
+glue                    1.8.0   RSPM       1.8.0   CRAN  [1]   indirect
+grDevices                <NA>   <NA>        <NA>   <NA>  [2]     direct
+graphics                 <NA>   <NA>        <NA>   <NA>  [2]     direct
+grid                     <NA>   <NA>        <NA>   <NA>  [2]   indirect
+gtable                  0.3.6   RSPM       0.3.6   CRAN  [1]   indirect
+haven                   2.5.5   RSPM       2.5.5   CRAN  [1]     direct
+here                    1.0.2   RSPM       1.0.2   CRAN  [1]     direct
+highr                    0.11   RSPM        0.11   CRAN  [1]   indirect
+hms                     1.1.3   RSPM       1.1.3   CRAN  [1]   indirect
+htmltools             0.5.8.1   RSPM     0.5.8.1   CRAN  [1]   indirect
+insight                 1.4.2   RSPM       1.4.2   CRAN  [1]   indirect
+isoband                 0.2.7   RSPM       0.2.7   CRAN  [1]   indirect
+iterators              1.0.14   RSPM      1.0.14   CRAN  [1]   indirect
+janitor                 2.2.1   RSPM       2.2.1   CRAN  [1]     direct
+jomo                    2.7-6   RSPM       2.7-6   CRAN  [1]   indirect
+jquerylib               0.1.4   RSPM       0.1.4   CRAN  [1]   indirect
+jsonlite                2.0.0   RSPM       2.0.0   CRAN  [1]   indirect
+knitr                    1.50   RSPM        1.50   CRAN  [1]     direct
+labeling                0.4.3   RSPM       0.4.3   CRAN  [1]   indirect
+lattice                0.22-7   CRAN      0.22-7   CRAN  [2]   indirect
+lifecycle               1.0.4   RSPM       1.0.4   CRAN  [1]   indirect
+lintr                    <NA>   <NA>        <NA>   <NA> <NA>     direct
+listenv                0.10.0   RSPM      0.10.0   CRAN  [1]   indirect
+lme4                   1.1-37   RSPM      1.1-37   CRAN  [1]     direct
+lmerTest                3.1-3   RSPM       3.1-3   CRAN  [1]     direct
+lmtest                 0.9-40   RSPM      0.9-40   CRAN  [1]     direct
+lubridate               1.9.4   RSPM       1.9.4   CRAN  [1]   indirect
+magrittr                2.0.4   RSPM       2.0.4   CRAN  [1]   indirect
+marginaleffects          <NA>   <NA>        <NA>   <NA> <NA>     direct
+memoise                 2.0.1   RSPM       2.0.1   CRAN  [1]   indirect
+methods                  <NA>   <NA>        <NA>   <NA>  [2]   indirect
+mgcv                    1.9-3   CRAN       1.9-3   CRAN  [2]   indirect
+mice                   3.18.0   RSPM      3.18.0   CRAN  [1]     direct
+microbenchmark          1.5.0   RSPM       1.5.0   CRAN  [1]   indirect
+mime                     0.13   RSPM        0.13   CRAN  [1]   indirect
+minqa                   1.2.8   RSPM       1.2.8   CRAN  [1]   indirect
+mitml                   0.4-5   RSPM       0.4-5   CRAN  [1]   indirect
+modelr                 0.1.11   RSPM      0.1.11   CRAN  [1]   indirect
+moments                0.14.1   RSPM      0.14.1   CRAN  [1]     direct
+mvtnorm                 1.3-3   RSPM       1.3-3   CRAN  [1]   indirect
+nlme                  3.1-168   CRAN     3.1-168   CRAN  [2]     direct
+nloptr                  2.2.1   RSPM       2.2.1   CRAN  [1]   indirect
+nnet                   7.3-20   CRAN      7.3-20   CRAN  [2]   indirect
+numDeriv           2016.8-1.1   RSPM  2016.8-1.1   CRAN  [1]   indirect
+officer                 0.7.2   RSPM       0.7.2   CRAN  [1]     direct
+openssl                 2.3.4   RSPM       2.3.4   CRAN  [1]   indirect
+ordinal           2023.12-4.1   RSPM 2023.12-4.1   CRAN  [1]   indirect
+pan                       1.9   RSPM         1.9   CRAN  [1]   indirect
+parallel                 <NA>   <NA>        <NA>   <NA>  [2]   indirect
+parallelly             1.46.0   RSPM      1.46.0   CRAN  [1]   indirect
+parameters             0.28.2   RSPM      0.28.2   CRAN  [1]   indirect
+partR2                   <NA>   <NA>        <NA>   <NA> <NA>     direct
+pbkrtest                0.5.5   RSPM       0.5.5   CRAN  [1]   indirect
+performance            0.15.2   RSPM      0.15.2   CRAN  [1]     direct
+pillar                 1.11.1   RSPM      1.11.1   CRAN  [1]   indirect
+pkgconfig               2.0.3   RSPM       2.0.3   CRAN  [1]   indirect
+prettyunits             1.2.0   RSPM       1.2.0   CRAN  [1]   indirect
+progress                1.2.3   RSPM       1.2.3   CRAN  [1]   indirect
+purrr                   1.1.0   RSPM       1.1.0   CRAN  [1]     direct
+quantreg                  6.1   RSPM         6.1   CRAN  [1]     direct
+ragg                    1.5.0   RSPM       1.5.0   CRAN  [1]   indirect
+rappdirs                0.3.3   RSPM       0.3.3   CRAN  [1]   indirect
+rbibutils                 2.4   RSPM         2.4   CRAN  [1]   indirect
+readr                   2.1.5   RSPM       2.1.5   CRAN  [1]     direct
+reformulas              0.4.2   RSPM       0.4.2   CRAN  [1]     direct
+renv                    1.1.5   RSPM       1.1.5   CRAN  [1]     direct
+rlang                   1.1.6   RSPM       1.1.6   CRAN  [1]     direct
+rmarkdown                2.30   RSPM        2.30   CRAN  [1]   indirect
+rpart                  4.1.24   CRAN      4.1.24   CRAN  [2]   indirect
+rprojroot               2.1.1   RSPM       2.1.1   CRAN  [1]   indirect
+sandwich                3.1-1   RSPM       3.1-1   CRAN  [1]     direct
+sass                   0.4.10   RSPM      0.4.10   CRAN  [1]   indirect
+scales                  1.4.0   RSPM       1.4.0   CRAN  [1]     direct
+shape                 1.4.6.1   RSPM     1.4.6.1   CRAN  [1]   indirect
+snakecase              0.11.1   RSPM      0.11.1   CRAN  [1]   indirect
+spatial                7.3-18   CRAN        <NA>   <NA>  [2]       <NA>
+splines                  <NA>   <NA>        <NA>   <NA>  [2]     direct
+stats                    <NA>   <NA>        <NA>   <NA>  [2]     direct
+stringi                 1.8.7   RSPM       1.8.7   CRAN  [1]   indirect
+stringr                 1.6.0   RSPM       1.6.0   CRAN  [1]     direct
+survival                3.8-3   CRAN       3.8-3   CRAN  [2]   indirect
+sys                     3.4.3   RSPM       3.4.3   CRAN  [1]   indirect
+systemfonts             1.3.1   RSPM       1.3.1   CRAN  [1]   indirect
+testthat                 <NA>   <NA>        <NA>   <NA> <NA>     direct
+textshaping             1.0.4   RSPM       1.0.4   CRAN  [1]   indirect
+tibble                  3.3.0   RSPM       3.3.0   CRAN  [1]     direct
+tidyr                   1.3.1   RSPM       1.3.1   CRAN  [1]     direct
+tidyselect              1.2.1   RSPM       1.2.1   CRAN  [1]   indirect
+timechange              0.3.0   RSPM       0.3.0   CRAN  [1]   indirect
+tinytex                  0.57   RSPM        0.57   CRAN  [1]   indirect
+tools                    <NA>   <NA>        <NA>   <NA>  [2]     direct
+tzdb                    0.5.0   RSPM       0.5.0   CRAN  [1]   indirect
+ucminf                  1.2.2   RSPM       1.2.2   CRAN  [1]   indirect
+utf8                    1.2.6   RSPM       1.2.6   CRAN  [1]   indirect
+utils                    <NA>   <NA>        <NA>   <NA>  [2]     direct
+uuid                    1.2-1   RSPM       1.2-1   CRAN  [1]   indirect
+vctrs                   0.6.5   RSPM       0.6.5   CRAN  [1]   indirect
+viridisLite             0.4.2   RSPM       0.4.2   CRAN  [1]   indirect
+vroom                   1.6.6   RSPM       1.6.6   CRAN  [1]   indirect
+withr                   3.0.2   RSPM       3.0.2   CRAN  [1]   indirect
+xfun                     0.53   RSPM        0.53   CRAN  [1]   indirect
+xml2                    1.4.0   RSPM       1.4.0   CRAN  [1]   indirect
+yaml                   2.3.10   RSPM      2.3.10   CRAN  [1]   indirect
+zip                     2.3.3   RSPM       2.3.3   CRAN  [1]   indirect
+zoo                    1.8-14   RSPM      1.8-14   CRAN  [1]   indirect
+
+[1]: /data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/renv/library/linux-ubuntu-questing/R-4.5/aarch64-unknown-linux-gnu
+[2]: /root/.cache/R/renv/sandbox/linux-ubuntu-questing/R-4.5/aarch64-unknown-linux-gnu/9a444a72                                          
+
+# R System Requirements ------------------------------------------------------
+
+# ABI ------------------------------------------------------------------------
+- No ABI problems were detected in the set of installed packages.
+
+# User Profile ---------------------------------------------------------------
+[no user profile detected]
+
+# Settings -------------------------------------------------------------------
+List of 13
+ $ bioconductor.version     : NULL
+ $ external.libraries       : chr(0) 
+ $ ignored.packages         : chr(0) 
+ $ package.dependency.fields: chr [1:3] "Imports" "Depends" "LinkingTo"
+ $ ppm.enabled              : NULL
+ $ ppm.ignored.urls         : chr(0) 
+ $ r.version                : NULL
+ $ snapshot.type            : chr "implicit"
+ $ use.cache                : logi TRUE
+ $ vcs.ignore.cellar        : logi TRUE
+ $ vcs.ignore.library       : logi TRUE
+ $ vcs.ignore.local         : logi TRUE
+ $ vcs.manage.ignores       : logi TRUE
+
+# Options --------------------------------------------------------------------
+List of 9
+ $ defaultPackages                     : chr [1:6] "datasets" "utils" "grDevices" "graphics" ...
+ $ download.file.method                : NULL
+ $ download.file.extra                 : NULL
+ $ install.packages.compile.from.source: NULL
+ $ pkgType                             : chr "source"
+ $ repos                               : Named chr "https://packagemanager.posit.co/cran/latest"
+  ..- attr(*, "names")= chr "CRAN"
+ $ renv.consent                        : logi TRUE
+ $ renv.project.path                   : chr "/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling"
+ $ renv.verbose                        : logi TRUE
+
+# Environment Variables ------------------------------------------------------
+HOME                        = /root
+LANG                        = en_US.UTF-8
+MAKE                        = make
+R_LIBS                      = <NA>
+R_LIBS_SITE                 = /usr/local/lib/R/site-library/:/usr/local/lib/R/site-library:/usr/lib/R/site-library:/usr/lib/R/library
+R_LIBS_USER                 = /data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/renv/library/linux-ubuntu-questing/R-4.5/aarch64-unknown-linux-gnu
+RENV_DEFAULT_R_ENVIRON      = <NA>
+RENV_DEFAULT_R_ENVIRON_USER = <NA>
+RENV_DEFAULT_R_LIBS         = <NA>
+RENV_DEFAULT_R_LIBS_SITE    = /usr/local/lib/R/site-library/:/usr/local/lib/R/site-library:/usr/lib/R/site-library:/usr/lib/R/library
+RENV_DEFAULT_R_LIBS_USER    = /root/R/aarch64-unknown-linux-gnu-library/4.5
+RENV_DEFAULT_R_PROFILE      = <NA>
+RENV_DEFAULT_R_PROFILE_USER = <NA>
+RENV_PROJECT                = /data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling
+
+# PATH -----------------------------------------------------------------------
+- /usr/local/sbin
+- /usr/local/bin
+- /usr/sbin
+- /usr/bin
+- /sbin
+- /bin
+
+# Cache ----------------------------------------------------------------------
+There are a total of 141 packages installed in the renv cache.
+Cache path: "~/.cache/R/renv/cache/v5/linux-ubuntu-questing/R-4.5/aarch64-unknown-linux-gnu"
+

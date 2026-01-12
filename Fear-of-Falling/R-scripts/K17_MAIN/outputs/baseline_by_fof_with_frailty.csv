@@ -1,0 +1,38 @@
+ ,"Without FOF
+n=77","With FOF
+n=199",P-value
+"Women, n (%)",67(87),185(93),0.116
+"Age, mean (SD)",78(7),78(6),0.334
+"Diseases, n (%)",17(22),57(29),0.269
+  Diabetes,8(10),28(14),0.415
+  Dementia,1(1),6(3),0.677
+  Parkinson's,1(1),5(3),1.000
+  Cerebrovascular Accidents,8(10),24(12),0.697
+  Comorbidity (>1 disease),1(1),6(3),0.677
+"Self-rated Health, n (%)",77(100),199(100),0.002
+  Good,38(58),123(79),<0.001
+  Moderate,27(41),29(19),<0.001
+  Bad,1(2),3(2),1.000
+"Mikkeli Osteoporosis Index, mean (SD)",10.9(3),11.3(3),0.383
+"Body Mass Index, mean (SD)",26.2(4.7),27.4(4.5),0.083
+"Smoked, n (%)",4(5),6(3),0.470
+"Alcohol, n (%)",77(100),199(100),0.571
+  No,41(56),104(55),0.835
+  Moderate,29(40),82(43),0.614
+  Large,3(4),4(2),0.401
+"Self-Rated Mobility, n (%)",77(100),199(100),0.006
+  Good,15(19),75(38),0.003
+  Moderate,42(55),91(46),0.227
+  Weak,20(26),30(15),0.040
+"Walking 500 m, n (%)",77(100),199(100),0.056
+  No,53(70),108(55),0.028
+  Difficulties,23(30),84(43),0.056
+  Cannot,0(0),4(2),0.579
+"Balance difficulties, n (%)",48(62),150(77),0.015
+"Fallen, n (%)",54(70),151(76),0.295
+"Fractures, n (%)",55(71),134(68),0.584
+"Pain (Visual Analog Scale), mm, mean (SD)",3.2(2.5),4.2(2.7),0.004
+"Frailty (Fried-inspired proxy), n (%)",77(100),199(100),0.336
+  robust,14(19),28(16),0.518
+  pre-frail,40(55),86(49),0.372
+  frail,19(26),63(36),0.143
