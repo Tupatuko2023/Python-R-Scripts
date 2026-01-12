@@ -10,7 +10,8 @@ scripts <- c(
   "R-scripts/K15/K15.R",
   "R-scripts/K16/K16.R",
   "R-scripts/K17/K17.R",
-  "R-scripts/K18/K18.R"
+  "R-scripts/K18/K18.R",
+  "R-scripts/K19_MAIN/K19_MAIN.V1_frailty-vs-fof-evidence-pack.R"
 )
 
 results <- list()
