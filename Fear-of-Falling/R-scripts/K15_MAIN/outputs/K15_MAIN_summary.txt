@@ -1,0 +1,4 @@
+K15_MAIN frailty proxy derivation
+N total: 276
+Frailty categories: robust (0), pre-frail (1), frail (>=2)
+See CSV outputs for category distributions.
