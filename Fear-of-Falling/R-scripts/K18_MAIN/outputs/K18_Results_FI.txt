@@ -1,0 +1,45 @@
+TULOKSET: Haurausmuutosten kontrastianalyysi (K18)
+==================================================
+
+Analyysin yleiskatsaus
+----------------------
+Tämä analyysi tarkasteli 12 kuukauden muutoksia (Δ) yhdistelmätoimintakyvyssä (Z-pistemäärä) ja testasi, eroavatko nämä muutokset haurausryhmien (ΔΔ hauraus) ja FOF-statuksen (ΔΔ FOF) välillä.
+
+Yksiköt: Kaikki estimaatit ovat keskihajonnan (SD) yksiköissä.
+
+Mallien rakenne
+---------------
+M1 (PRIMÄÄRI): aika×FOF + aika×hauraus (EI 3-suuntaista yhdysvaikutusta)
+  → Hauraus ΔΔ on YHTEINEN FOF-ryhmille (mallin suunnitelman mukaan)
+  → FOF ΔΔ on YHTEINEN hauraustasoille (mallin suunnitelman mukaan)
+
+M2 (EKSPLORATIIVINEN): aika×FOF×hauraus (sisältää 3-suuntaisen yhdysvaikutuksen)
+  → Mahdollistaa stratifioidut kontrastit
+  → Vain eksploratiivinen; tulkittava varoen
+
+Mallien vertailut (LRT)
+-----------------------
+M0 vs. M1: p < 0.001
+M1 vs. M2: p 0.386
+
+===============================================================================
+PRIMÄÄRIT TULOKSET (M1)
+===============================================================================
+Katso englannikielinen versio yksityiskohtaisiin tuloksiin.
+
+
+P4: Jatkuva haurausindeksi (M_cont)
+------------------------------------
+  time_f12:frailty_score_3: Estimaatti = -0.286 (95% LV [-0.384, -0.188], p < 0.001)
+  Tulkinta: Jokaista +1 haurauspistettä kohden 12 kk muutos eroaa -0.286 SD-yksikköä.
+
+===============================================================================
+EKSPLORATIIVISET TULOKSET (M2)
+===============================================================================
+Katso englannikielinen versio yksityiskohtaisiin tuloksiin.
+
+Kaikki estimaatit ovat SD-yksiköissä (Z-pisteet).
+P-arvot muotoiltu p_fmt()-funktiolla.
+PRIMÄÄRIT kontrastit: säätö = sidak
+EKSPLORATIIVISET kontrastit: säätö = holm
+

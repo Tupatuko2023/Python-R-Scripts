@@ -1,0 +1,96 @@
+RESULTS: Frailty Change Contrasts Analysis (K18)
+================================================
+
+Analysis Overview
+-----------------
+This analysis examined 12-month changes (Δ) in composite physical function (Z-score) and tested whether these changes differ between frailty groups (ΔΔ frailty) and FOF status (ΔΔ FOF) using mixed models with emmeans contrasts.
+
+Units: All estimates are in standard deviation (SD) units, as Composite_Z is z-scored. Δ represents within-group change; ΔΔ represents between-group differences in change.
+
+Model Structure
+---------------
+M1 (PRIMARY): time×FOF + time×frailty (NO 3-way interaction)
+  → Frailty ΔΔ is COMMON across FOF groups (by design)
+  → FOF ΔΔ is COMMON across frailty levels (by design)
+
+M2 (EXPLORATORY): time×FOF×frailty (includes 3-way interaction)
+  → Allows stratified contrasts (frailty ΔΔ within FOF; FOF ΔΔ within frailty)
+  → Exploratory only; interpret with caution
+
+Model Comparisons (LRT)
+-----------------------
+M0 vs. M1 (tests time×frailty addition): p < 0.001
+  → Significant: Changes differ between frailty groups.
+
+M1 vs. M2 (tests 3-way interaction): p 0.386
+  → Not significant: No evidence for 3-way moderation (M1 preferred).
+
+===============================================================================
+PRIMARY RESULTS (M1 - Common-by-Design Contrasts)
+===============================================================================
+
+P1: Change Estimates (Δ, 12-month within-cell changes)
+------------------------------------------------------
+  Robust / nonFOF: Δ = 0.114 (95% CI [-0.204, 0.431], p 0.481)
+  Pre-frail / nonFOF: Δ = 0.309 (95% CI [0.166, 0.453], p < 0.001)
+  Frail / nonFOF: Δ = -0.139 (95% CI [-0.298, 0.019], p 0.085)
+  Robust / FOF: Δ = -0.048 (95% CI [-0.356, 0.261], p 0.761)
+  Pre-frail / FOF: Δ = 0.148 (95% CI [0.043, 0.253], p 0.006)
+  Frail / FOF: Δ = -0.300 (95% CI [-0.420, -0.181], p < 0.001)
+
+P2: PRIMARY Frailty ΔΔ (COMMON across FOF groups)
+--------------------------------------------------
+Note: M1 does NOT include 3-way interaction, so frailty contrasts are averaged over FOF.
+Adjustment: sidak (emmeans auto-switched from Tukey for interaction contrasts)
+
+  Robust - (Pre-frail): ΔΔ = -0.196 (95% CI [-0.583, 0.192], p 0.535)
+  Robust - Frail: ΔΔ = 0.253 (95% CI [-0.142, 0.647], p 0.330)
+  (Pre-frail) - Frail: ΔΔ = 0.448 (95% CI [0.269, 0.627], p < 0.001)
+
+P3: PRIMARY FOF ΔΔ (COMMON across frailty levels)
+-------------------------------------------------
+Note: M1 does NOT include 3-way interaction, so FOF contrast is averaged over frailty.
+
+  FOF ΔΔ (time×FOF interaction): ΔΔ = -0.161 (95% CI [-0.316, -0.007], p 0.041)
+
+P4: Continuous Frailty Proxy (M_cont)
+--------------------------------------
+Note: Interaction effect from continuous frailty model (time×frailty_score_3).
+
+  time_f12:frailty_score_3: Estimate = -0.286 (95% CI [-0.384, -0.188], p < 0.001)
+  Interpretation: Per +1 frailty point, 12-month change differs by -0.286 SD units.
+
+===============================================================================
+EXPLORATORY RESULTS (M2 - Stratified Contrasts)
+===============================================================================
+CAUTION: These are exploratory contrasts from M2. Interpret with appropriate skepticism.
+
+E2: EXPLORATORY Frailty ΔΔ (STRATIFIED by FOF)
+----------------------------------------------
+Adjustment: holm
+
+  (12-0 Robust) - (12-0 Pre-frail) (in nonFOF): ΔΔ = -0.124 (95% CI [-0.758, 0.511], p 0.940)
+  (12-0 Robust) - (12-0 Frail) (in nonFOF): ΔΔ = 0.196 (95% CI [-0.457, 0.850], p 0.940)
+  (12-0 Pre-frail) - (12-0 Frail) (in nonFOF): ΔΔ = 0.320 (95% CI [-0.017, 0.657], p 0.069)
+  (12-0 Robust) - (12-0 Pre-frail) (in FOF): ΔΔ = -0.231 (95% CI [-0.724, 0.262], p 0.391)
+  (12-0 Robust) - (12-0 Frail) (in FOF): ΔΔ = 0.269 (95% CI [-0.231, 0.769], p 0.391)
+  (12-0 Pre-frail) - (12-0 Frail) (in FOF): ΔΔ = 0.500 (95% CI [0.287, 0.712], p < 0.001)
+
+E3: EXPLORATORY FOF ΔΔ (STRATIFIED by frailty)
+----------------------------------------------
+Adjustment: holm
+
+  FOF ΔΔ (time×FOF interaction) (in Robust): ΔΔ = -0.194 (95% CI [-0.817, 0.430], p 0.541)
+  FOF ΔΔ (time×FOF interaction) (in Pre-frail): ΔΔ = -0.087 (95% CI [-0.293, 0.120], p 0.409)
+  FOF ΔΔ (time×FOF interaction) (in Frail): ΔΔ = -0.266 (95% CI [-0.518, -0.015], p 0.038)
+
+===============================================================================
+PRIMARY INTERPRETATION (from M1)
+===============================================================================
+Changes in physical function over 12 months differ significantly between frailty groups. The 3-way interaction (M2) is not significant (p 0.386), supporting M1 as the preferred model. M1 contrasts are common across groups by design.
+
+All estimates are in SD units (Z-scores), providing standardized effect sizes.
+P-values formatted with p_fmt() for consistency.
+PRIMARY contrasts use adjustment: sidak
+EXPLORATORY contrasts use adjustment: holm
+

@@ -1336,3 +1336,26 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2026-01-12 16:34:58.50885,K19_MAIN,K19_fixed_effects_tables,table_csv,R-scripts/K19_MAIN/outputs/K19_fixed_effects_tables.csv,50,NA
 2026-01-12 16:34:58.782066,K19_MAIN,K19_Results_FI,text,R-scripts/K19_MAIN/outputs/K19_Results_FI.txt,NA,NA
 2026-01-12 16:34:59.067183,K19_MAIN,sessioninfo,sessioninfo,R-scripts/K19_MAIN/outputs/sessioninfo_K19_MAIN.txt,NA,NA
+2026-01-12 20:21:23.075549,K15_MAIN,qc_sanity_checks,table_csv,R-scripts/K15_MAIN/outputs/K15_MAIN_qc_sanity_checks.csv,1,NA
+2026-01-12 20:21:23.589082,K15_MAIN,frailty_cat_3_overall,table_csv,R-scripts/K15_MAIN/outputs/frailty_cat_3_overall.csv,4,NA
+2026-01-12 20:21:24.036463,K15_MAIN,frailty_cat_3_overall,table_html,R-scripts/K15_MAIN/outputs/frailty_cat_3_overall.html,4,NA
+2026-01-12 20:21:24.329422,K15_MAIN,frailty_cat3_by_FOF,table_csv,R-scripts/K15_MAIN/outputs/frailty_cat3_by_FOF.csv,6,NA
+2026-01-12 20:21:24.646854,K15_MAIN,frailty_cat3_by_FOF,table_html,R-scripts/K15_MAIN/outputs/frailty_cat3_by_FOF.html,6,NA
+2026-01-12 20:21:24.936938,K15_MAIN,frailty_analysis_data_rdata,rdata,R-scripts/K15_MAIN/outputs/K15_frailty_analysis_data.RData,276,NA
+2026-01-12 20:21:25.224648,K15_MAIN,summary_txt,text,R-scripts/K15_MAIN/outputs/K15_MAIN_summary.txt,NA,NA
+2026-01-12 20:21:25.491745,K15_MAIN,sessioninfo,sessioninfo,R-scripts/K15_MAIN/outputs/sessioninfo_K15_MAIN.txt,NA,NA
+2026-01-12 20:22:24.319525,K18_MAIN,PRIMARY frailty change contrasts tables (M1),table_docx,R-scripts/K18_MAIN/outputs/K18_PRIMARY_tables_M1.docx,276,NA
+2026-01-12 20:22:25.652057,K18_MAIN,EXPLORATORY frailty change contrasts tables (M2),table_docx,R-scripts/K18_MAIN/outputs/K18_EXPLORATORY_tables_M2.docx,276,NA
+2026-01-12 20:22:26.652344,K18_MAIN,PRIMARY change contrasts forest plot (M1),plot_png,R-scripts/K18_MAIN/outputs/K18_PRIMARY_contrasts_M1.png,276,NA
+2026-01-12 20:22:27.642937,K18_MAIN,EXPLORATORY change contrasts forest plot (M2),plot_png,R-scripts/K18_MAIN/outputs/K18_EXPLORATORY_contrasts_M2.png,276,NA
+2026-01-12 20:22:28.467168,K18_MAIN,Predicted trajectories by frailty and FOF (M1),plot_png,R-scripts/K18_MAIN/outputs/K18_predicted_trajectories_M1.png,276,NA
+2026-01-12 20:22:28.771716,K18_MAIN,Results text (English),text,R-scripts/K18_MAIN/outputs/K18_Results_EN.txt,276,NA
+2026-01-12 20:22:29.015053,K18_MAIN,Results text (Finnish),text,R-scripts/K18_MAIN/outputs/K18_Results_FI.txt,276,NA
+2026-01-12 20:22:29.518945,K18_MAIN,All frailty change models and emmeans results (PRIMARY+EXPLORATORY),rdata,R-scripts/K18_MAIN/outputs/K18_all_models.RData,276,NA
+2026-01-12 20:22:29.830423,K18_MAIN,sessioninfo,sessioninfo,R-scripts/K18_MAIN/outputs/sessioninfo_K18_MAIN.txt,NA,NA
+2026-01-12 20:22:57.406172,K19_MAIN,K19_model_comparisons_ABCs,table_csv,R-scripts/K19_MAIN/outputs/K19_model_comparisons_ABCs.csv,6,NA
+2026-01-12 20:22:57.878652,K19_MAIN,K19_collinearity_M1_Mcont,table_csv,R-scripts/K19_MAIN/outputs/K19_collinearity_M1_Mcont.csv,16,NA
+2026-01-12 20:22:58.533539,K19_MAIN,K19_partial_r2_M1_Mcont,table_csv,R-scripts/K19_MAIN/outputs/K19_partial_r2_M1_Mcont.csv,16,NA
+2026-01-12 20:22:58.911198,K19_MAIN,K19_fixed_effects_tables,table_csv,R-scripts/K19_MAIN/outputs/K19_fixed_effects_tables.csv,50,NA
+2026-01-12 20:22:59.137744,K19_MAIN,K19_Results_FI,text,R-scripts/K19_MAIN/outputs/K19_Results_FI.txt,NA,NA
+2026-01-12 20:22:59.418015,K19_MAIN,sessioninfo,sessioninfo,R-scripts/K19_MAIN/outputs/sessioninfo_K19_MAIN.txt,NA,NA

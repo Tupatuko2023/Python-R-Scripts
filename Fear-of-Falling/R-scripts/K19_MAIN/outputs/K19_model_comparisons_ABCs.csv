@@ -1,7 +1,7 @@
 model_set,model,formula,AIC,BIC,logLik,n,LRT_chisq,LRT_df,LRT_p
-categorical,A,Composite_Z ~ time_f * FOF_status + age + sex + BMI + (1 | ID),780.8969943889338,818.4984914153891,-381.4484971944669,482,97.56442227625837,4,3.245107365039208e-20
-categorical,B,Composite_Z ~ time_f * frailty_cat_3 + age + sex + BMI + (1 | ID),692.8088192012841,738.7662044558407,-335.40440960064205,482,5.476247088608716,2,0.0646916240383751
-categorical,C,Composite_Z ~ time_f * FOF_status + time_f * frailty_cat_3 + age + sex + BMI + (1 | ID),691.3325721126754,745.6458455953332,-332.6662860563377,482,NA,NA,NA
-continuous,A,Composite_Z ~ time_f * FOF_status + age + sex + BMI + (1 | ID),780.8969943889338,818.4984914153891,-381.4484971944669,482,95.47175823545115,2,1.855970676889301e-21
-continuous,B,Composite_Z ~ time_f * frailty_score_3 + age + sex + BMI + (1 | ID),689.4201790553451,727.0216760818005,-335.71008952767255,482,3.994942901862487,2,0.1356779181430426
-continuous,C,Composite_Z ~ time_f * FOF_status + time_f * frailty_score_3 + age + sex + BMI + (1 | ID),689.4252361534826,735.3826214080392,-333.7126180767413,482,NA,NA,NA
+categorical,A,Composite_Z ~ time_f * FOF_status + age + sex + BMI + (1 | ID),780.8969943889357,818.4984914153911,-381.44849719446785,482,97.56442227626121,4,3.245107365034689e-20
+categorical,B,Composite_Z ~ time_f * frailty_cat_3 + age + sex + BMI + (1 | ID),692.8088192012843,738.7662044558409,-335.40440960064217,482,5.476247088609853,2,0.06469162403833832
+categorical,C,Composite_Z ~ time_f * FOF_status + time_f * frailty_cat_3 + age + sex + BMI + (1 | ID),691.3325721126745,745.6458455953323,-332.66628605633724,482,NA,NA,NA
+continuous,A,Composite_Z ~ time_f * FOF_status + age + sex + BMI + (1 | ID),780.8969943889357,818.4984914153911,-381.44849719446785,482,95.47175823545297,2,1.8559706768876126e-21
+continuous,B,Composite_Z ~ time_f * frailty_score_3 + age + sex + BMI + (1 | ID),689.420179055345,727.0216760818004,-335.7100895276725,482,3.9949429018622595,2,0.13567791814305802
+continuous,C,Composite_Z ~ time_f * FOF_status + time_f * frailty_score_3 + age + sex + BMI + (1 | ID),689.4252361534827,735.3826214080393,-333.71261807674136,482,NA,NA,NA

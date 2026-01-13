@@ -1,0 +1,16 @@
+TULOKSET: K19 frailty vs FOF evidence pack
+========================================
+
+Nested A/B/C -mallivertailu (ML, LRT vs C):
+  Categorical: A vs C p = 3.245e-20, B vs C p = 0.06469
+  Continuous:  A vs C p = 1.856e-21, B vs C p = 0.1357
+Huom: kollineaarisuus/partial R2 laskettiin ML-refit -malleista (sama kaava kuin M1/M_cont).
+
+Kollineaarisuustarkistus tehty (ks. K19_collinearity_M1_Mcont.csv).
+Partial R2 / termikohtaiset efektit tuotettu (ks. K19_partial_r2_M1_Mcont.csv).
+
+Output-polut:
+  - R-scripts/K19_MAIN/outputs/K19_model_comparisons_ABCs.csv
+  - R-scripts/K19_MAIN/outputs/K19_collinearity_M1_Mcont.csv
+  - R-scripts/K19_MAIN/outputs/K19_partial_r2_M1_Mcont.csv
+  - R-scripts/K19_MAIN/outputs/K19_fixed_effects_tables.csv
