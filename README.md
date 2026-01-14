@@ -9,8 +9,11 @@ workflows. Each subfolder is a standalone project with its own docs.
 ## Main project
 
 - [Electronic Frailty Index](Electronic-Frailty-Index/README.md)
+- [Fear of Falling](Fear-of-Falling/README.md)
 
 ## Quick start
+
+### Electronic Frailty Index (Python)
 
 ```bash
 python src/efi/cli.py \
@@ -18,6 +21,30 @@ python src/efi/cli.py \
   --out out/efi_scores.csv \
   --report-md out/report.md
 ```
+
+### Fear of Falling (R)
+
+Run from the Fear-of-Falling project root (required working directory).
+
+```bash
+cd Fear-of-Falling
+
+# Restore the locked R environment
+R -q -e 'if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv"); renv::restore(prompt = FALSE)'
+
+# Pick a Kxx script and run it
+find R-scripts -maxdepth 3 -type f -name "*.R" | head -30
+Rscript "R-scripts/<K_FOLDER>/<FILE_TAG>.R"
+
+# Verify outputs and manifest logging
+ls -la "R-scripts/<K_FOLDER>/outputs/"
+tail -n 10 manifest/manifest.csv
+```
+
+Notes:
+
+- Default data path used by multiple scripts: `data/external/KaatumisenPelko.csv`.
+- Outputs follow the project convention under `R-scripts/<K_FOLDER>/outputs/` and each artifact is logged to `manifest/manifest.csv`.
 
 ## License and citation
 
