@@ -946,3 +946,11 @@ Rscript --version || { echo "FATAL: Rscript missing in this environment"; exit 1
 ```sh
 proot-distro login ubuntu -- bash -lc 'cd /data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling && $RSCRIPT_BIN --version'
 ```
+
+## ?? System Architecture & Dependencies
+This project is part of a distributed research ecosystem. It relies on the shared utility library:
+- **Library:** ../Python-R-Scripts
+- **Modules:** src/analytics/privacy_utils.R (SDC Logic)
+- **Protocol:** See 'HANDOVER.md' for agent workflows.
+
+> **AGENT NOTE:** When generating new analysis scripts, ALWAYS check ../Python-R-Scripts for reusable modules before writing new code.
