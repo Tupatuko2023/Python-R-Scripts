@@ -33,6 +33,15 @@ suppressPackageStartupMessages({
   library(here)
 })
 
+# Load privacy utilities from the shared library
+# Note: Path is relative to project root (Fear-of-Falling -> .. -> src)
+shared_lib_path <- file.path("..", "src", "analytics", "privacy_utils.R")
+if (file.exists(shared_lib_path)) {
+  source(shared_lib_path)
+} else {
+  warning("Privacy utils not found at: ", shared_lib_path, ". SDC will not be applied.")
+}
+
 # Load reporting helpers (init_paths already called by K1.7.main.R)
 source(here::here("R", "functions", "reporting.R"))
 
@@ -145,6 +154,12 @@ final_table <- final_table %>%
 cat("  Final table structure:\n")
 cat("    Rows:", nrow(final_table), "\n")
 cat("    Columns:", ncol(final_table), "\n")
+
+# Apply Statistical Disclosure Control (SDC)
+if (exists("suppress_small_cells")) {
+  cat("  Applying SDC (suppressing small cells n < 5)...\n")
+  final_table <- suppress_small_cells(final_table, ends_with("_n"), min_n = 5)
+}
 
 # Export with manifest logging (uses save_table_csv_html from reporting.R)
 cat("  Saving final table to outputs directory...\n")
