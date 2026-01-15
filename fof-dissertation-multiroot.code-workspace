@@ -1,0 +1,18 @@
+{
+  "folders": [
+    {
+      "name": "Python-R-Scripts",
+      "path": "."
+    },
+    {
+      "name": "FOF-Dissertation-Project",
+      "path": "../FOF-Dissertation-Project"
+    }
+  ],
+  "settings": {
+    "git.openRepositoryInParentFolders": "never",
+    "files.exclude": {
+      "**/.git": false
+    }
+  }
+}

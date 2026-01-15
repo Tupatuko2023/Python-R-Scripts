@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(done)",
+      "Bash(test:*)",
+      "Bash(Rscript:*)",
+      "Bash(R --vanilla --quiet -f:*)",
+      "Bash(cmd.exe /c \"py -V\")",
+      "Bash(python docs/make_run_order.py:*)",
+      "Bash(rg:*)",
+      "Bash(cmd.exe /c \"py docs\\\\make_run_order.py\")",
+      "Bash(cmd.exe /c \"py docs\\\\make_run_order.py 2>&1\")",
+      "Bash(python3:*)",
+      "Bash(cmd.exe /c \"py make_run_order.py\")",
+      "Bash(echo:*)",
+      "Bash(/c/Windows/py.exe:*)",
+      "Bash(powershell.exe -NoProfile -Command \"py -c \"\"import pandas as pd; df=pd.read_csv\\(''docs/run_order.csv''\\); print\\(''Shape:'', df.shape\\); print\\(''Columns:'', df.columns.tolist\\(\\)\\); print\\(''\\\\nFirst 3 rows:''\\); print\\(df.head\\(3\\)[[''script_id'', ''depends_on'', ''reads_primary'']].to_string\\(index=False\\)\\)\"\"\")",
+      "Bash(powershell.exe -NoProfile -Command \"py -c \"\"import csv; r=open\\(''docs/run_order.csv'',''r'',encoding=''utf-8'',newline=''''\\); rows=list\\(csv.reader\\(r\\)\\); r.close\\(\\); print\\(''Total rows:'', len\\(rows\\)\\); print\\(''Header cols:'', len\\(rows[0]\\)\\); print\\(''Data row cols:'', [len\\(row\\) for row in rows[1:6]]\\); assert all\\(len\\(row\\)==9 for row in rows\\), ''Column count mismatch''; print\\(''OK: All rows have 9 columns''\\)\"\"\")",
+      "Bash(powershell.exe -NoProfile -Command \"py -c \"\"import pandas as pd; df=pd.read_csv\\(''docs/run_order.csv''\\); k5_14=df[df[''script_id''].isin\\([''K05_MAIN'',''K06_MAIN'',''K07_MAIN'',''K08_MAIN'',''K09_MAIN'',''K10_MAIN'',''K11_MAIN'',''K12_MAIN'',''K13_MAIN'',''K14_MAIN'',''K17_MAIN'']\\)]; print\\(k5_14[[''script_id'',''depends_on'']].to_string\\(index=False\\)\\); print\\(''\\\\nAll depends_on empty?'', k5_14[''depends_on''].isna\\(\\).all\\(\\)\\)\"\"\")",
+      "Bash(powershell.exe -NoProfile -Command \"py -c \"\"import pandas as pd; df=pd.read_csv\\(''docs/run_order.csv''\\); main=df[df[''script_id''].str.contains\\(''_MAIN'',na=False\\)]; print\\(''_MAIN scripts with Grep-verified notes:''\\); print\\(main[[''script_id'',''notes'']].to_string\\(index=False\\)\\); print\\(''\\\\n\\\\nAll contain Grep-verified?'', main[''notes''].str.contains\\(''Grep-verified'',na=False\\).all\\(\\)\\)\"\"\")",
+      "Bash(git add:*)"
+    ]
+  }
+}
