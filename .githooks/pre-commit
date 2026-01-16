@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+source "${ROOT}/.githooks/_lib/hooklib.sh"
+
+skip_if_requested
+in_repo_or_fail
+project_hint
+
+hook_echo "== pre-commit gates =="
+
+# 1) Guardrails: forbid accidental data/output/binaries + large files
+run_tool "tools/forbid-large-or-sensitive.sh" --mode pre-commit
+
+# 2) renv lock sanity (lightweight)
+run_tool "tools/check-renv.sh" --mode pre-commit
+
+# 3) R syntax parse for staged .R only (lightweight)
+run_tool "tools/check-r-syntax.sh" --mode pre-commit
+
+# 4) Python minimal checks if applicable
+run_tool "tools/check-python.sh" --mode pre-commit
+
+hook_echo "OK: pre-commit gates passed."

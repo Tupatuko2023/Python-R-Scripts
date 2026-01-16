@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+source "${ROOT}/.githooks/_lib/hooklib.sh"
+
+in_repo_or_fail
+
+hook_echo "== pre-push gates (minimal CI parity) =="
+
+# Always re-run guardrails (fast)
+run_tool "tools/forbid-large-or-sensitive.sh" --mode pre-push
+
+# Prefer a repo-provided smoke target if present; fallback to lightweight checks.
+if [[ -x "${ROOT}/tools/run-gates.sh" ]]; then
+  "${ROOT}/tools/run-gates.sh" --mode pre-push --smoke
+else
+  hook_echo "WARN: tools/run-gates.sh missing; running fallback checks."
+  run_tool "tools/check-renv.sh" --mode pre-push
+  run_tool "tools/check-r-syntax.sh" --mode pre-push
+  run_tool "tools/check-python.sh" --mode pre-push
+fi
+
+hook_echo "OK: pre-push gates passed."
