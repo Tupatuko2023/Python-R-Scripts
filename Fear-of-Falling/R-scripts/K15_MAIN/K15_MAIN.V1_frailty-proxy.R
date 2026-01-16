@@ -78,7 +78,65 @@ if (length(missing_cols) > 0) {
   stop("Missing required columns: ", paste(missing_cols, collapse = ", "))
 }
 
+# --- Column type checks ------------------------------------------------------
+type_cols <- c(
+  "ToimintaKykySummary0",
+  "ToimintaKykySummary2",
+  "Puristus0",
+  "Puristus2",
+  "kavelynopeus_m_sek0",
+  "kavelynopeus_m_sek2",
+  "Tuoli0",
+  "Tuoli2",
+  "Seisominen0",
+  "Seisominen2",
+  "BMI",
+  "sex",
+  "age",
+  "PainVAS0",
+  "oma_arvio_liikuntakyky",
+  "kaatuminen"
+)
+bad_types <- type_cols[!vapply(raw_data[type_cols], is.numeric, logical(1))]
+if (length(bad_types) > 0) {
+  stop("Expected numeric columns: ", paste(bad_types, collapse = ", "))
+}
+
 # --- Standardize + QC --------------------------------------------------------
+qc_overall <- raw_data %>%
+  summarise(
+    n = dplyr::n(),
+    miss_age = sum(is.na(age)),
+    miss_sex = sum(is.na(sex)),
+    miss_BMI = sum(is.na(BMI)),
+    miss_z0 = sum(is.na(ToimintaKykySummary0)),
+    miss_z12 = sum(is.na(ToimintaKykySummary2)),
+    miss_grip0 = sum(is.na(Puristus0)),
+    miss_grip2 = sum(is.na(Puristus2)),
+    miss_walk0 = sum(is.na(kavelynopeus_m_sek0)),
+    miss_walk2 = sum(is.na(kavelynopeus_m_sek2)),
+    miss_chair0 = sum(is.na(Tuoli0)),
+    miss_chair2 = sum(is.na(Tuoli2)),
+    miss_balance0 = sum(is.na(Seisominen0)),
+    miss_balance2 = sum(is.na(Seisominen2)),
+    miss_srm = sum(is.na(oma_arvio_liikuntakyky)),
+    miss_falls = sum(is.na(kaatuminen)),
+    miss_pain = sum(is.na(PainVAS0))
+  )
+
+qc_overall_path <- file.path(outputs_dir, paste0(script_label, "_qc_missingness_overall.csv"))
+save_table_csv(qc_overall, qc_overall_path)
+append_manifest(
+  manifest_row(
+    script = script_label,
+    label = "qc_missingness_overall",
+    path = get_relpath(qc_overall_path),
+    kind = "table_csv",
+    n = nrow(qc_overall)
+  ),
+  manifest_path
+)
+
 df <- standardize_analysis_vars(raw_data)
 qc <- sanity_checks(df)
 qc_path <- file.path(outputs_dir, paste0(script_label, "_qc_sanity_checks.csv"))
