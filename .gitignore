@@ -5,6 +5,7 @@ SMOKE_TEST_REPORT*.md
 Fear-of-Falling/SMOKE_TEST_REPORT*.md
 Fear-of-Falling/docs/DELIVERY_NOTE.md
 Microsoft.PowerShell_profile.ps1
+codex-auth-backup.tgz
 
 # Local agent prompts (do not version)
 prompts/
