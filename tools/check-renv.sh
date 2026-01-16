@@ -21,7 +21,7 @@ note "renv: found lockfile at: ${LOCK}"
 
 # Light validation: lockfile must be readable by renv::lockfile_read.
 if command -v Rscript >/dev/null 2>&1; then
-  Rscript -q -e "ok <- TRUE; tryCatch({ if (!requireNamespace('renv', quietly=TRUE)) stop('renv not installed'); renv::lockfile_read('${LOCK}'); }, error=function(e){ message(e$message); ok <- FALSE }); if (!ok) quit(status=2)" \
+  Rscript -e "ok <- TRUE; tryCatch({ if (!requireNamespace('renv', quietly=TRUE)) stop('renv not installed'); renv::lockfile_read('${LOCK}'); }, error=function(e){ message(e\$message); ok <- FALSE }); if (!ok) quit(status=2)" \
     || die "renv lockfile read failed. Fix renv.lock or install renv."
 else
   note "WARN: Rscript not available; cannot validate renv.lock read."
