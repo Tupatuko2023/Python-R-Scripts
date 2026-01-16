@@ -81,7 +81,58 @@ srh_source_var <- if ("koettuterveydentila" %in% names(raw_data)) {
   stop("Neither 'koettuterveydentila' nor 'SRH' found in the data.")
 }
 
+# --- Column type checks ------------------------------------------------------
+type_cols <- c(
+  "age",
+  "BMI",
+  "MOIindeksiindeksi",
+  "tupakointi",
+  "alkoholi",
+  "vaikeus_liikkua_500m",
+  "tasapainovaikeus",
+  "kaatuminen",
+  "murtumia",
+  "PainVAS0"
+)
+bad_types <- type_cols[!vapply(raw_data[type_cols], is.numeric, logical(1))]
+if (length(bad_types) > 0) {
+  stop("Expected numeric columns: ", paste(bad_types, collapse = ", "))
+}
+
 # --- Minimal QC --------------------------------------------------------------
+qc_overall <- raw_data %>%
+  summarise(
+    n = dplyr::n(),
+    miss_age = sum(is.na(age)),
+    miss_sex = sum(is.na(sex)),
+    miss_BMI = sum(is.na(BMI)),
+    miss_srh = sum(is.na(.data[[srh_source_var]])),
+    miss_moi = sum(is.na(MOIindeksiindeksi)),
+    miss_smoke = sum(is.na(tupakointi)),
+    miss_alcohol = sum(is.na(alkoholi)),
+    miss_srm = sum(is.na(oma_arvio_liikuntakyky)),
+    miss_walk = sum(is.na(vaikeus_liikkua_500m)),
+    miss_balance = sum(is.na(tasapainovaikeus)),
+    miss_falls = sum(is.na(kaatuminen)),
+    miss_fracture = sum(is.na(murtumia)),
+    miss_pain = sum(is.na(PainVAS0)),
+    miss_diabetes = sum(is.na(diabetes)),
+    miss_neuro = sum(is.na(alzheimer) | is.na(parkinson) | is.na(AVH))
+  )
+
+qc_overall_path <- file.path(outputs_dir, paste0(script_label, "_qc_missingness_overall.csv"))
+save_table_csv(qc_overall, qc_overall_path)
+append_manifest(
+  manifest_row(
+    script = script_label,
+    label = "qc_missingness_overall",
+    path = get_relpath(qc_overall_path),
+    kind = "table_csv",
+    n = nrow(qc_overall)
+  ),
+  manifest_path
+)
+
 qc_missingness <- raw_data %>%
   mutate(FOF_status = kaatumisenpelkoOn) %>%
   group_by(FOF_status) %>%
