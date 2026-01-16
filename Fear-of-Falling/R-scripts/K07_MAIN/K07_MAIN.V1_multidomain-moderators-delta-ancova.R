@@ -123,6 +123,18 @@ if (srh_var == "") {
   stop("Missing SRH variable: neither 'SRH' nor 'koettuterveydentila' found in raw_data.")
 }
 
+# --- Column type checks ------------------------------------------------------
+type_cols <- c(
+  "age",
+  "BMI",
+  "ToimintaKykySummary0",
+  "ToimintaKykySummary2"
+)
+bad_types <- type_cols[!vapply(raw_data[type_cols], is.numeric, logical(1))]
+if (length(bad_types) > 0) {
+  stop("Expected numeric columns: ", paste(bad_types, collapse = ", "))
+}
+
 # --- Minimal QC --------------------------------------------------------------
 if (anyDuplicated(raw_data$id)) {
   stop("Duplicate id rows detected; expected wide format.")
@@ -189,6 +201,33 @@ if (length(bad_walk) > 0L) {
   )
 }
 
+qc_overall <- raw_data %>%
+  summarise(
+    n = dplyr::n(),
+    miss_age = sum(is.na(age)),
+    miss_sex = sum(is.na(sex)),
+    miss_BMI = sum(is.na(BMI)),
+    miss_z0 = sum(is.na(ToimintaKykySummary0)),
+    miss_z12 = sum(is.na(ToimintaKykySummary2)),
+    miss_neuro = sum(is.na(alzheimer) | is.na(parkinson) | is.na(AVH)),
+    miss_srh = sum(is.na(.data[[srh_var]])),
+    miss_srm = sum(is.na(oma_arvio_liikuntakyky)),
+    miss_walk = sum(is.na(Vaikeus500m))
+  )
+
+qc_overall_path <- file.path(outputs_dir, paste0(script_label, "_qc_missingness_overall.csv"))
+save_table_csv(qc_overall, qc_overall_path)
+append_manifest(
+  manifest_row(
+    script = script_label,
+    label = "qc_missingness_overall",
+    path = get_relpath(qc_overall_path),
+    kind = "table_csv",
+    n = nrow(qc_overall)
+  ),
+  manifest_path
+)
+
 qc_missingness <- raw_data %>%
   mutate(FOF_status = kaatumisenpelkoOn) %>%
   group_by(FOF_status) %>%
@@ -238,6 +277,12 @@ dat <- raw_data %>%
     SRM_raw = oma_arvio_liikuntakyky,
     Walk500m_raw = Vaikeus500m
   )
+
+delta_diff <- dat$Delta_Composite_Z - (dat$Composite_Z12 - dat$Composite_Z0)
+delta_diff <- delta_diff[!is.na(delta_diff)]
+if (length(delta_diff) > 0 && any(abs(delta_diff) > 1e-8)) {
+  stop("Delta check failed: Composite_Z12 - Composite_Z0 mismatch detected.")
+}
 
 dat <- dat %>%
   mutate(
