@@ -11,6 +11,13 @@ pipeline-kovettamisen hyväksymiskriteereiksi FOF-alatutkimuksessa.
 
 ---
 
+## Source of truth
+
+- This file is the canonical QC checklist for the Fear-of-Falling analysis codebase.
+- Downstream repos should link to this file via the analysis submodule.
+
+---
+
 ## Milloin QC ajetaan
 
 ## Ajo yhdell? komennolla (K18_QC)
