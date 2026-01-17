@@ -18,6 +18,8 @@ Wrapper tuottaa audit trailin `manifest/`-kansioon ennen Rscript-ajoa.
 `--rscript` on suositeltu: ilman sita wrapper tekee vain metadata-ajon.
 Polku voi olla project-relatiivinen tai repo-root-relatiivinen.
 
+Lyhyt malli: git commit -> pre-commit, git push -> pre-push, analysis -> tools/run-gates.sh
+
 ## Konventiot
 
 Kxx-skriptit kayttavat `init_paths()` + `append_manifest()` -mallia useissa
