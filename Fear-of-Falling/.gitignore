@@ -54,6 +54,9 @@ temp/.RData
 R-scripts/*/outputs/*.png
 R-scripts/*/outputs/*.html
 R-scripts/*/outputs/*.txt
+R-scripts/**/outputs/
+R-scripts/**/outputs/*_qc_missingness_overall.csv
+R-scripts/**/outputs/sessioninfo_*.txt
 
 Rplots.pdf
 
@@ -62,3 +65,7 @@ SMOKE_TEST_REPORT_*.md
 
 # Testing mock data (generated in CI, don't commit)
 data/testing/mock_*.csv
+
+# Local-only artifacts and scratch directories
+analysis/
+docs/plans/
