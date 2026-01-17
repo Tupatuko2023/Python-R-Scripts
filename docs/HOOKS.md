@@ -3,6 +3,11 @@
 Tavoite: pakottaa kevyet, deterministiset tarkistukset ennen commit/push,
 ja tarjota yksi "before analysis run" -gate, joka tuottaa audit trailin.
 
+Lyhyt malli:
+- git commit -> pre-commit
+- git push -> pre-push
+- analysis -> tools/run-gates.sh
+
 ## Asennus (per klooni)
 
 ```bash
