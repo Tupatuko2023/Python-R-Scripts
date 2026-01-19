@@ -1,3 +1,5 @@
+![Python and R Scripts cover](docs/assets/cover/python-r-scripts-cover.jpg)
+
 ﻿# Python and R Scripts
 
 ![python-ci](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/python-ci.yml/badge.svg)
