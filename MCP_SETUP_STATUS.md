@@ -111,3 +111,16 @@ The only repo-specific requirement is Codex’s trusted git repo check.
 “github ready” in logs confirms MCP server initialization.
 
 A codex exec response may still report “none detected” if the prompt did not invoke MCP tools; this does not indicate MCP failure.
+
+Default warning-free mode (recommended)
+
+Set GitHub MCP disabled by default to suppress GH_TOKEN startup warnings:
+
+In ~/.codex/config.toml under [mcp_servers.github]:
+
+enabled = false
+
+
+Enable MCP only per command when needed:
+
+GH_TOKEN="$(gh auth token -h github.com 2>/dev/null)" codex -c mcp_servers.github.enabled=true mcp list
