@@ -87,6 +87,35 @@ Non-negotiables (tiivistelmä):
 - Seed vain satunnaisuudessa; tallenna sessionInfo/renv `CLAUDE.md`-ohjeen mukaan.
 - Tee aina table-to-text crosscheck; älä arvaa numeroita.
 
+## Filesystem scopes (RW / RO / never_touch)
+
+Repository tool policy is enforced by `configs/tool_scopes.yaml` and
+`mcp_servers/repo_tools_server.py`. Root listing is allowed only via the
+explicit `.` rule (no hard-coded bypass).
+
+RW (read-write):
+
+- `R-scripts/**` (especially `R-scripts/*/outputs/**`)
+- `manifest/**`
+- `R/**`
+- `scripts/termux/**`
+- `docs/**`
+
+RO (read-only):
+
+- `.` (repo root listing is allowed only by this explicit rule)
+- `data/**` (especially raw/external inputs)
+- `outputs/**` (legacy; do not write)
+- `renv/**` and `renv.lock` (change only when explicitly doing environment work)
+- `config/**`, `tests/**` (read by default)
+
+never_touch:
+
+- `.git/**`
+- `.git-crypt/**`
+
+Patterns MUST be recursive (`**`) so nested paths are matched reliably.
+
 ## Environment setup
 
 ### R (suositus)
