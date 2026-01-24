@@ -1,7 +1,5 @@
 import unittest
 import os
-import shutil
-import json
 from pathlib import Path
 import sys
 
@@ -9,6 +7,8 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from mcp_servers.filesystem_guard import FileSystemGuard, SecurityError
+from mcp_servers.repo_tools_server import RepoToolsServer
+from agents.codex_mcp import FakeCodexMCPServer
 
 class TestFileSystemGuard(unittest.TestCase):
     def setUp(self):
@@ -59,22 +59,38 @@ class TestFileSystemGuard(unittest.TestCase):
         with self.assertRaises(SecurityError):
             self.guard.validate_path(path, "integrator", "read")
 
-    def test_git_guard(self):
-        # Integrator can commit
-        try:
-            self.guard.validate_git_command(["commit", "-m", "msg"], "integrator")
-        except SecurityError:
-            self.fail("Integrator should be able to commit")
-
-        # Quality Gate cannot commit
+    def test_git_allowlist_and_roles(self):
+        server = RepoToolsServer()
         with self.assertRaises(SecurityError):
-            self.guard.validate_git_command(["commit", "-m", "msg"], "quality_gate")
+            server.run_git(["checkout", "main"], "integrator")
+        with self.assertRaises(SecurityError):
+            server.run_git(["add", "R-scripts/test_script.R"], "quality_gate")
+        with self.assertRaises(SecurityError):
+            server.run_git(["commit", "-m", "msg"], "integrator")
 
-        # Quality Gate can status
+    def test_replace_in_file(self):
+        server = RepoToolsServer()
+        rel_path = "R-scripts/zz_replace_in_file_test.txt"
+        abs_path = self.repo_root / rel_path
         try:
-            self.guard.validate_git_command(["status"], "quality_gate")
-        except SecurityError:
-             self.fail("Quality Gate should be able to status")
+            with open(abs_path, "w", encoding="utf-8") as f:
+                f.write("hello world\n")
+            diff = server.replace_in_file(rel_path, "world", "there", "integrator")
+            self.assertIn("there", diff)
+            with open(abs_path, "r", encoding="utf-8") as f:
+                self.assertEqual(f.read(), "hello there\n")
+        finally:
+            if abs_path.exists():
+                abs_path.unlink()
+
+    def test_fake_codex_mcp(self):
+        server = FakeCodexMCPServer()
+        server.start()
+        try:
+            response = server.send_request({"jsonrpc": "2.0", "id": 1, "method": "ping", "params": {}})
+            self.assertEqual(response["result"]["content"][0]["text"], "stub-ok")
+        finally:
+            server.stop()
 
 if __name__ == '__main__':
     unittest.main()

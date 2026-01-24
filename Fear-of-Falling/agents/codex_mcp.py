@@ -55,6 +55,46 @@ class CodexMCPServer:
             self.process.wait()
             print("Codex MCP Server stopped")
 
+class FakeCodexMCPServer:
+    """
+    A fast, deterministic stub for CI/smoke runs.
+    """
+    def __init__(self):
+        self.started = False
+
+    def start(self):
+        self.started = True
+        print("Fake Codex MCP Server started")
+
+    def send_request(self, request: dict):
+        if not self.started:
+            raise RuntimeError("Server not started")
+        return {
+            "jsonrpc": "2.0",
+            "id": request.get("id"),
+            "result": {"content": [{"type": "text", "text": "stub-ok"}]}
+        }
+
+    def stop(self):
+        if self.started:
+            self.started = False
+            print("Fake Codex MCP Server stopped")
+
+def has_codex_secrets() -> bool:
+    keys = [
+        "OPENAI_API_KEY",
+        "OPENAI_BASE_URL",
+        "OPENAI_ORG_ID",
+        "CODEX_API_KEY",
+        "CODEX_AUTH_TOKEN"
+    ]
+    return any(os.environ.get(key) for key in keys)
+
+def get_codex_mcp_server(use_real: bool):
+    if use_real:
+        return CodexMCPServer()
+    return FakeCodexMCPServer()
+
 if __name__ == "__main__":
     # Example usage / Test
     server = CodexMCPServer()
