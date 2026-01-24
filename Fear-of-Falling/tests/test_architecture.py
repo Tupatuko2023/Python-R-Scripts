@@ -12,12 +12,16 @@ from mcp_servers.filesystem_guard import FileSystemGuard, SecurityError
 
 class TestFileSystemGuard(unittest.TestCase):
     def setUp(self):
-        self.repo_root = Path(os.path.abspath("."))
+        # Prefer subproject root relative to this file for CI runs from repo root.
+        self.repo_root = Path(__file__).resolve().parents[1]
         self.config_path = self.repo_root / "configs/tool_scopes.json"
-
-        # Ensure config exists (it should from previous steps)
         if not self.config_path.exists():
-            self.fail("Config file not found")
+            fallback = Path(os.path.abspath(".")) / "Fear-of-Falling" / "configs/tool_scopes.json"
+            if fallback.exists():
+                self.repo_root = fallback.parents[1]
+                self.config_path = fallback
+            else:
+                self.fail("Config file not found")
 
         self.guard = FileSystemGuard(str(self.config_path), str(self.repo_root))
 

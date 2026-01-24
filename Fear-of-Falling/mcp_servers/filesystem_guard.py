@@ -90,6 +90,10 @@ class FileSystemGuard:
         if subcommand not in allowlist:
             raise SecurityError(f"Git subcommand '{subcommand}' is not allowed.")
 
+        if subcommand == "checkout":
+            if len(args) < 2 or args[1] != "-b":
+                raise SecurityError("Only 'git checkout -b <branch>' is allowed.")
+
         # Enforce Read-Only roles cannot write via git
         # 'integrator' is the only role allowed to perform state-changing git operations
         # defined in the allowlist (add, commit, checkout).
