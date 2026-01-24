@@ -27,9 +27,14 @@ logging.basicConfig(
 
 class RepoToolsServer:
     def __init__(self):
+        # Resolve paths relative to this script file to ensure stability
+        # regardless of where the script is invoked from.
+        self.base_dir = Path(__file__).resolve().parent.parent
+        self.config_path = self.base_dir / "configs/tool_scopes.json"
+
         self.guard = FileSystemGuard(
-            config_path="configs/tool_scopes.json",
-            repo_root="."
+            config_path=str(self.config_path),
+            repo_root=str(self.base_dir)
         )
 
     def log_request(self, tool_name, args, result=None, error=None):

@@ -12,14 +12,16 @@ from mcp_servers.filesystem_guard import FileSystemGuard, SecurityError
 
 class TestFileSystemGuard(unittest.TestCase):
     def setUp(self):
-        self.repo_root = Path(os.path.abspath("."))
-        self.config_path = self.repo_root / "configs/tool_scopes.json"
+        # Resolve paths relative to the test file location
+        # This allows running tests from repo root or subproject root.
+        self.base_dir = Path(__file__).resolve().parent.parent
+        self.config_path = self.base_dir / "configs/tool_scopes.json"
 
         # Ensure config exists (it should from previous steps)
         if not self.config_path.exists():
-            self.fail("Config file not found")
+            self.fail(f"Config file not found at {self.config_path}")
 
-        self.guard = FileSystemGuard(str(self.config_path), str(self.repo_root))
+        self.guard = FileSystemGuard(str(self.config_path), str(self.base_dir))
 
     def test_integrator_allowed_write(self):
         # Integrator can write to R-scripts
