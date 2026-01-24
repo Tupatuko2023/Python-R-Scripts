@@ -90,6 +90,12 @@ class FileSystemGuard:
         if subcommand not in allowlist:
             raise SecurityError(f"Git subcommand '{subcommand}' is not allowed.")
 
-        if subcommand == "checkout":
-            if len(args) < 2 or args[1] != "-b":
-                raise SecurityError("Only 'git checkout -b <branch>' is allowed.")
+        # Enforce Read-Only roles cannot write via git
+        # 'integrator' is the only role allowed to perform state-changing git operations
+        # defined in the allowlist (add, commit, checkout).
+        # 'architect' and 'quality_gate' are strictly read-only.
+
+        write_git_commands = ["add", "commit", "checkout"]
+
+        if role != "integrator" and subcommand in write_git_commands:
+             raise SecurityError(f"Role '{role}' is read-only and cannot execute state-changing git command '{subcommand}'.")

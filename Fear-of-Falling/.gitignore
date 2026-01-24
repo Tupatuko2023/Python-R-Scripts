@@ -44,8 +44,6 @@ env/
 # Output and temporary files
 out/
 temp/.RData
-artifacts/logs/
-artifacts/traces/
 
 # renv
 **/renv/library/
