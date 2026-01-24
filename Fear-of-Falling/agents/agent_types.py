@@ -31,6 +31,8 @@ class Agent:
             return self.server.read_file(kwargs['path'], kwargs['role'])
         elif tool_name == "write_file":
             return self.server.write_file(kwargs['path'], kwargs['content'], kwargs['role'])
+        elif tool_name == "replace_in_file":
+            return self.server.replace_in_file(kwargs['path'], kwargs['search'], kwargs['replace'], kwargs['role'])
         elif tool_name == "list_files":
             return self.server.list_files(kwargs['path'], kwargs['role'])
         elif tool_name == "run_git":

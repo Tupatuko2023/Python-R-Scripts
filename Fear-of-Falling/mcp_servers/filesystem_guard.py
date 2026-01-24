@@ -90,4 +90,6 @@ class FileSystemGuard:
         if subcommand not in allowlist:
             raise SecurityError(f"Git subcommand '{subcommand}' is not allowed.")
 
-        # TODO: Add more granular checks (e.g., allow 'checkout -b' but not 'checkout master') if needed.
+        if subcommand == "checkout":
+            if len(args) < 2 or args[1] != "-b":
+                raise SecurityError("Only 'git checkout -b <branch>' is allowed.")
