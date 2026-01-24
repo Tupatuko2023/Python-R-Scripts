@@ -1,6 +1,5 @@
 import sys
 import os
-import argparse
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -11,9 +10,6 @@ def run_security_test():
 
     integrator = Agent("Iggy", "integrator", "", ["write_file"])
     architect = Agent("Archie", "architect", "", ["write_file"]) # Architect shouldn't even have this, but if they try...
-
-    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    smoke_path = os.path.join(repo_root, "R-scripts", "smoke.txt")
 
     # Test 1: Integrator write to allowed path
     print("\nTest 1: Integrator write to 'R-scripts/smoke.txt'")
@@ -42,20 +38,9 @@ def run_security_test():
         # We temporarily add it to allowed tools to bypass client-side check
         architect.allowed_tools.append("write_file")
         res = architect.run("Write file", [{"tool": "write_file", "args": {"path": "R-scripts/plan.txt", "content": "Plan"}}])
-        if "Access denied" in res or "failed" in res:
-            print("PASS: Architect write blocked.")
-        else:
-            print("FAIL: Architect write succeeded?!")
+        print("FAIL: Architect write succeeded?!")
     except Exception as e:
          print(f"PASS: Architect write blocked: {e}")
 
-    if os.path.exists(smoke_path):
-        os.remove(smoke_path)
-
-def main():
-    parser = argparse.ArgumentParser(description="Run a basic security smoke test.")
-    parser.parse_args()
-    run_security_test()
-
 if __name__ == "__main__":
-    main()
+    run_security_test()
