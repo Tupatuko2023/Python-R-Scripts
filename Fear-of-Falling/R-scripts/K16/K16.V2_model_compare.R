@@ -73,6 +73,7 @@ source(here("R", "functions", "init.R"))
 source(here("R", "functions", "io.R"))
 source(here("R", "functions", "checks.R"))
 source(here("R", "functions", "reporting.R"))
+source(here("R", "functions", "v2_helpers.R"))
 
 paths <- init_paths(script_label)
 outputs_dir   <- file.path(getOption("fof.outputs_dir"), "K16_V2_model_compare")
@@ -111,8 +112,7 @@ if (!("ID" %in% names(analysis_data))) {
   }
 }
 
-is_long <- anyDuplicated(analysis_data$ID) > 0 ||
-  ("time" %in% names(analysis_data)) || ("time_f" %in% names(analysis_data))
+is_long <- detect_is_long(analysis_data)
 
 if (!is_long) {
   if (!("Composite_Z0" %in% names(analysis_data))) {
@@ -172,22 +172,14 @@ if (any(!analysis_data$FOF_status %in% c(0, 1, NA))) {
 # ==============================================================================
 # 04. QC summaries (aggregate only)
 # ==============================================================================
-qc_missing_by_group <- analysis_data %>%
-  mutate(FOF_group = factor(FOF_status, levels = c(0, 1), labels = c("nonFOF", "FOF"))) %>%
-  group_by(FOF_group) %>%
-  summarise(
-    n = n(),
-    across(
-      all_of(c(
-        if (is_long) "Composite_Z" else c("Composite_Z0", "Composite_Z12"),
-        "frailty_weakness", "frailty_slowness",
-        "frailty_low_activity", "frailty_low_BMI"
-      )),
-      ~ sum(is.na(.)),
-      .names = "missing_{.col}"
-    ),
-    .groups = "drop"
-  )
+qc_metrics <- c(
+  if (is_long) "Composite_Z" else c("Composite_Z0", "Composite_Z12"),
+  "frailty_weakness", "frailty_slowness",
+  "frailty_low_activity", "frailty_low_BMI"
+)
+qc_missing_by_group <- v2_qc_missing_by_group(analysis_data,
+                                              group_col = "FOF_status",
+                                              metrics = qc_metrics)
 
 flag_outliers <- function(x, sd_cut = 4) {
   if (!is.numeric(x)) return(NA_integer_)
@@ -241,7 +233,14 @@ combo_list <- c(list(baseline_3_component = baseline_cols), combo_list)
 # 06. Fit ANCOVA models
 # ==============================================================================
 fit_combo_model <- function(df, cols) {
-  score <- rowSums(df[, cols], na.rm = FALSE)
+  if (!all(cols %in% names(df))) {
+    missing <- setdiff(cols, names(df))
+    stop("Missing frailty component columns: ", paste(missing, collapse = ", "))
+  }
+  score <- df %>%
+    dplyr::select(dplyr::all_of(cols)) %>%
+    as.matrix() %>%
+    rowSums(na.rm = FALSE)
 
   if (is_long) {
     if ("time_f" %in% names(df)) {
