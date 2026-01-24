@@ -32,11 +32,20 @@ class RepoToolsServer:
             repo_root="."
         )
 
+    def _summarize_result(self, result):
+        if result is None:
+            return None
+        if isinstance(result, str):
+            return {"length": len(result)}
+        if isinstance(result, list):
+            return {"length": len(result)}
+        return {"type": type(result).__name__}
+
     def log_request(self, tool_name, args, result=None, error=None):
         entry = {
             "tool": tool_name,
             "args": args,
-            "result": str(result)[:200] + "..." if result else None,
+            "result": self._summarize_result(result),
             "error": str(error) if error else None
         }
         logging.info(json.dumps(entry))
@@ -45,8 +54,11 @@ class RepoToolsServer:
         try:
             abs_path = self.guard.validate_path(path, role, "read")
             with open(abs_path, 'r', encoding='utf-8') as f:
-                return f.read()
+                result = f.read()
+            self.log_request("read_file", {"path": path, "role": role}, result=result)
+            return result
         except Exception as e:
+            self.log_request("read_file", {"path": path, "role": role}, error=e)
             raise e
 
     def write_file(self, path: str, content: str, role: str) -> str:
@@ -71,8 +83,52 @@ class RepoToolsServer:
                 fromfile=f"a/{path}",
                 tofile=f"b/{path}"
             )
-            return "".join(diff)
+            result = "".join(diff)
+            self.log_request(
+                "write_file",
+                {"path": path, "role": role, "content_length": len(content)},
+                result=result
+            )
+            return result
         except Exception as e:
+            self.log_request(
+                "write_file",
+                {"path": path, "role": role, "content_length": len(content)},
+                error=e
+            )
+            raise e
+
+    def replace_in_file(self, path: str, search: str, replace: str, role: str) -> str:
+        try:
+            abs_path = self.guard.validate_path(path, role, "write")
+            with open(abs_path, 'r', encoding='utf-8') as f:
+                old_content = f.read()
+
+            new_content = old_content.replace(search, replace)
+
+            if new_content != old_content:
+                with open(abs_path, 'w', encoding='utf-8') as f:
+                    f.write(new_content)
+
+            diff = difflib.unified_diff(
+                old_content.splitlines(keepends=True),
+                new_content.splitlines(keepends=True),
+                fromfile=f"a/{path}",
+                tofile=f"b/{path}"
+            )
+            result = "".join(diff)
+            self.log_request(
+                "replace_in_file",
+                {"path": path, "role": role, "search_length": len(search), "replace_length": len(replace)},
+                result=result
+            )
+            return result
+        except Exception as e:
+            self.log_request(
+                "replace_in_file",
+                {"path": path, "role": role, "search_length": len(search), "replace_length": len(replace)},
+                error=e
+            )
             raise e
 
     def list_files(self, path: str, role: str) -> str:
@@ -88,13 +144,21 @@ class RepoToolsServer:
                 # Filter out obvious ignores if needed, or rely on agent
                 files.append(item + ("/" if os.path.isdir(os.path.join(abs_path, item)) else ""))
             files.sort()
-            return "\n".join(files)
+            result = "\n".join(files)
+            self.log_request("list_files", {"path": path, "role": role}, result=result)
+            return result
         except Exception as e:
+            self.log_request("list_files", {"path": path, "role": role}, error=e)
             raise e
 
     def run_git(self, args: list, role: str) -> str:
         try:
             self.guard.validate_git_command(args, role)
+            if role in {"architect", "quality_gate"} and args[0] not in {"status", "diff"}:
+                raise SecurityError(f"Role '{role}' may only run 'git status' or 'git diff'.")
+
+            if args[0] == "commit" and os.environ.get("FOF_QA_APPROVED") != "1" and os.environ.get("FOF_ALLOW_COMMIT") != "1":
+                raise SecurityError("Commit blocked: Quality Gate approval or explicit override required.")
 
             # Run git command
             result = subprocess.run(
@@ -105,9 +169,13 @@ class RepoToolsServer:
             )
 
             if result.returncode != 0:
-                return f"Git Error: {result.stderr}"
-            return result.stdout
+                output = f"Git Error: {result.stderr}"
+            else:
+                output = result.stdout
+            self.log_request("run_git", {"args": args, "role": role}, result=output)
+            return output
         except Exception as e:
+            self.log_request("run_git", {"args": args, "role": role}, error=e)
             raise e
 
     def handle_request(self, line):
@@ -150,6 +218,20 @@ class RepoToolsServer:
                                 }
                             },
                             {
+                                "name": "replace_in_file",
+                                "description": "Replaces text in a file and returns a diff.",
+                                "inputSchema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "path": {"type": "string"},
+                                        "search": {"type": "string"},
+                                        "replace": {"type": "string"},
+                                        "role": {"type": "string"}
+                                    },
+                                    "required": ["path", "search", "replace", "role"]
+                                }
+                            },
+                            {
                                 "name": "list_files",
                                 "description": "Lists files in a directory.",
                                 "inputSchema": {
@@ -188,6 +270,8 @@ class RepoToolsServer:
                         result = self.read_file(args["path"], args["role"])
                     elif name == "write_file":
                         result = self.write_file(args["path"], args["content"], args["role"])
+                    elif name == "replace_in_file":
+                        result = self.replace_in_file(args["path"], args["search"], args["replace"], args["role"])
                     elif name == "list_files":
                         result = self.list_files(args["path"], args["role"])
                     elif name == "run_git":
@@ -202,7 +286,6 @@ class RepoToolsServer:
                             "content": [{"type": "text", "text": str(result)}]
                         }
                     }
-                    self.log_request(name, args, result=result)
 
                 except Exception as e:
                     error_msg = str(e)
@@ -211,7 +294,6 @@ class RepoToolsServer:
                         "id": id_,
                         "error": {"code": -32000, "message": error_msg}
                     }
-                    self.log_request(name, args, error=error_msg)
             else:
                  response = {
                         "jsonrpc": "2.0",

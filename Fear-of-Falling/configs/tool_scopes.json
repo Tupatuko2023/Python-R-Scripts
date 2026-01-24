@@ -14,6 +14,7 @@
         "renv/**",
         "renv.lock",
         "config/**",
+        "configs/**",
         "tests/**"
       ],
       "never_touch": [
@@ -41,6 +42,7 @@
         "scripts/termux/**",
         "docs/**",
         "config/**",
+        "configs/**",
         "tests/**",
         "data/**",
         "outputs/**",
@@ -49,7 +51,8 @@
       ],
       "never_touch": [
         ".git/**",
-        ".git-crypt/**"
+        ".git-crypt/**",
+        ".github/**"
       ]
     }
   },
