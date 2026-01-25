@@ -239,7 +239,7 @@ git show --stat <MERGE_SHA>
 
 ## References
 
-- **PR #49:** https://github.com/Tupatuko2023/Python-R-Scripts/pull/49
+- **PR #49:** <https://github.com/Tupatuko2023/Python-R-Scripts/pull/62>
 - **Merge commit:** 909f534
 - **Acceptance memo:** `reports/C3fix_acceptance_memo.txt`
 - **Preflight skill:** `.codex/skills/fof-preflight/SKILL.md`
