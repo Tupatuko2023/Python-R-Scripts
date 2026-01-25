@@ -1,0 +1,63 @@
+{
+  "roles": {
+    "integrator": {
+      "read_write": [
+        "R-scripts/**",
+        "manifest/**",
+        "R/**",
+        "scripts/termux/**",
+        "docs/**"
+      ],
+      "read_only": [
+        "data/**",
+        "outputs/**",
+        "renv/**",
+        "renv.lock",
+        "config/**",
+        "tests/**"
+      ],
+      "never_touch": [
+        ".git/**",
+        ".git-crypt/**",
+        ".github/**"
+      ]
+    },
+    "architect": {
+      "read_write": [],
+      "read_only": [
+        "**"
+      ],
+      "never_touch": [
+        ".git/**",
+        ".git-crypt/**"
+      ]
+    },
+    "quality_gate": {
+      "read_write": [],
+      "read_only": [
+        "R-scripts/**",
+        "manifest/**",
+        "R/**",
+        "scripts/termux/**",
+        "docs/**",
+        "config/**",
+        "tests/**",
+        "data/**",
+        "outputs/**",
+        "renv/**",
+        "renv.lock"
+      ],
+      "never_touch": [
+        ".git/**",
+        ".git-crypt/**"
+      ]
+    }
+  },
+  "git_allowlist": [
+    "status",
+    "diff",
+    "checkout",
+    "add",
+    "commit"
+  ]
+}
