@@ -54,6 +54,7 @@ python3 .codex/skills/fof-preflight/scripts/preflight.py --verbose
 ```
 
 **Blocks:**
+
 - Raw data edits (`data/`, `data/external/`)
 - Kxx script intro/Required Vars mismatches
 - Output discipline violations
@@ -106,6 +107,7 @@ Rscript .codex/skills/fof-qc-summarizer/scripts/qc_summarize.R \
 ```
 
 **Outputs:**
+
 - `qc_summary.csv` (15 rows: aggregate checks only)
 - `qc_summary.txt` (human-readable)
 
@@ -160,6 +162,7 @@ git show --stat <MERGE_SHA>
 ### What to Commit
 
 ✅ **Commit:**
+
 - `R-scripts/K18/K18_QC.V1_qc-run.R` (runner fixes)
 - `manifest/manifest.csv` (K18_QC artifact rows)
 - `R-scripts/K18/outputs/K18_QC/qc_summary/*` (aggregate-only)
@@ -167,6 +170,7 @@ git show --stat <MERGE_SHA>
 - `reports/C3fix_acceptance_memo.txt` (acceptance criteria)
 
 ❌ **DO NOT Commit:**
+
 - `R-scripts/K18/outputs/K18_QC/qc/qc_row_id_watch.csv` (contains participant IDs)
 - `R-scripts/K18/outputs/K18_QC/qc/qc_uniqueness.csv` (contains participant IDs)
 - Raw data files (`data/`, `data/external/`)
