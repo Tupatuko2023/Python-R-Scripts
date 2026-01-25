@@ -21,13 +21,16 @@ APPEND to progress.txt (never replace, always append):
 
 ```markdown
 ## [Date/Time] - [Story ID]
+
 Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+
 - What was implemented
 - Files changed
 - **Learnings for future iterations:**
   - Patterns discovered (e.g., "this codebase uses X for Y")
   - Gotchas encountered (e.g., "don't forget to update Z when changing W")
   - Useful context (e.g., "the evaluation panel is in component X")
+
 ---
 ```
 
@@ -41,6 +44,7 @@ If you discover a **reusable pattern** that future iterations should know, add i
 
 ```markdown
 ## Codebase Patterns
+
 - Example: Use `sql<number>` template for aggregations
 - Example: Always use `IF NOT EXISTS` for migrations
 - Example: Export types from actions.ts for UI components
