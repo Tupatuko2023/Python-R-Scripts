@@ -6,7 +6,8 @@ report/**
 **/renv/**
 **/node_modules/**
 **/.git/**
-**/SMOKE_TEST_REPORT_*.md
-Fear-of-Falling/SMOKE_TEST_ERRORS.md
-Fear-of-Falling/SMOKE_TEST_FINAL_RUN.md
+**/SMOKE_TEST_REPORT*.md
+Fear-of-Falling/SMOKE_TEST_*.md
+Fear-of-Falling/repo_audit/repo_inventory.md
+Fear-of-Falling/docs/DELIVERY_NOTE.md
 scripts/ralph/**
