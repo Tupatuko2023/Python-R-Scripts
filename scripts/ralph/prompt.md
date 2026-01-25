@@ -4,8 +4,8 @@ You are an autonomous coding agent working on a software project.
 
 ## Your Task
 
-1. Read the PRD at `./prd.json` (project root)
-2. Read the progress log at `./progress.txt` (project root; check Codebase Patterns section first)
+1. Read the PRD at `prd.json` (in the project root)
+2. Read the progress log at `progress.txt` (in the project root) (check Codebase Patterns section first)
 3. Check you're on the correct branch from PRD `branchName`. If not, check it out or create from main.
 4. Pick the **highest priority** user story where `passes: false`
 5. Implement that single user story
@@ -19,18 +19,15 @@ You are an autonomous coding agent working on a software project.
 
 APPEND to progress.txt (never replace, always append):
 
-```markdown
+```
 ## [Date/Time] - [Story ID]
-
 Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
-
 - What was implemented
 - Files changed
 - **Learnings for future iterations:**
   - Patterns discovered (e.g., "this codebase uses X for Y")
   - Gotchas encountered (e.g., "don't forget to update Z when changing W")
   - Useful context (e.g., "the evaluation panel is in component X")
-
 ---
 ```
 
@@ -42,9 +39,8 @@ The learnings section is critical - it helps future iterations avoid repeating m
 
 If you discover a **reusable pattern** that future iterations should know, add it to the `## Codebase Patterns` section at the TOP of progress.txt (create it if it doesn't exist). This section should consolidate the most important learnings:
 
-```markdown
+```
 ## Codebase Patterns
-
 - Example: Use `sql<number>` template for aggregations
 - Example: Always use `IF NOT EXISTS` for migrations
 - Example: Export types from actions.ts for UI components
