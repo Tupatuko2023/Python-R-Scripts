@@ -6,23 +6,28 @@ metadata:
 ---
 
 ## How to use
+
 Run from the Fear-of-Falling subproject root or repo root.
 
 Example:
+
 ```bash
 python .codex/skills/fof-preflight/scripts/preflight.py
 ```
 
 ## Inputs
+
 - Git working tree diff (`git diff --name-only --diff-filter=ACMRTUXB`).
 - Kxx R scripts under `Fear-of-Falling/R-scripts/` (or `R-scripts/`).
 - Policy sources: `Fear-of-Falling/CLAUDE.md`, `Fear-of-Falling/QC_CHECKLIST.md`.
 
 ## Outputs
+
 - Console summary with PASS/WARN/FAIL.
 - Exit code 0 only if no FAIL conditions are found.
 
 ## Failure modes
+
 - Not a git repo or diff fails.
 - Any change under `data/` or `data/external/`.
 - Kxx `.R` scripts missing the standard intro/Required vars block.
@@ -32,6 +37,7 @@ python .codex/skills/fof-preflight/scripts/preflight.py
 - Suspicious `outputs/` usage not under `R-scripts/<script>/outputs/`.
 
 ## Safety/guardrails
+
 - FAIL CLOSED: if a rule cannot be verified, the script exits 1 with context.
 - No external APIs or network calls.
 - Does not modify data or outputs.
