@@ -9,3 +9,4 @@ report/**
 **/SMOKE_TEST_REPORT_*.md
 Fear-of-Falling/SMOKE_TEST_ERRORS.md
 Fear-of-Falling/SMOKE_TEST_FINAL_RUN.md
+scripts/ralph/**

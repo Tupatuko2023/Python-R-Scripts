@@ -33,12 +33,14 @@ Before running smoke tests, ensure:
 ### Option 1: Simple Standalone Runner (Recommended for Quick Checks)
 
 To run a subset of tests (K11-K16):
+
 ```bash
 # From the project root directory
 Rscript tests/run_smoke_tests.R
 ```
 
 To run the full pipeline test (K1-K16):
+
 ```bash
 # From the project root directory
 Rscript tests/smoke_test_all_k_scripts.R
@@ -63,6 +65,7 @@ MOCK_MODE=true Rscript tests/smoke_test_all_k_scripts.R
 ```
 
 **Effect of MOCK_MODE=true:**
+
 - **K9.R:** If the primary ANCOVA model fails (Type III and Type II), the script will generate a dummy result table with a warning instead of stopping execution. This ensures the pipeline continues for artifact verification purposes.
 - Without `MOCK_MODE=true`, `K9.R` will stop with an error on model failure (fail-fast behavior for production/real data).
 

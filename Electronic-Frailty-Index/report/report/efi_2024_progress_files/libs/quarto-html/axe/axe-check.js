@@ -47,7 +47,7 @@ class QuartoAxeDocumentReporter extends QuartoAxeReporter {
 
     const descriptionElement = document.createElement("div");
     descriptionElement.className = "quarto-axe-violation-description";
-    descriptionElement.innerText = `${violation.impact.replace(/^[a-z]/, match => match.toLocaleUpperCase())}: ${violation.description}`;
+    descriptionElement.innerText = `${violation.impact.replace(/^[a-z]/, (match) => match.toLocaleUpperCase())}: ${violation.description}`;
     violationElement.appendChild(descriptionElement);
 
     const helpElement = document.createElement("div");
@@ -120,17 +120,24 @@ class QuartoAxeChecker {
     this.options = opts;
   }
   async init() {
-    const axe = (await import("https://cdn.skypack.dev/pin/axe-core@v4.10.3-aVOFXWsJaCpVrtv89pCa/mode=imports,min/optimized/axe-core.js")).default;
+    const axe = (
+      await import(
+        "https://cdn.skypack.dev/pin/axe-core@v4.10.3-aVOFXWsJaCpVrtv89pCa/mode=imports,min/optimized/axe-core.js"
+      )
+    ).default;
     const result = await axe.run({
       exclude: [
-       // https://github.com/microsoft/tabster/issues/288
-       // MS has claimed they won't fix this, so we need to add an exclusion to
-       // all tabster elements
-       "[data-tabster-dummy]"
+        // https://github.com/microsoft/tabster/issues/288
+        // MS has claimed they won't fix this, so we need to add an exclusion to
+        // all tabster elements
+        "[data-tabster-dummy]",
       ],
-      preload: { assets: ['cssom'], timeout: 50000 }    
+      preload: { assets: ["cssom"], timeout: 50000 },
     });
-    const reporter = this.options === true ? new QuartoAxeConsoleReporter(result) : new reporters[this.options.output](result, this.options);
+    const reporter =
+      this.options === true
+        ? new QuartoAxeConsoleReporter(result)
+        : new reporters[this.options.output](result, this.options);
     reporter.report();
   }
 }
