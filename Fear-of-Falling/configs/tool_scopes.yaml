@@ -1,0 +1,59 @@
+integrator:
+  filesystem:
+    read_write:
+      - "R-scripts/**"
+      - "manifest/**"
+      - "R/**"
+      - "scripts/termux/**"
+      - "docs/**"
+    read_only:
+      - "."
+      - "data/**"
+      - "outputs/**"
+      - "renv/**"
+      - "renv.lock"
+      - "config/**"
+      - "tests/**"
+    never_touch:
+      - ".git/**"
+      - ".git-crypt/**"
+
+architect:
+  filesystem:
+    read_write: []
+    read_only:
+      - "."
+      - "R-scripts/**"
+      - "manifest/**"
+      - "R/**"
+      - "scripts/termux/**"
+      - "docs/**"
+      - "data/**"
+      - "outputs/**"
+      - "renv/**"
+      - "renv.lock"
+      - "config/**"
+      - "tests/**"
+    never_touch:
+      - ".git/**"
+      - ".git-crypt/**"
+
+quality_gate:
+  filesystem:
+    read_write: []
+    read_only:
+      - "."
+      - "R-scripts/**"
+      - "manifest/**"
+      - "R/**"
+      - "scripts/termux/**"
+      - "docs/**"
+      - "data/**"
+      - "outputs/**"
+      - "renv/**"
+      - "renv.lock"
+      - "config/**"
+      - "tests/**"
+    never_touch:
+      - ".git/**"
+      - ".git-crypt/**"
