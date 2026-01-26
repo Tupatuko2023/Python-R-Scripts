@@ -1,8 +1,10 @@
 ﻿# Spec: Standardized Table 1 Generator
+
 **Goal:** Create a reusable R function to generate 'Table 1' (Baseline Characteristics).
 **Context:** Standard requirement for clinical trials. Must be privacy-safe.
 
 ## Requirements
+
 1. **Function Signature:** create_table1(data, vars, strata = NULL, ...)
 
 2. **Logic:**

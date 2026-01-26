@@ -4,6 +4,7 @@ Tavoite: pakottaa kevyet, deterministiset tarkistukset ennen commit/push,
 ja tarjota yksi "before analysis run" -gate, joka tuottaa audit trailin.
 
 Lyhyt malli:
+
 - git commit -> pre-commit
 - git push -> pre-push
 - analysis -> tools/run-gates.sh
@@ -19,6 +20,7 @@ Hookit ovat versionoituja ja ajavat `tools/*`-gateskriptit.
 ## Pre-commit (kevyt)
 
 Ajaa:
+
 - Guardrails: ei vahingossa dataa/outputs/arkistoja staged-settiin
 - renv.lock sanity (ei `renv::restore` hookissa)
 - R: `parse()` staged .R tiedostoille
@@ -27,6 +29,7 @@ Ajaa:
 ## Pre-push (minimal CI parity)
 
 Ajaa:
+
 - Guardrails + renv + smoke-tason syntax checks
 - Jos `tools/run-gates.sh` löytyy: `--smoke`
 
@@ -40,12 +43,14 @@ tools/run-gates.sh --mode analysis --project Fear-of-Falling \
 ```
 
 Tämä kirjoittaa:
+
 - `Fear-of-Falling/manifest/run_meta_*.txt`
 - `Fear-of-Falling/manifest/sessionInfo_*.txt`
 - `Fear-of-Falling/manifest/renv_diagnostics_*.txt`
 
 `--rscript` on suositeltu: jos se annetaan, skripti ajetaan. Jos ei anneta,
 wrapper vain kirjaa audit-metadatan. Polku voi olla:
+
 - project-relatiivinen (esim. `R-scripts/K05/...`, suhteessa `Fear-of-Falling/`)
 - repo-root-relatiivinen (esim. `Fear-of-Falling/R-scripts/K05/...`)
 

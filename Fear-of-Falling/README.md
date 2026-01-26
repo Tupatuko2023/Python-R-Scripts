@@ -100,7 +100,9 @@ Rscript R-scripts/run_mixed_fof_time.R --data "<DATA_PATH_OR_OBJECT>" --out "R-s
 ## Troubleshooting (QC)
 
 ### K18_QC: PASS criteria
+
 QC is considered PASS when `qc_status_summary.csv` shows:
+
 - `time_levels = TRUE`
 - `fof_levels  = TRUE`
 - `overall_pass = TRUE`
@@ -109,20 +111,25 @@ And the `details` field includes:
 `observed_raw`, `observed_canonical`, `expected_raw`, `expected_canonical`.
 
 Expected file:
+
 - `R-scripts/K18_QC/outputs/K18_QC/qc/qc_status_summary.csv`
 
 ### Common failure modes (time / FOF)
+
 If QC fails with:
+
 - `time_levels` showing observed levels like `baseline;12m` while expected includes `baseline;m12;12m`
 - `fof_levels` showing observed `0;1` while expected includes `nonFOF;FOF`
 
 ...the issue is usually synonyms/coding differences, not corrupted data.
 
 Fix: ensure QC normalizes (canonicalizes) common synonyms:
+
 - time: `12m`, `m12`, `12`, `t12`, `1` -> `m12`; baseline aliases -> `baseline`
 - FOF: `0`/`nonfof` -> `nonFOF`; `1`/`fof` -> `FOF`
 
 ### Running K18_QC
+
 From the Fear-of-Falling subproject root:
 
 ```bash
@@ -948,7 +955,9 @@ proot-distro login ubuntu -- bash -lc 'cd /data/data/com.termux/files/home/Pytho
 ```
 
 ## ?? System Architecture & Dependencies
+
 This project is part of a distributed research ecosystem. It relies on the shared utility library:
+
 - **Library:** ../Python-R-Scripts
 - **Modules:** src/analytics/privacy_utils.R (SDC Logic)
 - **Protocol:** See 'HANDOVER.md' for agent workflows.

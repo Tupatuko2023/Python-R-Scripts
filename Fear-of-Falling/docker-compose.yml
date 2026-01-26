@@ -1,7 +1,7 @@
 # Docker Compose configuration for Fear of Falling R Analysis
 # Usage: docker-compose up -d
 
-version: '3.8'
+version: "3.8"
 
 services:
   fof-r-analysis:
@@ -41,7 +41,11 @@ services:
     environment:
       - RENV_PATHS_CACHE=/root/.local/share/renv
     # Override this command when running
-    command: ["echo", "Use 'docker-compose run fof-runner Rscript R-scripts/K11/K11.R'"]
+    command:
+      [
+        "echo",
+        "Use 'docker-compose run fof-runner Rscript R-scripts/K11/K11.R'",
+      ]
     profiles:
       - tools
 

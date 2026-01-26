@@ -3,20 +3,20 @@ name: r-ci
 on:
   push:
     paths:
-      - 'Fear-of-Falling/**/*.R'
-      - 'Fear-of-Falling/**/*.r'
-      - 'Fear-of-Falling/renv.lock'
-      - 'Fear-of-Falling/renv/**'
-      - '.github/workflows/r-ci.yml'
-      - '!**/*.md'
+      - "Fear-of-Falling/**/*.R"
+      - "Fear-of-Falling/**/*.r"
+      - "Fear-of-Falling/renv.lock"
+      - "Fear-of-Falling/renv/**"
+      - ".github/workflows/r-ci.yml"
+      - "!**/*.md"
   pull_request:
     paths:
-      - 'Fear-of-Falling/**/*.R'
-      - 'Fear-of-Falling/**/*.r'
-      - 'Fear-of-Falling/renv.lock'
-      - 'Fear-of-Falling/renv/**'
-      - '.github/workflows/r-ci.yml'
-      - '!**/*.md'
+      - "Fear-of-Falling/**/*.R"
+      - "Fear-of-Falling/**/*.r"
+      - "Fear-of-Falling/renv.lock"
+      - "Fear-of-Falling/renv/**"
+      - ".github/workflows/r-ci.yml"
+      - "!**/*.md"
 
 jobs:
   r-ci:
@@ -63,4 +63,4 @@ jobs:
       # Otherwise, do a smoke test and finish successfully
       - name: Smoke tests
         if: hashFiles('Fear-of-Falling/renv.lock') == ''
-        run: "Rscript -e \"print(sessionInfo()); message('Smoke tests completed')\""
+        run: 'Rscript -e "print(sessionInfo()); message(''Smoke tests completed'')"'
