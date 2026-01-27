@@ -10,3 +10,4 @@ Decisions (ADR-lite)
 - Knowledge package builder added: scripts/40_build_knowledge_package.py (zip + index.json; gitignored outputs; defense-in-depth identifier check).
 
 - End-to-end CI-safe smoke test added (sample pipeline: QC → preprocess → report → knowledge package).
+- HANDOFF COMPLETE: repo pointers finalized; ready to push/open PR. Last commit: f34de2cf6f18a1d7429fa8ace143408787d02d2c Quantify FOF: finalize handoff pointers
