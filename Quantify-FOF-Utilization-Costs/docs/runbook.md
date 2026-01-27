@@ -1,0 +1,87 @@
+Runbook (Option B, Aim 2)
+
+This project is Option B: raw data stays outside the repo (DATA_ROOT). Repo contains only code + metadata + templates + synthetic sample.
+
+0) Local setup (Termux/PRoot-safe)
+
+1. Create local config (never commit):
+
+Copy config/.env.example to config/.env
+
+Set DATA_ROOT to an absolute path
+
+
+2. (Optional) Enable aggregates when permitted:
+
+Set ALLOW_AGGREGATES=1 in local config/.env
+
+
+1) Inventory after each new paper_02 batch
+
+python scripts/00_inventory_manifest.py --scan paper_02
+
+
+2) QC (safe-by-default)
+
+Sample (CI-safe):
+
+python scripts/30_qc_summary.py --use-sample
+
+
+3) Preprocess tabular
+
+Sample (no aggregates):
+
+python scripts/10_preprocess_tabular.py --use-sample
+
+
+Aggregates (double-gated):
+
+ALLOW_AGGREGATES=1 python scripts/10_preprocess_tabular.py --use-sample --allow-aggregates
+
+Suppression applies for n < 5 (metrics blank, suppressed=1)
+
+
+4) Reporting (non-sensitive)
+
+Build report from QC + optional aggregates:
+
+python scripts/50_build_report.py
+
+Outputs are gitignored under outputs/reports/
+
+
+5) PDF/PPTX extraction (optional, layout-aware)
+
+Requires optional parsers (pdfplumber/pypdf/python-pptx).
+
+Run:
+
+python scripts/20_extract_pdf_pptx.py --scan paper_02
+
+Outputs are gitignored under docs/derived_text/
+
+Safety: extractor is fail-closed on identifier-like tokens.
+
+
+6) Knowledge package (agent-ready)
+
+Default bundle (metadata + docs + manifests + tests):
+
+python scripts/40_build_knowledge_package.py
+
+
+Include derived text (optional):
+
+python scripts/40_build_knowledge_package.py --include-derived
+
+Outputs are gitignored under outputs/knowledge/
+
+
+Common failure modes
+
+DATA_ROOT missing: scripts exit cleanly with guidance.
+
+Parser missing: extractor logs SKIPPED/ERROR with install guidance.
+
+Safety check triggered: aborts; review derived_text and input source content.
