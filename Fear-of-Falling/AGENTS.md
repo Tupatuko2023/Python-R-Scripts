@@ -321,6 +321,17 @@ Käytä runbookia kun teet K18 QC -muutoksia tai validoit QC-artefakteja.
 - TODO: lisää tieto, mitä tiedostoja ei saa muuttaa (esim. lukitut raportit,
   prereg, tms.), jos sellaisia on.
 
+## Ralph agent loop
+
+For autonomous multi-story implementation, use the Ralph agent loop:
+
+- **Runbook:** `../docs/RALPH_RUNBOOK.md`
+- **Entry point:** `../scripts/ralph/ralph.sh`
+- **PRD:** `../prd.json` (repo root)
+- **Progress:** `../progress.txt` (repo root)
+
+When Ralph works on FOF stories, ensure the story description or `progress.txt` Codebase Patterns section reminds it to work from `Fear-of-Falling/` directory.
+
 ## Termux runner note (Rscript)
 
 Jos ajat agenttia Android Termuxissa ja `Rscript` puuttuu natiivista Termuxista, aja kaikki R-komennot proot-ympäristössä ja käytä aina `/usr/bin/Rscript` (esim. `RSCRIPT_BIN=/usr/bin/Rscript`). Suositeltu malli:

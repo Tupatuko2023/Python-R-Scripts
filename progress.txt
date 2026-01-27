@@ -1,1 +1,32 @@
-# progress
+# Ralph Progress Log
+
+## Codebase Patterns
+
+- FOF subproject working directory: always `Python-R-Scripts/Fear-of-Falling/`
+- Kxx scripts require standard intro block (see Fear-of-Falling/CLAUDE.md)
+- Outputs go to `R-scripts/<script_label>/outputs/`
+- Manifest row per artifact in `manifest/manifest.csv`
+- Do not commit raw data, outputs, or secrets
+- Use `set.seed(20251124)` for reproducibility when randomness involved
+
+---
+Started: 2026-01-26
+---
+
+## 2026-01-27 - RALPH-001
+
+- Validated Ralph bootstrap setup (manual simulation due to Windows shell PATH issues)
+- Files created/modified:
+  - `docs/RALPH_RUNBOOK.md` - comprehensive runbook
+  - `prd.json` - initial PRD with test story
+  - `progress.txt` - initialized with Codebase Patterns
+  - `Fear-of-Falling/AGENTS.md` - added Ralph section
+  - `scripts/ralph/run-ralph.sh` - Windows wrapper script
+- **Learnings for future iterations:**
+  - Windows Git Bash requires explicit PATH setup: `export PATH="$HOME/bin:$HOME/.local/bin:$PATH"`
+  - jq installed via winget goes to `AppData/Local/Microsoft/WinGet/Packages/`
+  - Use `scripts/ralph/run-ralph.sh` wrapper on Windows to ensure correct PATH
+  - Full paths work when PATH doesn't: `/c/Users/<user>/.local/bin/claude`
+
+---
+
