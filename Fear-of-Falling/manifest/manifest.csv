@@ -1362,3 +1362,4 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2026-01-27 10:30:00.000000,K00_META,audit_standard_intro_compliance,audit_csv,R-scripts/K00_META/outputs/K00_META/audit_standard_intro_compliance.csv,50,FOF-001 audit: Kxx standard intro compliance check
 2026-01-27 10:45:00.000000,K00_META,audit_outputs_structure,audit_csv,R-scripts/K00_META/outputs/K00_META/audit_outputs_structure.csv,39,FOF-002 audit: R-scripts output directory structure
 2026-01-27 10:45:01.000000,K00_META,audit_manifest_coverage,audit_csv,R-scripts/K00_META/outputs/K00_META/audit_manifest_coverage.csv,10,FOF-002 audit: manifest coverage metrics
+2026-01-27 11:00:00.000000,K00_META,RENV_STATUS,doc_md,docs/RENV_STATUS.md,NA,FOF-003: renv environment documentation

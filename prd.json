@@ -45,7 +45,7 @@
       "title": "Document renv status and R package dependencies",
       "description": "Check if renv.lock exists in Fear-of-Falling/ and document its status. Run renv::status() if possible and record the output. This helps ensure reproducibility. Work from Fear-of-Falling/ directory.",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Check for renv.lock, renv/, .Rprofile",
         "Document R version requirements if found",
