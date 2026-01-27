@@ -32,7 +32,7 @@
       "title": "Verify manifest/output directory structure",
       "description": "Check that the R-scripts/ directory structure follows the convention: R-scripts/<script_label>/outputs/. Verify manifest/manifest.csv exists or document that it needs to be created. Work from Fear-of-Falling/ directory.",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Document current R-scripts/ directory structure",
         "Check if manifest/manifest.csv exists",
