@@ -1,3 +1,28 @@
 source_dataset,original_variable,standard_variable,transform_rule,unit,coding,notes
 paper_02_register_extract,fof_flag,FOF_status,as_integer_0_1,,0=no;1=yes,Placeholder mapping example (no real data)
 paper_02_register_extract,svc_visits_total,util_visits_total,as_integer,,non-negative integer,Placeholder utilisation metric
+paper_02_utilisation_visits,person_id,id,as_string,,TBD,Placeholder mapping; confirm controller schema
+paper_02_utilisation_visits,period_start_raw,period_start,date_parse_iso,ISO-8601,TBD,Placeholder mapping
+paper_02_utilisation_visits,period_end_raw,period_end,date_parse_iso,ISO-8601,TBD,Placeholder mapping
+paper_02_utilisation_visits,followup_days_raw,followup_days,as_integer,days,TBD,Placeholder mapping
+paper_02_utilisation_visits,visits_total,util_visits_total,as_integer,count,TBD,Placeholder mapping
+paper_02_utilisation_visits,visits_outpatient,util_visits_outpatient,as_integer,count,TBD,Placeholder mapping
+paper_02_utilisation_visits,visits_inpatient,util_visits_inpatient,as_integer,count,TBD,Placeholder mapping
+paper_02_utilisation_visits,visits_emergency,util_visits_emergency,as_integer,count,TBD,Placeholder mapping
+paper_02_utilisation_visits,visits_primarycare,util_visits_primarycare,as_integer,count,TBD,Placeholder mapping
+paper_02_inpatient,person_id,id,as_string,,TBD,Placeholder mapping; confirm controller schema
+paper_02_inpatient,period_start_raw,period_start,date_parse_iso,ISO-8601,TBD,Placeholder mapping
+paper_02_inpatient,period_end_raw,period_end,date_parse_iso,ISO-8601,TBD,Placeholder mapping
+paper_02_inpatient,inpatient_days,util_days_inpatient,as_integer,days,TBD,Placeholder mapping
+paper_02_costs,person_id,id,as_string,,TBD,Placeholder mapping; confirm controller schema
+paper_02_costs,period_start_raw,period_start,date_parse_iso,ISO-8601,TBD,Placeholder mapping
+paper_02_costs,period_end_raw,period_end,date_parse_iso,ISO-8601,TBD,Placeholder mapping
+paper_02_costs,cost_total_raw,cost_total_eur,eur_numeric,EUR,TBD,Placeholder mapping
+paper_02_costs,cost_inpatient_raw,cost_inpatient_eur,eur_numeric,EUR,TBD,Placeholder mapping
+paper_02_costs,cost_outpatient_raw,cost_outpatient_eur,eur_numeric,EUR,TBD,Placeholder mapping
+paper_02_costs,cost_medication_raw,cost_medication_eur,eur_numeric,EUR,TBD,Placeholder mapping
+paper_02_covariates,person_id,id,as_string,,TBD,Placeholder mapping; confirm controller schema
+paper_02_covariates,fof_flag,FOF_status,as_integer,,TBD,Placeholder mapping; coding TBD
+paper_02_covariates,age_years,age,as_numeric,years,TBD,Placeholder mapping
+paper_02_covariates,sex_code,sex,as_string,,TBD,Placeholder mapping
+paper_02_covariates,bmi_value,BMI,as_numeric,kg/m^2,TBD,Placeholder mapping
