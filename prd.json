@@ -19,7 +19,7 @@
       "title": "Audit Kxx scripts for standard intro compliance",
       "description": "Review all K*.R scripts in Fear-of-Falling/ to check if they have the mandatory STANDARD SCRIPT INTRO block as defined in CLAUDE.md. Create a checklist in progress.txt showing which scripts are compliant and which need updates. Work from Fear-of-Falling/ directory.",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "List of all K*.R scripts found",
         "Each script checked for: shebang, metadata block, script_label, init_paths(), req_cols",
@@ -32,7 +32,7 @@
       "title": "Verify manifest/output directory structure",
       "description": "Check that the R-scripts/ directory structure follows the convention: R-scripts/<script_label>/outputs/. Verify manifest/manifest.csv exists or document that it needs to be created. Work from Fear-of-Falling/ directory.",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Document current R-scripts/ directory structure",
         "Check if manifest/manifest.csv exists",
@@ -45,7 +45,7 @@
       "title": "Document renv status and R package dependencies",
       "description": "Check if renv.lock exists in Fear-of-Falling/ and document its status. Run renv::status() if possible and record the output. This helps ensure reproducibility. Work from Fear-of-Falling/ directory.",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Check for renv.lock, renv/, .Rprofile",
         "Document R version requirements if found",

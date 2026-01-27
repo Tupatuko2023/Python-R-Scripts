@@ -8,9 +8,98 @@
 - Manifest row per artifact in `manifest/manifest.csv`
 - Do not commit raw data, outputs, or secrets
 - Use `set.seed(20251124)` for reproducibility when randomness involved
+- **Kxx compliance (FOF-001 audit):** 50 scripts total; 23 FULL (46%), 18 PARTIAL (36%), 9 MINIMAL (18%)
+- **Compliant scripts** (FULL): K11-K16, K01_MAIN-K13_MAIN, K16_MAIN-K18_MAIN use init_paths()
+- **Needs work:** K1, K8, K9, K10 (legacy scripts lacking standard intro); K1.5, K1.6, K3.6 (minimal headers)
+- **Audit CSV:** `R-scripts/K00_META/outputs/K00_META/audit_standard_intro_compliance.csv`
+- **Output structure (FOF-002):** 37/39 folders have outputs/; 3 missing (K2, K4, K10 - legacy)
+- **Manifest coverage (FOF-002):** 84.5% (229/277 files tracked); K*_MAIN folders need manifest entries
+- **Structure CSVs:** `audit_outputs_structure.csv`, `audit_manifest_coverage.csv`
+- **renv (FOF-003):** R 4.5.0, 169 packages locked; renv.lock + renv/ + .Rprofile all present
+- **Key packages:** lme4, nlme, emmeans, mice, marginaleffects, dplyr, ggplot2, broom
+- **renv docs:** `Fear-of-Falling/docs/RENV_STATUS.md`
 
 ---
 Started: 2026-01-26
+---
+
+## 2026-01-27 - FOF-003
+
+- Documented renv status and R package dependencies
+- Files created:
+  - `Fear-of-Falling/docs/RENV_STATUS.md` (comprehensive renv guide)
+- Manifest updated: 1 row appended
+- **Environment Summary:**
+  - R version: 4.5.0 (specified in renv.lock)
+  - Total packages: 169 locked
+  - renv.lock: Present
+  - renv/: Present (libraries for R-4.4 and R-4.5)
+  - .Rprofile: Present (sources renv/activate.R)
+- **Key Analysis Packages Verified:**
+  - Modeling: lme4, nlme, emmeans, mice, marginaleffects
+  - Data: dplyr, tidyr, readr, here
+  - Reporting: ggplot2, knitr, rmarkdown, broom, broom.mixed
+  - Diagnostics: performance, parameters, effectsize
+- **Sync Issues Noted:**
+  - Previous diagnostics showed some packages used but not recorded
+  - Recommendation: Run `renv::snapshot()` to update lockfile
+- **Learnings for future iterations:**
+  - Always run scripts with renv activated (automatic via .Rprofile)
+  - Do not use `install.packages()` directly - use `renv::install()`
+  - Keep `renv.lock` committed; `renv/library/` is gitignored
+
+---
+
+## 2026-01-27 - FOF-002
+
+- Audited R-scripts/ output directory structure and manifest coverage
+- Files created:
+  - `R-scripts/K00_META/outputs/K00_META/audit_outputs_structure.csv` (39 folders)
+  - `R-scripts/K00_META/outputs/K00_META/audit_manifest_coverage.csv` (10 metrics)
+- Manifest updated: 2 rows appended
+- **Output Structure Summary:**
+  - 37/39 folders (94.9%) have outputs/ subdirectory
+  - 3 folders missing outputs/: K2, K4, K10 (legacy scripts)
+- **Manifest Coverage Summary:**
+  - 1,362 rows in manifest.csv (1,361 data + header)
+  - 27 unique scripts tracked
+  - 277 files on disk, 229 tracked (84.5% coverage)
+  - 48 files missing from manifest (mostly K*_MAIN folders)
+  - 13 malformed rows detected (corrupted CSV fragments)
+- **Issues Found:**
+  - K*_MAIN folders have outputs but almost no manifest entries
+  - Case inconsistencies in K11 file names
+  - K2, K4, K10 may be deprecated (no outputs directory)
+- **Learnings for future iterations:**
+  - Always run manifest append after creating output files
+  - K*_MAIN folders need manifest reconciliation
+  - Legacy K1-K10 single-file scripts may be superseded by *_MAIN versions
+
+---
+
+## 2026-01-27 - FOF-001
+
+- Audited 50 K*.R scripts for STANDARD SCRIPT INTRO compliance (Fear-of-Falling/CLAUDE.md)
+- Files created:
+  - `R-scripts/K00_META/outputs/K00_META/audit_standard_intro_compliance.csv` (50 rows)
+- Manifest updated: 1 row appended to `manifest/manifest.csv`
+- **Compliance Summary:**
+  - FULL compliance: 23 scripts (46%) - K11-K16, all *_MAIN variants
+  - PARTIAL compliance: 18 scripts (36%) - most have headers but lack init_paths()
+  - MINIMAL compliance: 9 scripts (18%) - legacy scripts (K1, K8, K9, K10)
+- **Key Compliance Criteria Checked:**
+  - Shebang (#!/usr/bin/env Rscript): 45/50 scripts (90%)
+  - Header block (# ==): 44/50 scripts (88%)
+  - File tag: 45/50 scripts (90%)
+  - Required vars section: 37/50 scripts (74%)
+  - Workflow steps: 37/50 scripts (74%)
+  - req_cols variable: 13/50 scripts (26%)
+  - init_paths() usage: 23/50 scripts (46%)
+- **Learnings for future iterations:**
+  - Newer *_MAIN scripts are fully compliant; legacy K1-K10 single files need modernization
+  - req_cols check is the most commonly missing element
+  - Focus remediation on actively-used scripts (K11-K18) rather than legacy K1-K4
+
 ---
 
 ## 2026-01-27 - RALPH-001
