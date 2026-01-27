@@ -12,6 +12,7 @@ workflows. Each subfolder is a standalone project with its own docs.
 
 - [Electronic Frailty Index](Electronic-Frailty-Index/README.md)
 - [Fear of Falling](Fear-of-Falling/README.md)
+- [Quantify FOF Utilization Costs](Quantify-FOF-Utilization-Costs/README.md)
 
 ## Quick start
 
