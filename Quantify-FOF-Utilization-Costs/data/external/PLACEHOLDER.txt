@@ -1,0 +1,5 @@
+This folder is a placeholder only. RAW DATA MUST NOT be stored in this Git repository.
+
+Option B policy:
+- Keep raw/register-linked data outside the repo (DATA_ROOT points to that location).
+- This repo contains only metadata, schemas, documentation, synthetic test data, and pipeline code.
