@@ -12,6 +12,7 @@ workflows. Each subfolder is a standalone project with its own docs.
 
 - [Electronic Frailty Index](Electronic-Frailty-Index/README.md)
 - [Fear of Falling](Fear-of-Falling/README.md)
+- [Quantify FOF Utilization Costs](Quantify-FOF-Utilization-Costs/README.md)
 
 ## Quick start
 
@@ -169,3 +170,11 @@ Docs-only changes skip expensive test runs, saving CI minutes.
 ├─ .github/workflows/         # continuous integration workflows
 └─ out/                       # outputs, ignored in VCS
 ```
+
+## Quantify-FOF-Utilization-Costs
+Aim 2: Quantify FOF-related health-service utilisation and costs (Option B: raw data outside repo). Includes safe-by-default QC, double-gated aggregates, non-sensitive reporting, layout-aware PDF/PPTX chunking, and an agent-ready knowledge package.
+
+- Project: Quantify-FOF-Utilization-Costs/
+- Runbook: Quantify-FOF-Utilization-Costs/docs/runbook.md
+- E2E smoke: python -m unittest Quantify-FOF-Utilization-Costs.tests.test_end_to_end_smoke
+
