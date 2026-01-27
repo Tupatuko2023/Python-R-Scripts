@@ -51,9 +51,19 @@ def main() -> int:
         print(msg)
         return 0
 
+    # TODO (layout-aware extraction):
+    # Plain text extraction often destroys table structure. Prefer a layout-aware pipeline:
+    # - Extract tables as separate chunks (e.g., Markdown tables) with page references.
+    # - Keep narrative text chunks separate from tables.
+    # - Write JSONL with chunk metadata:
+    #   {source_file, page, chunk_type(text|table), content_md, bbox(optional), created_at}
+    #
+    # Keep dependencies optional and off-by-default. Ensure no raw PDFs/PPTX are copied into repo paths and
+    # outputs stay non-sensitive (derived_text is gitignored; do not store confidential content if not permitted).
+
     msg = (
-        "Extraction skeleton only. Install optional libs (PyPDF2, python-pptx) locally if permitted, "
-        "then implement extraction."
+        "Extraction skeleton only. Next step: implement layout-aware chunking (tables as Markdown chunks) "
+        "into docs/derived_text/*.jsonl with page metadata. No extraction performed."
     )
     if not args.dry_run:
         write_placeholder(DERIVED_DIR / "extract_log.json", msg)

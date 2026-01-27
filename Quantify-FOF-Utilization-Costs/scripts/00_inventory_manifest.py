@@ -13,6 +13,23 @@ from path_resolver import get_data_root, get_paper02_dir
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = PROJECT_ROOT / "manifest" / "dataset_manifest.csv"
 
+DEFAULT_FIELDS = [
+    "logical_name",
+    "file_glob",
+    "location",
+    "sha256",
+    "rows",
+    "cols",
+    "schema_ref",
+    "version",
+    "updated_at",
+    "last_verified_date",
+    "owner",
+    "permit_id",
+    "sensitivity_level",
+    "notes",
+]
+
 
 def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
     h = hashlib.sha256()
@@ -30,11 +47,22 @@ def iter_files(base: Path, patterns: List[str]) -> Iterable[Path]:
         yield from base.glob(pat)
 
 
-def load_manifest_rows() -> List[Dict[str, str]]:
+def load_manifest() -> tuple[list[dict[str, str]], list[str]]:
     if not MANIFEST_PATH.exists():
-        return []
+        return ([], DEFAULT_FIELDS)
     with MANIFEST_PATH.open("r", encoding="utf-8", newline="") as f:
-        return list(csv.DictReader(f))
+        dr = csv.DictReader(f)
+        rows = list(dr)
+        fieldnames = list(dr.fieldnames or DEFAULT_FIELDS)
+        if "last_verified_date" not in fieldnames:
+            if "updated_at" in fieldnames:
+                idx = fieldnames.index("updated_at") + 1
+                fieldnames.insert(idx, "last_verified_date")
+            else:
+                fieldnames.append("last_verified_date")
+        for r in rows:
+            r.setdefault("last_verified_date", "")
+        return (rows, fieldnames)
 
 
 def write_manifest_rows(rows: List[Dict[str, str]], fieldnames: List[str]) -> None:
@@ -88,26 +116,14 @@ def main() -> int:
         print(f"No files matched under: {base}")
         return 0
 
-    now = datetime.now(timezone.utc).isoformat()
+    now_iso = datetime.now(timezone.utc).date().isoformat()
+    now_ts = datetime.now(timezone.utc).isoformat()
     print(f"Found {len(files)} files under {base}")
 
-    rows = load_manifest_rows()
-    default_fields = [
-        "logical_name",
-        "file_glob",
-        "location",
-        "sha256",
-        "rows",
-        "cols",
-        "schema_ref",
-        "version",
-        "updated_at",
-        "owner",
-        "permit_id",
-        "sensitivity_level",
-        "notes",
-    ]
-    fieldnames = list(rows[0].keys()) if rows else default_fields
+    rows, fieldnames = load_manifest()
+    for k in DEFAULT_FIELDS:
+        if k not in fieldnames:
+            fieldnames.append(k)
     existing_index = {r.get("logical_name", ""): i for i, r in enumerate(rows)}
 
     updates: List[Dict[str, str]] = []
@@ -123,7 +139,8 @@ def main() -> int:
             "cols": "",
             "schema_ref": "",
             "version": "",
-            "updated_at": now,
+            "updated_at": now_ts,
+            "last_verified_date": now_iso,
             "owner": "controller",
             "permit_id": "PERMIT_TODO",
             "sensitivity_level": "high",
@@ -141,7 +158,15 @@ def main() -> int:
     for u in updates:
         key = u["logical_name"]
         if key in existing_index:
-            rows[existing_index[key]] = {**rows[existing_index[key]], **u}
+            prev = rows[existing_index[key]]
+            prev_sha = (prev.get("sha256") or "").strip()
+            if prev_sha == u["sha256"]:
+                prev["updated_at"] = u["updated_at"]
+                prev["last_verified_date"] = u["last_verified_date"]
+            else:
+                for kk, vv in u.items():
+                    prev[kk] = vv
+            rows[existing_index[key]] = prev
         else:
             rows.append(u)
 
