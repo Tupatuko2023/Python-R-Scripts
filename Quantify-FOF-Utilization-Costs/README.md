@@ -36,3 +36,18 @@ If data is missing, scripts will exit with actionable instructions.
 
 How to obtain data (high level)
 Register linkage and extraction are handled by designated controllers under permits. This repo intentionally does not encode sensitive locations, keys, or any participant-level data.
+
+## Handoff complete
+Operational docs and CI-safe verification are in place:
+
+- Runbook: docs/runbook.md
+- Checklist: docs/checklist.md
+- End-to-end smoke test (sample pipeline):
+  - python -m unittest Quantify-FOF-Utilization-Costs.tests.test_end_to_end_smoke
+- Build an agent-ready knowledge package (gitignored outputs):
+  - python scripts/40_build_knowledge_package.py
+  - Optional include derived text: python scripts/40_build_knowledge_package.py --include-derived
+
+Reminder: after each new paper_02 batch, update the manifest inventory:
+- python scripts/00_inventory_manifest.py --scan paper_02
+
