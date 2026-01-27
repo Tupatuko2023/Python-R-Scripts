@@ -15,9 +15,39 @@
 - **Output structure (FOF-002):** 37/39 folders have outputs/; 3 missing (K2, K4, K10 - legacy)
 - **Manifest coverage (FOF-002):** 84.5% (229/277 files tracked); K*_MAIN folders need manifest entries
 - **Structure CSVs:** `audit_outputs_structure.csv`, `audit_manifest_coverage.csv`
+- **renv (FOF-003):** R 4.5.0, 169 packages locked; renv.lock + renv/ + .Rprofile all present
+- **Key packages:** lme4, nlme, emmeans, mice, marginaleffects, dplyr, ggplot2, broom
+- **renv docs:** `Fear-of-Falling/docs/RENV_STATUS.md`
 
 ---
 Started: 2026-01-26
+---
+
+## 2026-01-27 - FOF-003
+
+- Documented renv status and R package dependencies
+- Files created:
+  - `Fear-of-Falling/docs/RENV_STATUS.md` (comprehensive renv guide)
+- Manifest updated: 1 row appended
+- **Environment Summary:**
+  - R version: 4.5.0 (specified in renv.lock)
+  - Total packages: 169 locked
+  - renv.lock: Present
+  - renv/: Present (libraries for R-4.4 and R-4.5)
+  - .Rprofile: Present (sources renv/activate.R)
+- **Key Analysis Packages Verified:**
+  - Modeling: lme4, nlme, emmeans, mice, marginaleffects
+  - Data: dplyr, tidyr, readr, here
+  - Reporting: ggplot2, knitr, rmarkdown, broom, broom.mixed
+  - Diagnostics: performance, parameters, effectsize
+- **Sync Issues Noted:**
+  - Previous diagnostics showed some packages used but not recorded
+  - Recommendation: Run `renv::snapshot()` to update lockfile
+- **Learnings for future iterations:**
+  - Always run scripts with renv activated (automatic via .Rprofile)
+  - Do not use `install.packages()` directly - use `renv::install()`
+  - Keep `renv.lock` committed; `renv/library/` is gitignored
+
 ---
 
 ## 2026-01-27 - FOF-002
