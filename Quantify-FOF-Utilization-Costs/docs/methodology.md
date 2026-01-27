@@ -20,3 +20,8 @@ Allowed aggregate outputs
 - Small-cell suppression applies (n < 5): metrics suppressed.
 - No participant identifiers are written to aggregates.
 - See: docs/aggregate_formats.md
+
+Unstructured inputs (PDF/PPTX)
+- Layout-aware extraction writes JSONL chunks (text vs tables) into docs/derived_text/ (gitignored).
+- Extraction is optional and depends on available parsers (pdfplumber/pypdf/python-pptx).
+- Safety check aborts if identifier-like tokens are detected.
