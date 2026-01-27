@@ -1,0 +1,5 @@
+dataset,variable,label,type,unit,coding,required,notes
+synthetic_sample,id,Synthetic subject id,integer,,,yes,Non-identifying synthetic id
+synthetic_sample,FOF_status,Fear of falling status,integer,,0=no;1=yes,yes,Synthetic coding
+synthetic_sample,util_visits_total,Total health-service visits (period),integer,,non-negative integer,yes,Synthetic utilisation
+synthetic_sample,cost_total_eur,Total costs EUR (period),number,EUR,non-negative,yes,Synthetic costs

@@ -1,0 +1,3 @@
+source_dataset,original_variable,standard_variable,transform_rule,unit,coding,notes
+paper_02_register_extract,fof_flag,FOF_status,as_integer_0_1,,0=no;1=yes,Placeholder mapping example (no real data)
+paper_02_register_extract,svc_visits_total,util_visits_total,as_integer,,non-negative integer,Placeholder utilisation metric
