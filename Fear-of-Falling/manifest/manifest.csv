@@ -1359,3 +1359,4 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2026-01-12 20:22:58.911198,K19_MAIN,K19_fixed_effects_tables,table_csv,R-scripts/K19_MAIN/outputs/K19_fixed_effects_tables.csv,50,NA
 2026-01-12 20:22:59.137744,K19_MAIN,K19_Results_FI,text,R-scripts/K19_MAIN/outputs/K19_Results_FI.txt,NA,NA
 2026-01-12 20:22:59.418015,K19_MAIN,sessioninfo,sessioninfo,R-scripts/K19_MAIN/outputs/sessioninfo_K19_MAIN.txt,NA,NA
+2026-01-27 10:30:00.000000,K00_META,audit_standard_intro_compliance,audit_csv,R-scripts/K00_META/outputs/K00_META/audit_standard_intro_compliance.csv,50,FOF-001 audit: Kxx standard intro compliance check
