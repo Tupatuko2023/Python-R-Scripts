@@ -26,15 +26,26 @@ def _parse_dotenv(path: Path) -> Dict[str, str]:
     return out
 
 
+def _validate_absolute(p: Path) -> Path:
+    # Termux + PRoot can resolve ~ differently; require absolute paths to avoid ambiguity.
+    if not p.is_absolute():
+        raise SystemExit(
+            "DATA_ROOT must be an absolute path (Termux/PRoot-safe). "
+            "Update Quantify-FOF-Utilization-Costs/config/.env (from .env.example) "
+            "and set DATA_ROOT to an absolute secure location."
+        )
+    return p
+
+
 def get_data_root(require: bool = False) -> Optional[Path]:
     """Return DATA_ROOT if set (env var or config/.env)."""
     env = os.environ.get("DATA_ROOT")
     if env:
-        return Path(env).expanduser()
+        return _validate_absolute(Path(env).expanduser())
 
     cfg = _parse_dotenv(ENV_FILE)
     if cfg.get("DATA_ROOT"):
-        return Path(cfg["DATA_ROOT"]).expanduser()
+        return _validate_absolute(Path(cfg["DATA_ROOT"]).expanduser())
 
     if require:
         raise SystemExit(
@@ -47,4 +58,5 @@ def get_data_root(require: bool = False) -> Optional[Path]:
 def get_paper02_dir(data_root: Path) -> Path:
     cfg = _parse_dotenv(ENV_FILE)
     rel = cfg.get("PAPER_02_DIR", "paper_02")
+    # rel can be relative; it is appended under an absolute DATA_ROOT.
     return (data_root / rel).resolve()

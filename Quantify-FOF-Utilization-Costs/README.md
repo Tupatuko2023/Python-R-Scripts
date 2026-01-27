@@ -24,6 +24,8 @@ python -m unittest discover -s Quantify-FOF-Utilization-Costs/tests
 2) Smoke-run QC on synthetic sample:
 python Quantify-FOF-Utilization-Costs/scripts/30_qc_summary.py --use-sample
 
+NOTE: Run python Quantify-FOF-Utilization-Costs/scripts/00_inventory_manifest.py --scan paper_02 whenever you receive a new paper_02 data batch so the manifest stays in sync.
+
 Quickstart (local with sensitive data)
 1) Create Quantify-FOF-Utilization-Costs/config/.env from .env.example
 2) Set DATA_ROOT to your secure repo-external data location (controller/permit compliant)

@@ -32,6 +32,7 @@ EXPECTED_HEADERS = {
         "schema_ref",
         "version",
         "updated_at",
+        "last_verified_date",
         "owner",
         "permit_id",
         "sensitivity_level",
