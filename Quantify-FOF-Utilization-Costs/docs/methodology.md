@@ -25,3 +25,9 @@ Unstructured inputs (PDF/PPTX)
 - Layout-aware extraction writes JSONL chunks (text vs tables) into docs/derived_text/ (gitignored).
 - Extraction is optional and depends on available parsers (pdfplumber/pypdf/python-pptx).
 - Safety check aborts if identifier-like tokens are detected.
+
+
+## Knowledge package (agent-ready)
+- Build: python scripts/40_build_knowledge_package.py
+- Output: outputs/knowledge/knowledge_package.zip (gitignored)
+- Contains metadata + docs + manifests (+ optional derived_text) only; excludes raw data and config/.env.
