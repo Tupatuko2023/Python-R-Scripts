@@ -1,0 +1,21 @@
+# Quantify FOF project ignores (Option B: raw data repo-external)
+
+data/external/*
+!data/external/PLACEHOLDER.txt
+
+# Local configs (never commit secrets/paths)
+config/.env
+config/.local
+config/.yaml
+config/*.yml
+
+# Outputs/reports (generated)
+outputs/**
+reports/**
+docs/derived_text/**
+manifest/run_log.local.csv
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
