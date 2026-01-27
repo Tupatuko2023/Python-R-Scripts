@@ -14,3 +14,9 @@ Key metrics (placeholder definitions)
 Allowed in-repo outputs
 - Non-sensitive QC summaries and aggregates only (counts, missingness, schema drift).
 - No participant-level extracts or raw register files stored in repo.
+
+Allowed aggregate outputs
+- Aggregates are opt-in (double gate): ALLOW_AGGREGATES=1 and --allow-aggregates.
+- Small-cell suppression applies (n < 5): metrics suppressed.
+- No participant identifiers are written to aggregates.
+- See: docs/aggregate_formats.md
