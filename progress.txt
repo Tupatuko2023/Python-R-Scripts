@@ -12,9 +12,39 @@
 - **Compliant scripts** (FULL): K11-K16, K01_MAIN-K13_MAIN, K16_MAIN-K18_MAIN use init_paths()
 - **Needs work:** K1, K8, K9, K10 (legacy scripts lacking standard intro); K1.5, K1.6, K3.6 (minimal headers)
 - **Audit CSV:** `R-scripts/K00_META/outputs/K00_META/audit_standard_intro_compliance.csv`
+- **Output structure (FOF-002):** 37/39 folders have outputs/; 3 missing (K2, K4, K10 - legacy)
+- **Manifest coverage (FOF-002):** 84.5% (229/277 files tracked); K*_MAIN folders need manifest entries
+- **Structure CSVs:** `audit_outputs_structure.csv`, `audit_manifest_coverage.csv`
 
 ---
 Started: 2026-01-26
+---
+
+## 2026-01-27 - FOF-002
+
+- Audited R-scripts/ output directory structure and manifest coverage
+- Files created:
+  - `R-scripts/K00_META/outputs/K00_META/audit_outputs_structure.csv` (39 folders)
+  - `R-scripts/K00_META/outputs/K00_META/audit_manifest_coverage.csv` (10 metrics)
+- Manifest updated: 2 rows appended
+- **Output Structure Summary:**
+  - 37/39 folders (94.9%) have outputs/ subdirectory
+  - 3 folders missing outputs/: K2, K4, K10 (legacy scripts)
+- **Manifest Coverage Summary:**
+  - 1,362 rows in manifest.csv (1,361 data + header)
+  - 27 unique scripts tracked
+  - 277 files on disk, 229 tracked (84.5% coverage)
+  - 48 files missing from manifest (mostly K*_MAIN folders)
+  - 13 malformed rows detected (corrupted CSV fragments)
+- **Issues Found:**
+  - K*_MAIN folders have outputs but almost no manifest entries
+  - Case inconsistencies in K11 file names
+  - K2, K4, K10 may be deprecated (no outputs directory)
+- **Learnings for future iterations:**
+  - Always run manifest append after creating output files
+  - K*_MAIN folders need manifest reconciliation
+  - Legacy K1-K10 single-file scripts may be superseded by *_MAIN versions
+
 ---
 
 ## 2026-01-27 - FOF-001
