@@ -79,12 +79,20 @@ def main() -> int:
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    now_ts = datetime.now(timezone.utc).isoformat()
+
     shape = count_rows_cols(in_path)
     out_overview = OUT_DIR / "qc_overview.csv"
     with out_overview.open("w", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
         w.writerow(["timestamp", "input_path", "rows", "cols"])
-        w.writerow([datetime.now(timezone.utc).isoformat(), str(in_path), shape["rows"], shape["cols"]])
+        w.writerow([now_ts, str(in_path), shape["rows"], shape["cols"]])
+
+    out_inputs = OUT_DIR / "qc_inputs.csv"
+    with out_inputs.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["timestamp", "input_path", "input_hash"])
+        w.writerow([now_ts, str(in_path), ""])
 
     miss = missingness(in_path)
     out_miss = OUT_DIR / "qc_missingness.csv"
@@ -111,6 +119,7 @@ def main() -> int:
             w.writerow(["extra_in_input", v])
 
     print(f"Wrote: {out_overview}")
+    print(f"Wrote: {out_inputs}")
     print(f"Wrote: {out_miss}")
     print(f"Wrote: {out_schema}")
     return 0
