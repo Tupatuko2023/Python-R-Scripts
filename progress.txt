@@ -23,6 +23,25 @@
 Started: 2026-01-26
 ---
 
+## 2026-01-27 - MERGE: FOF-001..FOF-003 to main
+
+- Merged ralph/fof-improvements branch to main (commit f21bd96)
+- **Included commits:**
+  - 36b45d7: FOF-001 - Audit Kxx scripts for standard intro compliance
+  - 4e86cff: FOF-002 - Verify manifest/output directory structure
+  - 01d2a69: FOF-003 - Document renv status and R package dependencies
+- **Artifacts merged:**
+  - R-scripts/K00_META/outputs/K00_META/audit_standard_intro_compliance.csv
+  - R-scripts/K00_META/outputs/K00_META/audit_outputs_structure.csv
+  - R-scripts/K00_META/outputs/K00_META/audit_manifest_coverage.csv
+  - Fear-of-Falling/docs/RENV_STATUS.md
+- **Next wave backlog (FOF-004..006):**
+  - FOF-004: Fix manifest coverage (48 missing files)
+  - FOF-005: Create outputs/ dirs for K2, K4, K10
+  - FOF-006: Modernize MINIMAL compliance scripts (7 scripts)
+
+---
+
 ## 2026-01-27 - FOF-003
 
 - Documented renv status and R package dependencies
