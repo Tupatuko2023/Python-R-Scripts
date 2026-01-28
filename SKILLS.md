@@ -7,6 +7,24 @@
 
 ---
 
+## TODO System (Agent-First Task Queue) — MUST
+
+Pakollinen työjono ja toimintalogiikka:
+
+- **Selection rule:** valitse tehtävä vain `tasks/01-ready/`-kansiosta. Jos se on tyhjä: STOP ja pyydä ihmiseltä tehtävää.
+- **Transitions:** siirrä tehtävä `01-ready → 02-in-progress → 03-review`. Ihminen siirtää `04-done`.
+- **Log:** lisää tehtävätiedostoon aikaleimallinen lokimerkintä (ISO-8601; local time ok) jokaisesta merkittävästä toimesta.
+- **DoD gate (analyysirepo):** tee vähintään yksi smoke-run (Rscript/python) aliprojektin ohjeiden mukaan. Aja QC-runner, jos repo tarjoaa sen. Jos `renv/` on käytössä, varmista että `renv::restore()` on mahdollinen ja kirjaa tarvittaessa `sessionInfo()`/`renv::diagnostics()`.
+- **Blocker:** jos olet epävarma, luo blocker-merkintä tehtävään tai pyydä ihmiseltä täsmennys ennen jatkoa.
+
+**Steering integration (MUST):** lue `config/steering.md` ennen työn aloitusta ja noudata sitä:
+- Max changes per run: 5 files
+- Safe mode: `true` → tiedostojen poistot vaativat hyväksynnän
+- Approvals required: `docs/` tai `src/` poistot, uudet Python-riippuvuudet, `data/`-rakenteen muutokset
+- Language policy: dokumentaatio suomeksi, koodi/muuttujat englanniksi
+
+---
+
 ## GitHub Auth (Non-Interactive) — Termux-safe
 
 Supported auth models (automatic, no prompts):
