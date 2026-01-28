@@ -239,3 +239,14 @@ Ready for review: YES
 
 Log
 2026-01-28 08:27: recorded Run A/Run B execution evidence
+
+Commit references (audit trail)
+
+bd4865d: task record only (0002 moved to review with execution/DoD notes); no hygiene file changes included.
+
+a2d4973: actual hygiene changes committed (.gitignore scoped ignore for Fear-of-Falling/artifacts/ + 2 curated docs/guides files tracked).
+
+
+Log
+
+2026-01-28 08:30: recorded commit references for audit trail (bd4865d task-only; a2d4973 hygiene changes)
