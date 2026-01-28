@@ -52,6 +52,45 @@
         "List key packages used by Kxx scripts",
         "Add reproducibility notes to progress.txt"
       ]
+    },
+    {
+      "id": "FOF-004",
+      "title": "Fix manifest coverage for K*_MAIN outputs",
+      "description": "Add missing manifest entries for 48 output files. Audit found K01_MAIN through K17_MAIN have outputs not tracked in manifest/manifest.csv. Each artifact needs exactly one manifest row (timestamp, script, name, type, path, rows, notes).",
+      "priority": 4,
+      "passes": false,
+      "acceptanceCriteria": [
+        "All files in K01_MAIN through K17_MAIN/outputs/ have manifest entries",
+        "All files in K5, K6, K7, K8, K9/outputs/ have manifest entries",
+        "Manifest coverage reaches 95%+ (from current 84.5%)",
+        "No duplicate entries added"
+      ]
+    },
+    {
+      "id": "FOF-005",
+      "title": "Create outputs/ directories for K2, K4, K10",
+      "description": "Three legacy script folders lack the standard outputs/ subdirectory: K2, K4, K10. Create the directories and add .gitkeep files to ensure Git tracks them.",
+      "priority": 5,
+      "passes": false,
+      "acceptanceCriteria": [
+        "R-scripts/K2/outputs/.gitkeep exists",
+        "R-scripts/K4/outputs/.gitkeep exists",
+        "R-scripts/K10/outputs/.gitkeep exists",
+        "audit_outputs_structure.csv shows 0 folders without outputs dir"
+      ]
+    },
+    {
+      "id": "FOF-006",
+      "title": "Modernize standard intro for MINIMAL compliance scripts",
+      "description": "Upgrade legacy scripts with MINIMAL compliance to at least PARTIAL. Target scripts: K1.Z_Score_Change_2G_v4.R, K10.R, K8.R, K1.5, K3.6, K9.R, K1.6. Add shebang, header block, and workflow comments per CLAUDE.md standard.",
+      "priority": 6,
+      "passes": false,
+      "acceptanceCriteria": [
+        "All 7 MINIMAL scripts upgraded to PARTIAL or better",
+        "Each script has: shebang, header block with SCRIPT_ID, workflow comments",
+        "No functional code changes - header/metadata only",
+        "Re-run audit shows 0 MINIMAL compliance scripts"
+      ]
     }
   ]
 }
