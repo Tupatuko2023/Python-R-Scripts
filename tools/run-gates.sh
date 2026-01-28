@@ -21,7 +21,7 @@ preflight_policy() {
     exit 2
   fi
   echo "Loaded TODO policy from ${SKILLS_PATH} + ${AGENT_POLICY_PATH}" >&2
-  echo "Loaded steering constraints from ${STEERING_PATH}" >&2
+  echo "Loaded steering constraints from ${STEERING_PATH} (max changes: 5 files/run; safe mode: true; approvals required; docs Finnish/code English)" >&2
 
   if [[ ! -d "${READY_DIR}" ]]; then
     echo "FATAL: tasks/01-ready missing at ${READY_DIR}" >&2
