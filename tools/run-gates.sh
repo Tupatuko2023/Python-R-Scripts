@@ -2,6 +2,38 @@
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
+SKILLS_PATH="${ROOT}/SKILLS.md"
+AGENT_POLICY_PATH="${ROOT}/config/agent_policy.md"
+STEERING_PATH="${ROOT}/config/steering.md"
+READY_DIR="${ROOT}/tasks/01-ready"
+
+preflight_policy() {
+  if [[ ! -f "${SKILLS_PATH}" ]]; then
+    echo "FATAL: missing SKILLS.md at ${SKILLS_PATH}" >&2
+    exit 2
+  fi
+  if [[ ! -f "${AGENT_POLICY_PATH}" ]]; then
+    echo "FATAL: missing agent_policy.md at ${AGENT_POLICY_PATH}" >&2
+    exit 2
+  fi
+  if [[ ! -f "${STEERING_PATH}" ]]; then
+    echo "FATAL: missing steering.md at ${STEERING_PATH}" >&2
+    exit 2
+  fi
+  echo "Loaded TODO policy from ${SKILLS_PATH} + ${AGENT_POLICY_PATH}" >&2
+  echo "Loaded steering constraints from ${STEERING_PATH}" >&2
+
+  if [[ ! -d "${READY_DIR}" ]]; then
+    echo "FATAL: tasks/01-ready missing at ${READY_DIR}" >&2
+    exit 2
+  fi
+  if [[ -z "$(find "${READY_DIR}" -maxdepth 1 -type f -print -quit)" ]]; then
+    echo "FATAL: tasks/01-ready is empty. Add a task before running gates." >&2
+    exit 3
+  fi
+}
+
+preflight_policy
 
 usage() {
   cat >&2 << 'EOF'

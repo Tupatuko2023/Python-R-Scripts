@@ -1,4 +1,5 @@
 # Agent/Audit artifacts (generated; do not commit)
+Fear-of-Falling/artifacts/
 Fear-of-Falling/repo_audit/
 Fear-of-Falling/tests/smoke_test/logs_*/
 SMOKE_TEST_REPORT*.md
