@@ -5,10 +5,9 @@ Tämä tiedosto ohjaa agentin yleistä toimintaa ja fokusta. Ihmistutkija päivi
 ## Current Focus (Nykyinen Fokus)
 
 **Status:** `active`
-**Mode:** `literature_review` <!-- vaihtoehdot: writing, experiment, literature_review, maintenance -->
+**Mode:** `literature_review`  <!-- vaihtoehdot: writing, experiment, literature_review, maintenance -->
 
 **Viikon tavoitteet:**
-
 - [ ] Määrittele hakustrategia (TASK-101)
 - [ ] Tuo alustavat viitteet (TASK-102)
 
@@ -21,7 +20,6 @@ Tämä tiedosto ohjaa agentin yleistä toimintaa ja fokusta. Ihmistutkija päivi
 ## Approvals Required
 
 Seuraavat toimenpiteet vaativat aina ihmisen hyväksynnän:
-
 - Tiedostojen poistaminen `docs/` tai `src/` kansioista.
 - Uusien Python-pakettien lisääminen riippuvuuksiin.
 - `data/` kansion rakenteen muuttaminen.
