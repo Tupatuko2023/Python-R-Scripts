@@ -17,11 +17,7 @@ Pakollinen työjono ja toimintalogiikka:
 - **DoD gate (analyysirepo):** tee vähintään yksi smoke-run (Rscript/python) aliprojektin ohjeiden mukaan. Aja QC-runner, jos repo tarjoaa sen. Jos `renv/` on käytössä, varmista että `renv::restore()` on mahdollinen ja kirjaa tarvittaessa `sessionInfo()`/`renv::diagnostics()`.
 - **Blocker:** jos olet epävarma, luo blocker-merkintä tehtävään tai pyydä ihmiseltä täsmennys ennen jatkoa.
 
-**Steering integration (MUST):** lue `config/steering.md` ennen työn aloitusta ja noudata sitä:
-- Max changes per run: 5 files
-- Safe mode: `true` → tiedostojen poistot vaativat hyväksynnän
-- Approvals required: `docs/` tai `src/` poistot, uudet Python-riippuvuudet, `data/`-rakenteen muutokset
-- Language policy: dokumentaatio suomeksi, koodi/muuttujat englanniksi
+**Steering integration (MUST):** lue `config/steering.md` ennen työn aloitusta ja noudata siinä määriteltyjä rajoitteita, hyväksyntäehtoja ja kielipolitiikkaa.
 
 ---
 
