@@ -172,9 +172,9 @@ Docs-only changes skip expensive test runs, saving CI minutes.
 ```
 
 ## Quantify-FOF-Utilization-Costs
+
 Aim 2: Quantify FOF-related health-service utilisation and costs (Option B: raw data outside repo). Includes safe-by-default QC, double-gated aggregates, non-sensitive reporting, layout-aware PDF/PPTX chunking, and an agent-ready knowledge package.
 
 - Project: Quantify-FOF-Utilization-Costs/
 - Runbook: Quantify-FOF-Utilization-Costs/docs/runbook.md
 - E2E smoke: python -m unittest Quantify-FOF-Utilization-Costs.tests.test_end_to_end_smoke
-

@@ -9,6 +9,4 @@ Before running with real data
 After running
 [ ] git status -sb shows no tracked raw data or secrets
 [ ] Any outputs are under gitignored paths (outputs/, docs/derived_text/)
-[ ] If sharing results internally:
-    - Share only suppressed aggregates, non-sensitive reports, and/or knowledge package zip/index
-    - Never share config/.env or any repo-external raw data files
+[ ] If sharing results internally: - Share only suppressed aggregates, non-sensitive reports, and/or knowledge package zip/index - Never share config/.env or any repo-external raw data files
