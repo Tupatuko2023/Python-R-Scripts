@@ -1,6 +1,7 @@
 # Build integration map + local-only assembly for paper_02 (multi-source xlsx+csv) and enable QC
 
 ## Orchestration packet (qfta2)
+
 Agent: qfta2
 
 Default gate sequence (reminder): docs → tests → sample QC → inventory manifest → assembly → QC → report → knowledge package
@@ -22,6 +23,7 @@ Option B red lines:
 - Never commit outputs/ or docs/derived_text/.
 
 ## Context
+
 paper_02 sisältää useita lähteitä (xlsx + csv). Nykyinen QC-skripti `Quantify-FOF-Utilization-Costs/scripts/30_qc_summary.py` olettaa yhden tiedoston ja kaatuu, jos sille annetaan hakemisto tai jos data vaatii yhdistämistä useasta taulusta.
 
 Tarve: yhdistää useita datasettejä (mm. käynnit, osastojaksot, diagnoosit, verrokit, mahdolliset kustannus/hinnasto- tai KAAOS/Lifecare-lähteet). Lisäksi KAAOS-exceleissä otsikkorivi ei ole ensimmäisellä rivillä vaan rivillä 2.
@@ -29,6 +31,7 @@ Tarve: yhdistää useita datasettejä (mm. käynnit, osastojaksot, diagnoosit, v
 Option B: absoluuttisia polkuja ei saa kirjoittua mihinkään output-artefaktiin eikä task-lokiin. Kaikki ajo tehdään paikallisesti, ja lokiin kirjataan vain “--input provided locally” ja success/failure sekä lyhyt yhteenveto ilman polkuja.
 
 ## Inputs (local only; do not paste paths)
+
 Data source inventory (observed):
 - `Tutkimusaineisto_pkl_kaynnit_2010_2019.csv` (pipe-separated; header present)
 - `Tutkimusaineisto_pkl-käynnit_2010_2019.xlsx` (Taul1; header present)
@@ -49,6 +52,7 @@ Known corrupted copies (ignore these):
 - `verrokitjatutkimushenkilöt – kopio.xlsx` -> BadZipFile
 
 ## Objective
+
 1) Create an integration map for paper_02:
    - list each source table, its role (events, diagnoses, procedures, cohort, linkage, cost/price),
    - identify join keys and any temporal join rules (dates, validity ranges),
@@ -62,12 +66,14 @@ Known corrupted copies (ignore these):
    QC must fail if any absolute path-like strings appear in QC outputs.
 
 ## Target files
+
 - `Quantify-FOF-Utilization-Costs/scripts/30_qc_summary.py`
 - `Quantify-FOF-Utilization-Costs/scripts/qc_no_abs_paths_check.py` (create if missing; or extend)
 - NEW: `Quantify-FOF-Utilization-Costs/scripts/20_assemble_paper02.py` (local-only assembly runner)
 - Task file itself (log only)
 
 ## Plan
+
 1) Read-only discovery
    - Confirm which files are canonical sources (prefer non-copy originals).
    - Confirm KAAOS header row handling: use row 2 as header (skip first row).
@@ -106,8 +112,9 @@ Known corrupted copies (ignore these):
    - Never move to `tasks/04-done/` (human decides).
 
 ## Acceptance criteria
+
 - Integration map exists (gitignored artifact) and is consistent with observed headers:
-  - PKL events include Pdgo/Sdg* and Tp* fields
+  - PKL events include Pdgo/Sdg\* and Tp\* fields
   - Osastojaksot joined to osastojakso_diagnoosit by person + osastojakso start/end
   - KAAOS header row handled as row 2
   - Corrupted “copy” xlsx files ignored
@@ -120,6 +127,7 @@ Known corrupted copies (ignore these):
   - 1 to 4 bullets summarizing what was enforced (redaction, header row, checker)
 
 ## Log
+
 - 2026-01-28 CREATED: Multi-source paper_02 requires integration map + assembly before QC.
 - 2026-01-28: --input provided locally
 - 2026-01-28: QC_SUCCESS
@@ -128,7 +136,9 @@ Known corrupted copies (ignore these):
   - corrupted kopio XLSX ignored
   - XLSX missing dependency fails closed
   - shared IO utils extracted; integration map scanned; manifest path normalization handles Windows separators
+
 ## Notes / guardrails (non-negotiable)
+
 - Do not paste or write absolute paths anywhere (chat, tasks, outputs).
 - Do not write any person identifiers or raw data values into logs or reports.
 - Output artifacts must be gitignored and safe for Option B.
