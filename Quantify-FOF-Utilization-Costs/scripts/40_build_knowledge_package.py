@@ -11,6 +11,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, List, Dict
 
+from qc_no_abs_paths_check import scan_paths
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = PROJECT_ROOT / "outputs" / "knowledge"
 ZIP_PATH = OUT_DIR / "knowledge_package.zip"
@@ -80,14 +82,22 @@ def safety_check_identifier(paths: List[Path]) -> None:
             continue
         for tok in IDENT_TOKENS:
             if tok in txt:
-                raise SystemExit(f"Safety check failed: identifier-like token found in {p}")
+                raise SystemExit("Safety check failed: identifier-like token found in derived text.")
 
 
-def build_index(entries: List[Dict[str, str]], zip_sha256: str) -> Dict[str, object]:
+def _safe_display(path: Path) -> str:
+    try:
+        rel = path.relative_to(PROJECT_ROOT)
+    except ValueError:
+        rel = Path(path.name)
+    return rel.as_posix()
+
+
+def build_index(entries: List[Dict[str, str]], zip_sha256: str, zip_ref: str) -> Dict[str, object]:
     return {
         "generated_at": utc_now_iso(),
         "git_commit": get_git_commit(),
-        "zip_path": str(ZIP_PATH),
+        "zip_path": zip_ref,
         "zip_sha256": zip_sha256,
         "allow_aggregates_env": (os.environ.get("ALLOW_AGGREGATES") or ""),
         "file_count": len(entries),
@@ -127,10 +137,12 @@ def main() -> int:
             entries.append({"path": rel, "sha256": sha256_file(p)})
 
     zip_sha = sha256_file(out_zip)
-    idx = build_index(entries, zip_sha)
+    zip_ref = _safe_display(out_zip)
+    idx = build_index(entries, zip_sha, zip_ref)
     INDEX_PATH.write_text(json.dumps(idx, ensure_ascii=True, indent=2), encoding="utf-8")
-    print(f"Wrote: {out_zip}")
-    print(f"Wrote: {INDEX_PATH}")
+    scan_paths([INDEX_PATH])
+    print(f"Wrote: {zip_ref}")
+    print(f"Wrote: {_safe_display(INDEX_PATH)}")
     return 0
 
 

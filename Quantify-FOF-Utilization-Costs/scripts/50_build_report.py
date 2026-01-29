@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, List
 
+from qc_no_abs_paths_check import scan_paths
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 QC_DIR = PROJECT_ROOT / "outputs" / "qc"
 AGG_PATH = PROJECT_ROOT / "outputs" / "aggregates" / "aim2_aggregates.csv"
@@ -40,7 +42,15 @@ def _read_csv_filtered(path: Path, max_lines: int = 60) -> List[str]:
     return lines
 
 
-def _append_run_log(out_path: Path, status: str, notes: str) -> None:
+def _safe_display(path: Path) -> str:
+    try:
+        rel = path.relative_to(PROJECT_ROOT)
+    except ValueError:
+        rel = Path(path.name)
+    return rel.as_posix()
+
+
+def _append_run_log(out_ref: str, status: str, notes: str) -> None:
     header = [
         "run_id",
         "timestamp",
@@ -59,7 +69,7 @@ def _append_run_log(out_path: Path, status: str, notes: str) -> None:
         "UNKNOWN",
         "UNKNOWN",
         "",  # input_manifest_version
-        str(out_path),
+        out_ref,
         status,
         notes,
     ]
@@ -125,12 +135,14 @@ def main() -> int:
     report = "\n".join(parts)
 
     if "id," in report.lower() or " id " in report.lower():
-        _append_run_log(out_path, "FAILED", "Safety check failed: identifier-like text found")
+        _append_run_log(_safe_display(out_path), "FAILED", "Safety check failed: identifier-like text found")
         raise SystemExit("Safety check failed: report appears to contain identifier-like text (id).")
 
     out_path.write_text(report, encoding="utf-8")
-    _append_run_log(out_path, "OK", "report generated")
-    print(f"Wrote: {out_path}")
+    out_ref = _safe_display(out_path)
+    _append_run_log(out_ref, "OK", "report generated")
+    scan_paths([out_path])
+    print(f"Wrote: {out_ref}")
     return 0
 
 
