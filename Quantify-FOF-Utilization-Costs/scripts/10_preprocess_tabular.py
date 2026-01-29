@@ -1,13 +1,14 @@
 import os
-import sys
 import argparse
 import csv
 from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 def load_data(use_sample=False):
     if use_sample:
         print("MODE: Using synthetic sample data (CI-safe).")
-        p = Path("data/synthetic_sample.csv")
+        p = PROJECT_ROOT / "data" / "synthetic_sample.csv"
         try:
             import pandas as pd
         except ImportError:
@@ -35,7 +36,7 @@ def write_aggregates_if_allowed(allow_aggregates: bool) -> None:
         return
     if os.getenv("ALLOW_AGGREGATES") != "1":
         return
-    out_dir = Path("outputs/aggregates")
+    out_dir = PROJECT_ROOT / "outputs" / "aggregates"
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / "aim2_aggregates.csv"
     header = ["group", "count", "suppressed"]
