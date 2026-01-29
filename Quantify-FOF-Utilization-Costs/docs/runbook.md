@@ -44,6 +44,14 @@ python scripts/50_build_report.py
 
 Outputs are gitignored under outputs/reports/
 
+Stdout & artifact safety (Option B)
+
+Stdout and logs must never print absolute paths; print only repo-relative identifiers like outputs/...
+
+QC/report/knowledge text artifacts are scanned with qc_no_abs_paths_check and must fail closed with a generic message (no match echoing).
+
+XLSX parsing requires openpyxl; if an XLSX input is encountered and openpyxl is missing, scripts exit non-zero with a generic dependency error.
+
 1. PDF/PPTX extraction (optional, layout-aware)
 
 Requires optional parsers (pdfplumber/pypdf/python-pptx).
