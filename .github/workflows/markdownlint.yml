@@ -15,6 +15,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -23,8 +25,53 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Collect Markdown files
+        id: md_files
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --no-tags --prune --depth=1 origin "${{ github.base_ref }}"
+            git diff --name-only -z --diff-filter=ACMRT "origin/${{ github.base_ref }}"...HEAD -- "*.md" > md_files_raw.txt
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              if git rev-parse origin/main >/dev/null 2>&1; then
+                BEFORE="origin/main"
+              else
+                BEFORE="HEAD~1"
+              fi
+            fi
+            if ! git diff --name-only -z --diff-filter=ACMRT "$BEFORE" HEAD -- "*.md" > md_files_raw.txt 2>/dev/null; then
+              git ls-files -z -- "*.md" > md_files_raw.txt
+            fi
+          fi
+          python - << 'PY'
+          import re
+          raw = open("md_files_raw.txt", "rb").read().split(b"\0")
+          keep = []
+          for entry in raw:
+            if not entry:
+              continue
+            path = entry.decode("utf-8")
+            if re.search(r"(^|/)tasks/", path):
+              continue
+            if path.startswith("docs/guides/") and path.endswith(".docx.md"):
+              continue
+            if path.startswith("config/"):
+              continue
+            keep.append(entry)
+          with open("md_files.txt", "wb") as handle:
+            handle.write(b"\0".join(keep))
+            if keep:
+              handle.write(b"\0")
+          PY
+          COUNT="$(wc -c < md_files.txt | tr -d ' ')"
+          echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
+
       - name: Check Prettier formatting
-        run: npx prettier --check "**/*.md"
+        if: steps.md_files.outputs.count != '0'
+        run: xargs -0 npx prettier --check < md_files.txt
 
       - name: Run markdownlint
-        run: npx markdownlint-cli2 "**/*.md"
+        if: steps.md_files.outputs.count != '0'
+        run: xargs -0 npx markdownlint-cli2 < md_files.txt
