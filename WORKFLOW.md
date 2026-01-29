@@ -18,27 +18,27 @@ Tämä repositorio noudattaa Agent-First -metodologiaa analyysityössä (R + Pyt
 ## Prosessi (Workflow)
 
 1. **Speksaus (Spec):**
-    - Ihminen luo idean `tasks/00-backlog/`.
-    - Kun idea on kypsä (selkeät input/output ja DoD), ihminen siirtää tiedoston `tasks/01-ready/`.
+   - Ihminen luo idean `tasks/00-backlog/`.
+   - Kun idea on kypsä (selkeät input/output ja DoD), ihminen siirtää tiedoston `tasks/01-ready/`.
 
 2. **Suoritus (Execute):**
-    - Agentti valitsee tehtävän (ks. `config/agent_policy.md`).
-    - Agentti siirtää tiedoston `tasks/02-in-progress/`.
-    - Agentti suorittaa työn (koodaa, kirjoittaa, analysoi).
-    - Agentti päivittää lokia tehtävätiedostossa.
+   - Agentti valitsee tehtävän (ks. `config/agent_policy.md`).
+   - Agentti siirtää tiedoston `tasks/02-in-progress/`.
+   - Agentti suorittaa työn (koodaa, kirjoittaa, analysoi).
+   - Agentti päivittää lokia tehtävätiedostossa.
 
 3. **Tarkistus (Review):**
-    - Agentti siirtää valmiin työn `tasks/03-review/`.
-    - Ihminen tarkistaa työn laadun.
+   - Agentti siirtää valmiin työn `tasks/03-review/`.
+   - Ihminen tarkistaa työn laadun.
 
 4. **Hyväksyntä (Done):**
-    - **Ennen siirtoa:**
-      - Suorita vähintään yksi tyypillinen smoke-run (Rscript tai python) kyseisen aliprojektin ohjeiden mukaan.
-      - Jos aliprojektissa on `renv/`, varmista että ympäristö on palautettavissa (`renv::restore()` tarpeen mukaan) ja kirjaa tarvittaessa `sessionInfo()` tai `renv::diagnostics()` lokiin.
-      - Jos aliprojektissa on QC-runner (esim. `K18`-tyyppinen QC tai termux-runner), aja se ennen review-siirtoa.
-      - Aja testit/lintit vain jos repo jo tarjoaa ne eikä se laajenna toolchainia (esim. `python -m pytest` tai projektin oma komento).
-    - **Hyväksytty:** Ihminen siirtää tiedoston `tasks/04-done/`.
-    - **Hylätty:** Ihminen palauttaa tiedoston `tasks/01-ready/` ja lisää palautteen tehtävänanto-osioon.
+   - **Ennen siirtoa:**
+     - Suorita vähintään yksi tyypillinen smoke-run (Rscript tai python) kyseisen aliprojektin ohjeiden mukaan.
+     - Jos aliprojektissa on `renv/`, varmista että ympäristö on palautettavissa (`renv::restore()` tarpeen mukaan) ja kirjaa tarvittaessa `sessionInfo()` tai `renv::diagnostics()` lokiin.
+     - Jos aliprojektissa on QC-runner (esim. `K18`-tyyppinen QC tai termux-runner), aja se ennen review-siirtoa.
+     - Aja testit/lintit vain jos repo jo tarjoaa ne eikä se laajenna toolchainia (esim. `python -m pytest` tai projektin oma komento).
+   - **Hyväksytty:** Ihminen siirtää tiedoston `tasks/04-done/`.
+   - **Hylätty:** Ihminen palauttaa tiedoston `tasks/01-ready/` ja lisää palautteen tehtävänanto-osioon.
 
 ## Hakemistorakenne
 
