@@ -1,0 +1,30 @@
+﻿dataset,variable,label,type,unit,coding,required,notes
+synthetic_sample,id,Synthetic subject id,integer,,,yes,Non-identifying synthetic id
+synthetic_sample,FOF_status,Fear of falling status,integer,,0=no;1=yes,yes,Synthetic coding
+synthetic_sample,util_visits_total,Total health-service visits (period),integer,,non-negative integer,yes,Synthetic utilisation
+synthetic_sample,cost_total_eur,Total costs EUR (period),number,EUR,non-negative,yes,Synthetic costs
+paper_02_utilisation_visits,id,Participant id (pseudonymized),string,,TBD,yes,Placeholder;
+paper_02_utilisation_visits,period_start,Observation period start,date,ISO-8601,TBD,yes,Placeholder
+paper_02_utilisation_visits,period_end,Observation period end,date,ISO-8601,TBD,yes,Placeholder
+paper_02_utilisation_visits,followup_days,Follow-up length,integer,days,TBD,no,Placeholder; may be derived
+paper_02_utilisation_visits,util_visits_total,Total visits (all settings),integer,count,TBD,yes,Placeholder
+paper_02_utilisation_visits,util_visits_outpatient,Outpatient visits,integer,count,TBD,no,Placeholder
+paper_02_utilisation_visits,util_visits_inpatient,Inpatient admissions,integer,count,TBD,no,Placeholder
+paper_02_utilisation_visits,util_visits_emergency,Emergency visits,integer,count,TBD,no,Placeholder
+paper_02_utilisation_visits,util_visits_primarycare,Primary care visits,integer,count,TBD,no,Placeholder
+paper_02_inpatient,id,Participant id (pseudonymized),string,,TBD,yes,Placeholder;
+paper_02_inpatient,period_start,Observation period start,date,ISO-8601,TBD,yes,Placeholder
+paper_02_inpatient,period_end,Observation period end,date,ISO-8601,TBD,yes,Placeholder
+paper_02_inpatient,util_days_inpatient,Inpatient days,integer,days,TBD,no,Placeholder
+paper_02_costs,id,Participant id (pseudonymized),string,,TBD,yes,Placeholder;
+paper_02_costs,period_start,Observation period start,date,ISO-8601,TBD,yes,Placeholder
+paper_02_costs,period_end,Observation period end,date,ISO-8601,TBD,yes,Placeholder
+paper_02_costs,cost_total_eur,Total costs,number,EUR,TBD,yes,Placeholder
+paper_02_costs,cost_inpatient_eur,Inpatient costs,number,EUR,TBD,no,Placeholder
+paper_02_costs,cost_outpatient_eur,Outpatient costs,number,EUR,TBD,no,Placeholder
+paper_02_costs,cost_medication_eur,Medication costs,number,EUR,TBD,no,Placeholder
+paper_02_covariates,id,Participant id (pseudonymized),string,,TBD,yes,Placeholder; confirm controller schema
+paper_02_covariates,FOF_status,Fear of falling status,integer,,TBD,no,Placeholder;
+paper_02_covariates,age,Age at baseline,number,years,TBD,no,Placeholder
+paper_02_covariates,sex,Sex,category,,TBD,no,Placeholder
+paper_02_covariates,BMI,Body mass index,number,kg/m^2,TBD,no,Placeholder

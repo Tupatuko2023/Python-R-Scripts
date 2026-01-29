@@ -1,7 +1,1 @@
-logical_name,file_glob,location,sha256,rows,cols,schema_ref,version,updated_at,last_verified_date,owner,permit_id,sensitivity_level,notes
-paper_02_register_extract,*.csv,repo_external:${DATA_ROOT}/paper_02,,,,data/data_dictionary.csv,v0,1970-01-01,1970-01-01,controller,PERMIT_TODO,high,Placeholder only (no real file)
-paper_02_utilisation_visits,*.csv,repo_external:${DATA_ROOT}/paper_02,,,,data/data_dictionary.csv,v0,1970-01-01,1970-01-01,controller,PERMIT_TODO,high,controller-delivered; repo-external
-paper_02_inpatient,*.csv,repo_external:${DATA_ROOT}/paper_02,,,,data/data_dictionary.csv,v0,1970-01-01,1970-01-01,controller,PERMIT_TODO,high,controller-delivered; repo-external
-paper_02_costs,*.csv,repo_external:${DATA_ROOT}/paper_02,,,,data/data_dictionary.csv,v0,1970-01-01,1970-01-01,controller,PERMIT_TODO,high,controller-delivered; repo-external
-paper_02_covariates,*.csv,repo_external:${DATA_ROOT}/paper_02,,,,data/data_dictionary.csv,v0,1970-01-01,1970-01-01,controller,PERMIT_TODO,high,controller-delivered; repo-external
-synthetic_sample,data/sample/sample_utilization.csv,repo:Quantify-FOF-Utilization-Costs/data/sample/sample_utilization.csv,,,,data/data_dictionary.csv,v1,1970-01-01,1970-01-01,repo,NA,low,CI-safe synthetic dataset
+logical_name,relative_path,file_glob,description,sensitivity

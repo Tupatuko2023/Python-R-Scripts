@@ -1,2 +1,1 @@
-run_id,timestamp,git_commit,config_hash,input_manifest_version,outputs_written,status,notes
-RUN_PLACEHOLDER,1970-01-01T00:00:00Z,UNKNOWN,UNKNOWN,v0,,SKIPPED,Placeholder row only
+timestamp,actor,script,status,message
