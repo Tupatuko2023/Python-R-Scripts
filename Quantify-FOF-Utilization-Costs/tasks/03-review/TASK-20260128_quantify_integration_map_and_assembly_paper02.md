@@ -127,6 +127,7 @@ Known corrupted copies (ignore these):
   - KAAOS header row=2 handled
   - corrupted kopio XLSX ignored
   - XLSX missing dependency fails closed
+  - shared IO utils extracted; integration map scanned; manifest path normalization handles Windows separators
 ## Notes / guardrails (non-negotiable)
 - Do not paste or write absolute paths anywhere (chat, tasks, outputs).
 - Do not write any person identifiers or raw data values into logs or reports.

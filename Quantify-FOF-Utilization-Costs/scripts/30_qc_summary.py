@@ -6,23 +6,22 @@ import csv
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List
 import zipfile
 
 from path_resolver import SAMPLE_DIR, get_data_root, get_paper02_dir
 from qc_no_abs_paths_check import scan_paths
+from _io_utils import (
+    iter_date_columns,
+    key_columns,
+    manifest_relative_path,
+    parse_date,
+    read_rows,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DICT_PATH = PROJECT_ROOT / "data" / "data_dictionary.csv"
 OUT_DIR = PROJECT_ROOT / "outputs" / "qc"
-
-DATE_HINTS = ("date", "pvm", "paiva")
-KEY_CANDIDATES = {
-    "person_id": ["person_id", "henkilo_id", "henkiloid", "patient_id", "subject_id", "pseudonym"],
-    "event_id": ["event_id", "kaynti_id", "visit_id"],
-    "episode_id": ["episode_id", "osastojakso_id", "episodeid"],
-}
-
 
 @dataclass
 class Source:
@@ -40,67 +39,6 @@ def load_dictionary_vars(dict_path: Path) -> List[str]:
                 continue
             vars_.append(row["variable"])
     return vars_
-
-
-def _normalize_col_name(name: str) -> str:
-    return name.strip().lower().replace(" ", "_").replace("/", "_")
-
-
-def _detect_delimiter(path: Path) -> str:
-    with path.open("r", encoding="utf-8", newline="") as f:
-        line = f.readline()
-    return "|" if line.count("|") > line.count(",") else ","
-
-
-def _read_csv_rows(path: Path) -> Tuple[List[Dict[str, str]], List[str]]:
-    delim = _detect_delimiter(path)
-    rows: List[Dict[str, str]] = []
-    with path.open("r", encoding="utf-8", newline="") as f:
-        dr = csv.DictReader(f, delimiter=delim)
-        cols = [_normalize_col_name(c) for c in (dr.fieldnames or [])]
-        for row in dr:
-            rows.append({
-                _normalize_col_name(k): ("" if v is None else str(v)) for k, v in row.items()
-            })
-    return rows, cols
-
-
-def _read_xlsx_rows(path: Path) -> Tuple[List[Dict[str, str]], List[str]]:
-    try:
-        import openpyxl
-    except ModuleNotFoundError:
-        raise SystemExit("Missing dependency for XLSX parsing.")
-
-    rows_out: List[Dict[str, str]] = []
-    cols_out: List[str] = []
-    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
-    use_header = 2 if "kaaos" in path.name.lower() else 1
-
-    for ws in wb.worksheets:
-        header: Optional[List[str]] = None
-        for idx, row in enumerate(ws.iter_rows(values_only=True), start=1):
-            if idx < use_header:
-                continue
-            if idx == use_header:
-                header = [_normalize_col_name("" if c is None else str(c)) for c in row]
-                if not cols_out:
-                    cols_out = header
-                continue
-            if header is None:
-                continue
-            out_row: Dict[str, str] = {}
-            for c, v in zip(header, row):
-                out_row[c] = "" if v is None else str(v)
-            rows_out.append(out_row)
-    return rows_out, cols_out
-
-
-def load_rows(path: Path) -> Tuple[List[Dict[str, str]], List[str]]:
-    if path.suffix.lower() == ".csv":
-        return _read_csv_rows(path)
-    if path.suffix.lower() in {".xlsx", ".xls"}:
-        return _read_xlsx_rows(path)
-    raise ValueError("Unsupported file type.")
 
 
 def _collect_from_dir(base: Path) -> List[Source]:
@@ -130,10 +68,9 @@ def _collect_from_manifest(path: Path) -> List[Source]:
             loc = row.get("location", "")
             if not logical.startswith("paper_02::"):
                 continue
-            marker = "/paper_02/"
-            if marker not in loc:
+            rel = manifest_relative_path(loc)
+            if not rel:
                 continue
-            rel = loc.split(marker, 1)[1]
             p = base / rel
             if p.suffix.lower() not in {".csv", ".xlsx", ".xls"}:
                 continue
@@ -159,45 +96,6 @@ def _collect_sources(args: argparse.Namespace) -> List[Source]:
             rel = p.relative_to(base).as_posix()
             sources.append(Source(source_id=f"assembled::{rel}", path=p, kind="assembled"))
     return sources
-
-
-def _iter_date_columns(cols: Iterable[str]) -> Iterable[str]:
-    for c in cols:
-        lc = str(c).lower()
-        if any(h in lc for h in DATE_HINTS):
-            yield c
-
-
-def _key_columns(cols: Iterable[str]) -> List[Tuple[str, str]]:
-    out: List[Tuple[str, str]] = []
-    cols_map = {c.lower(): c for c in cols}
-    for key, candidates in KEY_CANDIDATES.items():
-        for cand in candidates:
-            if cand in cols_map:
-                out.append((key, cols_map[cand]))
-                break
-    return out
-
-
-def _parse_date(value: str) -> Optional[str]:
-    raw = value.strip()
-    if not raw:
-        return None
-    for fmt in (
-        "%Y-%m-%d",
-        "%Y/%m/%d",
-        "%d.%m.%Y",
-        "%d/%m/%Y",
-        "%Y-%m-%d %H:%M:%S",
-    ):
-        try:
-            return datetime.strptime(raw, fmt).date().isoformat()
-        except ValueError:
-            continue
-    try:
-        return datetime.fromisoformat(raw).date().isoformat()
-    except ValueError:
-        return None
 
 
 def _safe_log_inputs(args: argparse.Namespace) -> None:
@@ -252,7 +150,8 @@ def main() -> int:
         if "kopio" in src.path.name.lower():
             continue
         try:
-            rows, cols = load_rows(src.path)
+            header_row = 2 if "kaaos" in src.path.name.lower() else 1
+            rows, cols = read_rows(src.path, header_row=header_row)
         except zipfile.BadZipFile:
             continue
         except ValueError:
@@ -274,10 +173,10 @@ def main() -> int:
         inputs_rows.append({"timestamp": now_ts, "source_ref": src.source_id, "input_hash": ""})
 
         missing: Dict[str, int] = {c: 0 for c in cols}
-        key_columns = _key_columns(cols)
-        key_seen: Dict[str, set[str]] = {k: set() for k, _ in key_columns}
-        key_dupes: Dict[str, int] = {k: 0 for k, _ in key_columns}
-        date_columns = list(_iter_date_columns(cols))
+        key_cols = key_columns(cols)
+        key_seen: Dict[str, set[str]] = {k: set() for k, _ in key_cols}
+        key_dupes: Dict[str, int] = {k: 0 for k, _ in key_cols}
+        date_columns = list(iter_date_columns(cols))
         date_invalid: Dict[str, int] = {c: 0 for c in date_columns}
 
         for row in rows:
@@ -285,7 +184,7 @@ def main() -> int:
                 val = row.get(c, "")
                 if val is None or str(val).strip() == "":
                     missing[c] += 1
-            for key, col in key_columns:
+            for key, col in key_cols:
                 val = row.get(col, "")
                 if val is None or str(val).strip() == "":
                     continue
@@ -297,7 +196,7 @@ def main() -> int:
                 val = row.get(c, "")
                 if val is None or str(val).strip() == "":
                     continue
-                if _parse_date(str(val)) is None:
+                if parse_date(str(val)) is None:
                     date_invalid[c] += 1
 
         for c in sorted(missing.keys()):
@@ -311,7 +210,7 @@ def main() -> int:
         for v in extras:
             schema_rows.append({"source_ref": src.source_id, "kind": "extra_in_input", "variable": v})
 
-        for key, col in key_columns:
+        for key, col in key_cols:
             key_rows.append(
                 {"source_ref": src.source_id, "key": key, "column": col, "duplicates": str(key_dupes[key])}
             )

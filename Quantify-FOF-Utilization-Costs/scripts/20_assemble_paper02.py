@@ -5,24 +5,22 @@ import argparse
 import csv
 import zipfile
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
 
 from path_resolver import get_data_root, get_paper02_dir
+from qc_no_abs_paths_check import scan_paths
+from _io_utils import (
+    manifest_relative_path,
+    normalize_dates,
+    normalize_keys,
+    read_rows,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = PROJECT_ROOT / "outputs" / "assembled" / "paper_02"
 REPORT_PATH = PROJECT_ROOT / "outputs" / "reports" / "paper_02_integration_map.md"
 MANIFEST_PATH = PROJECT_ROOT / "manifest" / "dataset_manifest.csv"
-
-DATE_HINTS = ("date", "pvm", "paiva")
-KEY_CANDIDATES = {
-    "person_id": ["person_id", "henkilo_id", "henkiloid", "patient_id", "subject_id", "pseudonym"],
-    "event_id": ["event_id", "kaynti_id", "visit_id"],
-    "episode_id": ["episode_id", "osastojakso_id", "episodeid"],
-}
-
 
 @dataclass
 class Source:
@@ -43,115 +41,13 @@ def _slugify(text: str) -> str:
     return slug[:80] if slug else "source"
 
 
-def _normalize_col_name(name: str) -> str:
-    return name.strip().lower().replace(" ", "_").replace("/", "_")
-
-
-def _detect_delimiter(path: Path) -> str:
-    with path.open("r", encoding="utf-8", newline="") as f:
-        line = f.readline()
-    return "|" if line.count("|") > line.count(",") else ","
-
-
-def _read_csv_rows(path: Path) -> Tuple[List[Dict[str, str]], List[str]]:
-    delim = _detect_delimiter(path)
-    rows: List[Dict[str, str]] = []
-    with path.open("r", encoding="utf-8", newline="") as f:
-        dr = csv.DictReader(f, delimiter=delim)
-        cols = [_normalize_col_name(c) for c in (dr.fieldnames or [])]
-        for row in dr:
-            rows.append({
-                _normalize_col_name(k): ("" if v is None else str(v)) for k, v in row.items()
-            })
-    return rows, cols
-
-
-def _read_xlsx_rows(path: Path) -> Tuple[List[Dict[str, str]], List[str]]:
-    try:
-        import openpyxl
-    except ModuleNotFoundError:
-        raise SystemExit("Missing dependency for XLSX parsing.")
-
-    rows_out: List[Dict[str, str]] = []
-    cols_out: List[str] = []
-    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
-    use_header = 2 if "kaaos" in path.name.lower() else 1
-
-    for ws in wb.worksheets:
-        header: Optional[List[str]] = None
-        for idx, row in enumerate(ws.iter_rows(values_only=True), start=1):
-            if idx < use_header:
-                continue
-            if idx == use_header:
-                header = [_normalize_col_name("" if c is None else str(c)) for c in row]
-                if not cols_out:
-                    cols_out = header
-                continue
-            if header is None:
-                continue
-            out_row: Dict[str, str] = {}
-            for c, v in zip(header, row):
-                out_row[c] = "" if v is None else str(v)
-            rows_out.append(out_row)
-    return rows_out, cols_out
-
-
 def _load_rows(path: Path) -> Tuple[List[Dict[str, str]], List[str]]:
     if path.suffix.lower() == ".csv":
-        return _read_csv_rows(path)
+        return read_rows(path)
     if path.suffix.lower() in {".xlsx", ".xls"}:
-        return _read_xlsx_rows(path)
+        header_row = 2 if "kaaos" in path.name.lower() else 1
+        return read_rows(path, header_row=header_row)
     raise ValueError("Unsupported file type.")
-
-
-def _normalize_keys(rows: List[Dict[str, str]], cols: List[str]) -> Tuple[List[Dict[str, str]], List[str]]:
-    cols_map = {c.lower(): c for c in cols}
-    for canonical, candidates in KEY_CANDIDATES.items():
-        if canonical in cols_map:
-            continue
-        for cand in candidates:
-            if cand in cols_map:
-                old = cols_map[cand]
-                cols = [canonical if c == old else c for c in cols]
-                for row in rows:
-                    row[canonical] = row.pop(old, "")
-                cols_map[canonical] = canonical
-                break
-    return rows, cols
-
-
-def _parse_date(value: str) -> Optional[str]:
-    raw = value.strip()
-    if not raw:
-        return None
-    for fmt in (
-        "%Y-%m-%d",
-        "%Y/%m/%d",
-        "%d.%m.%Y",
-        "%d/%m/%Y",
-        "%Y-%m-%d %H:%M:%S",
-    ):
-        try:
-            return datetime.strptime(raw, fmt).date().isoformat()
-        except ValueError:
-            continue
-    try:
-        return datetime.fromisoformat(raw).date().isoformat()
-    except ValueError:
-        return None
-
-
-def _normalize_dates(rows: List[Dict[str, str]], cols: List[str]) -> None:
-    date_cols = [c for c in cols if any(h in c for h in DATE_HINTS)]
-    if not date_cols:
-        return
-    for row in rows:
-        for c in date_cols:
-            val = row.get(c, "")
-            if val is None or str(val).strip() == "":
-                continue
-            parsed = _parse_date(str(val))
-            row[c] = parsed if parsed is not None else ""
 
 
 def _collect_from_dir(base: Path) -> List[Source]:
@@ -181,10 +77,9 @@ def _collect_from_manifest(path: Path) -> List[Source]:
             loc = row.get("location", "")
             if not logical.startswith("paper_02::"):
                 continue
-            marker = "/paper_02/"
-            if marker not in loc:
+            rel = manifest_relative_path(loc)
+            if not rel:
                 continue
-            rel = loc.split(marker, 1)[1]
             p = base / rel
             if p.suffix.lower() not in {".csv", ".xlsx", ".xls"}:
                 continue
@@ -271,6 +166,7 @@ def _write_integration_map(
     if assembled_output:
         lines.append(f"- {assembled_output}")
     REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    scan_paths([REPORT_PATH])
 
 
 def main() -> int:
@@ -313,8 +209,8 @@ def main() -> int:
             continue
         if not rows and not cols:
             continue
-        rows, cols = _normalize_keys(rows, cols)
-        _normalize_dates(rows, cols)
+        rows, cols = normalize_keys(rows, cols)
+        normalize_dates(rows, cols)
 
         role = _assign_role(src.source_id)
         roles[src.source_id] = role
@@ -334,8 +230,8 @@ def main() -> int:
         primary_id = sources[0].source_id
         try:
             primary_rows, primary_cols = _load_rows(sources[0].path)
-            primary_rows, primary_cols = _normalize_keys(primary_rows, primary_cols)
-            _normalize_dates(primary_rows, primary_cols)
+            primary_rows, primary_cols = normalize_keys(primary_rows, primary_cols)
+            normalize_dates(primary_rows, primary_cols)
         except Exception:
             primary_rows = []
             primary_cols = []
