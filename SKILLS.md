@@ -136,13 +136,13 @@ git pull --ff-only
 git switch -c docs/<topic>
 ```
 
-2. Make changes (minimal diffs)
+1. Make changes (minimal diffs)
 
 - Avoid reformatting unrelated content.
 - Never touch `data/raw/**` or `data/processed/**`.
 - Never edit submodule contents under `analysis/modules/**`.
 
-3. Local checks (run what is feasible)
+1. Local checks (run what is feasible)
 
 ```bash
 git submodule update --init --recursive
@@ -155,27 +155,27 @@ proot-distro login debian --termux-home -- bash -lc "cd <ABS_REPO_ROOT> && bash 
 proot-distro login debian --termux-home -- bash -lc "cd <ABS_REPO_ROOT> && quarto render"
 ```
 
-4. Commit (one logical change per commit)
+1. Commit (one logical change per commit)
 
 ```bash
 git add -A
 git commit -m "docs: enforce non-interactive gh auth protocol"
 ```
 
-5. Push and open PR (non-interactive)
+1. Push and open PR (non-interactive)
 
 ```bash
 git push -u origin HEAD
 gh pr create --fill
 ```
 
-6. Enable auto-merge only after checks pass
+1. Enable auto-merge only after checks pass
 
 ```bash
 gh pr merge --auto --squash
 ```
 
-7. Post-merge cleanup (only after merge is confirmed)
+1. Post-merge cleanup (only after merge is confirmed)
 
 ```bash
 gh pr view --json merged -q .merged
@@ -187,7 +187,7 @@ git push origin --delete docs/<topic> || true
 
 Required report format:
 
-```
+```text
 Auth model used: (gh-authenticated device) OR (GH_TOKEN/GITHUB_TOKEN env)
 Checklist:
 Sync & branch: Done/Not done/Stop reason

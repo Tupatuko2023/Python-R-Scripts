@@ -119,7 +119,7 @@ Known corrupted copies (ignore these):
 ## Acceptance criteria
 
 - Integration map exists (gitignored artifact) and is consistent with observed headers:
-  - PKL events include Pdgo/Sdg* and Tp* fields
+  - PKL events include Pdgo/Sdg\* and Tp\* fields
   - Osastojaksot joined to osastojakso_diagnoosit by person + osastojakso start/end
   - KAAOS header row handled as row 2
   - Corrupted “copy” xlsx files ignored

@@ -17,21 +17,21 @@ Tämä repositorio noudattaa Agent-First -metodologiaa analyysityössä (R + Pyt
 
 ## Prosessi (Workflow)
 
-1.  **Speksaus (Spec):**
+1. **Speksaus (Spec):**
     - Ihminen luo idean `tasks/00-backlog/`.
     - Kun idea on kypsä (selkeät input/output ja DoD), ihminen siirtää tiedoston `tasks/01-ready/`.
 
-2.  **Suoritus (Execute):**
+2. **Suoritus (Execute):**
     - Agentti valitsee tehtävän (ks. `config/agent_policy.md`).
     - Agentti siirtää tiedoston `tasks/02-in-progress/`.
     - Agentti suorittaa työn (koodaa, kirjoittaa, analysoi).
     - Agentti päivittää lokia tehtävätiedostossa.
 
-3.  **Tarkistus (Review):**
+3. **Tarkistus (Review):**
     - Agentti siirtää valmiin työn `tasks/03-review/`.
     - Ihminen tarkistaa työn laadun.
 
-4.  **Hyväksyntä (Done):**
+4. **Hyväksyntä (Done):**
     - **Ennen siirtoa:**
       - Suorita vähintään yksi tyypillinen smoke-run (Rscript tai python) kyseisen aliprojektin ohjeiden mukaan.
       - Jos aliprojektissa on `renv/`, varmista että ympäristö on palautettavissa (`renv::restore()` tarpeen mukaan) ja kirjaa tarvittaessa `sessionInfo()` tai `renv::diagnostics()` lokiin.
