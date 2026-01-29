@@ -22,3 +22,9 @@ __pycache__/
 
 # knowledge package outputs
 outputs/knowledge/
+
+# Task Isolation (feature branches only)
+tasks/02-in-progress/*
+!tasks/02-in-progress/.keep
+tasks/03-review/*
+!tasks/03-review/.keep
