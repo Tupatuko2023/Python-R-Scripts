@@ -11,7 +11,14 @@ REPORT = PROJECT_ROOT / "outputs" / "reports" / "aim2_report.md"
 ZIP = PROJECT_ROOT / "outputs" / "knowledge" / "knowledge_package.zip"
 INDEX = PROJECT_ROOT / "outputs" / "knowledge" / "index.json"
 
+try:
+    import pandas as pd  # noqa: F401
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
 
+
+@unittest.skipUnless(HAS_PANDAS, "pandas not installed")
 class TestEndToEndSmoke(unittest.TestCase):
     def run_cmd(self, args, env):
         p = subprocess.run([sys.executable] + args, capture_output=True, text=True, env=env)

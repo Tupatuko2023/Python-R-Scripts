@@ -9,7 +9,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = PROJECT_ROOT / "scripts"
 AGG = PROJECT_ROOT / "outputs" / "aggregates" / "aim2_aggregates.csv"
 
+try:
+    import pandas as pd  # noqa: F401
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
 
+
+@unittest.skipUnless(HAS_PANDAS, "pandas not installed")
 class TestAggregates(unittest.TestCase):
     def _run(self, args):
         env = os.environ.copy()
