@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "healthcare-mcp-public": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--network",
+        "host",
+        "cicatriiz/healthcare-mcp-public:latest"
+      ]
+    },
+    "secure-analysis-r": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--network",
+        "none",
+        "-v",
+        "${PRIVATE_DATA_PATH}:/data:ro",
+        "finite-sample/rmcp:latest"
+      ]
+    }
+  }
+}
