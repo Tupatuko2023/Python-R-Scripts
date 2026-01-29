@@ -1,1 +1,1 @@
-logical_name,filename,file_hash,file_size,last_modified,status,notes
+logical_name,relative_path,file_glob,description,sensitivity

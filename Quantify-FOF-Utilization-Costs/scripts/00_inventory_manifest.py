@@ -1,65 +1,67 @@
-import argparse
-import csv
 import os
 import sys
-from datetime import datetime
+import argparse
+import datetime
+import csv
+from pathlib import Path
 
-# Configuration
-MANIFEST_DIR = "manifest"
-MANIFEST_FILE = "dataset_manifest.csv"
-MANIFEST_PATH = os.path.join(MANIFEST_DIR, MANIFEST_FILE)
+# Try to import dotenv, handle missing dependency gracefully
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
 
-def ensure_manifest_exists():
-    """Ensures the manifest directory and file exist with headers."""
-    if not os.path.exists(MANIFEST_DIR):
-        os.makedirs(MANIFEST_DIR)
-        print(f"Created directory: {MANIFEST_DIR}")
-    
-    if not os.path.exists(MANIFEST_PATH):
-        with open(MANIFEST_PATH, 'w', newline='', encoding='utf-8') as f:
+def setup_env():
+    """Load environment variables from config/.env."""
+    env_path = Path("config/.env")
+    if load_dotenv and env_path.exists():
+        load_dotenv(dotenv_path=env_path)
+    return os.getenv("DATA_ROOT")
+
+def log_run(status, message):
+    """Append a log entry to manifest/run_log.csv."""
+    log_file = Path("manifest/run_log.csv")
+    timestamp = datetime.datetime.now().isoformat()
+    actor = os.getenv("USERNAME", os.getenv("USER", "unknown_agent"))
+    script = os.path.basename(__file__)
+
+    if log_file.exists():
+        with open(log_file, "a", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow(['logical_name', 'filename', 'file_hash', 'file_size', 'last_modified', 'status', 'notes'])
-        print(f"Created manifest file: {MANIFEST_PATH}")
+            # Schema: timestamp,actor,script,status,message
+            writer.writerow([timestamp, actor, script, status, message])
 
-def scan_dataset(logical_name):
-    """Placeholder for scanning a dataset."""
-    print(f"Scanning {logical_name}...")
-    # Implementation for actual scanning would go here.
-    # For now, it's a scaffold.
-    ensure_manifest_exists()
-    print(f"Scan complete for {logical_name}. (No changes made in scaffold mode)")
+def scan_inventory(data_root, target_dataset):
+    """Mock scan function for Option B inventory."""
+    if not data_root:
+        print("ERROR: DATA_ROOT not set in config/.env")
+        log_run("FAILURE", "DATA_ROOT missing")
+        return
 
-def check_manifest():
-    """Validates that the manifest file exists."""
-    print("Checking manifest integrity...")
-    if os.path.exists(MANIFEST_PATH):
-        print(f"SUCCESS: Manifest found at {MANIFEST_PATH}")
-        # Could add more logic here to check CSV headers, etc.
-    else:
-        print(f"ERROR: Manifest not found at {MANIFEST_PATH}")
-        sys.exit(1)
+    target_path = Path(data_root) / target_dataset
+    if not target_path.exists():
+        print(f"WARNING: Target dataset path not found: {target_path}")
+        log_run("WARNING", f"Path not found: {target_dataset}")
+        return
+
+    print(f"Scanning {target_path}...")
+    try:
+        files = list(target_path.glob("*"))
+        print(f"Found {len(files)} files/dirs in {target_dataset}")
+        log_run("SUCCESS", f"Scanned {target_dataset}, found {len(files)} items")
+    except Exception as e:
+        print(f"ERROR: {e}")
+        log_run("FAILURE", str(e))
 
 def main():
-    parser = argparse.ArgumentParser(description="Manage data inventory manifest.")
-    
-    parser.add_argument(
-        "--scan", 
-        type=str, 
-        help="Scan a directory (by logical name) and update the manifest."
-    )
-    
-    parser.add_argument(
-        "--check", 
-        action="store_true", 
-        help="Validate that the manifest file exists and is readable."
-    )
-    
+    parser = argparse.ArgumentParser(description="Manage dataset inventory (Option B).")
+    parser.add_argument("--scan", help="Scan a dataset folder under DATA_ROOT", type=str)
     args = parser.parse_args()
-    
+
+    data_root = setup_env()
+
     if args.scan:
-        scan_dataset(args.scan)
-    elif args.check:
-        check_manifest()
+        scan_inventory(data_root, args.scan)
     else:
         parser.print_help()
 
