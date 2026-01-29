@@ -1,0 +1,18 @@
+{
+  "dataset": "paper_02",
+  "status": "FROZEN_DELIVERED",
+  "recorded_at_utc": "2026-01-29T10:57:03.052688+00:00",
+  "git_commit": "f8c0a9e5052d78b8540ab60be615996c0e121660",
+  "pr_number": 70,
+  "option_b": {
+    "no_absolute_paths": true,
+    "no_raw_values": true,
+    "outputs_gitignored": true,
+    "aggregates_double_gated": true,
+    "suppression_rule_n_lt_5": true
+  },
+  "notes": [
+    "Post-merge verification completed (CI-safe, sample-only).",
+    "Delivery lock is metadata-only; does not include paths or data."
+  ]
+}
