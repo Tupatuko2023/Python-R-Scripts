@@ -1,1 +1,3 @@
 timestamp,actor,script,status,message
+2026-01-30T03:04:51+02:00,run3a,data_dictionary_updated,added_file_unreadable_markers
+2026-01-30T03:23:43+02:00,fof_burden_cost_register_linkage_analysis_spec_checklist,run3b_completed,register_linkage_spec_written
