@@ -1,2 +1,1 @@
-run_id,timestamp,script_name,user,status,output_artifacts
-ISO-202601290948,2026-01-29 09.48.07,workflow_isolation_setup,GEMINI,SUCCESS,tasks/04-done/task-fix-multi-agent-collision.md
+timestamp,actor,script,status,message
