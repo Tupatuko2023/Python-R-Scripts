@@ -27,6 +27,25 @@ Pakollinen työjono ja toimintalogiikka:
 
 ---
 
+## Orchestration exceptions (MUST)
+
+Nämä poikkeukset ohittavat TODO-valintasäännön vain orkestroijan
+eksplisiittisellä käskyllä:
+
+1. **PR+merge gate precedence**
+   - Jos orkestroija käskee hoitaa PR:n (ja/tai merge) ensin, agentti ei
+     aloita uuden tehtävän etsimistä tai luomista ennen kuin:
+     a) PR on mergetty (oletus), TAI
+     b) orkestroija eksplisiittisesti ohittaa merge-ehdon.
+   - Agentti saa tehdä PR:n validointeja, mutta ei siirry uuteen tehtävään.
+
+2. **Orkestroijan ohjaama tehtävän luonti**
+   - Jos orkestroija käskee luomaan uuden tehtävän `tasks/01-ready/`-kansioon,
+     agentti luo sen itse (metadata-only, Option B -turvarajat).
+   - Ei raakadataa, ei absoluuttisia polkuja, ei salaisuuksia, ei outputteja.
+
+---
+
 ## GitHub Auth (Non-Interactive) — Termux-safe
 
 Supported auth models (automatic, no prompts):
