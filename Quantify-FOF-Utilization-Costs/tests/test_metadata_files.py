@@ -49,7 +49,53 @@ class TestMetadataFiles(unittest.TestCase):
             with p.open("r", encoding="utf-8", newline="") as f:
                 reader = csv.reader(f)
                 header = next(reader)
+            if p.name == "data_dictionary.csv":
+                # Accept legacy header or expanded schema with provenance/redaction/standardization columns.
+                legacy = EXPECTED_HEADERS[p.name]
+                required_new = [
+                    "source_dataset",
+                    "source_dataset_redacted",
+                    "source_name_redaction_reason",
+                    "identifier_like_filename",
+                    "source_file_sha256_prefix1mb",
+                    "variable",
+                    "dtype",
+                    "units",
+                    "coding",
+                    "notes",
+                    "variable_en",
+                    "standard_name_en",
+                    "description_en",
+                ]
+                if header == legacy:
+                    continue
+                missing = [c for c in required_new if c not in header]
+                self.assertEqual(missing, [], f"Header mismatch for {p.name}; missing: {missing}")
+                continue
+            if p.name == "VARIABLE_STANDARDIZATION.csv":
+                # Accept legacy or expanded standardization schema.
+                legacy = EXPECTED_HEADERS[p.name]
+                required_new = [
+                    "source_dataset",
+                    "variable_original",
+                    "variable_en",
+                    "standard_name_en",
+                    "role_guess",
+                    "dtype_example",
+                    "description_en",
+                    "notes",
+                ]
+                if header == legacy:
+                    continue
+                missing = [c for c in required_new if c not in header]
+                self.assertEqual(missing, [], f"Header mismatch for {p.name}; missing: {missing}")
+                continue
             self.assertEqual(header, EXPECTED_HEADERS[p.name], f"Header mismatch for {p.name}")
+
+    def test_no_case_duplicate_data_readme(self) -> None:
+        data_dir = PROJECT_ROOT / "data"
+        self.assertTrue((data_dir / "readme.md").exists(), "Canonical data/readme.md missing")
+        self.assertFalse((data_dir / "README.md").exists(), "Duplicate data/README.md must not exist")
 
 
 if __name__ == "__main__":
