@@ -19,7 +19,7 @@
 
 4. **Output Discipline:**
    - All artifacts (plots, tables) must go to `outputs/` (or script-specific `outputs/`).
-   - Every artifact generation must be logged in `manifest/manifest.csv` (File, Date, Script, Hash).
+   - Every artifact generation must be logged in `manifest/dataset_manifest.csv` (File, Date, Script, Hash) and run metadata appended to `manifest/run_log.csv`.
 
 5. **Script Standards:**
    - **R Scripts:** Must follow the "STANDARD R SCRIPT INTRO" below.
@@ -60,7 +60,7 @@
 #
 # Outputs + manifest:
 # - outputs dir: outputs/{{SCRIPT_ID}}/
-# - manifest: append to manifest/manifest.csv
+# - manifest: append to manifest/dataset_manifest.csv and record runs in manifest/run_log.csv
 #
 # Workflow:
 # 01) Init paths (path_resolver)
