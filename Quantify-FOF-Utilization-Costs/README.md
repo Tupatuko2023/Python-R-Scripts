@@ -55,3 +55,9 @@ Operational docs and CI-safe verification are in place:
 Reminder: after each new paper_02 batch, update the manifest inventory:
 
 - python scripts/00_inventory_manifest.py --scan paper_02
+
+## Documentation & Standards
+
+- **Agent & Dev Rules:** [CLAUDE.md](CLAUDE.md) (Read this first!)
+- **Analysis Plan:** [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md)
+- **Data Dictionary Workflow:** [docs/DATA_DICTIONARY_WORKFLOW.md](docs/DATA_DICTIONARY_WORKFLOW.md)
