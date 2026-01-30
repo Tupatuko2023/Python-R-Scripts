@@ -65,4 +65,4 @@ Before analysis, run `scripts/30_qc_summary.py` (or R equivalent) to verify:
 2. **Data Inventory:** Run `scripts/00_inventory_manifest.py` to index `DATA_ROOT`.
 3. **QC Run:** Execute logic checks.
 4. **Analysis:** Run modeling scripts (e.g., `Q20_models.R`).
-5. **Output:** Check `outputs/` and `manifest/manifest.csv` for logged results.
+5. **Output:** Check `outputs/` and `manifest/run_log.csv` for logged results.
