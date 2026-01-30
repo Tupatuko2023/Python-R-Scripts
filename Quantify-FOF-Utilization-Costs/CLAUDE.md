@@ -19,7 +19,8 @@
 
 4. **Output Discipline:**
    - All artifacts (plots, tables) must go to `outputs/` (or script-specific `outputs/`).
-   - Every artifact generation must be logged in `manifest/manifest.csv` (File, Date, Script, Hash).
+   - Every pipeline execution must be logged in `manifest/run_log.csv` (Status, Message, Script).
+   - Input datasets are tracked in `manifest/dataset_manifest.csv`.
 
 5. **Script Standards:**
    - **R Scripts:** Must follow the "STANDARD R SCRIPT INTRO" below.
@@ -60,15 +61,15 @@
 #
 # Outputs + manifest:
 # - outputs dir: outputs/{{SCRIPT_ID}}/
-# - manifest: append to manifest/manifest.csv
+# - manifest: append run status to manifest/run_log.csv
 #
 # Workflow:
 # 01) Init paths (path_resolver)
-# 02) Load Data (DATA_ROOT)
+# 02) Load Data (DATA_ROOT via manifest/dataset_manifest.csv)
 # 03) Standardize & QC (see docs/DATA_DICTIONARY_WORKFLOW.md)
 # 04) Analysis / Modeling
 # 05) Save Outputs
-# 06) Update Manifest
+# 06) Update Manifest (run_log.csv)
 # ==============================================================================
 
 suppressPackageStartupMessages({
@@ -89,7 +90,7 @@ suppressPackageStartupMessages({
 1. Header present and filled?
 2. `DATA_ROOT` used for input? (No hardcoded local paths)
 3. Variable names verified against `VARIABLE_STANDARDIZATION.csv`?
-4. Manifest updated at the end?
+4. `run_log.csv` updated at the end?
 
 ---
 

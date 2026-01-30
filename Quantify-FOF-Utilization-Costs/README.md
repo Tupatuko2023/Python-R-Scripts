@@ -58,6 +58,7 @@ Reminder: after each new paper_02 batch, update the manifest inventory:
 
 ## Documentation & Standards
 
-- **Agent & Dev Rules:** [CLAUDE.md](CLAUDE.md) (Read this first!)
+- **Runbook (Operational):** [docs/runbook.md](docs/runbook.md) (Read this first!)
 - **Analysis Plan:** [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md)
+- **Agent Guidelines:** [CLAUDE.md](CLAUDE.md) (Rules & Conventions)
 - **Data Dictionary Workflow:** [docs/DATA_DICTIONARY_WORKFLOW.md](docs/DATA_DICTIONARY_WORKFLOW.md)
