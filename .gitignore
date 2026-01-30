@@ -11,3 +11,4 @@ codex-auth-backup.tgz
 # Local agent prompts (do not version)
 prompts/
 **/prompts/*.txt
+.Rproj.user
