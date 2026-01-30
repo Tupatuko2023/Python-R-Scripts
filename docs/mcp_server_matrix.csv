@@ -1,0 +1,5 @@
+Server Name,Transport Type,Status,Notes
+healthcare-mcp-public,Docker (stdio via -i),FAIL,Docker daemon unreachable (npipe error). Config missing.
+secure-analysis-r,Docker (stdio via -i),FAIL,Docker daemon unreachable. Config missing. Environment variable PRIVATE_DATA_PATH undefined.
+github,HTTP/SSE or stdio,MISSING,Not configured in mcpServers. Reference guide available in docs/guides.
+filesystem,stdio,MISSING,Not configured.
