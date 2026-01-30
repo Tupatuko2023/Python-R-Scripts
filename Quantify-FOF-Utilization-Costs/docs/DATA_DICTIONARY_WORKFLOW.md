@@ -14,7 +14,7 @@
 
 1. Script reads `DATA_ROOT` headers.
 2. Script checks `data/VARIABLE_STANDARDIZATION.csv`.
-3. If new columns found, script generates a "Mapping Candidate" list.
+3. If new columns are found, script generates a "Mapping Candidate" list.
    - _Agent Action:_ You can propose translations but MUST mark them as `status="INFERRED"`.
    - Example: `kayntikerrat` -> `visit_count (INFERRED)`
 
