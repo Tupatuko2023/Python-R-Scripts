@@ -79,7 +79,8 @@ suppressPackageStartupMessages({
 })
 
 # --- Init ---
-# TODO: Source path_resolver or equivalent to get DATA_ROOT
+# Verify: Source path_resolver (if exists) or set DATA_ROOT manually
+# Ensure module imports (like fof.utils) are valid for the environment
 # DATA_ROOT <- Sys.getenv("DATA_ROOT")
 # if (DATA_ROOT == "") stop("DATA_ROOT not set (Option B protection)")
 
@@ -112,13 +113,15 @@ from pathlib import Path
 
 # Add project root to path for imports
 current_file = Path(__file__).resolve()
-project_root = current_file.parents[1] # Adjust based on depth
+project_root = current_file.parents[1] # Verify: Adjust parent depth if moved
 sys.path.append(str(project_root))
 
+# Verify: Ensure modules exist and are importable
 from scripts.path_resolver import get_data_root, resolve_output_dir
 from scripts._io_utils import update_manifest
 
 def main():
+    # Verify: CI-safe DATA_ROOT setup works
     DATA_ROOT = get_data_root()
     # ... logic ...
 
