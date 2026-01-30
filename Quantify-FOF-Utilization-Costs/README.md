@@ -40,6 +40,25 @@ If data is missing, scripts will exit with actionable instructions.
 How to obtain data (high level)
 Register linkage and extraction are handled by designated controllers under permits. This repo intentionally does not encode sensitive locations, keys, or any participant-level data.
 
+
+
+## Aim 2 Analysis Pipeline (Panel Data)
+
+**Status:** Ready for Data (R Scripts)
+
+1. **Environment Setup:**
+   `Rscript scripts/00_setup_env.R`
+   (Initializes `renv` and installs dependencies: tidyverse, MASS, sandwich, etc.)
+2. **Data Build (Secure):**
+   `Rscript scripts/10_build_panel_person_period.R`
+   (Reads `DATA_ROOT`, applies `data/VARIABLE_STANDARDIZATION.csv`, saves `derived/aim2_panel.csv`)
+3. **Quality Control:**
+   `Rscript scripts/20_qc_panel_summary.R`
+   (Checks derived panel for logical consistency and zeros; outputs to `outputs/qc_summary_aim2.txt`)
+4. **Modeling (NB & Gamma):**
+   `Rscript scripts/30_models_panel_nb_gamma.R`
+   (Runs Negative Binomial and Gamma models, performs cluster bootstrap, and saves aggregate results to `outputs/panel_models_summary.csv`)
+
 ## Handoff complete
 
 Operational docs and CI-safe verification are in place:
@@ -55,3 +74,9 @@ Operational docs and CI-safe verification are in place:
 Reminder: after each new paper_02 batch, update the manifest inventory:
 
 - python scripts/00_inventory_manifest.py --scan paper_02
+
+## Documentation & Standards
+
+- **Agent & Dev Rules:** [CLAUDE.md](CLAUDE.md) (Read this first!)
+- **Analysis Plan:** [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md)
+- **Data Dictionary Workflow:** [docs/DATA_DICTIONARY_WORKFLOW.md](docs/DATA_DICTIONARY_WORKFLOW.md)
