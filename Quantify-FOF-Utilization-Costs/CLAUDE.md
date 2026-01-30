@@ -79,6 +79,11 @@ suppressPackageStartupMessages({
 
 # --- Init ---
 # TODO: Source path_resolver or equivalent to get DATA_ROOT
+# Minimal CI-safe example (local only; DO NOT commit paths):
+#   Sys.setenv(DATA_ROOT = "/absolute/secure/path")
+# or set in config/.env (not committed):
+#   DATA_ROOT=/absolute/secure/path
+# path_resolver note: this is project-specific (e.g., scripts/path_resolver.R). Create it if missing.
 # DATA_ROOT <- Sys.getenv("DATA_ROOT")
 # if (DATA_ROOT == "") stop("DATA_ROOT not set (Option B protection)")
 
@@ -111,9 +116,14 @@ from pathlib import Path
 
 # Add project root to path for imports
 current_file = Path(__file__).resolve()
-project_root = current_file.parents[1] # Adjust based on depth
+project_root = current_file.parents[1]  # NOTE: verify this matches your subproject root.
+# Safer options (choose one):
+# - Set PROJECT_ROOT env var and use: Path(os.environ["PROJECT_ROOT"]).resolve()
+# - Walk up until you find a known anchor (e.g., README.md at subproject root).
 sys.path.append(str(project_root))
 
+# NOTE: scripts.path_resolver and scripts._io_utils are project-specific.
+# If these modules do not exist in your repo, replace with direct pathlib I/O or add equivalents under scripts/.
 from scripts.path_resolver import get_data_root, resolve_output_dir
 from scripts._io_utils import update_manifest
 
