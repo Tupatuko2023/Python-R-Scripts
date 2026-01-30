@@ -2,28 +2,28 @@
 
 ## CRITICAL RULES (NON-NEGOTIABLE)
 
-1.  **Option B Data Governance:**
-    - **NO RAW DATA IN GIT.** All data reading must occur via `DATA_ROOT` path resolution.
-    - Repo contains only metadata, schemas, documentation, and synthetic test data.
-    - Do not paste sample rows of real participant data into issues or comments.
+1. **Option B Data Governance:**
+   - **NO RAW DATA IN GIT.** All data reading must occur via `DATA_ROOT` path resolution.
+   - Repo contains only metadata, schemas, documentation, and synthetic test data.
+   - Do not paste sample rows of real participant data into issues or comments.
 
-2.  **No "Guessing" (Finnish Metadata Protocol):**
-    - Do not translate variable names or values from Finnish to English based on intuition.
-    - Use `data/VARIABLE_STANDARDIZATION.csv` as the source of truth.
-    - If a term is missing, follow `docs/DATA_DICTIONARY_WORKFLOW.md`: Mark as `INFERRED`, request confirmation, then freeze.
+2. **No "Guessing" (Finnish Metadata Protocol):**
+   - Do not translate variable names or values from Finnish to English based on intuition.
+   - Use `data/VARIABLE_STANDARDIZATION.csv` as the source of truth.
+   - If a term is missing, follow `docs/DATA_DICTIONARY_WORKFLOW.md`: Mark as `INFERRED`, request confirmation, then freeze.
 
-3.  **Reproducibility:**
-    - **R:** Use `renv` (lockfile).
-    - **Python:** Use `requirements.txt` / `pyproject.toml`.
-    - **Randomness:** Use `set.seed(20250130)` (or project standard) only when necessary (bootstrapping, simulation).
+3. **Reproducibility:**
+   - **R:** Use `renv` (lockfile).
+   - **Python:** Use `requirements.txt` / `pyproject.toml`.
+   - **Randomness:** Use `set.seed(20250130)` (or project standard) only when necessary (bootstrapping, simulation).
 
-4.  **Output Discipline:**
-    - All artifacts (plots, tables) must go to `outputs/` (or script-specific `outputs/`).
-    - Every artifact generation must be logged in `manifest/manifest.csv` (File, Date, Script, Hash).
+4. **Output Discipline:**
+   - All artifacts (plots, tables) must go to `outputs/` (or script-specific `outputs/`).
+   - Every artifact generation must be logged in `manifest/manifest.csv` (File, Date, Script, Hash).
 
-5.  **Script Standards:**
-    - **R Scripts:** Must follow the "STANDARD R SCRIPT INTRO" below.
-    - **Python Scripts:** Must use `path_resolver.py` for all I/O and follow the "STANDARD PYTHON HEADER".
+5. **Script Standards:**
+   - **R Scripts:** Must follow the "STANDARD R SCRIPT INTRO" below.
+   - **Python Scripts:** Must use `path_resolver.py` for all I/O and follow the "STANDARD PYTHON HEADER".
 
 ---
 
@@ -86,10 +86,10 @@ suppressPackageStartupMessages({
 
 ### Valid Script Checklist (R)
 
-1.  Header present and filled?
-2.  `DATA_ROOT` used for input? (No hardcoded local paths)
-3.  Variable names verified against `VARIABLE_STANDARDIZATION.csv`?
-4.  Manifest updated at the end?
+1. Header present and filled?
+2. `DATA_ROOT` used for input? (No hardcoded local paths)
+3. Variable names verified against `VARIABLE_STANDARDIZATION.csv`?
+4. Manifest updated at the end?
 
 ---
 
