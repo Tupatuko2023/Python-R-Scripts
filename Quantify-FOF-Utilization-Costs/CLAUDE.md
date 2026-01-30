@@ -123,7 +123,15 @@ project_root = current_file.parents[1]  # NOTE: verify this matches your subproj
 sys.path.append(str(project_root))
 
 # NOTE: scripts.path_resolver and scripts._io_utils are project-specific.
-# If these modules do not exist in your repo, replace with direct pathlib I/O or add equivalents under scripts/.
+# Expected interfaces (documented, not enforced):
+# - scripts.path_resolver:
+#     def get_project_root(current_file: Path) -> Path
+#     def get_data_root() -> Path  # reads DATA_ROOT env/config, must be absolute
+#     def resolve_output_dir(*parts: str) -> Path
+# - scripts._io_utils:
+#     def update_manifest(path: Path, *, script: str, hash_value: str | None = None) -> None
+# Fallback if modules are missing: replace imports with pathlib joins + stdlib/pandas I/O,
+# or add equivalent helpers under scripts/ in your project.
 from scripts.path_resolver import get_data_root, resolve_output_dir
 from scripts._io_utils import update_manifest
 
