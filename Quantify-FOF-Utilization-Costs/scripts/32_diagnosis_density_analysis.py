@@ -230,7 +230,7 @@ def main():
     parser.add_argument("--allow-aggregates", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
-    data_root = r"C:\GitWork\FOF_LOCAL-DATA\paper_02"
+    data_root = os.environ.get("DATA_ROOT", r"data/external")
     df_link, df_kaaos, df_pkl, df_inpat = load_data(data_root)
     df_pkl['SSN'] = clean_ssn_id(df_pkl, 'Henkilotunnus')
     df_inpat['SSN'] = clean_ssn_id(df_inpat, 'Henkilotunnus')

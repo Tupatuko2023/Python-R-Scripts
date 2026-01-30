@@ -462,7 +462,7 @@ def main():
     parser.add_argument("--allow-aggregates", action="store_true")
     args = parser.parse_args()
     
-    data_root = r"C:\GitWork\FOF_LOCAL-DATA\paper_02"
+    data_root = os.environ.get("DATA_ROOT", r"data/external")
     output_dir = Path("outputs/aggregates")
     output_dir.mkdir(parents=True, exist_ok=True)
     
