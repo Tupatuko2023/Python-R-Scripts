@@ -9,3 +9,484 @@ paper_02_kaaos,T8_KaatumisenpelkoOn,fof_fear_binary,recode_01,,0=No;1=Yes,
 paper_02_hfrs,HFRS,hfrs_score,eur_numeric,,,
 paper_02_hfrs,pvm,date_hfrs,date_parse_fi,,,
 paper_02_kaaos,Tutkimuspäivä,date_baseline,date_parse_fi,,,
+KAAOS_data.xlsx,Unnamed: 0,unnamed_0,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,Unnamed: 1,unnamed_1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,1.,1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,2.,2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,3.,3,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,4.,4,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,5.,5,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,6.,6,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,7.,7,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,8.,8,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,9.,9,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,10.,10,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,11.,11,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,12.,12,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,13.,13,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,14.,14,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,15.,15,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,16.,16,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,17.,17,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,18.,18,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,19.,19,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,20.,20,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,21.,21,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,22.,22,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,23.,23,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,24.,24,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,25.,25,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,26.,26,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,27.,27,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,28.,28,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,29.,29,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,30.,30,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,31.,31,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,32.,32,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,33.,33,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,34.,34,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,35.,35,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,36.,36,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,37.,37,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,38.,38,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,39.,39,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,40.,40,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,41.,41,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,42.,42,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,43.,43,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,44.,44,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,45.,45,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,46.,46,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,47.,47,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,48.,48,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,49.,49,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,50.,50,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,51.,51,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,52.,52,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,53.,53,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,54.,54,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,55.,55,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,56.,56,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,57.,57,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,58.,58,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,59.,59,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,60.,60,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,61.,61,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,62.,62,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,63.,63,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,64.,64,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,65.,65,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data.xlsx,66.,66,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,Unnamed: 0,unnamed_0,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,Unnamed: 1,unnamed_1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,Unnamed: 2,unnamed_2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,1.,1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,2.,2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,3.,3,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,4.,4,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,5.,5,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,6.,6,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,7.,7,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,8.,8,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,9.,9,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,10.,10,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,11.,11,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,12.,12,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,13.,13,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,14.,14,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,15.,15,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,16.,16,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,17.,17,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,18.,18,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,19.,19,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,20.,20,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,21.,21,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,22.,22,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,23.,23,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,24.,24,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,25.,25,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,26.,26,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,27.,27,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,28.,28,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,29.,29,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,30.,30,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,31.,31,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,32.,32,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,33.,33,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,34.,34,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,35.,35,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,36.,36,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,37.,37,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,38.,38,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,39.,39,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,40.,40,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,41.,41,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,42.,42,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,43.,43,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,44.,44,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,45.,45,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,46.,46,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,47.,47,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,48.,48,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,49.,49,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,50.,50,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,51.,51,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,52.,52,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,53.,53,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,54.,54,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,55.,55,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,56.,56,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,57.,57,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,58.,58,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,59.,59,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,60.,60,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,61.,61,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,62.,62,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,63.,63,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,64.,64,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,65.,65,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+KAAOS_data_k├ñyntip├ñiv├ñt ilman sotua.xlsx,66.,66,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],Unnamed: 0,unnamed_0,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],Unnamed: 1,unnamed_1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],Unnamed: 2,unnamed_2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],1.,1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],2.,2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],3.,3,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],4.,4,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],5.,5,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],6.,6,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],7.,7,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],8.,8,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],9.,9,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],10.,10,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],11.,11,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],12.,12,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],13.,13,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],14.,14,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],15.,15,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],16.,16,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],17.,17,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],18.,18,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],19.,19,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],20.,20,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],21.,21,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],22.,22,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],23.,23,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],24.,24,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],25.,25,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],26.,26,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],27.,27,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],28.,28,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],29.,29,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],30.,30,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],31.,31,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],32.,32,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],33.,33,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],34.,34,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],35.,35,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],36.,36,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],37.,37,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],38.,38,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],39.,39,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],40.,40,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],41.,41,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],42.,42,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],43.,43,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],44.,44,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],45.,45,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],46.,46,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],47.,47,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],48.,48,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],49.,49,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],50.,50,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],51.,51,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],52.,52,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],53.,53,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],54.,54,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],55.,55,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],56.,56,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],57.,57,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],58.,58,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],59.,59,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],60.,60,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],61.,61,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],62.,62,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],63.,63,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],64.,64,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],65.,65,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],66.,66,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],Unnamed: 0,unnamed_0,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],Unnamed: 1,unnamed_1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],Unnamed: 2,unnamed_2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],1.,1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],2.,2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],3.,3,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],4.,4,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],5.,5,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],6.,6,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],7.,7,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],8.,8,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],9.,9,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],10.,10,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],11.,11,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],12.,12,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],13.,13,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],14.,14,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],15.,15,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],16.,16,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],17.,17,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],18.,18,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],19.,19,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],20.,20,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],21.,21,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],22.,22,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],23.,23,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],24.,24,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],25.,25,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],26.,26,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],27.,27,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],28.,28,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],29.,29,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],30.,30,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],31.,31,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],32.,32,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],33.,33,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],34.,34,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],35.,35,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],36.,36,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],37.,37,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],38.,38,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],39.,39,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],40.,40,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],41.,41,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],42.,42,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],43.,43,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],44.,44,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],45.,45,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],46.,46,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],47.,47,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],48.,48,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],49.,49,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],50.,50,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],51.,51,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],52.,52,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],53.,53,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],54.,54,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],55.,55,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],56.,56,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],57.,57,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],58.,58,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],59.,59,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],60.,60,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],61.,61,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],62.,62,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],63.,63,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],64.,64,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],65.,65,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+[REDACTED_NAME],66.,66,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,[REDACTED_IDENTIFIER],personal_identity_code,TBD,,,DIRECT_IDENTIFIER; must_not_be_used_in_repo_outputs; Inferred from name/role: Direct personal identity code (sensitive). Must be excluded from repo outputs; use pseudonymized linkage id instead.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,IkaNyt,age_nyt,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,ika_osastolla,age_osastolla,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,Kayntipvm,visit_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,TapaturmaPaiva,tapaturma_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,Kuolinpvm,death_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,Kuntakoodi,kuntakoodi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,KuntaNimi,kunta_nimi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,OsastojaksoAlkuPvm,osastojakso_start_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,OsastojaksoLoppuPvm,osastojakso_end_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,SaapumisSyy,saapumis_syy,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx,PoistumisSyy,poistumis_syy,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,[REDACTED_IDENTIFIER],personal_identity_code,TBD,,,DIRECT_IDENTIFIER; must_not_be_used_in_repo_outputs; Inferred from name/role: Direct personal identity code (sensitive). Must be excluded from repo outputs; use pseudonymized linkage id instead.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,IkaNyt,age_nyt,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Ika_Kontaktilla,age_kontaktilla,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Kayntipvm,visit_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,TapaturmaPaiva,tapaturma_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Kuolinpvm,death_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Kuntakoodi,kuntakoodi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,KuntaNimi,kunta_nimi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Pdgo,pdgo,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg1o,sdg1o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg2o,sdg2o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg3o,sdg3o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg4o,sdg4o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg5o,sdg5o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg6o,sdg6o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg7o,sdg7o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg8o,sdg8o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg9o,sdg9o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp1,tp1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp2,tp2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp3,tp3,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp4,tp4,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp5,tp5,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp6,tp6,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp7,tp7,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp8,tp8,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp9,tp9,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp10,tp10,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp11,tp11,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp12,tp12,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp13,tp13,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp14,tp14,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp15,tp15,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp16,tp16,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp17,tp17,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp18,tp18,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp19,tp19,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp20,tp20,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp21,tp21,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp22,tp22,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp23,tp23,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp24,tp24,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Kopio_Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp25,tp25,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Lifecare potilasaineisto ÔÇô kopio.xlsx,FILE_UNREADABLE,file_unreadable,TBD,,,UNREADABLE/COPY/PASSWORD-PROTECTED; Inferred from name/role: Source file could not be read; variable list unavailable.; Codex Scan
+Lifecare potilasaineisto.xlsx,RID,rid,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Lifecare potilasaineisto.xlsx,SSN,ssn,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Lifecare potilasaineisto.xlsx,IkaTapahtumahetkella,age_tapahtumahetkella,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Lifecare potilasaineisto.xlsx,IkaNyt,age_nyt,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Lifecare potilasaineisto.xlsx,tapahtpvm,tapahtpvm_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Lifecare potilasaineisto.xlsx,DateOfDeath,date_of_death,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Lifecare potilasaineisto.xlsx,kuntanro,kuntanro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Lifecare potilasaineisto.xlsx,kuntanimi,kuntanimi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Lifecare potilasaineisto.xlsx,koodi1,koodi1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Lifecare potilasaineisto.xlsx,koodi2,koodi2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Lifecare potilasaineisto.xlsx,toimenpide1,toimenpide1,TBD,,,Inferred from name/role: Procedure code or derived indicator.; Codex Scan
+Lifecare potilasaineisto.xlsx,toimenpide2,toimenpide2,TBD,,,Inferred from name/role: Procedure code or derived indicator.; Codex Scan
+Lifecare potilasaineisto.xlsx,toimenpide3,toimenpide3,TBD,,,Inferred from name/role: Procedure code or derived indicator.; Codex Scan
+Lifecare potilasaineisto.xlsx,toimenpide4,toimenpide4,TBD,,,Inferred from name/role: Procedure code or derived indicator.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,[REDACTED_IDENTIFIER],personal_identity_code,TBD,,,DIRECT_IDENTIFIER; must_not_be_used_in_repo_outputs; Inferred from name/role: Direct personal identity code (sensitive). Must be excluded from repo outputs; use pseudonymized linkage id instead.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Ika_Jaksolla,age_jaksolla,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,OsastojaksoAlkuPvm,osastojakso_start_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,OsastojaksoLoppuPvm,osastojakso_end_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,TapaturmaPaiva,tapaturma_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Kuolinpvm,death_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Pdgo,pdgo,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Sdg1o,sdg1o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Sdg2o,sdg2o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Sdg3o,sdg3o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Sdg4o,sdg4o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Sdg5o,sdg5o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Sdg6o,sdg6o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Sdg7o,sdg7o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Sdg8o,sdg8o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Sdg9o,sdg9o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp1,tp1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp2,tp2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp3,tp3,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp4,tp4,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp5,tp5,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp6,tp6,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp7,tp7,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp8,tp8,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp9,tp9,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp10,tp10,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp11,tp11,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp12,tp12,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp13,tp13,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp14,tp14,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp15,tp15,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp16,tp16,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp17,tp17,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp18,tp18,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp19,tp19,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp20,tp20,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp21,tp21,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp22,tp22,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp23,tp23,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp24,tp24,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx,Tp25,tp25,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,[REDACTED_IDENTIFIER],personal_identity_code,TBD,,,DIRECT_IDENTIFIER; must_not_be_used_in_repo_outputs; Inferred from name/role: Direct personal identity code (sensitive). Must be excluded from repo outputs; use pseudonymized linkage id instead.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,IkaNyt,age_nyt,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,ika_osastolla,age_osastolla,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,Kayntipvm,visit_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,TapaturmaPaiva,tapaturma_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,Kuolinpvm,death_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,Kuntakoodi,kuntakoodi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,KuntaNimi,kunta_nimi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,OsastojaksoAlkuPvm,osastojakso_start_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,OsastojaksoLoppuPvm,osastojakso_end_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,SaapumisSyy,saapumis_syy,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_osastojaksot_2010_2019.xlsx,PoistumisSyy,poistumis_syy,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,[REDACTED_IDENTIFIER],personal_identity_code,TBD,,,DIRECT_IDENTIFIER; must_not_be_used_in_repo_outputs; Inferred from name/role: Direct personal identity code (sensitive). Must be excluded from repo outputs; use pseudonymized linkage id instead.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,IkaNyt,age_nyt,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Ika_Kontaktilla,age_kontaktilla,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Kayntipvm,visit_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,TapaturmaPaiva,tapaturma_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Kuolinpvm,death_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Kuntakoodi,kuntakoodi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,KuntaNimi,kunta_nimi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Pdgo,pdgo,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg1o,sdg1o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg2o,sdg2o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg3o,sdg3o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg4o,sdg4o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg5o,sdg5o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg6o,sdg6o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg7o,sdg7o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg8o,sdg8o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Sdg9o,sdg9o,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp1,tp1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp2,tp2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp3,tp3,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp4,tp4,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp5,tp5,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp6,tp6,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp7,tp7,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp8,tp8,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp9,tp9,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp10,tp10,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp11,tp11,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp12,tp12,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp13,tp13,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp14,tp14,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp15,tp15,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp16,tp16,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp17,tp17,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp18,tp18,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp19,tp19,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp20,tp20,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp21,tp21,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp22,tp22,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp23,tp23,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp24,tp24,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl-kÔö£├▒ynnit_2010_2019.xlsx,Tp25,tp25,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Tutkimusaineisto_pkl_kaynnit_2010_2019.csv,[REDACTED_IDENTIFIER],personal_identity_code_age_visit_date_tapaturma_date_death_date_kuntakoodi_kunta_nimi_pdgo_sdg1o_sdg2o_sdg3o_sdg4o_sdg5o_sdg6o_sdg7o_sdg8o_sdg9o_tp1_tp2_tp3_tp4_tp5_tp6_tp7_tp8_tp9_tp10_tp11_tp12_tp13_tp14_tp15_tp16_tp17_tp18_tp19_tp20_tp21_tp22_tp23_tp24_tp25,TBD,,,DIRECT_IDENTIFIER; must_not_be_used_in_repo_outputs; Inferred from name/role: Direct personal identity code (sensitive). Must be excluded from repo outputs; use pseudonymized linkage id instead.; Codex Scan
+Verrokit.XLSX,Tutkimus-henkil├Ân k├ñsittelynro,study_henkilon_kasittelynro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Tutkimus-henkil├Ân numero,study_henkilon_numero,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Tutkimus-henkil├Ân henkil├Âtunnus,study_henkilon_personal_identity_code,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Ver-rokin nro,ver_rokin_nro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Tutk.henkil├Ân / verrokin henkil├Âtunnus,tutk_henkilon_verrokin_personal_identity_code,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Syntym├ñ-p├ñiv├ñ,syntyma_date,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,"Syntym├ñ-
+vuosi",syntyma_year,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Kuolinp├ñiv├ñ,kuolinpaiva,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,"Suku-
+puoli",suku_puoli,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Indeksip├ñiv├ñ,indeksipaiva,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Ind.pv koti- kunta,ind_pv_koti_kunta,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,"Indeksip├ñiv├ñn
+kotikunnan nimi",indeksipaivan_kotikunnan_nimi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,Tutkimushenkil├Ân numero,tutkimushenkilon_numero,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,Verrokin nro,verrokin_nro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,kvuosi,kvuosi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,tpks,tpks,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,tpksaika,tpksaika,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,vks,vks,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,m1,m1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,m2,m2,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,m3,m3,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,m4,m4,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+aineisto_U1662_a.xlsx,kuolpvm,kuolpvm_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+sotut.xlsx,NRO,nro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+sotut.xlsx,"1. KAAOS
+Vastaan-otto-
+k├ñynti
+ (pvm)",1_kaaos_vastaan_otto_visit_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+sotut.xlsx,Sotu,sotu,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+sotut.xlsx,"potilas-
+tunnus",patient_tunnus,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+verrokitjatutkimushenkil├Ât ÔÇô kopio.xlsx,FILE_UNREADABLE,file_unreadable,TBD,,,UNREADABLE/COPY/PASSWORD-PROTECTED; Inferred from name/role: Source file could not be read; variable list unavailable.; Codex Scan
+verrokitjatutkimushenkil├Ât.xlsx,Tutkimus-henkil├Ân numero,study_henkilon_numero,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+verrokitjatutkimushenkil├Ât.xlsx,Tutk.henkil├Ân / verrokin henkil├Âtunnus,tutk_henkilon_verrokin_personal_identity_code,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+verrokitjatutkimushenkil├Ât.xlsx,Tutkimus-henkil├Ân henkil├Âtunnus,study_henkilon_personal_identity_code,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+verrokitjatutkimushenkil├Ât.xlsx,Ver-rokin nro,ver_rokin_nro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
