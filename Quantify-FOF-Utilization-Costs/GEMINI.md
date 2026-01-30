@@ -34,6 +34,10 @@ Your goal is to orchestrate the pipeline for Aim 2: Quantify FOF-related health-
 
 ## OPERATIONAL COMMANDS
 
+* **Aim 2 Init**: `Rscript scripts/00_setup_env.R`
+* **Aim 2 Build**: `Rscript scripts/10_build_panel_person_period.R`
+* **Aim 2 Models**: `Rscript scripts/30_models_panel_nb_gamma.R`
+
 * **Test (CI-Safe)**: `python -m unittest discover -s tests`
 * **QC Smoke**: `python scripts/30_qc_summary.py --use-sample`
 * **Inventory**: `python scripts/00_inventory_manifest.py --scan paper_02`

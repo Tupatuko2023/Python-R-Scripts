@@ -490,3 +490,12 @@ verrokitjatutkimushenkil├Ât.xlsx,Tutkimus-henkil├Ân numero,study_henkilon_
 verrokitjatutkimushenkil├Ât.xlsx,Tutk.henkil├Ân / verrokin henkil├Âtunnus,tutk_henkilon_verrokin_personal_identity_code,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 verrokitjatutkimushenkil├Ât.xlsx,Tutkimus-henkil├Ân henkil├Âtunnus,study_henkilon_personal_identity_code,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 verrokitjatutkimushenkil├Ât.xlsx,Ver-rokin nro,ver_rokin_nro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+paper_02_panel,period_raw,period,as_factor,calendar_year,,Aim 2 panel period
+paper_02_panel,person_time_raw,person_time,as_numeric,person_years,non-negative,Aim 2 offset
+paper_02_covariates,frailty_score_raw,frailty_fried,as_numeric,points,0-5,Fried frailty proxy (placeholder)
+paper_02_covariates,frailty_count_3,frailty_fried,as_numeric,points,0-5,Fried frailty proxy (K15 match)
+paper_02_covariates,prior_falls_n,prior_falls,as_integer,count,non-negative,Falls in 12m prior baseline
+paper_02_covariates,morbidity_index,morbidity_charlson,as_integer,points,non-negative,Charlson Index
+paper_02_costs,cost_total_eur,cost_total_eur,eur_numeric,EUR,non-negative,Total direct hc costs
+paper_02_costs,cost_inpatient_eur,cost_inpatient_eur,eur_numeric,EUR,non-negative,Inpatient costs
+paper_02_costs,cost_outpatient_eur,cost_outpatient_eur,eur_numeric,EUR,non-negative,Outpatient costs
