@@ -413,7 +413,7 @@ def main():
     parser.add_argument("--full-mapping", action="store_true")
     args = parser.parse_args()
     
-    data_root = r"C:\GitWork\FOF_LOCAL-DATA\paper_02"
+    data_root = os.environ.get("DATA_ROOT", r"data/external")
     out_dir = Path("outputs/aggregates")
     out_dir.mkdir(exist_ok=True, parents=True)
     

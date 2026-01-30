@@ -209,7 +209,7 @@ def main():
     parser.add_argument("--input", help="Optional path to aggregate file")
     args = parser.parse_args()
     
-    data_root = r"C:\GitWork\FOF_LOCAL-DATA\paper_02"
+    data_root = os.environ.get("DATA_ROOT", r"data/external")
     
     df_link, df_kaaos, df_pkl, df_inpat = load_data(data_root)
     
