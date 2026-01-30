@@ -1,3 +1,9 @@
 timestamp,actor,script,status,message
+2026-01-29T12:00:21.869613,tomik,00_inventory_manifest.py,FAILURE,DATA_ROOT missing
+2026-01-29T12:14:08.054810,tomik,00_inventory_manifest.py,WARNING,Path not found: paper_02
+2026-01-29T12:14:26.151918,tomik,00_inventory_manifest.py,SUCCESS,"Scanned ., found 28 items"
+2026-01-29T13:57:58.255229,tomik,00_inventory_manifest.py,WARNING,Path not found: paper_02
+2026-01-29T13:59:00.657084,tomik,00_inventory_manifest.py,SUCCESS,"Scanned paper_02, found 35 items"
+2026-01-29T15:11:17.136548,tomik,00_inventory_manifest.py,WARNING,Path not found: outputs
 2026-01-30T03:04:51+02:00,run3a,data_dictionary_updated,added_file_unreadable_markers
 2026-01-30T03:23:43+02:00,fof_burden_cost_register_linkage_analysis_spec_checklist,run3b_completed,register_linkage_spec_written

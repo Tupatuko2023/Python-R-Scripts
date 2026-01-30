@@ -1,1 +1,4 @@
-logical_name,relative_path,file_glob,description,sensitivity
+﻿logical_name,relative_path,file_glob,description,sensitivity,header_row
+paper_02_outpatient,C:\GitWork\FOF_LOCAL-DATA\paper_02\Tutkimusaineisto_pkl_kaynnit_2010_2019.csv,*.csv,Outpatient visits 2010-2019,Private,0
+paper_02_kaaos,C:\GitWork\FOF_LOCAL-DATA\paper_02\KAAOS_data.xlsx,*.xlsx,KAAOS clinical data,Private,1
+paper_02_inpatient,C:\GitWork\FOF_LOCAL-DATA\paper_02\Tutkimusaineisto_osastojaksot_2010_2019.xlsx,*.xlsx,Inpatient episodes,Private,0

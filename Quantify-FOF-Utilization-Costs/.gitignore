@@ -28,3 +28,5 @@ tasks/02-in-progress/*
 !tasks/02-in-progress/.keep
 tasks/03-review/*
 !tasks/03-review/.keep
+
+manifest/dataset_manifest.csv
