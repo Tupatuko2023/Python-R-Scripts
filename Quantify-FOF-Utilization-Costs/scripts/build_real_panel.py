@@ -28,6 +28,18 @@ sotu.columns = ["NRO", "id"]
 
 # Merge KAAOS with IDs
 baseline = pd.merge(kaaos, sotu, on="NRO")
+
+# 2.1 Load Frailty Scores (from sibling project output)
+frailty_path = DERIVED_DIR / "frailty_scores.csv"
+if frailty_path.exists():
+    frailty = pd.read_csv(frailty_path)
+    baseline = pd.merge(baseline, frailty, on="NRO", how="left")
+    baseline["frailty_cat_3"] = baseline["frailty_cat_3"].fillna("unknown")
+    print(f"Frailty scores merged: {baseline['frailty_cat_3'].value_counts().to_dict()}")
+else:
+    print("Warning: frailty_scores.csv not found. Using placeholder.")
+    baseline["frailty_cat_3"] = "unknown"
+
 baseline = baseline.drop(columns=["NRO"])
 print(f"Baseline loaded: {len(baseline)} persons.")
 
@@ -50,7 +62,7 @@ for _, row in baseline.iterrows():
             "sex": row["sex"],
             "period": yr,
             "person_time": 1.0,
-            "frailty_fried": 0 # Placeholder
+            "frailty_fried": row["frailty_cat_3"]
         })
 
 panel_df = pd.DataFrame(panel_list)
