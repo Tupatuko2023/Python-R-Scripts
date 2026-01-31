@@ -53,8 +53,8 @@ sex (esim. 1=M, 2=F standardoinnin mukaan)
 KB missing → required for panel analysis (must be mapped/derived and added to standardization):
 period (jakso; factor/numeric)
 person*time (riskiaika per periodi; PY)
-frailty*_(Fried-proxy -indikaattori tai -pistemäärä)
-morbidity\__ / comorbidity*\*(esim. Charlson tms. SAP:n mukaan)
+frailty*\_(Fried-proxy -indikaattori tai -pistemäärä)
+morbidity\_\_ / comorbidity*\*(esim. Charlson tms. SAP:n mukaan)
 prior_falls*\* (aiemmat kaatumiset tms. SAP:n mukaan)
 
 Count-outcomes: palveluluokkakohtaiset periodilaskurit (esim. päivystyskäynnit, osastoepisodit, avohoitokäynnit, kuntoutusepisodit, kotihoitokontaktit)
@@ -73,8 +73,8 @@ Aikavaihtuvat kovariaatit (jos SAP määrittelee) mallinnetaan period-tasolla ja
 Päämalli (kullekin count-outcomelle erikseen):
 [
 Y*{it} \sim \text{NegBin}, \quad \log(E[Y*{it}]) =
-\beta_0 + \beta_1 \text{FOF}\_i + \gamma_t(\text{period}\_t) + \mathbf{X}_i\boldsymbol{\beta}
-\log(\text{person_time}_{it})
+\beta*0 + \beta_1 \text{FOF}\_i + \gamma_t(\text{period}\_t) + \mathbf{X}\_i\boldsymbol{\beta}
+\log(\text{person_time}*{it})
 ]
 Spesifikaatio (template):
 count_it ~ FOF_status + period + age + sex + morbidity + prior_falls + frailty + offset(log(person_time))
@@ -96,8 +96,8 @@ Päämalli (kullekin cost-outcomelle erikseen):
 [
 \text{Cost}{it} \mid \text{Cost}{it}>0 \sim \Gamma,\quad
 \log(E[\text{Cost}_{it}]) =
-\alpha_0 + \alpha_1 \text{FOF}\_i + \gamma_t(\text{period}\_t) + \mathbf{X}_i\boldsymbol{\alpha}
-\log(\text{person_time}_{it})
+\alpha*0 + \alpha_1 \text{FOF}\_i + \gamma_t(\text{period}\_t) + \mathbf{X}\_i\boldsymbol{\alpha}
+\log(\text{person_time}*{it})
 ]
 Spesifikaatio (template):
 cost_it ~ FOF_status + period + age + sex + morbidity + prior_falls + frailty + offset(log(person_time)), family = Gamma(link="log")
