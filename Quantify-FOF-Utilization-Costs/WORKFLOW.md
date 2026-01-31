@@ -1,4 +1,5 @@
 # Branch Isolation Rule
+
 Files in tasks/02-in-progress and tasks/03-review MUST NOT be merged to main unless moved to 04-done.
 
 ## Remote Sync Rule (MANDATORY for gpa1qf-gpa4qf)

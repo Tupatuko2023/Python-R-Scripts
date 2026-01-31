@@ -9,21 +9,20 @@ Your goal is to orchestrate the pipeline for Aim 2: Quantify FOF-related health-
 ## CRITICAL CONSTRAINTS (NON-NEGOTIABLE)
 
 1. **Option B Data Policy**:
+
 * RAW DATA NEVER ENTERS THIS REPO.
 * Data resides in repo-external `DATA_ROOT` (defined in `config/.env`).
 * Repo contains ONLY: metadata, scripts, templates, and synthetic sample data.
 
+1. **PowerShell 7.0 Execution**:
 
-2. **PowerShell 7.0 Execution**:
 * All shell commands must be PS7 compatible.
 * Do not assume bash/sh.
 
+1. **Output Discipline**:
 
-3. **Output Discipline**:
 * All generated artifacts go to `outputs/` (gitignored).
 * Never commit outputs or raw data.
-
-
 
 ## SOURCE OF TRUTH HIERARCHY
 

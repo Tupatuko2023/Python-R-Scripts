@@ -20,7 +20,6 @@ Manifests are metadata-only.
 
 Never commit outputs/ or docs/derived_text/.
 
-
 Context
 
 PR #70 (paper_02 integration map + assembly + QC hardening) is merged. This task confirms main is stable, and then locks paper_02 as a delivered unit (metadata-only).
@@ -28,7 +27,6 @@ PR #70 (paper_02 integration map + assembly + QC hardening) is merged. This task
 Objective
 
 1. Post-merge CI-safe verification on main (sample-only):
-
 
 unittest discover
 
@@ -40,22 +38,17 @@ build_report
 
 build_knowledge_package
 
-
-2. paper_02 delivery lock (metadata-only):
-
+1. paper_02 delivery lock (metadata-only):
 
 Update manifest metadata to mark paper_02 as “FROZEN/DELIVERED” (no data, no paths).
 
 Ensure any suppression rule reminders remain documented (n<5 suppressed) when aggregates are later explicitly enabled.
 
-
-3. Task tracking:
-
+1. Task tracking:
 
 Do NOT move paper_02 task to tasks/04-done without explicit human instruction.
 
 Record only safe log lines.
-
 
 Commands (CI-safe)
 
@@ -69,7 +62,6 @@ python Quantify-FOF-Utilization-Costs/scripts/50_build_report.py
 
 python Quantify-FOF-Utilization-Costs/scripts/40_build_knowledge_package.py
 
-
 Acceptance criteria
 
 All CI-safe validations succeed on main.
@@ -79,7 +71,6 @@ paper_02 marked frozen/delivered in metadata-only manifest without leaking paths
 No outputs/ or derived_text/ are staged or committed.
 
 No move to tasks/04-done.
-
 
 Log (safe only)
 

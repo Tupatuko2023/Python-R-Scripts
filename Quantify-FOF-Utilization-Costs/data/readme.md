@@ -32,10 +32,12 @@ Tämä kansio sisältää **metadata-only** -artefaktit, joita käytetään anal
 ## Data governance (Option B)
 
 **Sallittua repoon:**
+
 - Yllä listatut metadata-artefaktit
 - Synteettiset näyteaineistot `data/sample/`
 
 **Ei sallittua repoon:**
+
 - Yksilötason rekisteriotteet
 - Toimitetut raakadata-tiedostot
 - Mikään tunnisteita sisältävä tai palautettava sisältö

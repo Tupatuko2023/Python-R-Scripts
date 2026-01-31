@@ -53,8 +53,8 @@ sex (esim. 1=M, 2=F standardoinnin mukaan)
 KB missing → required for panel analysis (must be mapped/derived and added to standardization):
 period (jakso; factor/numeric)
 person_time (riskiaika per periodi; PY)
-frailty_* (Fried-proxy -indikaattori tai -pistemäärä)
-morbidity_* / comorbidity_* (esim. Charlson tms. SAP:n mukaan)
+frailty_*(Fried-proxy -indikaattori tai -pistemäärä)
+morbidity_* / comorbidity_*(esim. Charlson tms. SAP:n mukaan)
 prior_falls_* (aiemmat kaatumiset tms. SAP:n mukaan)
 
 Count-outcomes: palveluluokkakohtaiset periodilaskurit (esim. päivystyskäynnit, osastoepisodit, avohoitokäynnit, kuntoutusepisodit, kotihoitokontaktit)
@@ -64,7 +64,7 @@ Cost-outcomes: periodikohtaiset kustannukset (kokonaiskustannus ja/tai komponent
 Kaikki lähtötilanteen muuttujat (FOF, ikä, sukupuoli, frailty, lähtötilanteen komorbiditeetit) liitetään henkilö–jakso -tauluun ja toistuvat kaikilla periodeilla samalle henkilölle.
 Aikavaihtuvat kovariaatit (jos SAP määrittelee) mallinnetaan period-tasolla ja dokumentoidaan erikseen; oletuksena tässä suunnitelmassa kovariaatit ovat lähtötilanteen mittauksia, ellei projektin SAP lukitse muuta.
 
-4. Statistical Models
+1. Statistical Models
 4.0 Mallivalinta (paneelirakenne ja epävarmuus)
 Paneeliaineistossa toistomittaukset huomioidaan ensisijaisesti population-averaged-tulkinnan mukaisesti käyttäen cluster-robust vakiovirheitä henkilötasolla (id).
 Mixed/GEE-estimaattorit voidaan lisätä, jos SAP/KB vaatii; tässä suunnitelmassa ensisijainen raportointi perustuu pooled-malleihin + robust SE + cluster bootstrap ennusteille.
@@ -124,14 +124,14 @@ Unconditional recycled prediction:
 E[cost_it] = Pr(cost_it>0) × E[cost_it | cost_it>0]
 Raportointi: €/PY FOF=1 vs 0, ratio ja absolute €-difference, + cluster bootstrap 95% LV.
 
-5. QC Gates (Quality Control)
+1. QC Gates (Quality Control)
 Ennen mallinnusta tuotetaan QC-yhteenveto (metadata-only output outputs/-hakemistoon):
 Logical consistency: counts ≥ 0, costs ≥ 0, person_time > 0
 Completeness: FOF, frailty, covariates
 Panel integrity: periodien määrä, aukot
 Zeros & skew: nollaosuus, outlierit
 QC:n tulokset kirjataan lyhyesti ja niiden perusteella lukitaan two-part käyttö.
-6. Runbook & Reproducibility
+2. Runbook & Reproducibility
 Environment: renv::restore()
 Script naming:
 scripts/10_build_panel_person_period.R
@@ -157,9 +157,9 @@ library(broom)      # tidy
 
 # [Full R code template implied from prompt]
 
-# ...
+# 
 
-7. Interpretation & Reporting
+1. Interpretation & Reporting
 7.1 Report-ready outputs (default)
 Counts: IRR(FOF), Recycled predictions (rate/PY, ratio, diff) + 95% boot CI
 Costs: MR(FOF) (pos), Recycled predictions (€/PY, ratio, diff) + 95% boot CI (Two-part if needed)

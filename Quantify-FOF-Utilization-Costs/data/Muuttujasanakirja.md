@@ -4,14 +4,17 @@
 **Generoitu**: 2026-01-30T07:09:30.950444+00:00
 
 ## Option B -rajaus
+
 - Ei raakadataa, ei yksilötason arvoja repoon
 - Vain skeema + turvalliset aggregaatit (puuttuvuus% ja uniikit otoksesta)
 
 ## Standardointi (englanti)
+
 - `data/VARIABLE_STANDARDIZATION.csv`: muuttujien englanninkieliset standardinimet + heuristiset selitteet
 - `data/VARIABLE_STANDARDIZATION.md`: standardisointisäännöt ja yhteenveto
 
 ## DATA_ROOT tiedostot (redacted relpath + metadata)
+
 - `KAAOS_data.xlsx` (bytes=226130, mtime_utc=2026-01-27T14:03:17.200093+00:00, sha256_prefix1mb=f8f1cc6b7ca69f1e1026d99972eae74c1fb701dc8b44994cbd36e1b5d9a2e9c9, identifier_like_filename=0, redaction_reason=)
 - `KAAOS_data_käyntipäivät ilman sotua.xlsx` (bytes=216520, mtime_utc=2026-01-27T14:03:17.260093+00:00, sha256_prefix1mb=f2c33ded69dc79a257507620d5964d21a7a57c280fdcbf33267b841f38dddb6f, identifier_like_filename=0, redaction_reason=)
 - `[REDACTED_NAME]` (bytes=221231, mtime_utc=2026-01-27T14:03:17.164093+00:00, sha256_prefix1mb=6616fae649aaa74e5454d858f45d5b2402d04e2a47de2f3096eb0dcbff7fc15e, identifier_like_filename=1, redaction_reason=identifier_like_filename)
@@ -31,62 +34,78 @@
 - `verrokitjatutkimushenkilöt.xlsx` (bytes=71831, mtime_utc=2026-01-27T14:03:17.248093+00:00, sha256_prefix1mb=86c8abdfe916683a56a8667241e9879d07804d9b182a6e78d036017ad29ddfa8, identifier_like_filename=0, redaction_reason=)
 
 ## Lukukelvottomat tiedostot (metadata-only)
+
 - `Lifecare potilasaineisto – kopio.xlsx`: UNREADABLE/COPY/PASSWORD-PROTECTED (XLRDError: Can't find workbook in OLE2 compound document)
 - `verrokitjatutkimushenkilöt – kopio.xlsx`: UNREADABLE/COPY/PASSWORD-PROTECTED (XLRDError: Can't find workbook in OLE2 compound document)
 
 ## Tiivistelmä per lähdedatasetti
+
 ### KAAOS_data.xlsx
+
 - Muuttujia: 68
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### KAAOS_data_käyntipäivät ilman sotua.xlsx
+
 - Muuttujia: 69
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### Kopio_Tutkimusaineisto_osastojaksot_2010_2019.xlsx
+
 - Muuttujia: 12
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### Kopio_Tutkimusaineisto_pkl-k├ñynnit_2010_2019.xlsx
+
 - Muuttujia: 43
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### Lifecare potilasaineisto.xlsx
+
 - Muuttujia: 14
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx
+
 - Muuttujia: 41
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### Tutkimusaineisto_osastojaksot_2010_2019.xlsx
+
 - Muuttujia: 12
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### Tutkimusaineisto_pkl-k├ñynnit_2010_2019.xlsx
+
 - Muuttujia: 43
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### Tutkimusaineisto_pkl_kaynnit_2010_2019.csv
+
 - Muuttujia: 1
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### Verrokit.XLSX
+
 - Muuttujia: 12
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### [REDACTED_NAME]
+
 - Muuttujia: 138
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### aineisto_U1662_a.xlsx
+
 - Muuttujia: 11
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### sotut.xlsx
+
 - Muuttujia: 4
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)
 
 ### verrokitjatutkimushenkilöt.xlsx
+
 - Muuttujia: 4
 - Otos: enintään 2000 riviä (vain puuttuvuus/uniikit)

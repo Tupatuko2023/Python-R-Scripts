@@ -13,7 +13,7 @@ The Aim 2 analysis code (Panel Data) is now implemented. The README needs to be 
 
 Apped the following section to `README.md` (e.g., before "Handoff complete" or in a new "Analysis Pipelines" section).
 
-### Content to Append/Insert:
+### Content to Append/Insert
 
 ## Aim 2 Analysis Pipeline (Panel Data)
 
