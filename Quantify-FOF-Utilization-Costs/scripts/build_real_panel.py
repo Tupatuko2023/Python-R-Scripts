@@ -35,8 +35,21 @@ if frailty_path.exists():
     frailty = pd.read_csv(frailty_path)
     baseline = pd.merge(baseline, frailty, on="NRO", how="left")
     baseline["frailty_cat_3"] = baseline["frailty_cat_3"].fillna("unknown")
-    print(f"Frailty scores merged: {baseline['frailty_cat_3'].value_counts().to_dict()}")
+    
+    # Create frailty_binary: 0=Non-Frail (robust/pre-frail), 1=Frail, unknown=unknown
+    conditions = [
+        (baseline["frailty_cat_3"].isin(["robust", "pre-frail"])),
+        (baseline["frailty_cat_3"] == "frail"),
+        (baseline["frailty_cat_3"] == "unknown")
+    ]
+    choices = ["non-frail", "frail", "unknown"]
+    baseline["frailty_binary"] = np.select(conditions, choices, default="unknown")
+    
+    print(f"Frailty scores merged: {baseline['frailty_binary'].value_counts().to_dict()}")
 else:
+    print("Warning: frailty_scores.csv not found. Using placeholder.")
+    baseline["frailty_cat_3"] = "unknown"
+    baseline["frailty_binary"] = "unknown"
     print("Warning: frailty_scores.csv not found. Using placeholder.")
     baseline["frailty_cat_3"] = "unknown"
 
@@ -62,7 +75,8 @@ for _, row in baseline.iterrows():
             "sex": row["sex"],
             "period": yr,
             "person_time": 1.0,
-            "frailty_fried": row["frailty_cat_3"]
+            "frailty_fried": row["frailty_cat_3"],
+            "frailty_binary": row["frailty_binary"]
         })
 
 panel_df = pd.DataFrame(panel_list)

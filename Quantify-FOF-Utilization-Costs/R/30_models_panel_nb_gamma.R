@@ -47,7 +47,7 @@ v_age     <- "age"
 v_sex     <- "sex"
 v_period  <- "period"
 v_pt      <- "person_time"
-v_frailty <- "frailty_fried"
+v_frailty <- "frailty_binary"
 
 # Outcomes to model (adjust based on actual data presence)
 count_outcomes <- c("util_visits_total", "util_visits_outpatient", "util_visits_inpatient")

@@ -133,12 +133,12 @@ if (DATA_ROOT != "" && file.exists(PANEL_PATH)) {
   print(p_trend_c)
   dev.off()
   
-  # --- 4) Frailty Trends (New) ---
-  if ("frailty_fried" %in% names(panel)) {
-    message("Generating Frailty Trends...")
+  # --- 4) Frailty Trends (Updated) ---
+  if ("frailty_binary" %in% names(panel)) {
+    message("Generating Frailty Trends (Binary)...")
     trends_frail <- panel %>%
-      filter(frailty_fried != "unknown") %>%
-      group_by(period, frailty_fried) %>%
+      filter(frailty_binary != "unknown") %>%
+      group_by(period, frailty_binary) %>%
       summarise(
         n_obs = n(),
         total_visits = sum(util_visits_total, na.rm = TRUE),
@@ -148,17 +148,17 @@ if (DATA_ROOT != "" && file.exists(PANEL_PATH)) {
       mutate(rate_py = total_visits / total_pt)
       
     if (nrow(trends_frail) > 0) {
-      p_frail <- ggplot(trends_frail, aes(x = period, y = rate_py, color = frailty_fried, group = frailty_fried)) +
+      p_frail <- ggplot(trends_frail, aes(x = period, y = rate_py, color = frailty_binary, group = frailty_binary)) +
         geom_line(size = 1.2) + 
         geom_point(size = 3) +
         theme_minimal() +
-        scale_color_viridis_d(option = "plasma") +
-        labs(title = "Visit Trends by Frailty Status",
+        scale_color_viridis_d(option = "plasma", end = 0.8) +
+        labs(title = "Visit Trends by Frailty Status (Binary)",
              subtitle = "Visits per Person-Year",
              x = "Follow-up Period (Years)", y = "Visits / PY",
              color = "Frailty")
       
-      agg_png(file.path(FIG_DIR, "trend_visits_by_frailty.png"), width = 1000, height = 700, res = 120)
+      agg_png(file.path(FIG_DIR, "trend_visits_by_frailty_binary.png"), width = 1000, height = 700, res = 120)
       print(p_frail)
       dev.off()
     }
