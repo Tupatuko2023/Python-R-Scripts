@@ -2,8 +2,8 @@
 
 ## Status
 
-* **Source:** Completed Tasks (Scripts 00-30)
-* **Target:** README.md
+- **Source:** Completed Tasks (Scripts 00-30)
+- **Target:** README.md
 
 ## Context
 

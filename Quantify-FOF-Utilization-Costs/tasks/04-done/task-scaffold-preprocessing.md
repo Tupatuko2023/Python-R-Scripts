@@ -12,8 +12,8 @@ assignee: gpa4qf
 
 # Specs
 
-* **Data Policy:** Option B (Real data external, Synthetic internal).
-* **Script logic:**
-  * If --use-sample: Load data/synthetic_sample.csv.
-  * Else: Load from os.getenv('DATA_ROOT').
-* **Validation:** Check columns against data_dictionary.csv.
+- **Data Policy:** Option B (Real data external, Synthetic internal).
+- **Script logic:**
+  - If --use-sample: Load data/synthetic_sample.csv.
+  - Else: Load from os.getenv('DATA_ROOT').
+- **Validation:** Check columns against data_dictionary.csv.

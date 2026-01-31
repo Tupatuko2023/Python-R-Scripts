@@ -2,8 +2,8 @@
 
 ## Status
 
-* **Source:** docs/analysis_plan.md (Section 6/Runbook code block)
-* **Target:** scripts/30_models_panel_nb_gamma.R
+- **Source:** docs/analysis_plan.md (Section 6/Runbook code block)
+- **Target:** scripts/30_models_panel_nb_gamma.R
 
 ## Instructions
 
@@ -92,7 +92,7 @@ recycled_rate <- function(model, df) {
     d2 <- df
     d2[[v_fof]] <- val
     # Predict expected count/cost per period
-    mu <- as.numeric(predict(model, newdata = d2, type = "response")) 
+    mu <- as.numeric(predict(model, newdata = d2, type = "response"))
     # Convert to per PY (aggregated)
     sum(mu, na.rm = TRUE) / sum(d2[[v_pt]], na.rm = TRUE)
   }
@@ -112,7 +112,7 @@ boot_cluster <- function(df, ids, B, fit_fun, pred_fun) {
       samp_ids <- sample(ids, size = length(ids), replace = TRUE)
       # Efficient join to replicate rows
       df_b <- inner_join(df, tibble(!!v_id := samp_ids), by = v_id, relationship = "many-to-many")
-      
+
       m_b <- fit_fun(df_b)
       out[[b]] <- pred_fun(m_b, df_b)
     }, error = function(e) return(NULL))
@@ -135,12 +135,12 @@ ids <- unique(panel[[v_id]])
 for (y in count_outcomes) {
   if (!y %in% names(panel)) next
   message("Modeling Count: ", y)
-  
+
   m <- fit_nb(panel, y)
   est <- recycled_rate(m, panel)
-  
+
   boot <- boot_cluster(panel, ids, B, function(d) fit_nb(d, y), function(m, d) recycled_rate(m, d))
-  
+
   # Summarize
   res <- est %>% mutate(
     outcome = y,
@@ -155,13 +155,13 @@ for (y in count_outcomes) {
 for (y in cost_outcomes) {
   if (!y %in% names(panel)) next
   message("Modeling Cost: ", y)
-  
+
   # Gamma on positives
   m <- fit_gamma_pos(panel, y)
   est <- recycled_rate(m, panel %>% filter(.data[[y]] > 0)) # Note: recycled on positives only for conditional
-  
+
   boot <- boot_cluster(panel, ids, B, function(d) fit_gamma_pos(d, y), function(m, d) recycled_rate(m, d %>% filter(.data[[y]] > 0)))
-  
+
   res <- est %>% mutate(
     outcome = y,
     type = "cost_gamma_pos",

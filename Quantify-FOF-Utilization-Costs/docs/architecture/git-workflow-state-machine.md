@@ -10,16 +10,16 @@ stateDiagram-v2
     Idle --> ClaimLock: Start Task
     ClaimLock --> Preflight: Lock Acquired
     ClaimLock --> [*]: Lock Exists (Fail Fast)
-    
+
     Preflight --> Checkout: Env Healthy
     Preflight --> ReleaseLock: Error
-    
+
     Checkout --> Work: Branch Ready
     Work --> Commit: Changes Made
-    
+
     Commit --> Push: Commit Success
     Push --> PRUpsert: Push Success
-    
+
     PRUpsert --> ReleaseLock: PR Ready
     ReleaseLock --> [*]: Task Complete
 ```

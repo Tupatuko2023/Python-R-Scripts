@@ -1,5 +1,4 @@
-﻿
-# TASK: [Short Title]
+﻿# TASK: [Short Title]
 
 **Status**: 01-ready
 **Assigned**: Gemini
@@ -11,8 +10,8 @@
 
 ## INPUTS
 
-* [File/Script A]
-* [Data B]
+- [File/Script A]
+- [Data B]
 
 ## STEPS
 
@@ -21,5 +20,5 @@
 
 ## ACCEPTANCE CRITERIA
 
-* [ ] Artifact X exists
-* [ ] Test Y passes
+- [ ] Artifact X exists
+- [ ] Test Y passes

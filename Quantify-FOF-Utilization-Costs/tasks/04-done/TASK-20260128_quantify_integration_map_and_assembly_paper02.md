@@ -58,17 +58,17 @@ Known corrupted copies (ignore these):
 
 ## Objective
 
-1) Create an integration map for paper_02:
+1. Create an integration map for paper_02:
    - list each source table, its role (events, diagnoses, procedures, cohort, linkage, cost/price),
    - identify join keys and any temporal join rules (dates, validity ranges),
    - describe minimal assembly outputs needed for downstream analysis.
 
-2) Implement a local-only assembly step that produces an analysis-ready dataset (or a small set of normalized outputs) under gitignored outputs, without ever writing absolute paths.
+2. Implement a local-only assembly step that produces an analysis-ready dataset (or a small set of normalized outputs) under gitignored outputs, without ever writing absolute paths.
 
-3) Update QC so it can be executed deterministically for:
+3. Update QC so it can be executed deterministically for:
    - each source table (basic shape, missingness, key uniqueness),
    - and the assembled dataset (join coverage, duplicates, date sanity).
-   QC must fail if any absolute path-like strings appear in QC outputs.
+     QC must fail if any absolute path-like strings appear in QC outputs.
 
 ## Target files
 
@@ -79,17 +79,17 @@ Known corrupted copies (ignore these):
 
 ## Plan
 
-1) Read-only discovery
+1. Read-only discovery
    - Confirm which files are canonical sources (prefer non-copy originals).
    - Confirm KAAOS header row handling: use row 2 as header (skip first row).
 
-2) Integration map (write to outputs/reports, gitignored)
+2. Integration map (write to outputs/reports, gitignored)
    - Produce a short markdown artifact describing:
      - sources, columns, keys, and intended joins,
      - which dataset is the “primary events” table for utilization and costs,
      - what the assembled dataset will contain.
 
-3) Assembly implementation (local-only)
+3. Assembly implementation (local-only)
    - Implement `20_assemble_paper02.py`:
      - Accept `--input-root` (directory) and/or a manifest file name (no absolute paths in logs).
      - Read xlsx via openpyxl or pandas.
@@ -98,7 +98,7 @@ Known corrupted copies (ignore these):
      - Write assembled outputs to `Quantify-FOF-Utilization-Costs/outputs/` in gitignored location.
      - Never write absolute paths into outputs; store only relative identifiers or placeholders.
 
-4) QC update
+4. QC update
    - Update `30_qc_summary.py` so it can run on:
      - a single file (csv/xlsx),
      - or a manifest describing multiple sources,
@@ -107,12 +107,12 @@ Known corrupted copies (ignore these):
      - scan QC outputs for path-like patterns (Termux/Linux/Windows),
      - fail with generic message without printing matches.
 
-5) Run locally (Option B)
+5. Run locally (Option B)
    - Set input root locally (provided locally, not logged).
    - Run assembly, then QC.
    - Record only success/failure and high-level counts, no paths, no command lines containing paths.
 
-6) After work
+6. After work
    - Move this task from `tasks/02-in-progress/` to `tasks/03-review/`.
    - Never move to `tasks/04-done/` (human decides).
 
