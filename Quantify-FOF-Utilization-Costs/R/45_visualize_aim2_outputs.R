@@ -132,6 +132,38 @@ if (DATA_ROOT != "" && file.exists(PANEL_PATH)) {
   agg_png(file.path(FIG_DIR, "trend_costs_py.png"), width = 1000, height = 700, res = 120)
   print(p_trend_c)
   dev.off()
+  
+  # --- 4) Frailty Trends (New) ---
+  if ("frailty_fried" %in% names(panel)) {
+    message("Generating Frailty Trends...")
+    trends_frail <- panel %>%
+      filter(frailty_fried != "unknown") %>%
+      group_by(period, frailty_fried) %>%
+      summarise(
+        n_obs = n(),
+        total_visits = sum(util_visits_total, na.rm = TRUE),
+        total_pt = sum(person_time, na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      mutate(rate_py = total_visits / total_pt)
+      
+    if (nrow(trends_frail) > 0) {
+      p_frail <- ggplot(trends_frail, aes(x = period, y = rate_py, color = frailty_fried, group = frailty_fried)) +
+        geom_line(size = 1.2) + 
+        geom_point(size = 3) +
+        theme_minimal() +
+        scale_color_viridis_d(option = "plasma") +
+        labs(title = "Visit Trends by Frailty Status",
+             subtitle = "Visits per Person-Year",
+             x = "Follow-up Period (Years)", y = "Visits / PY",
+             color = "Frailty")
+      
+      agg_png(file.path(FIG_DIR, "trend_visits_by_frailty.png"), width = 1000, height = 700, res = 120)
+      print(p_frail)
+      dev.off()
+    }
+  }
+
 } else {
   message("Skipping Trend Plots: DATA_ROOT or aim2_panel.csv missing.")
 }

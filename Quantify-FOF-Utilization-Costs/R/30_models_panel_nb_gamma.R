@@ -61,22 +61,25 @@ vcov_cluster <- function(model, cluster_vec) {
 }
 
 fit_nb <- function(df, y) {
-  # Formula: y ~ FOF + period + age + sex + frailty + offset
-  # Ensure factors
+  # Formula: y ~ FOF * frailty + period + age + sex + offset
+  # Filter out unknown frailty for this analysis
+  df_sub <- df %>% filter(.data[[v_frailty]] != "unknown")
+  if(nrow(df_sub) == 0) return(NULL)
+
   f_str <- paste0(
-    y, " ~ ", v_fof, " + factor(", v_period, ") + ", v_age, " + factor(", v_sex, ") + ",
-    v_frailty, " + offset(log(", v_pt, "))"
+    y, " ~ ", v_fof, " * factor(", v_frailty, ") + factor(", v_period, ") + ", v_age, " + factor(", v_sex, ") + offset(log(", v_pt, "))"
   )
-  MASS::glm.nb(as.formula(f_str), data = df)
+  MASS::glm.nb(as.formula(f_str), data = df_sub)
 }
 
 fit_gamma_pos <- function(df, y) {
-  df_pos <- df %>% filter(.data[[y]] > 0)
+  # Filter out unknown frailty
+  df_sub <- df %>% filter(.data[[v_frailty]] != "unknown")
+  df_pos <- df_sub %>% filter(.data[[y]] > 0)
   if(nrow(df_pos) < 10) return(NULL) # Too few positives
   
   f_str <- paste0(
-    y, " ~ ", v_fof, " + factor(", v_period, ") + ", v_age, " + factor(", v_sex, ") + ",
-    v_frailty, " + offset(log(", v_pt, "))"
+    y, " ~ ", v_fof, " * factor(", v_frailty, ") + factor(", v_period, ") + ", v_age, " + factor(", v_sex, ") + offset(log(", v_pt, "))"
   )
   glm(as.formula(f_str), data = df_pos, family = Gamma(link = "log"))
 }
@@ -131,22 +134,28 @@ ci_percentile <- function(x, alpha = 0.05) {
 #-----------------------------
 B <- 50 # Debug level
 results <- list()
-ids <- unique(panel[[v_id]])
+
+# Filter to those with known frailty for interaction analysis
+panel_filtered <- panel %>% filter(.data[[v_frailty]] != "unknown")
+ids <- unique(panel_filtered[[v_id]])
+
+message("Persons with frailty data: ", length(ids))
 
 # --- Counts ---
 for (y in count_outcomes) {
-  if (!y %in% names(panel)) next
+  if (!y %in% names(panel_filtered)) next
   message("Modeling Count: ", y)
   
-  m <- fit_nb(panel, y)
-  est <- recycled_rate(m, panel)
+  m <- fit_nb(panel_filtered, y)
+  if(is.null(m)) next
+  est <- recycled_rate(m, panel_filtered)
   
-  boot <- boot_cluster(panel, ids, B, function(d) fit_nb(d, y), function(m, d) recycled_rate(m, d))
+  boot <- boot_cluster(panel_filtered, ids, B, function(d) fit_nb(d, y), function(m, d) recycled_rate(m, d))
   
   # Summarize
   res <- est %>% mutate(
     outcome = y,
-    type = "count_nb",
+    type = "count_nb_interaction",
     val_fof0_l = ci_percentile(boot$val_fof0)[1], val_fof0_u = ci_percentile(boot$val_fof0)[2],
     ratio_l = ci_percentile(boot$ratio)[1], ratio_u = ci_percentile(boot$ratio)[2]
   )
@@ -155,22 +164,24 @@ for (y in count_outcomes) {
 
 # --- Costs ---
 for (y in cost_outcomes) {
-  if (!y %in% names(panel)) next
+  if (!y %in% names(panel_filtered)) next
   message("Modeling Cost: ", y)
   
   # Gamma on positives
-  m <- fit_gamma_pos(panel, y)
+  m <- fit_gamma_pos(panel_filtered, y)
+  if(is.null(m)) next
   
   # Recycled on positives only for conditional mean
-  est <- recycled_rate(m, panel %>% filter(.data[[y]] > 0))
+  panel_pos <- panel_filtered %>% filter(.data[[y]] > 0)
+  est <- recycled_rate(m, panel_pos)
   
-  boot <- boot_cluster(panel, ids, B, 
+  boot <- boot_cluster(panel_filtered, ids, B, 
                        function(d) fit_gamma_pos(d, y), 
                        function(m, d) recycled_rate(m, d %>% filter(.data[[y]] > 0)))
   
   res <- est %>% mutate(
     outcome = y,
-    type = "cost_gamma_pos",
+    type = "cost_gamma_pos_interaction",
     val_fof0_l = ci_percentile(boot$val_fof0)[1], val_fof0_u = ci_percentile(boot$val_fof0)[2],
     ratio_l = ci_percentile(boot$ratio)[1], ratio_u = ci_percentile(boot$ratio)[2]
   )
