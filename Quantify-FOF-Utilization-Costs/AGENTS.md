@@ -1,4 +1,3 @@
-
 ## Conflict Resolution Protocol
 
 1. **Always Diff**: Before resolving conflicts, explicitly show the difference (lines added/removed) between local and remote versions.

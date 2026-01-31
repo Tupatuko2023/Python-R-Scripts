@@ -41,6 +41,6 @@ Some files could not be read (e.g., password-protected copies). These are record
 
 ## How to use
 
-1) Start from `VARIABLE_STANDARDIZATION.csv` to see the proposed English standard names and inferred descriptions.
-2) Confirm/replace `description_en` (and optionally fill `description_fi`) in a separate governance step if needed.
-3) Keep Option B: never add participant-level examples or raw values to repo artifacts.
+1. Start from `VARIABLE_STANDARDIZATION.csv` to see the proposed English standard names and inferred descriptions.
+2. Confirm/replace `description_en` (and optionally fill `description_fi`) in a separate governance step if needed.
+3. Keep Option B: never add participant-level examples or raw values to repo artifacts.

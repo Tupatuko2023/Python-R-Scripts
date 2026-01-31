@@ -2,8 +2,8 @@
 
 ## Status
 
-* **Source:** docs/analysis_plan.md
-* **Target:** data/VARIABLE_STANDARDIZATION.csv
+- **Source:** docs/analysis_plan.md
+- **Target:** data/VARIABLE_STANDARDIZATION.csv
 
 ## Context
 
@@ -28,7 +28,7 @@ new_rows = [
     # Panel Time structure
     ["paper_02_panel", "period_raw", "period", "as_factor", "calendar_year", "", "Aim 2 panel period"],
     ["paper_02_panel", "person_time_raw", "person_time", "as_numeric", "person_years", "non-negative", "Aim 2 offset"],
-    
+
     # Covariates
     ["paper_02_covariates", "frailty_score_raw", "frailty_fried", "as_numeric", "points", "0-5", "Fried frailty proxy"],
     ["paper_02_covariates", "prior_falls_n", "prior_falls", "as_integer", "count", "non-negative", "Falls in 12m prior baseline"],

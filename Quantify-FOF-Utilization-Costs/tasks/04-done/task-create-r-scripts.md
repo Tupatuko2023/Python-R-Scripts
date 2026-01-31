@@ -2,8 +2,8 @@
 
 ## Status
 
-* **Source:** docs/analysis_plan.md
-* **Target:** scripts/
+- **Source:** docs/analysis_plan.md
+- **Target:** scripts/
 
 ## Instructions
 
