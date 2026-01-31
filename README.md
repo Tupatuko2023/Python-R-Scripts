@@ -8,6 +8,14 @@
 This repository contains Python and R projects for data analysis and research
 workflows. Each subfolder is a standalone project with its own docs.
 
+## Execution Environments
+
+This monorepo supports multiple execution environments with specific configurations:
+
+*   **Windows (Standard):** Primary environment using PowerShell 7.0 and `GEMINI.md` guidance.
+*   **Android (Termux):** Mobile environment using Bash and `GEMINI_TERMUX.md` guidance. Requires `termux-wake-lock` for long-running scripts.
+*   **Git Bash / Linux:** Standard Unix-like environments.
+
 ## Main project
 
 - [Electronic Frailty Index](Electronic-Frailty-Index/README.md)
