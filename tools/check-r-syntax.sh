@@ -26,7 +26,7 @@ while IFS= read -r f; do
   if [[ ! -f "${ROOT}/${f}" ]]; then
     continue
   fi
-  Rscript -q -e "parse(file='${ROOT}/${f}')" \
+  Rscript -e "parse(file='${ROOT}/${f}')" \
     || die "R parse failed: ${f}"
 done <<< "${FILES}"
 
