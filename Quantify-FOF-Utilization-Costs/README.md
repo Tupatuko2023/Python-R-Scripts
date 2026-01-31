@@ -37,6 +37,14 @@ Quickstart (local with sensitive data)
 
 If data is missing, scripts will exit with actionable instructions.
 
+## Execution Environments
+
+This subproject supports two primary execution environments:
+
+*   **Windows (Standard):** Uses PowerShell 7.0. Follow the guidelines in `GEMINI.md`.
+*   **Android (Termux):** Uses Bash and `termux-wake-lock`. Follow the guidelines in `GEMINI_TERMUX.md`.
+    *   **Note:** In Termux, the Python-based builder (`scripts/build_real_panel.py`) is used instead of the R-based builder to prevent memory-related segmentation faults.
+
 How to obtain data (high level)
 Register linkage and extraction are handled by designated controllers under permits. This repo intentionally does not encode sensitive locations, keys, or any participant-level data.
 
@@ -48,7 +56,8 @@ Register linkage and extraction are handled by designated controllers under perm
    `Rscript scripts/00_setup_env.R`
    (Initializes `renv` and installs dependencies: tidyverse, MASS, sandwich, etc.)
 2. **Data Build (Secure):**
-   `Rscript scripts/10_build_panel_person_period.R`
+   *   **Windows:** `Rscript scripts/10_build_panel_person_period.R`
+   *   **Android (Termux):** `python scripts/build_real_panel.py`
    (Reads `DATA_ROOT`, applies `data/VARIABLE_STANDARDIZATION.csv`, saves `derived/aim2_panel.csv`)
 3. **Quality Control:**
    `Rscript scripts/20_qc_panel_summary.R`
