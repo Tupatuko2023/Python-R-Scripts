@@ -4,6 +4,7 @@ status: ready
 assignee: Gemini
 priority: high
 ---
+
 # Context
 
 Project requires "Option B" data policy: Raw data is external, only metadata is stored in repo.

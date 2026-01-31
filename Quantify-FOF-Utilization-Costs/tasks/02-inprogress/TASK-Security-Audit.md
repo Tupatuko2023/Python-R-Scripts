@@ -12,19 +12,19 @@ Checks
 
 1. **Manifest Safety**:
 
-* Check \manifest/dataset_manifest.csv\. If it contains absolute paths (e.g., "C:/Users/..."), ensure \manifest/\ is added to \.gitignore\.
-* If manifest must be shared, convert paths to relative or use a hash.
-* Recommended action: Add \manifest/dataset_manifest.csv\ to \.gitignore\ immediately if not present.
+- Check \manifest/dataset_manifest.csv\. If it contains absolute paths (e.g., "C:/Users/..."), ensure \manifest/\ is added to \.gitignore\.
+- If manifest must be shared, convert paths to relative or use a hash.
+- Recommended action: Add \manifest/dataset_manifest.csv\ to \.gitignore\ immediately if not present.
 
 1. **Git History Check**:
 
-* Run \git status\ and ensure no secrets or external data files are staged.
+- Run \git status\ and ensure no secrets or external data files are staged.
 
 1. **Output Hygiene**:
 
-* When reporting file locations, replace the absolute prefix with \{DATA_ROOT}\.
-* Example: instead of \Z:\Secure\Data\file.csv\, output \{DATA_ROOT}/file.csv\.
+- When reporting file locations, replace the absolute prefix with \{DATA_ROOT}\.
+- Example: instead of \Z:\Secure\Data\file.csv\, output \{DATA_ROOT}/file.csv\.
 
 Next Steps after Audit
 
-* Once hygiene is secured, return to the FOF variable investigation (KAAOS_data.xlsx).
+- Once hygiene is secured, return to the FOF variable investigation (KAAOS_data.xlsx).

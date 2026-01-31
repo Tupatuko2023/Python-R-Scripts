@@ -1,4 +1,3 @@
-
 # TASK: Security Audit & Path Sanitization
 
 **Status**: 01-ready
@@ -12,28 +11,28 @@ Ensure no absolute paths to sensitive data are committed to git or displayed in 
 
 ## INPUTS
 
-* manifest/dataset_manifest.csv (target for inspection)
-* .gitignore (target for update)
-* scripts/ (check for hardcoded paths)
+- manifest/dataset_manifest.csv (target for inspection)
+- .gitignore (target for update)
+- scripts/ (check for hardcoded paths)
 
 ## STEPS
 
 1. **Manifest Safety**:
 
-* Check 'manifest/dataset_manifest.csv' for absolute paths (e.g., 'C:/Users/...').
-* IF absolute paths exist: Add 'manifest/dataset_manifest.csv' to '.gitignore' immediately OR convert paths to relative.
+- Check 'manifest/dataset_manifest.csv' for absolute paths (e.g., 'C:/Users/...').
+- IF absolute paths exist: Add 'manifest/dataset_manifest.csv' to '.gitignore' immediately OR convert paths to relative.
 
 1. **Git History Check**:
 
-* Run 'git status' to ensure no secrets or external data files are staged.
-* Verify no sensitive files are tracked in current HEAD.
+- Run 'git status' to ensure no secrets or external data files are staged.
+- Verify no sensitive files are tracked in current HEAD.
 
 1. **Output Hygiene**:
 
-* Verify scripts output paths using '{DATA_ROOT}' placeholder logic instead of hardcoded absolute paths where applicable.
+- Verify scripts output paths using '{DATA_ROOT}' placeholder logic instead of hardcoded absolute paths where applicable.
 
 ## ACCEPTANCE CRITERIA
 
-* [ ] 'manifest/dataset_manifest.csv' is either gitignored OR contains no absolute paths.
-* [ ] 'git status' is clean of sensitive files.
-* [ ] No absolute paths to data found in recent logs or script outputs.
+- [ ] 'manifest/dataset_manifest.csv' is either gitignored OR contains no absolute paths.
+- [ ] 'git status' is clean of sensitive files.
+- [ ] No absolute paths to data found in recent logs or script outputs.

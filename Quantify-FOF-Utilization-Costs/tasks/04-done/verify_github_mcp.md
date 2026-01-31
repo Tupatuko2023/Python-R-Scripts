@@ -10,16 +10,16 @@ Varmista, että GitHub-työkalut ovat käytettävissä ja että Agentti saa yhte
 
 ## INPUTS
 
-* `GITHUB_PERSONAL_ACCESS_TOKEN` (Environment Variable)
-* Agent restart (to apply settings)
+- `GITHUB_PERSONAL_ACCESS_TOKEN` (Environment Variable)
+- Agent restart (to apply settings)
 
 ## STEPS
 
 1. **Tool Discovery**: Listaa työkalut. Etsi GitHub-spesifejä työkaluja (esim. `github_search_repositories`, `github_get_issue` jne. riippuen serverin versiosta).
 2. **Connectivity Test**: Suorita kevyt hakukomento, esim. etsi tämän repon nimi tai julkinen repo "modelcontextprotocol".
-    * *Huom: Älä tee kirjoitusoperaatioita (issue/PR) testin aikana.*
+   - _Huom: Älä tee kirjoitusoperaatioita (issue/PR) testin aikana._
 
 ## ACCEPTANCE CRITERIA
 
-* [ ] GitHub-työkalut näkyvät työkalulistassa.
-* [ ] Hakukomento palauttaa tuloksia (ei 401/403 virheitä).
+- [ ] GitHub-työkalut näkyvät työkalulistassa.
+- [ ] Hakukomento palauttaa tuloksia (ei 401/403 virheitä).

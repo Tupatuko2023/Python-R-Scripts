@@ -1,4 +1,3 @@
-
 # TASK: Restore MCP connectivity on Windows PowerShell
 
 **Status**: 01-ready
@@ -11,8 +10,8 @@ Restore MCP connectivity on Windows PowerShell (Docker + stdio). This includes e
 
 ## INPUTS
 
-* `docs/runbook_mcp_windows.md`
-* `config/mcp/mcpServers.example.json`
+- `docs/runbook_mcp_windows.md`
+- `config/mcp/mcpServers.example.json`
 
 ## STEPS
 
@@ -22,6 +21,6 @@ Restore MCP connectivity on Windows PowerShell (Docker + stdio). This includes e
 
 ## ACCEPTANCE CRITERIA
 
-* [ ] `config/mcp_windows_fix.json` exists and contains valid JSON.
-* [ ] Windows paths in the JSON are correctly escaped (double backslashes).
-* [ ] `docs/runbook_mcp_windows.md` is updated with application instructions.
+- [ ] `config/mcp_windows_fix.json` exists and contains valid JSON.
+- [ ] Windows paths in the JSON are correctly escaped (double backslashes).
+- [ ] `docs/runbook_mcp_windows.md` is updated with application instructions.
