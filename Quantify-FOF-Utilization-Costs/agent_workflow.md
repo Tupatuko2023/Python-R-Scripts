@@ -1,4 +1,3 @@
-
 # Agent Execution Protocol
 
 Standard operating procedure for Gemini Agents gpa1qf-gpa4qf:

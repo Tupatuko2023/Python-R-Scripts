@@ -10,8 +10,8 @@ Verifioi, että MCP-palvelimet (filesystem ja docker) toimivat odotetusti konfig
 
 ## INPUTS
 
-* `config/mcp_windows_fix.json` (applied to settings)
-* `README.md` (target for read test)
+- `config/mcp_windows_fix.json` (applied to settings)
+- `README.md` (target for read test)
 
 ## STEPS
 
@@ -21,6 +21,6 @@ Verifioi, että MCP-palvelimet (filesystem ja docker) toimivat odotetusti konfig
 
 ## ACCEPTANCE CRITERIA
 
-* [ ] Agentti listaa työkalut ilman virheitä.
-* [ ] `README.md` sisältö saadaan luettua.
-* [ ] MCP-yhteys on stabiili (ei "Connection closed" -virheitä).
+- [ ] Agentti listaa työkalut ilman virheitä.
+- [ ] `README.md` sisältö saadaan luettua.
+- [ ] MCP-yhteys on stabiili (ei "Connection closed" -virheitä).

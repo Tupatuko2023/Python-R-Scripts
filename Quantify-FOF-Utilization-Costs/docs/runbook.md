@@ -8,27 +8,27 @@ This project is Option B: raw data stays outside the repo (DATA_ROOT). Repo cont
 
 Below is a set of commands for installing current versions Numpy and Pandas on a clean Termux installation. Read them carefully, don't re-order or modify steps unless know what you are doing. Steps are not applicable for old package versions.
 
-1) Upgrade all packages
+1. Upgrade all packages
 
 yes | pkg upgrade
 
-1) Install Python, dependencies and build tools
+1. Install Python, dependencies and build tools
 
 pkg install git python build-essential cmake ninja libopenblas libandroid-execinfo patchelf binutils-is-llvm
 
-1) Install tools for building Python projects
+1. Install tools for building Python projects
 
 pip3 install setuptools wheel packaging pyproject_metadata cython meson-python versioneer
 
-1) Check your Python version
+1. Check your Python version
 
 python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")'
 
-1) Install Numpy. Replace value 3.12 with actual Python version obtained in step 4!!!
+1. Install Numpy. Replace value 3.12 with actual Python version obtained in step 4!!!
 
 MATHLIB=m LDFLAGS="-lpython3.12" pip3 install --no-build-isolation --no-cache-dir numpy
 
-1) Install Pandas. Replace value 3.12 with actual Python version obtained in step 4!!!
+1. Install Pandas. Replace value 3.12 with actual Python version obtained in step 4!!!
 
 LDFLAGS="-lpython3.12" pip3 install --no-build-isolation --no-cache-dir pandas
 

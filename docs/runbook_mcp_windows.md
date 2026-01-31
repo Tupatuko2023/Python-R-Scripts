@@ -89,8 +89,8 @@ Tämä konfiguraatio lisää Docker-serverit ja esimerkin `filesystem`-serverist
 
 ## 4. Vianmääritys
 
-| Ongelma | Ratkaisu |
-|--------|----------|
-| `docker: error during connect` | Käynnistä Docker Desktop. |
-| Serveri ei näy listassa | Tarkista JSON-syntaksi ja tiedoston sijainti (`.gemini/settings.json`). |
-| `npx` ei löydy | Lisää Node.js PATHiin tai käytä täyttä polkua. |
+| Ongelma                        | Ratkaisu                                                                |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| `docker: error during connect` | Käynnistä Docker Desktop.                                               |
+| Serveri ei näy listassa        | Tarkista JSON-syntaksi ja tiedoston sijainti (`.gemini/settings.json`). |
+| `npx` ei löydy                 | Lisää Node.js PATHiin tai käytä täyttä polkua.                          |
