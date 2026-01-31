@@ -122,9 +122,9 @@ locate_script <- function(candidates) {
   NA_character_
 }
 
-setup_script <- locate_script(c("00_setup_env.R", file.path("scripts", "00_setup_env.R")))
-qc_script <- locate_script(c("20_qc_panel_summary.R", file.path("scripts", "20_qc_panel_summary.R")))
-models_script <- locate_script(c("30_models_panel_nb_gamma.R", file.path("scripts", "30_models_panel_nb_gamma.R")))
+setup_script <- locate_script(c("R/00_setup_env.R", "00_setup_env.R", file.path("scripts", "00_setup_env.R")))
+qc_script <- locate_script(c("R/20_qc_panel_summary.R", "20_qc_panel_summary.R", file.path("scripts", "20_qc_panel_summary.R")))
+models_script <- locate_script(c("R/30_models_panel_nb_gamma.R", "30_models_panel_nb_gamma.R", file.path("scripts", "30_models_panel_nb_gamma.R")))
 
 # Optional frailty proxy step (only if present)
 frailty_script <- locate_script(c(
@@ -150,7 +150,7 @@ run_child_rscript <- function(label, expr = NULL, script = NULL) {
   }
 
   if (!is.null(expr)) {
-    args <- c("--vanilla", "-e", expr)
+    args <- c("--vanilla", "-e", shQuote(expr))
   } else {
     args <- c("--vanilla", script)
   }
@@ -182,7 +182,7 @@ run_child_rscript <- function(label, expr = NULL, script = NULL) {
 # ========================
 
 # If panel already contains frailty, skip. Otherwise, run frailty proxy script if available.
-panel_cols <- tryCatch(names(readr::read_csv(panel_path, n_max = 0, show_col_types = FALSE)),
+panel_cols <- tryCatch(names(read.csv(panel_path, nrows = 0, stringsAsFactors = FALSE)),
                        error = function(e) character(0))
 has_frailty <- any(panel_cols %in% c("frailty_fried", "frailty_score", "frailty"))
 
@@ -204,12 +204,12 @@ run_minimal_qc_gates <- function(panel_path_in) {
   required <- c("id","FOF_status","age","sex","period","person_time")
   frailty_any <- c("frailty_fried","frailty_score","frailty")
 
-  cols <- names(readr::read_csv(panel_path_in, n_max = 0, show_col_types = FALSE))
+  cols <- names(read.csv(panel_path_in, nrows = 0, stringsAsFactors = FALSE))
   missing_req <- setdiff(required, cols)
   if (length(missing_req) > 0) stop(paste0("QC gate failed: puuttuvat sarakkeet: ", paste(missing_req, collapse = ", ")))
   if (!any(frailty_any %in% cols)) stop("QC gate failed: frailty-sarake puuttuu (frailty_fried/frailty_score/frailty).")
 
-  panel <- readr::read_csv(panel_path_in, show_col_types = FALSE)
+  panel <- read.csv(panel_path_in, stringsAsFactors = FALSE)
 
   any_dup <- any(duplicated(paste(panel$id, panel$period)))
   any_pt_le0 <- any(panel$person_time <= 0, na.rm = TRUE)
@@ -255,7 +255,7 @@ run_minimal_qc_gates <- function(panel_path_in) {
 if (!RUN_MODELS_ONLY) {
   if (!DRY_RUN) {
     qc_driver <- run_minimal_qc_gates(panel_path)
-    readr::write_csv(qc_driver$qc, file.path(outputs_root, "qc", paste0("qc_summary_driver_", RUN_ID, ".csv")))
+    write.csv(qc_driver$qc, file.path(outputs_root, "qc", paste0("qc_summary_driver_", RUN_ID, ".csv")), row.names = FALSE)
 
     if (length(qc_driver$reasons) > 0) {
       stop(paste0("QC gate failed: ", paste(head(qc_driver$reasons, 3), collapse = " | ")))
@@ -303,7 +303,7 @@ if (!RUN_QC_ONLY) {
 # ========================
 
 apply_n5_suppression <- function(csv_path) {
-  df <- tryCatch(readr::read_csv(csv_path, show_col_types = FALSE), error = function(e) NULL)
+  df <- tryCatch(read.csv(csv_path, stringsAsFactors = FALSE), error = function(e) NULL)
   if (is.null(df)) return(invisible(FALSE))
   if (!("n" %in% names(df))) return(invisible(FALSE))
 
@@ -318,7 +318,7 @@ apply_n5_suppression <- function(csv_path) {
   num_cols <- setdiff(num_cols, c("n", "suppressed"))
   for (cn in num_cols) df[[cn]][suppressed_rows] <- NA_real_
 
-  readr::write_csv(df, csv_path)
+  write.csv(df, csv_path, row.names = FALSE)
   invisible(TRUE)
 }
 

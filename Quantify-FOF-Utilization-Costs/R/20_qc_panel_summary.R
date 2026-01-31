@@ -10,7 +10,8 @@ if (!file.exists(panel_path)) {
   quit(save="no")
 }
 
-panel <- read_csv(panel_path, show_col_types = FALSE)
+# Load panel
+panel <- read.csv(panel_path, stringsAsFactors = FALSE)
 
 # QC Metrics
 

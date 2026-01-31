@@ -32,10 +32,10 @@ if (DATA_ROOT == "" || !file.exists(PANEL_PATH)) {
 # Variable standardization (repo metadata)
 std_path <- "data/VARIABLE_STANDARDIZATION.csv"
 if (!file.exists(std_path)) stop("Missing data/VARIABLE_STANDARDIZATION.csv in repo.")
-std_map <- read_csv(std_path, show_col_types = FALSE)
+std_map <- read.csv(std_path, stringsAsFactors = FALSE)
 
 # Load panel (must be person-period; no PII in outputs)
-panel <- read_csv(PANEL_PATH, show_col_types = FALSE)
+panel <- read.csv(PANEL_PATH, stringsAsFactors = FALSE)
 
 #-----------------------------
 # 1) Variable Config
@@ -182,5 +182,5 @@ for (y in cost_outcomes) {
 #-----------------------------
 final_tbl <- bind_rows(results)
 dir.create("outputs", showWarnings = FALSE)
-write_csv(final_tbl, "outputs/panel_models_summary.csv")
+write.csv(final_tbl, "outputs/panel_models_summary.csv", row.names = FALSE)
 message("Done. Results saved to outputs/panel_models_summary.csv")

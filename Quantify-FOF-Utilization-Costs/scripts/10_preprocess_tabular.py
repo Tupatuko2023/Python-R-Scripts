@@ -6,6 +6,7 @@ import argparse
 import csv
 from pathlib import Path
 
+from path_resolver import get_data_root
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 def write_aggregates_if_allowed(allow_aggregates: bool) -> None:
@@ -63,12 +64,14 @@ def load_and_preprocess():
         if not filepath_raw:
             continue
 
-        # Resolve path relative to PROJECT_ROOT/data/external or similar if needed?
-        # Assuming inventory paths are relative to repo root or absolute.
-        # If relative, we prepend PROJECT_ROOT.
+        # Resolve path relative to DATA_ROOT if it starts with paper_02 or similar
+        data_root = get_data_root()
         filepath = Path(filepath_raw)
         if not filepath.is_absolute():
-             filepath = PROJECT_ROOT / filepath_raw
+            if data_root:
+                filepath = data_root / filepath_raw
+            else:
+                filepath = PROJECT_ROOT / filepath_raw
 
         header_row = int(row.get('header_row', 0))
         

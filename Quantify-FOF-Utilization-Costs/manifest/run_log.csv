@@ -6,4 +6,8 @@ timestamp,actor,script,status,message
 2026-01-29T13:59:00.657084,tomik,00_inventory_manifest.py,SUCCESS,"Scanned paper_02, found 35 items"
 2026-01-29T15:11:17.136548,tomik,00_inventory_manifest.py,WARNING,Path not found: outputs
 2026-01-30T03:04:51+02:00,run3a,data_dictionary_updated,added_file_unreadable_markers
-2026-01-30T03:23:43+02:00,fof_burden_cost_register_linkage_analysis_spec_checklist,run3b_completed,register_linkage_spec_written
+2026-01-30T03:23:43+02:00,fof_burden_cost_register_linkage_analysis_spec_checklist,run3b_completed,register_linkage_spec_written2026-01-31T19:00:45.670473,unknown_agent,00_inventory_manifest.py,WARNING,Path not found: paper_02
+2026-01-31T19:01:18.550749,unknown_agent,00_inventory_manifest.py,SUCCESS,"Scanned paper_02, found 22 items"
+2026-01-31T19:14:57.701302,unknown_agent,00_inventory_manifest.py,FAILURE,DATA_ROOT missing
+2026-01-31T19:15:55.162922,unknown_agent,00_inventory_manifest.py,SUCCESS,"Scanned paper_02, found 1 items"
+2026-01-31T19:36:00.711588,unknown_agent,00_inventory_manifest.py,SUCCESS,"Scanned paper_02, found 22 items"
