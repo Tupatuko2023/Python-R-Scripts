@@ -7,6 +7,7 @@
 ## 1. Nykytila ja Suositus
 
 **Havainnot:**
+
 - **Docker Daemon:** Ei yhteyttä (`npipe` error). Docker Desktop ei ole käynnissä tai ei hyväksy yhteyksiä.
 - **Konfiguraatio:** `mcpServers` -määritykset puuttuvat aktiivisesta konfiguraatiosta (`.gemini/settings.json` tai VS Code).
 - **Environment:** Node.js ja Python on asennettu, mutta MCP-servereitä ei ole määritelty niitä käyttämään.
@@ -17,10 +18,12 @@ Koska käytät jo CLI:tä, helpoin tapa on korjata `settings.json` ja käynnist�
 ## 2. Korjaustoimenpiteet (Checklist)
 
 ### Vaihe 1: Käynnistä Docker
+
 - [ ] Käynnistä **Docker Desktop** Windowsissa.
 - [ ] Varmista PowerShellissä: `docker ps` ei anna virhettä.
 
 ### Vaihe 2: Konfiguroi Gemini CLI
+
 Luo tai muokkaa tiedostoa `~/.gemini/settings.json` (Windowsissa `C:\Users\<user>\.gemini\settings.json`).
 
 Lisää `mcpServers`-lohko (katso Config Snippet alla).
@@ -29,6 +32,7 @@ Lisää `mcpServers`-lohko (katso Config Snippet alla).
 - [ ] Varmista, että JSON on validi (ei ylimääräisiä pilkkuja).
 
 ### Vaihe 3: Aseta Ympäristömuuttujat
+
 Jotta `secure-analysis-r` toimii, data-polku pitää määritellä.
 
 - [ ] PowerShell: `$env:PRIVATE_DATA_PATH = "C:\Polku\Dataan"`
@@ -78,6 +82,7 @@ Tämä konfiguraatio lisää Docker-serverit ja esimerkin `filesystem`-serverist
 ```
 
 **Huomioita Windows-käyttäjille:**
+
 1. **Polut:** Käytä tuplakenoja `\\` tai kauttaviivoja `/` poluissa JSON-sisällä.
 2. **Command:** `npx` vaatii, että Node.js on PATHissa. Jos ei toimi, käytä täyttä polkua `C:\\Program Files\\nodejs\\npx.cmd`.
 3. **Docker:** `--network host` toimii Windowsissa rajoitetusti, mutta MCP stdio-putken (via `docker run -i`) pitäisi toimia.

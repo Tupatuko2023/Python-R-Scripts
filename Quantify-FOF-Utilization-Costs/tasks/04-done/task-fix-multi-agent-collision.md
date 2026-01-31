@@ -7,19 +7,22 @@ priority: high
 ---
 
 # Context
+
 Current workflow allows `tasks/02-in-progress/` and `tasks/03-review/` files to be merged into `main`.
 This causes "State Pollution": when Agent A pulls `main`, they receive Agent B's in-progress files, violating isolation.
 
-
 # Objective
-Refactor the workflow so that `main` branch is always clean of intermediate states. 
+
+Refactor the workflow so that `main` branch is always clean of intermediate states.
 Tasks should conceptually jump from `01-ready` -> `04-done` on `main`, while the `02` and `03` states exist only on feature branches.
 
 # Inputs
+
 - `WORKFLOW.md`
 - Current content of `tasks/02-in-progress/` and `tasks/03-review/`
 
 # Steps
+
 1. **Analyze & Clean Main:**
    - Review all items currently in `tasks/02-in-progress/` and `tasks/03-review/` on `main`.
    - If they are stale/done, move to `04-done` or `archive`.
@@ -36,11 +39,11 @@ Tasks should conceptually jump from `01-ready` -> `04-done` on `main`, while the
    - Recommendation: Update `SKILLS.md` or `WORKFLOW.md` with the chosen protocol.
 
 # Deliverables
+
 1. Clean `tasks/02-in-progress/` and `tasks/03-review/` folders on `main`.
 2. Updated `WORKFLOW.md` reflecting the isolation strategy.
 
 # Definition of Done
+
 - `git ls-tree -r main --name-only` shows no task files in `02` or `03` (except placeholders).
 - A fresh clone of the repo does not show other agents' active work.
-
-

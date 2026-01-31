@@ -19,19 +19,18 @@ Ensure no absolute paths to sensitive data are committed to git or displayed in 
 ## STEPS
 
 1. **Manifest Safety**:
+
 * Check 'manifest/dataset_manifest.csv' for absolute paths (e.g., 'C:/Users/...').
 * IF absolute paths exist: Add 'manifest/dataset_manifest.csv' to '.gitignore' immediately OR convert paths to relative.
 
+1. **Git History Check**:
 
-2. **Git History Check**:
 * Run 'git status' to ensure no secrets or external data files are staged.
 * Verify no sensitive files are tracked in current HEAD.
 
+1. **Output Hygiene**:
 
-3. **Output Hygiene**:
 * Verify scripts output paths using '{DATA_ROOT}' placeholder logic instead of hardcoded absolute paths where applicable.
-
-
 
 ## ACCEPTANCE CRITERIA
 

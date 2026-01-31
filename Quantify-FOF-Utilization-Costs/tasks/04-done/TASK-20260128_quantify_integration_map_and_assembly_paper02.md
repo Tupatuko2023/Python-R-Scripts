@@ -7,6 +7,7 @@ Agent: qfta2
 Default gate sequence (reminder): docs → tests → sample QC → inventory manifest → assembly → QC → report → knowledge package
 
 Canonical commands (CI-safe):
+
 - python -m unittest discover -s Quantify-FOF-Utilization-Costs/tests
 - python Quantify-FOF-Utilization-Costs/scripts/30_qc_summary.py --use-sample
 - python Quantify-FOF-Utilization-Costs/scripts/00_inventory_manifest.py --scan paper_02
@@ -15,6 +16,7 @@ Canonical commands (CI-safe):
 - python Quantify-FOF-Utilization-Costs/scripts/40_build_knowledge_package.py
 
 Option B red lines:
+
 - No absolute paths anywhere.
 - Logs must say only “--input provided locally”.
 - No raw values in logs or artifacts.
@@ -33,6 +35,7 @@ Option B: absoluuttisia polkuja ei saa kirjoittua mihinkään output-artefaktiin
 ## Inputs (local only; do not paste paths)
 
 Data source inventory (observed):
+
 - `Tutkimusaineisto_pkl_kaynnit_2010_2019.csv` (pipe-separated; header present)
 - `Tutkimusaineisto_pkl-käynnit_2010_2019.xlsx` (Taul1; header present)
 - `Tutkimusaineisto_osastojaksot_2010_2019.xlsx` (Sheet1; header present)
@@ -45,9 +48,11 @@ Data source inventory (observed):
 - `KAAOS_data*.xlsx` (Taul1/ Taul2; header row is 2, not 1)
 
 KAAOS header detection result:
+
 - All KAAOS files: FIRST_TEXTY_ROW = 2
 
 Known corrupted copies (ignore these):
+
 - `Lifecare potilasaineisto – kopio.xlsx` -> BadZipFile
 - `verrokitjatutkimushenkilöt – kopio.xlsx` -> BadZipFile
 

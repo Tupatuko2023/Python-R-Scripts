@@ -12,27 +12,28 @@ Below is a set of commands for installing current versions Numpy and Pandas on a
 
 yes | pkg upgrade
 
-2) Install Python, dependencies and build tools
+1) Install Python, dependencies and build tools
 
 pkg install git python build-essential cmake ninja libopenblas libandroid-execinfo patchelf binutils-is-llvm
 
-3) Install tools for building Python projects
+1) Install tools for building Python projects
 
 pip3 install setuptools wheel packaging pyproject_metadata cython meson-python versioneer
 
-4) Check your Python version
+1) Check your Python version
 
 python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")'
 
-5) Install Numpy. Replace value 3.12 with actual Python version obtained in step 4!!!
+1) Install Numpy. Replace value 3.12 with actual Python version obtained in step 4!!!
 
 MATHLIB=m LDFLAGS="-lpython3.12" pip3 install --no-build-isolation --no-cache-dir numpy
 
-6) Install Pandas. Replace value 3.12 with actual Python version obtained in step 4!!!
+1) Install Pandas. Replace value 3.12 with actual Python version obtained in step 4!!!
 
 LDFLAGS="-lpython3.12" pip3 install --no-build-isolation --no-cache-dir pandas
 
 Common tips (Termux):
+
 - Pass --no-build-isolation if module requires cmake, ninja, patchelf or something like during build time.
 - Pass --no-cache-dir to prevent reusing modules from cache.
 - Set variable LDFLAGS="-lpython3.12" to force link native extensions with Python 3.xx library (replace 3.12 with actual Python version).

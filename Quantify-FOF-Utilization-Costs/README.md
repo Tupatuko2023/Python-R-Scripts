@@ -40,8 +40,6 @@ If data is missing, scripts will exit with actionable instructions.
 How to obtain data (high level)
 Register linkage and extraction are handled by designated controllers under permits. This repo intentionally does not encode sensitive locations, keys, or any participant-level data.
 
-
-
 ## Aim 2 Analysis Pipeline (Panel Data)
 
 **Status:** Ready for Data (R Scripts)
