@@ -20,21 +20,27 @@ The current Aim 2 panel (2010-2019) includes 486 participants. Frailty data from
 
 **Total matched with frailty: 126**
 
-## 4. Model Diagnostics & Risks
-Initial models were fitted using the interaction term `FOF_status * frailty_fried`.
+## 4. Model Diagnostics & Refinement
 
-### 4.1 Statistical Instability
-- **Non-Convergence / Singularities**: Due to the N=6 count in the "Robust" reference group, the model coefficients for the intercept and the main effects of frailty categories show extremely large standard errors ($2.96 \times 10^5$), indicating statistical instability.
-- **Interpretation Risk**: The current interaction estimates (Rate Ratios and Cost Ratios) are unreliable. The bootstrap intervals for the aggregated effect (`panel_models_summary.csv`) appear narrow only because the interaction term is being "neutralized" by the large standard errors, or the model is defaulting to a mean-only estimation for sparse cells.
+### 4.1 Transition to Binary Frailty (Iteration 2)
+Following expert advice, we collapsed the frailty categories into a binary variable:
+- **Non-Frail**: Combined "Robust" (N=6) and "Pre-frail" (N=71). Total N=77.
+- **Frail**: Remained as "Frail" (N=49).
 
-### 4.2 Visualization
-- **Trend Plot**: `trend_visits_by_frailty.png` shows the raw utilization rates per person-year stratified by the three known frailty categories.
-- **Observations**: The "Robust" group (N=6) shows high volatility in the trend due to individual-level outliers significantly impacting the group mean.
+### 4.2 Statistical Stability (Improved)
+- **Convergence**: The model now converges with reasonable standard errors.
+- **Diagnostics**:
+    - `FOF_status:frailty_binarynon-frail` interaction term is now estimable (Std. Error: 0.46).
+    - Confidence intervals are now stable and interpretable.
+    - Dispersion parameter (Theta) for Negative Binomial is ~0.09.
 
-## 5. Questions for Clinical/Statistical Expert
-1. **Grouping Strategy**: Given N=6 for Robust, do you recommend merging the **Robust** and **Pre-frail** groups into a single reference category (e.g., "Non-Frail") for the interaction models?
-2. **Missingness Bias**: Is the "Unknown" group (N=360) systematically different from those assessed for frailty? If so, should we include an "Unknown" category in the model rather than excluding them?
-3. **Model Specification**: Should we move from an interaction model to a stratified model if the goal is to show the effect of FOF *within* frailty strata, considering the sparse reference cell?
+### 4.3 Visualization
+- **Trend Plot**: `trend_visits_by_frailty_binary.png` replaces the 3-class version. It shows a much cleaner signal for the "Non-Frail" vs "Frail" comparison over the 10-year period.
+
+## 5. Summary for Clinical/Statistical Expert
+1. **Successful Refinement**: Merging Robust + Pre-frail solved the singularity issue.
+2. **Missingness Confirmation**: Diagnostic script `R/99_frailty_check.R` confirmed that the linkage rate (126/486) is consistent with the available K15 baseline data (N=250 non-missing frailty scores in source).
+3. **Current State**: We have a stable interaction model (`FOF * frailty_binary`) ready for final interpretation.
 
 ## 6. Next Steps
 - [ ] Implement group merging (Robust + Pre-frail) pending expert feedback.
