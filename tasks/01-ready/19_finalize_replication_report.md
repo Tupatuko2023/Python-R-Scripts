@@ -28,5 +28,7 @@ The separate analysis and injury-only replication are complete.
     -   `cp knowledge_package.zip /sdcard/Download/aim2_COMPLETE_ANALYSIS.zip`
 
 ## DEFINITION OF DONE
-- [ ] Handover document contains the comparison discussion.
-- [ ] `/sdcard/Download/aim2_COMPLETE_ANALYSIS.zip` exists.
+
+- [x] Handover document contains the comparison discussion.
+
+- [x] `/sdcard/Download/aim2_COMPLETE_ANALYSIS.zip` exists.
