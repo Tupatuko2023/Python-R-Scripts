@@ -11,3 +11,6 @@ timestamp,actor,script,status,message
 2026-01-31T19:14:57.701302,unknown_agent,00_inventory_manifest.py,FAILURE,DATA_ROOT missing
 2026-01-31T19:15:55.162922,unknown_agent,00_inventory_manifest.py,SUCCESS,"Scanned paper_02, found 1 items"
 2026-01-31T19:36:00.711588,unknown_agent,00_inventory_manifest.py,SUCCESS,"Scanned paper_02, found 22 items"
+2026-01-31T21:11:23.968030,unknown_agent,00_inventory_manifest.py,FAILURE,DATA_ROOT missing
+2026-01-31T21:11:35.217892,unknown_agent,00_inventory_manifest.py,SUCCESS,"Scanned paper_02, found 22 items"
+2026-02-01T16:06:41.722200,unknown_agent,00_inventory_manifest.py,FAILURE,DATA_ROOT missing

@@ -1,0 +1,13 @@
+run_id: 20260131T184131
+timestamp: 2026-01-31 18:41:31
+data_root_set: TRUE
+panel_readable: TRUE
+seed: 20260130
+bootstrap_B: 10
+allow_aggregates_env: TRUE
+intend_aggregates_user: TRUE
+run_qc_only: FALSE
+run_models_only: FALSE
+dry_run: FALSE
+git_hash: d8fca9061f2cd6f6710eafdf1a97f72abfc3da0a
+R.version: R version 4.5.2 (2025-10-31)

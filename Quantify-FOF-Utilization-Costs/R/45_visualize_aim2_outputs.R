@@ -133,12 +133,14 @@ if (DATA_ROOT != "" && file.exists(PANEL_PATH)) {
   print(p_trend_c)
   dev.off()
   
-  # --- 4) Frailty Trends (Updated) ---
-  if ("frailty_binary" %in% names(panel)) {
-    message("Generating Frailty Trends (Binary)...")
+  # --- 4) Frailty Trends (RESCUE MODE: 3-Class) ---
+  v_frailty <- "frailty_fried"
+  if (v_frailty %in% names(panel)) {
+    message("Generating Frailty Trends (3-Class)...")
     trends_frail <- panel %>%
-      filter(frailty_binary != "unknown") %>%
-      group_by(period, frailty_binary) %>%
+      filter(.data[[v_frailty]] != "unknown") %>%
+      mutate(!!v_frailty := factor(.data[[v_frailty]], levels = c("robust", "pre-frail", "frail"))) %>%
+      group_by(period, .data[[v_frailty]]) %>%
       summarise(
         n_obs = n(),
         total_visits = sum(util_visits_total, na.rm = TRUE),
@@ -148,17 +150,17 @@ if (DATA_ROOT != "" && file.exists(PANEL_PATH)) {
       mutate(rate_py = total_visits / total_pt)
       
     if (nrow(trends_frail) > 0) {
-      p_frail <- ggplot(trends_frail, aes(x = period, y = rate_py, color = frailty_binary, group = frailty_binary)) +
+      p_frail <- ggplot(trends_frail, aes(x = period, y = rate_py, color = .data[[v_frailty]], group = .data[[v_frailty]])) +
         geom_line(size = 1.2) + 
         geom_point(size = 3) +
         theme_minimal() +
-        scale_color_viridis_d(option = "plasma", end = 0.8) +
-        labs(title = "Visit Trends by Frailty Status (Binary)",
+        scale_color_manual(values = c("robust" = "#2ecc71", "pre-frail" = "#f39c12", "frail" = "#e74c3c")) +
+        labs(title = "Visit Trends by Frailty Status (3-Class)",
              subtitle = "Visits per Person-Year",
              x = "Follow-up Period (Years)", y = "Visits / PY",
              color = "Frailty")
       
-      agg_png(file.path(FIG_DIR, "trend_visits_by_frailty_binary.png"), width = 1000, height = 700, res = 120)
+      agg_png(file.path(FIG_DIR, "trend_visits_by_frailty_3class.png"), width = 1000, height = 700, res = 120)
       print(p_frail)
       dev.off()
     }

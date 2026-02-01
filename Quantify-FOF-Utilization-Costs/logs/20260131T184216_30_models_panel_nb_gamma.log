@@ -1,0 +1,8 @@
+Modeling Count: util_visits_total
+Modeling Count: util_visits_outpatient
+Modeling Count: util_visits_inpatient
+Modeling Cost: cost_total_eur
+Modeling Cost: cost_outpatient_eur
+Modeling Cost: cost_inpatient_eur
+Done. Results saved to outputs/panel_models_summary.csv
+There were 50 or more warnings (use warnings() to see the first 50)

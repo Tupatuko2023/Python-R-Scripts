@@ -1,0 +1,6 @@
+run_id: 20260131T184216
+timestamp_end: 2026-01-31 18:42:29
+expected_safe_qc_exists: TRUE
+expected_safe_models_exists: TRUE
+archive_dir: outputs/archive/<RUN_ID>/
+logs_dir: logs/
