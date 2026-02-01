@@ -502,3 +502,7 @@ aim2_analysis,,,0,MANUAL_ENTRY,cost_medication_eur,number,,,,,,Medication costs,
 aim2_analysis,,,0,MANUAL_ENTRY,age,integer,,,,,,Age at baseline,,years,,nan (Required: yes)
 aim2_analysis,,,0,MANUAL_ENTRY,sex,integer,,,,,,Biological sex,,,0=F;1=M,Coding TBD (Required: yes)
 aim2_analysis,,,0,MANUAL_ENTRY,bmi,number,,,,,,Body Mass Index,,kg/m2,,nan (Required: no)
+KAAOS_data_sotullinen.xlsx,KAAOS_data_sotullinen.xlsx,,0,RESCUE_OP,frailty_score_raw,float64,covariate,,423.0,frailty_score_raw,frailty_score_raw,Fried frailty score (3 components),Fried frailty summapisteet (3 komponenttia),points,0-3,Sum of weakness; slowness; activity
+KAAOS_data_sotullinen.xlsx,KAAOS_data_sotullinen.xlsx,,0,RESCUE_OP,frailty_cat_3,str,covariate,,423.0,frailty_cat_3,frailty_cat_3,Fried frailty category,Fried frailty luokka,category,robust;pre-frail;frail,Robust=0; Pre-frail=1; Frail>=2
+KAAOS_data_sotullinen.xlsx,KAAOS_data_sotullinen.xlsx,,0,RESCUE_OP,handgrip_raw,float64,component,,423.0,handgrip_raw,handgrip_raw,Handgrip strength class (raw),Käsipuristusvoima luokka (raaka),class,0-5,Mapped to kg in protocol
+KAAOS_data_sotullinen.xlsx,KAAOS_data_sotullinen.xlsx,,0,RESCUE_OP,walk_speed_raw,float64,component,,423.0,walk_speed_raw,walk_speed_raw,Walking speed (10m seconds),Kävelynopeus (10m sekuntia),seconds,numeric,>12.5s indicates slowness
