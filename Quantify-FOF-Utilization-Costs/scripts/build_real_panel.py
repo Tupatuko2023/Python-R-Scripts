@@ -131,12 +131,37 @@ for _, row in df.iterrows():
 panel_df = pd.DataFrame(panel_list)
 
 # 6. Aggregate Visits per Person-Year
-visits_agg = outpatient.groupby(["id", "year"]).size().reset_index(name="util_visits_total")
+# A) Outpatient
+out_visits = outpatient.groupby(["id", "year"]).size().reset_index(name="util_visits_outpatient")
+# B) Inpatient (Placeholder: each row in inpat is a period)
+# Loading inpat for building real panel if needed. 
+# For now, we'll use the existing logic and expand it.
+inpat_path = DATA_ROOT / "paper_02" / "Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx"
+inpat = pd.read_excel(inpat_path)
+inpat.rename(columns={"Henkilotunnus": "id", "OsastojaksoAlkuPvm": "date_raw"}, inplace=True)
+
+def parse_inpat_date(x):
+    try:
+        s = str(int(float(x)))
+        if len(s) == 8:
+            return pd.to_datetime(s, format='%Y%m%d', errors='coerce')
+    except:
+        pass
+    return pd.to_datetime(x, errors='coerce')
+
+inpat["date"] = inpat["date_raw"].apply(parse_inpat_date)
+inpat["year"] = inpat["date"].dt.year
+in_visits = inpat.groupby(["id", "year"]).size().reset_index(name="util_visits_inpatient")
 
 # Merge visits into panel
-panel_df = pd.merge(panel_df, visits_agg, left_on=["id", "period"], right_on=["id", "year"], how="left")
-panel_df["util_visits_total"] = panel_df["util_visits_total"].fillna(0)
+panel_df = pd.merge(panel_df, out_visits, left_on=["id", "period"], right_on=["id", "year"], how="left")
 panel_df.drop(columns=["year"], inplace=True)
+panel_df = pd.merge(panel_df, in_visits, left_on=["id", "period"], right_on=["id", "year"], how="left")
+panel_df.drop(columns=["year"], inplace=True)
+
+panel_df["util_visits_outpatient"] = panel_df["util_visits_outpatient"].fillna(0)
+panel_df["util_visits_inpatient"] = panel_df["util_visits_inpatient"].fillna(0)
+panel_df["util_visits_total"] = panel_df["util_visits_outpatient"] + panel_df["util_visits_inpatient"]
 
 # 7. Calculate Costs (Assumption: 60 EUR per visit)
 panel_df["cost_total_eur"] = panel_df["util_visits_total"] * 60.0

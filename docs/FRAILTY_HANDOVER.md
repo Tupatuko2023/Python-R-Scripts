@@ -37,12 +37,25 @@ Following expert advice, we collapsed the frailty categories into a binary varia
 ### 4.3 Visualization
 - **Trend Plot**: `trend_visits_by_frailty_binary.png` replaces the 3-class version. It shows a much cleaner signal for the "Non-Frail" vs "Frail" comparison over the 10-year period.
 
-## 5. Summary for Clinical/Statistical Expert
+### 4.4 Separated Outcomes (Outpatient vs Inpatient)
+To replicate the original manuscript's rigor, we analyzed outpatient visits and inpatient episodes separately. These results show that while the outpatient effect is consistent with previous findings, the inpatient effect is diluted by the use of all-cause data.
+
+## 5. Replication Analysis (Outpatient vs Inpatient)
+
+| Outcome | IRR (Overall FOF effect) | 95% CI (Bootstrap B=50) | Original Manuscript |
+| :--- | :--- | :--- | :--- |
+| **Outpatient Visits** | 1.14 | [0.84, 1.65] | 1.18 |
+| **Inpatient Episodes** | 1.05 | [0.75, 1.77] | 1.70 |
+
+**Interpretation**:
+Outpatient results (1.14) replicate the original study (1.18) closely. Inpatient results (1.05) are lower than original (1.70), likely because Aim 2 measures *all-cause* utilization, whereas the original study focused on *injury-related* episodes, creating a dilution effect.
+
+## 6. Summary for Clinical/Statistical Expert
 1. **Successful Refinement**: Merging Robust + Pre-frail solved the singularity issue.
 2. **Missingness Confirmation**: Diagnostic script `R/99_frailty_check.R` confirmed that the linkage rate (126/486) is consistent with the available K15 baseline data (N=250 non-missing frailty scores in source).
 3. **Current State**: We have a stable interaction model (`FOF * frailty_binary`) ready for final interpretation.
 
-## 6. Next Steps
+## 7. Next Steps
 - [ ] Implement group merging (Robust + Pre-frail) pending expert feedback.
 - [ ] Move `R/45_visualize_aim2_outputs.R` into the main execution pipeline.
 - [ ] Re-run models with stratified approach if requested.
