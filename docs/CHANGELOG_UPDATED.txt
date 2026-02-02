@@ -1,0 +1,18 @@
+* **Shell Policy:**
+* *Muutos:* Bash/Termux/Proot poistettu kokonaan. Pakotettu PowerShell 7.0 (`$PSVersionTable`).
+* *Peruste:* SKILLS.md ja käyttäjän ympäristövaatimus (Windows/PS7).
+
+
+* **Monorepo Routing:**
+* *Muutos:* Lisätty "Discovery (Startup)" -vaihe, joka vaatii `Get-ChildItem` -ajon ennen oletuksia.
+* *Peruste:* Estää virheen "Aliprojektia ei löydy", jos repo on puhdas tai rakenne muuttunut (kuten käyttäjän virhetilanteessa).
+
+
+* **Security (Option B):**
+* *Muutos:* Lisätty eksplisiittinen kielto raakadatalla (`DATA_ROOT` pakko) ja vaatimus `n<5` suppressiolle.
+* *Peruste:* `Quantify-FOF-Utilization-Costs/RUNBOOK_SECURE_EXECUTION.md` ja `CLAUDE.md`.
+
+
+* **Source of Truth:**
+* *Muutos:* Määritelty hierarkia (`SKILLS.md` > `WORKFLOW.md` > `CLAUDE.md`).
+* *Peruste:* `SKILLS.md`:n ensimmäinen sääntö ("Rule of precedence").
