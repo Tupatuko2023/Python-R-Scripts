@@ -13,7 +13,8 @@ Project layout
 - data/: metadata + synthetic samples (CI-safe)
 - data/external/: placeholder only (gitignored)
 - manifest/: dataset manifest + run logs (metadata only)
-- scripts/: pipeline skeleton (safe-by-default)
+- R/: Target directory for all R-scripts (preferred for future development)
+- scripts/: pipeline skeleton (safe-by-default). NOTE: All R scripts should be migrated to R/ directory.
 - outputs/: generated QC/aggregate artifacts (ignored)
 - tests/: CI-safe tests using synthetic sample only
 
@@ -52,18 +53,20 @@ Register linkage and extraction are handled by designated controllers under perm
 
 **Status:** Ready for Data (R Scripts)
 
+*Note: In accordance with project standards, all new R scripts should be placed in the `R/` directory. Existing scripts in `scripts/` will be migrated to `R/`.*
+
 1. **Environment Setup:**
-   `Rscript scripts/00_setup_env.R`
+   `Rscript R/00_setup_env.R`
    (Initializes `renv` and installs dependencies: tidyverse, MASS, sandwich, etc.)
 2. **Data Build (Secure):**
-   *   **Windows:** `Rscript scripts/10_build_panel_person_period.R`
+   *   **Windows:** `Rscript R/10_build_panel_person_period.R`
    *   **Android (Termux):** `python scripts/build_real_panel.py`
    (Reads `DATA_ROOT`, applies `data/VARIABLE_STANDARDIZATION.csv`, saves `derived/aim2_panel.csv`)
 3. **Quality Control:**
-   `Rscript scripts/20_qc_panel_summary.R`
+   `Rscript R/20_qc_panel_summary.R`
    (Checks derived panel for logical consistency and zeros; outputs to `outputs/qc_summary_aim2.txt`)
 4. **Modeling (NB & Gamma):**
-   `Rscript scripts/30_models_panel_nb_gamma.R`
+   `Rscript R/30_models_panel_nb_gamma.R`
    (Runs Negative Binomial and Gamma models, performs cluster bootstrap, and saves aggregate results to `outputs/panel_models_summary.csv`)
 
 ## Handoff complete
