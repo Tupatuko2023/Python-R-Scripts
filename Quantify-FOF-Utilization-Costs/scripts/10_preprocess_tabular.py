@@ -24,14 +24,8 @@ def write_aggregates_if_allowed(allow_aggregates: bool) -> None:
         w.writerow(header)
         w.writerows(rows)
 
-def load_and_preprocess():
+def load_and_preprocess(data_root: Path | None):
     print("STARTING ETL PIPELINE (REVISION: AGGREGATION AND COSTS)...")
-
-    data_root_env = os.getenv("DATA_ROOT")
-    if not data_root_env:
-        print("ERROR: DATA_ROOT not set in config/.env")
-        return False
-    data_root = get_data_root()
 
     manifest_path = PROJECT_ROOT / "manifest" / "dataset_manifest.csv"
     std_path = PROJECT_ROOT / "data" / "VARIABLE_STANDARDIZATION.csv"
@@ -209,7 +203,13 @@ def main():
     if args.use_sample:
         print("NOTE: --use-sample requested, but this script is currently hardcoded for manifest-based loading.")
     
-    success = load_and_preprocess()
+    data_root_env = os.getenv("DATA_ROOT")
+    data_root = get_data_root()
+    if not data_root_env and not args.use_sample:
+        print("ERROR: DATA_ROOT not set in config/.env", file=sys.stderr)
+        raise SystemExit(0)
+
+    success = load_and_preprocess(data_root)
     
     write_aggregates_if_allowed(args.allow_aggregates)
 

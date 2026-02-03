@@ -1,4 +1,4 @@
-# CI Fix: Packaging Excludes outputs/ and Enforce DATA_ROOT Gate
+# CI Fix: Packaging Excludes outputs/ and Enforces DATA_ROOT Gate
 
 ## Context
 Python CI-safe tests are failing:
