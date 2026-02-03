@@ -57,6 +57,7 @@ def get_git_commit() -> str:
 
 
 def iter_files() -> Iterable[Path]:
+    outputs_dir = PROJECT_ROOT / "outputs"
     for d in INCLUDE_DIRS:
         if not d.exists():
             continue
@@ -67,8 +68,11 @@ def iter_files() -> Iterable[Path]:
                 continue
             if p in EXCLUDE_PATHS:
                 continue
-            if "outputs" in p.parts:
+            try:
+                p.resolve().relative_to(outputs_dir.resolve())
                 continue
+            except Exception:
+                pass
             yield p
 
 
@@ -116,15 +120,6 @@ def main() -> int:
 
     paths = list(iter_files())
 
-    # Include specific safe aggregate results from outputs
-    safe_outputs = [
-        PROJECT_ROOT / "outputs" / "panel_models_summary.csv",
-        PROJECT_ROOT / "outputs" / "qc_summary_aim2.txt",
-    ]
-    for p in safe_outputs:
-        if p.exists():
-            paths.append(p)
-
     derived_dir = PROJECT_ROOT / "docs" / "derived_text"
     derived_paths: List[Path] = []
     if args.include_derived and derived_dir.exists():
@@ -133,7 +128,18 @@ def main() -> int:
                 paths.append(p)
                 derived_paths.append(p)
 
-    paths = [p for p in paths if p not in EXCLUDE_PATHS and ("outputs" not in p.parts or p in safe_outputs)]
+    outputs_dir = PROJECT_ROOT / "outputs"
+    filtered_paths: List[Path] = []
+    for p in paths:
+        if p in EXCLUDE_PATHS:
+            continue
+        try:
+            p.resolve().relative_to(outputs_dir.resolve())
+            continue
+        except Exception:
+            pass
+        filtered_paths.append(p)
+    paths = filtered_paths
     # Defense-in-depth: only check derived_text content for identifier-like tokens.
     if derived_paths:
         safety_check_identifier(derived_paths)
