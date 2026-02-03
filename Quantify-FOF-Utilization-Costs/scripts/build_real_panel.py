@@ -8,15 +8,124 @@ DATA_ROOT = Path(os.getenv("DATA_ROOT", "/data/data/com.termux/files/home/FOF_LO
 DERIVED_DIR = DATA_ROOT / "derived"
 DERIVED_DIR.mkdir(parents=True, exist_ok=True)
 
-print(f"Building real panel (EXPANDED COHORT) from {DATA_ROOT}...")
+print("Building real panel (EXPANDED COHORT) from DATA_ROOT...")
 
 # 1. Master Cohort Source: Raw Excel
-raw_path = DATA_ROOT / "paper_02" / "KAAOS_data_sotullinen.xlsx"
+raw_candidates = [
+    DATA_ROOT / "paper_02" / "KAAOS_data.xlsx",
+    DATA_ROOT / "paper_02" / "KAAOS_data_sotullinen.xlsx",
+]
+raw_path = next((p for p in raw_candidates if p.exists()), None)
+if raw_path is None:
+    raise SystemExit("Raw KAAOS file missing (expected paper_02/KAAOS_data.xlsx or paper_02/KAAOS_data_sotullinen.xlsx).")
+# Keep only filename for logs (no absolute paths)
+raw_name = raw_path.name
+
+# Header-only scan (header row 2 in the source file)
+hdr_df = pd.read_excel(raw_path, nrows=0, header=1)
+hdr_cols = list(hdr_df.columns)
+
+def _norm_header(x: str) -> str:
+    x = str(x).replace("\u00A0", " ")
+    x = x.replace("\n", " ")
+    x = " ".join(x.split())
+    x = x.strip()
+    # Drop numeric prefixes like "2." to stabilize matching
+    if x and x[0].isdigit():
+        parts = x.split(" ", 1)
+        if parts[0].endswith(".") and len(parts) > 1:
+            x = parts[1].strip()
+    return x.lower()
+
+norm_map = {c: _norm_header(c) for c in hdr_cols}
+
+def pick_col_by_contains(target: str, include, exclude=None):
+    exclude = exclude or []
+    hits = []
+    for col, norm in norm_map.items():
+        if all(pat in norm for pat in include) and not any(pat in norm for pat in exclude):
+            hits.append(col)
+    if len(hits) == 1:
+        return hits[0]
+    if len(hits) == 0:
+        raise SystemExit(f"Missing column for {target} in KAAOS header (file: {raw_name}).")
+    raise SystemExit(f"Ambiguous columns for {target} in KAAOS header: {hits}")
+
+def find_candidates(patterns):
+    out = []
+    for col, norm in norm_map.items():
+        if any(pat in norm for pat in patterns):
+            out.append(col)
+    return out
+
+# Baseline column mapping from KAAOS (header row 2)
+col_id_primary = None
+try:
+    col_id_primary = pick_col_by_contains("id", include=["potilas", "tunnus"])
+except SystemExit:
+    col_id_primary = None
+col_id_fallback = pick_col_by_contains("id_fallback", include=["nro"]) if col_id_primary is None else None
+
+col_age = pick_col_by_contains("age", include=["ikä"])
+col_sex = pick_col_by_contains("sex", include=["sukupuoli"])
+col_bmi = pick_col_by_contains("bmi", include=["bmi"])
+col_fof = pick_col_by_contains("fof", include=["kaatumisen pelko", "ei pelkää"])
+col_smoker = pick_col_by_contains("smoker", include=["tupakointi"])
+col_alcohol = pick_col_by_contains("alcohol", include=["alkoholi"])
+col_dm = pick_col_by_contains("dm", include=["diabetes"])
+col_ad = pick_col_by_contains("ad", include=["alzheimer"])
+col_cva = pick_col_by_contains("cva", include=["avh"])
+col_srh = pick_col_by_contains("srh", include=["koettu", "terveydentila"])
+col_fallen = pick_col_by_contains("fallen", include=["kaatuminen"], exclude=["pelko"])
+col_balance = pick_col_by_contains("balance", include=["tasapaino", "vaike"])
+col_fract = pick_col_by_contains("fractures", include=["murtumia"], exclude=["lonkka", "vanhempien", "sisaruksien"])
+col_walk500 = pick_col_by_contains("walk500", include=["500m", "vaikeus", "liikkua"])
+col_ftsst = pick_col_by_contains("ftsst", include=["tk", "tuolilta nousu", "5 krt", "sek"], exclude=["1sk", "2sk"])
+col_ability = pick_col_by_contains("ability", include=["oma", "arvio", "liikuntakyv"])
+
+# 1b. Baseline dataset (for Table 1)
+baseline_cols = [
+    col_id_primary or col_id_fallback,
+    col_age, col_sex, col_bmi, col_fof, col_smoker, col_alcohol,
+    col_dm, col_ad, col_cva, col_srh, col_fallen, col_balance,
+    col_fract, col_walk500, col_ability
+]
+baseline_df = pd.read_excel(raw_path, header=1, usecols=baseline_cols)
+
+baseline_df = baseline_df.rename(columns={
+    (col_id_primary or col_id_fallback): "id",
+    col_age: "age",
+    col_sex: "sex",
+    col_bmi: "bmi",
+    col_fof: "kaatumisenpelkoOn",
+    col_smoker: "tupakointi",
+    col_alcohol: "alkoholi",
+    col_dm: "diabetes",
+    col_ad: "alzheimer",
+    col_cva: "AVH",
+    col_srh: "koettuterveydentila",
+    col_fallen: "kaatuminen",
+    col_balance: "tasapainovaikeus",
+    col_fract: "murtumia",
+    col_walk500: "vaikeus_liikkua_500m",
+    col_ability: "ability_out_of_home",
+})
+
+baseline_df["FTSST"] = pd.read_excel(raw_path, header=1, usecols=[col_ftsst])[col_ftsst]
+
+# Map ability codes to Table 1 categories (0=hyvä,1=kohtalainen,2=heikko,3=ei tietoa)
+ability_map = {0: "Without difficulties", 1: "With difficulties", 2: "Unable independently", 3: None}
+baseline_df["ability_out_of_home"] = baseline_df["ability_out_of_home"].map(ability_map)
+
+# Save baseline CSV for Table 1 (primary input)
+baseline_out = DERIVED_DIR / "kaatumisenpelko.csv"
+baseline_df.to_csv(baseline_out, index=False)
+print("Baseline CSV saved to derived/kaatumisenpelko.csv")
 # We'll use the indices verified in forensics
 # 0:NRO, 2:Sotu, 4:age, 5:sex, 17:BMI, 26:ActSR, 27:Act500m, 28:Act2km, 34:FOF, 37:MaxWalk, 45:StrengthR, 46:StrengthL, 47:Speed10m
 cols_idx = [0, 2, 4, 5, 17, 26, 27, 28, 34, 37, 45, 46, 47]
 raw_df = pd.read_excel(raw_path, usecols=cols_idx, skiprows=1)
-raw_df.columns = ["NRO", "Sotu", "age", "sex", "BMI", "ActSR", "Act500m", "Act2km", "FOF_raw", "MaxWalk", "StrengthR", "StrengthL", "Speed10m_sec"]
+raw_df.columns = ["NRO", "Sotu", "age", "sex", "bmi", "ActSR", "Act500m", "Act2km", "FOF_raw", "MaxWalk", "StrengthR", "StrengthL", "Speed10m_sec"]
 
 print(f"Loaded raw cohort: {len(raw_df)} rows.")
 
@@ -40,6 +149,7 @@ print(f"Linkage success: {raw_df['id'].notna().sum()} / {len(raw_df)} with Sotu.
 
 # Filter to those with IDs
 df = raw_df[raw_df["id"].notna()].copy()
+df["bmi"] = pd.to_numeric(df["bmi"], errors="coerce")
 
 # 3. Methodology Enforcement
 
@@ -122,6 +232,7 @@ for _, row in df.iterrows():
             "FOF_status": row["FOF_status"],
             "age": row["age"],
             "sex": row["sex"],
+            "bmi": row["bmi"],
             "period": yr,
             "person_time": 1.0,
             "frailty_fried": row["frailty_cat_3"],
@@ -169,6 +280,6 @@ panel_df["cost_total_eur"] = panel_df["util_visits_total"] * 60.0
 # 8. Save
 output_path = DERIVED_DIR / "aim2_panel.csv"
 panel_df.to_csv(output_path, index=False)
-print(f"Panel successfully saved to {output_path}")
+print("Panel successfully saved to derived/aim2_panel.csv")
 print(f"Final dataset: {len(df)} persons (Increased from 276!).")
 print(f"Panel size: {len(panel_df)} rows.")
