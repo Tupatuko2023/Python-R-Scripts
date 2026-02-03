@@ -27,6 +27,12 @@ def write_aggregates_if_allowed(allow_aggregates: bool) -> None:
 def load_and_preprocess():
     print("STARTING ETL PIPELINE (REVISION: AGGREGATION AND COSTS)...")
 
+    data_root_env = os.getenv("DATA_ROOT")
+    if not data_root_env:
+        print("ERROR: DATA_ROOT not set in config/.env")
+        return False
+    data_root = get_data_root()
+
     manifest_path = PROJECT_ROOT / "manifest" / "dataset_manifest.csv"
     std_path = PROJECT_ROOT / "data" / "VARIABLE_STANDARDIZATION.csv"
     output_dir = PROJECT_ROOT / "outputs" / "intermediate"
@@ -65,7 +71,6 @@ def load_and_preprocess():
             continue
 
         # Resolve path relative to DATA_ROOT if it starts with paper_02 or similar
-        data_root = get_data_root()
         filepath = Path(filepath_raw)
         if not filepath.is_absolute():
             if data_root:

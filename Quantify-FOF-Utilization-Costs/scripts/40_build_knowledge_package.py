@@ -116,15 +116,6 @@ def main() -> int:
 
     paths = list(iter_files())
 
-    # Include specific safe aggregate results from outputs
-    safe_outputs = [
-        PROJECT_ROOT / "outputs" / "panel_models_summary.csv",
-        PROJECT_ROOT / "outputs" / "qc_summary_aim2.txt",
-    ]
-    for p in safe_outputs:
-        if p.exists():
-            paths.append(p)
-
     derived_dir = PROJECT_ROOT / "docs" / "derived_text"
     derived_paths: List[Path] = []
     if args.include_derived and derived_dir.exists():
@@ -133,7 +124,7 @@ def main() -> int:
                 paths.append(p)
                 derived_paths.append(p)
 
-    paths = [p for p in paths if p not in EXCLUDE_PATHS and ("outputs" not in p.parts or p in safe_outputs)]
+    paths = [p for p in paths if p not in EXCLUDE_PATHS and "outputs" not in p.parts]
     # Defense-in-depth: only check derived_text content for identifier-like tokens.
     if derived_paths:
         safety_check_identifier(derived_paths)
