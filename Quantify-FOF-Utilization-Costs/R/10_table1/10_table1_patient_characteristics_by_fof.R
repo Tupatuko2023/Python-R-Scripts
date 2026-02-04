@@ -566,8 +566,8 @@ tab1 <- bind_rows(
   summ_bin_row("Balance difficulties, n (%)", df$balance, df$FOF),
   summ_bin_row("Fractures, n (%)", df$fractures, df$FOF),
   summ_bin_row("Difficulties of walking 500 m, n (%)", df$walk500, df$FOF),
-  summ_cont_row("FTSST, s, mean (SD)", df$ftsst, df$FOF),
-  summ_multicat("Ability to transact out of home", df$ability3, df$FOF,
+  summ_cont_row("Five times sit-to-stand (FTSST), s, mean (SD)", df$ftsst, df$FOF),
+  summ_multicat("Ability to transact out of home, n (%)", df$ability3, df$FOF,
                 c("Without difficulties","With difficulties","Unable independently"))
 )
 
