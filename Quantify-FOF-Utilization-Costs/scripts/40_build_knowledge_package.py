@@ -30,7 +30,11 @@ EXCLUDE_PATHS = {
 }
 
 EXCLUDE_DIR_NAMES = {"__pycache__", ".pytest_cache"}
-EXCLUDE_ROOTS = {"outputs", "logs"}
+EXCLUDE_ROOTS = (
+    Path("outputs"),
+    Path("logs"),
+)
+EXCLUDE_R_SUBDIRS = ("outputs", "logs")
 IDENT_TOKENS = ("id,", " id ")
 
 
@@ -98,14 +102,19 @@ def _safe_display(path: Path) -> str:
     return rel.as_posix()
 
 
-def should_exclude(rel_path: Path) -> bool:
-    parts = rel_path.parts
-    if not parts:
-        return False
-    if parts[0] in EXCLUDE_ROOTS:
-        return True
-    if parts[0] == "R" and any(part in EXCLUDE_ROOTS for part in parts):
-        return True
+def should_exclude(rel: Path) -> bool:
+    for root in EXCLUDE_ROOTS:
+        try:
+            rel.relative_to(root)
+            return True
+        except ValueError:
+            pass
+
+    parts = rel.parts
+    if len(parts) >= 3 and parts[0] == "R":
+        if any(seg in EXCLUDE_R_SUBDIRS for seg in parts[1:]):
+            return True
+
     return False
 
 
