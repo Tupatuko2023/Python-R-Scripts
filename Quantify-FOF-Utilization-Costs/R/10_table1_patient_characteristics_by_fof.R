@@ -15,10 +15,10 @@
 #  3) DATA_ROOT/data/kaatumisenpelko.csv      (alternative)
 #
 # OUTPUTS (repo-relative):
-#  - outputs/table1_patient_characteristics_by_fof.csv
-#  - (optional) outputs/table1_patient_characteristics_by_fof.html
-#  - (optional) outputs/table1_patient_characteristics_by_fof.docx
-#  - logs/table1_run_metadata.txt
+#  - R/10_table1/outputs/table1_patient_characteristics_by_fof.csv
+#  - (optional) R/10_table1/outputs/table1_patient_characteristics_by_fof.html
+#  - (optional) R/10_table1/outputs/table1_patient_characteristics_by_fof.docx
+#  - R/10_table1/logs/table1_run_metadata.txt
 # ==============================================================================
 
 suppressPackageStartupMessages({
@@ -41,15 +41,15 @@ EXPORT_HTML <- Sys.getenv("EXPORT_HTML", unset = "0") == "1"
 EXPORT_DOCX <- Sys.getenv("EXPORT_DOCX", unset = "0") == "1"
 DISABLE_SUPPRESSION <- Sys.getenv("DISABLE_SUPPRESSION", unset = "1") == "1"
 
-# Anchor outputs/logs to the subproject root (Quantify-FOF-Utilization-Costs)
+# Anchor outputs/logs to the Table 1 script location under the subproject root
 args_all <- commandArgs(trailingOnly = FALSE)
 file_arg <- grep("^--file=", args_all, value = TRUE)
 script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[1]) else NA_character_
 script_dir <- if (!is.na(script_path)) dirname(normalizePath(script_path, mustWork = FALSE)) else getwd()
 project_dir <- normalizePath(file.path(script_dir, ".."), mustWork = FALSE)
 
-outputs_dir <- file.path(project_dir, "outputs", "tables")
-logs_dir    <- file.path(project_dir, "logs")
+outputs_dir <- file.path(project_dir, "R", "10_table1", "outputs")
+logs_dir    <- file.path(project_dir, "R", "10_table1", "logs")
 dir.create(outputs_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(logs_dir,    showWarnings = FALSE, recursive = TRUE)
 blocked_path <- file.path(outputs_dir, "table1_patient_characteristics_by_fof.BLOCKED.txt")
@@ -602,7 +602,7 @@ if (file.exists(blocked_path)) {
   invisible(file.remove(blocked_path))
 }
 readr::write_csv(tab1, out_csv)
-log_msg("Wrote outputs/tables/table1_patient_characteristics_by_fof.csv")
+log_msg("Wrote R/10_table1/outputs/table1_patient_characteristics_by_fof.csv")
 
 # Optional HTML via gt (if installed)
 if (EXPORT_HTML) {
@@ -612,7 +612,7 @@ if (EXPORT_HTML) {
       gt::opt_table_outline() %>%
       gt::opt_row_striping()
     gt::gtsave(gt_tbl, out_html)
-    log_msg("Wrote outputs/tables/table1_patient_characteristics_by_fof.html")
+    log_msg("Wrote R/10_table1/outputs/table1_patient_characteristics_by_fof.html")
   } else {
     log_msg("EXPORT_HTML=1 but package 'gt' not available; skipping HTML.")
   }
@@ -626,7 +626,7 @@ if (EXPORT_DOCX) {
     doc <- officer::read_docx()
     doc <- officer::body_add_flextable(doc, ft)
     print(doc, target = out_docx)
-    log_msg("Wrote outputs/tables/table1_patient_characteristics_by_fof.docx")
+    log_msg("Wrote R/10_table1/outputs/table1_patient_characteristics_by_fof.docx")
   } else {
     log_msg("EXPORT_DOCX=1 but packages 'flextable'/'officer' not available; skipping DOCX.")
   }
