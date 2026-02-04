@@ -30,7 +30,7 @@ EXCLUDE_PATHS = {
 }
 
 EXCLUDE_DIR_NAMES = {"__pycache__", ".pytest_cache"}
-EXCLUDE_SEGMENTS = {"outputs", "logs"}
+EXCLUDE_ROOTS = {"outputs", "logs"}
 IDENT_TOKENS = ("id,", " id ")
 
 
@@ -68,7 +68,11 @@ def iter_files() -> Iterable[Path]:
                 continue
             if p in EXCLUDE_PATHS:
                 continue
-            if has_excluded_segment(p):
+            try:
+                rel = p.relative_to(PROJECT_ROOT)
+            except ValueError:
+                continue
+            if should_exclude(rel):
                 continue
             yield p
 
@@ -94,12 +98,15 @@ def _safe_display(path: Path) -> str:
     return rel.as_posix()
 
 
-def has_excluded_segment(path: Path) -> bool:
-    try:
-        rel = path.relative_to(PROJECT_ROOT)
-    except ValueError:
+def should_exclude(rel_path: Path) -> bool:
+    parts = rel_path.parts
+    if not parts:
         return False
-    return any(part in EXCLUDE_SEGMENTS for part in rel.parts)
+    if parts[0] in EXCLUDE_ROOTS:
+        return True
+    if parts[0] == "R" and any(part in EXCLUDE_ROOTS for part in parts):
+        return True
+    return False
 
 
 def build_index(entries: List[Dict[str, str]], zip_sha256: str, zip_ref: str) -> Dict[str, object]:
@@ -137,7 +144,11 @@ def main() -> int:
     for p in paths:
         if p in EXCLUDE_PATHS:
             continue
-        if has_excluded_segment(p):
+        try:
+            rel = p.relative_to(PROJECT_ROOT)
+        except ValueError:
+            continue
+        if should_exclude(rel):
             continue
         filtered_paths.append(p)
     paths = filtered_paths
