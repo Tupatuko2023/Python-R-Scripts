@@ -602,7 +602,7 @@ if (file.exists(blocked_path)) {
   invisible(file.remove(blocked_path))
 }
 readr::write_csv(tab1, out_csv)
-log_msg("Wrote R/10_table1/outputs/table1_patient_characteristics_by_fof.csv")
+log_msg(paste("Wrote", out_csv))
 
 # Optional HTML via gt (if installed)
 if (EXPORT_HTML) {
@@ -612,7 +612,7 @@ if (EXPORT_HTML) {
       gt::opt_table_outline() %>%
       gt::opt_row_striping()
     gt::gtsave(gt_tbl, out_html)
-    log_msg("Wrote R/10_table1/outputs/table1_patient_characteristics_by_fof.html")
+    log_msg(paste("Wrote", out_html))
   } else {
     log_msg("EXPORT_HTML=1 but package 'gt' not available; skipping HTML.")
   }
@@ -626,7 +626,7 @@ if (EXPORT_DOCX) {
     doc <- officer::read_docx()
     doc <- officer::body_add_flextable(doc, ft)
     print(doc, target = out_docx)
-    log_msg("Wrote R/10_table1/outputs/table1_patient_characteristics_by_fof.docx")
+    log_msg(paste("Wrote", out_docx))
   } else {
     log_msg("EXPORT_DOCX=1 but packages 'flextable'/'officer' not available; skipping DOCX.")
   }
