@@ -516,7 +516,7 @@ summ_multicat <- function(header_label, x_factor, g, level_labels_in_order) {
     `P-value` = p_str
   )
 
-  # Level rows (no denom, no p-value)
+  # Level rows (level-specific p-value vs all other levels)
   lev_rows <- lapply(level_labels_in_order, function(lev) {
     x_lev <- as.integer(x_factor == lev)
     denom2 <- tapply(!is.na(x_factor), g, sum)
@@ -531,11 +531,29 @@ summ_multicat <- function(header_label, x_factor, g, level_labels_in_order) {
       if (sup_any || (!is.na(n_lev["Yes"]) && n_lev["Yes"] < 5)) cell_yes <- suppress_cell(cell_yes)
     }
 
+    # level-specific p-value: level vs all other levels (2x2)
+    p_lev <- p_bin(as.integer(x_factor == lev), g)
+    p_lev_str <- fmt_p(p_lev)
+
+    ok2 <- !is.na(x_factor) & !is.na(g)
+    x2 <- factor(ifelse(x_factor[ok2] == lev, "Yes", "No"),
+                 levels = c("No","Yes"))
+    tab2 <- table(x2, g[ok2])
+
+    if (!DISABLE_SUPPRESSION) {
+      if (any(tab2 < 5) || sup_denom_no || sup_denom_yes) {
+        p_lev_str <- suppress_cell(p_lev_str)
+      }
+      if (sup_any) {
+        p_lev_str <- suppress_cell(p_lev_str)
+      }
+    }
+
     tibble::tibble(
       Variable = paste0("  ", lev),
       No = cell_no,
       Yes = cell_yes,
-      `P-value` = ""
+      `P-value` = p_lev_str
     )
   }) %>% bind_rows()
 
