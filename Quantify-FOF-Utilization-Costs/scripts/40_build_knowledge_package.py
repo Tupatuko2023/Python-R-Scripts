@@ -30,6 +30,11 @@ EXCLUDE_PATHS = {
 }
 
 EXCLUDE_DIR_NAMES = {"__pycache__", ".pytest_cache"}
+EXCLUDE_ROOTS = (
+    Path("outputs"),
+    Path("logs"),
+)
+EXCLUDE_R_SUBDIRS = ("outputs", "logs")
 IDENT_TOKENS = ("id,", " id ")
 
 
@@ -57,7 +62,6 @@ def get_git_commit() -> str:
 
 
 def iter_files() -> Iterable[Path]:
-    outputs_dir = PROJECT_ROOT / "outputs"
     for d in INCLUDE_DIRS:
         if not d.exists():
             continue
@@ -69,10 +73,11 @@ def iter_files() -> Iterable[Path]:
             if p in EXCLUDE_PATHS:
                 continue
             try:
-                p.resolve().relative_to(outputs_dir.resolve())
+                rel = p.relative_to(PROJECT_ROOT)
+            except ValueError:
                 continue
-            except Exception:
-                pass
+            if should_exclude(rel):
+                continue
             yield p
 
 
@@ -95,6 +100,22 @@ def _safe_display(path: Path) -> str:
     except ValueError:
         rel = Path(path.name)
     return rel.as_posix()
+
+
+def should_exclude(rel: Path) -> bool:
+    for root in EXCLUDE_ROOTS:
+        try:
+            rel.relative_to(root)
+            return True
+        except ValueError:
+            pass
+
+    parts = rel.parts
+    if len(parts) >= 3 and parts[0] == "R":
+        if any(seg in EXCLUDE_R_SUBDIRS for seg in parts[1:]):
+            return True
+
+    return False
 
 
 def build_index(entries: List[Dict[str, str]], zip_sha256: str, zip_ref: str) -> Dict[str, object]:
@@ -128,16 +149,16 @@ def main() -> int:
                 paths.append(p)
                 derived_paths.append(p)
 
-    outputs_dir = PROJECT_ROOT / "outputs"
     filtered_paths: List[Path] = []
     for p in paths:
         if p in EXCLUDE_PATHS:
             continue
         try:
-            p.resolve().relative_to(outputs_dir.resolve())
+            rel = p.relative_to(PROJECT_ROOT)
+        except ValueError:
             continue
-        except Exception:
-            pass
+        if should_exclude(rel):
+            continue
         filtered_paths.append(p)
     paths = filtered_paths
     # Defense-in-depth: only check derived_text content for identifier-like tokens.
