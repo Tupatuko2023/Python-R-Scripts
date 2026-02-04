@@ -15,7 +15,7 @@ Table 1 PR is merged; create a follow-up task + branch to align Table 1 with man
 - ATOH mapping matches manuscript coding or documented reason if mismatch persists.
 - Denominators and percents are row-level non-missing per group.
 - FTSST label is correct.
-- Minimal diff; rerun relevant script/tests.
+- Minimal diff; rerun relevant scripts/tests.
 
 ## Log
 - 2026-02-03T21:03:20+02:00 Task created and moved to 02-in-progress.
