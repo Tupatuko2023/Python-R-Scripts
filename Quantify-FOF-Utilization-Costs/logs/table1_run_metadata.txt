@@ -1,0 +1,6 @@
+timestamp: 2026-02-04 19:15:27
+data_root_set: TRUE
+allow_aggregates_env: TRUE
+export_html_requested: FALSE
+export_docx_requested: FALSE
+R.version: R version 4.5.2 (2025-10-31)

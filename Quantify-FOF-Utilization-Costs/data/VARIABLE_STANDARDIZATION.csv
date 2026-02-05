@@ -1,14 +1,14 @@
 source_dataset,original_variable,standard_variable,transform_rule,unit,coding,notes
 paper_02_outpatient,Henkilotunnus,id,as_string,,,
 paper_02_kaaos,FIXME_FOF_STRING,FOF_status,recode_01_2na,,0=No;1=Yes;2=Missing,"User specified Col AH, Row 2"
-paper_02_kaaos,Unnamed: 1,id,as_string,,,
-paper_02_kaaos,Ikä,age,as_integer,years,,
-paper_02_kaaos,Sukupuoli,sex,as_integer,,1=M;2=F,
-paper_02_kaaos,Painoindeksi (BMI),bmi,eur_numeric,kg/m2,,
-paper_02_kaaos,T8_KaatumisenpelkoOn,fof_fear_binary,recode_01,,0=No;1=Yes,
+paper_02_kaaos,potilas- tunnus,id,as_string,,,
+paper_02_kaaos,ikä (a),age,as_integer,years,,
+paper_02_kaaos,"sukupuoli  (0= nainen,  1= mies)",sex,as_integer,,1=M;2=F,
+paper_02_kaaos,"BMI  (kg/m^2, E1= ei tietoa)",bmi,eur_numeric,kg/m2,,
+paper_02_kaaos,"kaatumisen pelko  (0= ei pelkää, 1= pelkää, 2= ei tietoa)",FOF_status,recode_01,,0=No;1=Yes,
 paper_02_hfrs,HFRS,hfrs_score,eur_numeric,,,
 paper_02_hfrs,pvm,date_hfrs,date_parse_fi,,,
-paper_02_kaaos,Tutkimuspäivä,date_baseline,date_parse_fi,,,
+paper_02_kaaos,1. KAAOS Vastaan-otto- käynti  (pvm),date_baseline,date_parse_fi,,,
 KAAOS_data.xlsx,Unnamed: 0,unnamed_0,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 KAAOS_data.xlsx,Unnamed: 1,unnamed_1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 KAAOS_data.xlsx,1.,1,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
@@ -457,15 +457,12 @@ Verrokit.XLSX,Tutkimus-henkil├Ân henkil├Âtunnus,study_henkilon_personal_id
 Verrokit.XLSX,Ver-rokin nro,ver_rokin_nro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 Verrokit.XLSX,Tutk.henkil├Ân / verrokin henkil├Âtunnus,tutk_henkilon_verrokin_personal_identity_code,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 Verrokit.XLSX,Syntym├ñ-p├ñiv├ñ,syntyma_date,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
-Verrokit.XLSX,"Syntym├ñ-
-vuosi",syntyma_year,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Syntym├ñ- vuosi,syntyma_year,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 Verrokit.XLSX,Kuolinp├ñiv├ñ,kuolinpaiva,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
-Verrokit.XLSX,"Suku-
-puoli",suku_puoli,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Suku- puoli,suku_puoli,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 Verrokit.XLSX,Indeksip├ñiv├ñ,indeksipaiva,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 Verrokit.XLSX,Ind.pv koti- kunta,ind_pv_koti_kunta,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
-Verrokit.XLSX,"Indeksip├ñiv├ñn
-kotikunnan nimi",indeksipaivan_kotikunnan_nimi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+Verrokit.XLSX,Indeksip├ñiv├ñn kotikunnan nimi,indeksipaivan_kotikunnan_nimi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 aineisto_U1662_a.xlsx,Tutkimushenkil├Ân numero,tutkimushenkilon_numero,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 aineisto_U1662_a.xlsx,Verrokin nro,verrokin_nro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 aineisto_U1662_a.xlsx,kvuosi,kvuosi,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
@@ -478,13 +475,9 @@ aineisto_U1662_a.xlsx,m3,m3,TBD,,,Inferred from name/role: Variable requiring do
 aineisto_U1662_a.xlsx,m4,m4,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 aineisto_U1662_a.xlsx,kuolpvm,kuolpvm_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
 sotut.xlsx,NRO,nro,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
-sotut.xlsx,"1. KAAOS
-Vastaan-otto-
-k├ñynti
- (pvm)",1_kaaos_vastaan_otto_visit_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
+sotut.xlsx,1. KAAOS Vastaan-otto- k├ñynti  (pvm),1_kaaos_vastaan_otto_visit_date,TBD,,,Inferred from name/role: Event or reference date.; Codex Scan
 sotut.xlsx,Sotu,sotu,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
-sotut.xlsx,"potilas-
-tunnus",patient_tunnus,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
+sotut.xlsx,potilas- tunnus,patient_tunnus,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 verrokitjatutkimushenkil├Ât ÔÇô kopio.xlsx,FILE_UNREADABLE,file_unreadable,TBD,,,UNREADABLE/COPY/PASSWORD-PROTECTED; Inferred from name/role: Source file could not be read; variable list unavailable.; Codex Scan
 verrokitjatutkimushenkil├Ât.xlsx,Tutkimus-henkil├Ân numero,study_henkilon_numero,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
 verrokitjatutkimushenkil├Ât.xlsx,Tutk.henkil├Ân / verrokin henkil├Âtunnus,tutk_henkilon_verrokin_personal_identity_code,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan
