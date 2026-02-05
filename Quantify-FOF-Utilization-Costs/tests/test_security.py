@@ -12,8 +12,21 @@ class TestSecurityGuardrails(unittest.TestCase):
     def _run(self, rel_script: str, args: list[str]) -> subprocess.CompletedProcess:
         env = os.environ.copy()
         env.pop("DATA_ROOT", None)
-        cmd = [sys.executable, str(SCRIPTS / rel_script)] + args
-        return subprocess.run(cmd, capture_output=True, text=True, env=env)
+        
+        # Hide .env temporarily to force failure
+        dot_env = PROJECT_ROOT / "config" / ".env"
+        bak_env = PROJECT_ROOT / "config" / ".env.bak"
+        hidden = False
+        if dot_env.exists():
+            dot_env.rename(bak_env)
+            hidden = True
+            
+        try:
+            cmd = [sys.executable, str(SCRIPTS / rel_script)] + args
+            return subprocess.run(cmd, capture_output=True, text=True, env=env)
+        finally:
+            if hidden:
+                bak_env.rename(dot_env)
 
     def test_inventory_refuses_without_data_root(self) -> None:
         p = self._run("00_inventory_manifest.py", ["--scan", "paper_02"])

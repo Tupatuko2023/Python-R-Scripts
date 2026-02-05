@@ -9,6 +9,13 @@ from pathlib import Path
 from path_resolver import get_data_root
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
+def normalize_col(x: str) -> str:
+    if not isinstance(x, str): return str(x)
+    x = x.replace("\u00A0", " ")
+    x = x.replace("\n", " ")
+    x = " ".join(x.split())
+    return x.strip().lower()
+
 def write_aggregates_if_allowed(allow_aggregates: bool) -> None:
     if not allow_aggregates:
         return
@@ -51,20 +58,17 @@ def load_and_preprocess(data_root: Path | None):
     dataset_col = "logical_name" if "logical_name" in manifest.columns else "dataset"
     if dataset_col not in manifest.columns:
         print(f"WARNING: '{dataset_col}' column missing in manifest. Available: {manifest.columns}")
-        # Fallback to simple filtering if column missing
         data_rows = pd.DataFrame() 
     else:
         data_rows = manifest[~manifest[dataset_col].str.contains("synthetic|manifest|run_log", case=False, na=False)]
 
     for _, row in data_rows.iterrows():
         dataset_name = row[dataset_col]
-        # Handle various path columns from inventory
         filepath_raw = row.get('relative_path') or row.get('filepath') or row.get('path')
         
         if not filepath_raw:
             continue
 
-        # Resolve path relative to DATA_ROOT if it starts with paper_02 or similar
         filepath = Path(filepath_raw)
         if not filepath.is_absolute():
             if data_root:
@@ -102,35 +106,29 @@ def load_and_preprocess(data_root: Path | None):
         rules = std_rules[std_rules['source_dataset'] == dataset_name]
         
         rename_map = {}
+        df_cols_norm = {normalize_col(c): c for c in df.columns}
+        
         for _, r in rules.iterrows():
             orig = r['original_variable']
             std = r['standard_variable']
-            clean_orig = str(orig).replace('\ufeff', '')
+            norm_orig = normalize_col(orig)
             
-            if orig in df.columns: rename_map[orig] = std
-            elif clean_orig in df.columns: rename_map[clean_orig] = std
+            if norm_orig in df_cols_norm:
+                rename_map[df_cols_norm[norm_orig]] = std
             else:
-                 found = False
-                 for df_col in df.columns:
-                      if df_col.replace('\ufeff', '') == clean_orig:
-                           rename_map[df_col] = std
-                           found = True
-                           break
-                 if not found and orig == "FIXME_FOF_STRING" and dataset_name == "paper_02_kaaos":
+                if orig == "FIXME_FOF_STRING" and dataset_name == "paper_02_kaaos":
                     if len(df.columns) > 33:
                         rename_map[df.columns[33]] = std
-                 elif not found and orig == "Unnamed: 1" and dataset_name == "paper_02_kaaos":
+                elif orig == "Unnamed: 1" and dataset_name == "paper_02_kaaos":
                     if len(df.columns) > 1:
                         rename_map[df.columns[1]] = std
         
-        # Hard fallback for ID in outpatient
         if dataset_name == "paper_02_outpatient" and "id" not in rename_map.values():
              if len(df.columns) > 0 and "Henkilotunnus" in df.columns[0]: 
                  rename_map[df.columns[0]] = "id"
 
         df.rename(columns=rename_map, inplace=True)
         
-        # SELECT COLS
         keep_cols = [c for c in df.columns if c in rules['standard_variable'].values]
         if 'id' not in keep_cols and 'id' in df.columns: keep_cols.append('id')
             
@@ -158,12 +156,9 @@ def load_and_preprocess(data_root: Path | None):
             elif rule == 'date_parse_fi':
                 df[col] = pd.to_datetime(df[col], format='%Y%m%d', errors='coerce')
 
-        # AGGREGATION LOGIC (Aim 2 specific)
         if dataset_name == "paper_02_outpatient":
             print(f"  Aggregating outpatient visits for {len(df)} rows...")
-            # Each row is a visit
-            visits = df.groupby('id').size().reset_index(name='util_visits_total')
-            # Get first age/baseline if any
+            visits = df.groupby('id').size().reset_index(name='util_visits_outpatient')
             baseline_cols = [c for c in ['age', 'period_start'] if c in df.columns]
             if baseline_cols:
                 aggs = {c: 'first' if c == 'age' else 'min' for c in baseline_cols}
@@ -179,10 +174,10 @@ def load_and_preprocess(data_root: Path | None):
         else:
             merged_df = pd.merge(merged_df, df, on='id', how='outer')
             
-    # CALCULATE COSTS (Placeholder logic since no cost column found)
-    if not merged_df.empty and 'util_visits_total' in merged_df.columns:
+    if not merged_df.empty and 'util_visits_outpatient' in merged_df.columns:
          print("\nCALCULATING COSTS (Assumption: 60 EUR / visit)...")
-         merged_df['cost_total_eur'] = merged_df['util_visits_total'] * 60.0
+         merged_df['cost_outpatient_eur'] = merged_df['util_visits_outpatient'] * 60.0
+         merged_df['cost_total_eur'] = merged_df['cost_outpatient_eur'] # Placeholder for total
 
     print(f"\nSAVING RESULT: {output_path}")
     print(f"Total Rows: {len(merged_df)}")
@@ -193,24 +188,16 @@ def load_and_preprocess(data_root: Path | None):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--use-sample", action="store_true", help="Use internal synthetic data (Not fully implemented in this script yet)")
+    parser.add_argument("--use-sample", action="store_true", help="Use internal synthetic data")
     parser.add_argument("--allow-aggregates", action="store_true", help="Allow aggregate output")
     args = parser.parse_args()
 
-    # In this hybrid version, we primarily run the Stashed ETL logic
-    # but acknowledge the args.
-    
-    if args.use_sample:
-        print("NOTE: --use-sample requested, but this script is currently hardcoded for manifest-based loading.")
-    
-    data_root_env = os.getenv("DATA_ROOT")
     data_root = get_data_root()
-    if not data_root_env and not args.use_sample:
+    if not data_root and not args.use_sample:
         print("ERROR: DATA_ROOT not set in config/.env", file=sys.stderr)
         raise SystemExit(0)
 
-    success = load_and_preprocess(data_root)
-    
+    load_and_preprocess(data_root)
     write_aggregates_if_allowed(args.allow_aggregates)
 
 if __name__ == "__main__":

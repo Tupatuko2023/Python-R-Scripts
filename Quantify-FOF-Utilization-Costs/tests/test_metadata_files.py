@@ -28,6 +28,7 @@ EXPECTED_HEADERS = {
         "file_glob",
         "description",
         "sensitivity",
+        "header_row",
     ],
     "run_log.csv": [
         "timestamp",
