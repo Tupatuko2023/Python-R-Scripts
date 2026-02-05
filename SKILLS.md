@@ -46,6 +46,13 @@ eksplisiittisellä käskyllä:
 
 ---
 
+## Repository conventions (MUST)
+
+- Kaikki analyysi-R-skriptit ovat omissa kansioissaan `R/`-hakemiston alla.
+- Jokaisella skriptillä on omat `outputs/` ja `logs/` -alihakemistot.
+- Outputit ovat aina gitignored ja skriptikohtaisia.
+- Yhteisiä `outputs/`-hakemistoja ei käytetä.
+
 ## GitHub Auth (Non-Interactive) — Termux-safe
 
 Supported auth models (automatic, no prompts):
