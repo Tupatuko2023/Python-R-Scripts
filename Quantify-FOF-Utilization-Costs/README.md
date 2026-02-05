@@ -18,6 +18,12 @@ Project layout
 - outputs/: generated QC/aggregate artifacts (ignored)
 - tests/: CI-safe tests using synthetic sample only
 
+R-skriptien rakenne (lyhyesti)
+
+Jokainen analyysiskripti sijaitsee omassa kansiossaan `R/`-hakemiston alla ja kirjoittaa
+outputit sekä lokit vain omaan `outputs/` ja `logs/` -alihakemistoonsa (gitignored).
+Yhteisiä `outputs/`-hakemistoja ei käytetä.
+
 Quickstart (synthetic / CI-safe)
 From repo root:
 
