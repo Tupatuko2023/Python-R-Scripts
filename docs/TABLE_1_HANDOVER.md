@@ -17,7 +17,19 @@ Modify the `locate_input` function (around line 105) to prioritize the panel dat
 
 ### Fix 2: Use Correct Frailty and Smoking Variables
 The script currently tries to map variables from raw components or old column names.
-- **Frailty**: Update `col_frailty` mapping (around line 208) to explicitly use `frailty_cat_3`.
+- **Frailty Mapping**: Since `frailty_fried` in `aim2_panel.csv` may contain numeric scores (0-3) or even error values (5), you **MUST** use this exact mapping logic:
+    ```r
+    df <- df %>%
+      mutate(frailty_fried = as.numeric(as.character(frailty_fried))) %>%
+      mutate(frailty_cat_3 = case_when(
+        frailty_fried == 0 ~ "Robust",
+        frailty_fried >= 1 & frailty_fried <= 2 ~ "Pre-frail",
+        frailty_fried == 3 ~ "Frail",
+        frailty_fried > 3 ~ "Unknown", # Handle values like '5'
+        is.na(frailty_fried) ~ "Unknown",
+        TRUE ~ "Unknown"
+      ))
+    ```
 - **Smoking**: Since `smoking` is missing from `aim2_panel.csv`, you must join it from `KAAOS_data_sotullinen.xlsx`.
     - **Raw File**: `DATA_ROOT/paper_02/KAAOS_data_sotullinen.xlsx`
     - **Header Row**: 2 (labels are in row 2).
