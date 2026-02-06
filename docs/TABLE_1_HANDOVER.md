@@ -33,8 +33,9 @@ The script currently tries to map variables from raw components or old column na
 - **Smoking Join (KAAOS Excel)**: Since `smoking` is missing from `aim2_panel.csv`, join it from `KAAOS_data_sotullinen.xlsx`.
     - **Raw File**: `DATA_ROOT/paper_02/KAAOS_data_sotullinen.xlsx`
     - **Header Row**: 2 (labels are in row 2).
-    - **Join Key**: You **MUST** join Panel `id` to Excel `NRO` (Column 1). 
-    - **Note**: Previous failure was due to joining numeric ID to string Sotu.
+    - **Join Key**: You **MUST** join Panel `id` to Excel **Sotu** (Column 3). 
+    - **ID Origin**: Forensics confirmed that `id` in `aim2_panel.csv` contains the **Sotu string** (e.g., "160135-534C"), NOT a numeric research ID.
+    - **Normalization**: Note that the script's `normalize_id()` removes hyphens (e.g., "160135-534C" -> "160135534"). Ensure this is applied consistently to both sides of the join.
     - **Smoking Column**: `tupakointi` (Column index 19).
 
 ### Fix 3: Add Data Integrity Gates
@@ -49,7 +50,7 @@ if (nrow(df_raw) < 480) {
 ```r
 match_rate <- mean(!is.na(df_raw$frailty_cat_3) & df_raw$frailty_cat_3 != "Unknown")
 if (match_rate < 0.70) {
-  stop(paste0("CRITICAL: frailty join match_rate too low: ", round(match_rate, 3), ". Check ID vs NRO pairing."))
+  stop(paste0("CRITICAL: frailty join match_rate too low: ", round(match_rate, 3), ". Ensure you are joining Panel ID to Excel SOTU (not NRO)."))
 }
 ```
 
