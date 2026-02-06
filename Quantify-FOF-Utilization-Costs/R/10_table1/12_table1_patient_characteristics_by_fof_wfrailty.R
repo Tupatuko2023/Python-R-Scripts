@@ -10,9 +10,14 @@
 # - Apply N<5 suppression to all table cells (cells become "Suppressed"; p-values suppressed too)
 #
 # INPUT discovery (DATA_ROOT must be set):
-#  1) DATA_ROOT/derived/kaatumisenpelko.csv   (primary)
-#  2) DATA_ROOT/derived/aim2_panel.csv        (alternative)
-#  3) DATA_ROOT/data/kaatumisenpelko.csv      (alternative)
+#  1) DATA_ROOT/paper_02/KAAOS_data_sotullinen.xlsx (primary baseline runko)
+#  2) DATA_ROOT/derived/kaatumisenpelko.csv         (alternative)
+#  3) DATA_ROOT/data/kaatumisenpelko.csv            (alternative)
+#
+# TABLE 1 SOURCE OF TRUTH:
+# - Baseline cohort from aim2_panel.csv (N≈486)
+# - Frailty from frailty_cat_3 (precomputed baseline frailty)
+# - See docs/TABLE_1_HANDOVER.md
 #
 # OUTPUTS (repo-relative):
 #  - R/10_table1/outputs/table1_patient_characteristics_by_fof.csv
@@ -24,6 +29,7 @@
 suppressPackageStartupMessages({
   library(readr)
   library(dplyr)
+  library(readxl)
   library(tidyr)
   library(stringr)
 })
@@ -106,14 +112,15 @@ bmi_candidates <- c("BMI","bmi","Painoindeksi (BMI)","painoindeksi","painoindeks
 
 locate_input <- function(data_root) {
   candidates <- c(
-    file.path(data_root, "derived", "kaatumisenpelko.csv"),
-    file.path(data_root, "derived", "aim2_panel.csv"),
-    file.path(data_root, "data",    "kaatumisenpelko.csv")
+    file.path(data_root, "paper_02", "KAAOS_data_sotullinen.xlsx"),
+    file.path(data_root, "derived",  "kaatumisenpelko.csv"),
+    file.path(data_root, "data",     "kaatumisenpelko.csv")
   )
   first_existing <- NA_character_
   for (p in candidates) {
     if (file.exists(p) && file.access(p, 4) == 0) {
       if (is.na(first_existing)) first_existing <- p
+      if (grepl("\\.xlsx?$", p, ignore.case = TRUE)) return(p)
       hdr <- readr::read_csv(p, n_max = 0, show_col_types = FALSE, progress = FALSE)
       if (any(names(hdr) %in% bmi_candidates)) return(p)
     }
@@ -127,10 +134,14 @@ if (is.na(input_path)) {
 }
 
 # IMPORTANT: do not print absolute input_path
-log_msg("Input found (path redacted). Reading CSV...")
+log_msg("Input found (path redacted). Reading data...")
 log_msg("Input selected: ", basename(input_path))
 
-df_raw <- readr::read_csv(input_path, show_col_types = FALSE, progress = FALSE)
+if (grepl("\\.xlsx?$", input_path, ignore.case = TRUE)) {
+  df_raw <- readxl::read_excel(input_path, skip = 1, col_names = TRUE)
+} else {
+  df_raw <- readr::read_csv(input_path, show_col_types = FALSE, progress = FALSE)
+}
 
 # ----------------------------
 # C) Column mapping (no guessing)
@@ -140,6 +151,21 @@ normalize_header <- function(x) {
   x <- gsub("\u00A0", " ", x, fixed = TRUE)
   x <- gsub("[[:space:]]+", " ", x)
   trimws(x)
+}
+
+normalize_id <- function(x) {
+  x <- trimws(as.character(x))
+  x <- gsub("\\D", "", x)
+  x[x == ""] <- NA_character_
+  x
+}
+
+normalize_nro <- function(x) {
+  x <- trimws(as.character(x))
+  x[x == ""] <- NA_character_
+  num <- suppressWarnings(as.numeric(x))
+  out <- ifelse(!is.na(num), as.character(num), NA_character_)
+  out
 }
 
 pick_col_optional <- function(df_names, target, candidates) {
@@ -204,30 +230,96 @@ nm <- names(df_raw)
 
 id_candidates <- c("id","ID","Id","henkilotunnus","Henkilotunnus","sotu","Sotu","SOTU")
 
-col_id      <- pick_col_optional(nm, "id", id_candidates)
-col_fof      <- pick_col(nm, "FOF", c("FOF_status","fof_fear_binary","kaatumisenpelkoOn","kaatumisenpelko","FOF","fof"))
-col_sex      <- pick_col(nm, "sex", c("sex","Sukupuoli","sukupuoli","gender"))
-col_age      <- pick_col(nm, "age", c("age","Ikä","ikä","ika","Age"))
-col_bmi      <- pick_col(nm, "BMI", bmi_candidates)
-col_smoker   <- pick_col(nm, "smoker", c("tupakointi","smoker","smoking","Tupakointi"))
-col_alcohol  <- pick_col(nm, "alcohol", c("alkoholi","alcohol","alcohol_use","Alkoholi"))
-col_dm       <- pick_col(nm, "DM", c("diabetes","DM","dm","Diabetes"))
-col_ad       <- pick_col(nm, "AD", c("alzheimer","AD","ad","Alzheimer"))
-col_cva      <- pick_col(nm, "CVA", c("AVH","CVA","cva","stroke","aivoverenkiertohairio"))
-col_srh      <- if ("koettuterveydentila" %in% nm) {
-  "koettuterveydentila"
-} else if ("SRH" %in% nm) {
-  "SRH"
-} else {
-  stop("SRH puuttuu: ei löytynyt 'koettuterveydentila' eikä 'SRH'. Anna mappaus: SRH = <dataset_column_name> (ja muokkaa koodin col_srh).")
+pick_col_regex <- function(df_names, target, patterns) {
+  df_norm <- normalize_header(df_names)
+  hits <- integer()
+  for (pat in patterns) {
+    m <- grep(pat, df_norm, ignore.case = TRUE)
+    if (length(m) > 0) hits <- unique(c(hits, m))
+  }
+  if (length(hits) == 1) return(df_names[hits[1]])
+  if (length(hits) == 0) {
+    stop(paste0(
+      "Puuttuva sarake (tarvitaan mappaus): ", target, "\n",
+      "Anna mappaus muodossa: ", target, " = <dataset_column_name>"
+    ))
+  }
+  stop(paste0(
+    "Epäselvä mappaus (useita osumia) targetille ", target, ": ",
+    paste(df_names[hits], collapse = ", "), "\n",
+    "Anna yksiselitteinen mappaus: ", target, " = <dataset_column_name>"
+  ))
 }
-col_fallen   <- pick_col(nm, "fallen", c("kaatuminen","fallen","Falls","fall_history"))
-col_balance  <- pick_col(nm, "balance_difficulties", c("tasapainovaikeus","balance_difficulties","balance","Tasapainovaikeus"))
-col_fract    <- pick_col(nm, "fractures", c("murtumia","fractures","fracture","Murtumia"))
-col_walk500  <- pick_col(nm, "walk500", c("vaikeus_liikkua_500m","difficulties_walking_500m","walk500","Vaikeus_liikkua_500m"))
-col_ftsst    <- pick_col(nm, "FTSST_seconds", c("FTSST","fts", "FTSST_s","FTSST_sec","fts_seconds","FTSSTsek","FTSST0","Tuolilta nousu 5 krt","Tuolilta nousu 5 krt (sek)"))
-col_ability  <- pick_col(nm, "ability_out_of_home", c("ability_out_of_home","oma_arvio_liikuntakyky","toiminta_kodin_ulkopuolella","Ability","oma arvio liikuntakyvystä"))
-col_frailty  <- pick_col_optional(nm, "frailty_fried", c("frailty_fried","frailty_cat_3","frailty","frailty_fried_3","frailty3"))
+
+pick_col_regex_first <- function(df_names, target, patterns) {
+  df_norm <- normalize_header(df_names)
+  for (pat in patterns) {
+    m <- grep(pat, df_norm, ignore.case = TRUE)
+    if (length(m) == 1) return(df_names[m[1]])
+    if (length(m) > 1) {
+      stop(paste0(
+        "Epäselvä mappaus (useita osumia) targetille ", target, ": ",
+        paste(df_names[m], collapse = ", "), "\n",
+        "Anna yksiselitteinen mappaus: ", target, " = <dataset_column_name>"
+      ))
+    }
+  }
+  stop(paste0(
+    "Puuttuva sarake (tarvitaan mappaus): ", target, "\n",
+    "Anna mappaus muodossa: ", target, " = <dataset_column_name>"
+  ))
+}
+
+pick_col_regex_optional <- function(df_names, target, patterns) {
+  df_norm <- normalize_header(df_names)
+  for (pat in patterns) {
+    m <- grep(pat, df_norm, ignore.case = TRUE)
+    if (length(m) == 1) return(df_names[m[1]])
+    if (length(m) > 1) {
+      stop(paste0(
+        "Epäselvä mappaus (useita osumia) targetille ", target, ": ",
+        paste(df_names[m], collapse = ", "), "\n",
+        "Anna yksiselitteinen mappaus: ", target, " = <dataset_column_name>"
+      ))
+    }
+  }
+  NA_character_
+}
+
+col_id      <- pick_col_regex_first(nm, "id", c("^nro$", "^potilas", "^sotu$", "^henkilotunnus"))
+col_fof     <- pick_col_regex(nm, "FOF", c("^kaatumisen pelko\\s*\\(0="))
+col_sex     <- pick_col_regex(nm, "sex", c("^sukupuoli", "^sex"))
+col_age     <- pick_col_regex(nm, "age", c("^ikä", "^age"))
+col_bmi     <- pick_col_regex(nm, "BMI", c("^BMI", "painoindeksi"))
+col_smoker  <- pick_col_regex(nm, "smoker", c("^tupakointi", "^smoker", "^smoking"))
+col_alcohol <- pick_col_regex(nm, "alcohol", c("^alkoholi", "^alcohol"))
+col_dm      <- pick_col_regex(nm, "DM", c("^diabetes", "^dm$"))
+col_ad      <- pick_col_regex(nm, "AD", c("^alzheimer", "^ad$"))
+col_cva     <- pick_col_regex(nm, "CVA", c("^AVH", "^CVA", "stroke"))
+col_srh     <- pick_col_regex(nm, "SRH", c("^koettu terveydentila", "^SRH"))
+col_fallen  <- pick_col_regex(nm, "fallen", c("^kaatuminen\\s*\\("))
+col_balance <- pick_col_regex(nm, "balance_difficulties", c("^tasapaino-? ?vaikeudet"))
+col_fract   <- pick_col_regex(nm, "fractures", c("^murtumia"))
+col_walk500 <- pick_col_regex(nm, "walk500", c("^500m vaikeus liikkua"))
+col_ftsst   <- pick_col_regex(nm, "FTSST_seconds", c("^TK: Tuolilta nousu", "^FTSST"))
+col_ability <- pick_col_regex(nm, "ability_out_of_home", c("^kodin ulkopuolella asiointi"))
+col_frailty <- if ("frailty_cat_3" %in% nm) "frailty_cat_3" else NA_character_
+col_visit_date <- pick_col_regex_optional(nm, "baseline_visit_date", c("kaao[s]?\\s*vastaan", "vastaan-otto", "käynti.*pvm", "pvm"))
+
+# Deduplicate baseline to one row per NRO (prefer earliest visit date if available)
+if (!is.na(col_id)) {
+  is_nro <- grepl("^nro$", normalize_header(col_id), ignore.case = TRUE)
+  df_raw <- df_raw %>%
+    mutate(
+      id_key = if (is_nro) normalize_nro(.data[[col_id]]) else normalize_id(.data[[col_id]]),
+      visit_date = if (!is.na(col_visit_date)) suppressWarnings(as.Date(.data[[col_visit_date]], format = "%d.%m.%Y")) else as.Date(NA)
+    ) %>%
+    arrange(id_key, visit_date) %>%
+    group_by(id_key) %>%
+    slice(1) %>%
+    ungroup() %>%
+    select(-id_key, -visit_date)
+}
 
 # ----------------------------
 # D) Robust recoding helpers
@@ -238,6 +330,8 @@ normalize_fof <- function(x) {
     ux <- sort(unique(x[!is.na(x)]))
     # Common: 0/1
     if (all(ux %in% c(0, 1))) return(factor(ifelse(x == 1, "Yes", ifelse(x == 0, "No", NA_character_)), levels = c("No","Yes")))
+    # Common: 0/1/2 where 2=Unknown
+    if (all(ux %in% c(0, 1, 2))) return(factor(ifelse(x == 1, "Yes", ifelse(x == 0, "No", NA_character_)), levels = c("No","Yes")))
     # Common: 1/2 where 1=No 2=Yes
     if (all(ux %in% c(1, 2))) return(factor(ifelse(x == 2, "Yes", ifelse(x == 1, "No", NA_character_)), levels = c("No","Yes")))
   }
@@ -261,6 +355,48 @@ normalize_binary01 <- function(x) {
   yes_set <- c("1","yes","y","kyllä","kylla","true","t")
   as.integer(ifelse(x_chr %in% yes_set, 1L,
                     ifelse(x_chr %in% no_set, 0L, NA_integer_)))
+}
+
+normalize_binary012 <- function(x, label) {
+  x_chr <- tolower(trimws(as.character(x)))
+  x_chr[x_chr %in% c("", "e", "e1")] <- NA_character_
+  x_chr <- ifelse(grepl("^\\s*[0-9]+\\s*=", x_chr), sub("^\\s*([0-9]+)\\s*=.*$", "\\1", x_chr), x_chr)
+  x_chr <- ifelse(grepl("^\\s*[0-9]+\\s*$", x_chr), sub("^\\s*([0-9]+)\\s*$", "\\1", x_chr), x_chr)
+  x_chr <- ifelse(x_chr %in% c("kyllä","kylla","yes","y","true","t","k"), "1", x_chr)
+  x_chr <- ifelse(x_chr %in% c("ei","no","n","false","f"), "0", x_chr)
+  x_chr <- ifelse(x_chr %in% c("ei tietoa","unknown","missing","na","n/a"), "2", x_chr)
+  invalid <- !is.na(x_chr) & !x_chr %in% c("0","1","2")
+  if (any(invalid)) {
+    log_msg("Out-of-spec codes for ", label, ": ", sum(invalid), " coerced to NA.")
+    x_chr[invalid] <- NA_character_
+  }
+  as.integer(ifelse(x_chr == "1", 1L, ifelse(x_chr == "0", 0L, NA_integer_)))
+}
+
+normalize_walk500 <- function(x) {
+  x_chr <- tolower(trimws(as.character(x)))
+  x_chr[x_chr %in% c("", "e", "e1")] <- NA_character_
+  x_chr <- ifelse(grepl("^\\s*[0-9]+\\s*=", x_chr), sub("^\\s*([0-9]+)\\s*=.*$", "\\1", x_chr), x_chr)
+  x_chr <- ifelse(grepl("^\\s*[0-9]+\\s*$", x_chr), sub("^\\s*([0-9]+)\\s*$", "\\1", x_chr), x_chr)
+  invalid <- !is.na(x_chr) & !x_chr %in% c("0","1","2","3")
+  if (any(invalid)) {
+    log_msg("Out-of-spec codes for walk500: ", sum(invalid), " coerced to NA.")
+    x_chr[invalid] <- NA_character_
+  }
+  as.integer(ifelse(x_chr %in% c("1","2"), 1L, ifelse(x_chr == "0", 0L, NA_integer_)))
+}
+
+normalize_alcohol <- function(x) {
+  x_chr <- tolower(trimws(as.character(x)))
+  x_chr[x_chr %in% c("", "e", "e1")] <- NA_character_
+  x_chr <- ifelse(grepl("^\\s*[0-9]+\\s*=", x_chr), sub("^\\s*([0-9]+)\\s*=.*$", "\\1", x_chr), x_chr)
+  x_chr <- ifelse(grepl("^\\s*[0-9]+\\s*$", x_chr), sub("^\\s*([0-9]+)\\s*$", "\\1", x_chr), x_chr)
+  invalid <- !is.na(x_chr) & !x_chr %in% c("0","1","2","3")
+  if (any(invalid)) {
+    log_msg("Out-of-spec codes for alcohol: ", sum(invalid), " coerced to NA.")
+    x_chr[invalid] <- NA_character_
+  }
+  as.integer(ifelse(x_chr %in% c("1","2"), 1L, ifelse(x_chr == "0", 0L, NA_integer_)))
 }
 
 women_from_sex <- function(x) {
@@ -329,6 +465,27 @@ recode_ability_3 <- function(x) {
       )
       return(factor(out, levels = c("Without difficulties","With difficulties","Unable independently")))
     }
+    # Alternative: 0..2 increasing difficulty (0=no difficulties, 1=difficulties, 2=unable)
+    if (all(ux %in% 0:2)) {
+      out <- dplyr::case_when(
+        x == 0 ~ "Without difficulties",
+        x == 1 ~ "With difficulties",
+        x == 2 ~ "Unable independently",
+        TRUE ~ NA_character_
+      )
+      return(factor(out, levels = c("Without difficulties","With difficulties","Unable independently")))
+    }
+    # Alternative: 0..3 where 3=unknown
+    if (all(ux %in% 0:3)) {
+      out <- dplyr::case_when(
+        x == 0 ~ "Without difficulties",
+        x == 1 ~ "With difficulties",
+        x == 2 ~ "Unable independently",
+        x == 3 ~ NA_character_,
+        TRUE ~ NA_character_
+      )
+      return(factor(out, levels = c("Without difficulties","With difficulties","Unable independently")))
+    }
   }
   xc <- tolower(trimws(as.character(x)))
   out <- dplyr::case_when(
@@ -382,21 +539,23 @@ recode_frailty_3 <- function(x) {
 # ----------------------------
 df <- df_raw %>%
   transmute(
-    id = if (!is.na(col_id)) as.character(.data[[col_id]]) else NA_character_,
+    id = if (!is.na(col_id)) {
+      if (grepl("^nro$", normalize_header(col_id), ignore.case = TRUE)) normalize_nro(.data[[col_id]]) else normalize_id(.data[[col_id]])
+    } else NA_character_,
     FOF = normalize_fof(.data[[col_fof]]),
     women = women_from_sex(.data[[col_sex]]),
     age = suppressWarnings(as.numeric(.data[[col_age]])),
     bmi = suppressWarnings(as.numeric(.data[[col_bmi]])),
-    smoker = normalize_binary01(.data[[col_smoker]]),
-    alcohol = normalize_binary01(.data[[col_alcohol]]),
+    smoker = normalize_binary012(.data[[col_smoker]], "smoker"),
+    alcohol = normalize_alcohol(.data[[col_alcohol]]),
     dm = normalize_binary01(.data[[col_dm]]),
     ad = normalize_binary01(.data[[col_ad]]),
     cva = normalize_binary01(.data[[col_cva]]),
     srh3 = recode_srh_3(.data[[col_srh]]),
-    fallen = normalize_binary01(.data[[col_fallen]]),
-    balance = normalize_binary01(.data[[col_balance]]),
-    fractures = normalize_binary01(.data[[col_fract]]),
-    walk500 = normalize_binary01(.data[[col_walk500]]),
+    fallen = normalize_binary012(.data[[col_fallen]], "fallen"),
+    balance = normalize_binary012(.data[[col_balance]], "balance"),
+    fractures = normalize_binary012(.data[[col_fract]], "fractures"),
+    walk500 = normalize_walk500(.data[[col_walk500]]),
     ftsst = suppressWarnings(as.numeric(.data[[col_ftsst]])),
     ability3 = recode_ability_3(.data[[col_ability]]),
     frailty3 = if (!is.na(col_frailty)) recode_frailty_3(.data[[col_frailty]]) else NA_character_
@@ -407,36 +566,112 @@ load_frailty_lookup <- function(data_root) {
   if (!file.exists(panel_path)) {
     stop("Frailty lookup source missing: derived/aim2_panel.csv (DATA_ROOT).")
   }
+  cw_path <- file.path(data_root, "paper_02", "sotut.xlsx")
+  if (!file.exists(cw_path)) {
+    stop("Frailty crosswalk missing: paper_02/sotut.xlsx (DATA_ROOT).")
+  }
   hdr <- readr::read_csv(panel_path, n_max = 0, show_col_types = FALSE, progress = FALSE)
   panel_names <- names(hdr)
   col_id_panel <- pick_col(panel_names, "id", id_candidates)
-  col_frailty_panel <- pick_col(panel_names, "frailty_fried", c("frailty_fried","frailty_cat_3","frailty","frailty_fried_3","frailty3"))
-  panel_df <- readr::read_csv(panel_path, show_col_types = FALSE, progress = FALSE,
-                              col_select = dplyr::all_of(c(col_id_panel, col_frailty_panel)))
-  panel_df %>%
+  col_frailty_panel <- if ("frailty_fried" %in% panel_names) {
+    "frailty_fried"
+  } else {
+    stop("Frailty lookup source missing: expected frailty_fried in aim2_panel.csv.")
+  }
+  panel_df <- readr::read_csv(panel_path, show_col_types = FALSE, progress = FALSE)
+  if ("period" %in% names(panel_df)) {
+    panel_df <- panel_df %>%
+      dplyr::select(dplyr::all_of(c(col_id_panel, col_frailty_panel, "period"))) %>%
+      dplyr::arrange(.data[[col_id_panel]], .data$period) %>%
+      dplyr::group_by(.data[[col_id_panel]]) %>%
+      dplyr::slice(1) %>%
+      dplyr::ungroup()
+  } else {
+    panel_df <- panel_df %>%
+      dplyr::select(dplyr::all_of(c(col_id_panel, col_frailty_panel))) %>%
+      dplyr::arrange(.data[[col_id_panel]]) %>%
+      dplyr::group_by(.data[[col_id_panel]]) %>%
+      dplyr::slice(1) %>%
+      dplyr::ungroup()
+  }
+  if (nrow(panel_df) < 470) {
+    stop(paste0(
+      "CRITICAL ERROR: panel_dedup cohort too small. Found N=",
+      nrow(panel_df),
+      ", expected N≈477+. Check panel source/dedup."
+    ))
+  }
+  cw <- readxl::read_excel(cw_path, col_names = TRUE)
+  col_cw_nro <- pick_col_regex_first(names(cw), "crosswalk NRO", c("^NRO$"))
+  col_cw_sotu <- pick_col_regex_first(names(cw), "crosswalk Sotu", c("^Sotu$"))
+  cw_map <- cw %>%
     transmute(
-      id = as.character(.data[[col_id_panel]]),
-      frailty3 = recode_frailty_3(.data[[col_frailty_panel]])
+      sotu_key = normalize_id(.data[[col_cw_sotu]]),
+      nro_key = normalize_nro(.data[[col_cw_nro]])
+    ) %>%
+    filter(!is.na(sotu_key) & !is.na(nro_key))
+  cw_map <- cw_map %>%
+    mutate(nro_num = suppressWarnings(as.numeric(nro_key))) %>%
+    filter(!is.na(nro_num)) %>%
+    group_by(sotu_key) %>%
+    summarise(nro_key = as.character(min(nro_num)), .groups = "drop")
+  if (any(is.na(cw_map$nro_key))) stop("Frailty crosswalk has missing NRO after dedup; abort.")
+  panel_df <- panel_df %>%
+    transmute(
+      panel_key = normalize_id(.data[[col_id_panel]]),
+      frailty_raw = .data[[col_frailty_panel]],
+      frailty_fried_num = suppressWarnings(as.numeric(as.character(.data[[col_frailty_panel]])))
+    ) %>%
+    mutate(
+      frailty_fried_chr = tolower(trimws(as.character(.data$frailty_raw))),
+      frailty3 = dplyr::case_when(
+        frailty_fried_chr %in% c("robust", "rob") ~ "robust",
+        frailty_fried_chr %in% c("pre-frail", "prefrail", "pre frail") ~ "pre-frail",
+        frailty_fried_chr %in% c("frail") ~ "frail",
+        frailty_fried_num == 0 ~ "robust",
+        frailty_fried_num %in% c(1, 2) ~ "pre-frail",
+        frailty_fried_num == 3 ~ "frail",
+        is.na(frailty_fried_num) ~ "unknown",
+        frailty_fried_num > 3 ~ "unknown",
+        TRUE ~ "unknown"
+      )
     )
+  n_total <- nrow(panel_df)
+  n_nonmiss_num <- sum(!is.na(panel_df$frailty_fried_num))
+  n_unknown <- sum(panel_df$frailty3 == "unknown")
+  if (n_total > 0 && n_unknown == n_total) {
+    stop(paste0(
+      "CRITICAL: frailty_cat_3 is 100% unknown at panel baseline. ",
+      "n_total=", n_total, ", n_nonmiss_num=", n_nonmiss_num,
+      "."
+    ))
+  }
+  panel_df %>%
+    left_join(cw_map, by = c("panel_key" = "sotu_key")) %>%
+    transmute(id = normalize_nro(nro_key), frailty3 = frailty3)
 }
 
 if (is.na(col_frailty)) {
   if (is.na(col_id)) stop("Frailty join requires id column; id not found in baseline input.")
-  frailty_lookup <- load_frailty_lookup(DATA_ROOT)
-  inconsistent <- frailty_lookup %>%
-    filter(!is.na(id)) %>%
-    group_by(id) %>%
-    summarise(n_levels = dplyr::n_distinct(frailty3[!is.na(frailty3)]), .groups = "drop") %>%
-    filter(n_levels > 1)
-  if (nrow(inconsistent) > 0) stop("Frailty lookup has inconsistent values per id; abort.")
-  frailty_lookup <- frailty_lookup %>%
+  frailty_lookup_raw <- load_frailty_lookup(DATA_ROOT)
+  frailty_conf <- frailty_lookup_raw %>%
     filter(!is.na(id)) %>%
     group_by(id) %>%
     summarise(
-      frailty3 = {
-        vals <- unique(frailty3[!is.na(frailty3)])
-        if (length(vals) == 0) NA_character_ else vals[1]
-      },
+      n_nonunk = dplyr::n_distinct(frailty3[frailty3 %in% c("robust", "pre-frail", "frail")]),
+      .groups = "drop"
+    )
+  n_conflict <- sum(frailty_conf$n_nonunk > 1)
+  if (n_conflict > 0) stop("Frailty lookup has conflicting non-unknown values per id; abort.")
+  frailty_lookup <- frailty_lookup_raw %>%
+    filter(!is.na(id)) %>%
+    group_by(id) %>%
+    summarise(
+      frailty3 = dplyr::case_when(
+        any(frailty3 %in% c("robust", "pre-frail", "frail")) ~
+          dplyr::first(frailty3[frailty3 %in% c("robust", "pre-frail", "frail")]),
+        TRUE ~ "unknown"
+      ),
       .groups = "drop"
     )
   if (anyDuplicated(frailty_lookup$id) > 0) stop("Frailty lookup has duplicate ids; abort.")
@@ -447,8 +682,8 @@ if (is.na(col_frailty)) {
   df$frailty3.lk <- NULL
 }
 
-ok_frailty_levels <- c("robust", "pre-frail", "frail")
-frailty_nonmiss <- df$frailty3[!is.na(df$frailty3)]
+ok_frailty_levels <- c("robust", "pre-frail", "frail", "unknown")
+frailty_nonmiss <- df$frailty3[!is.na(df$frailty3) & df$frailty3 != "unknown"]
 frailty_levels_present <- sort(unique(as.character(frailty_nonmiss)))
 if (length(frailty_nonmiss) == 0) {
   stop("Frailty3 recode produced all-NA: check col_frailty mapping (fail-closed).")
@@ -456,8 +691,8 @@ if (length(frailty_nonmiss) == 0) {
 if (length(frailty_levels_present) < 2) {
   stop("Frailty3 has <2 levels after recode: check source coding (fail-closed).")
 }
-if (!all(frailty_levels_present %in% ok_frailty_levels)) {
-  stop("Frailty3 has unexpected levels after recode: ", paste(frailty_levels_present, collapse = ", "))
+if (!all(unique(as.character(df$frailty3[!is.na(df$frailty3)])) %in% ok_frailty_levels)) {
+  stop("Frailty3 has unexpected levels after recode: ", paste(unique(as.character(df$frailty3[!is.na(df$frailty3)])), collapse = ", "))
 }
 
 if (any(is.na(df$FOF))) {
@@ -466,7 +701,20 @@ if (any(is.na(df$FOF))) {
   if (!all(c("No","Yes") %in% present)) stop("FOF-ryhmät eivät muodostu odotetusti (No/Yes). Tarkista FOF-koodaus tai anna mappaus.")
 }
 
-df <- df %>% filter(!is.na(FOF)) %>% mutate(FOF = droplevels(FOF))
+df <- df %>%
+  filter(!is.na(FOF), !is.na(age) & age >= 65) %>%
+  mutate(FOF = droplevels(FOF))
+
+match_rate <- mean(!is.na(df$frailty3) & df$frailty3 != "unknown")
+if (match_rate < 0.70) {
+  stop(paste0("CRITICAL: frailty join match_rate too low: ", round(match_rate, 3)))
+}
+message("Table1 sample N: ", nrow(df))
+message("Frailty match_rate: ", round(match_rate, 3))
+frail_tab <- table(df$frailty3, useNA = "ifany")
+message("Frailty distribution: ", paste(names(frail_tab), as.integer(frail_tab), sep = "=", collapse = ", "))
+smoke_tab <- table(df$smoker, useNA = "ifany")
+message("Smoking distribution: ", paste(names(smoke_tab), as.integer(smoke_tab), sep = "=", collapse = ", "))
 
 N_no  <- sum(df$FOF == "No",  na.rm = TRUE)
 N_yes <- sum(df$FOF == "Yes", na.rm = TRUE)
