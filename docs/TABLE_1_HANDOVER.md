@@ -15,10 +15,14 @@ Modify the `locate_input` function (around line 105) to prioritize the panel dat
 - **Change**: Move `aim2_panel.csv` to the **first** position in the `candidates` vector.
 - **Goal**: Ensure the script loads the "Rescued" dataset (N=486).
 
-### Fix 2: Use Correct Frailty Variable
-The script currently tries to map frailty from raw components or old column names.
-- **Change**: Update `col_frailty` mapping (around line 208) to explicitly use `frailty_cat_3`.
-- **Note**: This variable is pre-calculated in the `aim2_panel.csv` as `robust`, `pre-frail`, or `frail`.
+### Fix 2: Use Correct Frailty and Smoking Variables
+The script currently tries to map variables from raw components or old column names.
+- **Frailty**: Update `col_frailty` mapping (around line 208) to explicitly use `frailty_cat_3`.
+- **Smoking**: Since `smoking` is missing from `aim2_panel.csv`, you must join it from `KAAOS_data_sotullinen.xlsx`.
+    - **Raw File**: `DATA_ROOT/paper_02/KAAOS_data_sotullinen.xlsx`
+    - **Header Row**: 2 (labels are in row 2).
+    - **Smoking Column**: `tupakointi` (Column index 19).
+    - **Linkage**: Use `Sotu` (Column 3) to match `id` in the panel.
 
 ### Fix 3: Add Data Integrity Assertion
 Add a row count check immediately after reading `df_raw` (around line 125):
