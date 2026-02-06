@@ -19,28 +19,37 @@ Modify the `locate_input` function (around line 105) to prioritize the panel dat
 The script currently tries to map variables from raw components or old column names.
 - **Frailty Mapping**: Since `frailty_fried` in `aim2_panel.csv` may contain numeric scores (0-3) or even error values (5), you **MUST** use this exact mapping logic:
     ```r
-    df <- df %>%
-      mutate(frailty_fried = as.numeric(as.character(frailty_fried))) %>%
+    df_panel <- df_panel %>%
+      mutate(frailty_fried = suppressWarnings(as.numeric(as.character(frailty_fried)))) %>%
       mutate(frailty_cat_3 = case_when(
         frailty_fried == 0 ~ "Robust",
         frailty_fried >= 1 & frailty_fried <= 2 ~ "Pre-frail",
         frailty_fried == 3 ~ "Frail",
-        frailty_fried > 3 ~ "Unknown", # Handle values like '5'
+        frailty_fried > 3 ~ "Unknown", # Handles 5
         is.na(frailty_fried) ~ "Unknown",
         TRUE ~ "Unknown"
       ))
     ```
-- **Smoking**: Since `smoking` is missing from `aim2_panel.csv`, you must join it from `KAAOS_data_sotullinen.xlsx`.
+- **Smoking Join (KAAOS Excel)**: Since `smoking` is missing from `aim2_panel.csv`, join it from `KAAOS_data_sotullinen.xlsx`.
     - **Raw File**: `DATA_ROOT/paper_02/KAAOS_data_sotullinen.xlsx`
     - **Header Row**: 2 (labels are in row 2).
+    - **Join Key**: You **MUST** join Panel `id` to Excel `NRO` (Column 1). 
+    - **Note**: Previous failure was due to joining numeric ID to string Sotu.
     - **Smoking Column**: `tupakointi` (Column index 19).
-    - **Linkage**: Use `Sotu` (Column 3) to match `id` in the panel.
 
-### Fix 3: Add Data Integrity Assertion
-Add a row count check immediately after reading `df_raw` (around line 125):
+### Fix 3: Add Data Integrity Gates
+Add these checks to ensure the data is correct:
+1. **Row Count Check**:
 ```r
 if (nrow(df_raw) < 480) {
-  stop(paste0("CRITICAL ERROR: Incorrect cohort size. Found N=", nrow(df_raw), ", expected N=486. Check input priority."))
+  stop(paste0("CRITICAL ERROR: Incorrect cohort size. Found N=", nrow(df_raw), ", expected N=486."))
+}
+```
+2. **Join Match Rate Check**:
+```r
+match_rate <- mean(!is.na(df_raw$frailty_cat_3) & df_raw$frailty_cat_3 != "Unknown")
+if (match_rate < 0.70) {
+  stop(paste0("CRITICAL: frailty join match_rate too low: ", round(match_rate, 3), ". Check ID vs NRO pairing."))
 }
 ```
 
