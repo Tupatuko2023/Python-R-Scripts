@@ -16,17 +16,24 @@ suppressPackageStartupMessages({
 })
 
 # Load common utilities
-common_script <- file.path("R", "common.R")
-if (!file.exists(common_script)) {
-  # Try finding it relative to script location if ran from R/
-  common_script <- file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(trailingOnly=FALSE), value=TRUE)[1])), "common.R")
+# Try loading common.R relative to script location or current directory
+common_script_locations <- c(
+  file.path("R", "common.R"),
+  file.path(getwd(), "R", "common.R"),
+  file.path("common.R")
+)
+
+found_common <- FALSE
+for (loc in common_script_locations) {
+  if (file.exists(loc)) {
+    source(loc)
+    found_common <- TRUE
+    break
+  }
 }
-if (file.exists(common_script)) {
-  source(common_script)
-} else {
-  # Fallback if common.R not found (shouldn't happen in correct workflow)
-  ensure_data_root <- function() Sys.getenv("DATA_ROOT")
-  log_manifest <- function(...) message("Manifest logging unavailable (common.R missing)")
+
+if (!found_common) {
+  stop("Could not find R/common.R. Please run from project root.")
 }
 
 DATA_ROOT <- ensure_data_root()
@@ -60,7 +67,7 @@ find_column <- function(df_names, pattern) {
   return(NA)
 }
 
-cast_value <- function(val, type) {
+cast_value <- function(val, type, format = NULL) {
   if (all(is.na(val))) {
     if (type == "integer") return(as.integer(val))
     if (type == "numeric") return(as.numeric(val))
@@ -78,8 +85,10 @@ cast_value <- function(val, type) {
   } else if (type == "date") {
      if (inherits(val, "POSIXt") || inherits(val, "Date")) {
        as.Date(val)
+     } else if (!is.null(format)) {
+       as.Date(as.character(val), format = format)
      } else {
-       as.character(val) # Setup for later parsing or let it be
+       as.Date(as.character(val)) # Try default ISO
      }
   } else {
     val
@@ -125,7 +134,7 @@ process_dataset <- function(name, ds_config) {
       }
     } else {
       val <- df[[src_col]]
-      df_out_list[[target]] <- cast_value(val, col_def$type)
+      df_out_list[[target]] <- cast_value(val, col_def$type, col_def$format)
     }
   }
 

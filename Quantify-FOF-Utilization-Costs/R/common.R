@@ -1,6 +1,6 @@
 # ==============================================================================
 # common.R
-# Purpose: Shared utilities for environment loading and logging.
+# Purpose: Shared utilities for environment loading, path handling, and logging.
 # ==============================================================================
 
 # Function to ensure DATA_ROOT is set
@@ -37,7 +37,7 @@ ensure_data_root <- function() {
     stop(paste("DATA_ROOT directory does not exist:", DATA_ROOT))
   }
 
-  return(DATA_ROOT)
+  return(normalizePath(DATA_ROOT))
 }
 
 # Function to log to manifest
@@ -55,7 +55,7 @@ log_manifest <- function(filepath, script_name, data_root) {
     hash <- digest::digest(file = filepath, algo = "sha256")
   }
 
-  rel_path <- sub(paste0("^", data_root, "/?"), "", filepath)
+  rel_path <- sub(paste0("^", normalizePath(data_root, winslash = "/"), "/?"), "", normalizePath(filepath, winslash = "/"))
   entry <- data.frame(
     timestamp = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"),
     file = rel_path,
