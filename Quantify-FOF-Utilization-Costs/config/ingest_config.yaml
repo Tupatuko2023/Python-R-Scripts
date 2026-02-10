@@ -1,0 +1,98 @@
+version: 1.0
+
+datasets:
+  paper_02_kaaos:
+    # Primary input for Table 1
+    filename: "paper_02/KAAOS_data_sotullinen.xlsx"
+    format: excel
+    sheet: 1
+    # Define columns to extract and their standardization
+    columns:
+      - target: "id"
+        source_pattern: "^nro$|^potilas|^sotu$|^henkilotunnus" # Regex for robustness, or exact string
+        type: "text"
+        required: true
+
+      - target: "FOF"
+        source_pattern: "^kaatumisen pelko\\s*\\(0="
+        type: "integer" # 0, 1, 2
+        required: true
+
+      - target: "age"
+        source_pattern: "^ik[äa]"
+        type: "integer"
+
+      - target: "sex"
+        source_pattern: "^sukupuoli|^sex"
+        type: "integer" # 1=Male, 2=Female usually
+
+      - target: "bmi"
+        source_pattern: "^BMI|painoindeksi"
+        type: "numeric"
+
+      - target: "smoker"
+        source_pattern: "^tupakointi|^smoker"
+        type: "integer"
+
+      - target: "alcohol"
+        source_pattern: "^alkoholi|^alcohol"
+        type: "integer"
+
+      - target: "dm"
+        source_pattern: "^diabetes|^dm$"
+        type: "integer"
+
+      - target: "ad"
+        source_pattern: "^alzheimer|^ad$"
+        type: "integer"
+
+      - target: "cva"
+        source_pattern: "^AVH|^CVA|stroke"
+        type: "integer"
+
+      - target: "srh"
+        source_pattern: "^koettu terveydentila|^SRH"
+        type: "text" # Often needs recoding
+
+      - target: "fallen"
+        source_pattern: "^kaatuminen\\s*\\("
+        type: "integer"
+
+      - target: "balance_difficulties"
+        source_pattern: "^tasapaino-? ?vaikeudet"
+        type: "integer"
+
+      - target: "fractures"
+        source_pattern: "^murtumia"
+        type: "integer"
+
+      - target: "walk500"
+        source_pattern: "^500m vaikeus liikkua"
+        type: "integer"
+
+      - target: "ftsst"
+        source_pattern: "^TK: Tuolilta nousu|^FTSST"
+        type: "numeric"
+
+      - target: "ability_out_of_home"
+        source_pattern: "^kodin ulkopuolella asiointi"
+        type: "text"
+
+      - target: "baseline_visit_date"
+        source_pattern: "kaao[s]?\\s*vastaan|vastaan-otto|käynti.*pvm|pvm"
+        type: "date"
+        format: "%d.%m.%Y"
+
+  paper_02_sotut:
+    # Crosswalk for Frailty lookup
+    filename: "paper_02/sotut.xlsx"
+    format: excel
+    columns:
+      - target: "nro"
+        source_pattern: "^NRO$"
+        type: "text"
+        required: true
+      - target: "sotu"
+        source_pattern: "^Sotu$"
+        type: "text"
+        required: true
