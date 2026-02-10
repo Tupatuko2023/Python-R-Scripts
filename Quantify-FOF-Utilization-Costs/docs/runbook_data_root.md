@@ -27,9 +27,9 @@ DATA_ROOT/
 
 ## Workflow
 
-1.  **Ingest (`R/01_ingest.R`):** Reads files from `raw/`, validates columns against `config/ingest_config.yaml`, and writes standardized Parquet files to `staging/`.
-2.  **Build (`R/02_build_derived.R`):** Reads from `staging/`, performs joins (e.g., Frailty lookup), and writes analysis-ready files to `derived/`.
-3.  **Analysis:** Scripts read _only_ from `derived/`.
+1. **Ingest (`R/01_ingest.R`):** Reads files from `raw/`, validates columns against `config/ingest_config.yaml`, and writes standardized Parquet files to `staging/`.
+2. **Build (`R/02_build_derived.R`):** Reads from `staging/`, performs joins (e.g., Frailty lookup), and writes analysis-ready files to `derived/`.
+3. **Analysis:** Scripts read _only_ from `derived/`.
 
 ## Manifest
 
