@@ -32,3 +32,18 @@ tasks/02-in-progress/*
 tasks/03-review/*
 !tasks/03-review/.keep
 
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Restore
+renv/library/
+renv/python/
+renv/staging/
+
+# Temporary build artifacts
+R_libs/
+install_deps.R
+install_r_pkgs.R
+data_root_test/
