@@ -29,11 +29,12 @@ DATA_ROOT/
 
 1.  **Ingest (`R/01_ingest.R`):** Reads files from `raw/`, validates columns against `config/ingest_config.yaml`, and writes standardized Parquet files to `staging/`.
 2.  **Build (`R/02_build_derived.R`):** Reads from `staging/`, performs joins (e.g., Frailty lookup), and writes analysis-ready files to `derived/`.
-3.  **Analysis:** Scripts read *only* from `derived/`.
+3.  **Analysis:** Scripts read _only_ from `derived/`.
 
 ## Manifest
 
 All write operations to `staging/` and `derived/` must be appended to `manifest/manifest.csv` with the following columns:
+
 - `timestamp`: ISO 8601 time
 - `file`: Relative path to the file
 - `hash`: SHA256 checksum
