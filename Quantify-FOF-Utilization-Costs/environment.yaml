@@ -1,0 +1,10 @@
+name: snakemake-fof
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - snakemake
+  - graphviz
+  - python=3.10
+  - pip
