@@ -1,0 +1,67 @@
+name: Snakemake sample-mode verify
+
+on:
+  pull_request:
+    paths:
+      - "Quantify-FOF-Utilization-Costs/**"
+      - ".github/workflows/snakemake-sample-verify.yml"
+  push:
+    branches:
+      - add-snakemake-fof-13302765633610309720
+    paths:
+      - "Quantify-FOF-Utilization-Costs/**"
+      - ".github/workflows/snakemake-sample-verify.yml"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup micromamba
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: Quantify-FOF-Utilization-Costs/environment.yaml
+          environment-name: snakemake-fof
+          cache-environment: true
+          cache-downloads: true
+
+      - name: Verify tools
+        run: |
+          micromamba run -n snakemake-fof snakemake --version
+          micromamba run -n snakemake-fof dot -V
+
+      - name: Snakemake dry-run (sample-mode)
+        run: |
+          unset DATA_ROOT
+          unset ALLOW_AGGREGATES
+          cd Quantify-FOF-Utilization-Costs
+          micromamba run -n snakemake-fof snakemake -n --config use_sample=True
+
+      - name: Snakemake summary (sample-mode)
+        run: |
+          unset DATA_ROOT
+          unset ALLOW_AGGREGATES
+          cd Quantify-FOF-Utilization-Costs
+          micromamba run -n snakemake-fof snakemake --summary --config use_sample=True
+
+      - name: Render DAG (artifact)
+        run: |
+          unset DATA_ROOT
+          unset ALLOW_AGGREGATES
+          cd Quantify-FOF-Utilization-Costs
+          mkdir -p outputs
+          micromamba run -n snakemake-fof snakemake --dag --config use_sample=True \
+            | micromamba run -n snakemake-fof dot -Tpng > outputs/dag.png
+          ls -la outputs/dag.png
+
+      - name: Upload DAG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snakemake-dag
+          path: Quantify-FOF-Utilization-Costs/outputs/dag.png
