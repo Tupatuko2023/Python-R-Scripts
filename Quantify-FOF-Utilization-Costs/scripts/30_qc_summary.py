@@ -21,7 +21,11 @@ from _io_utils import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DICT_PATH = PROJECT_ROOT / "data" / "data_dictionary.csv"
-OUT_DIR = PROJECT_ROOT / "outputs" / "qc"
+
+# Use environment variable for output dir if set (Snakemake compatibility)
+import os
+OUT_ROOT = Path(os.getenv("OUTPUT_DIR")) if os.getenv("OUTPUT_DIR") else PROJECT_ROOT / "outputs"
+OUT_DIR = OUT_ROOT / "qc"
 
 @dataclass
 class Source:
