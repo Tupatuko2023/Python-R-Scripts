@@ -2,7 +2,7 @@
 
 # Data root directory containing raw data (manifest/dataset_manifest.csv relative to this)
 # If not set here, can be provided via environment variable DATA_ROOT
-data_root: "../data/external"
+data_root: ""
 
 # Output directory for results (default: outputs/)
 output_dir: "outputs"
