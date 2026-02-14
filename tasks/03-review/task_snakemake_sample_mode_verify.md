@@ -25,3 +25,6 @@
 - 2026-02-14T18:53:59+02:00 Created task file (metadata only).
 - 2026-02-14T18:53:59+02:00 Moved to 02-in-progress.
 - 2026-02-14T18:58:53.2292475+02:00 Verification blocked in this environment (no working Snakemake env). Moved to 03-review with blocker.
+- 2026-02-14T19:02:28.6441214+02:00 Commit created: governance-safe logging + sample-mode plumbing.
+- 2026-02-14T19:02:28.6441214+02:00 Commit created: Snakefile use_sample parsing hardening.
+- 2026-02-14T19:02:28.6441214+02:00 Rebased onto origin/main and origin/add-snakemake-fof-13302765633610309720; push verified.
