@@ -16,7 +16,8 @@ if not script_path.exists():
 
 print(f"Running {script_path}...")
 # Pass along any arguments if needed, but for now we run default
-result = subprocess.run([sys.executable, str(script_path)], capture_output=True, text=True)
+# Explicitly set check=False to handle errors manually below, and avoid shell=True (default is False).
+result = subprocess.run([sys.executable, str(script_path)], capture_output=True, text=True, check=False)
 
 if result.returncode != 0:
     print("Inventory script failed:")
