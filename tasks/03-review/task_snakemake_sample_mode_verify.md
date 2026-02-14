@@ -29,3 +29,4 @@
 - 2026-02-14T19:02:28.6441214+02:00 Commit created: Snakefile use_sample parsing hardening.
 - 2026-02-14T19:02:28.6441214+02:00 Rebased onto origin/main and origin/add-snakemake-fof-13302765633610309720; push verified.
 - 2026-02-14T19:07:43.0939309+02:00 Added CI workflow for Snakemake sample-mode verification (dry-run/summary/dag). Waiting for green run.
+- 2026-02-14T20:44:15.4853579+02:00 CI: Snakemake sample-mode verify PASSED (dry-run/summary/dag). Blocker removed.
