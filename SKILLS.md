@@ -2,9 +2,21 @@
 
 ## Rule of precedence (MUST)
 
-- SKILLS.md on ylin totuus kaikissa agenttitoiminnoissa.
+- **SKILLS.md on ylin totuus kaikissa agenttitoiminnoissa.**
 - Ennen mitään `gh`-komentoja, PR-työtä tai mergeä: lue tämä tiedosto ensin ja noudata kirjaimellisesti.
 - Jos tämä tiedosto on ristiriidassa muiden ohjeiden kanssa: SKILLS.md voittaa.
+
+### Source of Truth -hierarkia (MUST FOLLOW)
+
+1. `SKILLS.md` (Ylin totuus: tietoturva, toimintaprotokolla, konfliktit)
+2. `WORKFLOW.md` (Branch isolation, Remote Sync -säännöt)
+3. `CLAUDE.md` / `README.md` (Projektikohtaiset konfiguraatiot, koodistandardit)
+
+## 1. Ympäristö ja Shell-pakko (MUST)
+
+- **Kaikki komennot on suoritettava PowerShell 7.0 (PS7) -ympäristössä.**
+- Älä koskaan käytä Bash-, Termux- tai Proot-komentoja (kuten `ls`, `cat`, `export`). Käytä aina vastaavia PS7-komentoja (esim. `Get-ChildItem`, `Get-Content`, `$env:VAR`).
+- Varmista aktiivinen shell: `$PSVersionTable`.
 
 ---
 
