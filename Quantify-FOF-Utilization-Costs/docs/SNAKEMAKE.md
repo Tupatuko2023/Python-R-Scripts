@@ -24,21 +24,21 @@ The pipeline automates the steps from data inventory to report generation, ensur
 
 1. **Navigate to the subproject:**
 
-    ```bash
-    cd Quantify-FOF-Utilization-Costs
-    ```
+   ```bash
+   cd Quantify-FOF-Utilization-Costs
+   ```
 
 2. **Create the environment:**
 
-    ```bash
-    mamba env create -f environment.yaml
-    ```
+   ```bash
+   mamba env create -f environment.yaml
+   ```
 
 3. **Activate the environment:**
 
-    ```bash
-    mamba activate snakemake-fof
-    ```
+   ```bash
+   mamba activate snakemake-fof
+   ```
 
 ## Configuration
 
@@ -51,21 +51,21 @@ Edit `config/config.yaml` to customize settings:
 
 1. **Dry-run (check execution plan):**
 
-    ```bash
-    snakemake -n
-    ```
+   ```bash
+   snakemake -n
+   ```
 
 2. **Execute (run on 1 core):**
 
-    ```bash
-    snakemake -j 1
-    ```
+   ```bash
+   snakemake -j 1
+   ```
 
 3. **Visualize the DAG:**
 
-    ```bash
-    snakemake --dag | dot -Tpng > dag.png
-    ```
+   ```bash
+   snakemake --dag | dot -Tpng > dag.png
+   ```
 
 ## Troubleshooting
 
