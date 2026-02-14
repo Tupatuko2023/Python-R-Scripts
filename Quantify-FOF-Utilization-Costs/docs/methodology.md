@@ -13,6 +13,10 @@ Key metrics (placeholder definitions)
 - Time window: period_start, period_end, followup_days.
 - Covariates: FOF_status, age, sex (TBD), BMI (kg/m^2).
 
+Table 2 deviation note
+
+- Analyyttinen kohortti tässä pipeline-versiossa on FOF_No=144 ja FOF_Yes=330. Käsikirjoituksessa raportoitiin FOF_No=147; ero tulee upstream-cohortista eikä Table 2 -suodatuksista.
+
 Allowed in-repo outputs
 
 - Non-sensitive QC summaries and aggregates only (counts, missingness, schema drift).

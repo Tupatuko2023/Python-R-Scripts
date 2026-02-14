@@ -57,6 +57,30 @@ Notes:
 - Default data path used by multiple scripts: `data/external/KaatumisenPelko.csv`.
 - Outputs follow the project convention under `R-scripts/<K_FOLDER>/outputs/` and each artifact is logged to `manifest/manifest.csv`.
 
+### Kimi CLI (NVIDIA NIM)
+
+Kimi chat CLI is available at `tools/kimi_cli.py` (Python stdlib only, no extra dependencies).
+
+```bash
+# Set API key in your shell (do not commit secrets)
+export NVIDIA_API_KEY=...
+
+# Argument mode
+python3 tools/kimi_cli.py "Say hello in Finnish"
+
+# stdin mode
+echo "List 5 fall-risk assessment points." | python3 tools/kimi_cli.py
+
+# Optional executable usage
+tools/kimi_cli.py --model moonshotai/kimi-k2-instruct --temperature 0.2 "Explain frailty in clinical research."
+```
+
+Optional shell alias:
+
+```bash
+alias kimi='python3 tools/kimi_cli.py'
+```
+
 ## License and citation
 
 - License: [MIT License](LICENSE)
