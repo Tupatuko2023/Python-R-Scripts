@@ -5,18 +5,7 @@ import datetime
 import csv
 from pathlib import Path
 
-# Try to import dotenv, handle missing dependency gracefully
-try:
-    from dotenv import load_dotenv
-except ImportError:
-    load_dotenv = None
-
-def setup_env():
-    """Load environment variables from config/.env."""
-    env_path = Path("config/.env")
-    if load_dotenv and env_path.exists():
-        load_dotenv(dotenv_path=env_path)
-    return os.getenv("DATA_ROOT")
+from path_resolver import get_data_root, safe_join_path
 
 def log_run(status, message):
     """Append a log entry to manifest/run_log.csv."""
@@ -38,7 +27,13 @@ def scan_inventory(data_root, target_dataset):
         log_run("FAILURE", "DATA_ROOT missing")
         return
 
-    target_path = Path(data_root) / target_dataset
+    try:
+        target_path = safe_join_path(Path(data_root), target_dataset)
+    except ValueError as e:
+        print(f"SECURITY ERROR: {e}")
+        log_run("FAILURE", f"Security Violation: {target_dataset}")
+        return
+
     if not target_path.exists():
         print(f"WARNING: Target dataset path not found: {target_path}")
         log_run("WARNING", f"Path not found: {target_dataset}")
@@ -58,7 +53,7 @@ def main():
     parser.add_argument("--scan", help="Scan a dataset folder under DATA_ROOT", type=str)
     args = parser.parse_args()
 
-    data_root = setup_env()
+    data_root = get_data_root()
 
     if args.scan:
         scan_inventory(data_root, args.scan)
