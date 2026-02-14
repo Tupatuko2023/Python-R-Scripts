@@ -1,0 +1,4 @@
+- 2026-02-07T06:40:40+02:00 Lisätty kanoninen DATA_ROOT bootstrap -agenttiohje SYSTEM_PROMPT_UPDATE.md:hen.
+- 2026-02-07T09:40:00+02:00 Table1 ajettu DATA_ROOTilla (ALLOW_AGGREGATES=1).
+- 2026-02-07T09:40:00+02:00 CSV generoitu.
+- 2026-02-07T09:40:00+02:00 CSV validoitu: P-value (overall) + Pairwise (adj) ja dynaamiset FOF-sarakkeet.

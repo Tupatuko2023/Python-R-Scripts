@@ -1,0 +1,6 @@
+timestamp=20260211_070952
+git_hash=1f9f32f
+project=Quantify-FOF-Utilization-Costs
+mode=analysis
+pwd=/data/data/com.termux/files/home/Python-R-Scripts/Quantify-FOF-Utilization-Costs
+script=

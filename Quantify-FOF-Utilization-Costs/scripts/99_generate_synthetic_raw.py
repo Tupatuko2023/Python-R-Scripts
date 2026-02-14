@@ -11,7 +11,8 @@ os.makedirs(RAW_DIR, exist_ok=True)
 def generate_kaaos():
     n_rows = 100
     df = pd.DataFrame({
-        'nro': range(1, n_rows + 1),
+        'potilas_id': range(1, n_rows + 1),
+        'osastojakso_id': range(1001, 1001 + n_rows),
         'kaatumisen pelko (0= ei pelkää, 1= pelkää, 2= ei tietoa)': np.random.choice([0, 1, 2], size=n_rows, p=[0.4, 0.4, 0.2]),
         'ikä (a)': np.random.randint(65, 95, size=n_rows),
         'sukupuoli (0= nainen, 1= mies)': np.random.choice([1, 2], size=n_rows), # 1=Male, 2=Female
@@ -19,9 +20,8 @@ def generate_kaaos():
         'vastaan-otto pvm': pd.date_range(start='2020-01-01', periods=n_rows, freq='D')
     })
 
-    # Add some other columns to match patterns
-    df['tupakointi'] = np.random.choice([0, 1], size=n_rows)
-    df['diabetes'] = np.random.choice([0, 1], size=n_rows)
+    # Add diagnosis columns
+    df['pdgo'] = np.random.choice(['S72.0', 'M16.9', 'I10'], size=n_rows)
 
     output_path = os.path.join(RAW_DIR, "KAAOS_data_sotullinen.xlsx")
     df.to_excel(output_path, index=False)
@@ -30,7 +30,7 @@ def generate_kaaos():
 def generate_sotut():
     n_rows = 100
     df = pd.DataFrame({
-        'NRO': range(1, n_rows + 1),
+        'potilas_id': range(1, n_rows + 1),
         'Sotu': [f"SOTU_{i}" for i in range(1, n_rows + 1)]
     })
     output_path = os.path.join(RAW_DIR, "sotut.xlsx")
