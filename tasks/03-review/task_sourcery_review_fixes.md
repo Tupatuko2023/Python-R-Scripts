@@ -1,7 +1,7 @@
 ﻿# TASK: Address Sourcery AI review (OUTPUT_DIR centralization, Snakefile quoting, R defaults, subprocess audit)
 
 ## STATUS
-- State: 02-in-progress
+- State: 03-review
 
 ## OBJECTIVE
 - Centralize OUTPUT_DIR resolution across scripts.
@@ -19,6 +19,7 @@
 - Task moved to 03-review (not 04-done).
 
 ## LOG
-- 2026-02-14T22:50:56.1779101+02:00 Created task and moved to 02-in-progress.
-- 2026-02-14T22:52:02.3789436+02:00 Implemented OUTPUT_DIR helper + Snakefile quoting + R OUTPUT_DIR defaults.
-- 2026-02-14T22:52:02.3789436+02:00 Audited inventory wrapper: no subprocess.run usage; runpy-based execution retained (no code change required).
+- 2026-02-14T22:50:56+02:00 Created task and moved to 02-in-progress.
+- 2026-02-14T22:52:02+02:00 Implemented OUTPUT_DIR helper + Snakefile quoting + R OUTPUT_DIR defaults.
+- 2026-02-14T22:52:02+02:00 Audited inventory wrapper: no subprocess.run usage; runpy-based execution retained (no code change required).
+- 2026-02-14T23:16:38.0209984+02:00 Implemented Sourcery review fixes; moved to 03-review.
