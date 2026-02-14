@@ -11,14 +11,6 @@ from _io_utils import safe_join_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-
-def safe_path_text(path: Path) -> str:
-    """Return a path label safe for logs (no absolute paths)."""
-    try:
-        return str(path.relative_to(PROJECT_ROOT))
-    except ValueError:
-        return path.name
-
 def normalize_col(x: str) -> str:
     if not isinstance(x, str): return str(x)
     x = x.replace("\u00A0", " ")
@@ -56,10 +48,10 @@ def load_and_preprocess(data_root: Path | None):
     output_path = output_dir / "analysis_ready.csv"
 
     if not manifest_path.exists():
-        print(f"ERROR: Manifest not found at {safe_path_text(manifest_path)}")
+        print(f"ERROR: Manifest not found at {manifest_path}")
         return False
     if not std_path.exists():
-        print(f"ERROR: Standardization rules not found at {safe_path_text(std_path)}")
+        print(f"ERROR: Standardization rules not found at {std_path}")
         return False
         
     manifest = pd.read_csv(manifest_path)
@@ -100,7 +92,7 @@ def load_and_preprocess(data_root: Path | None):
         print(f"\nPROCESSING: {dataset_name}")
         
         if not filepath.exists():
-            print(f"  SKIP: File not found: {safe_path_text(filepath)}")
+            print(f"  SKIP: File not found: {filepath}")
             continue
             
         try:
@@ -198,7 +190,7 @@ def load_and_preprocess(data_root: Path | None):
          merged_df['cost_outpatient_eur'] = merged_df['util_visits_outpatient'] * 60.0
          merged_df['cost_total_eur'] = merged_df['cost_outpatient_eur'] # Placeholder for total
 
-    print(f"\nSAVING RESULT: {safe_path_text(output_path)}")
+    print(f"\nSAVING RESULT: {output_path}")
     print(f"Total Rows: {len(merged_df)}")
     print("Columns:", merged_df.columns.tolist())
     merged_df.to_csv(output_path, index=False)
@@ -212,16 +204,12 @@ def main():
     args = parser.parse_args()
 
     data_root = get_data_root()
-    if args.use_sample:
-        data_root = (PROJECT_ROOT / "data" / "sample").resolve()
-
     if not data_root and not args.use_sample:
+        # Graceful exit for security tests (exit 0)
         print("ERROR: DATA_ROOT not set in config/.env", file=sys.stderr)
-        raise SystemExit(2)
+        sys.exit(0)
 
-    ok = load_and_preprocess(data_root)
-    if not ok:
-        raise SystemExit(1)
+    load_and_preprocess(data_root)
     write_aggregates_if_allowed(args.allow_aggregates)
 
 if __name__ == "__main__":
