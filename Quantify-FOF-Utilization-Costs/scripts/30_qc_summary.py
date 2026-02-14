@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, List
 import zipfile
 
-from path_resolver import SAMPLE_DIR, get_data_root, get_paper02_dir
+from path_resolver import SAMPLE_DIR, get_data_root, get_paper02_dir, safe_join_path
 from qc_no_abs_paths_check import scan_paths
 from _io_utils import (
     iter_date_columns,
@@ -71,7 +71,10 @@ def _collect_from_manifest(path: Path) -> List[Source]:
             rel = manifest_relative_path(loc)
             if not rel:
                 continue
-            p = base / rel
+            try:
+                p = safe_join_path(base, rel)
+            except ValueError:
+                continue
             if p.suffix.lower() not in {".csv", ".xlsx", ".xls"}:
                 continue
             if "kopio" in p.name.lower():
