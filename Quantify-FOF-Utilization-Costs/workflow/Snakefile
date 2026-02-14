@@ -12,7 +12,7 @@ rule inventory:
     log:
         f"{OUTPUT_DIR}/logs/inventory.log"
     shell:
-        "OUTPUT_DIR={OUTPUT_DIR} python workflow/scripts/inventory_wrapper.py > {log} 2>&1"
+        "OUTPUT_DIR='{OUTPUT_DIR}' python workflow/scripts/inventory_wrapper.py > '{log}' 2>&1"
 
 rule preprocess:
     input:
@@ -25,7 +25,7 @@ rule preprocess:
     log:
         f"{OUTPUT_DIR}/logs/preprocess.log"
     shell:
-        "OUTPUT_DIR={OUTPUT_DIR} ALLOW_AGGREGATES={params.allow_aggregates_env} python scripts/10_preprocess_tabular.py {params.allow_aggregates} > {log} 2>&1"
+        "OUTPUT_DIR='{OUTPUT_DIR}' ALLOW_AGGREGATES={params.allow_aggregates_env} python scripts/10_preprocess_tabular.py {params.allow_aggregates} > '{log}' 2>&1"
 
 rule qc:
     input:
@@ -41,7 +41,7 @@ rule qc:
     log:
         f"{OUTPUT_DIR}/logs/qc.log"
     shell:
-        "OUTPUT_DIR={OUTPUT_DIR} python scripts/30_qc_summary.py --input {input} > {log} 2>&1"
+        "OUTPUT_DIR='{OUTPUT_DIR}' python scripts/30_qc_summary.py --input '{input}' > '{log}' 2>&1"
 
 rule models:
     input:
@@ -51,7 +51,7 @@ rule models:
     log:
         f"{OUTPUT_DIR}/logs/models.log"
     shell:
-        "Rscript scripts/30_models_panel_nb_gamma.R {input} {output} > {log} 2>&1"
+        "OUTPUT_DIR='{OUTPUT_DIR}' Rscript scripts/30_models_panel_nb_gamma.R '{input}' '{output}' > '{log}' 2>&1"
 
 rule report:
     input:
@@ -62,4 +62,4 @@ rule report:
     log:
         f"{OUTPUT_DIR}/logs/report.log"
     shell:
-        "OUTPUT_DIR={OUTPUT_DIR} python scripts/50_build_report.py --out {output} > {log} 2>&1"
+        "OUTPUT_DIR='{OUTPUT_DIR}' python scripts/50_build_report.py --out '{output}' > '{log}' 2>&1"
