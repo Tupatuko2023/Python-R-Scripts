@@ -9,8 +9,9 @@ if (length(args) >= 2) {
   output_file <- args[2]
 } else {
   # Default paths if not provided
-  input_file <- "outputs/intermediate/analysis_ready.csv"
-  output_file <- "outputs/panel_models_summary.csv"
+  out_root <- Sys.getenv("OUTPUT_DIR", unset = "outputs")
+  input_file <- file.path(out_root, "intermediate", "analysis_ready.csv")
+  output_file <- file.path(out_root, "panel_models_summary.csv")
 }
 
 if (!file.exists(input_file)) {
