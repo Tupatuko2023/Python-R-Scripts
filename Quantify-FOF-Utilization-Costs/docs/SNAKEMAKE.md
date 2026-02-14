@@ -8,11 +8,11 @@ The pipeline automates the steps from data inventory to report generation, ensur
 
 ### Pipeline Steps (DAG)
 
-1.  **Inventory**: Scans the `DATA_ROOT` directory and updates `manifest/run_log.csv`.
-2.  **Preprocess**: ETL of raw data into `outputs/intermediate/analysis_ready.csv`.
-3.  **QC**: Generates QC summaries in `outputs/qc/`.
-4.  **Models**: Runs statistical models (Negative Binomial / Gamma) and outputs `outputs/panel_models_summary.csv`.
-5.  **Report**: Compiles the final Aim 2 report (`outputs/reports/aim2_report.md`).
+1. **Inventory**: Scans the `DATA_ROOT` directory and updates `manifest/run_log.csv`.
+2. **Preprocess**: ETL of raw data into `outputs/intermediate/analysis_ready.csv`.
+3. **QC**: Generates QC summaries in `outputs/qc/`.
+4. **Models**: Runs statistical models (Negative Binomial / Gamma) and outputs `outputs/panel_models_summary.csv`.
+5. **Report**: Compiles the final Aim 2 report (`outputs/reports/aim2_report.md`).
 
 ## Prerequisites
 
@@ -22,19 +22,20 @@ The pipeline automates the steps from data inventory to report generation, ensur
 
 ## Setup
 
-1.  **Navigate to the subproject:**
+1. **Navigate to the subproject:**
 
     ```bash
     cd Quantify-FOF-Utilization-Costs
     ```
 
-2.  **Create the environment:**
+2. **Create the environment:**
 
     ```bash
     mamba env create -f environment.yaml
     ```
 
-3.  **Activate the environment:**
+3. **Activate the environment:**
+
     ```bash
     mamba activate snakemake-fof
     ```
@@ -48,19 +49,20 @@ Edit `config/config.yaml` to customize settings:
 
 ## Running the Workflow
 
-1.  **Dry-run (check execution plan):**
+1. **Dry-run (check execution plan):**
 
     ```bash
     snakemake -n
     ```
 
-2.  **Execute (run on 1 core):**
+2. **Execute (run on 1 core):**
 
     ```bash
     snakemake -j 1
     ```
 
-3.  **Visualize the DAG:**
+3. **Visualize the DAG:**
+
     ```bash
     snakemake --dag | dot -Tpng > dag.png
     ```
