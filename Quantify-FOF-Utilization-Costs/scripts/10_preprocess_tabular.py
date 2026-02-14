@@ -7,6 +7,8 @@ import csv
 from pathlib import Path
 
 from path_resolver import get_data_root
+from _io_utils import safe_join_path
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 def normalize_col(x: str) -> str:
@@ -71,10 +73,14 @@ def load_and_preprocess(data_root: Path | None):
 
         filepath = Path(filepath_raw)
         if not filepath.is_absolute():
-            if data_root:
-                filepath = data_root / filepath_raw
-            else:
-                filepath = PROJECT_ROOT / filepath_raw
+            try:
+                if data_root:
+                    filepath = safe_join_path(data_root, filepath_raw)
+                else:
+                    filepath = safe_join_path(PROJECT_ROOT, filepath_raw)
+            except ValueError as e:
+                print(f"  SECURITY ERROR: {e}")
+                continue
 
         header_row = int(row.get('header_row', 0))
         
