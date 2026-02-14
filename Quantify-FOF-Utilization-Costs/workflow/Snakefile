@@ -1,7 +1,7 @@
 configfile: "config/config.yaml"
 
 OUTPUT_DIR = config.get("output_dir", "outputs")
-USE_SAMPLE = bool(config.get("use_sample", False))
+USE_SAMPLE = str(config.get("use_sample", "false")).lower() in ("1", "true", "yes", "y")
 
 rule all:
     input:
