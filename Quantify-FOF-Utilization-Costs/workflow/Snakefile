@@ -1,6 +1,7 @@
 configfile: "config/config.yaml"
 
 OUTPUT_DIR = config.get("output_dir", "outputs")
+USE_SAMPLE = bool(config.get("use_sample", False))
 
 rule all:
     input:
@@ -9,10 +10,12 @@ rule all:
 rule inventory:
     output:
         f"{OUTPUT_DIR}/manifest/inventory.done"
+    params:
+        use_sample_flag = "--use-sample" if USE_SAMPLE else ""
     log:
         f"{OUTPUT_DIR}/logs/inventory.log"
     shell:
-        "OUTPUT_DIR={OUTPUT_DIR} python workflow/scripts/inventory_wrapper.py > {log} 2>&1"
+        "OUTPUT_DIR={OUTPUT_DIR} python workflow/scripts/inventory_wrapper.py {params.use_sample_flag} > {log} 2>&1"
 
 rule preprocess:
     input:
@@ -20,12 +23,13 @@ rule preprocess:
     output:
         f"{OUTPUT_DIR}/intermediate/analysis_ready.csv"
     params:
+        use_sample_flag = "--use-sample" if USE_SAMPLE else "",
         allow_aggregates = "--allow-aggregates" if config.get("allow_aggregates") else "",
         allow_aggregates_env = "1" if config.get("allow_aggregates") else "0"
     log:
         f"{OUTPUT_DIR}/logs/preprocess.log"
     shell:
-        "OUTPUT_DIR={OUTPUT_DIR} ALLOW_AGGREGATES={params.allow_aggregates_env} python scripts/10_preprocess_tabular.py {params.allow_aggregates} > {log} 2>&1"
+        "OUTPUT_DIR={OUTPUT_DIR} ALLOW_AGGREGATES={params.allow_aggregates_env} python scripts/10_preprocess_tabular.py {params.use_sample_flag} {params.allow_aggregates} > {log} 2>&1"
 
 rule qc:
     input:
