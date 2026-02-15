@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from pathlib import Path
+from _io_utils import safe_join_path
 
 DATA_ROOT = Path(os.getenv("DATA_ROOT", "/data/data/com.termux/files/home/FOF_LOCAL_DATA"))
 DERIVED_DIR = DATA_ROOT / "derived"
@@ -11,7 +12,11 @@ DERIVED_DIR.mkdir(parents=True, exist_ok=True)
 print("Building real panel (EXPANDED COHORT N=486) from DATA_ROOT...")
 
 # 1. Master Cohort Source: Raw Excel (sotullinen is the gold standard here)
-raw_path = DATA_ROOT / "paper_02" / "KAAOS_data_sotullinen.xlsx"
+try:
+    raw_path = safe_join_path(DATA_ROOT, "paper_02", "KAAOS_data_sotullinen.xlsx")
+except ValueError as e:
+    raise SystemExit(f"Security error: {e}")
+
 if not raw_path.exists():
     raise SystemExit(f"Raw KAAOS file missing at {raw_path}")
 
@@ -90,7 +95,11 @@ df["frailty_binary"] = np.where(df["frailty_cat_3"].isin(["robust", "pre-frail"]
 print(f"Frailty distribution: {df['frailty_cat_3'].value_counts().to_dict()}")
 
 # 4. Load Outpatient Visits
-outpatient_path = DATA_ROOT / "paper_02" / "Tutkimusaineisto_pkl_kaynnit_2010_2019.csv"
+try:
+    outpatient_path = safe_join_path(DATA_ROOT, "paper_02", "Tutkimusaineisto_pkl_kaynnit_2010_2019.csv")
+except ValueError as e:
+    raise SystemExit(f"Security error: {e}")
+
 outpatient = pd.read_csv(outpatient_path, sep="|")
 outpatient.rename(columns={"Henkilotunnus": "id", "Kayntipvm": "date"}, inplace=True)
 outpatient["id"] = outpatient["id"].astype(str).str.strip()

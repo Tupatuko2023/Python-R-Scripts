@@ -60,6 +60,10 @@ project_dir <- if (basename(script_dir) == "10_table1") {
 
 outputs_dir <- file.path(project_dir, "R", "10_table1", "outputs")
 logs_dir    <- file.path(project_dir, "R", "10_table1", "logs")
+
+# Load security utilities
+source(file.path(project_dir, "R", "path_utils.R"))
+
 dir.create(outputs_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(logs_dir,    showWarnings = FALSE, recursive = TRUE)
 blocked_path <- file.path(outputs_dir, "table1_patient_characteristics_by_fof.BLOCKED.txt")
@@ -111,13 +115,16 @@ log_msg("Suppression disabled: ", DISABLE_SUPPRESSION)
 bmi_candidates <- c("BMI","bmi","Painoindeksi (BMI)","painoindeksi","painoindeksi_bmi")
 
 locate_input <- function(data_root) {
-  candidates <- c(
-    file.path(data_root, "paper_02", "KAAOS_data_sotullinen.xlsx"),
-    file.path(data_root, "derived",  "kaatumisenpelko.csv"),
-    file.path(data_root, "data",     "kaatumisenpelko.csv")
+  candidates <- list(
+    c("paper_02", "KAAOS_data_sotullinen.xlsx"),
+    c("derived",  "kaatumisenpelko.csv"),
+    c("data",     "kaatumisenpelko.csv")
   )
   first_existing <- NA_character_
-  for (p in candidates) {
+  for (parts in candidates) {
+    p <- tryCatch(do.call(safe_join_path, as.list(c(data_root, parts))), error = function(e) NA_character_)
+    if (is.na(p)) next
+
     if (file.exists(p) && file.access(p, 4) == 0) {
       if (is.na(first_existing)) first_existing <- p
       if (grepl("\\.xlsx?$", p, ignore.case = TRUE)) return(p)
@@ -562,11 +569,11 @@ df <- df_raw %>%
   )
 
 load_frailty_lookup <- function(data_root) {
-  panel_path <- file.path(data_root, "derived", "aim2_panel.csv")
+  panel_path <- safe_join_path(data_root, "derived", "aim2_panel.csv")
   if (!file.exists(panel_path)) {
     stop("Frailty lookup source missing: derived/aim2_panel.csv (DATA_ROOT).")
   }
-  cw_path <- file.path(data_root, "paper_02", "sotut.xlsx")
+  cw_path <- safe_join_path(data_root, "paper_02", "sotut.xlsx")
   if (!file.exists(cw_path)) {
     stop("Frailty crosswalk missing: paper_02/sotut.xlsx (DATA_ROOT).")
   }

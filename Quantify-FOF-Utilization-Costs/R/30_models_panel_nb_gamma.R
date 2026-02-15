@@ -7,6 +7,20 @@
 suppressPackageStartupMessages({
   library(dplyr)
   library(readr)
+})
+
+# Load security utilities
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[1]) else NA_character_
+script_dir  <- if (!is.na(script_path)) dirname(normalizePath(script_path, mustWork = FALSE)) else getwd()
+project_dir <- script_dir
+while (basename(project_dir) %in% c("R", "scripts", "10_table1", "10_table1_patient_characteristics_by_fof")) {
+  project_dir <- dirname(project_dir)
+}
+source(file.path(project_dir, "R", "path_utils.R"))
+
+suppressPackageStartupMessages({
   library(stringr)
   library(MASS)       # glm.nb
   library(sandwich)   # vcovCL
@@ -18,9 +32,18 @@ suppressPackageStartupMessages({
 # 0) Inputs (Option B)
 #-----------------------------
 DATA_ROOT <- Sys.getenv("DATA_ROOT")  # secure location, not in repo
-PANEL_PATH <- file.path(DATA_ROOT, "derived", "aim2_panel.csv")
 
-if (DATA_ROOT == "" || !file.exists(PANEL_PATH)) {
+if (DATA_ROOT == "") {
+  if (Sys.getenv("CI") == "true") {
+    message("CI mode: DATA_ROOT missing, exiting gracefully.")
+    quit(save="no", status=0)
+  }
+  stop("Set DATA_ROOT environment variable.")
+}
+
+PANEL_PATH <- safe_join_path(DATA_ROOT, "derived", "aim2_panel.csv")
+
+if (!file.exists(PANEL_PATH)) {
   # Fallback for CI/Syntax check without data
   if (Sys.getenv("CI") == "true") {
     message("CI mode: DATA_ROOT missing, exiting gracefully.")

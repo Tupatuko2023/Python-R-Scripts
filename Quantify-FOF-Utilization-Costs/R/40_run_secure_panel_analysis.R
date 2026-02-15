@@ -22,6 +22,17 @@ suppressPackageStartupMessages({
   library(dplyr)
 })
 
+# Load security utilities
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[1]) else NA_character_
+script_dir  <- if (!is.na(script_path)) dirname(normalizePath(script_path, mustWork = FALSE)) else getwd()
+project_dir <- script_dir
+while (basename(project_dir) %in% c("R", "scripts", "10_table1", "10_table1_patient_characteristics_by_fof")) {
+  project_dir <- dirname(project_dir)
+}
+source(file.path(project_dir, "R", "path_utils.R"))
+
 # ========================
 # A) Config & validations
 # ========================
@@ -47,7 +58,7 @@ DATA_ROOT <- Sys.getenv("DATA_ROOT", unset = "")
 if (DATA_ROOT == "") stop("DATA_ROOT ei ole asetettu.")
 if (!dir.exists(DATA_ROOT)) stop("DATA_ROOT-polku ei ole olemassa tai ei ole käytettävissä.")
 
-panel_path <- file.path(DATA_ROOT, "derived", "aim2_panel.csv")
+panel_path <- safe_join_path(DATA_ROOT, "derived", "aim2_panel.csv")
 if (!file.exists(panel_path)) stop("Paneeliaineisto puuttuu (odotettu: DATA_ROOT/derived/aim2_panel.csv).")
 if (file.access(panel_path, 4) != 0) stop("Ei lukuoikeutta paneeliaineistoon (DATA_ROOT/derived/aim2_panel.csv).")
 
@@ -323,9 +334,9 @@ apply_n5_suppression <- function(csv_path) {
 }
 
 safe_candidates <- c(
-  file.path(outputs_root, "qc_summary_aim2.txt"),
-  file.path(outputs_root, "panel_models_summary.csv"),
-  file.path(outputs_root, "qc", paste0("qc_summary_driver_", RUN_ID, ".csv"))
+  safe_join_path(outputs_root, "qc_summary_aim2.txt"),
+  safe_join_path(outputs_root, "panel_models_summary.csv"),
+  safe_join_path(outputs_root, "qc", paste0("qc_summary_driver_", RUN_ID, ".csv"))
 )
 
 to_archive <- safe_candidates[file.exists(safe_candidates)]
