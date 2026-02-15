@@ -1,8 +1,17 @@
 # R Security Tests for path_utils.R
 
-# Source the utility
-# Assuming run from Quantify-FOF-Utilization-Costs/tests/security/
-source("../../R/path_utils.R")
+# Load utilities via bootstrap
+# Search for bootstrap.R relative to this test script
+args_all <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args_all, value = TRUE)
+script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[1]) else NA_character_
+curr_dir  <- if (!is.na(script_path)) dirname(normalizePath(script_path, mustWork = FALSE)) else getwd()
+
+bootstrap_path <- file.path(curr_dir, "..", "..", "R", "bootstrap.R")
+if (!file.exists(bootstrap_path)) {
+  bootstrap_path <- "../../R/bootstrap.R"
+}
+source(bootstrap_path)
 
 test_that <- function(desc, code) {
   message("Testing: ", desc)
@@ -29,9 +38,11 @@ test_that("Path traversal is blocked", {
     safe_join_path(base, "../../../etc/passwd")
     stop("Failed to block traversal")
   }, error = function(e) {
-    if (!grepl("Security Violation", e)) stop("Wrong error message: ", e)
+    msg <- conditionMessage(e)
+    if (msg == "Failed to block traversal") stop(msg) # propagate if it didn't block
+    if (!grepl("Security Violation", msg)) stop("Wrong error message: ", msg)
     # Check for leakage
-    if (grepl("etc/passwd", e)) stop("Leaked part of traversal path")
+    if (grepl("etc/passwd", msg)) stop("Leaked part of traversal path")
   })
 })
 
@@ -44,7 +55,8 @@ test_that("Absolute paths are blocked if they leave boundary", {
     safe_join_path(base, "/etc/passwd")
     stop("Failed to block absolute path traversal")
   }, error = function(e) {
-    if (!grepl("Security Violation", e)) stop("Wrong error message: ", e)
+    msg <- conditionMessage(e)
+    if (!grepl("Security Violation", msg)) stop("Wrong error message: ", msg)
   })
 })
 
@@ -58,7 +70,8 @@ test_that("Sibling directories are blocked", {
     safe_join_path(base, "..", sibling_name, "file.txt")
     stop("Failed to block sibling directory traversal")
   }, error = function(e) {
-    if (!grepl("Security Violation", e$message)) stop("Wrong error message: ", e$message)
+    msg <- conditionMessage(e)
+    if (!grepl("Security Violation", msg)) stop("Wrong error message: ", msg)
   })
 })
 
@@ -68,7 +81,8 @@ test_that("Empty base is blocked", {
     safe_join_path("", "test.csv")
     stop("Failed to block empty base")
   }, error = function(e) {
-    if (!grepl("Security Violation", e)) stop("Wrong error message: ", e)
+    msg <- conditionMessage(e)
+    if (!grepl("Security Violation", msg)) stop("Wrong error message: ", msg)
   })
 })
 
