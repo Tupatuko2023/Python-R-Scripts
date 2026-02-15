@@ -47,22 +47,19 @@ EXPORT_HTML <- Sys.getenv("EXPORT_HTML", unset = "0") == "1"
 EXPORT_DOCX <- Sys.getenv("EXPORT_DOCX", unset = "0") == "1"
 DISABLE_SUPPRESSION <- Sys.getenv("DISABLE_SUPPRESSION", unset = "1") == "1"
 
-# Anchor outputs/logs to the Table 1 script location under the subproject root
+# Robust project root discovery & security bootstrap
 args_all <- commandArgs(trailingOnly = FALSE)
 file_arg <- grep("^--file=", args_all, value = TRUE)
 script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[1]) else NA_character_
 script_dir <- if (!is.na(script_path)) dirname(normalizePath(script_path, mustWork = FALSE)) else getwd()
-project_dir <- if (basename(script_dir) == "10_table1") {
-  normalizePath(file.path(script_dir, "..", ".."), mustWork = FALSE)
-} else {
-  normalizePath(file.path(script_dir, ".."), mustWork = FALSE)
+project_dir <- script_dir
+while (basename(project_dir) %in% c("R", "scripts", "10_table1", "security", "outputs", "logs")) {
+  project_dir <- dirname(project_dir)
 }
+source(file.path(project_dir, "R", "bootstrap.R"))
 
 outputs_dir <- file.path(project_dir, "R", "10_table1", "outputs")
 logs_dir    <- file.path(project_dir, "R", "10_table1", "logs")
-
-# Load security utilities
-source(file.path(project_dir, "R", "path_utils.R"))
 
 dir.create(outputs_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(logs_dir,    showWarnings = FALSE, recursive = TRUE)
