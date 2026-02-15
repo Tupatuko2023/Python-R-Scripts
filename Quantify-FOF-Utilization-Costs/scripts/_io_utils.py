@@ -24,6 +24,28 @@ def detect_delimiter(path: Path) -> str:
     return "|" if line.count("|") > line.count(",") else ","
 
 
+def safe_join_path(base: Path, *parts: str) -> Path:
+    """
+    Safely join path parts to a base directory, preventing path traversal.
+    Raises ValueError if the resulting path is outside the base directory.
+    """
+    # Use strict=False to handle non-existent paths (like new output dirs)
+    resolved_base = base.resolve(strict=False)
+    # Path.joinpath handles absolute paths by replacing the base, which we want to block if they leave the boundary.
+    joined = resolved_base.joinpath(*parts)
+    resolved_path = joined.resolve(strict=False)
+
+    # Use is_relative_to (Python 3.9+) for robust boundary checking.
+    # This prevents sibling directory vulnerabilities (e.g., /app/data vs /app/data_sensitive).
+    try:
+        resolved_path.relative_to(resolved_base)
+    except ValueError:
+        # Security: Do NOT leak absolute paths in the error message (Option B)
+        raise ValueError("Security Violation: Path traversal detected or path outside restricted boundary.")
+
+    return resolved_path
+
+
 def read_csv_rows(path: Path) -> Tuple[List[Dict[str, str]], List[str]]:
     delim = detect_delimiter(path)
     rows: List[Dict[str, str]] = []

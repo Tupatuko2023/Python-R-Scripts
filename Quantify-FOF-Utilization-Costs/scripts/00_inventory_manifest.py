@@ -5,6 +5,8 @@ import datetime
 import csv
 from pathlib import Path
 
+from _io_utils import safe_join_path
+
 # Try to import dotenv, handle missing dependency gracefully
 try:
     from dotenv import load_dotenv
@@ -38,7 +40,13 @@ def scan_inventory(data_root, target_dataset):
         log_run("FAILURE", "DATA_ROOT missing")
         return
 
-    target_path = Path(data_root) / target_dataset
+    try:
+        target_path = safe_join_path(Path(data_root), target_dataset)
+    except ValueError as e:
+        print(f"ERROR: {e}")
+        log_run("FAILURE", "Security violation: path traversal")
+        return
+
     if not target_path.exists():
         print(f"WARNING: Target dataset path not found: {target_path}")
         log_run("WARNING", f"Path not found: {target_dataset}")

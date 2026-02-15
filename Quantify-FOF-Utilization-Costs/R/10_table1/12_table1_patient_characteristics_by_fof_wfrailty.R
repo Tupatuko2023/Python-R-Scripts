@@ -47,19 +47,20 @@ EXPORT_HTML <- Sys.getenv("EXPORT_HTML", unset = "0") == "1"
 EXPORT_DOCX <- Sys.getenv("EXPORT_DOCX", unset = "0") == "1"
 DISABLE_SUPPRESSION <- Sys.getenv("DISABLE_SUPPRESSION", unset = "1") == "1"
 
-# Anchor outputs/logs to the Table 1 script location under the subproject root
+# Robust project root discovery & security bootstrap
 args_all <- commandArgs(trailingOnly = FALSE)
 file_arg <- grep("^--file=", args_all, value = TRUE)
 script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[1]) else NA_character_
 script_dir <- if (!is.na(script_path)) dirname(normalizePath(script_path, mustWork = FALSE)) else getwd()
-project_dir <- if (basename(script_dir) == "10_table1") {
-  normalizePath(file.path(script_dir, "..", ".."), mustWork = FALSE)
-} else {
-  normalizePath(file.path(script_dir, ".."), mustWork = FALSE)
+project_dir <- script_dir
+while (basename(project_dir) %in% c("R", "scripts", "10_table1", "security", "outputs", "logs")) {
+  project_dir <- dirname(project_dir)
 }
+source(file.path(project_dir, "R", "bootstrap.R"))
 
 outputs_dir <- file.path(project_dir, "R", "10_table1", "outputs")
 logs_dir    <- file.path(project_dir, "R", "10_table1", "logs")
+
 dir.create(outputs_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(logs_dir,    showWarnings = FALSE, recursive = TRUE)
 blocked_path <- file.path(outputs_dir, "table1_patient_characteristics_by_fof.BLOCKED.txt")
@@ -111,13 +112,16 @@ log_msg("Suppression disabled: ", DISABLE_SUPPRESSION)
 bmi_candidates <- c("BMI","bmi","Painoindeksi (BMI)","painoindeksi","painoindeksi_bmi")
 
 locate_input <- function(data_root) {
-  candidates <- c(
-    file.path(data_root, "paper_02", "KAAOS_data_sotullinen.xlsx"),
-    file.path(data_root, "derived",  "kaatumisenpelko.csv"),
-    file.path(data_root, "data",     "kaatumisenpelko.csv")
+  candidates <- list(
+    c("paper_02", "KAAOS_data_sotullinen.xlsx"),
+    c("derived",  "kaatumisenpelko.csv"),
+    c("data",     "kaatumisenpelko.csv")
   )
   first_existing <- NA_character_
-  for (p in candidates) {
+  for (parts in candidates) {
+    p <- tryCatch(do.call(safe_join_path, as.list(c(data_root, parts))), error = function(e) NA_character_)
+    if (is.na(p)) next
+
     if (file.exists(p) && file.access(p, 4) == 0) {
       if (is.na(first_existing)) first_existing <- p
       if (grepl("\\.xlsx?$", p, ignore.case = TRUE)) return(p)
@@ -562,11 +566,11 @@ df <- df_raw %>%
   )
 
 load_frailty_lookup <- function(data_root) {
-  panel_path <- file.path(data_root, "derived", "aim2_panel.csv")
+  panel_path <- safe_join_path(data_root, "derived", "aim2_panel.csv")
   if (!file.exists(panel_path)) {
     stop("Frailty lookup source missing: derived/aim2_panel.csv (DATA_ROOT).")
   }
-  cw_path <- file.path(data_root, "paper_02", "sotut.xlsx")
+  cw_path <- safe_join_path(data_root, "paper_02", "sotut.xlsx")
   if (!file.exists(cw_path)) {
     stop("Frailty crosswalk missing: paper_02/sotut.xlsx (DATA_ROOT).")
   }

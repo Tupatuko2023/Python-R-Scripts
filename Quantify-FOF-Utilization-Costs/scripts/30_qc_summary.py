@@ -17,6 +17,7 @@ from _io_utils import (
     manifest_relative_path,
     parse_date,
     read_rows,
+    safe_join_path,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -71,7 +72,10 @@ def _collect_from_manifest(path: Path) -> List[Source]:
             rel = manifest_relative_path(loc)
             if not rel:
                 continue
-            p = base / rel
+            try:
+                p = safe_join_path(base, rel)
+            except ValueError:
+                continue
             if p.suffix.lower() not in {".csv", ".xlsx", ".xls"}:
                 continue
             if "kopio" in p.name.lower():
