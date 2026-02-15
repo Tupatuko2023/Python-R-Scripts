@@ -5,7 +5,12 @@ import os
 from pathlib import Path
 from typing import Dict, Optional
 
-from _io_utils import safe_join_path
+try:
+    # Package execution
+    from ._io_utils import safe_join_path
+except ImportError:
+    # Script / repo-root execution
+    from _io_utils import safe_join_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_DIR = PROJECT_ROOT / "config"
