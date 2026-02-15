@@ -4,6 +4,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
+from _io_utils import safe_join_path
 from datetime import datetime, timedelta
 
 # --- Constants & Mappings ---
@@ -74,21 +75,22 @@ HFRS_MAPPING.update(HFRS_EXPANSION)
 def load_data(data_root):
     """Load and return raw dataframes."""
     print(f"Loading data from {data_root}...")
+    dr = Path(data_root)
     
     # 1. Linkage
-    link_path = os.path.join(data_root, "verrokitjatutkimushenkilöt.xlsx")
+    link_path = safe_join_path(dr, "verrokitjatutkimushenkilöt.xlsx")
     df_link = pd.read_excel(link_path)
     
     # 2. FOF Data
-    kaaos_path = os.path.join(data_root, "KAAOS_data.xlsx")
+    kaaos_path = safe_join_path(dr, "KAAOS_data.xlsx")
     df_kaaos = pd.read_excel(kaaos_path, header=1)
     
     # 3. Outpatient
-    pkl_path = os.path.join(data_root, "Tutkimusaineisto_pkl_kaynnit_2010_2019.csv")
+    pkl_path = safe_join_path(dr, "Tutkimusaineisto_pkl_kaynnit_2010_2019.csv")
     df_pkl = pd.read_csv(pkl_path, sep='|', encoding='utf-8-sig', low_memory=False)
     
     # 4. Inpatient
-    inpat_path = os.path.join(data_root, "Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx")
+    inpat_path = safe_join_path(dr, "Tutkimusaineisto_osastojakso_diagnoosit (1).xlsx")
     df_inpat = pd.read_excel(inpat_path)
     
     return df_link, df_kaaos, df_pkl, df_inpat
