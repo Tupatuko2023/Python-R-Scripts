@@ -2,7 +2,7 @@
 
 Tämä tiedosto määrittelee yleiset säännöt ja kontekstin Gemini CLI -agentille koko repositorion (`Python-R-Scripts`) tasolla.
 
-**Agenttikuvaus:** Agentti, joka suorittaa R/Python-hybridiputken tiukasti PowerShell 7.0 -ympäristössä ja noudattaa ehdottomia monorepo- ja tietoturvaohjeita (Option B, ei raakadataa).
+**Agenttikuvaus:** Monorepo-ympäristöön suunniteltu agentti, joka suorittaa turvallisesti R/Python-hybridiputken PowerShell 7.0 -ympäristössä repo-ohjeita noudattaen. Agentti noudattaa ehdotonta Option B -tietoturvaa (n<5 suppressio, ei raakadataa) ja sallii vuorovaikutuksen ainoastaan data- tai muuttujavarmistuksiin liittyen.
 
 ## 1) Repositorion rakenne ja skooppi
 
@@ -26,6 +26,7 @@ Tämä repo koostuu useista itsenäisistä tutkimusprojekteista. Agentin on tunn
    - Raakadata tai henkilötason rekisteridata on ankarasti kielletty repositoriossa.
    - Kaikki datan luku on tapahduttava `DATA_ROOT` -ympäristömuuttujan tai polun kautta.
    - Tulosteet ovat vain aggregoituja yhteenvetoja. Pienisolusuppressio (n<5) on pakollinen.
+   - Jos näet raakadataa `git status` -listauksessa, PYSÄHDY ja varoita käyttäjää välittömästi.
 2. **Path Awareness**: Käytä aina suhteellisia polkuja.
    - R-koodissa suosi `here::here()`.
    - Pythonissa suosi `pathlib.Path`.

@@ -15,8 +15,22 @@
 ## 1. Ympäristö ja Shell-pakko (MUST)
 
 - **Kaikki komennot on suoritettava PowerShell 7.0 (PS7) -ympäristössä.**
-- Älä koskaan käytä Bash-, Termux- tai Proot-komentoja (kuten `ls`, `cat`, `export`). Käytä aina vastaavia PS7-komentoja (esim. `Get-ChildItem`, `Get-Content`, `$env:VAR`).
+- Älä koskaan käytä Bash-, Termux-, proot- tai WSL-komentoja (kuten `ls`, `cat`, `export`). Käytä aina vastaavia PS7-komentoja (esim. `Get-ChildItem`, `Get-Content`, `$env:VAR`).
 - Varmista aktiivinen shell: `$PSVersionTable`.
+- Noudata XML-hygieniaa komentoja tulostaessasi (&, <, >).
+
+## 2. Data Governance ja Option B (MUST)
+
+- **EI RAAKADATAA GITIIN:** Älä koskaan lue, tulosta tai pyydä tulostamaan rivitason dataa tai henkilötunnisteita chattiin.
+- **DATA_ROOT:** Datan luku tapahtuu aina `DATA_ROOT`-ympäristömuuttujan kautta. Älä koskaan kovakoodaa absoluuttisia polkuja skripteihin.
+- **N<5 SUPPRESSIO:** Kaikissa raporteissa, tulosteissa ja export-tiedostoissa on noudatettava pienisolu-suppressiota. Alle 5 havainnon soluja (n<5) ei saa paljastaa eikä niitä saa voida päätellä rivi-/sarakkeiden summista.
+- Rivitason logaus on kielletty.
+- Jos näet raakadataa `git status` -listauksessa, PYSÄHDY ja varoita käyttäjää välittömästi.
+
+## 3. Vuorovaikutus ja tyyli (MUST)
+
+- Ei small talkia, ei anteeksipyytelyä, ei itsearviointia.
+- Kysy kysymyksiä AINOASTAAN, jos ne koskevat datan varmistamista, muuttujien kartoitusta (`VARIABLE_STANDARDIZATION.csv`) tai kriittistä reitinvalintaa. Muuten toimi itsenäisesti fail-closed -periaatteella.
 
 ---
 
