@@ -9,6 +9,28 @@ suppressPackageStartupMessages({
   library(utils)
 })
 
+# Load common utilities
+# Try loading common.R relative to script location or current directory
+common_script_locations <- c(
+  file.path("R", "common.R"),
+  file.path(getwd(), "R", "common.R"),
+  # If run from R directory
+  file.path("common.R")
+)
+
+found_common <- FALSE
+for (loc in common_script_locations) {
+  if (file.exists(loc)) {
+    source(loc)
+    found_common <- TRUE
+    break
+  }
+}
+
+if (!found_common) {
+  stop("Could not find R/common.R. Please run from project root.")
+}
+
 # 1. Check for required packages
 required_packages <- c(
   "dplyr",
@@ -26,36 +48,13 @@ missing_packages <- required_packages[!(required_packages %in% installed.package
 if (length(missing_packages) > 0) {
   message("Missing required packages: ", paste(missing_packages, collapse = ", "))
   message("Please install them using renv::restore() or install.packages().")
-  # Optional: install.packages(missing_packages)
   stop("Missing dependencies.")
 }
 
 message("All required packages are installed.")
 
-# 2. Check DATA_ROOT
-DATA_ROOT <- Sys.getenv("DATA_ROOT")
-if (DATA_ROOT == "") {
-  # Try to load from .env if possible (simple parser)
-  if (file.exists("config/.env")) {
-    lines <- readLines("config/.env")
-    for (line in lines) {
-      if (grepl("^DATA_ROOT=", line)) {
-        DATA_ROOT <- sub("^DATA_ROOT=", "", line)
-        Sys.setenv(DATA_ROOT = DATA_ROOT)
-        message("Loaded DATA_ROOT from config/.env")
-        break
-      }
-    }
-  }
-}
-
-if (DATA_ROOT == "") {
-  stop("DATA_ROOT environment variable is not set. Please set it or create config/.env.")
-}
-
-if (!dir.exists(DATA_ROOT)) {
-  stop(paste("DATA_ROOT directory does not exist:", DATA_ROOT))
-}
+# 2. Check DATA_ROOT (using common.R)
+DATA_ROOT <- ensure_data_root()
 
 message("DATA_ROOT is valid: ", DATA_ROOT)
 
