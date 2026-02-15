@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, List, Dict
 
+from path_resolver import safe_join_path
 from qc_no_abs_paths_check import scan_paths
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -132,11 +133,11 @@ def build_index(entries: List[Dict[str, str]], zip_sha256: str, zip_ref: str) ->
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build agent-ready knowledge package (non-sensitive).")
-    ap.add_argument("--out", default=str(ZIP_PATH), help="Output zip path.")
+    ap.add_argument("--out", default=ZIP_PATH.name, help="Output zip path under outputs/knowledge/.")
     ap.add_argument("--include-derived", action="store_true", help="Include docs/derived_text if present.")
     args = ap.parse_args()
 
-    out_zip = Path(args.out)
+    out_zip = safe_join_path(OUT_DIR, args.out)
     out_zip.parent.mkdir(parents=True, exist_ok=True)
 
     paths = list(iter_files())
