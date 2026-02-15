@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, List
 
+from path_resolver import safe_join_path
 from qc_no_abs_paths_check import scan_paths
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -84,10 +85,10 @@ def _append_run_log(out_ref: str, status: str, notes: str) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build non-sensitive Aim 2 report from QC + optional aggregates.")
-    ap.add_argument("--out", default=str(DEFAULT_OUT), help="Output report path.")
+    ap.add_argument("--out", default=DEFAULT_OUT.name, help="Output report path under outputs/reports/.")
     args = ap.parse_args()
 
-    out_path = Path(args.out)
+    out_path = safe_join_path(OUT_DIR, args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     qc_overview = QC_DIR / "qc_overview.csv"

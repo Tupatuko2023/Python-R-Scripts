@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, List, Optional, Sequence
 
-from path_resolver import get_data_root, get_paper02_dir
+from path_resolver import get_data_root, get_paper02_dir, safe_join_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DERIVED_DIR = PROJECT_ROOT / "docs" / "derived_text"
@@ -162,7 +162,7 @@ def extract_pptx_chunks(pptx_path: Path) -> List[Chunk]:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Layout-aware PDF/PPTX extraction into JSONL chunks (safe-by-default).")
     ap.add_argument("--scan", default="paper_02", help="Scan target (default: paper_02).")
-    ap.add_argument("--out", default=str(DEFAULT_JSONL), help="Output JSONL path (default: docs/derived_text/chunks.jsonl)")
+    ap.add_argument("--out", default=DEFAULT_JSONL.name, help="Output JSONL path under docs/derived_text/ (default: chunks.jsonl)")
     ap.add_argument("--limit-files", type=int, default=50, help="Max number of files to process per run.")
     ap.add_argument("--dry-run", action="store_true", help="Do not write outputs, only log actions.")
     args = ap.parse_args()
@@ -209,7 +209,7 @@ def main() -> int:
         print(f"DRY_RUN: would write {len(all_chunks)} chunks")
         return 0
 
-    out_path = Path(args.out)
+    out_path = safe_join_path(DERIVED_DIR, args.out)
     write_jsonl(out_path, all_chunks)
     write_log("OK", f"Wrote {len(all_chunks)} chunks.", {"out": str(out_path), "errors": errors[:50]})
     print(f"Wrote {len(all_chunks)} chunks to {out_path}")
