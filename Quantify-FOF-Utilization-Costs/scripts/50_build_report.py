@@ -5,15 +5,21 @@ import argparse
 import csv
 from datetime import datetime, timezone
 from pathlib import Path
+import sys
 from typing import Iterable, List
 
 from path_resolver import safe_join_path
 from qc_no_abs_paths_check import scan_paths
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-QC_DIR = PROJECT_ROOT / "outputs" / "qc"
-AGG_PATH = PROJECT_ROOT / "outputs" / "aggregates" / "aim2_aggregates.csv"
-OUT_DIR = PROJECT_ROOT / "outputs" / "reports"
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from utils.paths import get_output_root
+OUT_ROOT = get_output_root(PROJECT_ROOT)
+
+QC_DIR = OUT_ROOT / "qc"
+AGG_PATH = OUT_ROOT / "aggregates" / "aim2_aggregates.csv"
+OUT_DIR = OUT_ROOT / "reports"
 DEFAULT_OUT = OUT_DIR / "aim2_report.md"
 RUN_LOG_LOCAL = PROJECT_ROOT / "manifest" / "run_log.local.csv"
 

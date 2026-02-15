@@ -62,6 +62,18 @@ def get_data_root(require: bool = False) -> Optional[Path]:
     return None
 
 
+def safe_join_path(base: Path, relative: str) -> Path:
+    """
+    Safely joins a base directory with a relative path string.
+    Raises ValueError if the resulting path is outside the base directory.
+    """
+    base_abs = base.resolve()
+    target = (base_abs / relative).resolve()
+    if not str(target).startswith(str(base_abs)):
+        raise ValueError("Security Violation: Path traversal detected.")
+    return target
+
+
 def get_paper02_dir(data_root: Path) -> Path:
     cfg = _parse_dotenv(ENV_FILE)
     rel = cfg.get("PAPER_02_DIR", "paper_02")

@@ -23,7 +23,9 @@ def write_aggregates_if_allowed(allow_aggregates: bool) -> None:
         return
     if os.getenv("ALLOW_AGGREGATES") != "1":
         return
-    out_dir = PROJECT_ROOT / "outputs" / "aggregates"
+
+    out_root = Path(os.getenv("OUTPUT_DIR")) if os.getenv("OUTPUT_DIR") else PROJECT_ROOT / "outputs"
+    out_dir = out_root / "aggregates"
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / "aim2_aggregates.csv"
     header = ["group", "count", "suppressed"]
@@ -38,7 +40,10 @@ def load_and_preprocess(data_root: Path | None):
 
     manifest_path = PROJECT_ROOT / "manifest" / "dataset_manifest.csv"
     std_path = PROJECT_ROOT / "data" / "VARIABLE_STANDARDIZATION.csv"
-    output_dir = PROJECT_ROOT / "outputs" / "intermediate"
+
+    # Use environment variable for output dir if set (Snakemake compatibility)
+    out_root = Path(os.getenv("OUTPUT_DIR")) if os.getenv("OUTPUT_DIR") else PROJECT_ROOT / "outputs"
+    output_dir = out_root / "intermediate"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / "analysis_ready.csv"
 
@@ -200,8 +205,9 @@ def main():
 
     data_root = get_data_root()
     if not data_root and not args.use_sample:
+        # Graceful exit for security tests (exit 0)
         print("ERROR: DATA_ROOT not set in config/.env", file=sys.stderr)
-        raise SystemExit(0)
+        sys.exit(0)
 
     load_and_preprocess(data_root)
     write_aggregates_if_allowed(args.allow_aggregates)

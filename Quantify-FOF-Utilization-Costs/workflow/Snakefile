@@ -1,0 +1,73 @@
+from pathlib import Path
+
+configfile: "config/config.yaml"
+
+BASE = Path(workflow.basedir)
+PROJ = BASE.parent
+RDIR = (PROJ / "R").relative_to(PROJ).as_posix()
+PYDIR = (PROJ / "scripts").relative_to(PROJ).as_posix()
+WFDIR = BASE.relative_to(PROJ).as_posix()
+
+OUTPUT_DIR = config.get("output_dir", "outputs")
+
+rule all:
+    input:
+        f"{OUTPUT_DIR}/reports/aim2_report.md"
+
+rule inventory:
+    output:
+        f"{OUTPUT_DIR}/manifest/inventory.done"
+    log:
+        f"{OUTPUT_DIR}/logs/inventory.log"
+    shell:
+        "OUTPUT_DIR='{OUTPUT_DIR}' python '{WFDIR}/scripts/inventory_wrapper.py' > '{log}' 2>&1"
+
+rule preprocess:
+    input:
+        f"{OUTPUT_DIR}/manifest/inventory.done"
+    output:
+        f"{OUTPUT_DIR}/intermediate/analysis_ready.csv"
+    params:
+        allow_aggregates = "--allow-aggregates" if config.get("allow_aggregates") else "",
+        allow_aggregates_env = "1" if config.get("allow_aggregates") else "0"
+    log:
+        f"{OUTPUT_DIR}/logs/preprocess.log"
+    shell:
+        "OUTPUT_DIR='{OUTPUT_DIR}' ALLOW_AGGREGATES={params.allow_aggregates_env} python '{PYDIR}/10_preprocess_tabular.py' {params.allow_aggregates} > '{log}' 2>&1"
+
+rule qc:
+    input:
+        f"{OUTPUT_DIR}/intermediate/analysis_ready.csv"
+    output:
+        f"{OUTPUT_DIR}/qc/qc_overview.csv",
+        f"{OUTPUT_DIR}/qc/qc_inputs.csv",
+        f"{OUTPUT_DIR}/qc/qc_missingness.csv",
+        f"{OUTPUT_DIR}/qc/qc_schema_drift.csv",
+        f"{OUTPUT_DIR}/qc/qc_key_uniqueness.csv",
+        f"{OUTPUT_DIR}/qc/qc_date_sanity.csv",
+        f"{OUTPUT_DIR}/qc/qc_join_coverage.csv"
+    log:
+        f"{OUTPUT_DIR}/logs/qc.log"
+    shell:
+        "OUTPUT_DIR='{OUTPUT_DIR}' python '{PYDIR}/30_qc_summary.py' --input '{input}' > '{log}' 2>&1"
+
+rule models:
+    input:
+        f"{OUTPUT_DIR}/intermediate/analysis_ready.csv"
+    output:
+        f"{OUTPUT_DIR}/panel_models_summary.csv"
+    log:
+        f"{OUTPUT_DIR}/logs/models.log"
+    shell:
+        "OUTPUT_DIR='{OUTPUT_DIR}' Rscript '{RDIR}/30_models_panel_nb_gamma.R' '{input}' '{output}' > '{log}' 2>&1"
+
+rule report:
+    input:
+        qc_overview = f"{OUTPUT_DIR}/qc/qc_overview.csv",
+        models = f"{OUTPUT_DIR}/panel_models_summary.csv"
+    output:
+        f"{OUTPUT_DIR}/reports/aim2_report.md"
+    log:
+        f"{OUTPUT_DIR}/logs/report.log"
+    shell:
+        "OUTPUT_DIR='{OUTPUT_DIR}' python '{PYDIR}/50_build_report.py' --out '{output}' > '{log}' 2>&1"

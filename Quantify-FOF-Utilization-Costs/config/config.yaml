@@ -1,0 +1,18 @@
+# Configuration for Quantify-FOF-Utilization-Costs Snakemake workflow
+
+# Data root directory containing raw data (manifest/dataset_manifest.csv relative to this)
+# If not set here, can be provided via environment variable DATA_ROOT
+data_root: "../data/external"
+
+# Output directory for results (default: outputs/)
+output_dir: "outputs"
+
+# Allow aggregation (set to True to enable aim2_aggregates.csv generation)
+allow_aggregates: False
+
+# Use sample data (for testing/demo)
+use_sample: False
+
+# Paths to manifest and standardization files
+manifest: "manifest/dataset_manifest.csv"
+standardization: "data/VARIABLE_STANDARDIZATION.csv"
