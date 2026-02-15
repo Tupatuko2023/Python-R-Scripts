@@ -9,16 +9,17 @@ suppressPackageStartupMessages({
   library(readr)
 })
 
-# Load security utilities
+# Load security utilities via bootstrap
 args_all <- commandArgs(trailingOnly = FALSE)
 file_arg <- grep("^--file=", args_all, value = TRUE)
 script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[1]) else NA_character_
-script_dir  <- if (!is.na(script_path)) dirname(normalizePath(script_path, mustWork = FALSE)) else getwd()
-project_dir <- script_dir
-while (basename(project_dir) %in% c("R", "scripts", "10_table1", "10_table1_patient_characteristics_by_fof")) {
-  project_dir <- dirname(project_dir)
+curr_dir  <- if (!is.na(script_path)) dirname(normalizePath(script_path, mustWork = FALSE)) else getwd()
+
+bootstrap_path <- file.path(curr_dir, "bootstrap.R")
+if (!file.exists(bootstrap_path)) {
+  bootstrap_path <- "R/bootstrap.R"
 }
-source(file.path(project_dir, "R", "path_utils.R"))
+source(bootstrap_path)
 
 suppressPackageStartupMessages({
   library(stringr)

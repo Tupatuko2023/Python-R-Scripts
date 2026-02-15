@@ -29,10 +29,11 @@ def safe_join_path(base: Path, *parts: str) -> Path:
     Safely join path parts to a base directory, preventing path traversal.
     Raises ValueError if the resulting path is outside the base directory.
     """
-    resolved_base = base.resolve()
+    # resolve(strict=False) handles non-existent paths (e.g. output dirs)
+    resolved_base = base.resolve(strict=False)
     # Path.joinpath handles absolute paths by replacing the base, which we want to block if they leave the boundary.
     joined = resolved_base.joinpath(*parts)
-    resolved_path = joined.resolve()
+    resolved_path = joined.resolve(strict=False)
 
     # Use is_relative_to (Python 3.9+) for robust boundary checking.
     # This prevents sibling directory vulnerabilities (e.g., /app/data vs /app/data_sensitive).

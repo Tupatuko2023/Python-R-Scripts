@@ -8,22 +8,49 @@ safe_join_path <- function(base, ...) {
     stop("Security Violation: Base directory for safe_join_path is empty.")
   }
 
-  # Use normalizePath with mustWork=FALSE to handle non-existent paths (e.g. output dirs)
-  resolved_base <- normalizePath(base, mustWork = FALSE)
-  joined_path <- file.path(resolved_base, ...)
-  resolved_path <- normalizePath(joined_path, mustWork = FALSE)
-
-  # Robust boundary checking to avoid sibling directory vulnerabilities
-  # (e.g., /app/data vs /app/data_sensitive).
-  # Ensure resolved_base has a trailing separator for prefix matching.
-  base_prefix <- resolved_base
-  sep <- .Platform$file.sep
-  if (!endsWith(base_prefix, sep)) {
-    base_prefix <- paste0(base_prefix, sep)
+  # Block absolute paths in parts to prevent escaping the base
+  parts <- list(...)
+  for (p in parts) {
+    if (is.character(p) && length(p) > 0 && grepl("^/|^[A-Za-z]:", p)) {
+      stop("Security Violation: Absolute path detected in joined parts.")
+    }
   }
 
-  # The resolved path is safe if it starts with the base_prefix OR is exactly the resolved_base.
-  if (!(startsWith(resolved_path, base_prefix) || resolved_path == resolved_base)) {
+  # Use normalizePath with mustWork=FALSE to handle non-existent paths (e.g. output dirs)
+  resolved_base <- normalizePath(base, mustWork = FALSE, winslash = "/")
+  
+  # Ensure base is treated as a directory by normalizePath
+  if (!endsWith(resolved_base, "/")) {
+    resolved_base <- paste0(resolved_base, "/")
+  }
+
+  joined_path <- do.call(file.path, c(list(resolved_base), parts))
+  
+  # normalizePath(..., mustWork=FALSE) does NOT resolve ../ if the path doesn't exist
+  # We need to manually resolve .. to prevent traversal on non-existent output paths.
+  
+  # 1. Split path into components
+  path_parts <- strsplit(joined_path, "/|\\\\")[[1]]
+  # 2. Process components (stack based resolution)
+  stack <- character()
+  for (part in path_parts) {
+    if (part == "" || part == ".") next
+    if (part == "..") {
+      if (length(stack) > 0) stack <- stack[-length(stack)]
+    } else {
+      stack <- c(stack, part)
+    }
+  }
+  # 3. Reconstruct
+  # On Linux, leading / was lost in strsplit if joined_path was absolute
+  prefix <- if (grepl("^/", joined_path)) "/" else ""
+  resolved_path <- paste0(prefix, paste(stack, collapse = "/"))
+  
+  # Ensure resolved_path is normalized again
+  resolved_path <- normalizePath(resolved_path, mustWork = FALSE, winslash = "/")
+
+  # Robust boundary checking
+  if (!startsWith(resolved_path, resolved_base)) {
     # Security: Do NOT leak absolute paths in the error message (Option B)
     stop("Security Violation: Path traversal detected or path outside restricted boundary.")
   }
