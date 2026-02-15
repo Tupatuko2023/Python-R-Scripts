@@ -3,6 +3,7 @@
 - Project: `Quantify-FOF-Utilization-Costs`
 - Scope: `scripts/` + CLI execution paths
 - Status: Post-PR #87 hardening complete
+- Note: this document reflects a point-in-time posture as of PR #87 (and the subsequent hardening commit); future changes may introduce drift.
 
 ## 1. Threat Model Scope
 
@@ -36,7 +37,7 @@ Security properties:
 - Raises `ValueError("Security Violation: Path traversal detected")`.
 - Error message does not leak base directory.
 
-Status: Fully enforced and unit-tested.
+Status (as of PR #87): Enforced and covered by `tests/security/test_path_traversal.py`.
 
 Security tests:
 
@@ -64,7 +65,7 @@ Security impact:
 - Prevents traversal outside output base.
 - Keeps CLI defaults functional (relative filenames).
 
-Status: Hardened.
+Status (as of PR #87): Hardened.
 
 Behavior change:
 
@@ -78,7 +79,7 @@ Observed patterns:
 - Manifest-driven paths already pass through `safe_join_path`.
 - No ZipSlip (`extractall`) patterns found in `20_extract_pdf_pptx.py`.
 
-Status: No active bypass vectors detected.
+Observation (as of PR #87 audit): no direct `open(user_input)` patterns or archive extraction (`extractall`) usage found in `scripts/`.
 
 Residual consideration:
 
@@ -100,7 +101,7 @@ Security benefit:
 - Eliminates drift between validators.
 - Guarantees consistent error semantics.
 
-Status: Resolved.
+Status (as of PR #87): Resolved.
 
 ## 6. Error Message Leakage
 
@@ -109,7 +110,7 @@ Invariant enforced:
 - No base directory exposure in raised exceptions.
 - Fixed error string required by tests.
 
-Status: Verified by unit tests.
+Status (as of PR #87): Verified by unit tests.
 
 ## 7. Archive / Extraction Surface
 
@@ -124,7 +125,7 @@ PDF handling:
 - Uses file reads only.
 - No path-based extraction.
 
-Status: No ZipSlip-class risk detected.
+Status (as of PR #87): No ZipSlip-class risk detected.
 
 ## 8. Remaining Risk Surface (Low)
 
@@ -150,7 +151,6 @@ After PR #87 plus hardening:
 - CLI writes sandboxed.
 - Traversal invariant tested.
 - No detected bypasses in scripts layer.
-- No force-push and no history corruption.
 
 Overall rating:
 
@@ -161,7 +161,7 @@ Overall rating:
 Optional but recommended:
 
 1. Add developer rule: "All filesystem joins involving external input MUST use `safe_join_path`."
-2. Add CI grep guard: fail build if `Path(args.` appears without `safe_join_path`.
+2. Add a lightweight CI check focused on `--out` handling: require CLI output paths to resolve via `safe_join_path(output_base, args.out)` (or a centralized helper enforcing equivalent behavior). Prefer tests or static checks over brittle text grep.
 3. Add optional CLI test: `--out /tmp/x` raises `ValueError`.
 
 ## Final Assessment
