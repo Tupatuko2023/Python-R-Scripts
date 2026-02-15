@@ -151,20 +151,24 @@ def normalize_manifest_location(location: str) -> str:
     return location.replace("\\", "/")
 
 
-def safe_join_path(base: Path, relative: str) -> Path:
+def safe_join_path(base: Path, relative: str | Path) -> Path:
     """
-    Safely joins a base directory with a relative path string.
+    Safely joins a base directory with a user-provided path.
     Raises ValueError if the resulting path is outside the base directory.
     Does NOT leak the absolute path of base in error messages.
     """
-    base_abs = base.resolve()
-    # Path.joinpath or / handles basic joining
-    target = (base_abs / relative).resolve()
-    
-    # Check if target is still under base_abs
-    if not str(target).startswith(str(base_abs)):
-        raise ValueError("Security Violation: Path traversal detected. Access denied.")
-    
+    base_abs = Path(base).resolve(strict=False)
+    rel = Path(relative)
+
+    if rel.is_absolute():
+        raise ValueError("Security Violation: Path traversal detected")
+
+    target = (base_abs / rel).resolve(strict=False)
+    try:
+        target.relative_to(base_abs)
+    except ValueError as exc:
+        raise ValueError("Security Violation: Path traversal detected") from exc
+
     return target
 
 
