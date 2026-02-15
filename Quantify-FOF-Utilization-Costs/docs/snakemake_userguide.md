@@ -49,6 +49,19 @@ python scripts/00_inventory_manifest.py --scan paper_02
 
 > Ala tulosta `DATA_ROOT`-arvoa tai absoluuttisia polkuja lokiin/kommentteihin.
 
+## DATA_ROOT ja ymparistokohtainen synkronointi
+
+Tassa projektissa `DATA_ROOT` on aina paikallinen, repo-ulkoinen asetus.
+Sita ei synkronoida automaattisesti eri ymparistojen (esim. Termux, VSCode/Windows, CI) valilla.
+
+Jos kaytat useita ymparistoja:
+
+- Pida repoissa vain placeholder-arvot (`DATA_ROOT=__SET_ME__`).
+- Aseta oikea `DATA_ROOT` vain paikalliseen, gitignored `config/.env`-tiedostoon.
+- Ala koskaan committaa, tulosta tai jaa `DATA_ROOT`-arvoa.
+
+Termux- ja VSCode-ymparistot voivat kayttaa eri polkuformaatteja. Tama on normaalia, ja jokainen ymparisto konfiguroidaan erikseen paikallisesti.
+
 ## Snakemake-ajotavat
 
 ### Dry-run (turvallinen tarkistus)
