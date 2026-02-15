@@ -5,8 +5,6 @@ import os
 from pathlib import Path
 from typing import Dict, Optional
 
-from _io_utils import safe_join_path
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_DIR = PROJECT_ROOT / "config"
 ENV_FILE = CONFIG_DIR / ".env"
@@ -55,6 +53,18 @@ def get_data_root(require: bool = False) -> Optional[Path]:
             ".env.example and set DATA_ROOT to your secure repo-external data location."
         )
     return None
+
+
+def safe_join_path(base: Path, relative: str) -> Path:
+    """
+    Safely joins a base directory with a relative path string.
+    Raises ValueError if the resulting path is outside the base directory.
+    """
+    base_abs = base.resolve()
+    target = (base_abs / relative).resolve()
+    if not str(target).startswith(str(base_abs)):
+        raise ValueError("Security Violation: Path traversal detected.")
+    return target
 
 
 def get_paper02_dir(data_root: Path) -> Path:
