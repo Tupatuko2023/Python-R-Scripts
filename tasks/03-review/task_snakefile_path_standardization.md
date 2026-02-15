@@ -1,7 +1,7 @@
 ﻿# TASK: Standardize script paths in Snakefile (RDIR/PYDIR) + spaces-safe shell template
 
 ## STATUS
-- State: 02-in-progress
+- State: 03-review
 
 ## OBJECTIVE
 - Add RDIR/PYDIR path variables based on workflow.basedir.
@@ -16,5 +16,6 @@
 - Task moved to 03-review (not 04-done).
 
 ## LOG
-- 2026-02-15T14:46:24.9718445+02:00 Created task and moved to 02-in-progress.
-- 2026-02-15T14:47:24.0492204+02:00 Added BASE/PROJ/RDIR/PYDIR path variables and standardized shell script-path usage in Snakefile.
+- 2026-02-15T14:46:24+02:00 Created task and moved to 02-in-progress.
+- 2026-02-15T14:47:24+02:00 Added BASE/PROJ/RDIR/PYDIR path variables and standardized shell script-path usage in Snakefile.
+- 2026-02-15T14:53:00.0082235+02:00 Standardized Snakefile paths (RDIR/PYDIR) and updated models-rule. Ready for review.
