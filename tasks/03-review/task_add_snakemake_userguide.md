@@ -1,0 +1,2 @@
+- 2026-02-15T15:16:10.1973382+02:00 Added snakemake_userguide.md (Option B safe). Ready for review.
+- 2026-02-15T15:16:19.4705385+02:00 Added snakemake_userguide.md (Option B safe). Ready for review.

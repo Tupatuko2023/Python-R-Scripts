@@ -168,7 +168,6 @@ def safe_join_path(base: Path, relative: str | Path) -> Path:
         target.relative_to(base_abs)
     except ValueError as exc:
         raise ValueError("Security Violation: Path traversal detected") from exc
-
     return target
 
 

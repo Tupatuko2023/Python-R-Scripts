@@ -47,3 +47,5 @@ R_libs/
 install_deps.R
 install_r_pkgs.R
 data_root_test/
+.snakemake/
+dag.png

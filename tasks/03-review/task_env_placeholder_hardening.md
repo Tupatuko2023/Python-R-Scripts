@@ -1,0 +1,2 @@
+- 2026-02-15T15:22:43.9185728+02:00 Replaced env path examples with placeholders (Option B hardening). Ready for review.
+- 2026-02-15T15:22:53.4373847+02:00 Replaced env path examples with placeholders (Option B hardening). Ready for review.

@@ -1,0 +1,2 @@
+- 2026-02-15T15:34:49.1232839+02:00 Added local-only DATA_ROOT synchronization note. Ready for review.
+- 2026-02-15T15:35:41.1317021+02:00 Added local-only DATA_ROOT synchronization note. Ready for review.
