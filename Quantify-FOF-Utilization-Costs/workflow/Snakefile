@@ -13,12 +13,16 @@ PYDIR = (PROJ / "scripts").relative_to(PROJ).as_posix()
 WFDIR = BASE.relative_to(PROJ).as_posix()
 
 OUTPUT_DIR = config.get("output_dir", "outputs")
-DATA_ROOT = get_data_root(require=True)
+DATA_ROOT = get_data_root(require=False)
 
 
 def _resolve_data_root_path(rel_or_abs: str) -> str:
     p = Path(rel_or_abs)
-    return str(p if p.is_absolute() else (DATA_ROOT / p))
+    if p.is_absolute():
+        return str(p)
+    if DATA_ROOT is None:
+        return str(p)
+    return str(DATA_ROOT / p)
 
 rule all:
     input:
