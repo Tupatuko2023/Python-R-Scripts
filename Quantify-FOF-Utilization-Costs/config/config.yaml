@@ -1,8 +1,7 @@
 # Configuration for Quantify-FOF-Utilization-Costs Snakemake workflow
 
-# Data root directory containing raw data (manifest/dataset_manifest.csv relative to this)
-# If not set here, can be provided via environment variable DATA_ROOT
-data_root: "../data/external"
+# Data root directory containing source data (manifest-relative paths resolve under this root)
+data_root: "/data/data/com.termux/files/home/FOF_LOCAL_DATA"
 
 # Output directory for results (default: outputs/)
 output_dir: "outputs"
@@ -16,3 +15,22 @@ use_sample: False
 # Paths to manifest and standardization files
 manifest: "manifest/dataset_manifest.csv"
 standardization: "data/VARIABLE_STANDARDIZATION.csv"
+
+# Table 3 (injury-related health care usage vs control per 1000 patient-years)
+table3:
+  # Built analysis-ready inputs under DATA_ROOT/derived
+  visits_file: "derived/table3_visits_input.csv"
+  treat_file: "derived/table3_treat_input.csv"
+  # Cohort roster (raw, DATA_ROOT-scoped): defines case/control labels.
+  cohort_file: "paper_02/Verrokit.XLSX"
+  cohort_sheet: "Tulostiedot"
+  cohort_id_col: "Tutk.henkilön / verrokin henkilötunnus"
+  case_flag_col: "Ver-rokin nro"
+  case_flag_case_value: "0"
+  # Optional controls linkage/panel. Required if roster contains controls.
+  controls_link_table: ""
+  controls_panel_file: ""
+  visits_source_dataset: "paper_02_outpatient"
+  treat_source_dataset: ""
+  engine: "negbin"
+  make_docx: false

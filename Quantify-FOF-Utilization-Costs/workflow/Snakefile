@@ -9,10 +9,18 @@ PYDIR = (PROJ / "scripts").relative_to(PROJ).as_posix()
 WFDIR = BASE.relative_to(PROJ).as_posix()
 
 OUTPUT_DIR = config.get("output_dir", "outputs")
+DATA_ROOT = Path(config.get("data_root", ""))
+
+
+def _resolve_data_root_path(rel_or_abs: str) -> str:
+    p = Path(rel_or_abs)
+    return str(p if p.is_absolute() else (DATA_ROOT / p))
 
 rule all:
     input:
-        f"{OUTPUT_DIR}/reports/aim2_report.md"
+        f"{OUTPUT_DIR}/reports/aim2_report.md",
+        f"{OUTPUT_DIR}/tables/table3.csv",
+        f"{OUTPUT_DIR}/tables/table3.md"
 
 rule inventory:
     output:
@@ -71,3 +79,78 @@ rule report:
         f"{OUTPUT_DIR}/logs/report.log"
     shell:
         "OUTPUT_DIR='{OUTPUT_DIR}' python '{PYDIR}/50_build_report.py' --out '{output}' > '{log}' 2>&1"
+
+
+rule build_table3_inputs:
+    input:
+        script = f"{PYDIR}/15_build_table3_inputs.py"
+    output:
+        visits = _resolve_data_root_path(config.get("table3", {}).get("visits_file", "")),
+        treat = _resolve_data_root_path(config.get("table3", {}).get("treat_file", ""))
+    params:
+        cohort_file = lambda wc: config.get("table3", {}).get("cohort_file", ""),
+        cohort_sheet = lambda wc: config.get("table3", {}).get("cohort_sheet", ""),
+        cohort_id_col = lambda wc: config.get("table3", {}).get("cohort_id_col", ""),
+        case_flag_col = lambda wc: config.get("table3", {}).get("case_flag_col", ""),
+        case_flag_case_value = lambda wc: config.get("table3", {}).get("case_flag_case_value", "0"),
+        controls_link_table = lambda wc: config.get("table3", {}).get("controls_link_table", ""),
+        controls_panel_file = lambda wc: config.get("table3", {}).get("controls_panel_file", "")
+    log:
+        f"{OUTPUT_DIR}/logs/table3_inputs.log"
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p '{OUTPUT_DIR}/logs'
+        python '{input.script}' \
+          --visits-out "{output.visits}" \
+          --treat-out "{output.treat}" \
+          --cohort-file "{params.cohort_file}" \
+          --cohort-sheet "{params.cohort_sheet}" \
+          --cohort-id-col "{params.cohort_id_col}" \
+          --case-flag-col "{params.case_flag_col}" \
+          --case-flag-case-value "{params.case_flag_case_value}" \
+          --controls-link-table "{params.controls_link_table}" \
+          --controls-panel-file "{params.controls_panel_file}" \
+          > "{log}" 2>&1
+        """
+
+
+rule table3:
+    input:
+        varmap = config.get("standardization", "data/VARIABLE_STANDARDIZATION.csv"),
+        visits_built = rules.build_table3_inputs.output.visits,
+        treat_built = rules.build_table3_inputs.output.treat
+    output:
+        csv = f"{OUTPUT_DIR}/tables/table3.csv",
+        md = f"{OUTPUT_DIR}/tables/table3.md"
+    log:
+        f"{OUTPUT_DIR}/logs/table3.log"
+    params:
+        data_root = lambda wc: config.get("data_root", ""),
+        visits_file = lambda wc: config.get("table3", {}).get("visits_file", ""),
+        treat_file = lambda wc: config.get("table3", {}).get("treat_file", ""),
+        visits_source_dataset = lambda wc: config.get("table3", {}).get("visits_source_dataset", ""),
+        treat_source_dataset = lambda wc: config.get("table3", {}).get("treat_source_dataset", ""),
+        engine = lambda wc: config.get("table3", {}).get("engine", "negbin"),
+        make_docx_flag = lambda wc: "--make_docx" if config.get("table3", {}).get("make_docx", False) else ""
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p '{OUTPUT_DIR}/tables' '{OUTPUT_DIR}/logs'
+        if [ -z "{params.treat_file}" ]; then
+          echo "ERROR: table3.treat_file is empty in config/config.yaml." >&2
+          echo "Fix: add treatment dataset to manifest (via 00_inventory_manifest.py --scan) and set table3.treat_file to the manifest-relative path." >&2
+          exit 2
+        fi
+        Rscript '{RDIR}/20_table3/20_table3_injury_usage_per_1000_py.R' \
+          --data_root "{params.data_root}" \
+          --output_dir "{OUTPUT_DIR}/tables" \
+          --visits_file "{params.visits_file}" \
+          --treat_file "{params.treat_file}" \
+          --varmap_file "{input.varmap}" \
+          --visits_source_dataset "{params.visits_source_dataset}" \
+          --treat_source_dataset "{params.treat_source_dataset}" \
+          --engine "{params.engine}" \
+          {params.make_docx_flag} \
+          > "{log}" 2>&1
+        """
