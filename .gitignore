@@ -12,3 +12,4 @@ codex-auth-backup.tgz
 prompts/
 **/prompts/*.txt
 .Rproj.user
+out/
