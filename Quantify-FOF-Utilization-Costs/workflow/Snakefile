@@ -4,12 +4,16 @@ configfile: "config/config.yaml"
 
 BASE = Path(workflow.basedir)
 PROJ = BASE.parent
+import sys
+if str(PROJ) not in sys.path:
+    sys.path.insert(0, str(PROJ))
+from scripts.path_resolver import get_data_root
 RDIR = (PROJ / "R").relative_to(PROJ).as_posix()
 PYDIR = (PROJ / "scripts").relative_to(PROJ).as_posix()
 WFDIR = BASE.relative_to(PROJ).as_posix()
 
 OUTPUT_DIR = config.get("output_dir", "outputs")
-DATA_ROOT = Path(config.get("data_root", ""))
+DATA_ROOT = get_data_root(require=True)
 
 
 def _resolve_data_root_path(rel_or_abs: str) -> str:
@@ -101,7 +105,7 @@ rule build_table3_inputs:
         r"""
         set -euo pipefail
         mkdir -p '{OUTPUT_DIR}/logs'
-        python '{input.script}' \
+        python -B -m scripts.15_build_table3_inputs \
           --visits-out "{output.visits}" \
           --treat-out "{output.treat}" \
           --cohort-file "{params.cohort_file}" \

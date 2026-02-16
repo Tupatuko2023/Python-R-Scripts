@@ -28,8 +28,8 @@ table3:
   case_flag_col: "Ver-rokin nro"
   case_flag_case_value: "0"
   # Optional controls linkage/panel. Required if roster contains controls.
-  controls_link_table: ""
-  controls_panel_file: ""
+  controls_link_table: "derived/controls_link_table.csv"
+  controls_panel_file: "derived/controls_panel.csv"
   visits_source_dataset: "paper_02_outpatient"
   treat_source_dataset: ""
   engine: "negbin"

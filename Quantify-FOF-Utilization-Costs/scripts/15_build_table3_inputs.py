@@ -106,11 +106,21 @@ def _build_case_and_control_cohorts(
     if case_cohort.empty:
         raise SystemExit("Case cohort gate failed: no case rows after linkage.")
 
-    controls_link = pd.read_csv(_resolve_rel(data_root, controls_link_table_rel))
+    controls_link_path = _resolve_rel(data_root, controls_link_table_rel)
+    if not controls_link_path.exists():
+        raise SystemExit(
+            "Controls linkage gate failed: controls_link_table file not found under DATA_ROOT."
+        )
+    controls_link = pd.read_csv(controls_link_path)
     _must_have(controls_link, REQ_LINK, "controls_link_table")
     controls_link["register_id"] = controls_link["register_id"].astype(str).str.strip()
 
-    controls_panel = _read_csv_auto(_resolve_rel(data_root, controls_panel_file_rel))
+    controls_panel_path = _resolve_rel(data_root, controls_panel_file_rel)
+    if not controls_panel_path.exists():
+        raise SystemExit(
+            "Controls panel gate failed: controls_panel_file not found under DATA_ROOT."
+        )
+    controls_panel = _read_csv_auto(controls_panel_path)
     _must_have(controls_panel, {"id", "FOF_status", "age", "sex", "py"}, "controls_panel_file")
 
     controls_ids = case_map.loc[case_map["case_status"] == "control", ["register_id"]].copy()
