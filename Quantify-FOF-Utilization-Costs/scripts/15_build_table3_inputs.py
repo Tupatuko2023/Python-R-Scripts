@@ -7,7 +7,7 @@ from typing import Iterable, Tuple
 
 import pandas as pd
 
-from path_resolver import get_data_root, safe_join_path
+from scripts.path_resolver import get_data_root, safe_join_path
 
 
 REQ_AIM2 = {"id", "FOF_status", "age", "sex", "followup_days"}
@@ -158,12 +158,16 @@ def main() -> None:
 
     data_root = get_data_root(require=True)
     assert data_root is not None
+    data_root = data_root.expanduser().resolve()
 
     visits_out = Path(args.visits_out).expanduser().resolve()
     treat_out = Path(args.treat_out).expanduser().resolve()
     if not visits_out.is_absolute() or not treat_out.is_absolute():
         raise SystemExit("Output paths must be absolute.")
-    if not str(visits_out).startswith(str(data_root)) or not str(treat_out).startswith(str(data_root)):
+    try:
+        visits_out.relative_to(data_root)
+        treat_out.relative_to(data_root)
+    except ValueError:
         raise SystemExit("Output paths must be under DATA_ROOT.")
 
     aim2_path = _resolve_rel(data_root, "derived/aim2_analysis.csv")
