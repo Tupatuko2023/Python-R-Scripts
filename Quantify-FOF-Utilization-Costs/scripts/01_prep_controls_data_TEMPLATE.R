@@ -1,17 +1,20 @@
 #!/usr/bin/env Rscript
 # ==============================================================================
-# SECURE ETL TEMPLATE: Control Cohort Preparation (Table 3)
+# SECURE ETL TEMPLATE: Matched Control Cohort Preparation (Table 3)
 #
 # PURPOSE: 
 #   Transform raw controls data (e.g., Verrokit.XLSX) into analysis-ready 
-#   pseudonymized CSV files. 
+#   pseudonymized CSV files based on a matched case-control design.
 #
-# ENVIRONMENT:
-#   This script MUST be run in a secure environment with access to RAW PII.
-#   Only the outputs (derived/) should be moved to the analysis pipeline.
+# REPRODUCIBILITY & SECURITY:
+#   - Inherits FOF_status and Index Date from the matched Case.
+#   - Calculates age at case index date using control's own birth date (HETU).
+#   - Drops PII (HETU) before export to panel.
 #
 # INPUTS (Secure Environment):
-#   - Path to raw control cohort Excel (e.g., DATA_ROOT/paper_02/Verrokit.XLSX)
+#   - DATA_ROOT/paper_02/Verrokit.XLSX (Control Roster)
+#   - DATA_ROOT/derived/aim2_analysis.csv (Processed Case Data)
+#   - DATA_ROOT/derived/link_table.csv (Case ID -> Register ID mapping)
 #
 # OUTPUTS (Export-Safe):
 #   - DATA_ROOT/derived/controls_link_table.csv (id, register_id)
@@ -29,91 +32,101 @@ suppressPackageStartupMessages({
 DATA_ROOT <- Sys.getenv("DATA_ROOT")
 if (DATA_ROOT == "") stop("DATA_ROOT environment variable not set.")
 
-PATH_RAW_EXCEL  <- file.path(DATA_ROOT, "paper_02", "Verrokit.XLSX")
-PATH_DERIVED    <- file.path(DATA_ROOT, "derived")
+PATH_RAW_EXCEL   <- file.path(DATA_ROOT, "paper_02", "Verrokit.XLSX")
+PATH_AIM2_CASE   <- file.path(DATA_ROOT, "derived", "aim2_analysis.csv")
+PATH_CASE_LINK   <- file.path(DATA_ROOT, "derived", "link_table.csv")
+PATH_DERIVED     <- file.path(DATA_ROOT, "derived")
 
-# Column names in RAW data:
-COL_RAW_ID      <- "Tutk.henkilön / verrokin henkilötunnus" # Register identifier (PII)
-DATE_START_COL  <- "seuranta_alku_pvm"  # FILL IN ACTUAL COLUMN NAME
-DATE_END_COL    <- "seuranta_loppu_pvm"   # FILL IN ACTUAL COLUMN NAME
+# Roster column names (Verrokit.XLSX):
+COL_CASE_REF     <- "Tutkimushenkilon_nro" # Link to matched case's register_id
+COL_CTRL_ID      <- "Verrokin_nro"         # Control's own roster ID (e.g., register_id)
+COL_CTRL_HETU    <- "Verrokin_HETU"        # Control's PII (for age/sex)
 
-# Optional columns (set to NULL if they must be parsed from HETU)
-COL_RAW_AGE     <- NULL 
-COL_RAW_SEX     <- NULL
+# Control follow-up end date column (e.g., death, move, or study end 2019-12-31)
+DATE_CTRL_END    <- "seuranta_loppu_pvm" 
 
-# Project defaults
-FOF_CONTROL_VALUE <- 0 # Default status for control group
+# Case index date source (usually the interview/baseline date)
+# In aim2_analysis.csv, we might need to extract this if not present.
+# For this template, we assume it's calculated or available.
 # ------------------------------------------------------------------------------
 
-# 01) Load data
-if (!file.exists(PATH_RAW_EXCEL)) stop("Raw data not found at: ", PATH_RAW_EXCEL)
-df_raw <- read_excel(PATH_RAW_EXCEL, sheet = "Tulostiedot")
+# 01) Load Data
+if (!file.exists(PATH_RAW_EXCEL)) stop("Roster not found: ", PATH_RAW_EXCEL)
+if (!file.exists(PATH_AIM2_CASE)) stop("Case analysis data not found: ", PATH_AIM2_CASE)
+if (!file.exists(PATH_CASE_LINK)) stop("Case link table not found: ", PATH_CASE_LINK)
 
-# 02) Pseudonymization
-# Generate a new unique analysis ID for each control
+df_roster <- read_excel(PATH_RAW_EXCEL, sheet = "Tulostiedot")
+df_case   <- read_csv(PATH_AIM2_CASE)
+df_clink  <- read_csv(PATH_CASE_LINK)
+
+# 02) Prepare Case Reference
+# We need to map case's analysis 'id' to roster's 'Tutkimushenkilon_nro' (register_id)
+df_case_ref <- df_case %>%
+  inner_join(df_clink, by = "id") %>%
+  select(register_id, FOF_status, case_age = age, case_sex = sex) %>%
+  # Note: in real study, index_date (baseline) should be extracted from case data
+  # For now, we assume a placeholder if not present.
+  mutate(index_date = as.Date("2010-01-01")) # FIXME: use actual case index date
+
+# 03) Join Controls to matched Cases
+df_joined <- df_roster %>%
+  rename(register_id_case = !!sym(COL_CASE_REF), 
+         register_id_ctrl = !!sym(COL_CTRL_ID),
+         hetu_ctrl        = !!sym(COL_CTRL_HETU)) %>%
+  inner_join(df_case_ref, by = c("register_id_case" = "register_id"))
+
+# 04) Transformation Logic (Matched Design)
 set.seed(20260216)
-df_controls <- df_raw %>%
-  select(register_id = !!sym(COL_RAW_ID), everything()) %>%
-  distinct(register_id, .keep_all = TRUE) %>%
-  mutate(id = paste0("CTRL_", sprintf("%04d", row_number())))
-
-# 03) Transformation Logic
-df_processed <- df_controls %>%
+df_processed <- df_joined %>%
   mutate(
-    # --- SEX & AGE PARSING ---
-    # Logic: if COL_RAW_SEX is NULL, parse from HETU (register_id)
-    sex = if (is.null(COL_RAW_SEX)) {
-      # Finnish SSN individual number (chars 8-10): odd=male(1), even=female(2)
-      individual_num = as.numeric(substr(register_id, 8, 10))
-      ifelse(individual_num %% 2 == 0, 2, 1)
-    } else {
-      as.numeric(!!sym(COL_RAW_SEX))
-    },
-    
-    age = if (is.null(COL_RAW_AGE)) {
-      # Parsing birth year from HETU (simplified example)
-      # ddmmYY-XXXX -> century based on separator
-      century = case_when(
-        substr(register_id, 7, 7) == "+" ~ 1800,
-        substr(register_id, 7, 7) == "-" ~ 1900,
-        substr(register_id, 7, 7) == "A" ~ 2000,
-        TRUE ~ 1900
-      )
-      birth_year = century + as.numeric(substr(register_id, 5, 6))
-      2020 - birth_year # Example age calculation at study baseline
-    } else {
-      as.numeric(!!sym(COL_RAW_AGE))
-    },
+    # --- ANALYSIS ID ---
+    # Create unique analysis ID: CASE_ID + _CTRL_ + control_seq
+    # (Simplified for template)
+    id = paste0("CTRL_", sprintf("%04d", row_number())),
+
+    # --- SEX & BIRTH DATE FROM HETU ---
+    # Individual number (chars 8-10): odd=male(1), even=female(2)
+    sex = as.numeric(substr(hetu_ctrl, 8, 10)),
+    sex = ifelse(sex %% 2 == 0, 2, 1),
+
+    century = case_when(
+      substr(hetu_ctrl, 7, 7) == "+" ~ 1800,
+      substr(hetu_ctrl, 7, 7) == "-" ~ 1900,
+      substr(hetu_ctrl, 7, 7) == "A" ~ 2000,
+      TRUE ~ 1900
+    ),
+    birth_year = century + as.numeric(substr(hetu_ctrl, 5, 6)),
+    birth_date = as.Date(paste0(birth_year, "-", substr(hetu_ctrl, 3, 4), "-", substr(hetu_ctrl, 1, 2))),
+
+    # --- AGE AT CASE INDEX DATE ---
+    age = as.numeric(difftime(index_date, birth_date, units = "days")) / 365.25,
 
     # --- FOLLOW-UP (PY) ---
-    # Ensure columns are Date type
-    py = as.numeric(difftime(as.Date(!!sym(DATE_END_COL)), 
-                             as.Date(!!sym(DATE_START_COL)), 
-                             units = "days")) / 365.25,
+    # Control follow-up starts at Case's index date
+    py = as.numeric(difftime(as.Date(!!sym(DATE_CTRL_END)), index_date, units = "days")) / 365.25,
 
-    # --- CONSTANTS ---
-    FOF_status  = FOF_CONTROL_VALUE,
+    # --- PROPAGATED CONSTANTS ---
     case_status = "control"
-  )
+    # FOF_status is inherited from case (already in df_joined)
+  ) %>%
+  filter(py > 0) # Basic QC: must have follow-up
 
-# 04) Create LINK TABLE (id <-> register_id)
+# 05) Create LINK TABLE (Anonymized ID -> Roster register ID)
 df_link <- df_processed %>%
-  select(id, register_id)
+  select(id, register_id = register_id_ctrl)
 
-# 05) Create PANEL (Safe for Export)
-# STRICT SECURITY: drop register_id and any other PII columns before saving panel
+# 06) Create PANEL (Safe for Export)
+# STRICT SECURITY: drop HETU and case register IDs before export
 df_panel <- df_processed %>%
   select(id, case_status, FOF_status, age, sex, py)
 
-# 06) Save Outputs
+# 07) Save Outputs
 if (!dir.exists(PATH_DERIVED)) dir.create(PATH_DERIVED, recursive = TRUE)
 
 write_csv(df_link,  file.path(PATH_DERIVED, "controls_link_table.csv"))
 write_csv(df_panel, file.path(PATH_DERIVED, "controls_panel.csv"))
 
-cat("ETL Complete.
-")
-cat("Export-safe panel saved to: derived/controls_panel.csv
-")
-cat("Link table saved to:       derived/controls_link_table.csv
-")
+cat("ETL Complete.\n")
+cat("Matched design applied: FOF_status propagated from Case to Control.\n")
+cat("Export-safe panel saved to: derived/controls_panel.csv\n")
+cat("Link table saved to:       derived/controls_link_table.csv\n")
