@@ -1,7 +1,7 @@
 # Configuration for Quantify-FOF-Utilization-Costs Snakemake workflow
 
 # Data root directory containing source data (manifest-relative paths resolve under this root)
-data_root: ""
+data_root: "/data/data/com.termux/files/home/FOF_LOCAL_DATA"
 
 # Output directory for results (default: outputs/)
 output_dir: "outputs"

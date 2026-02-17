@@ -86,7 +86,7 @@ rule report:
     log:
         f"{OUTPUT_DIR}/logs/report.log"
     shell:
-        "OUTPUT_DIR='{OUTPUT_DIR}' python '{PYDIR}/50_build_report.py' --out '{output}' > '{log}' 2>&1"
+        "OUTPUT_DIR='{OUTPUT_DIR}' python '{PYDIR}/50_build_report.py' --out 'aim2_report.md' > '{log}' 2>&1"
 
 
 rule build_table3_inputs:
