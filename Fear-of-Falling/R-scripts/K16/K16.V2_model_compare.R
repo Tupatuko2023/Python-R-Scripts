@@ -11,11 +11,11 @@
 # Grouping variable: ID
 # Covariates: Composite_Z0, age, sex, BMI
 #
-# Required vars (analysis_data; must match req_cols check in code):
+# Required vars (analysis_data; must match required checks in code):
 # - Wide data: ID, FOF_status, Composite_Z0, Composite_Z12, Delta_Composite_Z,
 #              age, sex, BMI, frailty_weakness, frailty_slowness,
 #              frailty_low_activity, frailty_low_BMI
-# - Long data: ID, FOF_status, Composite_Z, time/time_f,
+# - Long data: ID, FOF_status, Composite_Z, and at least one of time/time_f,
 #              age, sex, BMI, frailty_weakness, frailty_slowness,
 #              frailty_low_activity, frailty_low_BMI
 #
@@ -163,6 +163,9 @@ req_cols <- if (is_long) req_long else req_wide
 missing_cols <- setdiff(req_cols, names(analysis_data))
 if (length(missing_cols) > 0) {
   stop("Missing required columns: ", paste(missing_cols, collapse = ", "))
+}
+if (is_long && !any(c("time", "time_f") %in% names(analysis_data))) {
+  stop("Missing required time column for long data: need time or time_f.")
 }
 
 if (any(!analysis_data$FOF_status %in% c(0, 1, NA))) {
