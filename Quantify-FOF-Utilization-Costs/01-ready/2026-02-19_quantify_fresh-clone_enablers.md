@@ -15,12 +15,12 @@ I have followed the `WORKFLOW.md` guidelines for the "Execute" phase:
 
 ## 2. Necessity Matrix (Gap Analysis)
 
-| Proposal | Needed? | Rationale | Evidence in Repo |
-| :--- | :--- | :--- | :--- |
-| **requirements.txt** | **YES** | `unittest` fails immediately due to `ModuleNotFoundError: No module named 'pandas'`. `scripts/10_preprocess_tabular.py` imports `pandas`, `numpy`. `openpyxl` needed for Excel. | `tests/test_end_to_end_smoke.py`, `scripts/10_preprocess_tabular.py` imports. |
-| **Makefile** | **YES** | Standardizes "Fresh Clone" setup and testing across environments (Linux/Mac/Win). Matches pattern in `Fear-of-Falling` but simplified. | Absence of `Makefile` in subproject; `Fear-of-Falling/Makefile` exists as prior art. |
-| **README.md Update** | **YES** | Current `Quickstart` commands were manual and prone to path errors. New instructions use `make` for reliability. | `Quantify-FOF-Utilization-Costs/README.md` contained manual commands. |
-| **environment.yaml** | **NO** | `environment.yaml` exists for Snakemake/Conda but is heavy. `requirements.txt` provides a lightweight, standard pip alternative without altering the Conda definition. | `Quantify-FOF-Utilization-Costs/environment.yaml`. |
+| Proposal             | Needed? | Rationale                                                                                                                                                                       | Evidence in Repo                                                                     |
+| :------------------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------- |
+| **requirements.txt** | **YES** | `unittest` fails immediately due to `ModuleNotFoundError: No module named 'pandas'`. `scripts/10_preprocess_tabular.py` imports `pandas`, `numpy`. `openpyxl` needed for Excel. | `tests/test_end_to_end_smoke.py`, `scripts/10_preprocess_tabular.py` imports.        |
+| **Makefile**         | **YES** | Standardizes "Fresh Clone" setup and testing across environments (Linux/Mac/Win). Matches pattern in `Fear-of-Falling` but simplified.                                          | Absence of `Makefile` in subproject; `Fear-of-Falling/Makefile` exists as prior art. |
+| **README.md Update** | **YES** | Current `Quickstart` commands were manual and prone to path errors. New instructions use `make` for reliability.                                                                | `Quantify-FOF-Utilization-Costs/README.md` contained manual commands.                |
+| **environment.yaml** | **NO**  | `environment.yaml` exists for Snakemake/Conda but is heavy. `requirements.txt` provides a lightweight, standard pip alternative without altering the Conda definition.          | `Quantify-FOF-Utilization-Costs/environment.yaml`.                                   |
 
 ## 3. File Changes
 
@@ -35,7 +35,7 @@ I have followed the `WORKFLOW.md` guidelines for the "Execute" phase:
 
 ### Git Diff (Summary)
 
-```diff
+````diff
 diff --git a/Quantify-FOF-Utilization-Costs/Makefile b/Quantify-FOF-Utilization-Costs/Makefile
 new file mode 100644
 index 0000000..f67cf91
@@ -138,7 +138,7 @@ index 0000000..e79054d
 +pandas>=2.2.0
 +numpy
 +openpyxl
-```
+````
 
 ## 4. Fresh Clone Commands
 
