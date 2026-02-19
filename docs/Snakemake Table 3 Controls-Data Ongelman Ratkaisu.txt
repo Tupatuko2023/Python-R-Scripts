@@ -1,0 +1,170 @@
+﻿Bioinformatiikan dataputkien eheyden varmistaminen: Ratkaisustrategiat kontrollidatan katoamiseen ja tunnisteavaruuksien epäjatkuvuusongelmiin Snakemake-ympäristöissä
+1. Johdanto: Dataputkien hiljainen rapautuminen ja tieteellisen eheyden kriisi
+Nykyaikaisessa bioinformatiikassa, jossa laskennalliset työnkulut käsittelevät petatavuja genomidataa, tekninen suorituskyky ja tieteellinen validiteetti sekoittuvat usein toisiinsa tavalla, joka hämärtää molempien rajoja. Kun data-engineer kohtaa tilanteen, jossa "Table 3" – eli tyypillisesti tutkimuksen validointikohortin tilastollinen yhteenveto – osoittaa kontrollidatan puuttumista tai vääristymiä, kyseessä ei ole pelkkä tiedostopolkujen virheellinen konfiguraatio. Kyseessä on fundamentaali epäjatkuvuuskohta, jossa "wet lab" -ympäristön tuottama sekvensointidata ja kliinisen rekisterin ("dry lab") metadata eivät kohtaa toisiaan matemaattisesti eheällä tavalla. Tämä raportti käsittelee syvällisesti ja tyhjentävästi, kuinka Snakemake-pohjaisissa analyysiputkissa (pipelines) ilmenevä kontrollidatan katoaminen – usein seurausta yhteensopimattomista ID-avaruuksista – voidaan diagnosoida, korjata ja ehkäistä pysyvästi.
+Ongelman ydin ei useinkaan ole siinä, että koodi kaatuisi virheeseen. Päinvastoin, vaarallisin virhetila on ns. "fail-open" -arkkitehtuuri, jossa liukuhihna suorittaa analyysin loppuun saakka, mutta jättää hiljaisesti huomiotta ne näytteet, joiden tunnisteet eivät täsmää. Kun kyseessä on epidemiologinen pitkittäistutkimus tai geneettinen assosiaatiotutkimus, kontrollinäytteiden (controls) putoaminen pois analyysista vääristää henkilövuosien (Person-Years, PY) laskentaa, mikä johtaa suoraan virheellisiin insidenssitiheyksiin ja riskisuhteisiin. Tämän raportin tavoitteena on ohjeistaa kokenutta bioinformatiikan data-engineeriä siirtymään "fail-open" -ajattelusta "fail-closed" -arkkitehtuuriin, jossa datan eheys varmistetaan kryptografisella tarkkuudella ennen kuin yhtäkään kallista laskentasykliä on suoritettu.
+Analysoimme ongelmaa kerroksittain, alkaen tunnisteavaruuksien topologiasta ja edeten Snakemake-sääntöjen (rules) uudelleenkirjoittamiseen, päätyen lopulta tilastollisen merkitsevyyden säilyttämiseen. Tässä prosessissa hyödynnämme rinnastuksia korkean luotettavuuden järjestelmiin, kuten ydinvoimaloiden turvalogiikkaan ja Linux-ytimen tietoturvapäivityksiin, osoittaaksemme, että bioinformatiikan datanhallinta vaatii samanlaista kurinalaisuutta kuin mikä tahansa turvallisuuskriittinen insinööritiede. Seuraavissa luvuissa pureudumme siihen, miksi ID-avaruudet erkanevat, kuinka Snakemake tulkitsee tiedostojärjestelmän puutteita ja millaisilla konkreettisilla koodimuutoksilla "Table 3" saadaan heijastamaan todellisuutta, eikä vain dataputken suodattamia jäänteitä.
+2. Tunnisteavaruuksien topologia ja metadatan dissonanssi
+2.1 Sekvensointilaboratorion ja kliinisen rekisterin eriytyneet todellisuudet
+Bioinformatiikan perusongelma suuressa mittakaavassa on datan alkuperän (provenance) jäljitettävyys yli organisaatiorajojen. Kun puhumme "Table 3 -ongelmasta", viittaamme usein tilanteeseen, jossa validointikohortin kontrolliryhmä on kutistunut tai kadonnut kokonaan lopullisesta raportista. Tämä johtuu lähes poikkeuksetta siitä, että sekvensointilaboratorio (LIMS, Laboratory Information Management System) ja kliininen rekisteri operoivat täysin eri tunnisteavaruuksissa (ID spaces). LIMS-järjestelmät generoivat tunnisteita, jotka palvelevat näytteen fyysistä seurantaa: ne sisältävät tietoa levystä, kaivosta (well), ajosta ja päivämäärästä. Esimerkiksi tunniste 2026_RUN_A_H12_CTRL on tyypillinen "wet lab" -tunniste.
+Toisaalta kliininen rekisteri, joka sisältää potilaan fenotyypin, diagnoosipäivämäärät ja seuranta-ajan päättymisen, käyttää pseudonymisoituja tunnisteita tietosuojasyistä (GDPR, HIPAA). Nämä tunnisteet, kuten STUDY_ID_9982, on suunniteltu estämään suora yhdistäminen henkilöön, mutta sallimaan datan linkitys tutkimuksen sisällä. Ongelma syntyy, kun Snakemake-putken on yhdistettävä nämä kaksi maailmaa. Jos linkitystiedosto (mapping file) on puutteellinen, vanhentunut tai formaatiltaan epäyhteensopiva (esimerkiksi erotinmerkkien - ja _ sekoittuminen), putki ei löydä vastaavuutta.
+Tässä kohtaa monet naiivit implementaatiot tekevät kohtalokkaan virheen: ne käyttävät "inner join" -operaatiota tai tiedostojärjestelmän glob-hakua, joka yksinkertaisesti pudottaa ne näytteet, joille ei löydy paria. Tämä on "fail-open" -suunnittelumalli. Järjestelmä "onnistuu" tuottamaan tuloksen, mutta tulos on tieteellisesti käyttökelvoton, koska kontrolliryhmän katoaminen muuttaa tutkimusasetelman perusparametreja. Tämä ei ole vain tekninen "bugi", vaan data-arkkitehtuurin valuvika. Data-engineerin on ymmärrettävä, että ID-avaruuksien harmonisointi ei ole vain merkkijonojen siivousta (string cleaning), vaan se on tutkimuksen osallistujajoukon matemaattinen määritelmä.
+2.2 Pseudonymisoinnin kerrokset ja palautettavuuden riskit
+Syventääksemme ymmärrystä ID-avaruuksien ristiriidoista, on tarkasteltava pseudonymisoinnin mekanismeja. Pseudonymisointi on prosessi, jossa suorat tunnisteet korvataan koodeilla. On olemassa kahdenlaisia pseudonyymejä: palautettavia (reversible) ja yksisuuntaisia (one-way hashing). Useimmissa pitkittäistutkimuksissa käytetään palautettavaa pseudonymisointia, koska uutta kliinistä dataa (esim. uusia diagnooseja) on voitava linkittää vanhaan sekvensointidataan vuosienkin päästä.
+Snakemake-putki toimii usein tässä välikerroksessa. Jos putki on suunniteltu odottamaan SAMPLE_ID -muotoa, mutta saa syötteenä PSEUDO_ID -muotoa ilman eksplisiittistä käännöstaulua, se tulkitsee tilanteen datan puuttumisena. Tutkimuksessa kuvataan massarekisteröinnin toiminnallisuutta, jossa on käytettävä sumeita hakuja (fuzzy matching) ja jokerimerkkejä (wildcards) master-datan attribuuttien yhdistämiseen. Jos tämä logiikka puuttuu Snakemake-säännöistä, kontrollit putoavat pois.
+Erityisen haastavaksi tilanteen tekee se, jos pseudonymisointiprosessi on suoritettu eri tavalla eri aikapisteissä tai eri sairaaloissa. Esimerkiksi Sairaala A saattaa käyttää etuliitettä HOSP_A-001 ja Sairaala B pelkkää numeroa 001. Kun nämä yhdistetään samaan "Table 3" -analyysiin, numerot saattavat törmätä tai jäädä linkittymättä. Tämä heterogeenisyys on ratkaistava ennen kuin data edes syötetään laskentaputkeen.
+3. Henkilövuodet (Person-Years) ja tilastollinen vääristymä
+3.1 Insidenssitiheyden matematiikka ja nimittäjän harha
+Miksi kontrollidatan puuttuminen on niin kriittistä? Bioinformatiikassa ja epidemiologiassa riskiarviot perustuvat usein insidenssitiheyteen (Incidence Rate, IR). Tämä lasketaan jakamalla tapahtumien määrä (Events) kokonaisriskin alla olevalla ajalla, jota mitataan henkilövuosina (Person-Years, PY). Kaava on yksinkertaistettuna:
+Henkilövuosi lasketaan kertomalla osallistujien määrä heidän tutkimuksessa viettämällään ajalla. Jos tutkimuksessa on 1000 kontrollia, joita seurataan 10 vuotta, saadaan 10 000 henkilövuotta. Jos ID-virheen vuoksi 500 kontrollia putoaa pois analyysista, nimittäjä kutistuu 5000 henkilövuoteen. Jos tapausten (cases) määrä pysyy samana (koska niihin usein kiinnitetään enemmän huomiota manuaalisessa kuratoinnissa), laskennallinen insidenssitiheys kaksinkertaistuu keinotekoisesti. Tämä vääristymä siirtyy suoraan Coxin verrannollisten hasardien malleihin ja muihin monimuuttuja-analyyseihin, joita käytetään Table 3:n tuottamiseen.
+Tutkimuslähteet ja korostavat, että henkilövuosien laskenta vaatii tarkan aloituspäivämäärän (entry date) ja lopetuspäivämäärän (exit date). Jos ID-avaruus on väärä, Snakemake-putki ei pysty yhdistämään sekvensointidataa rekisterin aikaleimoihin. Tällöin seuranta-aika on määrittelemätön (NaN), ja useimmat tilasto-ohjelmistot (R, Python pandas) pudottavat nämä rivit pois oletusarvoisesti. Tämä on mekanismi, jolla "tekninen ID-virhe" muuttuu "tieteelliseksi harhaksi".
+3.2 Taulukko: Kontrollikadon vaikutus riskilukuihin
+Seuraava taulukko havainnollistaa, kuinka dramaattisesti kontrollien osittainen katoaminen vaikuttaa raportoituihin tunnuslukuihin. Oletetaan hypoteettinen skenaario, jossa tutkitaan geneettistä riskiä.
+Skenaario
+	Kontrollit (N)
+	Tapaukset (N)
+	Henkilövuodet (PY)
+	Insidenssi (/1000 PY)
+	Suhteellinen Riski (RR) vs. Oletus
+	Todellinen tilanne
+	10 000
+	200
+	100 000
+	2.0
+	1.0 (Ref)
+	10% ID-hävikki
+	9 000
+	200
+	90 000
+	2.22
+	1.11
+	25% ID-hävikki
+	7 500
+	200
+	75 000
+	2.67
+	1.33
+	50% ID-hävikki
+	5 000
+	200
+	50 000
+	4.0
+	2.0
+	Kuten taulukosta ilmenee, 50% kontrollikato – mikä ei ole harvinaista, jos kokonainen sairaala tai erä putoaa pois nimiavaruusvirheen takia – kaksinkertaistaa havaitun riskin, vaikka biologista syytä ei ole. Data-engineerin vastuulla on varmistaa, että rivi "Todellinen tilanne" on se, joka päätyy julkaisuun.
+4. Snakemake-arkkitehtuuri: Fail-Open vs. Fail-Closed
+4.1 Snakemaken suorituslogiikka ja "wildcard" -ansat
+Snakemake on sääntöpohjainen (rule-based) työnkulun hallintajärjestelmä, joka rakentaa suoritusgraafin (DAG, Directed Acyclic Graph) haluttujen lopputulosten perusteella. Sen voima piilee "wildcards" -mekanismissa, joka sallii sääntöjen yleistämisen. Kuitenkin, juuri tässä piilee vaara ID-ongelmien yhteydessä. Tyypillinen virheellinen tapa määrittää syötetiedostot on käyttää glob.glob -funktiota Python-koodissa etsimään tiedostoja levyltä:
+# VIRHEELLINEN (Fail-Open) LÄHESTYMISTAPA
+rule aggregate_controls:
+   input:
+       expand("results/mapped/{sample}.bam", sample=glob_wildcards("data/{sample}.fastq").sample)
+   output:
+       "results/table3/aggregated_metrics.tsv"
+
+Tässä lähestymistavassa Snakemake etsii tiedostojärjestelmästä ne tiedostot, jotka ovat olemassa. Jos kontrollitiedostot on nimetty väärin (esim. ctrl_01.fastq kun odotetaan CTRL-01.fastq), glob_wildcards ei löydä niitä. Tällöin lista sample jää vajaaksi. Snakemake ei ilmoita virheestä, koska se ei tiedä, että tiedostoja pitäisi olla enemmän. Se yksinkertaisesti ajaa analyysin löydetyillä tiedostoilla. Tämä on "fail-open" -suunnittelua: järjestelmä jatkaa toimintaansa epätäydellisellä informaatiolla.
+4.2 "Fail-Closed" -filosofian soveltaminen bioinformatiikkaan
+Turvallisuuskriittisissä järjestelmissä, kuten laserien sulkimissa tai ydinvoimaloiden jäähdytysjärjestelmissä, käytetään "fail-closed" tai "fail-safe" -periaatetta. Jos anturi antaa epäselvää dataa tai kaapeli on irti, järjestelmä menee tilaan, joka estää toiminnan (sulkee sulkimen, ajaa alas reaktorin). Bioinformatiikassa tämä tarkoittaa, että jos ID-avaruuksien välillä on ristiriita, dataputken on pysähdyttävä ennen laskennan aloittamista.
+Tämä periaate on tunnistettu myös ohjelmistotason tietoturvassa. Esimerkiksi SUSE Linuxin ytimen päivityksissä on otettu käyttöön logiikkaa, jossa epäselvät tilanteet (esim. fail closed if we can't get max channel used) pakottavat prosessin pysähtymään tietovuotojen estämiseksi. Meidän on sovellettava tätä samaa logiikkaa: emme saa "spekuloida", että löydetyt kontrollit ovat riittäviä. Meidän on verifioitava se.
+Data-engineerin on rakennettava Snakemake-putkeen "Gatekeeper" -sääntö (portinvartija), joka vertaa sekvensoitujen näytteiden listaa kliinisen rekisterin odotettuun listaan. Vasta kun nämä kaksi joukkoa on täsmäytetty (set intersection), analyysi saa edetä.
+5. Korjaustoimenpiteet ja implementaatio-ohjeet
+Ratkaistaksemme Table 3 -ongelman, emme voi luottaa pelkkään merkkijonojen korjailuun lennosta. Tarvitsemme strukturoidun prosessin, joka koostuu kolmesta vaiheesta: skeemavalidaatiosta, ID-mäppäyksen pakottamisesta ja matemaattisesta verifikaatiosta.
+5.1 Vaihe 1: Konfiguraation skeemavalidaatio (Schema Validation)
+Ensimmäinen puolustuslinja on estää vääränmuotoisen datan pääsy putkeen. Snakemake tukee json-schema -standardia konfiguraatiotiedostojen validoinnissa. Meidän on määriteltävä tiukka skeema, joka kuvaa sallitut ID-formaatit.
+Luo tiedosto schemas/config.schema.yaml:
+$schema: "http://json-schema.org/draft-07/schema#"
+description: "Pipeline configuration validation"
+properties:
+ samples:
+   type: string
+   pattern: "^.*\\.tsv$" # Vaaditaan TSV-tiedosto
+ clinical_data:
+   type: string
+ id_format:
+   type: string
+   description: "Regex pattern for Sample IDs"
+   default: "^[A-Z]{3}_[0-9]{4}$" # Esim. PRJ_0001
+required:
+ - samples
+ - clinical_data
+
+Snakefilessa otamme tämän käyttöön heti alussa:
+from snakemake.utils import validate
+configfile: "config.yaml"
+validate(config, schema="schemas/config.schema.yaml")
+
+Tämä varmistaa, että käyttäjä ei voi edes käynnistää putkea, jos konfiguraatio ei vastaa odotuksia.
+5.2 Vaihe 2: "Gatekeeper" -sääntö ja ID-avaruuksien harmonisointi
+Tämä on ratkaisun ydin. Luomme säännön unify_id_spaces, joka toimii portinvartijana. Sen tehtävä on lukea LIMS-manifesti ja kliininen rekisteri, ja yrittää yhdistää ne. Jos yksikin kontrollinäyte jää ilman paria, skripti keskeyttää suorituksen (sys.exit(1)).
+Sääntö Snakefilessa:
+rule unify_id_spaces:
+   input:
+       manifest = config["samples"],
+       registry = config["clinical_data"]
+   output:
+       verified_map = "results/qc/id_mapping_verified.tsv",
+       audit_log = "results/qc/id_audit.log"
+   script:
+       "scripts/map_ids_fail_closed.py"
+
+Python-skriptin logiikka (scripts/map_ids_fail_closed.py): Tämän skriptin on oltava armoton. Se ei saa "arvata".
+1. Lataa manifesti ja rekisteri.
+2. Normalisoi ID:t (poista välilyönnit, muuta kaikki isoiksi kirjaimiksi, korvaa - merkillä _).
+3. Tee joukko-operaatio: missing_controls = set(manifest_controls) - set(registry_ids).
+4. Jos missing_controls ei ole tyhjä:
+   * Kirjaa puuttuvat ID:t lokiin.
+   * PYSÄYTÄ SUORITUS (Fail-Closed).
+5. Jos kaikki kunnossa, kirjoita verified_map, joka sisältää linkin LIMS-ID:n ja Rekisteri-ID:n välillä.
+Tämä vastaa tutkimuksessa kuvattua "gate"-logiikkaa, jossa signaali (tässä tapauksessa data) päästetään läpi vain, jos kynnysarvo ylittyy. Tässä kynnysarvo on 100% eheys.
+5.3 Vaihe 3: Henkilövuosien laskenta ja Table 3 generointi
+Kun ID:t on harmonisoitu, seuraava vaihe on varmistaa, että Table 3 lasketaan oikein. Tässä käytämme R-kieltä tai Pythonin pandas-kirjastoa. Kriittistä on käsitellä puuttuvat päivämäärät oikein.
+Jos start_date tai end_date puuttuu (mikä voi tapahtua, jos rekisteridata on vajaata vaikka ID:t täsmäävät), henkilövuodet lasketaan väärin. Skriptin on tarkistettava:
+* Onko entry_date < exit_date?
+* Onko seuranta-aika > 0?
+Jos havaitaan negatiivisia tai nolla-arvoisia henkilövuosia, skriptin on jälleen pysähdyttävä. Emme voi sallia, että kontrollit, joiden seuranta-aika on 0, vääristävät keskiarvoja.
+Taulukko: Esimerkki ID-mäppäystiedostosta (id_mapping_verified.tsv)
+LIMS_ID (Raw)
+	Registry_ID (Clean)
+	Entry_Date
+	Exit_Date
+	Status
+	Mapping_Note
+	sample_001_A
+	SMP_001
+	2010-01-01
+	2020-01-01
+	OK
+	Normalized (_A stripped)
+	Sample-002
+	SMP_002
+	2011-05-20
+	2021-05-20
+	OK
+	Delimiter fixed (- to _)
+	Ctrl_999
+	CTRL_999
+	2015-02-15
+	2015-02-15
+	FAIL
+	Zero duration (0 days)
+	Yllä olevassa taulukossa kolmas rivi on esimerkki tapauksesta, joka läpäisisi ID-tarkistuksen, mutta kaataisi PY-tarkistuksen. Molemmat portit ovat välttämättömiä.
+6. Syventävät näkökohdat ja infrastruktuuri
+6.1 GPU-laskenta ja kustannustehokkuus
+Nykyaikaisessa bioinformatiikassa käytetään yhä enemmän GPU-kiihdytettyjä työkaluja, kuten NVIDIA Parabricks, genomidatan prosessointiin. GPU-laskenta on erittäin nopeaa, mutta myös kallista (esim. AWS p4d -instanssit). "Fail-closed" -arkkitehtuuri on taloudellisesti kriittinen.
+Jos putki ajetaan GPU-klusterissa ilman edellä kuvattua ID-validointia, saatamme prosessoida tuhansia kontrollinäytteitä kalliilla GPU-ajalla, vain huomataksemme myöhemmin, että ne putoavat pois Table 3:sta ID-virheen takia. Tämä on resurssien haaskausta. Implementoimalla unify_id_spaces -säännön kevyenä CPU-tehtävänä ennen raskaita GPU-sääntöjä (kuten bwa-mem tai DeepVariant), varmistamme, että maksamme vain validin datan prosessoinnista.
+Tutkimus ehdottaa "transient" (väliaikainen) tiedostojen käyttöä kustannusten optimoimiseksi. Yhdistämällä tämä meidän ID-validointiimme, voimme luoda putken, joka on sekä tieteellisesti tarkka että taloudellisesti optimoitu.
+6.2 Konttien käyttö ja toistettavuus
+Jotta ID-manipulaatio (merkkijonojen siivous) toimisi identtisesti kaikissa ympäristöissä, on suositeltavaa kääriä Python-skriptit kontteihin (Docker/Singularity). Eri Python-versiot tai käyttöjärjestelmän lokaaliasetukset (locale) voivat käsitellä erikoismerkkejä tai ääkkösiä eri tavalla. Snakemake tukee konttien käyttöä suoraan säännöissä:
+rule unify_id_spaces:
+   container: "docker://python:3.9-slim"
+  ...
+
+Tämä varmistaa, että Sample-ä vs Sample-a -tyyppiset ongelmat eivät riipu siitä, ajaako käyttäjä putkea Macilla vai Linux-palvelimella.
+7. Yhteenveto
+Ratkaisu "Snakemake Table 3" -ongelmaan ei löydy tilastollisesta korjauskertoimesta, vaan fundamentaalista muutoksesta data-arkkitehtuurissa. Data-engineerin on otettava vastuu siitä, että putki kieltäytyy prosessoimasta epäjohdonmukaista dataa.
+Siirtymällä "fail-open" -mallista, joka sallii hiljaisen kontrollikadon, "fail-closed" -malliin, joka vaatii eksplisiittisen ID-harmonisoinnin, saavutamme kolme tavoitetta:
+1. Tieteellinen validiteetti: Henkilövuodet ja insidenssitiheydet lasketaan oikeasta populaatiosta.
+2. Taloudellinen tehokkuus: Emme tuhlaa GPU-resursseja dataan, jota ei voida käyttää.
+3. Jäljitettävyys: Jokaiselle näytteelle on olemassa todennettu polku sekvensointilaitteesta kliiniseen rekisteriin.
+Tässä raportissa esitetyt toimenpiteet – skeemavalidaatio, portinvartijasäännöt ja matemaattinen eheyden tarkistus – muodostavat vankan perustan luotettavalle bioinformatiikalle. Kun kontrollidata on turvattu, Table 3 lakkaa olemasta ongelma ja muuttuu siksi, miksi se on tarkoitettu: ikkunaksi biologiseen totuuteen.
+Tärkeimmät lähteet tekstin sisällä: medRxiv: Validation cohort definitions and PGS. PubMed: Incidence of COPD, Person-Years calculation. ResearchGate: Fail-closed patterns in research devices. SUSE: Kernel fail-closed security patches. Examine.com: Person-year definition and calculation. UManitoba: Person Years methodology. PMC: Person-years unit for risk assessment. Snakemake Docs: Configuration and Validation. Snakemake Docs: Rules and Input functions. UBC: Pseudonymization and data linkage. PMC: Reversible vs One-way Pseudonyms. bioRxiv: GPU pipeline costs and optimization. PMC: Gate logic in pipeline design.
+Works cited
+1. Steering Histories: A Scientifically Rigorous Framework for Temporal-Navigation Research Devices - ResearchGate, https://www.researchgate.net/publication/394883822_Steering_Histories_A_Scientifically_Rigorous_Framework_for_Temporal-Navigation_Research_Devices 2. Osteoporosis Genetic Risk Prediction Using Bone Mineral Density Polygenic Scores in Japanese - medRxiv, https://www.medrxiv.org/content/10.64898/2026.01.02.25342989v1.full.pdf 3. Prevalence, incidence, and lifetime risk for the development of COPD in the elderly: the Rotterdam study - PubMed, https://pubmed.ncbi.nlm.nih.gov/19201711/ 4. suse-sles-12-sp5-v20250107-hvm-ssd-x86_64 Package Source Changes, https://publiccloudimagechangeinfo.suse.com/amazon/suse-sles-12-sp5-v20250107-hvm-ssd-x86_64/package_changelogs.html 5. Pseudonymization - Research Data Management - The University of British Columbia, https://researchdata.library.ubc.ca/deposit/anonymize-and-de-identify/data-pseudonymization/ 6. Need for and Practical Interpretations of the Person-Year Construct in Neuropsychiatric Research - PMC, https://pmc.ncbi.nlm.nih.gov/articles/PMC6875836/ 7. Pseudonymization of Radiology Data for Research Purposes - PMC - NIH, https://pmc.ncbi.nlm.nih.gov/articles/PMC3043895/ 8. A Scalable Pseudonymization Tool for Rapid Deployment in Large Biomedical Research Networks: Development and Evaluation Study - PMC, https://pmc.ncbi.nlm.nih.gov/articles/PMC11063579/ 9. Pseudonymisation in medical research: from theory to practice - European Data Protection Supervisor, https://www.edps.europa.eu/system/files/2021-12/05_fabian_prasser_en.pdf 10. Person-year - Examine.com, https://examine.com/glossary/person-year/ 11. Concept: Person Years - Calculating in a Cohort Study, http://mchp-appserv.cpe.umanitoba.ca/viewConcept.php?conceptID=1196&printer=Y 12. Snakefiles and Rules — Snakemake 7.32.0 documentation, https://snakemake.readthedocs.io/en/v7.32.0/snakefiles/rules.html 13. suse-manager-server-5-0-byos-v20241224-hvm-ssd-x86_64 Package Source Changes, https://publiccloudimagechangeinfo.suse.com/amazon/suse-manager-server-5-0-byos-v20241224-hvm-ssd-x86_64/package_changelogs.html 14. Configuration — Snakemake 7.31.1 documentation - Read the Docs, https://snakemake.readthedocs.io/en/v7.31.1/snakefiles/configuration.html 15. A modular and adaptable analysis pipeline to compare slow cerebral rhythms across heterogeneous datasets - PMC, https://pmc.ncbi.nlm.nih.gov/articles/PMC10831958/ 16. Embarrassingly_FASTA: Enabling Recomputable, Population-Scale Pangenomics by Reducing Commercial Genome Processing Costs from $100 to less than $1 | bioRxiv, https://www.biorxiv.org/content/10.64898/2026.02.02.703356v1.full-text

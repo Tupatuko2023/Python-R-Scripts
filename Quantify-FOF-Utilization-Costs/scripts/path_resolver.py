@@ -23,13 +23,18 @@ def _parse_dotenv(path: Path) -> Dict[str, str]:
     if not path.exists():
         return out
     for raw in path.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
+        line = raw.strip().lstrip("\ufeff")
         if not line or line.startswith("#"):
             continue
+        if line.startswith("export "):
+            line = line[len("export ") :].strip()
         if "=" not in line:
             continue
         k, v = line.split("=", 1)
-        out[k.strip()] = v.strip().strip('"').strip("'")
+        key = k.strip()
+        if not key or " " in key:
+            continue
+        out[key] = v.strip().strip('"').strip("'")
     return out
 
 
