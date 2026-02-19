@@ -24,16 +24,35 @@ Jokainen analyysiskripti sijaitsee omassa kansiossaan `R/`-hakemiston alla ja ki
 outputit sekä lokit vain omaan `outputs/` ja `logs/` -alihakemistoonsa (gitignored).
 Yhteisiä `outputs/`-hakemistoja ei käytetä.
 
-Quickstart (synthetic / CI-safe)
-From repo root:
+Fresh Clone (CI-safe)
 
-1. Run tests:
-   python -m unittest discover -s Quantify-FOF-Utilization-Costs/tests
+This subproject uses a Makefile for standard operations. These commands use synthetic data (`data/sample/`) and do not require `DATA_ROOT`.
 
-2. Smoke-run QC on synthetic sample:
-   python Quantify-FOF-Utilization-Costs/scripts/30_qc_summary.py --use-sample
+**Windows (PowerShell) / macOS / Linux:**
 
-NOTE: Run python Quantify-FOF-Utilization-Costs/scripts/00_inventory_manifest.py --scan paper_02 whenever you receive a new paper_02 data batch so the manifest stays in sync.
+1.  **Setup Python Environment:**
+    ```bash
+    cd Quantify-FOF-Utilization-Costs
+    make setup
+    ```
+
+2.  **Run Tests (CI-safe):**
+    ```bash
+    make test
+    ```
+    *Verifies Python scripts and security guardrails.*
+
+3.  **Run Smoke QC (Sample Data):**
+    ```bash
+    make qc
+    ```
+    *Generates non-sensitive QC reports in `outputs/qc/`.*
+
+Legacy commands (from repo root):
+*   Run tests: `python -m unittest discover -s Quantify-FOF-Utilization-Costs/tests`
+*   Smoke-run QC: `python Quantify-FOF-Utilization-Costs/scripts/30_qc_summary.py --use-sample`
+
+NOTE: Run `python scripts/00_inventory_manifest.py --scan paper_02` (from subproject dir) whenever you receive a new paper_02 data batch so the manifest stays in sync.
 
 Quickstart (local with sensitive data)
 
