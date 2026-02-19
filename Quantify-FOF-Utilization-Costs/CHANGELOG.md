@@ -3,7 +3,7 @@
 **Päivämäärä:** 2026-02-19
 **Kohde:** "Gemini Termux Orchestrator GPT (S-QF)" -konfiguraatio
 
-### Muutokset ja perustelut:
+## Muutokset ja perustelut
 
 - **Ympäristön vaihdos (PS7 -> Termux Bash):** Alkuperäinen `GEMINI.md` vaati PowerShell 7 -yhteensopivuutta. Tämä on korvattu Termux-yhteensopivalla Bashilla (relatiiviset polut, &&-ketjutus, ei rootia).
   - _Lähde:_ Käyttäjän `termux_execution_plan` ja `termux_gemini_opas.md`.
