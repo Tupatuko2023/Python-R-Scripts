@@ -30,26 +30,28 @@ This subproject uses a Makefile for standard operations. These commands use synt
 
 **Windows (PowerShell) / macOS / Linux:**
 
-1.  **Setup Python Environment:**
+1. **Setup Python Environment:**
 
-    ```bash
-    cd Quantify-FOF-Utilization-Costs
-    make setup
-    ```
+   ```bash
+   cd Quantify-FOF-Utilization-Costs
+   make setup
+   ```
 
-2.  **Run Tests (CI-safe):**
+2. **Run Tests (CI-safe):**
 
-    ```bash
-    make test
-    ```
+   ```bash
+   make test
+   ```
 
-    _Verifies Python scripts and security guardrails._
+   _Verifies Python scripts and security guardrails._
 
-3.  **Run Smoke QC (Sample Data):**
-    ```bash
-    make qc
-    ```
-    _Generates non-sensitive QC reports in `outputs/qc/`._
+3. **Run Smoke QC (Sample Data):**
+
+   ```bash
+   make qc
+   ```
+
+   _Generates non-sensitive QC reports in `outputs/qc/`._
 
 Legacy commands (from repo root):
 
