@@ -92,8 +92,8 @@ def main() -> int:
     counts = load_counts(args.counts_json)
 
     dot_bin = shutil.which("dot")
-    if dot_bin is None:
-        print("Graphviz 'dot' was not found on PATH.", file=sys.stderr)
+    if not dot_bin:
+        print("Graphviz 'dot' not found on PATH. Rendering aborted.", file=sys.stderr)
         return 2
 
     try:
@@ -105,6 +105,7 @@ def main() -> int:
     template_text = dot_template.read_text(encoding="utf-8")
     rendered = render_dot(template_text, counts)
 
+    # Fail-fast only on unresolved template placeholders of the form __TOKEN__.
     if re.search(r"__[A-Z0-9_]+__", rendered):
         print("Unresolved template tokens found in DOT. Rendering aborted.", file=sys.stderr)
         return 2
@@ -122,8 +123,13 @@ def main() -> int:
 
     for fmt, outfile, extra_args in targets:
         cmd = [dot_bin, f"-T{fmt}", *extra_args, str(out_dot), "-o", str(outfile)]
-        # Security: fixed argv list, no shell, and no user-controlled executable.
-        subprocess.run(cmd, check=True, shell=False)  # nosec B603
+        try:
+            # Security: argv list, shell=False, fixed executable, no user-controlled args.
+            subprocess.run(cmd, check=True, shell=False)  # nosec B603,B607 (audited)
+        except subprocess.CalledProcessError as exc:
+            joined = " ".join(cmd)
+            print(f"Graphviz render failed (exit {exc.returncode}): {joined}", file=sys.stderr)
+            return 2
 
     print("Built flowchart artifacts:")
     for _, outfile, _ in targets:
