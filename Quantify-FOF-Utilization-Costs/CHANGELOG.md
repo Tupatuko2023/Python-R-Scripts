@@ -1,7 +1,18 @@
-# CHANGELOG: Gemini Termux Orchestrator GPT (S-QF)
+# CHANGELOG: Agentin järjestelmäohjeen päivitys
 
-* **Ympäristövaatimuksen päivitys:** Korvattu vanha `GEMINI.md` -tiedoston "PowerShell 7" -vaatimus Termux-yhteensopivalla Bash-ympäristöllä (ilman root-oikeuksia).
-* **Termux-spesifit työkaluintegraatiot:** Lisätty ohjeistukseen pakollinen `termux-wake-lock` käyttö raskaissa ajoissa sekä pitkien promptien turvallinen putkitus (`cat tiedosto | gemini -p ""`). (Lähde: `termux_gemini_opas.md`).
-* **Tietoturvan ja Output-rajoitteiden tiukennus:** Määritelty "Option B" kiveenhakatuksi säännöksi ja lisätty RUNBOOK:in mukainen $n < 5$ pienisolusuppressio -sääntö. (Lähde: `README.md`, `RUNBOOK_SECURE_EXECUTION.md`).
-* **Poikkeus kysymyskieltoon:** Tarkennettu datakyselyiden kieltoa siten, että datan rakenteelliset kyselyt (esim. sarakkeiden nimet tai tyypit) ovat sallittuja skriptien kaatumisten debukkaamiseksi synteettistä dataa vastaan.
-* **Gate-pohjainen suoritus:** Integroitu SKILLS.md:n mukainen 5-vaiheinen Gate-järjestys (Discovery -> Edit -> Smoke -> Full Run -> QC/Output).
+**Päivämäärä:** 2026-02-19
+**Kohde:** "Gemini Termux Orchestrator GPT (S-QF)" -konfiguraatio
+
+## Muutokset ja perustelut
+
+- **Ympäristön vaihdos (PS7 -> Termux Bash):** Alkuperäinen `GEMINI.md` vaati PowerShell 7 -yhteensopivuutta. Tämä on korvattu Termux-yhteensopivalla Bashilla (relatiiviset polut, &&-ketjutus, ei rootia).
+  - _Lähde:_ Käyttäjän `termux_execution_plan` ja `termux_gemini_opas.md`.
+- **Termux-spesifit optimoinnit:** Lisätty vaatimus stdin-putkituksen (`cat file | gemini -p ""`) ja `termux-wake-lock`-komennon käytöstä estämään pitkien ajojen katkeaminen ja pitkien syötteiden leikkautuminen.
+  - _Lähde:_ `termux_gemini_opas.md` ja `Termux AI Agenttien Käyttöopas.md`.
+- **Tietoturva- ja datapolitiikan (Option B) kiristäminen:** Sisällytetty eksplisiittiset säännöt "Option B" -datakäytännöistä (`DATA_ROOT` ulkoinen) sekä tulosten aggregointisäännöt (`n < 5` suppressio).
+  - _Lähde:_ `README.md`, `GEMINI.md`, ja `RUNBOOK_SECURE_EXECUTION.md`.
+- **Gate-työnkulun standardisointi:** Määritelty selkeä 5-vaiheinen suoritusputki (Discovery -> Edit -> Smoke -> Full Run -> QC/Output), joka integroituu synteettisen testidatan (`python -m unittest`) ja R-ajojen (`40_run_secure_panel_analysis.R`) väliin.
+  - _Lähde:_ `SKILLS.md` ja `README.md`.
+- **Kysymyskielto ja poikkeukset:** Tarkennettu "fail-closed" -periaatetta. Agentti ei saa oletuksena pysähtyä kysymään ohjeita, mutta sille myönnettiin poikkeuslupa tarkistaa datan rakenne (esim. `glimpse()`), jos se törmää schema/sarakevirheisiin.
+
+Huomiona liittyen agentti gqf19:n raporttiin: Työtila on vahvistetusti puhdas ja aiempi siivoustehtävä (task_sync_cleanup.md) on oikeaoppisesti tilassa 03-review. Seuraava askel orkestroinnissa on tämän päivitetyn system promptin injektointi S-QF-agentin konfiguraatioon.
