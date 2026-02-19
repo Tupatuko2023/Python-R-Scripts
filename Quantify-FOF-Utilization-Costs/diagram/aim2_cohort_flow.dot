@@ -1,0 +1,106 @@
+digraph AIM2_Cohort_Flow {
+  graph [
+    label="AIM2 analytic cohort derivation (KAAOS)\n",
+    labelloc="t",
+    fontsize=18,
+    fontname="Helvetica",
+    rankdir=TB,
+    bgcolor="white",
+    splines=ortho,
+    nodesep=0.35,
+    ranksep=0.55,
+    pad="0.25"
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=12,
+    color="#4b5563",
+    penwidth=1.1,
+    margin="0.18,0.12"
+  ];
+
+  edge [
+    color="#374151",
+    penwidth=1.1,
+    arrowsize=0.75
+  ];
+
+  note_age65 [
+    label=<
+      <TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2">
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10" COLOR="#6b7280">Note: Age &ge; 65 in raw dataset: <B>__AGE65_RAW__</B></FONT></TD></TR>
+      </TABLE>
+    >,
+    shape=note,
+    style="filled",
+    fillcolor="#f9fafb",
+    color="#e5e7eb",
+    fontcolor="#6b7280"
+  ];
+
+  n1 [
+    label="N = __N1__ patients in KAAOS dataset",
+    fillcolor="#eef2ff"
+  ];
+
+  e1 [
+    label="Excluded n = __EX1__\\nMissing or invalid FOF response\\n(__EX1_PCT__% of __N1__)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n3 [
+    label="N = __N3__ patients with FOF data\\n(__N3_PCT__% of __N1__)",
+    fillcolor="#eef2ff"
+  ];
+
+  e2 [
+    label="Excluded n = __EX2__\\nAge < 65 years\\n(__EX2_PCT__% of __N3__)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n5 [
+    label="Final eligible analytic cohort\\nN = __N5__\\n(__N5_PCT__% of __N3__)",
+    fillcolor="#eef2ff"
+  ];
+
+  g1 [
+    label="FOF: Yes\\nn = __G1__\\n(__G1_PCT__% of __N5__)",
+    fillcolor="#ecfdf5",
+    color="#047857",
+    fontcolor="#064e3b"
+  ];
+
+  g2 [
+    label="FOF: No\\nn = __G2__\\n(__G2_PCT__% of __N5__)",
+    fillcolor="#ecfdf5",
+    color="#047857",
+    fontcolor="#064e3b"
+  ];
+
+  n1 -> n3 [constraint=true];
+  n3 -> n5 [constraint=true];
+
+  n1 -> e1 [dir=none, constraint=false];
+  n3 -> e2 [dir=none, constraint=false];
+
+  n5 -> g1;
+  n5 -> g2;
+
+  { rank=same; n1; e1; }
+  { rank=same; n3; e2; }
+
+  n1 -> e1 [style=invis, weight=10];
+  n3 -> e2 [style=invis, weight=10];
+
+  { rank=same; g1; g2; }
+  g1 -> g2 [style=invis, weight=1];
+
+  note_age65 -> n1 [style=invis, weight=1];
+}
