@@ -12,22 +12,8 @@ load_local_env <- function(path = file.path("config", ".env")) {
   if (!file.exists(path)) {
     return(invisible(FALSE))
   }
+  # Single source of truth: parse and set vars once.
   try(readRenviron(path), silent = TRUE)
-  lines <- readLines(path, warn = FALSE)
-  lines <- trimws(lines)
-  lines <- lines[nzchar(lines)]
-  lines <- lines[!grepl("^#", lines)]
-  lines <- sub("^export\\s+", "", lines)
-  lines <- lines[grepl("^[A-Za-z_][A-Za-z0-9_]*=", lines)]
-  if (length(lines) == 0) {
-    return(invisible(TRUE))
-  }
-  keys <- sub("=.*$", "", lines)
-  vals <- sub("^[^=]*=", "", lines)
-  vals <- gsub("^['\"]|['\"]$", "", vals)
-  for (i in seq_along(keys)) {
-    do.call(Sys.setenv, setNames(list(vals[[i]]), keys[[i]]))
-  }
   invisible(TRUE)
 }
 
@@ -55,6 +41,10 @@ starting_n_expected <- suppressWarnings(as.integer(Sys.getenv("AIM2_START_N_EXPE
 final_n_expected <- suppressWarnings(as.integer(Sys.getenv("AIM2_FINAL_N_EXPECTED", "")))
 fof_yes_expected <- suppressWarnings(as.integer(Sys.getenv("AIM2_FOF_YES_EXPECTED", "")))
 fof_no_expected <- suppressWarnings(as.integer(Sys.getenv("AIM2_FOF_NO_EXPECTED", "")))
+age_threshold <- suppressWarnings(as.integer(Sys.getenv("AIM2_AGE_THRESHOLD", "65")))
+if (is.na(age_threshold)) {
+  stop("AIM2_AGE_THRESHOLD must be an integer.")
+}
 
 fof_missing_codes_env <- Sys.getenv("AIM2_FOF_MISSING_CODES", "2")
 fof_missing_codes <- strsplit(fof_missing_codes_env, ",", fixed = TRUE)[[1]]
@@ -62,7 +52,7 @@ fof_missing_codes <- trimws(fof_missing_codes)
 fof_missing_codes <- fof_missing_codes[nzchar(fof_missing_codes)]
 
 reason_missing_fof <- "Missing Fear of Falling (FOF) response"
-reason_age_lt65 <- "Age < 65 years"
+reason_age_lt_threshold <- glue("Age < {age_threshold} years")
 reason_missing_invalid_fof <- "Missing or invalid FOF response"
 
 data_root_env <- Sys.getenv("DATA_ROOT", unset = "")
@@ -132,6 +122,7 @@ if (!file.exists(raw_source_path) && nzchar(default_data_root)) {
 }
 raw_id_header <- Sys.getenv("AIM2_RAW_ID_HEADER", Sys.getenv("AIM2_ID_HEADER", if (panel_id_source == "SOTU") "Sotu" else "NRO"))
 raw_age_header_env <- Sys.getenv("AIM2_RAW_AGE_HEADER", "")
+raw_fof_header_env <- Sys.getenv("AIM2_RAW_FOF_HEADER", "")
 n_raw_ids <- NA_integer_
 n_after_fof_raw <- NA_integer_
 n_excluded_fof <- NA_integer_
@@ -162,15 +153,21 @@ if (nzchar(raw_source_path) && file.exists(raw_source_path) && panel_id_source %
   }
 
   id_raw <- as.character(raw_x[[raw_id_header]])
-  fof_col <- if ("FOF_raw" %in% raw_names) {
+  fof_col <- if (nzchar(raw_fof_header_env)) {
+    raw_fof_header_env
+  } else if ("FOF_raw" %in% raw_names) {
     "FOF_raw"
-  } else if (length(raw_names) >= 35) {
-    raw_names[[35]]
   } else {
     NA_character_
   }
-  if (is.na(fof_col)) {
-    stop("Could not identify RAW FOF column.")
+  if (is.na(fof_col) || !(fof_col %in% raw_names)) {
+    stop(
+      glue(
+        "Could not identify RAW FOF column in KAAOS Excel. ",
+        "Set AIM2_RAW_FOF_HEADER to the exact column name (preferred), ",
+        "or provide a RAW file containing 'FOF_raw'."
+      )
+    )
   }
   fof_raw <- suppressWarnings(as.numeric(raw_x[[fof_col]]))
   age_raw <- suppressWarnings(as.numeric(raw_x[[age_col]]))
@@ -184,12 +181,12 @@ if (nzchar(raw_source_path) && file.exists(raw_source_path) && panel_id_source %
   fof_clean <- fof_raw[keep_id]
   age_clean <- age_raw[keep_id]
   n_raw_ids <- dplyr::n_distinct(id_clean, na.rm = TRUE)
-  n_raw_age_ge65 <- sum(age_clean >= 65, na.rm = TRUE)
+  n_raw_age_ge65 <- sum(age_clean >= age_threshold, na.rm = TRUE)
   keep_fof <- fof_clean %in% c(0, 1)
   n_after_fof_raw <- dplyr::n_distinct(id_clean[keep_fof], na.rm = TRUE)
   n_excluded_fof <- n_raw_ids - n_after_fof_raw
-  n_excluded_age <- sum(age_clean[keep_fof] < 65, na.rm = TRUE)
-  message(glue("Raw cohort path: raw={n_raw_ids}, age_ge_65={n_raw_age_ge65}, after_fof={n_after_fof_raw}, excluded_fof={n_excluded_fof}, excluded_age_lt65={n_excluded_age}."))
+  n_excluded_age <- sum(age_clean[keep_fof] < age_threshold, na.rm = TRUE)
+  message(glue("Raw cohort path: raw={n_raw_ids}, age_ge_{age_threshold}={n_raw_age_ge65}, after_fof={n_after_fof_raw}, excluded_fof={n_excluded_fof}, excluded_age_lt_threshold={n_excluded_age}."))
 } else {
   warning("Raw source unavailable for full-cohort path; figure will include only canonical flow text.")
 }
@@ -231,8 +228,8 @@ dat1 <- hgutils::exclude_patients(
 dat2 <- hgutils::exclude_patients(
   flowchart = flow,
   dataset = dat1,
-  exclusion_criterium = !is.na(get(age_var)) & get(age_var) < 65,
-  reason = reason_age_lt65,
+  exclusion_criterium = !is.na(get(age_var)) & get(age_var) < age_threshold,
+  reason = reason_age_lt_threshold,
   node_text = "%s eligible patients",
   excluded_text = "%s excluded"
 )
@@ -242,7 +239,7 @@ n_after_ex2 <- count_unique_ids(dat2)
 n_after_ex1_id_na <- count_missing_ids(dat1)
 n_after_ex2_id_na <- count_missing_ids(dat2)
 message(glue("After exclusion 1 ({reason_missing_fof}): {n_after_ex1} unique non-missing {id_var}; id_na={n_after_ex1_id_na}."))
-message(glue("After exclusion 2 ({reason_age_lt65}): {n_after_ex2} unique non-missing {id_var}; id_na={n_after_ex2_id_na}."))
+message(glue("After exclusion 2 ({reason_age_lt_threshold}): {n_after_ex2} unique non-missing {id_var}; id_na={n_after_ex2_id_na}."))
 
 fof_counts <- dat2 %>%
   distinct(!!sym_id, .keep_all = TRUE) %>%
@@ -265,29 +262,50 @@ for (i in seq_len(nrow(fof_counts))) {
 message(glue("FOF split total: {sum_split}"))
 
 if (!is.na(final_n_expected)) {
-  stopifnot(n_final_ids == final_n_expected)
+  if (n_final_ids != final_n_expected) {
+    stop(glue(
+      "Final N mismatch: expected {final_n_expected}, got {n_final_ids}. ",
+      "Check AIM2_FINAL_N_EXPECTED and upstream cohort filters."
+    ))
+  }
 } else {
   warning("AIM2_FINAL_N_EXPECTED not set; final N assertion skipped.")
 }
-stopifnot(sum_split == n_final_ids)
+if (sum_split != n_final_ids) {
+  stop(glue(
+    "FOF split total mismatch: sum of FOF groups ({sum_split}) ",
+    "does not equal final analytic cohort size ({n_final_ids}). ",
+    "Check FOF grouping logic and cohort construction."
+  ))
+}
 
 n_yes <- sum(fof_counts$n[fof_counts$fof_group == "FOF: Yes"], na.rm = TRUE)
 n_no <- sum(fof_counts$n[fof_counts$fof_group == "FOF: No"], na.rm = TRUE)
 if (!is.na(fof_yes_expected)) {
-  stopifnot(n_yes == fof_yes_expected)
+  if (n_yes != fof_yes_expected) {
+    stop(glue(
+      "FOF 'Yes' count mismatch: expected {fof_yes_expected}, got {n_yes}. ",
+      "Check AIM2_FOF_YES_EXPECTED (if set) and FOF classification logic."
+    ))
+  }
 }
 if (!is.na(fof_no_expected)) {
-  stopifnot(n_no == fof_no_expected)
+  if (n_no != fof_no_expected) {
+    stop(glue(
+      "FOF 'No' count mismatch: expected {fof_no_expected}, got {n_no}. ",
+      "Check AIM2_FOF_NO_EXPECTED (if set) and FOF classification logic."
+    ))
+  }
 }
 
 # Build final text that goes into the exported PNG (full cohort path only).
 lines <- c(
   "Full cohort path (from canonical KAAOS source):",
   if (!is.na(n_raw_ids)) glue("N = {n_raw_ids} patients in KAAOS dataset") else "N = NA patients in KAAOS dataset",
-  if (!is.na(n_raw_age_ge65)) glue("  (Age >= 65 in raw dataset: {n_raw_age_ge65})") else "  (Age >= 65 in raw dataset: NA)",
+  if (!is.na(n_raw_age_ge65)) glue("  (Age >= {age_threshold} in raw dataset: {n_raw_age_ge65})") else glue("  (Age >= {age_threshold} in raw dataset: NA)"),
   if (!is.na(n_excluded_fof)) glue("|-----> N = {n_excluded_fof} excluded [{reason_missing_invalid_fof}]") else glue("|-----> N = NA excluded [{reason_missing_invalid_fof}]"),
   if (!is.na(n_after_fof_raw)) glue("N = {n_after_fof_raw} patients with FOF data") else "N = NA patients with FOF data",
-  if (!is.na(n_excluded_age)) glue("|-----> N = {n_excluded_age} excluded [{reason_age_lt65}]") else glue("|-----> N = NA excluded [{reason_age_lt65}]"),
+  if (!is.na(n_excluded_age)) glue("|-----> N = {n_excluded_age} excluded [{reason_age_lt_threshold}]") else glue("|-----> N = NA excluded [{reason_age_lt_threshold}]"),
   glue("N = {n_final_ids} eligible patients"),
   "",
   "FOF groups among final analytic cohort:",
