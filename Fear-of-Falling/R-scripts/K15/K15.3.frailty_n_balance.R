@@ -54,9 +54,6 @@ script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
 if (is.na(script_label) || script_label == "") script_label <- "K15.3."
 
 # Source helper functions (io, checks, modeling, reporting)
-rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$)"),
-   envir = .GlobalEnv)
-
 source(here("R","functions","io.R"))
 source(here("R","functions","checks.R"))
 source(here("R","functions","modeling.R"))
@@ -131,6 +128,16 @@ gait_cut_m_per_sec <- 0.8 # Slowness: < 0.8 m/s = hidas
 low_BMI_threshold <- 21 # Low BMI: BMI < 21
 maxwalk_low_cut_m <- 400 # Max kävelymatka < 400 m tulkitaan matalaksi
 
+# Helper: gate sex-stratified cutpoints when sex data is mostly missing/insufficient.
+sex_factor_usable <- function(x, min_non_na = 10, min_groups = 2) {
+  if (is.null(x)) return(FALSE)
+  x <- as.character(x)
+  non_na <- x[!is.na(x) & nzchar(x)]
+  if (length(non_na) < min_non_na) return(FALSE)
+  if (length(unique(non_na)) < min_groups) return(FALSE)
+  TRUE
+}
+
 # Huom: Weakness-komponentille
 # - sex_Q1: sukupuolikohtainen alin kvartiili (Q1) Puristus0:sta
 # - literature: kiinteät placeholder-rajat (esim. naisille <20 kg, miehille <30
@@ -144,8 +151,7 @@ maxwalk_low_cut_m <- 400 # Max kävelymatka < 400 m tulkitaan matalaksi
 # - 0 kg tulkitaan puuttuvaksi mittaukseksi (esim. ei tehty / tekninen ongelma).
 
 if (!("Puristus0" %in% names(analysis_data))) {
-  warning("Puristus0-muuttuja puuttuu analysis_data:
-  weakness-komponentti jää NA:ksi.")
+  warning("Puristus0-muuttuja puuttuu analysis_data:\nweakness-komponentti jää NA:ksi.")
 }
 
 # 4.1 Sukupuolimuuttuja apuun (sex_factor aina factor)
@@ -192,7 +198,8 @@ grip_cuts <- NULL
 
 if ("Puristus0" %in% names(analysis_data)) {
   
-  if (grip_cut_strategy == "sex_Q1") {
+  use_sex_grip <- sex_factor_usable(analysis_data$sex_factor, min_non_na = 10)
+  if (grip_cut_strategy == "sex_Q1" && use_sex_grip) {
     
     grip_cuts <- analysis_data %>%
       filter(!is.na(Puristus0_clean), !is.na(sex_factor)) %>%
@@ -214,23 +221,39 @@ if ("Puristus0" %in% names(analysis_data)) {
                           levels = c("female", "male")),
       cut_Q1    = c(20, 30) # placeholder: naiset <20 kg, miehet <30 kg
     )
-    message("K15.3.: Weakness-rajat (literature placeholder,
-    päivitä tarvittaessa):")
+    message("K15.3.: Weakness-rajat (literature placeholder,\npäivitä tarvittaessa):")
     print(grip_cuts)
     
     
+  } else {
+    if (grip_cut_strategy == "sex_Q1" && !use_sex_grip) {
+      message("K15.3.: Weakness-rajat: sex_Q1 pyydetty, mutta sex_factor on käyttökelvoton (enimmäkseen NA tai liian vähän havaintoja); fallback overall_Q1.")
+    }
+    grip_cuts <- analysis_data %>%
+      summarise(cut_Q1 = quantile(Puristus0_clean, probs = 0.25, na.rm = TRUE)) %>%
+      mutate(sex_factor = NA_character_) %>%
+      dplyr::select(sex_factor, cut_Q1)
+    message("K15.3.: Weakness-rajat (overall_Q1 / fallback):")
+    print(grip_cuts)
   }
   
   grip_cut_vec <- NULL
+  grip_cut_overall <- NA_real_
   if (!is.null(grip_cuts)) {
-    grip_cut_vec <- setNames(grip_cuts$cut_Q1,
-                             as.character(grip_cuts$sex_factor))
+    if (all(is.na(grip_cuts$sex_factor))) {
+      grip_cut_overall <- as.numeric(grip_cuts$cut_Q1[[1]])
+    } else {
+      grip_cut_vec <- setNames(grip_cuts$cut_Q1,
+                               as.character(grip_cuts$sex_factor))
+    }
   }
   
   analysis_data <- analysis_data %>%
     mutate(
       frailty_weakness = case_when(
-        is.null(grip_cut_vec) ~ NA_integer_,
+        is.null(grip_cut_vec) && is.na(grip_cut_overall) ~ NA_integer_,
+        is.null(grip_cut_vec) & !is.na(grip_cut_overall) & is.na(Puristus0_clean) ~ NA_integer_,
+        is.null(grip_cut_vec) & !is.na(grip_cut_overall) ~ if_else(Puristus0_clean < grip_cut_overall, 1L, 0L),
         is.na(Puristus0_clean) | is.na(sex_factor) ~ NA_integer_,
         TRUE ~ if_else(
           Puristus0_clean < grip_cut_vec[as.character(sex_factor)],
@@ -336,7 +359,8 @@ if (is.null(balance_var)) {
   # Cutpointit
   balance_cuts <- NULL
   
-  if (balance_cut_strategy == "sex_Q1" && ("sex_factor" %in% names(analysis_data))) {
+  use_sex_balance <- sex_factor_usable(analysis_data$sex_factor, min_non_na = 10)
+  if (balance_cut_strategy == "sex_Q1" && ("sex_factor" %in% names(analysis_data)) && use_sex_balance) {
     
     balance_cuts <- analysis_data %>%
       filter(!is.na(single_leg_stance_clean), !is.na(sex_factor)) %>%
@@ -364,6 +388,9 @@ if (is.null(balance_var)) {
       )
     
   } else {
+    if (balance_cut_strategy == "sex_Q1" && !use_sex_balance) {
+      message("K15.3.: Balance-rajat: sex_Q1 pyydetty, mutta sex_factor on käyttökelvoton (enimmäkseen NA tai liian vähän havaintoja); fallback overall_Q1.")
+    }
     
     # overall_Q1 (tai fallback jos sex_factor puuttuu)
     cut_overall <- analysis_data %>%
@@ -761,91 +788,100 @@ if (!("Composite_Z0" %in% names(analysis_data)) || !("Composite_Z3" %in% names(a
   
   if (n_common < 10) {
     warning("K15.3.: Liian pieni N common-sampelessä (<10): mallivertailu epäluotettava.")
-  }
-  
-  # 10B.2 Mallit
-  f0 <- as.formula(paste("Composite_Z3 ~", paste(base_terms, collapse = " + ")))
-  f1 <- as.formula(paste("Composite_Z3 ~", paste(c(base_terms, "frailty_count_2"), collapse = " + ")))
-  f2 <- as.formula(paste("Composite_Z3 ~", paste(c(base_terms, "frailty_count_3_balance"), collapse = " + ")))
-  
-  M0 <- lm(f0, data = model_df_common)
-  M1 <- lm(f1, data = model_df_common)
-  M2 <- lm(f2, data = model_df_common)
-  
-  # 10B.3 Mittarit
-  get_lm_metrics <- function(mod) {
-    s <- summary(mod)
-    tibble::tibble(
-      n = nobs(mod),
-      r2 = unname(s$r.squared),
-      adj_r2 = unname(s$adj.r.squared),
-      aic = AIC(mod),
-      bic = BIC(mod)
+    message("K15.3.: Ohitetaan mallivertailu, koska common-sample on liian pieni.")
+  } else {
+    # 10B.2 Mallit
+    f0 <- as.formula(paste("Composite_Z3 ~", paste(base_terms, collapse = " + ")))
+    f1 <- as.formula(paste("Composite_Z3 ~", paste(c(base_terms, "frailty_count_2"), collapse = " + ")))
+    f2 <- as.formula(paste("Composite_Z3 ~", paste(c(base_terms, "frailty_count_3_balance"), collapse = " + ")))
+    
+    M0 <- lm(f0, data = model_df_common)
+    M1 <- lm(f1, data = model_df_common)
+    M2 <- lm(f2, data = model_df_common)
+    
+    # 10B.3 Mittarit
+    get_lm_metrics <- function(mod) {
+      s <- summary(mod)
+      tibble::tibble(
+        n = nobs(mod),
+        r2 = unname(s$r.squared),
+        adj_r2 = unname(s$adj.r.squared),
+        aic = AIC(mod),
+        bic = BIC(mod)
+      )
+    }
+    
+    metrics <- dplyr::bind_rows(
+      get_lm_metrics(M0) %>% dplyr::mutate(model = "M0: base"),
+      get_lm_metrics(M1) %>% dplyr::mutate(model = "M1: + frailty_count_2 (weak+slow)"),
+      get_lm_metrics(M2) %>% dplyr::mutate(model = "M2: + frailty_count_3_balance (weak+slow+bal)")
+    ) %>%
+      dplyr::select(model, dplyr::everything())
+    
+    metrics <- metrics %>%
+      dplyr::mutate(
+        delta_r2_vs_M0 = r2 - metrics$r2[metrics$model == "M0: base"],
+        delta_adj_r2_vs_M0 = adj_r2 - metrics$adj_r2[metrics$model == "M0: base"]
+      )
+    
+    # Nested tests only against base model (M1 and M2 are not nested with each other).
+    lrt_01 <- anova(M0, M1)
+    lrt_02 <- anova(M0, M2)
+    
+    # 10B.4 Kertoimet (M1 & M2) taulukkoon
+    tidy_lm <- function(mod, model_name) {
+      co <- summary(mod)$coefficients
+      ci <- suppressMessages(confint(mod))
+      out <- tibble::as_tibble(co, rownames = "term") %>%
+        dplyr::rename(
+          estimate = Estimate,
+          se = `Std. Error`,
+          statistic = `t value`,
+          p_value = `Pr(>|t|)`
+        ) %>%
+        dplyr::left_join(
+          tibble::as_tibble(ci, rownames = "term") %>%
+            dplyr::rename(conf_low = `2.5 %`, conf_high = `97.5 %`),
+          by = "term"
+        ) %>%
+        dplyr::mutate(model = model_name) %>%
+        dplyr::select(model, term, estimate, se, conf_low, conf_high, p_value)
+      out
+    }
+    
+    coef_tab <- dplyr::bind_rows(
+      tidy_lm(M1, "M1"),
+      tidy_lm(M2, "M2")
     )
-  }
-  
-  metrics <- dplyr::bind_rows(
-    get_lm_metrics(M0) %>% dplyr::mutate(model = "M0: base"),
-    get_lm_metrics(M1) %>% dplyr::mutate(model = "M1: + frailty_count_2 (weak+slow)"),
-    get_lm_metrics(M2) %>% dplyr::mutate(model = "M2: + frailty_count_3_balance (weak+slow+bal)")
-  ) %>%
-    dplyr::select(model, dplyr::everything())
-  
-  metrics <- metrics %>%
-    dplyr::mutate(
-      delta_r2_vs_M0 = r2 - metrics$r2[metrics$model == "M0: base"],
-      delta_adj_r2_vs_M0 = adj_r2 - metrics$adj_r2[metrics$model == "M0: base"]
+    
+    # 10B.5 Tallenna taulukot K15.3.-tyyliin
+    save_table_csv_html(metrics, "K15.3._balance_model_metrics")
+    save_table_csv_html(coef_tab, "K15.3._balance_model_coefficients")
+    
+    # 10B.6 Tallenna nested-vertailut base-mallia vastaan
+    lrt_tab_01 <- tibble::as_tibble(lrt_01, rownames = "model") %>%
+      dplyr::rename(df = Df, rss = RSS, ss = `Sum of Sq`, f = F, p_value = `Pr(>F)`)
+    lrt_tab_02 <- tibble::as_tibble(lrt_02, rownames = "model") %>%
+      dplyr::rename(df = Df, rss = RSS, ss = `Sum of Sq`, f = F, p_value = `Pr(>F)`)
+    save_table_csv_html(lrt_tab_01, "K15.3._balance_model_nested_test_M0_vs_M1")
+    save_table_csv_html(lrt_tab_02, "K15.3._balance_model_nested_test_M0_vs_M2")
+    
+    message(
+      "K15.3.: Model comparison (non-nested M1 vs M2): ",
+      "AIC M0=", round(AIC(M0), 3), ", M1=", round(AIC(M1), 3), ", M2=", round(AIC(M2), 3),
+      "; BIC M0=", round(BIC(M0), 3), ", M1=", round(BIC(M1), 3), ", M2=", round(BIC(M2), 3)
     )
-  
-  # Nested F-test M1 vs M2 (sama N)
-  lrt_12 <- anova(M1, M2)
-  
-  # 10B.4 Kertoimet (M1 & M2) taulukkoon
-  tidy_lm <- function(mod, model_name) {
-    co <- summary(mod)$coefficients
-    ci <- suppressMessages(confint(mod))
-    out <- tibble::as_tibble(co, rownames = "term") %>%
-      dplyr::rename(
-        estimate = Estimate,
-        se = `Std. Error`,
-        statistic = `t value`,
-        p_value = `Pr(>|t|)`
-      ) %>%
-      dplyr::left_join(
-        tibble::as_tibble(ci, rownames = "term") %>%
-          dplyr::rename(conf_low = `2.5 %`, conf_high = `97.5 %`),
-        by = "term"
-      ) %>%
-      dplyr::mutate(model = model_name) %>%
-      dplyr::select(model, term, estimate, se, conf_low, conf_high, p_value)
-    out
+    message("K15.3.: Mallivertailu valmis. Katso outputs: K15.3._balance_model_metrics / coefficients / nested_test(M0_vs_M1, M0_vs_M2).")
   }
-  
-  coef_tab <- dplyr::bind_rows(
-    tidy_lm(M1, "M1"),
-    tidy_lm(M2, "M2")
-  )
-  
-  # 10B.5 Tallenna taulukot K15.3.-tyyliin
-  save_table_csv_html(metrics, "K15.3._balance_model_metrics")
-  save_table_csv_html(coef_tab, "K15.3._balance_model_coefficients")
-  
-  # 10B.6 Tallenna myös vertailutesti
-  lrt_tab <- tibble::as_tibble(lrt_12, rownames = "model") %>%
-    dplyr::rename(df = Df, rss = RSS, ss = `Sum of Sq`, f = F, p_value = `Pr(>F)`)
-  save_table_csv_html(lrt_tab, "K15.3._balance_model_nested_test_M1_vs_M2")
-  
-  message("K15.3.: Mallivertailu valmis. Katso outputs: K15.3._balance_model_metrics / coefficients / nested_test.")
 }
 
 # ==============================================================================
 # 11. Save Analysis Data for K16
 # ==============================================================================
 # Tallenna analysis_data K16:ta varten (sisältää kaikki frailty-muuttujat)
-rdata_path <- here::here("R-scripts", "K15.3.", "outputs",
-                         "K15.3._frailty_analysis_data.RData")
+rdata_path <- file.path(outputs_dir, "K15.3._frailty_analysis_data.RData")
 save(analysis_data, file = rdata_path)
-message("K15.3.: analysis_data tallennettu: ", rdata_path)
+message("K15.3.: analysis_data tallennettu: ", basename(rdata_path))
 
 message("K15.3.: Fried-inspired physical frailty proxy rakennettu ja perusjakaumat + FOF-vertailut tallennettu.")
 
