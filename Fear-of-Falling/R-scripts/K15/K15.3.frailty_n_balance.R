@@ -310,7 +310,8 @@ if (!("kavelynopeus_m_sek0" %in% names(analysis_data))) {
 balance_var <- NULL
 balance_aliases <- c(
   "single_leg_stance", "single leg stance", "one_leg_stance", "one-leg stance",
-  "one_leg_balance", "one leg balance", "SLS", "sls"
+  "one_leg_balance", "one leg balance", "SLS", "sls",
+  "z_Seisominen0", "Seisominen0", "z_Seisominen2", "Seisominen2"
 )
 
 # 1) Ensisijaisesti täsmähaku: löytyykö jokin alias-sarakkeen nimi sellaisenaan?
@@ -333,19 +334,42 @@ if (is.null(balance_var)) {
   analysis_data <- analysis_data %>% mutate(frailty_balance = NA_integer_)
 } else {
   message("K15.3.: Balance-muuttuja löytyi: ", balance_var)
-  
-  analysis_data <- analysis_data %>%
-    mutate(
-      single_leg_stance = as.numeric(.data[[balance_var]]),
-      single_leg_stance_clean = case_when(
-        is.na(single_leg_stance) ~ NA_real_,
-        single_leg_stance < 0 ~ NA_real_,   # virheellinen
-        TRUE ~ single_leg_stance
+
+  # Heuristic: Detect if Z-score (starts with z_ or has negatives and mean near 0)
+  # Check distribution if variable exists
+  vals <- analysis_data[[balance_var]]
+  is_z_score <- FALSE
+  if (is.numeric(vals)) {
+    has_neg <- any(vals < 0, na.rm = TRUE)
+    # Simple check: starts with z_ OR (has negatives)
+    if (grepl("^z_", balance_var, ignore.case = TRUE) || has_neg) {
+      is_z_score <- TRUE
+      message("K15.3.: Balance-muuttuja tunnistettu Z-scoreksi (nimi tai negatiiviset arvot).")
+    } else {
+      message("K15.3.: Balance-muuttuja tunnistettu sekunneiksi (ei negatiivisia).")
+    }
+  }
+
+  if (is_z_score) {
+    analysis_data <- analysis_data %>%
+      mutate(
+        single_leg_stance = as.numeric(.data[[balance_var]]),
+        single_leg_stance_clean = as.numeric(.data[[balance_var]]) # No cleaning of negatives
       )
-    )
+  } else {
+    analysis_data <- analysis_data %>%
+      mutate(
+        single_leg_stance = as.numeric(.data[[balance_var]]),
+        single_leg_stance_clean = case_when(
+          is.na(single_leg_stance) ~ NA_real_,
+          single_leg_stance < 0 ~ NA_real_,   # virheellinen
+          TRUE ~ single_leg_stance
+        )
+      )
+  }
   
-  # Diagnostiikka: mahdollinen katto-/lattiavaikutus (vain viesti)
-  if (any(!is.na(analysis_data$single_leg_stance_clean))) {
+  # Diagnostiikka: mahdollinen katto-/lattiavaikutus (vain viesti, jos EI z-score)
+  if (!is_z_score && any(!is.na(analysis_data$single_leg_stance_clean))) {
     max_sls <- suppressWarnings(max(analysis_data$single_leg_stance_clean, na.rm = TRUE))
     prop_at_max <- mean(analysis_data$single_leg_stance_clean == max_sls, na.rm = TRUE)
     if (is.finite(max_sls) && prop_at_max >= 0.20) {
@@ -382,7 +406,8 @@ if (is.null(balance_var)) {
       mutate(
         frailty_balance = case_when(
           is.na(single_leg_stance_clean) | is.na(sex_factor) ~ NA_integer_,
-          single_leg_stance_clean == 0 ~ 1L,
+          # If NOT Z-score, 0 means frail. If Z-score, 0 is just a value.
+          (!is_z_score & single_leg_stance_clean == 0) ~ 1L,
           TRUE ~ if_else(
             single_leg_stance_clean <= balance_cut_vec[as.character(sex_factor)],
             1L, 0L
@@ -407,7 +432,7 @@ if (is.null(balance_var)) {
       mutate(
         frailty_balance = case_when(
           is.na(single_leg_stance_clean) ~ NA_integer_,
-          single_leg_stance_clean == 0 ~ 1L,
+          (!is_z_score & single_leg_stance_clean == 0) ~ 1L,
           single_leg_stance_clean <= cut_overall ~ 1L,
           TRUE ~ 0L
         )
