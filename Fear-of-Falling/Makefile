@@ -151,6 +151,12 @@ run analyze: check-tools ## Run analysis with RUN_SCRIPT=path/to/script.R (requi
 	fi
 	@$(RSCRIPT) "$(RUN_SCRIPT)"
 
+frailty_balance: check-tools ## Run K15.3 frailty with balance (outputs to R-scripts/K15/outputs)
+	@$(RSCRIPT) R-scripts/K15/K15.3.frailty_n_balance.R
+
+test-k15-3: ## Run K15.3 smoke test
+	@$(RSCRIPT) tests/test_K15.3.R
+
 report: check-tools ## Render report with REPORT=path/to/report.qmd|Rmd (required).
 	@if [ -z "$(REPORT)" ]; then \
 		echo "ERROR: REPORT is required (e.g., make report REPORT=reports/report.qmd)."; \

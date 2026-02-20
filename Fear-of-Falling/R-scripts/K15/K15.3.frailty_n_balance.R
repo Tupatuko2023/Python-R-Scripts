@@ -47,11 +47,11 @@ file_arg <- grep("^--file=", args_all, value = TRUE)
 script_base <- if (length(file_arg) > 0) {
   sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
 } else {
-  "K15.3."  # interactive fallback
+  "K15"  # interactive fallback
 }
 
-script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
-if (is.na(script_label) || script_label == "") script_label <- "K15.3."
+# Override script_label to K15 to ensure outputs go to R-scripts/K15/outputs/
+script_label <- "K15"
 
 # Source helper functions (io, checks, modeling, reporting)
 source(here("R","functions","io.R"))
@@ -61,6 +61,9 @@ source(here("R","functions","reporting.R"))
 
 # init_paths() must set outputs_dir + manifest_path (+ options fof.*)
 paths <- init_paths(script_label)
+
+# seed (set for reproducibility, though no randomness in frailty derivation)
+set.seed(20251124)
 
 # ==============================================================================
 # 01. Load Dataset & Data Checking
