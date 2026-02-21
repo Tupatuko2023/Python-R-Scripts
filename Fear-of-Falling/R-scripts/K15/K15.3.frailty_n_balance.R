@@ -47,11 +47,11 @@ file_arg <- grep("^--file=", args_all, value = TRUE)
 script_base <- if (length(file_arg) > 0) {
   sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
 } else {
-  "K15.3."  # interactive fallback
+  "K15"  # interactive fallback
 }
 
-script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
-if (is.na(script_label) || script_label == "") script_label <- "K15.3."
+# Override script_label to K15 to ensure outputs go to R-scripts/K15/outputs/
+script_label <- "K15"
 
 # Source helper functions (io, checks, modeling, reporting)
 source(here("R","functions","io.R"))
@@ -62,13 +62,30 @@ source(here("R","functions","reporting.R"))
 # init_paths() must set outputs_dir + manifest_path (+ options fof.*)
 paths <- init_paths(script_label)
 
+# seed (set for reproducibility, though no randomness in frailty derivation)
+set.seed(20251124)
+
 # ==============================================================================
 # 01. Load Dataset & Data Checking
 # ==============================================================================
+# Parse optional --data argument
+args_trailing <- commandArgs(trailingOnly = TRUE)
+get_arg <- function(flag, default = NULL) {
+  idx <- match(flag, args_trailing)
+  if (!is.na(idx) && idx < length(args_trailing)) args_trailing[idx + 1] else default
+}
+data_path_arg <- get_arg("--data", NULL)
+
 # Load data
-file_path <- here::here("data", "external", "KaatumisenPelko.csv")
+if (!is.null(data_path_arg)) {
+  file_path <- data_path_arg
+  message("K15.3: Loading data from argument: ", file_path)
+} else {
+  file_path <- here::here("data", "external", "KaatumisenPelko.csv")
+}
+
 if (!file.exists(file_path)) {
-  stop("Tiedostoa data/external/KaatumisenPelko.csv ei löydy.")
+  stop("Datatiedostoa ei löydy: ", file_path)
 }
 
 raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
@@ -307,7 +324,8 @@ if (!("kavelynopeus_m_sek0" %in% names(analysis_data))) {
 balance_var <- NULL
 balance_aliases <- c(
   "single_leg_stance", "single leg stance", "one_leg_stance", "one-leg stance",
-  "one_leg_balance", "one leg balance", "SLS", "sls"
+  "one_leg_balance", "one leg balance", "SLS", "sls",
+  "z_Seisominen0", "Seisominen0", "z_Seisominen2", "Seisominen2"
 )
 
 # 1) Ensisijaisesti täsmähaku: löytyykö jokin alias-sarakkeen nimi sellaisenaan?
@@ -330,19 +348,42 @@ if (is.null(balance_var)) {
   analysis_data <- analysis_data %>% mutate(frailty_balance = NA_integer_)
 } else {
   message("K15.3.: Balance-muuttuja löytyi: ", balance_var)
-  
-  analysis_data <- analysis_data %>%
-    mutate(
-      single_leg_stance = as.numeric(.data[[balance_var]]),
-      single_leg_stance_clean = case_when(
-        is.na(single_leg_stance) ~ NA_real_,
-        single_leg_stance < 0 ~ NA_real_,   # virheellinen
-        TRUE ~ single_leg_stance
+
+  # Heuristic: Detect if Z-score (starts with z_ or has negatives and mean near 0)
+  # Check distribution if variable exists
+  vals <- analysis_data[[balance_var]]
+  is_z_score <- FALSE
+  if (is.numeric(vals)) {
+    has_neg <- any(vals < 0, na.rm = TRUE)
+    # Simple check: starts with z_ OR (has negatives)
+    if (grepl("^z_", balance_var, ignore.case = TRUE) || has_neg) {
+      is_z_score <- TRUE
+      message("K15.3.: Balance-muuttuja tunnistettu Z-scoreksi (nimi tai negatiiviset arvot).")
+    } else {
+      message("K15.3.: Balance-muuttuja tunnistettu sekunneiksi (ei negatiivisia).")
+    }
+  }
+
+  if (is_z_score) {
+    analysis_data <- analysis_data %>%
+      mutate(
+        single_leg_stance = as.numeric(.data[[balance_var]]),
+        single_leg_stance_clean = as.numeric(.data[[balance_var]]) # No cleaning of negatives
       )
-    )
+  } else {
+    analysis_data <- analysis_data %>%
+      mutate(
+        single_leg_stance = as.numeric(.data[[balance_var]]),
+        single_leg_stance_clean = case_when(
+          is.na(single_leg_stance) ~ NA_real_,
+          single_leg_stance < 0 ~ NA_real_,   # virheellinen
+          TRUE ~ single_leg_stance
+        )
+      )
+  }
   
-  # Diagnostiikka: mahdollinen katto-/lattiavaikutus (vain viesti)
-  if (any(!is.na(analysis_data$single_leg_stance_clean))) {
+  # Diagnostiikka: mahdollinen katto-/lattiavaikutus (vain viesti, jos EI z-score)
+  if (!is_z_score && any(!is.na(analysis_data$single_leg_stance_clean))) {
     max_sls <- suppressWarnings(max(analysis_data$single_leg_stance_clean, na.rm = TRUE))
     prop_at_max <- mean(analysis_data$single_leg_stance_clean == max_sls, na.rm = TRUE)
     if (is.finite(max_sls) && prop_at_max >= 0.20) {
@@ -379,7 +420,8 @@ if (is.null(balance_var)) {
       mutate(
         frailty_balance = case_when(
           is.na(single_leg_stance_clean) | is.na(sex_factor) ~ NA_integer_,
-          single_leg_stance_clean == 0 ~ 1L,
+          # If NOT Z-score, 0 means frail. If Z-score, 0 is just a value.
+          (!is_z_score & single_leg_stance_clean == 0) ~ 1L,
           TRUE ~ if_else(
             single_leg_stance_clean <= balance_cut_vec[as.character(sex_factor)],
             1L, 0L
@@ -404,7 +446,7 @@ if (is.null(balance_var)) {
       mutate(
         frailty_balance = case_when(
           is.na(single_leg_stance_clean) ~ NA_integer_,
-          single_leg_stance_clean == 0 ~ 1L,
+          (!is_z_score & single_leg_stance_clean == 0) ~ 1L,
           single_leg_stance_clean <= cut_overall ~ 1L,
           TRUE ~ 0L
         )

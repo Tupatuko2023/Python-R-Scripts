@@ -302,6 +302,19 @@ K2 outputs                           K4 outputs
 - Run K3 first: `Rscript R-scripts/K3/K3.7.main.R`
 - Check K3 outputs exist: `ls R-scripts/K3/outputs/`
 
+### K15 Frailty Pipeline
+
+| Pipeline  | Purpose                 | Input   | Output                   | Run Command            |
+| --------- | ----------------------- | ------- | ------------------------ | ---------------------- |
+| **K15.3** | Frailty proxy + balance | Raw CSV | Frailty tables & dataset | `make frailty_balance` |
+
+**K15.3.frailty_n_balance.R**:
+
+- Creates `frailty_count_3` (weakness + slowness + low_activity).
+- Creates `frailty_count_3_balance` (adds single leg stance).
+- Saves `K15_frailty_analysis_data.RData` for K16 use.
+- Outputs are stored in `R-scripts/K15/outputs/`.
+
 ---
 
 ## What gets run
