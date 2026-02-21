@@ -68,10 +68,24 @@ set.seed(20251124)
 # ==============================================================================
 # 01. Load Dataset & Data Checking
 # ==============================================================================
+# Parse optional --data argument
+args_trailing <- commandArgs(trailingOnly = TRUE)
+get_arg <- function(flag, default = NULL) {
+  idx <- match(flag, args_trailing)
+  if (!is.na(idx) && idx < length(args_trailing)) args_trailing[idx + 1] else default
+}
+data_path_arg <- get_arg("--data", NULL)
+
 # Load data
-file_path <- here::here("data", "external", "KaatumisenPelko.csv")
+if (!is.null(data_path_arg)) {
+  file_path <- data_path_arg
+  message("K15.3: Loading data from argument: ", file_path)
+} else {
+  file_path <- here::here("data", "external", "KaatumisenPelko.csv")
+}
+
 if (!file.exists(file_path)) {
-  stop("Tiedostoa data/external/KaatumisenPelko.csv ei löydy.")
+  stop("Datatiedostoa ei löydy: ", file_path)
 }
 
 raw_data <- readr::read_csv(file_path, show_col_types = FALSE)
