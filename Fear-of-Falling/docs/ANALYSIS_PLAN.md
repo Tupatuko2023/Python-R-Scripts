@@ -8,10 +8,12 @@ This document defines the authoritative analysis plan for the "Fear of Falling" 
 
 ## 1. Study Design & Research Question
 
-**Objective:** To determine if baseline Fear of Falling (FOF) predicts 12-month changes in physical performance (Composite Z-score) among older adults, adjusting for key confounders.
+**Objective:** To estimate the relative and independent effects of baseline Fear of Falling (FOF), frailty status (Fried-inspired proxy), and balance on 12-month trajectory/change in physical performance (Composite Z-score), adjusting for key confounders.
 
 - **Design:** Longitudinal cohort study (Baseline -> 12-month follow-up).
-- **Primary Comparison:** FOF vs. Non-FOF group differences in change over time.
+- **Primary Comparison:**
+  - **Independent effects:** In the same model, estimate `time:FOF_status`, `time:frailty_cat_3`, and `time:tasapainovaikeus` (or verified balance equivalent) to isolate each exposure's association with 12-month change.
+  - **Relative effects:** Compare effect magnitudes on a common scale and, when needed, test contrasts between time-interaction terms (Wald / `linearHypothesis`) with 95% CI.
 
 ## 2. Data & Variables (Verified Map)
 
@@ -22,6 +24,10 @@ All analysis must use these **canonical variable names**. Do not invent aliases.
 | **id**           | `id` (from source)            | Identifier | Unique per participant             |
 | **time**         | `time` / `time_months`        | Factor     | `0` (Baseline), `12` (Follow-up)   |
 | **FOF_status**   | `kaatumisenpelkoOn`           | Factor     | `0`="Ei FOF" (Ref), `1`="FOF"      |
+| **frailty_cat_3** | K15/K18 derived (`frailty_count_3`) | Factor | `robust`, `pre-frail`, `frail` |
+| _frailty_score_3_ (Sensitivity) | K15/K18 derived (`frailty_count_3`) | Numeric | 0-3 (continuous frailty proxy) |
+| **tasapainovaikeus** | Raw source / K08/K14 usage | Binary/Factor | `0` = no balance difficulty, `1` = balance difficulty |
+| _Seisominen0 / Seisominen2_ (objective balance candidate) | Raw source columns; used in K08/K12 as SLS proxy | Numeric | TODO: confirm canonical analysis name in `data/data_dictionary.csv` (`Seisominen*` vs `SLS*`) |
 | **Composite_Z**  | `ToimintaKykySummary0` & `2`  | Numeric    | Continuous (Z-score)               |
 | **age**          | `age`                         | Numeric    | Years                              |
 | **sex**          | `sex`                         | Factor     | Verify: Male/Female                |
@@ -32,6 +38,8 @@ All analysis must use these **canonical variable names**. Do not invent aliases.
 
 - **Immutable Data:** Raw data in `data/` is strictly READ-ONLY. All transformations happen in R.
 - **FOF Derivation:** Derived from binary `kaatumisenpelkoOn`. Ensure factor levels are explicit.
+- **Frailty Derivation:** Use `frailty_cat_3` as primary frailty exposure; use `frailty_score_3` for sensitivity analyses.
+- **Balance Variable:** Primary balance exposure is `tasapainovaikeus` unless a different canonical balance variable is verified in `data/data_dictionary.csv`.
 - **Timepoint:** Ensure "12" corresponds to the correct follow-up column (`ToimintaKykySummary2`).
 
 ## 3. Statistical Models
@@ -42,11 +50,14 @@ We analyze the _long-format_ dataset to maximize power and handle missing data u
 
 ```r
 # Formula (lmer)
-Composite_Z ~ time * FOF_status + age + sex + BMI + (1 | id)
+Composite_Z ~ time * FOF_status + time * frailty_cat_3 + time * tasapainovaikeus +
+  age + sex + BMI + (1 | id)
 ```
 
-- **Key Interest:** The interaction term `time12:FOF_statusFOF`.
-- **Interpretation:** Difference in the rate of change between FOF and Non-FOF groups.
+- **Key Interest:** The interaction terms `time:FOF_status`, `time:frailty_cat_3`, and `time:tasapainovaikeus`.
+- **Independent effects operationalization:** All exposure-by-time terms are estimated jointly in one model.
+- **Relative effects operationalization:** Report estimates on a common scale with 95% CI and test targeted coefficient differences (e.g., `time:FOF_status` vs `time:frailty_cat_3`) via Wald / `linearHypothesis`.
+- **Exploratory only (optional):** `time * FOF_status * frailty_cat_3` (and/or balance moderation) may be run as secondary analyses, clearly labeled exploratory.
 
 ### 3.2 Cross-Check: ANCOVA (Wide Format)
 
@@ -54,7 +65,8 @@ To verify robustness, we perform an ANCOVA on the wide dataset (complete cases f
 
 ```r
 # Formula (lm)
-Composite_Z_12m ~ FOF_status + Composite_Z_baseline + age + sex + BMI
+Composite_Z_12m ~ Composite_Z_baseline + FOF_status + frailty_cat_3 +
+  tasapainovaikeus + age + sex + BMI
 ```
 
 - **Consistency Check:** The effect size and direction should align with the LMM interaction term.
@@ -66,6 +78,8 @@ Before running the final models, the data must pass the strict QC gates defined 
 - **Gate 1 (Ingest):** No data corruption (row counts match, IDs unique).
 - **Gate 2 (Logic):** `time` has exactly 2 levels; `FOF_status` has exactly 2 levels.
 - **Gate 3 (Missingness):** Report missingness by Group x Time.
+- **Gate 2.1 (Exposure Levels):** Verify valid levels/coding for `frailty_cat_3` and `tasapainovaikeus` (or verified balance equivalent).
+- **Gate 3.1 (Exposure Missingness):** Extend missingness reporting to FOF x frailty x balance strata (or equivalent grouped summaries) and explicitly report frailty/balance missingness.
 - **Gate 4 (Delta Check):** Ensure `Delta = FollowUp - Baseline` (tolerance 1e-8).
 
 **Runner:** `R-scripts/K18/K18_QC.V1_qc-run.R` (or latest equivalent).
