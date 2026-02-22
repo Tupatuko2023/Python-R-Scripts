@@ -19,21 +19,21 @@ def run_workflow_demo(use_codex=False, smoke=False):
     architect = Agent(
         name="Archie",
         role="architect",
-        instructions="Plan changes. Do not touch files.",
+        instructions="Plan changes. Do not touch files. Before contributing, consult .codex/skills/make-repo-contribution/SKILL.md.",
         allowed_tools=["read_file", "list_files"]
     )
 
     integrator = Agent(
         name="Iggy",
         role="integrator",
-        instructions="Implement changes. Allowed to write to R-scripts.",
+        instructions="Implement changes. Allowed to write to R-scripts. Before contributing, consult .codex/skills/make-repo-contribution/SKILL.md.",
         allowed_tools=["read_file", "write_file", "list_files", "run_git"]
     )
 
     quality_gate = Agent(
         name="Quinn",
         role="quality_gate",
-        instructions="Verify changes. Read only.",
+        instructions="Verify changes. Read only. Before contributing, consult .codex/skills/make-repo-contribution/SKILL.md.",
         allowed_tools=["read_file", "list_files", "run_git"]
     )
 

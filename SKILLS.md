@@ -4,6 +4,7 @@
 
 - SKILLS.md on ylin totuus kaikissa agenttitoiminnoissa.
 - Ennen mitään `gh`-komentoja, PR-työtä tai mergeä: lue tämä tiedosto ensin ja noudata kirjaimellisesti.
+- **MANDATORY:** Ennen mitään kontribuutiota (Issue/Branch/Commit/PR), konsultoi ja noudata ohjeita tiedostossa `.codex/skills/make-repo-contribution/SKILL.md`.
 - Jos tämä tiedosto on ristiriidassa muiden ohjeiden kanssa: SKILLS.md voittaa.
 
 ---
@@ -227,7 +228,8 @@ Cleanup: Done/Not done/Stop reason
 
 ## Skills directory index
 
-The skills location has moved to the `skills/` directory:
+The skills location has moved to the `skills/` directory (general) and `.codex/skills/` (Codex-specific):
 
 - Index: `skills/README.md`
 - GitHub PAT skill: `skills/github-pat/skill.md`
+- Make Repo Contribution skill: `.codex/skills/make-repo-contribution/SKILL.md`
