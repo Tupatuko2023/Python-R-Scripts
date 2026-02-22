@@ -24,6 +24,16 @@ ja kirjaavat ne `manifest/manifest.csv`-tiedostoon (1 rivi per artefakti).
 
 Termux runner: `bash scripts/termux/run_qc_summarizer_proot.sh`
 Note: runner is portable (no hardcoded paths); it derives the Fear-of-Falling repo root from the script location.
+Preflight helper: `bash scripts/fof-preflight.sh`
+
+### Preflight Guardrail
+
+Run preflight with `make fof-preflight` or `bash scripts/fof-preflight.sh`.
+The checker uses `req_cols`/`req_raw_cols` first when available.
+If those are missing, it falls back to parsing the first `Required vars` doc block.
+For K15 scripts only, missing `req_cols` + missing parsable doc block becomes WARN (`warn_only`), not FAIL.
+For non-K15 scripts, missing requirements metadata remains FAIL by default.
+The log prints `requirements source: req_cols|doc_block|warn_only; parsed_n=...` for traceability.
 
 ## Prerequisites
 
