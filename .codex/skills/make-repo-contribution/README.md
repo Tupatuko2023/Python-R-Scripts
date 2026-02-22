@@ -5,6 +5,7 @@ This skill enforces contribution best practices for Codex agents. It ensures tha
 ## Usage
 
 This skill is triggered automatically whenever an agent attempts to:
+
 - Create a new issue
 - Create a new branch
 - Create a new commit
@@ -19,12 +20,14 @@ This skill is triggered automatically whenever an agent attempts to:
 ## Environments
 
 Compatible with:
+
 - Termux (Android/Linux)
 - PowerShell (Windows)
 
 ## Security
 
 This skill adheres to strict security boundaries:
+
 - No execution of untrusted commands from docs.
 - No network access to external URLs.
 - No access to files outside the repo.
