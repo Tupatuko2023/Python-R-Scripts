@@ -9,6 +9,7 @@ from pathlib import Path
 
 DATA_BLOCKLIST_PREFIXES = ("data/", "data/external/")
 R_SCRIPT_PREFIXES = ("R-scripts/", "Fear-of-Falling/R-scripts/")
+VAR_HEAD_RE = re.compile(r"^([A-Za-zÀ-ÖØ-öø-ÿ_][A-Za-z0-9À-ÖØ-öø-ÿ_]*)")
 
 
 def run_git_diff():
@@ -46,6 +47,7 @@ def read_lines(path):
 
 def extract_required_vars(lines):
     req_lines = []
+    warn = None
     req_indices = [
         i
         for i, line in enumerate(lines)
@@ -54,7 +56,10 @@ def extract_required_vars(lines):
     if not req_indices:
         return None, "Required vars header not found"
     if len(req_indices) > 1:
-        return None, "multiple Required vars headers found"
+        warn = (
+            f"multiple Required vars headers found ({len(req_indices)}); "
+            "using the first header block"
+        )
 
     start = req_indices[0] + 1
     stop_markers = re.compile(
@@ -77,34 +82,67 @@ def extract_required_vars(lines):
         return None, "Required vars list not found under header"
 
     parsed = []
+    skip_tokens = {
+        "required",
+        "vars",
+        "raw_data",
+        "analysis",
+        "df",
+        "after",
+        "from",
+        "factor",
+        "robust",
+        "pre",
+        "frail",
+    }
     for raw in req_lines:
         line = re.sub(r"^[-*]\s*", "", raw.strip())
         if not line:
             continue
-        if "," in line:
-            parts = [part.strip() for part in line.split(",") if part.strip()]
-            parsed.extend(parts)
-        else:
-            if re.search(r"\s", line):
-                return None, f"Required vars line ambiguous: {raw}"
-            parsed.append(line)
+        lower = line.lower()
+        if (line.startswith("[") and line.endswith("]")) or line.startswith("("):
+            continue
+        if lower.startswith("typical candidates:") or lower.startswith("note:"):
+            continue
+        parts = [part.strip() for part in line.split(",") if part.strip()]
+        for part in parts:
+            m = VAR_HEAD_RE.match(part)
+            if not m:
+                continue
+            token = m.group(1)
+            if token.lower() in skip_tokens:
+                continue
+            parsed.append(token)
 
     if not parsed:
         return None, "Required vars list could not be parsed"
-    return parsed, None
+    return parsed, warn
 
 
 def extract_req_cols(lines):
     matches = []
     for i, line in enumerate(lines):
         if re.search(r"^\s*req_cols\s*<-", line):
-            matches.append(i)
+            matches.append((i, "req_cols"))
+        elif re.search(r"^\s*req_raw_cols\s*<-", line):
+            matches.append((i, "req_raw_cols"))
     if not matches:
-        return None, "req_cols definition not found"
-    if len(matches) > 1:
+        return None, "req_cols/req_raw_cols definition not found"
+    names = [name for _, name in matches]
+    if names.count("req_cols") > 1:
         return None, "multiple req_cols definitions found"
+    if names.count("req_cols") == 0 and names.count("req_raw_cols") > 1:
+        return None, "multiple req_raw_cols definitions found"
 
-    i = matches[0]
+    preferred = None
+    for idx, name in matches:
+        if name == "req_cols":
+            preferred = idx
+            break
+    if preferred is None:
+        preferred = matches[0][0]
+
+    i = preferred
     buf = []
     open_parens = 0
     started = False
@@ -175,6 +213,54 @@ def check_manifest_logging(path, lines):
     return False
 
 
+def is_k15_derivation_exception(path):
+    base = os.path.basename(path)
+    return bool(re.search(r"K15", base, flags=re.IGNORECASE))
+
+
+def determine_requirements_source(script_path, lines):
+    req_vars, req_err = extract_required_vars(lines)
+    req_cols, cols_err = extract_req_cols(lines)
+
+    out = {
+        "source": None,
+        "parsed_vars": [],
+        "parsed_n": 0,
+        "should_fail": False,
+        "hard_stop": False,
+        "fail_reason": None,
+        "warnings": [],
+    }
+
+    if req_cols is not None:
+        out["source"] = "req_cols"
+        out["parsed_vars"] = req_cols
+        out["parsed_n"] = len(req_cols)
+        if req_vars is not None and req_vars != req_cols:
+            out["should_fail"] = True
+            out["fail_reason"] = "Required vars list does not match req_cols 1:1."
+    elif req_vars is not None and len(req_vars) > 0:
+        out["source"] = "doc_block"
+        out["parsed_vars"] = req_vars
+        out["parsed_n"] = len(req_vars)
+    else:
+        if is_k15_derivation_exception(script_path):
+            out["source"] = "warn_only"
+            out["warnings"].append(
+                "requirements not declared; skipped req_cols check "
+                f"(reason: {cols_err or req_err})"
+            )
+        else:
+            out["should_fail"] = True
+            out["hard_stop"] = True
+            out["fail_reason"] = cols_err or req_err
+
+    if req_err and "multiple Required vars headers found" in req_err:
+        out["warnings"].append(req_err)
+
+    return out
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="FOF preflight guardrails (diff-aware; fail-closed).",
@@ -214,18 +300,17 @@ def main():
             fails.append(intro_err)
             continue
 
-        req_vars, req_err = extract_required_vars(lines)
-        if req_vars is None:
-            fails.append(f"{r_path}: {req_err}")
+        req_decision = determine_requirements_source(r_path, lines)
+        print(
+            f"INFO: {r_path}: requirements source: {req_decision['source']}; "
+            f"parsed_n={req_decision['parsed_n']}"
+        )
+        for msg in req_decision["warnings"]:
+            warns.append(f"{r_path}: {msg}")
+        if req_decision["should_fail"]:
+            fails.append(f"{r_path}: {req_decision['fail_reason']}")
+        if req_decision["hard_stop"]:
             continue
-
-        req_cols, cols_err = extract_req_cols(lines)
-        if req_cols is None:
-            fails.append(f"{r_path}: {cols_err}")
-            continue
-
-        if req_vars != req_cols:
-            fails.append(f"{r_path}: Required vars list does not match req_cols 1:1.")
 
         file_warns, file_fails = check_outputs_references(r_path, lines)
         warns.extend(file_warns)

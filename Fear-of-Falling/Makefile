@@ -10,7 +10,7 @@ LINTR_CONFIG ?= .lintr
 TEST_SCRIPT ?= tests/run_smoke_tests.R
 
 .PHONY: help all check-tools setup setup-r setup-py lint lint-r lint-py format format-r format-py test test-r test-py \
-validate run analyze report clean clean-cache clean-outputs
+validate run analyze report clean clean-cache clean-outputs fof-preflight
 
 help: ## Show this help.
 	@awk 'BEGIN {FS = ":.*##"} /^[a-zA-Z0-9_-]+:.*##/ {printf "  %-16s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -156,6 +156,9 @@ frailty_balance: check-tools ## Run K15.3 frailty with balance (outputs to R-scr
 
 test-k15-3: ## Run K15.3 smoke test
 	@$(RSCRIPT) tests/test_K15.3.R
+
+fof-preflight: ## Run diff-aware FOF preflight checker
+	@bash scripts/fof-preflight.sh
 
 report: check-tools ## Render report with REPORT=path/to/report.qmd|Rmd (required).
 	@if [ -z "$(REPORT)" ]; then \
