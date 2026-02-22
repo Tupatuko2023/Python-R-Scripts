@@ -10,10 +10,10 @@ if [ ! -f "$PRECHECK" ]; then
   exit 1
 fi
 
-if command -v python >/dev/null 2>&1; then
-  PY=python
-elif command -v python3 >/dev/null 2>&1; then
+if command -v python3 >/dev/null 2>&1; then
   PY=python3
+elif command -v python >/dev/null 2>&1; then
+  PY=python
 else
   echo "FATAL: python/python3 not found in PATH" >&2
   exit 1

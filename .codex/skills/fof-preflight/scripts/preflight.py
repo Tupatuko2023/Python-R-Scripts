@@ -45,16 +45,30 @@ def read_lines(path):
         return None, f"cannot read file: {exc}"
 
 
+def _debug_enabled():
+    return os.getenv("FOF_PREFLIGHT_DEBUG") in ("1", "true", "TRUE", "yes", "YES")
+
+
+def _debug_add(debug_rows, reason, line):
+    if debug_rows is None or len(debug_rows) >= 20:
+        return
+    snippet = (line or "").strip()
+    if len(snippet) > 140:
+        snippet = snippet[:137] + "..."
+    debug_rows.append(f"{reason}: {snippet}")
+
+
 def extract_required_vars(lines):
     req_lines = []
     warn = None
+    debug_rows = [] if _debug_enabled() else None
     req_indices = [
         i
         for i, line in enumerate(lines)
         if re.search(r"Required vars", line, flags=re.IGNORECASE)
     ]
     if not req_indices:
-        return None, "Required vars header not found"
+        return None, "Required vars header not found", debug_rows
     if len(req_indices) > 1:
         warn = (
             f"multiple Required vars headers found ({len(req_indices)}); "
@@ -69,17 +83,21 @@ def extract_required_vars(lines):
     for line in lines[start:]:
         stripped = line.strip()
         if not stripped:
+            _debug_add(debug_rows, "stop-empty", line)
             break
         if stripped == "#":
+            _debug_add(debug_rows, "stop-comment-only", line)
             break
         if not stripped.startswith("#"):
+            _debug_add(debug_rows, "stop-not-comment", line)
             break
         if stop_markers.search(stripped):
+            _debug_add(debug_rows, "stop-marker", line)
             break
         req_lines.append(stripped.lstrip("#").strip())
 
     if not req_lines:
-        return None, "Required vars list not found under header"
+        return None, "Required vars list not found under header", debug_rows
 
     parsed = []
     skip_tokens = {
@@ -98,25 +116,30 @@ def extract_required_vars(lines):
     for raw in req_lines:
         line = re.sub(r"^[-*]\s*", "", raw.strip())
         if not line:
+            _debug_add(debug_rows, "skip-empty", raw)
             continue
         lower = line.lower()
         if (line.startswith("[") and line.endswith("]")) or line.startswith("("):
+            _debug_add(debug_rows, "skip-bracketed", raw)
             continue
         if lower.startswith("typical candidates:") or lower.startswith("note:"):
+            _debug_add(debug_rows, "skip-note", raw)
             continue
         parts = [part.strip() for part in line.split(",") if part.strip()]
         for part in parts:
             m = VAR_HEAD_RE.match(part)
             if not m:
+                _debug_add(debug_rows, "skip-no-var-head", part)
                 continue
             token = m.group(1)
             if token.lower() in skip_tokens:
+                _debug_add(debug_rows, "skip-stop-token", token)
                 continue
             parsed.append(token)
 
     if not parsed:
-        return None, "Required vars list could not be parsed"
-    return parsed, warn
+        return None, "Required vars list could not be parsed", debug_rows
+    return parsed, warn, debug_rows
 
 
 def extract_req_cols(lines):
@@ -129,10 +152,8 @@ def extract_req_cols(lines):
     if not matches:
         return None, "req_cols/req_raw_cols definition not found"
     names = [name for _, name in matches]
-    if names.count("req_cols") > 1:
-        return None, "multiple req_cols definitions found"
-    if names.count("req_cols") == 0 and names.count("req_raw_cols") > 1:
-        return None, "multiple req_raw_cols definitions found"
+    if names.count("req_cols") > 1 or names.count("req_raw_cols") > 1:
+        return None, "multiple req_cols/req_raw_cols definitions found"
 
     preferred = None
     for idx, name in matches:
@@ -215,11 +236,14 @@ def check_manifest_logging(path, lines):
 
 def is_k15_derivation_exception(path):
     base = os.path.basename(path)
-    return bool(re.search(r"K15", base, flags=re.IGNORECASE))
+    norm = path.replace("\\", "/")
+    if "/R-scripts/K15/" in norm:
+        return True
+    return bool(re.match(r"^K15[._]", base))
 
 
 def determine_requirements_source(script_path, lines):
-    req_vars, req_err = extract_required_vars(lines)
+    req_vars, req_err, req_debug = extract_required_vars(lines)
     req_cols, cols_err = extract_req_cols(lines)
 
     out = {
@@ -230,6 +254,7 @@ def determine_requirements_source(script_path, lines):
         "hard_stop": False,
         "fail_reason": None,
         "warnings": [],
+        "debug": [],
     }
 
     if req_cols is not None:
@@ -257,6 +282,10 @@ def determine_requirements_source(script_path, lines):
 
     if req_err and "multiple Required vars headers found" in req_err:
         out["warnings"].append(req_err)
+    if cols_err and "multiple req_cols/req_raw_cols definitions found" in cols_err:
+        out["warnings"].append(cols_err)
+    if req_debug:
+        out["debug"] = req_debug
 
     return out
 
