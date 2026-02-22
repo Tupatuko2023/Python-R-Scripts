@@ -13,9 +13,9 @@ This skill is triggered automatically whenever an agent attempts to:
 
 ## Behavior
 
-1.  **Discovery**: The agent searches for `CONTRIBUTING.md`, `README.md`, and issue/PR templates.
-2.  **Enforcement**: The agent adopts the discovered conventions (branch naming, commit messages).
-3.  **Verification**: The agent identifies required checks (tests, linting) and asks the user to run them.
+1. **Discovery**: The agent searches for `CONTRIBUTING.md`, `README.md`, and issue/PR templates.
+2. **Enforcement**: The agent adopts the discovered conventions (branch naming, commit messages).
+3. **Verification**: The agent identifies required checks (tests, linting) and asks the user to run them.
 
 ## Environments
 
