@@ -14,11 +14,59 @@ on:
       - "Fear-of-Falling/**"
       - "!Fear-of-Falling/**/*.md"
       - "!Fear-of-Falling/.pre-commit-config.yaml"
-  workflow_dispatch: # Allow manual triggers
+  workflow_dispatch:
+    inputs:
+      run_smoke:
+        description: "Force run K smoke tests"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
+  changes:
+    name: Detect Smoke-Relevant Changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      smoke_relevant: ${{ steps.filter.outputs.smoke_relevant }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            smoke_relevant:
+              - "Fear-of-Falling/R-scripts/**"
+              - "Fear-of-Falling/R/functions/**"
+              - "Fear-of-Falling/renv.lock"
+              - "Fear-of-Falling/Makefile"
+              - "Fear-of-Falling/scripts/**"
+              - "Fear-of-Falling/tests/smoke_test_all_k_scripts.R"
+              - "Fear-of-Falling/Dockerfile"
+              - ".github/workflows/smoke-tests.yml"
+      - name: Show smoke gate decision
+        run: |
+          echo "smoke_relevant=${{ steps.filter.outputs.smoke_relevant }}"
+          if [ "${{ steps.filter.outputs.smoke_relevant }}" != "true" ]; then
+            echo "Skipping heavy K smoke tests: no smoke-relevant paths changed."
+          fi
+
+  skip-smoke:
+    name: Skip K Scripts Smoke Tests (not relevant)
+    needs: changes
+    if: needs.changes.outputs.smoke_relevant != 'true' && !(github.event_name == 'workflow_dispatch' && (inputs.run_smoke == true || inputs.run_smoke == 'true'))
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "K smoke tests skipped by path filter (no relevant file changes)."
+
   smoke-tests:
     name: Run K Scripts Smoke Tests
+    needs: changes
+    if: needs.changes.outputs.smoke_relevant == 'true' || (github.event_name == 'workflow_dispatch' && (inputs.run_smoke == true || inputs.run_smoke == 'true'))
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -33,9 +81,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image
-        run: |
-          docker build -t fof-r-analysis:latest .
+      - name: Build Docker image (cached)
+        uses: docker/build-push-action@v6
+        with:
+          context: Fear-of-Falling
+          file: Fear-of-Falling/Dockerfile
+          load: true
+          tags: fof-r-analysis:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Run smoke tests
         id: smoke_test
