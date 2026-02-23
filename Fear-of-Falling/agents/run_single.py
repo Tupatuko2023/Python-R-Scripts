@@ -4,12 +4,23 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from agents.agent_types import Agent
+from agents.contribution_preflight import apply_contribution_preflight
 
 def run_security_test():
     print("=== Running Security Smoke Test ===")
 
-    integrator = Agent("Iggy", "integrator", "Before contributing, consult .codex/skills/make-repo-contribution/SKILL.md.", ["write_file"])
-    architect = Agent("Archie", "architect", "Before contributing, consult .codex/skills/make-repo-contribution/SKILL.md.", ["write_file"]) # Architect shouldn't even have this, but if they try...
+    integrator = Agent(
+        "Iggy",
+        "integrator",
+        apply_contribution_preflight("Run security smoke checks with guarded write operations."),
+        ["write_file"],
+    )
+    architect = Agent(
+        "Archie",
+        "architect",
+        apply_contribution_preflight("Architect role in smoke test; should avoid file writes."),
+        ["write_file"],
+    )  # Architect shouldn't even have this, but if they try...
 
     # Test 1: Integrator write to allowed path
     print("\nTest 1: Integrator write to 'R-scripts/smoke.txt'")
