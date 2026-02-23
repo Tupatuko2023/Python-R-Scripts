@@ -6,7 +6,7 @@ from pathlib import Path
 # Ensure we can import modules
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from agents.agent_types import Agent
+from agents.agent_types import Agent, before_contributing_sentence
 
 def run_workflow_demo(use_codex=False, smoke=False):
     print("=== Starting Option A Architecture Demo ===")
@@ -19,21 +19,21 @@ def run_workflow_demo(use_codex=False, smoke=False):
     architect = Agent(
         name="Archie",
         role="architect",
-        instructions="Plan changes. Do not touch files. Before contributing, consult .codex/skills/make-repo-contribution/SKILL.md.",
+        instructions=f"Plan changes. Do not touch files. {before_contributing_sentence()}",
         allowed_tools=["read_file", "list_files"]
     )
 
     integrator = Agent(
         name="Iggy",
         role="integrator",
-        instructions="Implement changes. Allowed to write to R-scripts. Before contributing, consult .codex/skills/make-repo-contribution/SKILL.md.",
+        instructions=f"Implement changes. Allowed to write to R-scripts. {before_contributing_sentence()}",
         allowed_tools=["read_file", "write_file", "list_files", "run_git"]
     )
 
     quality_gate = Agent(
         name="Quinn",
         role="quality_gate",
-        instructions="Verify changes. Read only. Before contributing, consult .codex/skills/make-repo-contribution/SKILL.md.",
+        instructions=f"Verify changes. Read only. {before_contributing_sentence()}",
         allowed_tools=["read_file", "list_files", "run_git"]
     )
 

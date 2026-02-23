@@ -8,6 +8,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from mcp_servers.repo_tools_server import RepoToolsServer
 
+MAKE_REPO_CONTRIBUTION_SKILL_PATH = ".codex/skills/make-repo-contribution/SKILL.md"
+
+def before_contributing_sentence() -> str:
+    """Returns the standardized sentence for consulting the contribution skill."""
+    return f"Before contributing, consult {MAKE_REPO_CONTRIBUTION_SKILL_PATH}."
+
 class Agent:
     def __init__(self, name: str, role: str, instructions: str, allowed_tools: List[str]):
         self.name = name
