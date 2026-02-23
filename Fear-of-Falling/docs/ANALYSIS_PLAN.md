@@ -19,20 +19,20 @@ This document defines the authoritative analysis plan for the "Fear of Falling" 
 
 All analysis must use these **canonical variable names**. Do not invent aliases.
 
-| Canonical Name   | Source / Derivation           | Type       | Levels / Coding                    |
-| :--------------- | :---------------------------- | :--------- | :--------------------------------- |
-| **id**           | `id` (from source)            | Identifier | Unique per participant             |
-| **time**         | `time` / `time_months`        | Factor     | `0` (Baseline), `12` (Follow-up)   |
-| **FOF_status**   | `kaatumisenpelkoOn`           | Factor     | `0`="Ei FOF" (Ref), `1`="FOF"      |
-| **frailty_cat_3** | K15/K18 derived (`frailty_count_3`) | Factor | `robust`, `pre-frail`, `frail` |
-| _frailty_score_3_ (Sensitivity) | K15/K18 derived (`frailty_count_3`) | Numeric | 0-3 (continuous frailty proxy) |
-| **tasapainovaikeus** | Raw source / K08/K14 usage | Binary/Factor | `0` = no balance difficulty, `1` = balance difficulty |
-| _Seisominen0 / Seisominen2_ (objective balance candidate) | Raw source columns; used in K08/K12 as SLS proxy | Numeric | TODO: confirm canonical analysis name in `data/data_dictionary.csv` (`Seisominen*` vs `SLS*`) |
-| **Composite_Z**  | `ToimintaKykySummary0` & `2`  | Numeric    | Continuous (Z-score)               |
-| **age**          | `age`                         | Numeric    | Years                              |
-| **sex**          | `sex`                         | Factor     | Verify: Male/Female                |
-| **BMI**          | `BMI`                         | Numeric    | kg/m²                              |
-| _SRH_ (Optional) | `SRH` / `koettuterveydentila` | Factor     | Verify: Good/Avg/Poor (1-3 or 0-2) |
+| Canonical Name       | Source / Derivation                 | Type          | Levels / Coding                       |
+| :------------------- | :---------------------------------- | :------------ | :------------------------------------ |
+| **id**               | `id` (from source)                  | Identifier    | Unique per participant                |
+| **time**             | `time` / `time_months`              | Factor        | `0` (Baseline), `12` (Follow-up)      |
+| **FOF_status**       | `kaatumisenpelkoOn`                 | Factor        | `0`="Ei FOF" (Ref), `1`="FOF"         |
+| **frailty_cat_3**    | K15/K18 derived (`frailty_count_3`) | Factor        | `robust`, `pre-frail`, `frail`        |
+| _frailty_score_3_    | K15/K18 derived (`frailty_count_3`) | Numeric       | 0-3 (continuous frailty proxy)        |
+| **tasapainovaikeus** | Raw source / K08/K14 usage          | Binary/Factor | `0` = no difficulty, `1` = difficulty |
+| _Seisominen\*_       | Raw source columns (K08/K12 usage)  | Numeric       | Objective balance candidate (TBD)     |
+| **Composite_Z**      | `ToimintaKykySummary0` & `2`        | Numeric       | Continuous (Z-score)                  |
+| **age**              | `age`                               | Numeric       | Years                                 |
+| **sex**              | `sex`                               | Factor        | Verify: Male/Female                   |
+| **BMI**              | `BMI`                               | Numeric       | kg/m²                                 |
+| _SRH_ (Optional)     | `SRH` / `koettuterveydentila`       | Factor        | Verify: Good/Avg/Poor (1-3 or 0-2)    |
 
 **Notes:**
 
@@ -40,6 +40,8 @@ All analysis must use these **canonical variable names**. Do not invent aliases.
 - **FOF Derivation:** Derived from binary `kaatumisenpelkoOn`. Ensure factor levels are explicit.
 - **Frailty Derivation:** Use `frailty_cat_3` as primary frailty exposure; use `frailty_score_3` for sensitivity analyses.
 - **Balance Variable:** Primary balance exposure is `tasapainovaikeus` unless a different canonical balance variable is verified in `data/data_dictionary.csv`.
+- **Sensitivity row detail:** `_frailty_score_3_` corresponds to sensitivity analyses.
+- **Objective balance candidate detail:** `_Seisominen*_` maps to raw `Seisominen0` / `Seisominen2` columns (SLS proxy in K08/K12); confirm final canonical analysis name in `data/data_dictionary.csv` (`Seisominen*` vs `SLS*`).
 - **Timepoint:** Ensure "12" corresponds to the correct follow-up column (`ToimintaKykySummary2`).
 
 ## 3. Statistical Models
