@@ -84,7 +84,7 @@ git commit -m "<message>"
 - Reference the issue (e.g., `Closes #123`).
 - Do not merge to main unless explicitly instructed.
 
-### 3. Verification (Pre-requisites)
+### 3. Verification (Prerequisites)
 
 - Identify required checks (lint, test, build) from docs.
 - **Do NOT run them yourself.** List the commands for the user to run.

@@ -12,13 +12,19 @@ def run_security_test():
     integrator = Agent(
         "Iggy",
         "integrator",
-        apply_contribution_preflight("Run security smoke checks with guarded write operations."),
+        apply_contribution_preflight(
+            "Run security smoke checks with guarded write operations.",
+            include_contribution_preflight=False,
+        ),
         ["write_file"],
     )
     architect = Agent(
         "Archie",
         "architect",
-        apply_contribution_preflight("Architect role in smoke test; should avoid file writes."),
+        apply_contribution_preflight(
+            "Architect role in smoke test; should avoid file writes.",
+            include_contribution_preflight=False,
+        ),
         ["write_file"],
     )  # Architect shouldn't even have this, but if they try...
 
