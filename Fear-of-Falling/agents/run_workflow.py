@@ -7,6 +7,7 @@ from pathlib import Path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from agents.agent_types import Agent
+from agents.contribution_preflight import apply_contribution_preflight
 
 def run_workflow_demo(use_codex=False, smoke=False):
     print("=== Starting Option A Architecture Demo ===")
@@ -19,21 +20,21 @@ def run_workflow_demo(use_codex=False, smoke=False):
     architect = Agent(
         name="Archie",
         role="architect",
-        instructions="Plan changes. Do not touch files.",
+        instructions=apply_contribution_preflight("Plan changes. Do not touch files."),
         allowed_tools=["read_file", "list_files"]
     )
 
     integrator = Agent(
         name="Iggy",
         role="integrator",
-        instructions="Implement changes. Allowed to write to R-scripts.",
+        instructions=apply_contribution_preflight("Implement changes. Allowed to write to R-scripts."),
         allowed_tools=["read_file", "write_file", "list_files", "run_git"]
     )
 
     quality_gate = Agent(
         name="Quinn",
         role="quality_gate",
-        instructions="Verify changes. Read only.",
+        instructions=apply_contribution_preflight("Verify changes. Read only."),
         allowed_tools=["read_file", "list_files", "run_git"]
     )
 

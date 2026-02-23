@@ -3,6 +3,11 @@ import subprocess
 import json
 import os
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from agents.contribution_preflight import contribution_preflight_instructions
+
+
 class CodexMCPServer:
     """
     A wrapper to run the Codex CLI as an MCP server over stdio.
@@ -57,6 +62,7 @@ class CodexMCPServer:
 
 if __name__ == "__main__":
     # Example usage / Test
+    print("Contribution preflight:", contribution_preflight_instructions())
     server = CodexMCPServer()
     try:
         # verifying it fails gracefully if npx/codex is missing
