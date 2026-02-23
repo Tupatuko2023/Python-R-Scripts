@@ -77,3 +77,9 @@ Roll out PR #101 intent repo-wide so any agent entrypoint capable of contributio
 - Introduce one shared helper/module for contribution preflight instruction injection.
 - Wire all discovered entrypoints to this helper (no duplicated skill body text).
 - Extend discovery to any additional repo-level orchestrators if found during wiring phase.
+
+## Post-Review Fixes (2026-02-23)
+- 2026-02-23 11:31:09 Applied Sourcery review fixes in commit `0bd93b4`:
+  - DRY shared contribution-preflight constants/helpers in `Fear-of-Falling/agents/contribution_preflight.py`.
+  - Kept `run_single.py` security-test instructions minimal by explicitly disabling contribution preflight injection for that scenario.
+  - Fixed skill heading typo to `Verification (Prerequisites)` in `.codex/skills/make-repo-contribution/SKILL.md`.
