@@ -18,6 +18,8 @@ Use this skill whenever you need to:
 - Create a Commit
 - Create a Pull Request
 
+This applies to any agent entrypoint, orchestrator, or wrapper that can initiate those actions.
+
 ## Instructions
 
 ### 1. Discovery
@@ -26,6 +28,7 @@ Before taking action, search for contribution guidelines and templates.
 
 - Read `CONTRIBUTING.md` (check root and `.github/`)
 - Read `README.md`
+- Check `docs/` for contribution or governance notes.
 - Check for Issue/PR templates in `.github/ISSUE_TEMPLATE/` and `.github/PULL_REQUEST_TEMPLATE/` or `docs/`.
 - Summarize what you found (or didn't find) to the user.
 
