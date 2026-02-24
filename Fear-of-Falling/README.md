@@ -95,6 +95,7 @@ cat manifest/manifest.csv | tail -10
 ## Paper_01 / Table 2 (K23_TABLE2)
 
 `K23_TABLE2` tuottaa paper_01 Table 2 -taulukon outcome-kohtaisesti:
+
 - baseline, follow-up ja `delta = follow-up - baseline`
 - ANCOVA p-arvot malleista A/B/C
 - HGS raportoidaan myös sukupuolistratifioituna (female/male)
@@ -185,6 +186,7 @@ Rscript R-scripts/K24/K24_TABLE2A.V1_delta-by-test-fof-frailty.R \
 ```
 
 Tuotokset:
+
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv`
 - `R-scripts/K24/outputs/K24_TABLE2A/sessionInfo.txt`
@@ -202,6 +204,7 @@ Rscript R-scripts/K24/K24_TABLE2A.V1.2_paper-ready-delta-by-test-fof-frailty-sco
 ```
 
 V1.2 tuotokset:
+
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.html`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.csv`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_score_v1_2.csv`
@@ -219,6 +222,7 @@ Rscript R-scripts/K24/K24_TABLE2A.V2_canonical-delta-by-test-fof-frailty.R \
 ```
 
 V2 tuotokset:
+
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.html`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.csv`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.html`
@@ -244,6 +248,7 @@ Rscript R-scripts/K24/K24_VIS.V1_forestplots_table2A_cat_vs_score.R \
 ```
 
 Tuotokset oletuksena:
+
 - `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF.{png,pdf}`
 - `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore.{png,pdf}`
 - `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_frailtyCat_overallP.{png,pdf}`
@@ -266,6 +271,7 @@ Standardoidut kuvat raportoivat regressiokertoimet muodossa `beta / SD_baseline`
 
 Jos `run-gates --smoke` kaatuu ympäristöön (esim. `renv` bootstrap), käytä
 determinististä fallback-varmistusta:
+
 1. `Rscript .../K24_VIS...` exit code = 0.
 2. `ls R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS` sisältää uudet kuvat.
 3. `grep -E "qc_status|sd_baseline_missing_n" .../plot_manifest.txt` näyttää
@@ -290,6 +296,7 @@ Rscript R-scripts/K25/K25_RESULTS.V1.1_table2A-results-text-paper-ready.R \
 ```
 
 V1.1 narrative-outputit:
+
 - `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.md`
 - `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.txt`
 - `R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v1_1.txt`
@@ -304,6 +311,7 @@ Rscript R-scripts/K25/K25_RESULTS.V2_table2A-results-text-canonical.R \
 ```
 
 V2 outputit:
+
 - `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.md`
 - `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.txt`
 - `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.md`
@@ -313,6 +321,7 @@ V2 outputit:
 ## K26 Reviewer Visuals (K26_VIS)
 
 `K26_VIS` tekee reviewer-figure setin K26 moderointimalleista (ei uusia analyysejä):
+
 - predicted `Delta_Composite_Z` by `frailty_cat_3 × FOF_status` (95% CI)
 - moderation plot: predicted `Delta_Composite_Z` vs `Composite_Z0` (facet `frailty_cat_3`, color `FOF_status`)
 - optional score sensitivity plot: predicted `Delta_Composite_Z` by `frailty_score_3 × FOF_status`
@@ -322,6 +331,7 @@ Rscript R-scripts/K26/K26_VIS.V1_composite-delta-predicted-plots.R --format=both
 ```
 
 Tuotokset:
+
 - `R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_predicted_delta_by_frailtycat_x_fof.{png,pdf}`
 - `R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_moderation_delta_vs_baseline_by_frailtycat.{png,pdf}`
 - `R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_predicted_delta_by_frailtyscore_x_fof.{png,pdf}` (jos score-malli saatavilla)

@@ -4,9 +4,11 @@ This file is the single source of truth for the PR description.
 All paths should be interpreted relative to `<REPO_ROOT>/Fear-of-Falling`.
 
 ## Summary
+
 This PR adds canonical K24/K25/K26 scripts and reviewer-facing visualization/reporting updates for the Fear-of-Falling pipeline while keeping generated artifacts out of version control. The analysis chain is documented and reproducible from canonical inputs.
 
 ## Included (code/docs only)
+
 - `R-scripts/K24/*.R` (including `K24_TABLE2A.V2_*` and `K24_VIS.V1_*`)
 - `R-scripts/K25/*.R` (including `K25_RESULTS.V2_*`)
 - `R-scripts/K26/*.R` (including `K26_LMM_MOD.V1_*` and `K26_VIS.V1_*`)
@@ -16,6 +18,7 @@ This PR adds canonical K24/K25/K26 scripts and reviewer-facing visualization/rep
 - `tasks/03-review/*.md`
 
 ## Explicitly excluded (no outputs committed)
+
 - No `R-scripts/*/outputs/**` files
 - No `.png/.pdf` figures
 - No `sessionInfo*.txt`, `*provenance*.txt`, `plot_manifest.txt`
@@ -23,12 +26,14 @@ This PR adds canonical K24/K25/K26 scripts and reviewer-facing visualization/rep
 - No run logs (`gate_err.log`, `gate_out.log`, etc.)
 
 ## Canonical scripts to use
+
 - K24 table pipeline: `R-scripts/K24/K24_TABLE2A.V2_canonical-delta-by-test-fof-frailty.R`
 - K24 visuals: `R-scripts/K24/K24_VIS.V1_forestplots_table2A_cat_vs_score.R`
 - K25 results text: `R-scripts/K25/K25_RESULTS.V2_table2A-results-text-canonical.R`
 - K26 visuals: `R-scripts/K26/K26_VIS.V1_composite-delta-predicted-plots.R`
 
 ## Reproducibility (local/home machine)
+
 Run from repo root:
 
 ```bash
@@ -52,6 +57,7 @@ Rscript R-scripts/K26/K26_VIS.V1_composite-delta-predicted-plots.R --format=both
 ```
 
 ## Reproducibility (Termux + PRoot Debian)
+
 Adjust `<REPO_ROOT>` to your local checkout path.
 
 ```bash
@@ -68,6 +74,7 @@ proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin
 ```
 
 ## QC / provenance checkpoints
+
 - K24 VIS: `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/plot_manifest.txt`
   - expected: `qc_status=PASS`, `std_method=baseline_sd`, `sd_source=audit`
 - K26 VIS: `R-scripts/K26/outputs/K26_VIS/K26_VIS_provenance.txt`
@@ -77,6 +84,7 @@ proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin
   - expected: overall `PASS`
 
 ## Reviewer signoff checklist (03-review -> 04-done)
+
 - [ ] Run canonical commands (local or Termux/PRoot) and verify successful exits
 - [ ] Confirm QC/provenance values at the checkpoints above
 - [ ] Confirm outputs are not staged:
@@ -86,6 +94,7 @@ proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin
 - [ ] Keep tasks in `03-review`; human performs `04-done` move after approval
 
 ## Pre-merge verification
+
 - [ ] No outputs committed (`git diff --name-only`)
 - [ ] Canonical scripts documented
 - [ ] Repro commands verified locally

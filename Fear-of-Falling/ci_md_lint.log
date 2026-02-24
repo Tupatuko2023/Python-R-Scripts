@@ -1,0 +1,408 @@
+lint	Set up job	﻿2026-02-24T17:37:43.3871160Z Current runner version: '2.331.0'
+lint	Set up job	2026-02-24T17:37:43.3893289Z ##[group]Runner Image Provisioner
+lint	Set up job	2026-02-24T17:37:43.3894199Z Hosted Compute Agent
+lint	Set up job	2026-02-24T17:37:43.3894833Z Version: 20260123.484
+lint	Set up job	2026-02-24T17:37:43.3895389Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+lint	Set up job	2026-02-24T17:37:43.3896047Z Build Date: 2026-01-23T19:41:17Z
+lint	Set up job	2026-02-24T17:37:43.3896694Z Worker ID: {6fa958a0-69f7-4c70-9bdf-72f0e0720130}
+lint	Set up job	2026-02-24T17:37:43.3897378Z Azure Region: westcentralus
+lint	Set up job	2026-02-24T17:37:43.3897923Z ##[endgroup]
+lint	Set up job	2026-02-24T17:37:43.3899231Z ##[group]Operating System
+lint	Set up job	2026-02-24T17:37:43.3899808Z Ubuntu
+lint	Set up job	2026-02-24T17:37:43.3900251Z 24.04.3
+lint	Set up job	2026-02-24T17:37:43.3900750Z LTS
+lint	Set up job	2026-02-24T17:37:43.3901207Z ##[endgroup]
+lint	Set up job	2026-02-24T17:37:43.3901702Z ##[group]Runner Image
+lint	Set up job	2026-02-24T17:37:43.3902217Z Image: ubuntu-24.04
+lint	Set up job	2026-02-24T17:37:43.3902730Z Version: 20260201.15.1
+lint	Set up job	2026-02-24T17:37:43.3903786Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260201.15/images/ubuntu/Ubuntu2404-Readme.md
+lint	Set up job	2026-02-24T17:37:43.3905269Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260201.15
+lint	Set up job	2026-02-24T17:37:43.3906103Z ##[endgroup]
+lint	Set up job	2026-02-24T17:37:43.3907155Z ##[group]GITHUB_TOKEN Permissions
+lint	Set up job	2026-02-24T17:37:43.3909147Z Contents: read
+lint	Set up job	2026-02-24T17:37:43.3909752Z Metadata: read
+lint	Set up job	2026-02-24T17:37:43.3910242Z Packages: read
+lint	Set up job	2026-02-24T17:37:43.3910755Z ##[endgroup]
+lint	Set up job	2026-02-24T17:37:43.3912623Z Secret source: Actions
+lint	Set up job	2026-02-24T17:37:43.3913353Z Prepare workflow directory
+lint	Set up job	2026-02-24T17:37:43.4214181Z Prepare all required actions
+lint	Set up job	2026-02-24T17:37:43.4251713Z Getting action download info
+lint	Set up job	2026-02-24T17:37:43.8406526Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+lint	Set up job	2026-02-24T17:37:43.9353390Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+lint	Set up job	2026-02-24T17:37:44.0939228Z Complete job name: lint
+lint	Run actions/checkout@v4	﻿2026-02-24T17:37:44.1586187Z ##[group]Run actions/checkout@v4
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1587156Z with:
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1587787Z   fetch-depth: 0
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1588383Z   repository: Tupatuko2023/Python-R-Scripts
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1589259Z   token: ***
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1589828Z   ssh-strict: true
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1590398Z   ssh-user: git
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1590974Z   persist-credentials: true
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1591666Z   clean: true
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1592264Z   sparse-checkout-cone-mode: true
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1592882Z   fetch-tags: false
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1593426Z   show-progress: true
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1594386Z   lfs: false
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1594896Z   submodules: false
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1595467Z   set-safe-directory: true
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.1596425Z ##[endgroup]
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2718055Z Syncing repository: Tupatuko2023/Python-R-Scripts
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2720252Z ##[group]Getting Git version info
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2721513Z Working directory is '/home/runner/work/Python-R-Scripts/Python-R-Scripts'
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2722780Z [command]/usr/bin/git version
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2723352Z git version 2.52.0
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2725769Z ##[endgroup]
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2730502Z Temporarily overriding HOME='/home/runner/work/_temp/fed0b190-e3c0-494b-a87a-5d31926a504f' before making global git config changes
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2732172Z Adding repository directory to the temporary git global config as a safe directory
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2734585Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Python-R-Scripts/Python-R-Scripts
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2738017Z Deleting the contents of '/home/runner/work/Python-R-Scripts/Python-R-Scripts'
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2739701Z ##[group]Initializing the repository
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2740543Z [command]/usr/bin/git init /home/runner/work/Python-R-Scripts/Python-R-Scripts
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2813950Z hint: Using 'master' as the name for the initial branch. This default branch name
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2815890Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2817842Z hint: to use in all of your new repositories, which will suppress this warning,
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2819709Z hint: call:
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2820571Z hint:
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2821629Z hint: 	git config --global init.defaultBranch <name>
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2822895Z hint:
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2824291Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2826126Z hint: 'development'. The just-created branch can be renamed via this command:
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2827604Z hint:
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2828563Z hint: 	git branch -m <name>
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2829584Z hint:
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2830771Z hint: Disable this message with "git config set advice.defaultBranchName false"
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2832844Z Initialized empty Git repository in /home/runner/work/Python-R-Scripts/Python-R-Scripts/.git/
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2835396Z [command]/usr/bin/git remote add origin https://github.com/Tupatuko2023/Python-R-Scripts
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2855219Z ##[endgroup]
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2856812Z ##[group]Disabling automatic garbage collection
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2859458Z [command]/usr/bin/git config --local gc.auto 0
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2882661Z ##[endgroup]
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2884381Z ##[group]Setting up auth
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2890091Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.2915105Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.3165039Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.3188870Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.3359915Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.3382968Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.3548963Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.3573830Z ##[endgroup]
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.3574727Z ##[group]Fetching the repository
+lint	Run actions/checkout@v4	2026-02-24T17:37:44.3581755Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +904cc9b2799b9accb4a8b595a8fbc1314c589aa5:refs/remotes/pull/104/merge
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5236861Z From https://github.com/Tupatuko2023/Python-R-Scripts
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5241189Z  * [new branch]      add-snakemake-fof-13302765633610309720   -> origin/add-snakemake-fof-13302765633610309720
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5245634Z  * [new branch]      archive/main-gitcrypt-fix-local-20260105 -> origin/archive/main-gitcrypt-fix-local-20260105
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5248935Z  * [new branch]      chore-ignore-logs                        -> origin/chore-ignore-logs
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5250868Z  * [new branch]      chore/audit-notes                        -> origin/chore/audit-notes
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5253173Z  * [new branch]      chore/ci-hardening-smoke-pathfilter      -> origin/chore/ci-hardening-smoke-pathfilter
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5255895Z  * [new branch]      chore/fix-markdown-formatting            -> origin/chore/fix-markdown-formatting
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5258465Z  * [new branch]      chore/fof-codex-skills-qc-preflight      -> origin/chore/fof-codex-skills-qc-preflight
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5261090Z  * [new branch]      chore/fof-k18-qc-final-clean             -> origin/chore/fof-k18-qc-final-clean
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5263727Z  * [new branch]      chore/fof-k18-qc-guardrails-only         -> origin/chore/fof-k18-qc-guardrails-only
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5266121Z  * [new branch]      chore/fof-k18-qc-only                    -> origin/chore/fof-k18-qc-only
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5268995Z  * [new branch]      chore/gitignore-agent-artifacts          -> origin/chore/gitignore-agent-artifacts
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5271459Z  * [new branch]      chore/k01-main                           -> origin/chore/k01-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5273503Z  * [new branch]      chore/k02-main                           -> origin/chore/k02-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5276586Z  * [new branch]      chore/k03-main                           -> origin/chore/k03-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5279151Z  * [new branch]      chore/k04-main                           -> origin/chore/k04-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5281484Z  * [new branch]      chore/k05-main-wide-ancova               -> origin/chore/k05-main-wide-ancova
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5284088Z  * [new branch]      chore/k06-main-moderators                -> origin/chore/k06-main-moderators
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5286295Z  * [new branch]      chore/k07-main                           -> origin/chore/k07-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5288280Z  * [new branch]      chore/k08-main                           -> origin/chore/k08-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5290208Z  * [new branch]      chore/k09-main                           -> origin/chore/k09-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5292122Z  * [new branch]      chore/k10-main                           -> origin/chore/k10-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5294165Z  * [new branch]      chore/k11-main                           -> origin/chore/k11-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5296091Z  * [new branch]      chore/k12-main                           -> origin/chore/k12-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5297980Z  * [new branch]      chore/k13-main                           -> origin/chore/k13-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5299986Z  * [new branch]      chore/k14-main                           -> origin/chore/k14-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5302096Z  * [new branch]      chore/k15-main                           -> origin/chore/k15-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5304258Z  * [new branch]      chore/k16-main                           -> origin/chore/k16-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5306508Z  * [new branch]      chore/k17-main                           -> origin/chore/k17-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5308660Z  * [new branch]      chore/k18-main                           -> origin/chore/k18-main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5311091Z  * [new branch]      chore/make-portable-mkdir                -> origin/chore/make-portable-mkdir
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5314551Z  * [new branch]      chore/make-repo-contribution-skill-639528964909925367 -> origin/chore/make-repo-contribution-skill-639528964909925367
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5317821Z  * [new branch]      chore/manifest-spec-doc                  -> origin/chore/manifest-spec-doc
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5320301Z  * [new branch]      chore/markdownlint-repair                -> origin/chore/markdownlint-repair
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5322843Z  * [new branch]      chore/pr-description-k24-k26             -> origin/chore/pr-description-k24-k26
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5325958Z  * [new branch]      chore/project-relocate-efi               -> origin/chore/project-relocate-efi
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5330145Z  * [new branch]      chore/quantify-fresh-clone-enablement-17773508065108349583 -> origin/chore/quantify-fresh-clone-enablement-17773508065108349583
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5334086Z  * [new branch]      chore/rca-codex-egress                   -> origin/chore/rca-codex-egress
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5337026Z  * [new branch]      chore/task-sync-cleanup-v2               -> origin/chore/task-sync-cleanup-v2
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5339535Z  * [new branch]      chore/thesis-scope-align-v2              -> origin/chore/thesis-scope-align-v2
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5342051Z  * [new branch]      ci-smoke-fix                             -> origin/ci-smoke-fix
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5344335Z  * [new branch]      ci/markdownlint-fixes                    -> origin/ci/markdownlint-fixes
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5347204Z  * [new branch]      dependabot/github_actions/actions/checkout-5 -> origin/dependabot/github_actions/actions/checkout-5
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5350542Z  * [new branch]      dependabot/github_actions/actions/setup-node-6 -> origin/dependabot/github_actions/actions/setup-node-6
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5354419Z  * [new branch]      dependabot/github_actions/actions/setup-python-6 -> origin/dependabot/github_actions/actions/setup-python-6
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5358092Z  * [new branch]      dependabot/github_actions/actions/upload-artifact-5 -> origin/dependabot/github_actions/actions/upload-artifact-5
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5361744Z  * [new branch]      dependabot/github_actions/github/codeql-action-4 -> origin/dependabot/github_actions/github/codeql-action-4
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5365589Z  * [new branch]      dependabot/npm_and_yarn/markdownlint-cli2-0.19.0 -> origin/dependabot/npm_and_yarn/markdownlint-cli2-0.19.0
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5369488Z  * [new branch]      dependabot/npm_and_yarn/markdownlint-cli2-0.21.0 -> origin/dependabot/npm_and_yarn/markdownlint-cli2-0.21.0
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5372964Z  * [new branch]      dependabot/npm_and_yarn/multi-93e1d9c764 -> origin/dependabot/npm_and_yarn/multi-93e1d9c764
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5376199Z  * [new branch]      dependabot/npm_and_yarn/prettier-3.8.1   -> origin/dependabot/npm_and_yarn/prettier-3.8.1
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5378963Z  * [new branch]      docs-security-sourcery-fixes             -> origin/docs-security-sourcery-fixes
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5381385Z  * [new branch]      docs-security-summary                    -> origin/docs-security-summary
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5383511Z  * [new branch]      docs-update                              -> origin/docs-update
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5385746Z  * [new branch]      docs/github-cli-setup                    -> origin/docs/github-cli-setup
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5388095Z  * [new branch]      docs/github-cli-setup-v2                 -> origin/docs/github-cli-setup-v2
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5390394Z  * [new branch]      docs/k22-thesis-scope                    -> origin/docs/k22-thesis-scope
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5392749Z  * [new branch]      docs/update-task-status                  -> origin/docs/update-task-status
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5395660Z  * [new branch]      electronic-frailty                       -> origin/electronic-frailty
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5398275Z  * [new branch]      feat/aim2-cohort-flowchart-v2            -> origin/feat/aim2-cohort-flowchart-v2
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5400809Z  * [new branch]      feat/aim2-inclusion-flowchart            -> origin/feat/aim2-inclusion-flowchart
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5404125Z  * [new branch]      feat/implement-data-architecture-12473190439772066551 -> origin/feat/implement-data-architecture-12473190439772066551
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5407209Z  * [new branch]      feat/k15-frailty-n-balance               -> origin/feat/k15-frailty-n-balance
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5409750Z  * [new branch]      feat/k21-variable-standardization        -> origin/feat/k21-variable-standardization
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5412456Z  * [new branch]      feat/pr90-only-inclusion-flowchart       -> origin/feat/pr90-only-inclusion-flowchart
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5415201Z  * [new branch]      feat/table3-controls-gates               -> origin/feat/table3-controls-gates
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5418104Z  * [new branch]      feature/audit-and-standards-9553179924345441563 -> origin/feature/audit-and-standards-9553179924345441563
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5421616Z  * [new branch]      feature/fof-option-a-architecture-5367773218557018049 -> origin/feature/fof-option-a-architecture-5367773218557018049
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5424779Z  * [new branch]      feature/k20-baseline-overlap             -> origin/feature/k20-baseline-overlap
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5427012Z  * [new branch]      fix/codeql-config                        -> origin/fix/codeql-config
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5429106Z  * [new branch]      fix/codeql-languages                     -> origin/fix/codeql-languages
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5431278Z  * [new branch]      fix/formatting-retry                     -> origin/fix/formatting-retry
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5433342Z  * [new branch]      fix/markdownlint                         -> origin/fix/markdownlint
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5435657Z  * [new branch]      fix/markdownlint-dispatch                -> origin/fix/markdownlint-dispatch
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5438056Z  * [new branch]      fix/markdownlint-md060                   -> origin/fix/markdownlint-md060
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5440370Z  * [new branch]      fix/markdownlint-md060-config            -> origin/fix/markdownlint-md060-config
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5442673Z  * [new branch]      fix/markdownlint-scope                   -> origin/fix/markdownlint-scope
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5444918Z  * [new branch]      fix/md060-content                        -> origin/fix/md060-content
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5446993Z  * [new branch]      fix/mock-data-parity                     -> origin/fix/mock-data-parity
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5448994Z  * [new branch]      fix/python-ci                            -> origin/fix/python-ci
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5450911Z  * [new branch]      fix/python-ci-v2                         -> origin/fix/python-ci-v2
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5452751Z  * [new branch]      fix/r-ci                                 -> origin/fix/r-ci
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5454848Z  * [new branch]      fix/r-ci-fof-renv-smoke                  -> origin/fix/r-ci-fof-renv-smoke
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5456993Z  * [new branch]      fix/r-ci-install-renv                    -> origin/fix/r-ci-install-renv
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5459057Z  * [new branch]      fix/r-ci-rcmdcheck                       -> origin/fix/r-ci-rcmdcheck
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5461679Z  * [new branch]      frailty-proxy-construction-1230988170593681868 -> origin/frailty-proxy-construction-1230988170593681868
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5465116Z  * [new branch]      k15-3-frailty-balance-integration-7956440144620593733 -> origin/k15-3-frailty-balance-integration-7956440144620593733
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5467702Z  * [new branch]      main                                     -> origin/main
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5469513Z  * [new branch]      main-gitcrypt-fix                        -> origin/main-gitcrypt-fix
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5471304Z  * [new branch]      pr-71                                    -> origin/pr-71
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5472999Z  * [new branch]      pr-72                                    -> origin/pr-72
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5474838Z  * [new branch]      pr3-fof-playbook                         -> origin/pr3-fof-playbook
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5477367Z  * [new branch]      sec-path-traversal-fix-v3-1737474656808683066 -> origin/sec-path-traversal-fix-v3-1737474656808683066
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5480399Z  * [new branch]      sec/path-traversal-fix-v3-1737474656808683066 -> origin/sec/path-traversal-fix-v3-1737474656808683066
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5483057Z  * [new branch]      security-path-traversal-fix              -> origin/security-path-traversal-fix
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5485354Z  * [new branch]      table1-label-fix                         -> origin/table1-label-fix
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5487439Z  * [new branch]      table1-multicat-pvalues                  -> origin/table1-multicat-pvalues
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5489402Z  * [new branch]      test-branch                              -> origin/test-branch
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5491166Z  * [new branch]      test/gh-pr                               -> origin/test/gh-pr
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5492920Z  * [new ref]         904cc9b2799b9accb4a8b595a8fbc1314c589aa5 -> pull/104/merge
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5496403Z ##[endgroup]
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5497733Z ##[group]Determining the checkout info
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5499189Z ##[endgroup]
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5500029Z [command]/usr/bin/git sparse-checkout disable
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5502471Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5505392Z ##[group]Checking out the ref
+lint	Run actions/checkout@v4	2026-02-24T17:37:45.5506723Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/104/merge
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8217460Z Updating files:   9% (91/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8257190Z Updating files:  10% (96/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8271068Z Updating files:  11% (105/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8276288Z Updating files:  12% (115/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8281675Z Updating files:  13% (124/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8287255Z Updating files:  14% (134/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8297328Z Updating files:  15% (143/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8308199Z Updating files:  16% (153/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8311976Z Updating files:  17% (162/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8314240Z Updating files:  18% (172/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8317733Z Updating files:  19% (181/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8320231Z Updating files:  20% (191/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8323528Z Updating files:  21% (200/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8325866Z Updating files:  22% (210/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8328001Z Updating files:  23% (219/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8330023Z Updating files:  24% (229/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8333250Z Updating files:  25% (238/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8339327Z Updating files:  26% (248/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8346201Z Updating files:  27% (257/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8349462Z Updating files:  28% (267/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8358642Z Updating files:  29% (276/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8367138Z Updating files:  30% (286/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8373246Z Updating files:  31% (295/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8375941Z Updating files:  32% (305/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8388185Z Updating files:  33% (314/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8424863Z Updating files:  34% (324/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8428694Z Updating files:  35% (333/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8430791Z Updating files:  36% (343/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8437327Z Updating files:  37% (352/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8440728Z Updating files:  38% (362/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8447090Z Updating files:  39% (371/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8456688Z Updating files:  40% (381/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8462812Z Updating files:  41% (390/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8469295Z Updating files:  42% (400/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8474613Z Updating files:  43% (409/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8478091Z Updating files:  44% (419/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8483553Z Updating files:  45% (428/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8489253Z Updating files:  46% (438/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8495028Z Updating files:  47% (447/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8512638Z Updating files:  48% (457/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8532405Z Updating files:  49% (466/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8535725Z Updating files:  50% (476/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8539382Z Updating files:  51% (486/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8544098Z Updating files:  52% (495/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8546013Z Updating files:  53% (505/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8547582Z Updating files:  54% (514/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8549285Z Updating files:  55% (524/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8551290Z Updating files:  56% (533/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8553199Z Updating files:  57% (543/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8555335Z Updating files:  58% (552/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8557556Z Updating files:  59% (562/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8559721Z Updating files:  60% (571/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8561870Z Updating files:  61% (581/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8566144Z Updating files:  62% (590/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8569079Z Updating files:  63% (600/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8571503Z Updating files:  64% (609/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8575781Z Updating files:  65% (619/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8578825Z Updating files:  66% (628/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8580759Z Updating files:  67% (638/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8582907Z Updating files:  68% (647/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8584884Z Updating files:  69% (657/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8586724Z Updating files:  70% (666/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8588315Z Updating files:  71% (676/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8590087Z Updating files:  72% (685/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8605174Z Updating files:  73% (695/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8608121Z Updating files:  74% (704/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8610974Z Updating files:  75% (714/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8613348Z Updating files:  76% (723/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8616275Z Updating files:  77% (733/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8618478Z Updating files:  78% (742/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8620988Z Updating files:  79% (752/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8623007Z Updating files:  80% (761/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8624886Z Updating files:  81% (771/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8627303Z Updating files:  82% (780/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8630461Z Updating files:  83% (790/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8633891Z Updating files:  84% (799/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8636547Z Updating files:  85% (809/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8696736Z Updating files:  86% (818/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8708438Z Updating files:  87% (828/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8711278Z Updating files:  88% (837/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8715911Z Updating files:  89% (847/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8719354Z Updating files:  90% (856/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8722039Z Updating files:  91% (866/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8724598Z Updating files:  92% (875/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8726071Z Updating files:  93% (885/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8727903Z Updating files:  94% (894/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8729796Z Updating files:  95% (904/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8731830Z Updating files:  96% (913/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8733522Z Updating files:  97% (923/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8736802Z Updating files:  98% (932/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8738883Z Updating files:  99% (942/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8739373Z Updating files: 100% (951/951)
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8739650Z Updating files: 100% (951/951), done.
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8753978Z Note: switching to 'refs/remotes/pull/104/merge'.
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8754472Z 
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8754776Z You are in 'detached HEAD' state. You can look around, make experimental
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8755242Z changes and commit them, and you can discard any commits you make in this
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8755657Z state without impacting any branches by switching back to a branch.
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8755910Z 
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8756077Z If you want to create a new branch to retain commits you create, you may
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8756482Z do so (now or later) by using -c with the switch command. Example:
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8756710Z 
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8756808Z   git switch -c <new-branch-name>
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8756969Z 
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8757057Z Or undo this operation with:
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8757349Z 
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8757422Z   git switch -
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8757545Z 
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8757731Z Turn off this advice by setting config variable advice.detachedHead to false
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8758002Z 
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8758308Z HEAD is now at 904cc9b Merge 6960ab7c13a113120a3dcb2c53923a4065908615 into 9960cb2676dc32c108f83b3a4807d97f29a756a9
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.8972590Z ##[endgroup]
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.9002830Z [command]/usr/bin/git log -1 --format=%H
+lint	Run actions/checkout@v4	2026-02-24T17:37:46.9020987Z 904cc9b2799b9accb4a8b595a8fbc1314c589aa5
+lint	Run actions/setup-node@v4	﻿2026-02-24T17:37:46.9215604Z ##[group]Run actions/setup-node@v4
+lint	Run actions/setup-node@v4	2026-02-24T17:37:46.9215864Z with:
+lint	Run actions/setup-node@v4	2026-02-24T17:37:46.9216029Z   node-version: 20
+lint	Run actions/setup-node@v4	2026-02-24T17:37:46.9216222Z   always-auth: false
+lint	Run actions/setup-node@v4	2026-02-24T17:37:46.9216407Z   check-latest: false
+lint	Run actions/setup-node@v4	2026-02-24T17:37:46.9216743Z   token: ***
+lint	Run actions/setup-node@v4	2026-02-24T17:37:46.9216916Z ##[endgroup]
+lint	Run actions/setup-node@v4	2026-02-24T17:37:47.0829919Z Found in cache @ /opt/hostedtoolcache/node/20.20.0/x64
+lint	Run actions/setup-node@v4	2026-02-24T17:37:47.0836398Z ##[group]Environment details
+lint	Run actions/setup-node@v4	2026-02-24T17:37:49.8706660Z node: v20.20.0
+lint	Run actions/setup-node@v4	2026-02-24T17:37:49.8707060Z npm: 10.8.2
+lint	Run actions/setup-node@v4	2026-02-24T17:37:49.8707347Z yarn: 1.22.22
+lint	Run actions/setup-node@v4	2026-02-24T17:37:49.8708449Z ##[endgroup]
+lint	Install dependencies	﻿2026-02-24T17:37:49.8795499Z ##[group]Run npm ci
+lint	Install dependencies	2026-02-24T17:37:49.8795784Z [36;1mnpm ci[0m
+lint	Install dependencies	2026-02-24T17:37:49.8875762Z shell: /usr/bin/bash -e {0}
+lint	Install dependencies	2026-02-24T17:37:49.8876022Z ##[endgroup]
+lint	Install dependencies	2026-02-24T17:37:52.7636877Z 
+lint	Install dependencies	2026-02-24T17:37:52.7644085Z added 86 packages, and audited 87 packages in 3s
+lint	Install dependencies	2026-02-24T17:37:52.7644407Z 
+lint	Install dependencies	2026-02-24T17:37:52.7644611Z 54 packages are looking for funding
+lint	Install dependencies	2026-02-24T17:37:52.7644887Z   run `npm fund` for details
+lint	Install dependencies	2026-02-24T17:37:52.7663765Z 
+lint	Install dependencies	2026-02-24T17:37:52.7664367Z 2 moderate severity vulnerabilities
+lint	Install dependencies	2026-02-24T17:37:52.7664715Z 
+lint	Install dependencies	2026-02-24T17:37:52.7665077Z To address all issues (including breaking changes), run:
+lint	Install dependencies	2026-02-24T17:37:52.7665614Z   npm audit fix --force
+lint	Install dependencies	2026-02-24T17:37:52.7665840Z 
+lint	Install dependencies	2026-02-24T17:37:52.7665977Z Run `npm audit` for details.
+lint	Collect Markdown files	﻿2026-02-24T17:37:52.7784391Z ##[group]Run set -euo pipefail
+lint	Collect Markdown files	2026-02-24T17:37:52.7784738Z [36;1mset -euo pipefail[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7785121Z [36;1mif [ "pull_request" = "pull_request" ]; then[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7785462Z [36;1m  git fetch --no-tags --prune --depth=1 origin "main"[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7785948Z [36;1m  git diff --name-only -z --diff-filter=ACMRT "origin/main"...HEAD -- "*.md" > md_files_raw.txt[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7786377Z [36;1melse[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7786613Z [36;1m  BEFORE="e8a3f316ed931aa5683f3236de8d5c2146846839"[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7787001Z [36;1m  if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7787399Z [36;1m    if git rev-parse origin/main >/dev/null 2>&1; then[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7787683Z [36;1m      BEFORE="origin/main"[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7787902Z [36;1m    else[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7788084Z [36;1m      BEFORE="HEAD~1"[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7788275Z [36;1m    fi[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7788443Z [36;1m  fi[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7788865Z [36;1m  if ! git diff --name-only -z --diff-filter=ACMRT "$BEFORE" HEAD -- "*.md" > md_files_raw.txt 2>/dev/null; then[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7789349Z [36;1m    git ls-files -z -- "*.md" > md_files_raw.txt[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7789599Z [36;1m  fi[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7789757Z [36;1mfi[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7789917Z [36;1mpython - << 'PY'[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7790117Z [36;1mimport re[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7790363Z [36;1mraw = open("md_files_raw.txt", "rb").read().split(b"\0")[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7790649Z [36;1mkeep = [][0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7790826Z [36;1mfor entry in raw:[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7791030Z [36;1m  if not entry:[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7791222Z [36;1m    continue[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7791421Z [36;1m  path = entry.decode("utf-8")[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7791678Z [36;1m  if re.search(r"(^|/)tasks/", path):[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7791911Z [36;1m    continue[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7792198Z [36;1m  if path.startswith("docs/guides/") and path.endswith(".docx.md"):[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7792520Z [36;1m    continue[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7792726Z [36;1m  if path.startswith("config/"):[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7792954Z [36;1m    continue[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7793147Z [36;1m  keep.append(entry)[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7793397Z [36;1mwith open("md_files.txt", "wb") as handle:[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7793928Z [36;1m  handle.write(b"\0".join(keep))[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7794169Z [36;1m  if keep:[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7794353Z [36;1m    handle.write(b"\0")[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7794561Z [36;1mPY[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7794761Z [36;1mCOUNT="$(wc -c < md_files.txt | tr -d ' ')"[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7795054Z [36;1mecho "count=${COUNT}" >> "$GITHUB_OUTPUT"[0m
+lint	Collect Markdown files	2026-02-24T17:37:52.7813699Z shell: /usr/bin/bash -e {0}
+lint	Collect Markdown files	2026-02-24T17:37:52.7813996Z ##[endgroup]
+lint	Collect Markdown files	2026-02-24T17:37:53.2188629Z From https://github.com/Tupatuko2023/Python-R-Scripts
+lint	Collect Markdown files	2026-02-24T17:37:53.2189304Z  * branch            main       -> FETCH_HEAD
+lint	Check Prettier formatting	﻿2026-02-24T17:37:53.2575917Z ##[group]Run xargs -0 npx prettier --check < md_files.txt
+lint	Check Prettier formatting	2026-02-24T17:37:53.2576318Z [36;1mxargs -0 npx prettier --check < md_files.txt[0m
+lint	Check Prettier formatting	2026-02-24T17:37:53.2594487Z shell: /usr/bin/bash -e {0}
+lint	Check Prettier formatting	2026-02-24T17:37:53.2594734Z ##[endgroup]
+lint	Check Prettier formatting	2026-02-24T17:37:53.5966632Z Checking formatting...
+lint	Check Prettier formatting	2026-02-24T17:37:53.8037235Z [[33mwarn[39m] Fear-of-Falling/README.md
+lint	Check Prettier formatting	2026-02-24T17:37:53.8311805Z [[33mwarn[39m] Fear-of-Falling/docs/PR_DESCRIPTION_K24_K26.md
+lint	Check Prettier formatting	2026-02-24T17:37:53.8313051Z [[33mwarn[39m] Code style issues found in 2 files. Run Prettier with --write to fix.
+lint	Check Prettier formatting	2026-02-24T17:37:53.8595835Z ##[error]Process completed with exit code 123.
+lint	Post Run actions/checkout@v4	﻿2026-02-24T17:37:53.8700241Z Post job cleanup.
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9555018Z [command]/usr/bin/git version
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9592635Z git version 2.52.0
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9630897Z Temporarily overriding HOME='/home/runner/work/_temp/03e6d2f7-f090-4ab8-a75f-6ca6b6e7ae8c' before making global git config changes
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9632377Z Adding repository directory to the temporary git global config as a safe directory
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9637294Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Python-R-Scripts/Python-R-Scripts
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9665303Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9692460Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9867227Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9882905Z http.https://github.com/.extraheader
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9893297Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:53.9916888Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:54.0081891Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+lint	Post Run actions/checkout@v4	2026-02-24T17:37:54.0105331Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+lint	Complete job	﻿2026-02-24T17:37:54.0351108Z Cleaning up orphan processes
