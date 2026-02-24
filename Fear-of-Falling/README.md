@@ -92,6 +92,243 @@ ls -la "R-scripts/<K_FOLDER>/outputs/<script_label>/"
 cat manifest/manifest.csv | tail -10
 ```
 
+## Paper_01 / Table 2 (K23_TABLE2)
+
+`K23_TABLE2` tuottaa paper_01 Table 2 -taulukon outcome-kohtaisesti:
+- baseline, follow-up ja `delta = follow-up - baseline`
+- ANCOVA p-arvot malleista A/B/C
+- HGS raportoidaan myös sukupuolistratifioituna (female/male)
+
+### Oletusinput
+
+- `data/external/KaatumisenPelko.csv`
+
+Jos tiedosto on muualla, anna `--input`.
+
+### Ajo (repo-juuresta Fear-of-Falling)
+
+V1 on alkuperäinen toteutus. V2 on manuscript-aligned versio (FTSST raw seconds
+positiivisena, follow-up ANCOVA p-arvot A/B/C, fixed manuscript cohort oletuksena).
+
+```bash
+Rscript R-scripts/K23/K23_TABLE2.V1_table2-paper01.R
+```
+
+Manuscript-aligned V2:
+
+```bash
+Rscript R-scripts/K23/K23_TABLE2.V2_table2-paper01-align-manuscript.R
+```
+
+Published-style replica V2.3:
+
+```bash
+Rscript R-scripts/K23/K23_TABLE2.V2.3_table2-paper01-replica-published.R
+```
+
+V2.3 replikoituu julkaistuun raportointitapaan (raw population, delta-mallit A/B/C,
+kiinteä N-otsikko). Todellinen mallikohtainen N raportoidaan erillisessä audit-tiedostossa.
+
+Vaihtoehtoisesti parametreilla:
+
+```bash
+Rscript R-scripts/K23/K23_TABLE2.V1_table2-paper01.R \
+  --input=data/external/KaatumisenPelko.csv \
+  --output_html=R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html \
+  --output_csv=R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv
+```
+
+Valinnainen varmap override JSON:
+
+```bash
+Rscript R-scripts/K23/K23_TABLE2.V1_table2-paper01.R \
+  --varmap_json=path/to/varmap_override.json
+```
+
+Huom: jos `jsonlite` ei ole asennettuna nykyiseen `renv`-ympäristöön, varmap-override ohitetaan varoituksella.
+
+### Tuotokset
+
+- `R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html`
+- `R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv`
+- `R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt`
+- `R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.html`
+- `R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.csv`
+- `R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2.txt`
+- `R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.html`
+- `R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.csv`
+- `R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_modelN_audit.csv`
+- `R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2_3.txt`
+- manifest-rivit: `manifest/manifest.csv` (1 rivi per artefakti)
+
+### Sanity checks
+
+- Dataset-version ollessa käsikirjoituksen mukainen raaka FOF-ryhmäjakauma on:
+  - Without FOF = 77
+  - With FOF = 199
+- Outcome-kohtainen complete-case-suodatus voi muuttaa analyysikohtaista N:ää.
+
+## Table 2A / K24_TABLE2A (FOF + Frailty)
+
+`K24_TABLE2A` tuottaa testikohtaiset delta-regressiot, joissa `FOF_status` ja
+frailty (`frailty_cat_3` tai `frailty_score_3`) ovat samassa mallissa yhdessä
+covariaattien (`baseline`, `age`, `sex`, `BMI`, valinnainen `tasapainovaikeus`) kanssa.
+
+Canonical muuttujat noudattavat `docs/ANALYSIS_PLAN.md`-määrittelyä. Jos input on
+raakadata, skriptin mapping-blokki mapittaa canonicalit tunnetuista raakasarakkeista.
+
+```bash
+Rscript R-scripts/K24/K24_TABLE2A.V1_delta-by-test-fof-frailty.R \
+  --input=data/external/KaatumisenPelko.csv \
+  --frailty_mode=cat \
+  --include_balance=FALSE
+```
+
+Tuotokset:
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv`
+- `R-scripts/K24/outputs/K24_TABLE2A/sessionInfo.txt`
+
+V1.1 tuottaa paper-ready-version: pooled HGS poistetaan paperitaulukosta,
+FOF-ryhmäkohtaiset N:t näytetään, ja frailty-kontrastit siirretään audit-CSV:hen.
+
+V1.2 on score-sensitiivisyysajo (`frailty_score_3` jatkuvana, per +1 piste), joka
+tuottaa paper-ready score-taulukon, audit-taulukon sekä cat-vs-score vertailun:
+
+```bash
+Rscript R-scripts/K24/K24_TABLE2A.V1.2_paper-ready-delta-by-test-fof-frailty-score.R \
+  --input=data/external/KaatumisenPelko.csv \
+  --include_balance=FALSE
+```
+
+V1.2 tuotokset:
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.html`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.csv`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_score_v1_2.csv`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_v1_2.csv`
+- `R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_2.txt`
+
+V2 on canonical-only rerun. Se käyttää ensisijaisesti K15:n frailty-augmented
+RData-inputtia eikä salli fallback-derivointia.
+
+```bash
+Rscript R-scripts/K24/K24_TABLE2A.V2_canonical-delta-by-test-fof-frailty.R \
+  --input=R-scripts/K15/outputs/K15_frailty_analysis_data.RData \
+  --frailty_mode=both \
+  --include_balance=FALSE
+```
+
+V2 tuotokset:
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.html`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.csv`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.html`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.csv`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_canonical_v2.csv`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv`
+- `R-scripts/K24/outputs/K24_TABLE2A/K24_frailty_provenance_v2.txt`
+- `R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v2.txt`
+
+### K24 visualisointi (K24_VIS)
+
+`K24_VIS` generoi forest plotit canonical V2 compare-CSV:stä ja tekee QC-tarkistuksen
+FOF-estimaatin cat-vs-score erolle toleranssilla (`--qc_tol`, default `0.10`).
+
+```bash
+Rscript R-scripts/K24/K24_VIS.V1_forestplots_table2A_cat_vs_score.R \
+  --input=R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv \
+  --format=both \
+  --make_cat_p=TRUE \
+  --qc_tol=0.10 \
+  --z_tol=1.96 \
+  --qc_strict=FALSE
+```
+
+Tuotokset oletuksena:
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF.{png,pdf}`
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore.{png,pdf}`
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_frailtyCat_overallP.{png,pdf}`
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts.{png,pdf}`
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized.{png,pdf}`
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore_standardized.{png,pdf}`
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/qc_fof_cat_vs_score_diff.csv` (kun vertailurivejä löytyy)
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/qc_sd_baseline_missing.csv` (vain jos baseline SD puuttuu / on 0)
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/plot_manifest.txt`
+- `R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/sessionInfo.txt`
+
+Huom: QC käyttää nyt ensisijaisesti CI-pohjaista `z_diff`-metriikkaa + `sign_flip`
+tarkistusta (abs-diff mukana vain auditointiin). Oletuksena status on `PASS`/`WARN`
+(ei `FAIL`) koska cat vs score ovat eri mallispesifikaatioita; `--qc_strict=TRUE`
+aktivoi strict-fail -käytöksen. Canonical V2 rerunissa suurin poikkeama on
+`HGS (Men)` (small N), ja `max_z_diff_excl_hgs_men` raportoidaan erikseen.
+Standardoidut kuvat raportoivat regressiokertoimet muodossa `beta / SD_baseline`
+(“per baseline SD”, ei Cohen's d); `plot_manifest.txt` kirjaa menetelmän avaimilla
+`std_method=baseline_sd` ja `sd_source=audit`.
+
+Jos `run-gates --smoke` kaatuu ympäristöön (esim. `renv` bootstrap), käytä
+determinististä fallback-varmistusta:
+1. `Rscript .../K24_VIS...` exit code = 0.
+2. `ls R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS` sisältää uudet kuvat.
+3. `grep -E "qc_status|sd_baseline_missing_n" .../plot_manifest.txt` näyttää
+   `qc_status=PASS` ja `sd_baseline_missing_n=0`.
+
+## K25 Results Text Generator
+
+`K25_RESULTS` generoi konservatiivisen Results-tekstin suoraan K24 paper-ready
+CSV:stä (ei uusia analyysejä, vain table-to-text).
+
+```bash
+Rscript R-scripts/K25/K25_RESULTS.V1_table2A-results-text-from-csv.R \
+  --input=R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.csv
+```
+
+V1.1 tuottaa paper-ready narrative-tekstin (vähemmän listamainen, samat numerot):
+
+```bash
+Rscript R-scripts/K25/K25_RESULTS.V1.1_table2A-results-text-paper-ready.R \
+  --input=R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.csv \
+  --style=narrative
+```
+
+V1.1 narrative-outputit:
+- `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.md`
+- `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.txt`
+- `R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v1_1.txt`
+
+V2 lukee canonical K24 V2 -CSV:n ja tuottaa sekä list- että narrative-tekstit
+samassa ajossa, sisältäen provenance-lauseen (K15_RData, no fallback).
+
+```bash
+Rscript R-scripts/K25/K25_RESULTS.V2_table2A-results-text-canonical.R \
+  --input=R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.csv \
+  --style=both
+```
+
+V2 outputit:
+- `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.md`
+- `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.txt`
+- `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.md`
+- `R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.txt`
+- `R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v2.txt`
+
+## K26 Reviewer Visuals (K26_VIS)
+
+`K26_VIS` tekee reviewer-figure setin K26 moderointimalleista (ei uusia analyysejä):
+- predicted `Delta_Composite_Z` by `frailty_cat_3 × FOF_status` (95% CI)
+- moderation plot: predicted `Delta_Composite_Z` vs `Composite_Z0` (facet `frailty_cat_3`, color `FOF_status`)
+- optional score sensitivity plot: predicted `Delta_Composite_Z` by `frailty_score_3 × FOF_status`
+
+```bash
+Rscript R-scripts/K26/K26_VIS.V1_composite-delta-predicted-plots.R --format=both
+```
+
+Tuotokset:
+- `R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_predicted_delta_by_frailtycat_x_fof.{png,pdf}`
+- `R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_moderation_delta_vs_baseline_by_frailtycat.{png,pdf}`
+- `R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_predicted_delta_by_frailtyscore_x_fof.{png,pdf}` (jos score-malli saatavilla)
+- `R-scripts/K26/outputs/K26_VIS/K26_VIS_provenance.txt`
+- `R-scripts/K26/outputs/K26_VIS/qc_summary.csv`
+- `R-scripts/K26/outputs/K26_VIS/sessionInfo.txt`
+
 ### Vaihtoehtoinen ajo: driver-skripti (jos olemassa)
 
 Jos repo sisältää driver-skriptin (esim. `R-scripts/run_mixed_fof_time.R`), varmista olemassaolo ennen käyttöä:
