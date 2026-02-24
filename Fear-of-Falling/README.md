@@ -329,6 +329,9 @@ Tuotokset:
 - `R-scripts/K26/outputs/K26_VIS/qc_summary.csv`
 - `R-scripts/K26/outputs/K26_VIS/sessionInfo.txt`
 
+Output artifacts are intentionally not versioned in git. Regenerate tables/figures
+locally by re-running the scripts above and keep `outputs/` content out of commits.
+
 ### Vaihtoehtoinen ajo: driver-skripti (jos olemassa)
 
 Jos repo sisältää driver-skriptin (esim. `R-scripts/run_mixed_fof_time.R`), varmista olemassaolo ennen käyttöä:
