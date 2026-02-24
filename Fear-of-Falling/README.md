@@ -331,6 +331,8 @@ Tuotokset:
 
 Output artifacts are intentionally not versioned in git. Regenerate tables/figures
 locally by re-running the scripts above and keep `outputs/` content out of commits.
+PR template for the canonical K24/K25/K26 review package:
+`docs/PR_DESCRIPTION_K24_K26.md`.
 
 ### Vaihtoehtoinen ajo: driver-skripti (jos olemassa)
 
