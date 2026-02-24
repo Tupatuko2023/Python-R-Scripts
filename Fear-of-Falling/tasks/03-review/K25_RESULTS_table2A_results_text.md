@@ -128,3 +128,7 @@ proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin
 - PASS: checks 1–7 succeed.
 - HOLD: missing provenance sentence, CSV↔text mismatch, missing output, or duplicate manifest labels.
 - Task movement to `04-done` remains human-only after signoff.
+
+## PR description template location
+PR description template moved to `docs/PR_DESCRIPTION_K24_K26.md` to avoid drift.
+Copy-paste that file's contents into the GitHub PR body (single source of truth).
