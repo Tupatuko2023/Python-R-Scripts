@@ -1,0 +1,12 @@
+flag,missing_without,missing_with,missing_total,pct_without,pct_with
+age_missing,0,0,0,0,0
+sex_missing,0,0,0,0,0
+bmi_missing,2,8,10,2.6,4
+MWS0_missing,3,21,24,3.9,10.6
+MWS2_missing,4,12,16,5.2,6
+FTSST0_missing,0,3,3,0,1.5
+FTSST2_missing,5,10,15,6.5,5
+SLS0_missing,2,8,10,2.6,4
+SLS2_missing,2,5,7,2.6,2.5
+HGS0_missing,1,1,2,1.3,0.5
+HGS2_missing,2,3,5,2.6,1.5

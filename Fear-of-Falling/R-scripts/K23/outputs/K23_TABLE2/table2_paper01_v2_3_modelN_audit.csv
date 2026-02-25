@@ -1,0 +1,22 @@
+Outcome,sex_stratum,population_mode,dv_mode,model,formula,include_sex_in_model,nobs,n_without,n_with
+Composite,all,raw,delta,A,delta ~ FOF_status_f,FALSE,276,77,199
+Composite,all,raw,delta,B,delta ~ FOF_status_f + baseline,FALSE,276,77,199
+Composite,all,raw,delta,C,delta ~ FOF_status_f + baseline + age + BMI + Sex_f,TRUE,266,75,191
+HGS,all,raw,delta,A,delta ~ FOF_status_f,FALSE,269,74,195
+HGS,all,raw,delta,B,delta ~ FOF_status_f + baseline,FALSE,269,74,195
+HGS,all,raw,delta,C,delta ~ FOF_status_f + baseline + age + BMI + Sex_f,TRUE,259,72,187
+HGS (female),female,raw,delta,A,delta ~ FOF_status_f,FALSE,245,64,181
+HGS (female),female,raw,delta,B,delta ~ FOF_status_f + baseline,FALSE,245,64,181
+HGS (female),female,raw,delta,C,delta ~ FOF_status_f + baseline + age + BMI,FALSE,235,62,173
+HGS (male),male,raw,delta,A,delta ~ FOF_status_f,FALSE,24,10,14
+HGS (male),male,raw,delta,B,delta ~ FOF_status_f + baseline,FALSE,24,10,14
+HGS (male),male,raw,delta,C,delta ~ FOF_status_f + baseline + age + BMI,FALSE,24,10,14
+MWS,all,raw,delta,A,delta ~ FOF_status_f,FALSE,247,72,175
+MWS,all,raw,delta,B,delta ~ FOF_status_f + baseline,FALSE,247,72,175
+MWS,all,raw,delta,C,delta ~ FOF_status_f + baseline + age + BMI + Sex_f,TRUE,238,70,168
+FTSST,all,raw,delta,A,delta ~ FOF_status_f,FALSE,259,72,187
+FTSST,all,raw,delta,B,delta ~ FOF_status_f + baseline,FALSE,259,72,187
+FTSST,all,raw,delta,C,delta ~ FOF_status_f + baseline + age + BMI + Sex_f,TRUE,250,71,179
+SLS,all,raw,delta,A,delta ~ FOF_status_f,FALSE,263,74,189
+SLS,all,raw,delta,B,delta ~ FOF_status_f + baseline,FALSE,263,74,189
+SLS,all,raw,delta,C,delta ~ FOF_status_f + baseline + age + BMI + Sex_f,TRUE,253,72,181

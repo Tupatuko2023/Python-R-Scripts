@@ -1,0 +1,8 @@
+step,definition,N_without,N_with,N_total,Delta_prev_without,Delta_prev_with,Delta_prev_total
+Step0_raw,Non-missing FOF group,77,199,276,NA,NA,NA
+Step1_covariates,"Raw ∩ covariates complete (age, sex_mapped, BMI)",75,191,266,-2,-8,-10
+Step2_MWS_cc,Step1 ∩ MWS baseline+followup complete,70,168,238,-5,-23,-28
+Step2_FTSST_cc,Step1 ∩ FTSST baseline+followup complete,71,179,250,1,11,12
+Step2_SLS_cc,Step1 ∩ SLS baseline+followup complete,72,181,253,1,2,3
+Step2_HGS_cc,Step1 ∩ HGS baseline+followup complete,72,187,259,0,6,6
+Step3_all_outcomes,Step1 ∩ all outcomes complete (MWS+FTSST+SLS+HGS),67,155,222,-5,-32,-37

@@ -1486,3 +1486,204 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2026-02-24 14:54:23.546105,K26_VIS,K26_VIS_provenance_txt,txt,R-scripts/K26/outputs/K26_VIS/K26_VIS_provenance.txt,NA,K26_VIS input/model/grid provenance trace
 2026-02-24 14:54:23.765328,K26_VIS,K26_VIS_qc_summary_csv,qc_table_csv,R-scripts/K26/outputs/K26_VIS/qc_summary.csv,5,K26_VIS QC checks for grid/prediction completeness
 2026-02-24 14:54:24.023581,K26_VIS,K26_VIS_sessionInfo_txt,sessioninfo,R-scripts/K26/outputs/K26_VIS/sessionInfo.txt,NA,K26_VIS sessionInfo + renv diagnostics
+manifest/sessionInfo.txt,2026-02-25 16.32.33,REPRO,54821c8,NA,NA,NA
+manifest/renv_diagnostics.txt,2026-02-25 16.32.33,REPRO,54821c8,NA,NA,NA
+2026-02-25 16:33:12.026489,K15,K15.3._frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15.3._frailty_count_3_overall.csv,NA,NA
+2026-02-25 16:33:12.357774,K15,K15.3._frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15.3._frailty_count_3_overall.html,NA,NA
+2026-02-25 16:33:12.620481,K15,K15.3._frailty_cat_3_overall,table_csv,R-scripts/K15/outputs/K15.3._frailty_cat_3_overall.csv,NA,NA
+2026-02-25 16:33:12.86138,K15,K15.3._frailty_cat_3_overall,table_html,R-scripts/K15/outputs/K15.3._frailty_cat_3_overall.html,NA,NA
+2026-02-25 16:33:13.095917,K15,K15.3._frailty_count_4_overall,table_csv,R-scripts/K15/outputs/K15.3._frailty_count_4_overall.csv,NA,NA
+2026-02-25 16:33:13.38075,K15,K15.3._frailty_count_4_overall,table_html,R-scripts/K15/outputs/K15.3._frailty_count_4_overall.html,NA,NA
+2026-02-25 16:33:13.595353,K15,K15.3._frailty_cat_4_overall,table_csv,R-scripts/K15/outputs/K15.3._frailty_cat_4_overall.csv,NA,NA
+2026-02-25 16:33:13.811575,K15,K15.3._frailty_cat_4_overall,table_html,R-scripts/K15/outputs/K15.3._frailty_cat_4_overall.html,NA,NA
+2026-02-25 16:33:14.067543,K15,K15.3._frailty_count_3_balance_overall,table_csv,R-scripts/K15/outputs/K15.3._frailty_count_3_balance_overall.csv,NA,NA
+2026-02-25 16:33:14.285048,K15,K15.3._frailty_count_3_balance_overall,table_html,R-scripts/K15/outputs/K15.3._frailty_count_3_balance_overall.html,NA,NA
+2026-02-25 16:33:14.510775,K15,K15.3._frailty_cat_3_balance_overall,table_csv,R-scripts/K15/outputs/K15.3._frailty_cat_3_balance_overall.csv,NA,NA
+2026-02-25 16:33:14.744122,K15,K15.3._frailty_cat_3_balance_overall,table_html,R-scripts/K15/outputs/K15.3._frailty_cat_3_balance_overall.html,NA,NA
+2026-02-25 16:33:15.041367,K15,K15.3._frailty_cat3_by_FOF,table_csv,R-scripts/K15/outputs/K15.3._frailty_cat3_by_FOF.csv,NA,NA
+2026-02-25 16:33:15.287172,K15,K15.3._frailty_cat3_by_FOF,table_html,R-scripts/K15/outputs/K15.3._frailty_cat3_by_FOF.html,NA,NA
+2026-02-25 16:33:15.541832,K15,K15.3._frailty_cat4_by_FOF,table_csv,R-scripts/K15/outputs/K15.3._frailty_cat4_by_FOF.csv,NA,NA
+2026-02-25 16:33:15.763279,K15,K15.3._frailty_cat4_by_FOF,table_html,R-scripts/K15/outputs/K15.3._frailty_cat4_by_FOF.html,NA,NA
+2026-02-25 16:33:16.816968,K15,K15.3._frailty_cat3_by_FOF,figure_png,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15.3._frailty_cat3_by_FOF.png,NA,Stacked proportion plot: frailty_cat_3 distribution by FOF-status.
+2026-02-25 16:33:17.260536,K15,K15.3._balance_model_metrics,table_csv,R-scripts/K15/outputs/K15.3._balance_model_metrics.csv,NA,NA
+2026-02-25 16:33:17.508565,K15,K15.3._balance_model_metrics,table_html,R-scripts/K15/outputs/K15.3._balance_model_metrics.html,NA,NA
+2026-02-25 16:33:17.786594,K15,K15.3._balance_model_coefficients,table_csv,R-scripts/K15/outputs/K15.3._balance_model_coefficients.csv,NA,NA
+2026-02-25 16:33:18.019398,K15,K15.3._balance_model_coefficients,table_html,R-scripts/K15/outputs/K15.3._balance_model_coefficients.html,NA,NA
+2026-02-25 16:33:18.258591,K15,K15.3._balance_model_nested_test_M0_vs_M1,table_csv,R-scripts/K15/outputs/K15.3._balance_model_nested_test_M0_vs_M1.csv,NA,NA
+2026-02-25 16:33:18.492941,K15,K15.3._balance_model_nested_test_M0_vs_M1,table_html,R-scripts/K15/outputs/K15.3._balance_model_nested_test_M0_vs_M1.html,NA,NA
+2026-02-25 16:33:18.753406,K15,K15.3._balance_model_nested_test_M0_vs_M2,table_csv,R-scripts/K15/outputs/K15.3._balance_model_nested_test_M0_vs_M2.csv,NA,NA
+2026-02-25 16:33:19.049184,K15,K15.3._balance_model_nested_test_M0_vs_M2,table_html,R-scripts/K15/outputs/K15.3._balance_model_nested_test_M0_vs_M2.html,NA,NA
+2026-02-25 16:37:20.181168,K21,compare_frailty_proxies_delta_composite_z,table_csv,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.csv,12,Model A vs B on delta_composite_z using common-sample and non-nested fit metrics
+2026-02-25 16:37:20.650371,K21,compare_frailty_proxies_delta_composite_z,doc_md,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.md,NA,Narrative summary crosschecked against CSV
+2026-02-25 16:37:20.934768,K21,compare_frailty_proxies_delta_forest,plot_png,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_forest.png,239,Single-panel forest plot: frail vs robust estimate (A vs B)
+2026-02-25 16:37:26.625277,K22,K22_sls_models_fixed_effects,table_csv,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_models_fixed_effects.csv,55,K22 targeted SLS models: coefficients + CI + p
+2026-02-25 16:37:26.640146,K22,K22_sls_model_metrics,table_csv,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_model_metrics.csv,8,"K22 targeted SLS models: N, AIC, R2 and spline-vs-linear p"
+2026-02-25 16:37:26.645362,K22,K22_sls_evidence_note,doc_md,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_evidence_note.md,NA,Manuscript-ready interpretation for K22 SLS checks
+2026-02-25 16:37:26.6498,K22,K22_sls_delta_vs_sls,plot_png,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_delta_vs_sls.png,256,Single-panel scatter with linear and loess fits
+2026-02-25 16:37:30.370653,K23_TABLE2,table2_paper01_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv,7,Paper_01 Table 2 dataframe
+manifest/sessionInfo.txt,2026-02-25 16.37.32,REPRO,54821c8,NA,NA,NA
+manifest/renv_diagnostics.txt,2026-02-25 16.37.32,REPRO,54821c8,NA,NA,NA
+2026-02-25 16:44:28.9821,K21,compare_frailty_proxies_delta_composite_z,table_csv,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.csv,12,Model A vs B on delta_composite_z using common-sample and non-nested fit metrics
+2026-02-25 16:44:29.494142,K21,compare_frailty_proxies_delta_composite_z,doc_md,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.md,NA,Narrative summary crosschecked against CSV
+2026-02-25 16:44:29.8728,K21,compare_frailty_proxies_delta_forest,plot_png,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_forest.png,239,Single-panel forest plot: frail vs robust estimate (A vs B)
+2026-02-25 16:44:34.763349,K22,K22_sls_models_fixed_effects,table_csv,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_models_fixed_effects.csv,55,K22 targeted SLS models: coefficients + CI + p
+2026-02-25 16:44:34.776416,K22,K22_sls_model_metrics,table_csv,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_model_metrics.csv,8,"K22 targeted SLS models: N, AIC, R2 and spline-vs-linear p"
+2026-02-25 16:44:34.781663,K22,K22_sls_evidence_note,doc_md,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_evidence_note.md,NA,Manuscript-ready interpretation for K22 SLS checks
+2026-02-25 16:44:34.78825,K22,K22_sls_delta_vs_sls,plot_png,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_delta_vs_sls.png,256,Single-panel scatter with linear and loess fits
+2026-02-25 16:44:37.936561,K23_TABLE2,table2_paper01_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv,7,Paper_01 Table 2 dataframe
+2026-02-25 16:44:38.804081,K23_TABLE2,table2_paper01_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html,7,gt HTML output
+2026-02-25 16:44:48.373433,K23_TABLE2,sessionInfo,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt,NA,sessionInfo + renv diagnostics
+R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt,2026-02-25 16.44.49,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html,2026-02-25 16.44.49,K23_TABLE2,54821c8,NA,NA,NA
+2026-02-25 16:44:51.748779,K23_TABLE2,table2_cohort_attrition_qc_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_cohort_attrition_qc.csv,7,K23 Table2 manuscript cohort attrition steps (raw -> covariates -> outcomes -> intersection)
+2026-02-25 16:44:52.126987,K23_TABLE2,table2_missingness_matrix_qc_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_missingness_matrix_by_fof.csv,11,K23 Table2 variable missingness matrix by FOF group
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_cohort_attrition_qc.csv,2026-02-25 16.44.52,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_missingness_matrix_by_fof.csv,2026-02-25 16.44.52,K23_TABLE2,54821c8,NA,NA,NA
+2026-02-25 16:44:55.699165,K23_TABLE2,table2_paper01_v2_2_debug_models_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_models.csv,56,V2.2 model+population debug grid (followup vs delta ANCOVA)
+2026-02-25 16:44:56.008853,K23_TABLE2,table2_paper01_v2_2_debug_summary_txt,qc_text,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_summary.txt,NA,V2.2 deterministic mismatch diagnostics summary
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_models.csv,2026-02-25 16.44.56,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_summary.txt,2026-02-25 16.44.56,K23_TABLE2,54821c8,NA,NA,NA
+2026-02-25 16:44:59.421196,K23_TABLE2,table2_paper01_v2_3_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.csv,7,Published replica Table 2 (raw pop + delta models + fixed N header)
+2026-02-25 16:44:59.953206,K23_TABLE2,table2_paper01_v2_3_modelN_audit_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_modelN_audit.csv,21,"Model-wise actual N audit for V2.3 (A/B/C, outcome/strata)"
+2026-02-25 16:45:00.662371,K23_TABLE2,table2_paper01_v2_3_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.html,7,Published replica Table 2 HTML (V2.3)
+2026-02-25 16:45:10.632707,K23_TABLE2,sessionInfo_v2_3,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2_3.txt,NA,sessionInfo + renv diagnostics (V2.3)
+R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2_3.txt,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_modelN_audit.csv,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.csv,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.html,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
+2026-02-25 16:45:13.159201,K23_TABLE2,table2_paper01_v2_3_paranoia_diff_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_diff.csv,75,V2.4 paranoia-check cell-level numeric diffs vs manuscript gold standard
+2026-02-25 16:45:13.55379,K23_TABLE2,table2_paper01_v2_3_paranoia_summary_txt,qc_text,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_summary.txt,NA,V2.4 paranoia-check summary (max diff + tolerance verdict)
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_diff.csv,2026-02-25 16.45.14,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_summary.txt,2026-02-25 16.45.14,K23_TABLE2,54821c8,NA,NA,NA
+2026-02-25 16:45:16.874019,K23_TABLE2,table2_paper01_v2_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.csv,7,Paper_01 Table 2 V2 aligned dataframe
+2026-02-25 16:45:17.642943,K23_TABLE2,table2_paper01_v2_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.html,7,gt HTML output V2
+2026-02-25 16:45:26.241382,K23_TABLE2,sessionInfo_v2,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2.txt,NA,sessionInfo + renv diagnostics (V2)
+R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2.txt,2026-02-25 16.45.26,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.csv,2026-02-25 16.45.26,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.html,2026-02-25 16.45.26,K23_TABLE2,54821c8,NA,NA,NA
+manifest/sessionInfo.txt,2026-02-25 16.45.37,REPRO,54821c8,NA,NA,NA
+manifest/renv_diagnostics.txt,2026-02-25 16.45.37,REPRO,54821c8,NA,NA,NA
+2026-02-25 16:46:15.420904,K15,K15_frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
+2026-02-25 16:46:15.775741,K15,K15_frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
+2026-02-25 16:46:16.053782,K15,K15_frailty_cat_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv,NA,NA
+2026-02-25 16:46:16.325948,K15,K15_frailty_cat_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_3_overall.html,NA,NA
+2026-02-25 16:46:16.596596,K15,K15_frailty_count_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_4_overall.csv,NA,NA
+2026-02-25 16:46:16.855143,K15,K15_frailty_count_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_4_overall.html,NA,NA
+2026-02-25 16:46:17.088992,K15,K15_frailty_cat_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv,NA,NA
+2026-02-25 16:46:17.318215,K15,K15_frailty_cat_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_4_overall.html,NA,NA
+2026-02-25 16:46:17.611511,K15,K15_frailty_cat3_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.csv,NA,NA
+2026-02-25 16:46:17.840948,K15,K15_frailty_cat3_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.html,NA,NA
+2026-02-25 16:46:18.09334,K15,K15_frailty_cat4_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.csv,NA,NA
+2026-02-25 16:46:18.327251,K15,K15_frailty_cat4_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.html,NA,NA
+2026-02-25 16:46:18.666056,K15,K15_chisq_FOF_by_frailty_cat3,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.csv,NA,NA
+2026-02-25 16:46:18.924536,K15,K15_chisq_FOF_by_frailty_cat3,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.html,NA,NA
+2026-02-25 16:46:19.197357,K15,K15_chisq_FOF_by_frailty_cat4,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.csv,NA,NA
+2026-02-25 16:46:19.431864,K15,K15_chisq_FOF_by_frailty_cat4,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.html,NA,NA
+2026-02-25 16:46:20.172216,K15,K15_frailty_cat3_by_FOF,figure_png,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.png,NA,Stacked proportion plot: frailty_cat_3 distribution by FOF-status.
+2026-02-25 16:46:20.487345,K15,sessioninfo,sessioninfo,R-scripts/K15/outputs/sessioninfo_K15.txt,NA,NA
+2026-02-25 16:46:38.68819,K24_TABLE2A,table2A_paper_ready_canonical_cat_v2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.csv,5,K24 V2 canonical cat paper-ready CSV
+2026-02-25 16:46:39.006544,K24_TABLE2A,table2A_paper_ready_canonical_cat_v2_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.html,5,K24 V2 canonical cat paper-ready HTML
+2026-02-25 16:46:39.26521,K24_TABLE2A,table2A_paper_ready_canonical_score_v2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.csv,5,K24 V2 canonical score paper-ready CSV
+2026-02-25 16:46:39.529099,K24_TABLE2A,table2A_paper_ready_canonical_score_v2_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.html,5,K24 V2 canonical score paper-ready HTML
+2026-02-25 16:46:39.781469,K24_TABLE2A,table2A_audit_canonical_v2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_canonical_v2.csv,12,K24 V2 canonical audit CSV with frailty provenance fields
+2026-02-25 16:46:40.003703,K24_TABLE2A,table2A_cat_vs_score_compare_canonical_v2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv,6,K24 V2 canonical cat vs score compare CSV
+2026-02-25 16:46:40.234729,K24_TABLE2A,K24_frailty_provenance_v2_txt,qc_text,R-scripts/K24/outputs/K24_TABLE2A/K24_frailty_provenance_v2.txt,NA,K24 V2 canonical frailty provenance
+2026-02-25 16:46:40.459268,K24_TABLE2A,sessionInfo_v2,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v2.txt,NA,K24 V2 sessionInfo + renv diagnostics
+2026-02-25 16:49:32.972573,K21,compare_frailty_proxies_delta_composite_z,table_csv,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.csv,12,Model A vs B on delta_composite_z using common-sample and non-nested fit metrics
+2026-02-25 16:49:33.551657,K21,compare_frailty_proxies_delta_composite_z,doc_md,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.md,NA,Narrative summary crosschecked against CSV
+2026-02-25 16:49:33.949674,K21,compare_frailty_proxies_delta_forest,plot_png,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_forest.png,239,Single-panel forest plot: frail vs robust estimate (A vs B)
+2026-02-25 16:49:39.292989,K22,K22_sls_models_fixed_effects,table_csv,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_models_fixed_effects.csv,55,K22 targeted SLS models: coefficients + CI + p
+2026-02-25 16:49:39.301829,K22,K22_sls_model_metrics,table_csv,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_model_metrics.csv,8,"K22 targeted SLS models: N, AIC, R2 and spline-vs-linear p"
+2026-02-25 16:49:39.30717,K22,K22_sls_evidence_note,doc_md,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_evidence_note.md,NA,Manuscript-ready interpretation for K22 SLS checks
+2026-02-25 16:49:39.313188,K22,K22_sls_delta_vs_sls,plot_png,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_delta_vs_sls.png,256,Single-panel scatter with linear and loess fits
+2026-02-25 16:49:42.607314,K23_TABLE2,table2_paper01_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv,7,Paper_01 Table 2 dataframe
+2026-02-25 16:49:43.232601,K23_TABLE2,table2_paper01_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html,7,gt HTML output
+2026-02-25 16:49:52.274405,K23_TABLE2,sessionInfo,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt,NA,sessionInfo + renv diagnostics
+2026-02-25 16:49:55.618952,K23_TABLE2,table2_cohort_attrition_qc_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_cohort_attrition_qc.csv,7,K23 Table2 manuscript cohort attrition steps (raw -> covariates -> outcomes -> intersection)
+2026-02-25 16:49:55.908055,K23_TABLE2,table2_missingness_matrix_qc_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_missingness_matrix_by_fof.csv,11,K23 Table2 variable missingness matrix by FOF group
+2026-02-25 16:49:59.243855,K23_TABLE2,table2_paper01_v2_2_debug_models_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_models.csv,56,V2.2 model+population debug grid (followup vs delta ANCOVA)
+2026-02-25 16:49:59.481706,K23_TABLE2,table2_paper01_v2_2_debug_summary_txt,qc_text,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_summary.txt,NA,V2.2 deterministic mismatch diagnostics summary
+2026-02-25 16:50:03.174035,K23_TABLE2,table2_paper01_v2_3_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.csv,7,Published replica Table 2 (raw pop + delta models + fixed N header)
+2026-02-25 16:50:03.542707,K23_TABLE2,table2_paper01_v2_3_modelN_audit_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_modelN_audit.csv,21,"Model-wise actual N audit for V2.3 (A/B/C, outcome/strata)"
+2026-02-25 16:50:04.199977,K23_TABLE2,table2_paper01_v2_3_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.html,7,Published replica Table 2 HTML (V2.3)
+2026-02-25 16:50:13.015372,K23_TABLE2,sessionInfo_v2_3,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2_3.txt,NA,sessionInfo + renv diagnostics (V2.3)
+2026-02-25 16:50:15.733049,K23_TABLE2,table2_paper01_v2_3_paranoia_diff_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_diff.csv,75,V2.4 paranoia-check cell-level numeric diffs vs manuscript gold standard
+2026-02-25 16:50:16.099284,K23_TABLE2,table2_paper01_v2_3_paranoia_summary_txt,qc_text,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_summary.txt,NA,V2.4 paranoia-check summary (max diff + tolerance verdict)
+2026-02-25 16:50:19.246795,K23_TABLE2,table2_paper01_v2_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.csv,7,Paper_01 Table 2 V2 aligned dataframe
+2026-02-25 16:50:19.864338,K23_TABLE2,table2_paper01_v2_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.html,7,gt HTML output V2
+2026-02-25 16:50:28.45751,K23_TABLE2,sessionInfo_v2,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2.txt,NA,sessionInfo + renv diagnostics (V2)
+2026-02-25 16:50:32.470182,K24_TABLE2A,table2A_paper_ready_v1_1_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.csv,5,"K24 Table 2A paper-ready CSV (no pooled HGS, contrasts omitted)"
+2026-02-25 16:50:32.81993,K24_TABLE2A,table2A_audit_v1_1_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_v1_1.csv,6,K24 Table 2A audit CSV (includes pooled HGS + frailty contrasts)
+2026-02-25 16:50:33.551149,K24_TABLE2A,table2A_paper_ready_v1_1_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.html,5,K24 Table 2A paper-ready HTML (no pooled HGS)
+2026-02-25 16:50:42.682995,K24_TABLE2A,sessionInfo_v1_1,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_1.txt,NA,K24 V1.1 sessionInfo + renv diagnostics
+R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_1.txt,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_v1_1.csv,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.csv,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.html,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
+2026-02-25 16:50:46.397485,K24_TABLE2A,table2A_paper_ready_score_v1_2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.csv,5,K24 Table 2A paper-ready score-mode CSV (no pooled HGS)
+2026-02-25 16:50:46.750001,K24_TABLE2A,table2A_audit_score_v1_2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_score_v1_2.csv,6,K24 Table 2A audit score-mode CSV (includes pooled HGS)
+2026-02-25 16:50:47.094774,K24_TABLE2A,table2A_cat_vs_score_compare_v1_2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_v1_2.csv,6,K24 cat vs score frailty comparison (AIC + effects + agreement flag)
+2026-02-25 16:50:47.713184,K24_TABLE2A,table2A_paper_ready_score_v1_2_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.html,5,K24 Table 2A paper-ready score-mode HTML (no pooled HGS)
+2026-02-25 16:50:56.335251,K24_TABLE2A,sessionInfo_v1_2,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_2.txt,NA,K24 V1.2 sessionInfo + renv diagnostics
+R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_2.txt,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_score_v1_2.csv,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_v1_2.csv,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.csv,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.html,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+2026-02-25 16:50:59.755921,K24_TABLE2A,table2A_delta_by_test_with_frailty_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv,6,K24 Table 2A delta-by-test with joint FOF+frailty model
+2026-02-25 16:51:00.428263,K24_TABLE2A,table2A_delta_by_test_with_frailty_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html,6,K24 Table 2A HTML
+2026-02-25 16:51:09.871234,K24_TABLE2A,sessionInfo,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo.txt,NA,K24 sessionInfo + renv diagnostics
+R-scripts/K24/outputs/K24_TABLE2A/sessionInfo.txt,2026-02-25 16.51.10,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv,2026-02-25 16.51.10,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html,2026-02-25 16.51.10,K24_TABLE2A,54821c8,NA,NA,NA
+2026-02-25 16:51:22.393691,K24_TABLE2A,table2A_paper_ready_canonical_cat_v2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.csv,5,K24 V2 canonical cat paper-ready CSV
+2026-02-25 16:51:22.761033,K24_TABLE2A,table2A_paper_ready_canonical_cat_v2_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.html,5,K24 V2 canonical cat paper-ready HTML
+2026-02-25 16:51:23.153957,K24_TABLE2A,table2A_paper_ready_canonical_score_v2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.csv,5,K24 V2 canonical score paper-ready CSV
+2026-02-25 16:51:23.53781,K24_TABLE2A,table2A_paper_ready_canonical_score_v2_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.html,5,K24 V2 canonical score paper-ready HTML
+2026-02-25 16:51:23.853613,K24_TABLE2A,table2A_audit_canonical_v2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_canonical_v2.csv,12,K24 V2 canonical audit CSV with frailty provenance fields
+2026-02-25 16:51:24.138642,K24_TABLE2A,table2A_cat_vs_score_compare_canonical_v2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv,6,K24 V2 canonical cat vs score compare CSV
+2026-02-25 16:51:24.400646,K24_TABLE2A,K24_frailty_provenance_v2_txt,qc_text,R-scripts/K24/outputs/K24_TABLE2A/K24_frailty_provenance_v2.txt,NA,K24 V2 canonical frailty provenance
+2026-02-25 16:51:24.684365,K24_TABLE2A,sessionInfo_v2,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v2.txt,NA,K24 V2 sessionInfo + renv diagnostics
+2026-02-25 16:51:44.91886,K25_RESULTS,results_table2A_from_K24_v1_1_narrative_md,doc_md,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.md,5,K25 V1.1 paper-ready results text from K24 paper-ready Table 2A CSV
+2026-02-25 16:51:45.279576,K25_RESULTS,results_table2A_from_K24_v1_1_narrative_txt,text,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.txt,5,K25 V1.1 plain-text results narrative from K24 paper-ready Table 2A CSV
+2026-02-25 16:51:54.226004,K25_RESULTS,sessionInfo_v1_1,sessioninfo,R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v1_1.txt,NA,K25 V1.1 sessionInfo + renv diagnostics
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.md,2026-02-25 16.51.55,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.txt,2026-02-25 16.51.55,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v1_1.txt,2026-02-25 16.51.55,K25_RESULTS,54821c8,NA,NA,NA
+2026-02-25 16:51:57.042522,K25_RESULTS,results_table2A_from_K24_v1_1_md,doc_md,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.md,5,K25 results text generated from K24 paper-ready Table 2A CSV
+2026-02-25 16:51:57.425781,K25_RESULTS,results_table2A_from_K24_v1_1_txt,text,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.txt,5,K25 plain-text results paragraph from K24 paper-ready Table 2A CSV
+2026-02-25 16:52:07.164073,K25_RESULTS,sessionInfo,sessioninfo,R-scripts/K25/outputs/K25_RESULTS/sessionInfo.txt,NA,K25 sessionInfo + renv diagnostics
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.md,2026-02-25 16.52.08,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.txt,2026-02-25 16.52.08,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/sessionInfo.txt,2026-02-25 16.52.08,K25_RESULTS,54821c8,NA,NA,NA
+2026-02-25 16:52:10.216489,K25_RESULTS,results_table2A_from_K24_canonical_v2_md,doc_md,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.md,5,K25 V2 list style results text from K24 canonical CSV
+2026-02-25 16:52:10.653179,K25_RESULTS,results_table2A_from_K24_canonical_v2_txt,text,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.txt,5,K25 V2 list style plain text from K24 canonical CSV
+2026-02-25 16:52:10.991999,K25_RESULTS,results_table2A_from_K24_canonical_v2_narrative_md,doc_md,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.md,5,K25 V2 narrative results text from K24 canonical CSV
+2026-02-25 16:52:11.343805,K25_RESULTS,results_table2A_from_K24_canonical_v2_narrative_txt,text,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.txt,5,K25 V2 narrative plain text from K24 canonical CSV
+2026-02-25 16:52:20.52582,K25_RESULTS,sessionInfo_v2,sessioninfo,R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v2.txt,NA,K25 V2 sessionInfo + renv diagnostics
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.md,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.txt,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.md,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.txt,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v2.txt,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+2026-02-25 16:52:26.543758,K26_LMM_MOD,K26_LRT_primary_vs_mod_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_cat.csv,2,K26 LRT: primary vs moderation
+2026-02-25 16:52:27.016089,K26_LMM_MOD,K26_fixed_effects_primary_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_cat.csv,12,K26 fixed effects primary
+2026-02-25 16:52:27.468208,K26_LMM_MOD,K26_fixed_effects_moderation_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_cat.csv,18,K26 fixed effects moderation
+2026-02-25 16:52:27.818161,K26_LMM_MOD,K26_simple_slopes_change_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_cat.csv,9,K26 simple slopes change 12-0
+2026-02-25 16:52:28.191703,K26_LMM_MOD,K26_results_text_fi_cat,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_cat.txt,NA,K26 Finnish results text generated from model tables
+2026-02-25 16:52:28.562664,K26_LMM_MOD,K26_model_primary_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_cat.rds,NA,K26 lmer primary model object
+2026-02-25 16:52:28.912468,K26_LMM_MOD,K26_model_moderation_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_cat.rds,NA,K26 lmer moderation model object
+2026-02-25 16:52:29.929058,K26_LMM_MOD,K26_LRT_primary_vs_mod_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_score.csv,2,K26 LRT: primary vs moderation
+2026-02-25 16:52:30.359384,K26_LMM_MOD,K26_fixed_effects_primary_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_score.csv,10,K26 fixed effects primary
+2026-02-25 16:52:30.751713,K26_LMM_MOD,K26_fixed_effects_moderation_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_score.csv,14,K26 fixed effects moderation
+2026-02-25 16:52:31.101559,K26_LMM_MOD,K26_simple_slopes_change_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_score.csv,12,K26 simple slopes change 12-0
+2026-02-25 16:52:31.434491,K26_LMM_MOD,K26_results_text_fi_score,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_score.txt,NA,K26 Finnish results text generated from model tables
+2026-02-25 16:52:31.715385,K26_LMM_MOD,K26_model_primary_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_score.rds,NA,K26 lmer primary model object
+2026-02-25 16:52:31.981663,K26_LMM_MOD,K26_model_moderation_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_score.rds,NA,K26 lmer moderation model object
+2026-02-25 16:52:32.287331,K26_LMM_MOD,K26_frailty_provenance_txt,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt,NA,K26 frailty source/fallback/crosscheck trace
+2026-02-25 16:52:41.269998,K26_LMM_MOD,K26_sessionInfo,sessioninfo,R-scripts/K26/outputs/K26/K26_LMM_MOD/sessionInfo.txt,NA,K26 sessionInfo + renv diagnostics
+R-scripts/K26/outputs/K26_VIS/K26_VIS_provenance.txt,2026-02-25 16.53.00,K26_VIS,54821c8
+R-scripts/K26/outputs/K26_VIS/qc_summary.csv,2026-02-25 16.53.00,K26_VIS,54821c8
+R-scripts/K26/outputs/K26_VIS/sessionInfo.txt,2026-02-25 16.53.00,K26_VIS,54821c8
+manifest/sessionInfo.txt,2026-02-25 16.53.10,REPRO,54821c8
+manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8

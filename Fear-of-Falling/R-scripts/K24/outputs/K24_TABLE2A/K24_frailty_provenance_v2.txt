@@ -1,0 +1,14 @@
+K24 canonical frailty provenance v2
+timestamp=2026-02-25 16:51:13
+script_version=V2
+input_path=C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_analysis_data.RData
+input_kind=RData
+frailty_cat_source=K15_RData
+frailty_score_source=K15_RData
+fallback_used=FALSE
+crosscheck_ok=TRUE
+placeholder_used=FALSE
+rows_paper_cat=5
+rows_paper_score=5
+rows_audit=12
+rows_compare=6

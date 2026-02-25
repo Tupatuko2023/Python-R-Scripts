@@ -1,0 +1,15 @@
+K26 (cat) tulosyhteenveto
+- LRT primary vs moderation p-arvo: <0.001
+- 3-way termit (time_f12:*:cComposite_Z0) fixed effects -taulukosta:
+  - time_f12:cComposite_Z0: beta=0.2484, p=0.248
+  - time_f12:frailty_cat_3Pre-frail:cComposite_Z0: beta=-0.0700, p=0.772
+  - time_f12:frailty_cat_3Frail:cComposite_Z0: beta=-0.8331, p=0.001
+- Yksinkertaiset slope-muutokset (12-0) taulukosta:
+  - group=Robust, cComposite_Z0=-0.435, change12-0=0.2279, p=0.138
+  - group=Pre-frail, cComposite_Z0=-0.435, change12-0=0.0781, p=0.282
+  - group=Frail, cComposite_Z0=-0.435, change12-0=-0.2560, p=<0.001
+  - group=Robust, cComposite_Z0=-0.014, change12-0=0.3325, p=<0.001
+  - group=Pre-frail, cComposite_Z0=-0.014, change12-0=0.1532, p=0.001
+  - group=Frail, cComposite_Z0=-0.014, change12-0=-0.5022, p=<0.001
+- Tulkinta: 3-way-moderointi on eksploratiivinen; tulkinta varovaisesti.
+- Backbone-termi time_f:FOF_status sisältyi molempiin malleihin.

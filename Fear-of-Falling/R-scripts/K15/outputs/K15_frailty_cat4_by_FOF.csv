@@ -1,0 +1,7 @@
+FOF_status_factor,frailty_cat_4,n,row_total,row_proportion
+nonFOF,robust,12,71,0.16901408450704225
+nonFOF,pre-frail,54,71,0.7605633802816901
+nonFOF,frail,5,71,0.07042253521126761
+FOF,robust,26,170,0.15294117647058825
+FOF,pre-frail,131,170,0.7705882352941177
+FOF,frail,13,170,0.07647058823529412

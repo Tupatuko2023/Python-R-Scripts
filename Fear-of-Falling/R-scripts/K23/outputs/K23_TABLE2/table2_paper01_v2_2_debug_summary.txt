@@ -1,0 +1,23 @@
+K23_TABLE2 V2.2 debug summary
+Timestamp: 2026-02-25 14:49:59 UTC
+Input: C:/GitWork/Python-R-Scripts/Fear-of-Falling/data/external/KaatumisenPelko.csv
+
+Population anchors:
+- raw (non-missing FOF): 77/199
+- all_outcomes_intersection (covariates + all 4 outcomes): 67/155
+
+Manuscript reference p-values included in this run:
+- Available anchors in repo/user packet are partial. Current hardcoded anchor:
+  * MWS Model A (crude) = 0.220
+- Other manuscript p-values are NA in this debug run (no verified source file in repo snapshot).
+
+Best match for MWS crude p-value anchor (0.220):
+- population=raw, dv_mode=delta, p_A=0.220, abs_diff_A=0.000, N=70/168
+
+Best overall among available manuscript anchors:
+- outcome=MWS, population=raw, dv_mode=delta, overall_abs_diff=0.000
+
+Interpretation rule:
+- If delta DV combinations consistently minimize abs_diff vs manuscript anchors, manuscript likely used delta models.
+- If followup DV combinations minimize abs_diff, manuscript likely used follow-up ANCOVA.
+- If no close match even with model/population sweep, mismatch likely due to dataset extraction/cohort/timepoint differences.

@@ -1,0 +1,6 @@
+check,pass,detail,overall_status
+fig1_all_cells_present,TRUE,rows=6,PASS
+fig2_grid_rows,TRUE,"rows=300, grid_n=50",PASS
+fig1_no_na,TRUE,estimate/lcl/ucl finite,PASS
+fig2_no_na,TRUE,estimate/lcl/ucl finite,PASS
+fig3_no_na,TRUE,rows=8,PASS

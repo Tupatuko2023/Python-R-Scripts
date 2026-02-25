@@ -1,0 +1,26 @@
+K23_TABLE2 V2.4 paranoia-check summary
+Input replica CSV: C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.csv
+Output diff CSV: C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_diff.csv
+
+Coverage:
+- outcomes compared: FTSST, HGS (female), HGS (male), MWS, SLS
+- fields per outcome: 15
+- rows in diff table: 75
+
+Tolerance evaluation:
+- max_abs_diff: 0.000000
+- strict tolerance (<= 0.005): PASS
+- relaxed tolerance (<= 0.01): PASS
+- parsing/missing notes: 0
+
+Top differences (abs_diff):
+- FTSST / N_with: abs_diff=0.000000
+- FTSST / N_without: abs_diff=0.000000
+- FTSST / p_A: abs_diff=0.000000
+- FTSST / p_B: abs_diff=0.000000
+- FTSST / p_C: abs_diff=0.000000
+- FTSST / with_baseline_mean: abs_diff=0.000000
+- FTSST / with_baseline_sd: abs_diff=0.000000
+- FTSST / with_delta_lcl: abs_diff=0.000000
+- FTSST / with_delta_mean: abs_diff=0.000000
+- FTSST / with_delta_ucl: abs_diff=0.000000

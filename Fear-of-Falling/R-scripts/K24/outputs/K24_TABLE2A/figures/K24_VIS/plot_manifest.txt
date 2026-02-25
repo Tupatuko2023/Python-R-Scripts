@@ -1,0 +1,37 @@
+K24_VIS plot manifest
+timestamp=2026-02-25 16:51:32
+script=K24_VIS
+input=C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv
+input_delimiter=,
+audit_input=C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_canonical_v2.csv
+qc_status=PASS
+qc_reason=z-diff within threshold (z_tol=1.96); no sign flip.
+qc_tol=0.1
+z_tol=1.96
+qc_strict=FALSE
+max_abs_beta_diff=0.602000
+max_z_diff_all=0.105604
+max_z_diff_excl_hgs_men=0.029745
+outlier_outcome=HGS (Men)
+sign_flip_any=FALSE
+std_method=baseline_sd
+sd_source=audit
+sd_baseline_missing_n=0
+format=both
+width=8
+height=5
+make_cat_p=TRUE
+files_written=
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF.png
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF.pdf
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore.png
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore.pdf
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_frailtyCat_overallP.png
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_frailtyCat_overallP.pdf
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts.png
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts.pdf
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized.png
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized.pdf
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore_standardized.png
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore_standardized.pdf
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/qc_fof_cat_vs_score_diff.csv
