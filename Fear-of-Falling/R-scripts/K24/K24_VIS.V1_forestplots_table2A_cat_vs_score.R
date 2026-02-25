@@ -509,6 +509,23 @@ p_fof_std <- ggplot(fof_std_df, aes(x = beta_std, y = Outcome)) +
   ) +
   theme_minimal(base_size = 12)
 
+# Suodatetaan HGS (Men) pois selkeämpää skaalaa varten
+fof_std_df_excl_men <- fof_std_df %>%
+  filter(Outcome != "HGS (Men)")
+
+p_fof_std_excl_men <- ggplot(fof_std_df_excl_men, aes(x = beta_std, y = Outcome)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_errorbarh(aes(xmin = lcl_std, xmax = ucl_std), height = 0.2, color = "#2a4d69", na.rm = TRUE) +
+  geom_point(size = 2.8, color = "#2a4d69") +
+  geom_text(aes(label = label_std), nudge_y = 0.22, hjust = 0, size = 3.1, color = "#1b1b1b") +
+  labs(
+    title = "K24 canonical V2: FOF standardized beta (excl. HGS Men)",
+    subtitle = "Standardized beta per baseline SD (beta / SD_baseline)",
+    x = "FOF standardized beta (95% CI), per baseline SD",
+    y = NULL
+  ) +
+  theme_minimal(base_size = 12)
+
 p_score_std <- ggplot(score_std_df, aes(x = beta_std, y = Outcome)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
   geom_errorbarh(aes(xmin = lcl_std, xmax = ucl_std), height = 0.2, color = "#005b4f", na.rm = TRUE) +
@@ -536,6 +553,8 @@ if (isTRUE(cfg$make_cat_p)) {
 sv <- save_plot(p_cat_contrasts, "K24_canonicalV2_forest_FrailtyCatContrasts", cfg, artifacts)
 artifacts <- sv$records
 sv <- save_plot(p_fof_std, "K24_canonicalV2_forest_FOF_standardized", cfg, artifacts)
+artifacts <- sv$records
+sv <- save_plot(p_fof_std_excl_men, "K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men", cfg, artifacts)
 artifacts <- sv$records
 sv <- save_plot(p_score_std, "K24_canonicalV2_forest_FrailtyScore_standardized", cfg, artifacts)
 artifacts <- sv$records
