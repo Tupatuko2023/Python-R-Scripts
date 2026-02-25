@@ -57,6 +57,24 @@ Alla oleva rakenne on **osittain varmistettu** skriptikatkelmista (here::here-vi
 
 **Katso:** `docs/run_order.csv` ja `docs/R_RUN_ORDER.md` täydellisille I/O-kartoille ja ajojärjestyksille.
 
+## K26 (uusi) — Long LMM moderation sensitivity
+
+- **Script:** `R-scripts/K26/K26_LMM_MOD.V1_time-frailty-CompositeZ0-moderation.R`
+- **Purpose:** Long-LMM backbone (`time_f * FOF_status`) + eksploratiivinen `time_f * frailty * cComposite_Z0` moderointi, kahdessa frailty-moodissa (`cat` + `score`) samalla ajolla.
+- **Reads:** K15 frailty-augmented RData (`--input`), ensisijaisesti:
+  - `R-scripts/K15/outputs/K15_frailty_analysis_data.RData`
+  - `R-scripts/K15_MAIN/outputs/K15_frailty_analysis_data.RData`
+  - K26 canonical-only gate estää raw CSV-ajon.
+- **Writes:** `R-scripts/K26/outputs/K26/K26_LMM_MOD/`:
+  - LRT-taulukot (`K26_LRT_primary_vs_mod_{cat|score}.csv`)
+  - fixed effects -taulukot (`K26_fixed_effects_*_{cat|score}.csv`)
+  - simple slopes (`K26_simple_slopes_change_{cat|score}.csv`)
+  - results-tekstit (`K26_results_text_fi_{cat|score}.txt`)
+  - model RDS:t (`K26_model_*_{cat|score}.rds`)
+  - `sessionInfo.txt`
+- **Run:**
+  - `scripts/termux/run_k26_proot_clean.sh --input R-scripts/K15/outputs/K15_frailty_analysis_data.RData --include_balance TRUE --run_cat TRUE --run_score TRUE`
+
 ## Yhteiset resurssit (helpers, config, metadata)
 
 - **Data-oletuspolku:** `data/external/KaatumisenPelko.csv` (useissa skripteissä fallback)

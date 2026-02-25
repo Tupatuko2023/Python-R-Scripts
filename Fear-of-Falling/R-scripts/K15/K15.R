@@ -644,6 +644,17 @@ append_manifest(
 # ==============================================================================
 # 11. Save Analysis Data for K16
 # ==============================================================================
+# Canonical continuous frailty score for downstream scripts (K16/K18/K26):
+# frailty_score_3 must be numeric frailty_count_3, never derived from other proxies.
+if (!("frailty_count_3" %in% names(analysis_data))) {
+  stop("K15: frailty_count_3 missing; cannot derive canonical frailty_score_3.")
+}
+if (!("frailty_score_3" %in% names(analysis_data))) {
+  analysis_data <- analysis_data %>%
+    mutate(frailty_score_3 = as.numeric(frailty_count_3))
+  message("K15: frailty_score_3 derived as as.numeric(frailty_count_3).")
+}
+
 # Tallenna analysis_data K16:ta varten (sisältää kaikki frailty-muuttujat)
 rdata_path <- here::here("R-scripts", "K15", "outputs",
                          "K15_frailty_analysis_data.RData")
@@ -710,4 +721,3 @@ message("K15: Fried-inspired physical frailty proxy rakennettu ja perusjakaumat 
 # End of K15.R
 
 save_sessioninfo_manifest()
-
