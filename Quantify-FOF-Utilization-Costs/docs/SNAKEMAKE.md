@@ -90,6 +90,7 @@ snakemake -j 1 table3 --config allow_aggregates=True use_sample=False
 ```
 
 Huom: aggregate-outputit ovat fail-closed. Ajo vaatii:
+
 - `ALLOW_AGGREGATES=1` (ymparistomuuttuja, Snakemake asettaa sen `allow_aggregates=True` perusteella)
 - eksplisiittinen intent (`--intend_aggregates TRUE`, annetaan Snakemake-rulessa)
 

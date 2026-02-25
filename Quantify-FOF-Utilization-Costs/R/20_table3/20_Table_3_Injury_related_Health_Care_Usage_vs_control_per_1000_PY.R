@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
   library(optparse)
   library(readr)
   library(dplyr)
+  library(forcats)
   library(stringr)
   library(tidyr)
   library(purrr)
@@ -146,7 +147,9 @@ test_icd_bucket <- function() {
             "\nExp: ", paste(exp, collapse=" | "))
   }
 }
-test_icd_bucket()
+if (identical(Sys.getenv("QFOF_DEBUG"), "1")) {
+  test_icd_bucket()
+}
 
 BUCKET_LEVELS <- c(
   "S00-09","S10-19","S20-29","S30-39","S40-49","S50-59","S60-69","S70-79","S80-89","S90-99","T00-14",
@@ -417,9 +420,6 @@ get_panel_total <- function(panel_name, outcome_df, row_name = "Total") {
   if (nrow(one) == 0) return(list(irr_ci = NA_character_, p = NA_real_))
   list(irr_ci = one$irr_ci, p = one$p)
 }
-tot_wo <- table3_long %>% filter(panel == "Without FOF")
-tot_fo <- table3_long %>% filter(panel == "FOF")
-
 tot_vis_wo <- get_panel_total("Without FOF", table3_long %>% filter(row == "Total"), "Total")
 tot_vis_fo <- get_panel_total("FOF",         table3_long %>% filter(row == "Total"), "Total")
 
@@ -428,7 +428,7 @@ tp_fo <- table3_long %>% filter(panel == "FOF", row == "Treatment periods") %>% 
 
 txt1 <- paste0(
   "Total Clinical visits age-sex stand. IRR ",
-  tot_vis_wo$irr_ci, " vrs ", tot_vis_fo$irr_ci, " ", fmt_p(min(tot_wo$p, tot_fo$p, na.rm = TRUE))
+  tot_vis_wo$irr_ci, " vrs ", tot_vis_fo$irr_ci, " ", fmt_p(min(tot_vis_wo$p, tot_vis_fo$p, na.rm = TRUE))
 )
 txt2 <- paste0(
   "Total Treatment periods age sex adjusted. IRR ",
