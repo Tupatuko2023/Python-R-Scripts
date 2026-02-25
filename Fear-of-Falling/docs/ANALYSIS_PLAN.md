@@ -73,6 +73,25 @@ Composite_Z_12m ~ Composite_Z_baseline + FOF_status + frailty_cat_3 +
 
 - **Consistency Check:** The effect size and direction should align with the LMM interaction term.
 
+### 3.3 Sensitivity: Frailty Proxy Construction
+
+To evaluate whether balance should be included inside the frailty construct, we run a sensitivity comparison on `delta_composite_z` using the same complete-case sample for both models:
+
+```r
+# Model A (traditional proxy)
+delta_composite_z ~ frailty_cat_3 + FOF_status + age + sex + BMI
+
+# Model B (balance-extended proxy)
+delta_composite_z ~ frailty_cat_3_balance + FOF_status + age + sex + BMI
+```
+
+- **Frailty definitions:**
+  - `frailty_cat_3`: traditional 3-component Fried-inspired proxy.
+  - `frailty_cat_3_balance`: balance-extended proxy where single-leg stance (`frailty_balance`) is used in the 3-component construction.
+- **Model comparison rule:** Because A and B are non-nested, compare model fit by AIC and adjusted R² on the same common-sample N.
+- **Current K21 result summary:** On the same common-sample `N=239`, Model A outperformed Model B (`AIC 339.7903 vs 346.8775`, `adjusted R² 0.3188 vs 0.2982`; `Delta AIC (B-A)=+7.0872`, `Delta adjusted R² (B-A)=-0.0206`), so balance-extended frailty is treated as sensitivity-only for this outcome.
+- **Secondary SLS predictor check (K22):** Baseline SLS is evaluated as an independent predictor in both delta and ANCOVA specifications (`delta + ANCOVA`), including a nonlinearity test (`splines::ns`, `df=3`) and `SLS x FOF_status` interaction.
+
 ## 4. QC Gates (Quality Control)
 
 Before running the final models, the data must pass the strict QC gates defined in `QC_CHECKLIST.md`.

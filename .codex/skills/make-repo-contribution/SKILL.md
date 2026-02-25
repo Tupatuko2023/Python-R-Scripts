@@ -1,3 +1,10 @@
+---
+name: make-repo-contribution
+description: Repository contribution workflow for creating issues, branches, commits, and pull requests with strict local security boundaries.
+metadata:
+  short-description: Safe issue/branch/commit/PR workflow.
+---
+
 # Agent Skill: Make Repo Contribution
 
 ## Security Boundaries (Override)

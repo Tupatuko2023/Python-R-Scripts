@@ -59,6 +59,7 @@ fi
 run_proot_distro login debian --termux-home -- bash -lc "
 set -euo pipefail
 
+unset LD_PRELOAD LD_LIBRARY_PATH R_HOME R_LIBS R_LIBS_USER
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 cd '$FOF_ROOT' || exit 1
