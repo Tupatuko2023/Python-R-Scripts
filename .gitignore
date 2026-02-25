@@ -13,3 +13,5 @@ prompts/
 **/prompts/*.txt
 .Rproj.user
 out/
+
+.pytest_cache/
