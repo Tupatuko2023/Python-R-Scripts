@@ -12,7 +12,8 @@ The pipeline automates the steps from data inventory to report generation, ensur
 2. **Preprocess**: ETL of raw data into `outputs/intermediate/analysis_ready.csv`.
 3. **QC**: Generates QC summaries in `outputs/qc/`.
 4. **Models**: Runs statistical models (Negative Binomial / Gamma) and outputs `outputs/panel_models_summary.csv`.
-5. **Report**: Compiles the final Aim 2 report (`outputs/reports/aim2_report.md`).
+5. **Table 3**: Generates `outputs/tables/table3.csv` and `outputs/tables/table3.md`.
+6. **Report**: Compiles the final Aim 2 report (`outputs/reports/aim2_report.md`).
 
 ## Prerequisites
 
@@ -46,6 +47,7 @@ Edit `config/config.yaml` to customize settings:
 
 - `data_root`: Path to raw data (default: `../data/external`).
 - `allow_aggregates`: Set to `True` to enable aggregate outputs.
+- `use_sample`: Set to `True` for a data-free smoke run (also used by `table3` target).
 
 ## Running the Workflow
 
@@ -66,6 +68,31 @@ Edit `config/config.yaml` to customize settings:
    ```bash
    snakemake --dag | dot -Tpng > dag.png
    ```
+
+## Table 3 target
+
+`table3` tuottaa taulukon 3 outputit:
+
+- `outputs/tables/table3.csv`
+- `outputs/tables/table3.md`
+- logi: `outputs/logs/table3.log`
+
+Smoke-ajo (ei oikeaa dataa):
+
+```bash
+snakemake -j 1 table3 --config allow_aggregates=True use_sample=True
+```
+
+Normaali ajo:
+
+```bash
+snakemake -j 1 table3 --config allow_aggregates=True use_sample=False
+```
+
+Huom: aggregate-outputit ovat fail-closed. Ajo vaatii:
+
+- `ALLOW_AGGREGATES=1` (ymparistomuuttuja, Snakemake asettaa sen `allow_aggregates=True` perusteella)
+- eksplisiittinen intent (`--intend_aggregates TRUE`, annetaan Snakemake-rulessa)
 
 ## Troubleshooting
 
