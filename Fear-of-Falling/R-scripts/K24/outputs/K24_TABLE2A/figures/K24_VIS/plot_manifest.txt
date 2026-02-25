@@ -1,5 +1,5 @@
 K24_VIS plot manifest
-timestamp=2026-02-25 16:51:32
+timestamp=2026-02-25 20:07:57
 script=K24_VIS
 input=C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv
 input_delimiter=,

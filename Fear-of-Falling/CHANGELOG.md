@@ -3,6 +3,12 @@
 ## [Unreleased]
 
 ### Added
+- **K20-K26 Analysis Pipeline Completion**: Suoritettu koko K20-K26 analyysiputki PowerShell 7 -orkestraattorilla.
+  - Ratkaistu kriittiset riippuvuudet (K15 frailty-datan päivitys, `gt` ja `readxl` pakettien asennus).
+  - Tuotettu toistettavat analyysitulokset, mallit ja manifest-merkinnät.
+- **K24 Visualization & QC**: Suoritettu `K24_VIS.V1_forestplots_table2A_cat_vs_score.R`.
+  - Tuotettu Forest-kuvaajat FOF- ja Frailty-efekteille (PNG/PDF).
+  - Vahvistettu QC PASS (z-diff < 1.96, ei merkkien flippauksia cat- vs score-mallien välillä).
 - **PS7 Gemini CLI Bootstrap Pack**: Lisätty infrastruktuuri Gemini CLI -agentin toistettavaan ja fail-closed -periaatetta noudattavaan ajamiseen PowerShell 7 -ympäristössä.
   - `PS7_GEMINI_CLI_BOOTSTRAP.md`: Step-by-step käyttöönotto-ohjeistus ja työkalujen validointi.
   - `scripts/ps7/run_gemini_orchestrator.ps1`: Natiivi PS7-orkestrointiskripti, joka lataa tehtävät, laskee promptin tiivisteen (SHA256) ja hallinnoi CLI-putkitusta sekä lokitusta (`Start-Transcript`).
