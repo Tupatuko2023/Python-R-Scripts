@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 # ==============================================================================
-# K15.3 - Fried-inspired physical frailty proxy variable derivation with balance
+# K15.3 - modified 3-item physical frailty proxy (motor-oriented) derivation with balance
 # File tag: K15.3.R
-# Purpose: Derives a physical frailty proxy based on Fried phenotype criteria
+# Purpose: Derives a modified 3-item physical frailty proxy (motor-oriented)
 #          (exhaustion, weakness, slowness, low activity) adapted to available
 #          dataset variables; creates frailty categories (robust/pre-frail/frail)
 #          for subsequent K16 frailty-adjusted analyses
@@ -10,7 +10,7 @@
 # Outcome: None (derives frailty variables as exposures/covariates for K16)
 # Predictors: None (this is a data preparation script)
 # Moderator/interaction: None
-# Grouping variable: frailty_cat_3 (derived: "robust"/"pre-frail"/"frail")
+# Grouping variable: frailty_cat_3_A (derived: "robust"/"pre-frail"/"frail")
 # Covariates: N/A (script generates covariates)
 #
 # Required vars (raw_data - DO NOT INVENT; must match req_raw_cols check):
@@ -519,17 +519,10 @@ analysis_data <- analysis_data %>%
 
 analysis_data <- analysis_data %>%
   mutate(
+    # CHANGELOG: 2026-02-25 - Removed falls from low activity to avoid circularity/collider risk.
     frailty_low_activity = case_when(
-      # jos kaikki puuttuu -> NA
-      is.na(low_activity_flag_oma) &
-        is.na(low_activity_flag_500m) &
-        is.na(low_activity_flag_2km) &
-        is.na(low_activity_flag_maxwalk) ~ NA_integer_,
-      # jos joku indikaattori = 1 -> 1
-      low_activity_flag_oma == 1 |
-        low_activity_flag_500m == 1 |
-        low_activity_flag_2km == 1 |
-        low_activity_flag_maxwalk == 1 ~ 1L,
+      is.na(oma_arvio_liikuntakyky) ~ NA_integer_,
+      oma_arvio_liikuntakyky %in% c(0, 1) ~ 1L,
       TRUE ~ 0L
     )
   )
@@ -584,17 +577,24 @@ if (!("BMI" %in% names(analysis_data))) {
 # ==============================================================================
 analysis_data <- analysis_data %>%
   mutate(
-    # 3-komponenttinen proxy: weakness + slowness + low_activity
-    frailty_count_3 = frailty_weakness +
-      frailty_slowness +
-      frailty_low_activity,
-    
-    frailty_cat_3 = case_when(
-      is.na(frailty_count_3)       ~ NA_character_,
-      frailty_count_3 == 0         ~ "robust",
-      frailty_count_3 == 1         ~ "pre-frail",
-      frailty_count_3 >= 2         ~ "frail"
+    # modified 3-item physical frailty proxy (motor-oriented):
+    # does not include exhaustion or weight loss.
+    frailty_count_3_A = case_when(
+      is.na(frailty_weakness) | is.na(frailty_slowness) | is.na(frailty_low_activity) ~ NA_integer_,
+      TRUE ~ (frailty_weakness + frailty_slowness + frailty_low_activity)
     ),
+    frailty_cat_3_A = case_when(
+      is.na(frailty_count_3_A)       ~ NA_character_,
+      frailty_count_3_A == 0         ~ "robust",
+      frailty_count_3_A == 1         ~ "pre-frail",
+      frailty_count_3_A >= 2         ~ "frail"
+    ),
+    # Pragmatic path fallback: unable-codes not detected in current K15 recode rules.
+    frailty_count_3_B = frailty_count_3_A,
+    frailty_cat_3_B = frailty_cat_3_A,
+    # Backward-compatible aliases.
+    frailty_count_3 = frailty_count_3_A,
+    frailty_cat_3 = frailty_cat_3_A,
     
     # 4-komponenttinen proxy: lisää low_BMI
     frailty_count_4 = frailty_weakness +
@@ -609,6 +609,14 @@ analysis_data <- analysis_data %>%
       frailty_count_4 >= 3         ~ "frail"
     ),
     
+    frailty_cat_3_A = factor(
+      frailty_cat_3_A,
+      levels = c("robust", "pre-frail", "frail")
+    ),
+    frailty_cat_3_B = factor(
+      frailty_cat_3_B,
+      levels = c("robust", "pre-frail", "frail")
+    ),
     frailty_cat_3 = factor(
       frailty_cat_3,
       levels = c("robust", "pre-frail", "frail")
@@ -717,6 +725,98 @@ save_table_csv_html(tab_frailty_cat_3, "K15.3._frailty_cat_3_overall")
 save_table_csv_html(tab_frailty_count_4, "K15.3._frailty_count_4_overall")
 save_table_csv_html(tab_frailty_cat_4, "K15.3._frailty_cat_4_overall")
 
+qc_components_missing_overall <- tibble::tibble(
+  group = "overall",
+  component = c("frailty_weakness", "frailty_slowness", "frailty_low_activity"),
+  n_missing = c(
+    sum(is.na(analysis_data$frailty_weakness)),
+    sum(is.na(analysis_data$frailty_slowness)),
+    sum(is.na(analysis_data$frailty_low_activity))
+  )
+) %>%
+  mutate(pct_missing = 100 * n_missing / nrow(analysis_data))
+
+qc_components_missing_by_fof <- analysis_data %>%
+  group_by(FOF_status_factor) %>%
+  summarise(
+    n_group = n(),
+    frailty_weakness_missing = sum(is.na(frailty_weakness)),
+    frailty_slowness_missing = sum(is.na(frailty_slowness)),
+    frailty_low_activity_missing = sum(is.na(frailty_low_activity)),
+    .groups = "drop"
+  ) %>%
+  tidyr::pivot_longer(
+    cols = c(frailty_weakness_missing, frailty_slowness_missing, frailty_low_activity_missing),
+    names_to = "component",
+    values_to = "n_missing"
+  ) %>%
+  mutate(
+    group = as.character(FOF_status_factor),
+    component = gsub("_missing$", "", component),
+    pct_missing = 100 * n_missing / n_group
+  ) %>%
+  select(group, component, n_missing, pct_missing)
+
+qc_components_missing <- bind_rows(qc_components_missing_overall, qc_components_missing_by_fof)
+save_table_csv_html(
+  qc_components_missing,
+  "K15.3._frailty_components_missingness",
+  n = nrow(qc_components_missing),
+  write_html = FALSE
+)
+
+qc_score_missing <- tibble::tibble(
+  score = c("frailty_count_3_A", "frailty_count_3_B"),
+  n_missing = c(
+    sum(is.na(analysis_data$frailty_count_3_A)),
+    sum(is.na(analysis_data$frailty_count_3_B))
+  )
+) %>%
+  mutate(pct_missing = 100 * n_missing / nrow(analysis_data))
+save_table_csv_html(
+  qc_score_missing,
+  "K15.3._frailty_score_missingness",
+  n = nrow(qc_score_missing),
+  write_html = FALSE
+)
+
+if ("kaatuminen" %in% names(analysis_data)) {
+  analysis_data <- analysis_data %>%
+    mutate(
+      frailty_low_activity_legacy = case_when(
+        is.na(oma_arvio_liikuntakyky) & is.na(kaatuminen) & is.na(PainVAS0) ~ NA_integer_,
+        oma_arvio_liikuntakyky %in% c(0, 1) ~ 1L,
+        kaatuminen == 1 ~ 1L,
+        is.na(oma_arvio_liikuntakyky) | is.na(kaatuminen) | is.na(PainVAS0) ~ NA_integer_,
+        TRUE ~ 0L
+      ),
+      frailty_count_3_legacy = case_when(
+        is.na(frailty_weakness) | is.na(frailty_slowness) | is.na(frailty_low_activity_legacy) ~ NA_integer_,
+        TRUE ~ (frailty_weakness + frailty_slowness + frailty_low_activity_legacy)
+      ),
+      frailty_cat_3_legacy = case_when(
+        is.na(frailty_count_3_legacy) ~ NA_character_,
+        frailty_count_3_legacy == 0 ~ "robust",
+        frailty_count_3_legacy == 1 ~ "pre-frail",
+        frailty_count_3_legacy >= 2 ~ "frail"
+      ),
+      frailty_cat_3_legacy = factor(frailty_cat_3_legacy, levels = c("robust", "pre-frail", "frail"))
+    )
+  qc_legacy_vs_new <- analysis_data %>%
+    count(frailty_cat_3_legacy, frailty_cat_3_A, .drop = FALSE) %>%
+    arrange(frailty_cat_3_legacy, frailty_cat_3_A)
+} else {
+  qc_legacy_vs_new <- tibble::tibble(
+    note = "legacy_not_available: column 'kaatuminen' not present at this step."
+  )
+}
+save_table_csv_html(
+  qc_legacy_vs_new,
+  "K15.3._frailty_legacy_vs_new",
+  n = nrow(qc_legacy_vs_new),
+  write_html = FALSE
+)
+
 # --- NEW: laajennettu balance-proxy (frailty_count_3_balance / frailty_cat_3_balance) ---
 tab_frailty_count_3_balance <- analysis_data %>%
   count(frailty_count_3_balance) %>%
@@ -760,7 +860,7 @@ plot_frailty_cat3_by_FOF <- tab_frailty_cat3_by_FOF %>%
   ggplot(aes(x = FOF_status_factor, y = row_proportion, fill = frailty_cat_3)) +
   geom_col(position = "stack") +
   labs(
-    title = "Frailty category (3-component) by FOF-status",
+    title = "Modified 3-item physical frailty proxy (motor-oriented) by FOF-status",
     x = "FOF-status",
     y = "Proportion"
   ) +
@@ -925,9 +1025,18 @@ rdata_path <- file.path(outputs_dir, "K15.3._frailty_analysis_data.RData")
 save(analysis_data, file = rdata_path)
 message("K15.3.: analysis_data tallennettu: ", basename(rdata_path))
 
-message("K15.3.: Fried-inspired physical frailty proxy rakennettu ja perusjakaumat + FOF-vertailut tallennettu.")
+message("K15.3.: modified 3-item physical frailty proxy (motor-oriented) built; does not include exhaustion or weight loss.")
 
 # ==============================================================================
 # 12. Loppukommentit (Doc-Blokki)
 # ==============================================================================
 # (alkuperäinen doc-blokki jätetty ennalleen; huomaa että balance-laajennus on lisätty osioon 05B ja 10B)
+
+stopifnot(all(is.na(analysis_data$frailty_count_3_A) | analysis_data$frailty_count_3_A %in% 0:3))
+stopifnot(all(is.na(analysis_data$frailty_count_3_B) | analysis_data$frailty_count_3_B %in% 0:3))
+stopifnot(identical(levels(analysis_data$frailty_cat_3_A), c("robust", "pre-frail", "frail")))
+stopifnot(identical(levels(analysis_data$frailty_cat_3_B), c("robust", "pre-frail", "frail")))
+stopifnot(all(is.na(analysis_data$frailty_cat_3_A) == is.na(analysis_data$frailty_count_3_A)))
+stopifnot(all(is.na(analysis_data$frailty_cat_3_B) == is.na(analysis_data$frailty_count_3_B)))
+
+save_sessioninfo_manifest()
