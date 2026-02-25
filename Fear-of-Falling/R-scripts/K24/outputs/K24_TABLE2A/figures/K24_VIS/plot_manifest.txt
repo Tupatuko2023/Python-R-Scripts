@@ -1,5 +1,5 @@
 K24_VIS plot manifest
-timestamp=2026-02-25 20:17:55
+timestamp=2026-02-25 20:24:29
 script=K24_VIS
 input=C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv
 input_delimiter=,
@@ -36,4 +36,6 @@ files_written=
  - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men.pdf
  - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore_standardized.png
  - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore_standardized.pdf
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men.png
+ - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men.pdf
  - C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/qc_fof_cat_vs_score_diff.csv

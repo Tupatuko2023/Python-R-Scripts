@@ -539,6 +539,40 @@ p_score_std <- ggplot(score_std_df, aes(x = beta_std, y = Outcome)) +
   ) +
   theme_minimal(base_size = 12)
 
+# ---- Frailty categorical contrasts STANDARDIZED (excl. HGS Men) --------------
+cat_contrast_std_df <- cat_contrast_df %>%
+  mutate(Outcome = as.character(Outcome)) %>%
+  left_join(sd_df, by = "Outcome") %>%
+  mutate(
+    beta_std = beta / sd_baseline,
+    lcl_std = lcl / sd_baseline,
+    ucl_std = ucl / sd_baseline,
+    Outcome = factor(Outcome, levels = rev(outcome_levels))
+  ) %>%
+  filter(Outcome != "HGS (Men)") # Pudotetaan HGS (Men) skaalan pelastamiseksi
+
+p_cat_contrasts_std_excl_men <- ggplot(cat_contrast_std_df, aes(x = beta_std, y = Outcome, color = contrast)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_errorbarh(aes(xmin = lcl_std, xmax = ucl_std), position = position_dodge(width = 0.6), height = 0.15, na.rm = TRUE) +
+  geom_point(position = position_dodge(width = 0.6), size = 2.4) +
+  geom_text(
+    aes(label = label),
+    position = position_dodge(width = 0.6),
+    nudge_y = 0.23,
+    hjust = 0,
+    size = 2.9,
+    show.legend = FALSE
+  ) +
+  scale_color_manual(values = c("Pre-frail vs robust" = "#8c510a", "Frail vs robust" = "#01665e")) +
+  labs(
+    title = "K24 canonical V2: Frailty categorical contrasts (Standardized)",
+    subtitle = "Standardized beta per baseline SD (excl. HGS Men)",
+    x = "Frailty contrast standardized beta (95% CI), per baseline SD",
+    y = NULL,
+    color = "Contrast"
+  ) +
+  theme_minimal(base_size = 12)
+
 artifacts <- list()
 
 sv <- save_plot(p_fof, "K24_canonicalV2_forest_FOF", cfg, artifacts)
@@ -557,6 +591,8 @@ artifacts <- sv$records
 sv <- save_plot(p_fof_std_excl_men, "K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men", cfg, artifacts)
 artifacts <- sv$records
 sv <- save_plot(p_score_std, "K24_canonicalV2_forest_FrailtyScore_standardized", cfg, artifacts)
+artifacts <- sv$records
+sv <- save_plot(p_cat_contrasts_std_excl_men, "K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men", cfg, artifacts)
 artifacts <- sv$records
 
 plot_manifest_path <- file.path(cfg$out_dir, "plot_manifest.txt")
