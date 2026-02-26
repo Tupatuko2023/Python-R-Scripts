@@ -39,7 +39,7 @@ grep -c "qc_outcome_hist.png" Fear-of-Falling/QC_CHECKLIST.md  # Output: 3
 **Current (INCORRECT):**
 
 ```bash
-Rscript R-scripts/K18/K18_QC.V1_qc-run.R --data data/processed/analysis_long.csv --shape AUTO
+Rscript R-scripts/K18/K18_QC.V1_qc-run.R --data data/external/KaatumisenPelko.csv --shape AUTO
 ```
 
 Plus a duplicate section mentioning:
@@ -52,7 +52,7 @@ Plus a duplicate section mentioning:
 
 ```bash
 Rscript R-scripts/K18/K18_QC.V1_qc-run.R \
-  --data data/processed/analysis_long.csv \
+  --data data/external/KaatumisenPelko.csv \
   --shape AUTO \
   --dict data/data_dictionary.csv
 ```
@@ -62,6 +62,9 @@ Rscript R-scripts/K18/K18_QC.V1_qc-run.R \
 - `--data` (required): path to analysis dataset
 - `--shape` (optional): AUTO (default) | LONG | WIDE
 - `--dict` (optional): path to data dictionary (default: `data/data_dictionary.csv`)
+
+**Clarification:** `analysis_long.csv` is not a required canonical on-disk artifact for
+K18_QC. The runner reads `--data` and handles LONG/WIDE (or AUTO detect) in-memory.
 
 **Actions:**
 

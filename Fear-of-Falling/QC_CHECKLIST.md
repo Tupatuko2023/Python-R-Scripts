@@ -26,7 +26,7 @@ Aja QC näin (korvaa data-polku):
 
 ```bash
 Rscript R-scripts/K18/K18_QC.V1_qc-run.R \
-  --data data/processed/analysis_long.csv \
+  --data data/external/KaatumisenPelko.csv \
   --shape AUTO \
   --dict data/data_dictionary.csv
 ```
@@ -36,6 +36,10 @@ Rscript R-scripts/K18/K18_QC.V1_qc-run.R \
 - `--data` (required): path to analysis dataset
 - `--shape` (optional): AUTO (default) | LONG | WIDE
 - `--dict` (optional): path to data dictionary (default: `data/data_dictionary.csv`)
+
+**Important:** `analysis_long.csv` is not a required canonical artifact in this repo.
+K18_QC reads the dataset from `--data` and can ingest LONG, WIDE, or AUTO-detected
+shape. Use any valid CSV input path that matches the selected/auto-detected shape.
 
 QC-artefaktit kirjoitetaan polkuun `R-scripts/K18/outputs/K18_QC/qc/` ja
 
@@ -139,7 +143,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   # Input (TODO polku / objekti)
 
-  df <- read.csv("data/processed/analysis_long.csv")
+  df <- read.csv("<path/to/qc_input.csv>")
 
   dir.create("R-scripts/<K_FOLDER>/outputs/<script_label>/qc", recursive = TRUE, showWarnings = FALSE)
 
@@ -218,7 +222,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   ```r
 
-  df <- read.csv("data/processed/analysis_long.csv")
+  df <- read.csv("<path/to/qc_input.csv>")
 
   dir.create("R-scripts/<K_FOLDER>/outputs/<script_label>/qc", recursive = TRUE, showWarnings = FALSE)
 
@@ -304,7 +308,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   ```r
 
-  df <- read.csv("data/processed/analysis_long.csv")
+  df <- read.csv("<path/to/qc_input.csv>")
 
   dir.create("R-scripts/<K_FOLDER>/outputs/<script_label>/qc", recursive = TRUE, showWarnings = FALSE)
 
@@ -396,7 +400,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   ```r
 
-  df <- read.csv("data/processed/analysis_long.csv")
+  df <- read.csv("<path/to/qc_input.csv>")
 
   dir.create("R-scripts/<K_FOLDER>/outputs/<script_label>/qc", recursive = TRUE, showWarnings = FALSE)
 
@@ -458,7 +462,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   ```r
 
-  df <- read.csv("data/processed/analysis_long.csv")
+  df <- read.csv("<path/to/qc_input.csv>")
 
   dir.create("R-scripts/<K_FOLDER>/outputs/<script_label>/qc", recursive = TRUE, showWarnings = FALSE)
 
@@ -529,7 +533,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   ```r
 
-  df <- read.csv("data/processed/analysis_long.csv")
+  df <- read.csv("<path/to/qc_input.csv>")
 
   dir.create("R-scripts/<K_FOLDER>/outputs/<script_label>/qc", recursive = TRUE, showWarnings = FALSE)
 
@@ -647,7 +651,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   ```r
 
-  df <- read.csv("data/processed/analysis_long.csv")
+  df <- read.csv("<path/to/qc_input.csv>")
 
   dir.create("R-scripts/<K_FOLDER>/outputs/<script_label>/qc", recursive = TRUE, showWarnings = FALSE)
 

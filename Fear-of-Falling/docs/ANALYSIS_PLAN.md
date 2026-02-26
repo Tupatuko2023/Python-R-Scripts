@@ -118,7 +118,10 @@ Follow this sequence to reproduce the results.
 2. **QC & Validation:**
 
    ```bash
-   Rscript R-scripts/K18/K18_QC.V1_qc-run.R
+   Rscript R-scripts/K18/K18_QC.V1_qc-run.R \
+     --data data/external/KaatumisenPelko.csv \
+     --shape AUTO \
+     --dict data/data_dictionary.csv
    # Verify: outputs/qc_report.html says "PASS"
    ```
 
