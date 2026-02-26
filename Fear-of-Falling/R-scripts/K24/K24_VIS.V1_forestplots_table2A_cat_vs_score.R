@@ -488,7 +488,7 @@ p_cat_contrasts <- ggplot(cat_contrast_df, aes(x = beta, y = Outcome, color = co
   ) +
   scale_color_manual(values = c("Pre-frail vs robust" = "#8c510a", "Frail vs robust" = "#01665e")) +
   labs(
-    title = "K24 canonical V2: Frailty categorical contrasts",
+    title = "Frailty categorical contrasts",
     subtitle = "Pre-frail vs robust and frail vs robust (beta, 95% CI)",
     x = "Frailty contrast beta (95% CI)",
     y = NULL,

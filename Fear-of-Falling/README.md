@@ -221,15 +221,28 @@ Rscript R-scripts/K24/K24_TABLE2A.V2_canonical-delta-by-test-fof-frailty.R \
   --include_balance=FALSE
 ```
 
-V2 tuotokset:
+V2.1 on wrapper, joka ajaa V2:n ja sen jälkeen standardointi-auditin (V3) varmistaen, että ne ovat aina synkronoidut. **Tämä on suositeltu ajotapa.**
+
+```bash
+Rscript R-scripts/K24/K24_TABLE2A.V2.1_canonical-run-plus-std.R \
+  --input=R-scripts/K15/outputs/K15_frailty_analysis_data.RData \
+  --frailty_mode=both \
+  --include_balance=FALSE
+```
+
+*Huom: Historialliset V1/V1.1/V1.2 skriptit on siirretty hakemistoon `R-scripts/K24/legacy/scripts/` auditointitarkoituksia varten.*
+
+V2/V2.1 tuotokset:
 
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.html`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.csv`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.html`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.csv`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_canonical_v2.csv`
+- `R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_canonical_v3_with_std.csv` (Standardoitu versio)
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv`
 - `R-scripts/K24/outputs/K24_TABLE2A/K24_frailty_provenance_v2.txt`
+- `R-scripts/K24/outputs/K24_TABLE2A/K24_sync_check.txt` (Wrapperin varmistuslogi)
 - `R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v2.txt`
 
 ### K24 visualisointi (K24_VIS)

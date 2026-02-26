@@ -1,0 +1,12 @@
+K24 Synchronization Check
+Timestamp: 2026-02-26 15:04:33.576095
+Input RData: R-scripts/K15/outputs/K15_frailty_analysis_data.RData
+Status: PASS
+
+Verification details:
+- audit_v2 rows: 
+12
+- audit_v3 rows: 
+12
+- Core columns comparison (N, Beta, P): 
+Identical

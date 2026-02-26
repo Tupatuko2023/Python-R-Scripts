@@ -234,3 +234,10 @@ proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin
   2. `ls -la R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS` and verify new artifacts exist.
   3. `grep -nE "qc_status|sd_baseline_missing_n|std_method|sd_source" R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/plot_manifest.txt`.
   4. Verify manifest uniqueness for K24_VIS with a `(script,label,kind,path)` duplicate check.
+
+## Synchronization Update (2026-02-26)
+
+- **Ghost file resolution**: Identifed that 	able2A_audit_canonical_v3_with_std.csv contained historical values (N=237) due to a failed overwrite (file lock).
+- **Mitigation**: Created wrapper script K24_TABLE2A.V2.1_canonical-run-plus-std.R to ensure V2 and V3 are always generated in sequence from the same environment.
+- **Verification**: K24_sync_check.txt confirms core columns (Outcome, Model_N, FOF_Beta_CI, P_FOF) are identical between the raw V2 and standardized V3 artifacts. Current Model_N for MWS is 235 (matching the methodological fix in K15).
+- **Manifest**: sync_check.txt is now tracked in manifest/manifest.csv.
