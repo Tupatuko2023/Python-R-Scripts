@@ -103,11 +103,25 @@ normalize_file_string <- function(x) {
   out
 }
 
-strip_project_prefix <- function(x, project_root) {
-  x_norm <- normalize_file_string(x)
+resolve_manifest_schema_and_normalize_paths <- function(mf, project_root = here::here()) {
+  nm_lower <- tolower(names(mf))
+  script_col <- names(mf)[match("script", nm_lower)]
+  file_col <- names(mf)[match("file", nm_lower)]
+  if (is.na(file_col)) file_col <- names(mf)[match("path", nm_lower)]
+
   root_norm <- normalize_file_string(project_root)
-  prefix <- paste0(root_norm, "/")
-  ifelse(startsWith(x_norm, prefix), substring(x_norm, nchar(prefix) + 1), x_norm)
+  normalize_path <- function(x) {
+    x_norm <- normalize_file_string(x)
+    prefix <- paste0(root_norm, "/")
+    x_rel <- ifelse(startsWith(x_norm, prefix), substring(x_norm, nchar(prefix) + 1), x_norm)
+    list(as_is = x_norm, rel = x_rel)
+  }
+
+  list(
+    script_col = script_col,
+    file_col = file_col,
+    normalize_path = normalize_path
+  )
 }
 
 manifest_remove_rows_for_files <- function(manifest_path, script_label, files) {
@@ -116,30 +130,30 @@ manifest_remove_rows_for_files <- function(manifest_path, script_label, files) {
   mf <- suppressMessages(readr::read_csv(manifest_path, show_col_types = FALSE))
   if (nrow(mf) == 0) return(invisible(NULL))
 
-  nm_lower <- tolower(names(mf))
-  script_col <- names(mf)[match("script", nm_lower)]
-  file_col <- names(mf)[match("file", nm_lower)]
-  if (is.na(file_col)) file_col <- names(mf)[match("path", nm_lower)]
-  if (is.na(script_col) || is.na(file_col)) return(invisible(NULL))
+  schema <- resolve_manifest_schema_and_normalize_paths(mf)
+  if (is.na(schema$script_col) || is.na(schema$file_col)) return(invisible(NULL))
 
-  root <- here::here()
   target_aliases <- unique(unlist(lapply(files, function(f) {
+    norm <- schema$normalize_path(f)
+    rel_norm <- schema$normalize_path(get_relpath(f))
     c(
       as.character(f),
-      normalize_file_string(f),
-      normalize_file_string(get_relpath(f)),
-      strip_project_prefix(f, root),
-      strip_project_prefix(get_relpath(f), root)
+      get_relpath(f),
+      norm$as_is,
+      norm$rel,
+      rel_norm$as_is,
+      rel_norm$rel
     )
   })))
 
-  script_vals <- as.character(mf[[script_col]])
-  file_raw <- as.character(mf[[file_col]])
-  file_norm <- normalize_file_string(file_raw)
-  file_rel <- strip_project_prefix(file_norm, root)
+  script_vals <- as.character(mf[[schema$script_col]])
+  file_raw <- as.character(mf[[schema$file_col]])
+  file_norm <- schema$normalize_path(file_raw)
+  file_as_is <- file_norm$as_is
+  file_rel <- file_norm$rel
 
   matched_file <- file_raw %in% target_aliases |
-    file_norm %in% target_aliases |
+    file_as_is %in% target_aliases |
     file_rel %in% target_aliases
 
   keep <- !(script_vals == script_label & matched_file)
@@ -154,16 +168,13 @@ validate_manifest_no_duplicates_for_script <- function(manifest_path, script_lab
   mf <- suppressMessages(readr::read_csv(manifest_path, show_col_types = FALSE))
   if (nrow(mf) == 0) return(invisible(TRUE))
 
-  nm_lower <- tolower(names(mf))
-  script_col <- names(mf)[match("script", nm_lower)]
-  file_col <- names(mf)[match("file", nm_lower)]
-  if (is.na(file_col)) file_col <- names(mf)[match("path", nm_lower)]
-  if (is.na(script_col) || is.na(file_col)) return(invisible(TRUE))
+  schema <- resolve_manifest_schema_and_normalize_paths(mf)
+  if (is.na(schema$script_col) || is.na(schema$file_col)) return(invisible(TRUE))
 
-  sub <- mf[mf[[script_col]] == script_label, , drop = FALSE]
+  sub <- mf[mf[[schema$script_col]] == script_label, , drop = FALSE]
   if (nrow(sub) == 0) return(invisible(TRUE))
 
-  file_vals <- normalize_file_string(sub[[file_col]])
+  file_vals <- schema$normalize_path(sub[[schema$file_col]])$rel
   dup_counts <- sort(table(file_vals), decreasing = TRUE)
   dup_counts <- dup_counts[dup_counts > 1]
   if (length(dup_counts) > 0) {
@@ -417,7 +428,19 @@ write_rds_and_manifest(
 emm_score <- emmeans(
   m_int_score,
   ~ time * FOF_status_f | frailty_score_3,
-  at = list(frailty_score_3 = c(0, 1, 2, 3))
+  at = {
+    min_obs <- min(analysis_long$frailty_score_3, na.rm = TRUE)
+    max_obs <- max(analysis_long$frailty_score_3, na.rm = TRUE)
+    if (!is.finite(min_obs) || !is.finite(max_obs)) {
+      stop("frailty_score_3 has no finite non-missing values for emmeans support points")
+    }
+    support_candidates <- c(0, 1, 2, 3)
+    support <- sort(unique(as.numeric(pmin(pmax(support_candidates, min_obs), max_obs))))
+    if (length(support) < 2) {
+      stop("frailty_score_3 variation too small: emmeans support requires at least two distinct points")
+    }
+    list(frailty_score_3 = support)
+  }
 )
 
 score_changes_obj <- contrast(
@@ -622,6 +645,11 @@ report_lines <- c(
   "# K28: time × FOF × frailty -interaktio",
   paste0("Aineistossa käytetyt time-tasot: ", paste(time_levels, collapse = ", "), "."),
   paste0("Raportoitu muutosvertailu: ", time_levels[length(time_levels)], " - ", time_levels[1], "."),
+  paste0(
+    "frailty_score_3 tukipisteet: ",
+    paste(sort(unique(score_changes$frailty_score_3)), collapse = ", "),
+    " (klipattu havaittuun vaihteluväliin)."
+  ),
   threeway_line,
   summarize_score_changes(score_changes, "nonFOF"),
   summarize_score_changes(score_changes, "FOF"),
