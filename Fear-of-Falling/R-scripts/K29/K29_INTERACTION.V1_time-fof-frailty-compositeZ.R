@@ -122,8 +122,11 @@ source(here::here("R", "functions", "io.R"))
 source(here::here("R", "functions", "checks.R"))
 source(here::here("R", "functions", "reporting.R"))
 
-paths <- init_paths(script_label)
-outputs_dir   <- paths$outputs_dir
+# init_paths() with script_label "K29" to get R-scripts/K29/outputs/
+# then we manually append script_id_raw for the subfolder
+paths <- init_paths("K29")
+outputs_dir   <- file.path(paths$outputs_dir, script_id_raw)
+dir.create(outputs_dir, recursive = TRUE, showWarnings = FALSE)
 manifest_path <- paths$manifest_path
 
 set.seed(20251124)

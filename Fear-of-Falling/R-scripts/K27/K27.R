@@ -64,6 +64,41 @@ suppressPackageStartupMessages({
   library(dplyr)
 })
 
+# --- Local Helpers -----------------------------------------------------------
+normalize_fof_from_raw <- function(x) {
+  # returns factor with levels: c("No FOF","FOF")
+  if (is.factor(x)) x <- as.character(x)
+
+  # numeric/integer 0/1
+  if (is.numeric(x) || is.integer(x)) {
+    if (all(na.omit(x) %in% c(0, 1))) {
+      return(factor(ifelse(x == 1, "FOF", "No FOF"), levels = c("No FOF", "FOF")))
+    }
+  }
+
+  # logical TRUE/FALSE
+  if (is.logical(x)) {
+    return(factor(ifelse(isTRUE(x), "FOF", "No FOF"), levels = c("No FOF", "FOF")))
+  }
+
+  # character labels
+  xc <- tolower(trimws(as.character(x)))
+  yes_set <- c("1", "true", "t", "yes", "y", "kyllä", "kylla", "fof", "with fof")
+  no_set  <- c("0", "false", "f", "no", "n", "ei", "no fof", "without fof", "nonfof")
+
+  out <- ifelse(xc %in% yes_set, "FOF",
+                ifelse(xc %in% no_set, "No FOF", NA_character_))
+
+  # If mapping fails, stop with evidence (no guessing)
+  if (any(is.na(out) & !is.na(x))) {
+    bad <- sort(unique(x[is.na(out) & !is.na(x)]))
+    stop("K27: Unrecognized values in kaatumisenpelkoOn: ", paste(bad, collapse = ", "),
+         ". Please update normalize_fof_from_raw() mapping.")
+  }
+
+  factor(out, levels = c("No FOF", "FOF"))
+}
+
 # --- Standard init (MANDATORY) -----------------------------------------------
 # Derive script_label from --file, supporting file tags like: K27.V1_name.R
 args_all <- commandArgs(trailingOnly = FALSE)
@@ -141,12 +176,8 @@ if (length(missing_cols) > 0) {
 
 analysis_data_rec <- analysis_data %>%
   mutate(
-    # Optional FOF-status (for cross-tab sanity print; NOT stratification)
-    FOF_status = factor(
-      kaatumisenpelkoOn,
-      levels = c(0, 1),
-      labels = c("nonFOF", "FOF")
-    ),
+    # FOF-status (for cross-tab sanity print and Table 1 row)
+    FOF_status = normalize_fof_from_raw(.data$kaatumisenpelkoOn),
 
     # Sex: 0 = female, 1 = male
     sex_factor = factor(
@@ -598,6 +629,17 @@ tab_women <- tibble::tibble(
   P_value = format_pvalue(p_women)
 )
 
+# 7.1.1 Fear of falling, n (%)
+vals_fof <- format_n_pct(table1_sample$FOF_status, g, event = "FOF")
+p_fof <- fun_pvalue_cat(table1_sample$FOF_status, g)
+tab_fof <- tibble::tibble(
+  Variable = "Fear of falling, n (%)",
+  `robust` = vals_fof["robust"],
+  `pre-frail` = vals_fof["pre-frail"],
+  `frail` = vals_fof["frail"],
+  P_value = format_pvalue(p_fof)
+)
+
 # 7.2 Age, mean (SD)
 vals_age <- format_mean_sd(table1_sample$age, g, digits = 0)
 p_age <- fun_pvalue_cont(table1_sample$age, g)
@@ -752,6 +794,7 @@ tab_pain <- tibble::tibble(
 # Bind rows in K17 order (no extra invented rows)
 baseline_table_raw <- dplyr::bind_rows(
   tab_women,
+  tab_fof,
   tab_age,
   tab_diseases,
   tab_SRH,
@@ -777,7 +820,7 @@ col_frail    <- paste0("Frail\nn=", N_frail)
 
 baseline_table <- baseline_table_raw %>%
   rename(
-    " " = Variable,
+    "Characteristic" = Variable,
     !!col_robust := `robust`,
     !!col_prefrail := `pre-frail`,
     !!col_frail := `frail`,

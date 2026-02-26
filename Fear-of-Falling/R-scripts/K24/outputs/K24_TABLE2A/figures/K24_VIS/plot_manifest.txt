@@ -1,19 +1,19 @@
 K24_VIS plot manifest
-timestamp=2026-02-25 20:24:29
+timestamp=2026-02-26 10:23:59
 script=K24_VIS
 input=C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv
 input_delimiter=,
 audit_input=C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_canonical_v2.csv
-qc_status=PASS
-qc_reason=z-diff within threshold (z_tol=1.96); no sign flip.
+qc_status=WARN
+qc_reason=Expected model-spec difference; outlier=HGS (Men); report z_diff and sign_flip; abs-diff shown for audit.
 qc_tol=0.1
 z_tol=1.96
 qc_strict=FALSE
-max_abs_beta_diff=0.602000
-max_z_diff_all=0.105604
-max_z_diff_excl_hgs_men=0.029745
+max_abs_beta_diff=0.925000
+max_z_diff_all=0.169664
+max_z_diff_excl_hgs_men=0.055590
 outlier_outcome=HGS (Men)
-sign_flip_any=FALSE
+sign_flip_any=TRUE
 std_method=baseline_sd
 sd_source=audit
 sd_baseline_missing_n=0

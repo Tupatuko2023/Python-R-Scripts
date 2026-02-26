@@ -74,117 +74,72 @@ loaded via a namespace (and not attached):
 Project path: "C:/GitWork/Python-R-Scripts/Fear-of-Falling"
 
 # Status ---------------------------------------------------------------------
-The following package(s) are in an inconsistent state:
-
- package         installed recorded used
- bigD            y         n        y   
- bitops          y         n        y   
- brio            n         y        ?   
- callr           n         y        ?   
- cellranger      y         n        y   
- checkmate       n         y        ?   
- commonmark      y         n        y   
- curl            y         n        y   
- desc            n         y        ?   
- diffobj         n         y        ?   
- gt              y         n        y   
- htmlwidgets     y         n        y   
- juicyjuice      y         n        y   
- litedown        y         n        y   
- marginaleffects n         y        y   
- markdown        y         n        y   
- partR2          n         y        y   
- pbapply         n         y        ?   
- pkgbuild        n         y        ?   
- pkgload         n         y        ?   
- praise          n         y        ?   
- processx        n         y        ?   
- ps              n         y        ?   
- R.methodsS3     n         y        ?   
- R.oo            n         y        ?   
- R.utils         n         y        y   
- reactable       y         n        y   
- reactR          y         n        y   
- readxl          y         n        y   
- rematch         y         n        y   
- testthat        n         y        y   
- V8              y         n        y   
- waldo           n         y        ?   
-
-The following package(s) are out of sync [lockfile != library]:
-
-# CRAN -----------------------------------------------------------------------
-- xfun   [0.53 != 0.56]
-
-The lockfile was generated with R 4.5.0, but you're using R 4.4.2.
+The following package(s) are used in this project, but are not installed:
+- marginaleffects
+- partR2
+- R.utils
+- testthat
 
 See `?renv::status` for advice on resolving these issues.
 
 # Packages -------------------------------------------------------------------
                       Library Source    Lockfile Source Path Dependency
 Deriv                   4.2.0   RSPM       4.2.0   CRAN  [1]   indirect
-Formula                 1.2-5   RSPM       1.2-5   CRAN  [1]   indirect
+Formula                 1.2-5   RSPM       1.2-5   RSPM  [1]   indirect
 KernSmooth            2.23-24   CRAN        <NA>   <NA>  [2]       <NA>
-MASS                   7.3-65   RSPM      7.3-65   CRAN  [1]     direct
+MASS                   7.3-65   RSPM      7.3-65   RSPM  [1]     direct
 Matrix                  1.7-3   RSPM       1.7-3   CRAN  [1]   indirect
 MatrixModels            0.5-4   RSPM       0.5-4   CRAN  [1]   indirect
-R.methodsS3              <NA>   <NA>       1.8.2   CRAN <NA>       <NA>
-R.oo                     <NA>   <NA>      1.27.1   CRAN <NA>       <NA>
-R.utils                  <NA>   <NA>      2.13.0   CRAN <NA>     direct
+R.utils                  <NA>   <NA>        <NA>   <NA> <NA>     direct
 R6                      2.6.1   CRAN       2.6.1   CRAN  [1]   indirect
-RColorBrewer            1.1-3   RSPM       1.1-3   CRAN  [1]   indirect
+RColorBrewer            1.1-3   RSPM       1.1-3   RSPM  [1]   indirect
 Rcpp                    1.1.0   RSPM       1.1.0   CRAN  [1]   indirect
 RcppArmadillo        15.2.3-1   CRAN        <NA>   <NA>  [1]       <NA>
-RcppEigen           0.3.4.0.2   RSPM   0.3.4.0.2   CRAN  [1]   indirect
-Rdpack                  2.6.4   RSPM       2.6.4   CRAN  [1]   indirect
+RcppEigen           0.3.4.0.2   RSPM   0.3.4.0.2   RSPM  [1]   indirect
+Rdpack                  2.6.4   RSPM       2.6.4   RSPM  [1]   indirect
 S7                      0.2.0   RSPM       0.2.0   CRAN  [1]   indirect
-SparseM                1.84-2   RSPM      1.84-2   CRAN  [1]   indirect
+SparseM                1.84-2   RSPM      1.84-2   RSPM  [1]   indirect
 TTR                    0.24.4   CRAN        <NA>   <NA>  [1]       <NA>
-V8                      8.0.1   CRAN        <NA>   <NA>  [1]   indirect
-abind                   1.4-8   RSPM       1.4-8   CRAN  [1]   indirect
+V8                      8.0.1   CRAN       8.0.1   CRAN  [1]   indirect
+abind                   1.4-8   RSPM       1.4-8   RSPM  [1]   indirect
 askpass                 1.2.1   RSPM       1.2.1   CRAN  [1]   indirect
 backports               1.5.0   RSPM       1.5.0   CRAN  [1]   indirect
-base64enc               0.1-3   RSPM       0.1-3   CRAN  [1]   indirect
+base64enc               0.1-3   RSPM       0.1-3   RSPM  [1]   indirect
 bayestestR             0.17.0   RSPM      0.17.0   CRAN  [1]   indirect
-bigD                    0.3.1   CRAN        <NA>   <NA>  [1]   indirect
+bigD                    0.3.1   CRAN       0.3.1   CRAN  [1]   indirect
 bit                     4.6.0   CRAN       4.6.0   CRAN  [1]   indirect
 bit64                 4.6.0-1   CRAN     4.6.0-1   CRAN  [1]   indirect
-bitops                  1.0-9   CRAN        <NA>   <NA>  [1]   indirect
-boot                   1.3-32   RSPM      1.3-32   CRAN  [1]     direct
-brio                     <NA>   <NA>       1.1.5   CRAN <NA>       <NA>
+bitops                  1.0-9   CRAN       1.0-9   CRAN  [1]   indirect
+boot                   1.3-32   RSPM      1.3-32   RSPM  [1]     direct
 broom                  1.0.10   RSPM      1.0.10   CRAN  [1]     direct
 broom.mixed           0.2.9.6   RSPM     0.2.9.6   CRAN  [1]     direct
 bslib                   0.9.0   RSPM       0.9.0   CRAN  [1]   indirect
 cachem                  1.1.0   RSPM       1.1.0   CRAN  [1]   indirect
-callr                    <NA>   <NA>       3.7.6   CRAN <NA>       <NA>
-car                     3.1-3   RSPM       3.1-3   CRAN  [1]     direct
-carData                 3.0-5   RSPM       3.0-5   CRAN  [1]   indirect
-cellranger              1.1.0   CRAN        <NA>   <NA>  [1]   indirect
-checkmate                <NA>   <NA>       2.3.3   CRAN <NA>       <NA>
+car                     3.1-3   RSPM       3.1-3   RSPM  [1]     direct
+carData                 3.0-5   RSPM       3.0-5   RSPM  [1]   indirect
+cellranger              1.1.0   CRAN       1.1.0   CRAN  [1]   indirect
 class                  7.3-22   CRAN        <NA>   <NA>  [2]       <NA>
 cli                     3.6.5   CRAN       3.6.5   CRAN  [1]   indirect
 clipr                   0.8.0   CRAN       0.8.0   CRAN  [1]   indirect
 cluster                 2.1.6   CRAN        <NA>   <NA>  [2]       <NA>
-coda                 0.19-4.1   RSPM    0.19-4.1   CRAN  [1]   indirect
+coda                 0.19-4.1   RSPM    0.19-4.1   RSPM  [1]   indirect
 codetools              0.2-20   CRAN      0.2-20   CRAN  [2]   indirect
 colorspace              2.1-2   CRAN        <NA>   <NA>  [1]       <NA>
-commonmark              2.0.0   CRAN        <NA>   <NA>  [1]   indirect
+commonmark              2.0.0   CRAN       2.0.0   CRAN  [1]   indirect
 compiler                 <NA>   <NA>        <NA>   <NA>  [2]   indirect
 conflicted              1.2.0   RSPM       1.2.0   CRAN  [1]     direct
 cowplot                 1.2.0   RSPM       1.2.0   CRAN  [1]   indirect
 cpp11                   0.5.2   CRAN       0.5.2   CRAN  [1]   indirect
 crayon                  1.5.3   CRAN       1.5.3   CRAN  [1]   indirect
-curl                    7.0.0   CRAN        <NA>   <NA>  [1]   indirect
+curl                    7.0.0   CRAN       7.0.0   CRAN  [1]   indirect
 data.table             1.17.8   RSPM      1.17.8   CRAN  [1]   indirect
 datawizard              1.3.0   RSPM       1.3.0   CRAN  [1]   indirect
-desc                     <NA>   <NA>       1.4.3   CRAN <NA>       <NA>
-diffobj                  <NA>   <NA>       0.3.6   CRAN <NA>       <NA>
 digest                 0.6.37   RSPM      0.6.37   CRAN  [1]   indirect
 doBy                    4.7.0   RSPM       4.7.0   CRAN  [1]   indirect
 dplyr                   1.1.4   CRAN       1.1.4   CRAN  [1]     direct
 effectsize              1.0.1   RSPM       1.0.1   CRAN  [1]     direct
 emmeans                 2.0.0   RSPM       2.0.0   CRAN  [1]     direct
-estimability            1.5.1   RSPM       1.5.1   CRAN  [1]   indirect
+estimability            1.5.1   RSPM       1.5.1   RSPM  [1]   indirect
 evaluate                1.0.5   CRAN       1.0.5   CRAN  [1]   indirect
 farver                  2.1.2   RSPM       2.1.2   CRAN  [1]   indirect
 fastmap                 1.2.0   RSPM       1.2.0   CRAN  [1]   indirect
@@ -210,14 +165,14 @@ glue                    1.8.0   CRAN       1.8.0   CRAN  [1]   indirect
 grDevices                <NA>   <NA>        <NA>   <NA>  [2]     direct
 graphics                 <NA>   <NA>        <NA>   <NA>  [2]     direct
 grid                     <NA>   <NA>        <NA>   <NA>  [2]   indirect
-gt                      1.3.0   CRAN        <NA>   <NA>  [1]     direct
+gt                      1.3.0   CRAN       1.3.0   CRAN  [1]     direct
 gtable                  0.3.6   RSPM       0.3.6   CRAN  [1]   indirect
 haven                   2.5.5   CRAN       2.5.5   CRAN  [1]     direct
 here                    1.0.2   CRAN       1.0.2   CRAN  [1]     direct
 highr                    0.11   CRAN        0.11   CRAN  [1]   indirect
 hms                     1.1.3   RSPM       1.1.3   CRAN  [1]   indirect
 htmltools             0.5.8.1   RSPM     0.5.8.1   CRAN  [1]   indirect
-htmlwidgets             1.6.4   CRAN        <NA>   <NA>  [1]   indirect
+htmlwidgets             1.6.4   CRAN       1.6.4   CRAN  [1]   indirect
 insight                 1.4.2   RSPM       1.4.2   CRAN  [1]   indirect
 isoband                 0.2.7   RSPM       0.2.7   CRAN  [1]   indirect
 iterators              1.0.14   CRAN      1.0.14   CRAN  [1]   indirect
@@ -225,36 +180,36 @@ janitor                 2.2.1   CRAN       2.2.1   CRAN  [1]     direct
 jomo                    2.7-6   CRAN       2.7-6   CRAN  [1]   indirect
 jquerylib               0.1.4   RSPM       0.1.4   CRAN  [1]   indirect
 jsonlite                2.0.0   RSPM       2.0.0   CRAN  [1]     direct
-juicyjuice              0.1.0   CRAN        <NA>   <NA>  [1]   indirect
+juicyjuice              0.1.0   CRAN       0.1.0   CRAN  [1]   indirect
 knitr                    1.50   RSPM        1.50   CRAN  [1]     direct
-labeling                0.4.3   RSPM       0.4.3   CRAN  [1]   indirect
-lattice                0.22-7   RSPM      0.22-7   CRAN  [1]   indirect
+labeling                0.4.3   RSPM       0.4.3   RSPM  [1]   indirect
+lattice                0.22-7   RSPM      0.22-7   RSPM  [1]   indirect
 lifecycle               1.0.4   CRAN       1.0.4   CRAN  [1]   indirect
 lintr                    <NA>   <NA>        <NA>   <NA> <NA>     direct
-listenv                0.10.0   RSPM      0.10.0   CRAN  [1]   indirect
-litedown                  0.9   CRAN        <NA>   <NA>  [1]   indirect
+listenv                0.10.0   RSPM      0.10.0   RSPM  [1]   indirect
+litedown                  0.9   CRAN         0.9   CRAN  [1]   indirect
 lme4                   1.1-37   RSPM      1.1-37   CRAN  [1]     direct
 lmerTest                3.1-3   CRAN       3.1-3   CRAN  [1]     direct
 lmtest                 0.9-40   CRAN      0.9-40   CRAN  [1]     direct
 lubridate               1.9.4   CRAN       1.9.4   CRAN  [1]   indirect
 magrittr                2.0.4   CRAN       2.0.4   CRAN  [1]   indirect
-marginaleffects          <NA>   <NA>      0.31.0   CRAN <NA>     direct
-markdown                  2.0   CRAN        <NA>   <NA>  [1]   indirect
+marginaleffects          <NA>   <NA>        <NA>   <NA> <NA>     direct
+markdown                  2.0   CRAN         2.0   CRAN  [1]   indirect
 memoise                 2.0.1   RSPM       2.0.1   CRAN  [1]   indirect
 methods                  <NA>   <NA>        <NA>   <NA>  [2]   indirect
-mgcv                    1.9-3   RSPM       1.9-3   CRAN  [1]   indirect
+mgcv                    1.9-3   RSPM       1.9-3   RSPM  [1]   indirect
 mice                   3.18.0   RSPM      3.18.0   CRAN  [1]     direct
-microbenchmark          1.5.0   RSPM       1.5.0   CRAN  [1]   indirect
+microbenchmark          1.5.0   RSPM       1.5.0   RSPM  [1]   indirect
 mime                     0.13   RSPM        0.13   CRAN  [1]   indirect
-minqa                   1.2.8   RSPM       1.2.8   CRAN  [1]   indirect
+minqa                   1.2.8   RSPM       1.2.8   RSPM  [1]   indirect
 mitml                   0.4-5   CRAN       0.4-5   CRAN  [1]   indirect
 modelr                 0.1.11   RSPM      0.1.11   CRAN  [1]   indirect
 moments                0.14.1   CRAN      0.14.1   CRAN  [1]     direct
-mvtnorm                 1.3-3   RSPM       1.3-3   CRAN  [1]   indirect
+mvtnorm                 1.3-3   RSPM       1.3-3   RSPM  [1]   indirect
 nlme                  3.1-168   RSPM     3.1-168   CRAN  [1]     direct
 nloptr                  2.2.1   RSPM       2.2.1   CRAN  [1]   indirect
-nnet                   7.3-20   RSPM      7.3-20   CRAN  [1]   indirect
-numDeriv           2016.8-1.1   RSPM  2016.8-1.1   CRAN  [1]   indirect
+nnet                   7.3-20   RSPM      7.3-20   RSPM  [1]   indirect
+numDeriv           2016.8-1.1   RSPM  2016.8-1.1   RSPM  [1]   indirect
 officer                 0.7.2   CRAN       0.7.2   CRAN  [1]     direct
 openssl                 2.3.4   RSPM       2.3.4   CRAN  [1]   indirect
 ordinal           2023.12-4.1   CRAN 2023.12-4.1   CRAN  [1]   indirect
@@ -262,36 +217,30 @@ pan                       1.9   CRAN         1.9   CRAN  [1]   indirect
 parallel                 <NA>   <NA>        <NA>   <NA>  [2]   indirect
 parallelly             1.46.0   RSPM      1.46.0   CRAN  [1]   indirect
 parameters             0.28.2   RSPM      0.28.2   CRAN  [1]   indirect
-partR2                   <NA>   <NA>       0.9.2   CRAN <NA>     direct
-pbapply                  <NA>   <NA>       1.7-4   CRAN <NA>       <NA>
+partR2                   <NA>   <NA>        <NA>   <NA> <NA>     direct
 pbkrtest                0.5.5   RSPM       0.5.5   CRAN  [1]   indirect
 performance            0.15.2   RSPM      0.15.2   CRAN  [1]     direct
 pillar                 1.11.1   CRAN      1.11.1   CRAN  [1]   indirect
-pkgbuild                 <NA>   <NA>       1.4.8   CRAN <NA>       <NA>
 pkgconfig               2.0.3   CRAN       2.0.3   CRAN  [1]   indirect
-pkgload                  <NA>   <NA>       1.4.1   CRAN <NA>       <NA>
-praise                   <NA>   <NA>       1.0.0   CRAN <NA>       <NA>
 prettyunits             1.2.0   CRAN       1.2.0   CRAN  [1]   indirect
-processx                 <NA>   <NA>       3.8.6   CRAN <NA>       <NA>
 progress                1.2.3   CRAN       1.2.3   CRAN  [1]   indirect
-ps                       <NA>   <NA>       1.9.1   CRAN <NA>       <NA>
 purrr                   1.1.0   RSPM       1.1.0   CRAN  [1]     direct
 quadprog                1.5-8   CRAN        <NA>   <NA>  [1]       <NA>
 quantmod               0.4.28   CRAN        <NA>   <NA>  [1]       <NA>
-quantreg                  6.1   RSPM         6.1   CRAN  [1]     direct
+quantreg                  6.1   RSPM         6.1   RSPM  [1]     direct
 ragg                    1.5.0   RSPM       1.5.0   CRAN  [1]   indirect
 rappdirs                0.3.3   RSPM       0.3.3   CRAN  [1]   indirect
 rbibutils                 2.4   RSPM         2.4   CRAN  [1]   indirect
-reactR                  0.6.1   CRAN        <NA>   <NA>  [1]   indirect
-reactable               0.4.5   CRAN        <NA>   <NA>  [1]   indirect
+reactR                  0.6.1   CRAN       0.6.1   CRAN  [1]   indirect
+reactable               0.4.5   CRAN       0.4.5   CRAN  [1]   indirect
 readr                   2.1.5   RSPM       2.1.5   CRAN  [1]     direct
-readxl                  1.4.5   CRAN        <NA>   <NA>  [1]     direct
+readxl                  1.4.5   CRAN       1.4.5   CRAN  [1]     direct
 reformulas              0.4.2   RSPM       0.4.2   CRAN  [1]     direct
-rematch                 2.0.0   CRAN        <NA>   <NA>  [1]   indirect
+rematch                 2.0.0   CRAN       2.0.0   CRAN  [1]   indirect
 renv                    1.1.5   RSPM       1.1.5   CRAN  [1]     direct
 rlang                   1.1.6   CRAN       1.1.6   CRAN  [1]     direct
 rmarkdown                2.30   CRAN        2.30   CRAN  [1]   indirect
-rpart                  4.1.24   RSPM      4.1.24   CRAN  [1]   indirect
+rpart                  4.1.24   RSPM      4.1.24   RSPM  [1]   indirect
 rprojroot               2.1.1   CRAN       2.1.1   CRAN  [1]   indirect
 sandwich                3.1-1   CRAN       3.1-1   CRAN  [1]     direct
 sass                   0.4.10   RSPM      0.4.10   CRAN  [1]   indirect
@@ -303,10 +252,10 @@ splines                  <NA>   <NA>        <NA>   <NA>  [2]     direct
 stats                    <NA>   <NA>        <NA>   <NA>  [2]     direct
 stringi                 1.8.7   RSPM       1.8.7   CRAN  [1]   indirect
 stringr                 1.6.0   RSPM       1.6.0   CRAN  [1]     direct
-survival                3.8-3   RSPM       3.8-3   CRAN  [1]   indirect
+survival                3.8-3   RSPM       3.8-3   RSPM  [1]   indirect
 sys                     3.4.3   RSPM       3.4.3   CRAN  [1]   indirect
 systemfonts             1.3.1   RSPM       1.3.1   CRAN  [1]   indirect
-testthat                 <NA>   <NA>       3.3.2   CRAN <NA>     direct
+testthat                 <NA>   <NA>        <NA>   <NA> <NA>     direct
 textshaping             1.0.4   RSPM       1.0.4   CRAN  [1]   indirect
 tibble                  3.3.0   CRAN       3.3.0   CRAN  [1]     direct
 tidyr                   1.3.1   RSPM       1.3.1   CRAN  [1]     direct
@@ -321,18 +270,17 @@ ucminf                  1.2.2   CRAN       1.2.2   CRAN  [1]   indirect
 urca                    1.3-4   CRAN        <NA>   <NA>  [1]       <NA>
 utf8                    1.2.6   CRAN       1.2.6   CRAN  [1]   indirect
 utils                    <NA>   <NA>        <NA>   <NA>  [2]     direct
-uuid                    1.2-1   RSPM       1.2-1   CRAN  [1]   indirect
+uuid                    1.2-1   RSPM       1.2-1   RSPM  [1]   indirect
 vctrs                   0.6.5   CRAN       0.6.5   CRAN  [1]   indirect
 viridisLite             0.4.2   RSPM       0.4.2   CRAN  [1]   indirect
 vroom                   1.6.6   RSPM       1.6.6   CRAN  [1]   indirect
-waldo                    <NA>   <NA>       0.6.2   CRAN <NA>       <NA>
 withr                   3.0.2   CRAN       3.0.2   CRAN  [1]   indirect
-xfun                     0.56   CRAN        0.53   CRAN  [1]   indirect
+xfun                     0.56   CRAN        0.56   CRAN  [1]   indirect
 xml2                    1.4.0   RSPM       1.4.0   CRAN  [1]   indirect
 xts                    0.14.1   CRAN        <NA>   <NA>  [1]       <NA>
-yaml                   2.3.10   RSPM      2.3.10   CRAN  [1]   indirect
+yaml                   2.3.10   RSPM      2.3.10   RSPM  [1]   indirect
 zip                     2.3.3   CRAN       2.3.3   CRAN  [1]   indirect
-zoo                    1.8-14   RSPM      1.8-14   CRAN  [1]   indirect
+zoo                    1.8-14   RSPM      1.8-14   RSPM  [1]   indirect
 
 [1]: C:/GitWork/Python-R-Scripts/Fear-of-Falling/renv/library/windows/R-4.4/x86_64-w64-mingw32    
 [2]: C:/Users/tomik/AppData/Local/R/cache/R/renv/sandbox/windows/R-4.4/x86_64-w64-mingw32/6698a5f3
@@ -390,6 +338,8 @@ RENV_DEFAULT_R_PROFILE_USER = <NA>
 RENV_PROJECT                = C:/GitWork/Python-R-Scripts/Fear-of-Falling
 
 # PATH -----------------------------------------------------------------------
+- c:/rtools44/x86_64-w64-mingw32.static.posix/bin
+- c:/rtools44/usr/bin
 - c:/rtools44/x86_64-w64-mingw32.static.posix/bin
 - c:/rtools44/usr/bin
 - C:\Users\tomik\Miniconda3

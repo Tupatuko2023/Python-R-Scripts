@@ -7,11 +7,11 @@ fallback_used=FALSE
 fallback_notes=none
 n_wide_unique_id=276
 n_long_rows=552
-[mode=cat] n_complete=476
+[mode=cat] n_complete=472
 [mode=cat] key_terms_n=3
 [mode=cat] placeholder_used=FALSE
 [mode=cat] crosscheck_ok=TRUE
-[mode=score] n_complete=476
+[mode=score] n_complete=472
 [mode=score] key_terms_n=2
 [mode=score] placeholder_used=FALSE
 [mode=score] crosscheck_ok=TRUE

@@ -1,5 +1,5 @@
 K23_TABLE2 V2.2 debug summary
-Timestamp: 2026-02-25 14:49:59 UTC
+Timestamp: 2026-02-26 08:22:23 UTC
 Input: C:/GitWork/Python-R-Scripts/Fear-of-Falling/data/external/KaatumisenPelko.csv
 
 Population anchors:

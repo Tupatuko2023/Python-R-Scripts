@@ -2279,3 +2279,29 @@ manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
 2026-02-26 16:27:29.65039,K29_INTERACTION,interaction_plot_score,figure_png,R-scripts/K29_INTERACTION/outputs/K29_interaction_plot_score.png,NA,NA
 2026-02-26 16:27:29.972358,K29_INTERACTION,interaction_report_md,text_md,R-scripts/K29_INTERACTION/outputs/K29_interaction_report.md,NA,NA
 2026-02-26 16:27:30.307556,K29_INTERACTION,sessioninfo,sessioninfo,R-scripts/K29_INTERACTION/outputs/sessioninfo_K29_INTERACTION.txt,NA,NA
+2026-02-26 16:45:04.947967,K18,qc_variable_standardization_renames,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
+2026-02-26 16:45:05.482281,K18,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
+2026-02-26 16:45:05.761425,K18,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
+2026-02-26 16:45:06.039052,K18_QC,qc_profile,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_profile.csv,NA,QC profile
+2026-02-26 16:45:06.343234,K18_QC,qc_types_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types_status.csv,NA,Required columns + types status
+2026-02-26 16:45:06.624771,K18_QC,qc_types,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types.csv,NA,Required columns types
+2026-02-26 16:45:06.925212,K18_QC,qc_uniqueness,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_uniqueness.csv,NA,"Uniqueness of (id,time)"
+2026-02-26 16:45:07.195217,K18_QC,qc_id_timepoint_coverage_dist,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_id_timepoint_coverage_dist.csv,NA,ID timepoint coverage distribution
+2026-02-26 16:45:07.511434,K18_QC,qc_time_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels.csv,NA,Observed time levels
+2026-02-26 16:45:07.804435,K18_QC,qc_time_levels_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels_status.csv,NA,Time levels status
+2026-02-26 16:45:08.156505,K18_QC,qc_fof_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_fof_levels.csv,NA,FOF_status levels
+2026-02-26 16:45:08.502233,K18_QC,qc_missingness_overall,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_overall.csv,NA,Missingness overall
+2026-02-26 16:45:08.838201,K18_QC,qc_missingness_by_fof_time,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_by_fof_time.csv,NA,Missingness by FOF_status x time
+2026-02-26 16:45:09.182635,K18_QC,qc_delta_check,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_delta_check.csv,NA,Delta check (optional)
+2026-02-26 16:45:09.490485,K18_QC,qc_outcome_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_summary.csv,NA,Outcome summary
+2026-02-26 16:45:09.793337,K18_QC,qc_outcome_hist,qc_png,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_hist.png,NA,Outcome distribution histogram
+2026-02-26 16:45:10.137997,K18_QC,qc_row_id_watch,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_row_id_watch.csv,NA,Row/id watch
+2026-02-26 16:45:10.473591,K18,qc_status_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_status_summary.csv,NA,QC status summary
+2026-02-26 16:45:10.775393,K18_QC,qc_sessioninfo,sessionInfo,R-scripts/K18/outputs/K18_QC/qc/qc_sessioninfo.txt,NA,NA
+2026-02-26 16:45:15.770901,K18_QC,qc_renv_diagnostics,renv diagnostics,R-scripts/K18/outputs/K18_QC/qc/qc_renv_diagnostics.txt,NA,NA
+2026-02-26 16:45:17.793695,K29_INTERACTION,fixed_terms_score,table_csv,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_fixed_terms_score.csv,NA,NA
+2026-02-26 16:45:18.226884,K29_INTERACTION,fixed_terms_cat,table_csv,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_fixed_terms_cat.csv,NA,NA
+2026-02-26 16:45:18.715559,K29_INTERACTION,change_estimates_score,table_csv,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_change_score.csv,NA,NA
+2026-02-26 16:45:19.128868,K29_INTERACTION,interaction_plot_score,figure_png,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_plot_score.png,NA,NA
+2026-02-26 16:45:19.479382,K29_INTERACTION,interaction_report_md,text_md,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_report.md,NA,NA
+2026-02-26 16:45:19.87955,K29,sessioninfo,sessioninfo,R-scripts/K29/outputs/sessioninfo_K29.txt,NA,NA
