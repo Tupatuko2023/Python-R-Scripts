@@ -1242,6 +1242,18 @@ Rscript --version || { echo "FATAL: Rscript missing in this environment"; exit 1
 proot-distro login ubuntu -- bash -lc 'cd /data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling && $RSCRIPT_BIN --version'
 ```
 
+## K29 Mixed Interaction Model (Time × FOF × Frailty)
+
+`K29_INTERACTION` fits mixed models to test the 3-way interaction on `Composite_Z`.
+
+```bash
+Rscript R-scripts/K29/K29_INTERACTION.V1_time-fof-frailty-compositeZ.R
+```
+
+Outputs:
+- `R-scripts/K29_INTERACTION/outputs/K29_interaction_report.md` (Summary)
+- `R-scripts/K29_INTERACTION/outputs/K29_interaction_plot_score.png` (Visual)
+
 ## ?? System Architecture & Dependencies
 
 This project is part of a distributed research ecosystem. It relies on the shared utility library:

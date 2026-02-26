@@ -2204,3 +2204,78 @@ manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
 2026-02-26 15:04:26.856969,K24_TABLE2A,K24_frailty_provenance_v2_txt,qc_text,R-scripts/K24/outputs/K24_TABLE2A/K24_frailty_provenance_v2.txt,NA,K24 V2 canonical frailty provenance
 2026-02-26 15:04:27.121072,K24_TABLE2A,sessionInfo_v2,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v2.txt,NA,K24 V2 sessionInfo + renv diagnostics
 2026-02-26 15:04:33.58015,K24_TABLE2A,sync_check_txt,qc_text,R-scripts/K24/outputs/K24_TABLE2A/K24_sync_check.txt,NA,K24 V2/V3 synchronization verification
+2026-02-26 15:13:40.744879,K24_TABLE2A,table2A_paper_ready_canonical_cat_v2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.csv,5,K24 V2 canonical cat paper-ready CSV
+2026-02-26 15:13:41.048664,K24_TABLE2A,table2A_paper_ready_canonical_cat_v2_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.html,5,K24 V2 canonical cat paper-ready HTML
+2026-02-26 15:13:41.327327,K24_TABLE2A,table2A_paper_ready_canonical_score_v2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.csv,5,K24 V2 canonical score paper-ready CSV
+2026-02-26 15:13:41.585283,K24_TABLE2A,table2A_paper_ready_canonical_score_v2_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.html,5,K24 V2 canonical score paper-ready HTML
+2026-02-26 15:13:41.86052,K24_TABLE2A,table2A_audit_canonical_v2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_canonical_v2.csv,12,K24 V2 canonical audit CSV with frailty provenance fields
+2026-02-26 15:13:42.131048,K24_TABLE2A,table2A_cat_vs_score_compare_canonical_v2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv,6,K24 V2 canonical cat vs score compare CSV
+2026-02-26 15:13:42.421107,K24_TABLE2A,K24_frailty_provenance_v2_txt,qc_text,R-scripts/K24/outputs/K24_TABLE2A/K24_frailty_provenance_v2.txt,NA,K24 V2 canonical frailty provenance
+2026-02-26 15:13:42.689253,K24_TABLE2A,sessionInfo_v2,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v2.txt,NA,K24 V2 sessionInfo + renv diagnostics
+2026-02-26 15:13:48.689356,K24_TABLE2A,sync_check_txt,qc_text,R-scripts/K24/outputs/K24_TABLE2A/K24_sync_check.txt,NA,K24 V2/V3 synchronization verification
+2026-02-26 16:25:27.504459,K18,qc_variable_standardization_renames,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
+2026-02-26 16:25:27.974268,K18,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
+2026-02-26 16:25:28.219819,K18,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
+2026-02-26 16:25:28.477422,K18_QC,qc_profile,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_profile.csv,NA,QC profile
+2026-02-26 16:25:28.726882,K18_QC,qc_types_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types_status.csv,NA,Required columns + types status
+2026-02-26 16:25:28.959715,K18_QC,qc_types,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types.csv,NA,Required columns types
+2026-02-26 16:25:29.214408,K18_QC,qc_uniqueness,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_uniqueness.csv,NA,"Uniqueness of (id,time)"
+2026-02-26 16:25:29.4551,K18_QC,qc_id_timepoint_coverage_dist,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_id_timepoint_coverage_dist.csv,NA,ID timepoint coverage distribution
+2026-02-26 16:25:29.727377,K18_QC,qc_time_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels.csv,NA,Observed time levels
+2026-02-26 16:25:29.972875,K18_QC,qc_time_levels_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels_status.csv,NA,Time levels status
+2026-02-26 16:25:30.267258,K18_QC,qc_fof_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_fof_levels.csv,NA,FOF_status levels
+2026-02-26 16:25:30.504735,K18_QC,qc_missingness_overall,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_overall.csv,NA,Missingness overall
+2026-02-26 16:25:30.757577,K18_QC,qc_missingness_by_fof_time,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_by_fof_time.csv,NA,Missingness by FOF_status x time
+2026-02-26 16:25:31.008906,K18_QC,qc_delta_check,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_delta_check.csv,NA,Delta check (optional)
+2026-02-26 16:25:31.268386,K18_QC,qc_outcome_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_summary.csv,NA,Outcome summary
+2026-02-26 16:25:31.530679,K18_QC,qc_outcome_hist,qc_png,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_hist.png,NA,Outcome distribution histogram
+2026-02-26 16:25:31.803805,K18_QC,qc_row_id_watch,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_row_id_watch.csv,NA,Row/id watch
+2026-02-26 16:25:32.058664,K18,qc_status_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_status_summary.csv,NA,QC status summary
+2026-02-26 16:25:32.337917,K18_QC,qc_sessioninfo,sessionInfo,R-scripts/K18/outputs/K18_QC/qc/qc_sessioninfo.txt,NA,NA
+2026-02-26 16:25:36.622618,K18_QC,qc_renv_diagnostics,renv diagnostics,R-scripts/K18/outputs/K18_QC/qc/qc_renv_diagnostics.txt,NA,NA
+2026-02-26 16:26:02.597404,K18,qc_variable_standardization_renames,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
+2026-02-26 16:26:03.063116,K18,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
+2026-02-26 16:26:03.310545,K18,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
+2026-02-26 16:26:03.552635,K18_QC,qc_profile,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_profile.csv,NA,QC profile
+2026-02-26 16:26:03.793401,K18_QC,qc_types_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types_status.csv,NA,Required columns + types status
+2026-02-26 16:26:04.032858,K18_QC,qc_types,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types.csv,NA,Required columns types
+2026-02-26 16:26:04.300887,K18_QC,qc_uniqueness,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_uniqueness.csv,NA,"Uniqueness of (id,time)"
+2026-02-26 16:26:04.551368,K18_QC,qc_id_timepoint_coverage_dist,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_id_timepoint_coverage_dist.csv,NA,ID timepoint coverage distribution
+2026-02-26 16:26:04.815811,K18_QC,qc_time_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels.csv,NA,Observed time levels
+2026-02-26 16:26:05.080167,K18_QC,qc_time_levels_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels_status.csv,NA,Time levels status
+2026-02-26 16:26:05.343422,K18_QC,qc_fof_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_fof_levels.csv,NA,FOF_status levels
+2026-02-26 16:26:05.587329,K18_QC,qc_missingness_overall,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_overall.csv,NA,Missingness overall
+2026-02-26 16:26:05.839709,K18_QC,qc_missingness_by_fof_time,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_by_fof_time.csv,NA,Missingness by FOF_status x time
+2026-02-26 16:26:06.100921,K18_QC,qc_delta_check,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_delta_check.csv,NA,Delta check (optional)
+2026-02-26 16:26:06.366587,K18_QC,qc_outcome_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_summary.csv,NA,Outcome summary
+2026-02-26 16:26:06.624368,K18_QC,qc_outcome_hist,qc_png,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_hist.png,NA,Outcome distribution histogram
+2026-02-26 16:26:06.888422,K18_QC,qc_row_id_watch,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_row_id_watch.csv,NA,Row/id watch
+2026-02-26 16:26:07.145051,K18,qc_status_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_status_summary.csv,NA,QC status summary
+2026-02-26 16:26:07.416612,K18_QC,qc_sessioninfo,sessionInfo,R-scripts/K18/outputs/K18_QC/qc/qc_sessioninfo.txt,NA,NA
+2026-02-26 16:26:11.918732,K18_QC,qc_renv_diagnostics,renv diagnostics,R-scripts/K18/outputs/K18_QC/qc/qc_renv_diagnostics.txt,NA,NA
+2026-02-26 16:27:18.149502,K18,qc_variable_standardization_renames,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
+2026-02-26 16:27:18.599835,K18,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
+2026-02-26 16:27:18.818677,K18,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
+2026-02-26 16:27:19.056852,K18_QC,qc_profile,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_profile.csv,NA,QC profile
+2026-02-26 16:27:19.2824,K18_QC,qc_types_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types_status.csv,NA,Required columns + types status
+2026-02-26 16:27:19.491205,K18_QC,qc_types,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types.csv,NA,Required columns types
+2026-02-26 16:27:19.741592,K18_QC,qc_uniqueness,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_uniqueness.csv,NA,"Uniqueness of (id,time)"
+2026-02-26 16:27:19.993901,K18_QC,qc_id_timepoint_coverage_dist,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_id_timepoint_coverage_dist.csv,NA,ID timepoint coverage distribution
+2026-02-26 16:27:20.278557,K18_QC,qc_time_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels.csv,NA,Observed time levels
+2026-02-26 16:27:20.519424,K18_QC,qc_time_levels_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels_status.csv,NA,Time levels status
+2026-02-26 16:27:20.781676,K18_QC,qc_fof_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_fof_levels.csv,NA,FOF_status levels
+2026-02-26 16:27:21.020205,K18_QC,qc_missingness_overall,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_overall.csv,NA,Missingness overall
+2026-02-26 16:27:21.29971,K18_QC,qc_missingness_by_fof_time,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_by_fof_time.csv,NA,Missingness by FOF_status x time
+2026-02-26 16:27:21.551467,K18_QC,qc_delta_check,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_delta_check.csv,NA,Delta check (optional)
+2026-02-26 16:27:21.800696,K18_QC,qc_outcome_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_summary.csv,NA,Outcome summary
+2026-02-26 16:27:22.061652,K18_QC,qc_outcome_hist,qc_png,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_hist.png,NA,Outcome distribution histogram
+2026-02-26 16:27:22.345655,K18_QC,qc_row_id_watch,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_row_id_watch.csv,NA,Row/id watch
+2026-02-26 16:27:22.597735,K18,qc_status_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_status_summary.csv,NA,QC status summary
+2026-02-26 16:27:22.858983,K18_QC,qc_sessioninfo,sessionInfo,R-scripts/K18/outputs/K18_QC/qc/qc_sessioninfo.txt,NA,NA
+2026-02-26 16:27:27.01522,K18_QC,qc_renv_diagnostics,renv diagnostics,R-scripts/K18/outputs/K18_QC/qc/qc_renv_diagnostics.txt,NA,NA
+2026-02-26 16:27:28.765133,K29_INTERACTION,fixed_terms_score,table_csv,R-scripts/K29_INTERACTION/outputs/K29_interaction_fixed_terms_score.csv,NA,NA
+2026-02-26 16:27:29.081984,K29_INTERACTION,fixed_terms_cat,table_csv,R-scripts/K29_INTERACTION/outputs/K29_interaction_fixed_terms_cat.csv,NA,NA
+2026-02-26 16:27:29.375408,K29_INTERACTION,change_estimates_score,table_csv,R-scripts/K29_INTERACTION/outputs/K29_interaction_change_score.csv,NA,NA
+2026-02-26 16:27:29.65039,K29_INTERACTION,interaction_plot_score,figure_png,R-scripts/K29_INTERACTION/outputs/K29_interaction_plot_score.png,NA,NA
+2026-02-26 16:27:29.972358,K29_INTERACTION,interaction_report_md,text_md,R-scripts/K29_INTERACTION/outputs/K29_interaction_report.md,NA,NA
+2026-02-26 16:27:30.307556,K29_INTERACTION,sessioninfo,sessioninfo,R-scripts/K29_INTERACTION/outputs/sessioninfo_K29_INTERACTION.txt,NA,NA
