@@ -37,6 +37,20 @@ This task performs deterministic hygiene + remote synchronization while preservi
   - `find . -type f (outputs with_capacity_scores/analysis patterns)` -> empty.
   - `grep DATA_ROOT/paper_01` -> code/task text references only.
 - 2026-03-01 20:46: Proceeding with allowlist stage/commit/sync sequence.
+- 2026-03-01 20:49: First commit attempt blocked by pre-commit due staged `.rds` model objects under `R-scripts/K26/outputs/...`.
+- 2026-03-01 20:50: Unstaged forbidden `.rds` output files from index; re-ran staged checks.
+- 2026-03-01 20:52: Commit PASS:
+  - `git commit -m "chore: repo hygiene + sync (no analysis changes)"`
+  - commit: `996e0bd`
+- 2026-03-01 20:53: `git fetch --all --prune` PASS.
+- 2026-03-01 20:54: `git pull --rebase` initially blocked by unstaged tracked `.rds` output modifications; restored those tracked files and re-ran pull.
+- 2026-03-01 20:54: `git pull --rebase` PASS (branch up-to-date).
+- 2026-03-01 20:56: `bash ../tools/run-gates.sh --mode analysis --project Fear-of-Falling` PASS.
+- 2026-03-01 20:58: `git push` PASS:
+  - remote: `origin`
+  - branch: `feat/k28-manifest-idempotent-pr`
+  - updated: `1dc305c -> 996e0bd`
+- 2026-03-01 20:59: Post-sync status clean; task ready for `03-review`.
 
 ## Blockers
 - None at audit stage.
