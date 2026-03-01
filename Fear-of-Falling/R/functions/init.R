@@ -50,16 +50,42 @@ manifest_row <- function(script, label, path, kind,
   )
 }
 
+normalize_manifest_n <- function(x) {
+  x_chr <- as.character(x)
+  x_chr[trimws(x_chr) == ""] <- NA_character_
+  suppressWarnings(as.integer(x_chr))
+}
+
+normalize_manifest_timestamp <- function(x) {
+  if (inherits(x, "POSIXt")) {
+    out <- format(as.POSIXct(x, tz = "UTC"), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+  } else if (is.character(x)) {
+    out <- x
+  } else {
+    out <- as.character(x)
+  }
+  out[trimws(out) == ""] <- NA_character_
+  out
+}
+
 # Append row to manifest CSV
 append_manifest <- function(row, manifest_path) {
   stopifnot(is.data.frame(row))
   dir.create(dirname(manifest_path), recursive = TRUE, showWarnings = FALSE)
+  if (!("timestamp" %in% names(row))) row$timestamp <- NA_character_
+  row$timestamp <- normalize_manifest_timestamp(row$timestamp)
+  if (!("n" %in% names(row))) row$n <- NA_integer_
+  row$n <- normalize_manifest_n(row$n)
   
   if (!file.exists(manifest_path)) {
     readr::write_csv(row, manifest_path)
   } else {
     # suppressMessages to avoid "New names: ..." noise
     old <- suppressMessages(readr::read_csv(manifest_path, show_col_types = FALSE))
+    if (!("timestamp" %in% names(old))) old$timestamp <- NA_character_
+    old$timestamp <- normalize_manifest_timestamp(old$timestamp)
+    if (!("n" %in% names(old))) old$n <- NA_integer_
+    old$n <- normalize_manifest_n(old$n)
     out <- dplyr::bind_rows(old, row)
     readr::write_csv(out, manifest_path)
   }

@@ -125,16 +125,23 @@ Follow this sequence to reproduce the results.
    # Verify: outputs/qc_report.html says "PASS"
    ```
 
-3. **Primary Analysis (Long):**
+### 5.1 Canonical Implementation Mapping
+
+- **Canonical executable implementation for primary models:**  
+  `R-scripts/K26/K26_LMM_MOD.V1_time-frailty-CompositeZ0-moderation.R`
+- **K34 status:** Deprecated due to duplicate implementation scope.  
+  `R-scripts/K34/k34.r` is retained for audit traceability only and must not be used as the primary execution path.
+
+3. **Primary Analysis (Long; canonical execution path):**
 
    ```bash
-   # Placeholder: Rscript R-scripts/K20/K20_LMM.V1_primary.R
+   Rscript R-scripts/K26/K26_LMM_MOD.V1_time-frailty-CompositeZ0-moderation.R
    ```
 
-4. **Sensitivity Analysis (Wide):**
+4. **Sensitivity / Cross-check analyses:**
 
    ```bash
-   # Placeholder: Rscript R-scripts/K20/K20_ANCOVA.V1_check.R
+   # Included in canonical K26 workflow (plus related K2x sensitivity scripts as needed)
    ```
 
 ## 6. What Cannot Change (Non-Negotiables)

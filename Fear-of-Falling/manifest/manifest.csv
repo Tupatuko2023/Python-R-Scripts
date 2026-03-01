@@ -1,4 +1,59 @@
-timestamp,script,label,kind,path,n,notes
+","del_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,266,NA
+",NA",NA,NA,NA,NA,NA,276
+",NA",NA,NA,NA,NA,NA,K18
+",NA,K18
+",NA,text
+",plot_png",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_EXPLORATORY_contrasts_M2.png,276,NA,NA,NA,K18
+",plot_png",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_PRIMARY_contrasts_M1.png,276,NA,"_clean_names,text,R-scripts/K31/outputs/k31_columns_after_clean_names.txt,NA,NA
+",plot_png",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_PRIMARY_contrasts_M1.png,276,NA,NA,NA,K18
+",plot_png",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_predicted_trajectories_M1.png,276,NA,NA,NA,K18
+",qc_summary_csv",R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only,NA,NA,K18_QC_SUMMARY
+",qc_summary_txt",R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only,NA,NA,K31
+",rdata",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_all_models.RData,276,NA,NA,NA,K18
+",sessioninfo",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/sessioninfo_K18.txt,NA,NA,NA,NA,K18
+",table_csv",R-scripts/K30/outputs/k30_audit_continuous.csv,276,NA,NA,NA,K30
+",table_csv",R-scripts/K30/outputs/k30_audit_correlations.csv,276,NA,NA,NA,K30
+",table_csv",R-scripts/K30/outputs/k30_audit_self_report_freq.csv,276,NA,NA,NA,K30
+",table_csv",R-scripts/K30/outputs/k30_cfa_diagnostics.csv,276,NA,NA,NA,K30
+",table_csv",R-scripts/K30/outputs/k30_cfa_primary_loadings.csv,NA,NA,NA,NA,K30
+",table_csv",R-scripts/K30/outputs/k30_cfa_sensitivity_loadings.csv,NA,NA,NA,NA,K30
+",table_csv",R-scripts/K30/outputs/k30_direction_check.csv,276,NA,NA,NA,K30
+",table_csv",R-scripts/K30/outputs/k30_direction_check.csv,276,NA,NA,NA,K31
+",table_csv",R-scripts/K30/outputs/k30_red_flags.csv,276,NA,NA,NA,K30
+",table_csv",R-scripts/K30/outputs/k30_scores_summary.csv,276,NA,NA,NA,K30
+",table_csv",R-scripts/K31/outputs/k31_audit_continuous.csv,276,NA,NA,NA,K31
+",table_csv",R-scripts/K31/outputs/k31_audit_correlations.csv,276,NA,NA,NA,K31
+",table_csv",R-scripts/K31/outputs/k31_audit_self_report_freq.csv,276,NA,NA,NA,K31
+",table_csv",R-scripts/K31/outputs/k31_cfa_diagnostics.csv,276,NA,NA,NA,K31
+",table_csv",R-scripts/K31/outputs/k31_cfa_primary_loadings.csv,NA,NA,NA,NA,K31
+",table_csv",R-scripts/K31/outputs/k31_cfa_sensitivity_loadings.csv,NA,NA,NA,NA,K31
+",table_csv",R-scripts/K31/outputs/k31_red_flags.csv,276,NA,NA,NA,K31
+",table_csv",R-scripts/K31/outputs/k31_scores_summary.csv,276,NA,NA,NA,K31
+",table_docx",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_EXPLORATORY_tables_M2.docx,276,NA,NA,NA,K18
+",table_docx",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_EXPLORATORY_tables_M2.docx,276,NA,NA,NA,K30
+",table_docx",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_PRIMARY_tables_M1.docx,276,NA,NA,NA,K18
+",text",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_EN.txt,276,NA,NA,NA,K18
+",text",C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_FI.txt,276,NA,NA,NA,K18
+",text",R-scripts/K30/outputs/k30_cfa_primary_summary.txt,NA,NA,NA,NA,K30
+",text",R-scripts/K30/outputs/k30_cfa_sensitivity_summary.txt,NA,NA,NA,NA,K30
+",text",R-scripts/K30/outputs/k30_columns_after_clean_names.txt,NA,NA,NA,NA,K30
+",text",R-scripts/K30/outputs/k30_decision_log.txt,276,NA,NA,NA,K30
+",text",R-scripts/K30/outputs/k30_patient_level_output_receipt.txt,276,Patient-level CSV/RDS written to DATA_ROOT external path.,NA,NA,K30
+",text",R-scripts/K30/outputs/k30_sessioninfo.txt,NA,NA,NA,NA,K18_QC_SUMMARY
+",text",R-scripts/K31/outputs/k31_cfa_primary_summary.txt,NA,NA,NA,NA,K31
+",text",R-scripts/K31/outputs/k31_cfa_sensitivity_summary.txt,NA,NA,NA,NA,K31
+",text",R-scripts/K31/outputs/k31_columns_after_clean_names.txt,NA,NA,NA,NA,K31
+",text",R-scripts/K31/outputs/k31_decision_log.txt,276,NA,NA,NA,K30
+",text",R-scripts/K31/outputs/k31_decision_log.txt,276,NA,NA,NA,K31
+",text",R-scripts/K31/outputs/k31_patient_level_output_receipt.txt,276,Patient-level CSV/RDS written to DATA_ROOT external path.,NA,NA,K31
+",text",R-scripts/K31/outputs/k31_sessioninfo.txt,NA,NA,NA,NA,K30
+"Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square).",K11,NA,NA,NA,NA,NA
+"Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan.",K11,NA,NA,NA,NA,NA
+"Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma.",K11,NA,NA,NA,NA,NA
+"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75).",K11,NA,NA,NA,NA,NA
+"Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala).",K11,NA,NA,NA,NA,NA
+"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina.",K11,NA,NA,NA,NA,NA
+"odel_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,266,NA
 2025-12-14 16:13:26.562779,K12,FOF_effects_by_outcome,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_by_outcome.csv,10,NA
 2025-12-14 16:13:26.657435,K12,FOF_effects_standardized_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_standardized_extended.csv,5,NA
 2025-12-14 16:13:27.42612,K12,sessionInfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/sessionInfo_K12.txt,NA,NA
@@ -135,29 +190,6 @@ timestamp,script,label,kind,path,n,notes
 2025-12-14 17:04:22.781376,K11,gls_residual_variance_by_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/gls_residual_variance_by_FOF.html,NA,NA
 2025-12-14 17:04:22.827823,K11,quantile_reg_FOF_effect,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
 2025-12-14 17:04:22.8715,K11,quantile_reg_FOF_effect,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
-FOF-statusin frekvenssijakauma (nonFOF vs FOF).,K11,NA,NA,NA,NA,NA
-"Ikäluokkien (AgeClass: 65–74, 75–84, 85+) frekvenssijakauma.",K11,NA,NA,NA,NA,NA
-Ristiintaulukko FOF-status x AgeClass.,K11,NA,NA,NA,NA,NA
-"Ikäkvartiilit: havaintomäärä, min, mediaani ja maksimi iän mukaan.",K11,NA,NA,NA,NA,NA
-Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.,K11,NA,NA,NA,NA,NA
-"Laajennetun lineaarisen mallin (lm) kertoimet (sis. MOI, komorbiditeetit, kaatumishistoria, mieliala).",K11,NA,NA,NA,NA,NA
-Laajennetun lineaarisen mallin standardoidut kertoimet.,K11,NA,NA,NA,NA,NA
-FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.,K11,NA,NA,NA,NA,NA
-MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.,K11,NA,NA,NA,NA,NA
-MICE: poolattu perusmalli (lm) imputoidussa datassa.,K11,NA,NA,NA,NA,NA
-MICE: poolattu laajennettu malli (lm) imputoidussa datassa.,K11,NA,NA,NA,NA,NA
-MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).,K11,NA,NA,NA,NA,NA
-Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.,K11,NA,NA,NA,NA,NA
-Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).,K11,NA,NA,NA,NA,NA
-Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.,K11,NA,NA,NA,NA,NA
-"Ikäkvartiilikohtaiset p-arvot (FOF vs nonFOF responder-statuksessa, Fisher/Chi-square).",K11,NA,NA,NA,NA,NA
-FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).,K11,NA,NA,NA,NA,NA
-Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).,K11,NA,NA,NA,NA,NA
-GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.,K11,NA,NA,NA,NA,NA
-GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.,K11,NA,NA,NA,NA,NA
-"Kvanttilinjaregression (rq) FOF-kerroin eri kvantiileissa (tau = 0.25, 0.50, 0.75).",K11,NA,NA,NA,NA,NA
-Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.,K11,NA,NA,NA,NA,NA
-"Responder-osuudet prosentteina ikäkvartiileittain FOF/nonFOF mukaan, p-arvot/tähdet annotaatioina.",K11,NA,NA,NA,NA,NA
 2025-12-14 17:04:23.126731,K11,sessionInfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessionInfo_K11.txt,NA,NA
 2025-12-14 19:26:32.030963,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
 2025-12-14 19:26:32.096992,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
@@ -270,6 +302,31 @@ Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF 
 2025-12-14 21:09:46.094213,K15,K15_frailty_count_4_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_4_overall.html,NA,NA
 2025-12-14 21:09:46.166756,K15,K15_frailty_cat_4_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv,NA,NA
 2025-12-14 21:09:46.207892,K15,K15_frailty_cat_4_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat_4_overall.html,NA,NA
+2025-12-14T16:13:26Z,K12,FOF_effects_by_outcome,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_by_outcome.csv,10,NA
+2025-12-14T16:13:26Z,K12,FOF_effects_standardized_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_standardized_extended.csv,5,NA
+2025-12-14T16:13:27Z,K12,sessionInfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/sessionInfo_K12.txt,NA,NA
+2025-12-14T16:27:33Z,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
+2025-12-14T16:27:33Z,K11,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
+2025-12-14T16:27:33Z,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
+2025-12-14T16:28:46Z,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
+2025-12-14T16:28:46Z,K11,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
+2025-12-14T16:28:46Z,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
+2025-12-14T16:41:26Z,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
+2025-12-14T16:41:26Z,K11,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
+2025-12-14T16:41:26Z,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
+2025-12-14T16:41:26Z,K11,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
+2025-12-14T16:41:26Z,K11,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
+2025-12-14T16:43:55Z,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
+2025-12-14T16:43:55Z,K11,fit_primary_ancova,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.html,266,NA
+2025-12-14T16:43:55Z,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
+2025-12-14T16:43:55Z,K11,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
+2025-12-14T16:43:55Z,K11,missing_data_pattern,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.html,266,NA
+2025-12-14T16:43:57Z,K11,mice_pooled_model_base,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.csv,266,NA
+2025-12-14T16:43:57Z,K11,mice_pooled_model_base,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_base.html,266,NA
+2025-12-14T16:43:57Z,K11,mice_pooled_model_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.csv,266,NA
+2025-12-14T16:43:57Z,K11,mice_pooled_model_extended,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/mice_pooled_model_extended.html,266,NA
+2025-12-14T16:51:15Z,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
+2025-12-14T16:51:15Z,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
 2025-12-15 16:31:02.151451,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
 2025-12-15 16:31:02.241414,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
 2025-12-15 16:31:02.711702,K11,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
@@ -386,43 +443,9 @@ Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF 
 2025-12-20 17:36:11.167947,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
 2025-12-20 17:36:11.270906,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
 2025-12-20 17:36:11.667602,K16,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/sessioninfo_K16.txt,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-smoke_test_k6_k16,plot,smoke_test_k6_k16/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
-smoke_test_k6_k16,plot,smoke_test_k6_k16/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-smoke_test_k6_k16,plot,smoke_test_k6_k16/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-smoke_test_k6_k16,plot,smoke_test_k6_k16/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
-smoke_test_k6_k16,plot,smoke_test_k6_k16/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-smoke_test_k6_k16,plot,smoke_test_k6_k16/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
-smoke_test_k6_k16,table,smoke_test_k6_k16/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-smoke_test_k6_k16,plot,smoke_test_k6_k16/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
-smoke_test_k6_k16,plot,smoke_test_k6_k16/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-smoke_test_k6_k16,plot,smoke_test_k6_k16/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
 2025-12-27 15:01:33.552352,K17,K17_baseline_by_FOF_with_frailty,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K17/outputs/K17_baseline_by_FOF_with_frailty.csv,NA,NA
 2025-12-27 15:02:00.607877,K17,K17_baseline_by_FOF_with_frailty,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K17/outputs/K17_baseline_by_FOF_with_frailty.csv,NA,NA
 2025-12-27 15:02:00.72776,K17,K17_baseline_by_FOF_with_frailty,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K17/outputs/K17_baseline_by_FOF_with_frailty.html,NA,NA
-K17,table,K17/K17_baseline_by_FOF_with_frailty.csv,Baseline characteristics by FOF-status (Table 1) + frailty_cat_3 (robust/pre-frail/frail).,NA,NA,NA
 2025-12-27 15:02:00.834129,K17,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K17/outputs/sessioninfo_K17.txt,NA,NA
 2025-12-27 15:53:17.728126,K16,Frailty-adjusted model results tables,table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx,276,NA
 2025-12-27 15:53:18.192256,K16,All frailty-adjusted model objects,rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
@@ -616,17 +639,6 @@ K17,table,K17/K17_baseline_by_FOF_with_frailty.csv,Baseline characteristics by F
 2025-12-28 15:36:07.401165,K18,Results text (Finnish),text,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_FI.txt,276,NA
 2025-12-28 15:36:08.045586,K18,All frailty change models and emmeans results (PRIMARY+EXPLORATORY),rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_all_models.RData,276,NA
 2025-12-28 15:36:08.511839,K18,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/sessioninfo_K18.txt,NA,NA
-K9,table,K9/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
-K9,table,K9/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
-K9,table,K9/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
-K9,table,K9/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
-K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
 2025-12-28 21:01:40.682533,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
 2025-12-28 21:01:40.910697,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
 2025-12-28 21:01:41.35176,K11,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
@@ -725,32 +737,9 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2025-12-28 21:02:26.150289,K11,quantile_reg_FOF_effect,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
 2025-12-28 21:02:26.372978,K11,quantile_reg_FOF_effect,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
 2025-12-28 21:02:26.683837,K11,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/sessioninfo_K11.txt,NA,NA
-K9,table,K9/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
-K9,table,K9/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
-K9,table,K9/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
-K9,table,K9/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
-K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
 2025-12-28 21:05:00.760572,K14,K14_baseline_by_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K14/outputs/K14_baseline_by_FOF.csv,NA,NA
 2025-12-28 21:05:00.975379,K14,K14_baseline_by_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K14/outputs/K14_baseline_by_FOF.html,NA,NA
-K14,table,K14/K14_baseline_by_FOF.csv,Baseline characteristics by FOF-status (Table 1; unadjusted).,NA,NA,NA
 2025-12-28 21:05:01.146482,K14,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K14/outputs/sessioninfo_K14.txt,NA,NA
-K9,table,K9/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
-K9,table,K9/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
-K9,table,K9/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
-K9,table,K9/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
-K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
 2025-12-29 06:52:31.698324,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
 2025-12-29 06:52:31.896346,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
 2025-12-29 06:52:32.56918,K11,missing_data_pattern,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
@@ -790,8 +779,6 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2025-12-29 06:54:53.105046,K11,responder_pvalues_by_Age_quartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv,NA,NA
 2025-12-29 06:54:53.77582,K11,responder_pvalues_by_Age_quartile,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html,NA,NA
 2025-12-29 06:54:54.372057,K11,emmeans_FOF_vs_nonFOF_by_agequartile,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv,NA,NA
-2025-12-30 11:55:26.073356,K3,K3_Values_2G,table_csv,R-scripts/K3/outputs/K3_Values_2G.csv,10,NA
-ng/R-scripts/K13/outputs/simple_slopes_FOF_by_SRM.csv,NA,NA,NA,NA,NA,NA
 2025-12-29 07:00:32.170495,K13,simple_slopes_FOF_by_SRM,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K13/outputs/simple_slopes_FOF_by_SRM.html,NA,NA
 2025-12-29 07:00:43.422837,K13,VIF_interaction_models,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K13/outputs/VIF_interaction_models.csv,NA,NA
 2025-12-29 07:00:51.689106,K13,VIF_interaction_models,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K13/outputs/VIF_interaction_models.html,NA,NA
@@ -800,7 +787,6 @@ ng/R-scripts/K13/outputs/simple_slopes_FOF_by_SRM.csv,NA,NA,NA,NA,NA,NA
 2025-12-29 07:01:20.341865,K13,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K13/outputs/sessioninfo_K13.txt,NA,NA
 2025-12-29 07:01:40.419114,K14,K14_baseline_by_FOF,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K14/outputs/K14_baseline_by_FOF.csv,NA,NA
 2025-12-29 07:01:48.427765,K14,K14_baseline_by_FOF,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K14/outputs/K14_baseline_by_FOF.html,NA,NA
-K14,table,K14/K14_baseline_by_FOF.csv,Baseline characteristics by FOF-status (Table 1; unadjusted).,NA,NA,NA
 2025-12-29 07:01:58.763975,K14,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K14/outputs/sessioninfo_K14.txt,NA,NA
 2025-12-29 07:02:31.276729,K15,K15_frailty_count_3_overall,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
 2025-12-29 07:02:43.951268,K15,K15_frailty_count_3_overall,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
@@ -829,7 +815,6 @@ K14,table,K14/K14_baseline_by_FOF.csv,Baseline characteristics by FOF-status (Ta
 2025-12-29 07:07:15.511968,K16,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/sessioninfo_K16.txt,NA,NA
 2025-12-29 07:07:38.218454,K17,K17_baseline_by_FOF_with_frailty,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K17/outputs/K17_baseline_by_FOF_with_frailty.csv,NA,NA
 2025-12-29 07:07:48.267121,K17,K17_baseline_by_FOF_with_frailty,table_html,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K17/outputs/K17_baseline_by_FOF_with_frailty.html,NA,NA
-K17,table,K17/K17_baseline_by_FOF_with_frailty.csv,Baseline characteristics by FOF-status (Table 1) + frailty_cat_3 (robust/pre-frail/frail).,NA,NA,NA
 2025-12-29 07:07:55.490932,K17,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K17/outputs/sessioninfo_K17.txt,NA,NA
 2025-12-29 07:08:31.431381,K18,PRIMARY frailty change contrasts tables (M1),table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_PRIMARY_tables_M1.docx,276,NA
 2025-12-29 07:08:47.887665,K18,EXPLORATORY frailty change contrasts tables (M2),table_docx,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_EXPLORATORY_tables_M2.docx,276,NA
@@ -840,86 +825,12 @@ K17,table,K17/K17_baseline_by_FOF_with_frailty.csv,Baseline characteristics by F
 2025-12-29 07:09:32.890981,K18,Results text (Finnish),text,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_Results_FI.txt,276,NA
 2025-12-29 07:09:44.111358,K18,All frailty change models and emmeans results (PRIMARY+EXPLORATORY),rdata,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/K18_all_models.RData,276,NA
 2025-12-29 07:09:52.136678,K18,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K18/outputs/sessioninfo_K18.txt,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/interaction_summary_FOFxG_ANCOVA.csv,"FOF × moderaattori (Balance_problem / Walk500m_G_final) — interaktiotermit, Type III ANOVA",NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/contrast_summary_withinG_nonFOF_minus_FOF.csv,NonFOF – FOF LS-mean -kontrastit kunkin moderaattoritason sisällä (emmeans),NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_3class.csv,FOF × Walk500m alkuperäinen 3-luokkainen ristiintaulukko,NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_G_final.csv,FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Balance.png,Adjusted ΔComposite – EMM-kuva moderaattorina balance problems,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Walk500.png,Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_problem_main_effect.png,Päävaikutuskuva: tasapaino-ongelma ja säädetty ΔComposite,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_main_effect.png,Päävaikutuskuva: 500 m kävelykyky ja säädetty ΔComposite,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_Walk_fourpanel.png,"Nelikenttäkuva: ΔComposite FOF-statuksen, tasapaino-ongelman ja 500 m kävelykyvyn mukaan",NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/K8_Spearman_subjective_vs_objective.csv,"Spearman-korrelaatiot: subjektiiviset tasapaino-/kävelyvaikeudet vs. objektiiviset mittarit (SLS, MWS)",NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Balance_vs_SLS.csv,Ryhmätasoiset SLS0/SLS2-keskiarvot tasapaino-ongelman (Balance_problem) mukaan,NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Walk500m_vs_MWS.csv,Ryhmätasoiset MWS0/MWS2-keskiarvot 500 m kävelykyvyn (Walk500m_G_final) mukaan,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_vs_SLS0_boxplot.png,Validointiboksikuva: tasapaino-ongelma vs. SLS0 (baseline),NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_vs_MWS0_boxplot.png,Validointiboksikuva: 500 m kävelyvaikeus vs. MWS0 (baseline),NA,NA,NA
 2025-12-29 07:17:46.554832,K2,K2_Z_Score_Change_2G_Transposed,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K2/outputs/K2_Z_Score_Change_2G_Transposed.csv,46,NA
-K6_main,table,K6_main_main_results.csv,"K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)",NA,NA,NA
-K6_main,plot,K6_FOF_PainVAS0_G2_emmeans.png,Emmeans-interaktiokuva: FOF x kipuluokka (PainVAS0_G2),NA,NA,NA
-K6_main,plot,K6_FOF_SRH3_emmeans.png,Emmeans-interaktiokuva: FOF x self-rated health (SRH_3class),NA,NA,NA
-K6_main,plot,K6_FOF_SRM3_emmeans.png,Emmeans-interaktiokuva: FOF x self-rated mobility (SRM_3class),NA,NA,NA
-K6_main,plot,K6_FOF_contrasts_forest.png,FOF vs non_FOF erot Delta_Composite_Z:ssa moderaattoreiden ja luokkien mukaan (forest-kuva),NA,NA,NA
-K6_main,plot,K6_PainVAS0_G2_main_effect.png,Päävaikutuskuva: kipuluokat (PainVAS0_G2 low vs high) ja säädetty 12 kk muutos komposiitissa,NA,NA,NA
-K6_main,plot,K6_PainVAS0_continuous_effect.png,Päävaikutuskuva: jatkuvan kivun (PainVAS0) yhteys säädettyyn 12 kk muutokseen komposiitissa,NA,NA,NA
-K6_main,plot,K6_Age_effect.png,Päävaikutuskuva: iän (Age) yhteys säädettyyn 12 kk muutokseen komposiitissa,NA,NA,NA
 2025-12-29 07:18:47.331956,K1,K1_Z_Score_Change_2G,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv,8,NA
 2025-12-29 07:18:47.628266,K1,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K1/outputs/sessioninfo_K1.txt,NA,NA
 2025-12-29 07:38:00.915107,K3,K3_Values_2G,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K3/outputs/K3_Values_2G.csv,10,NA
 2025-12-29 07:38:01.143209,K3,sessioninfo,sessioninfo,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K3/outputs/sessioninfo_K3.txt,NA,NA
-K7,table,K7/K7_delta_desc_by_FOF.csv,"Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD).",NA,NA,NA
-K7,table,K7/K7_cell_means_DeltaComposite_by_subgroup.csv,"Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST).",NA,NA,NA
-K7,table,K7/K7_ANCOVA_type3_all_models.csv,"Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes).",NA,NA,NA
-K7,table,K7/K7_contrasts_CompositePBT_by_subgroups.csv,"Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",NA,NA,NA
-K7,table,K7/K7_contrasts_test_specific_by_subgroups.csv,"Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",NA,NA,NA
-K7,table,K7/K7_sample_sizes_by_subgroup.csv,"Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup).",NA,NA,NA
-K7,plot,K7/K7_box_DeltaComposite_FOF.png,Boxplot of change in composite physical performance (DeltaComposite) by FOF status.,NA,NA,NA
-K7,plot,K7/K7_MWS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).,NA,NA,NA
-K7,plot,K7/K7_SLS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.,NA,NA,NA
-K7,plot,K7/K7_FTSST_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.,NA,NA,NA
-K7,plot,K7/K7_MWS_composite_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.,NA,NA,NA
-K7,plot,K7/K7_SLS_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.,NA,NA,NA
-K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.,NA,NA,NA
-K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.,NA,NA,NA
-K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.,NA,NA,NA
-K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.,NA,NA,NA
 2025-12-29 07:39:11.154456,K4,K4_Values_2G_Transposed,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K4/outputs/K4_Values_2G_Transposed.csv,46,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_tidy_jn_c.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit),NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_jn_summary_all.csv,Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori),NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_eta_sq_partial.csv,Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_effectsize_hedges_g.csv,Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_multiplicity_pvalues.csv,P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_model_r2.csv,Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa,NA,NA,NA
-K5.1_MA,plot,K5.1_MA/jn_slope_plot_centered.png,JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty),NA,NA,NA
-K5.1_MA,plot,K5.1_MA/spline_interaction_plot.png,Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty),NA,NA,NA
-K5.1_MA,text,K5.1_MA/results_addendum_finnish.txt,Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_tidy_jn_c.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit),NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_jn_summary_all.csv,Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori),NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_eta_sq_partial.csv,Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_effectsize_hedges_g.csv,Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_multiplicity_pvalues.csv,P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_model_r2.csv,Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa,NA,NA,NA
-K5.1_MA,plot,K5.1_MA/jn_slope_plot_centered.png,JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty),NA,NA,NA
-K5.1_MA,plot,K5.1_MA/spline_interaction_plot.png,Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty),NA,NA,NA
-K5.1_MA,text,K5.1_MA/results_addendum_finnish.txt,Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle,NA,NA,NA
-K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot),NA,NA,NA
-K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv,JN-alueen määrälaskennan yhteenvetotaulukko,NA,NA,NA
-K5.2_JN,plot,R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png,JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona,NA,NA,NA
-K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot),NA,NA,NA
-K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv,JN-alueen määrälaskennan yhteenvetotaulukko,NA,NA,NA
-K5.2_JN,plot,R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png,JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_tidy_jn_c.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit),NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_jn_summary_all.csv,Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori),NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_eta_sq_partial.csv,Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_effectsize_hedges_g.csv,Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_multiplicity_pvalues.csv,P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille,NA,NA,NA
-K5.1_MA,table,K5.1_MA/K5.1_MA_model_r2.csv,Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa,NA,NA,NA
-K5.1_MA,plot,K5.1_MA/jn_slope_plot_centered.png,JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty),NA,NA,NA
-K5.1_MA,plot,K5.1_MA/spline_interaction_plot.png,Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty),NA,NA,NA
-K5.1_MA,text,K5.1_MA/results_addendum_finnish.txt,Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle,NA,NA,NA
-K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot),NA,NA,NA
-K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv,JN-alueen määrälaskennan yhteenvetotaulukko,NA,NA,NA
-K5.2_JN,plot,R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png,JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona,NA,NA,NA
 2025-12-30 09:34:09.277298,SMOKE_ENV,sessionInfo,text_file,R-scripts/SMOKE_ENV/outputs/sessionInfo.txt,NA,Smoke test environment check
 2025-12-30 09:34:12.089578,SMOKE_ENV,renv_status,text_file,R-scripts/SMOKE_ENV/outputs/renv_status.txt,NA,Smoke test renv status
 2025-12-30 10:17:36.269065,K18_QC,qc_variable_standardization_renames,qc_csv,R-scripts/K18_QC/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
@@ -984,57 +895,9 @@ K5.2_JN,plot,R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png,JN-alueen ero ΔCompos
 2025-12-30 11:55:21.819838,K18_QC,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18_QC/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
 2025-12-30 11:55:22.971193,K18_QC,qc_profile,qc_csv,R-scripts/K18_QC/outputs/K18_QC/qc/qc_profile.csv,NA,QC profile
 2025-12-30 11:55:23.521357,K18_QC,qc_types_status,qc_csv,R-scripts/K18_QC/outputs/K18_QC/qc/qc_types_status.csv,NA,Required columns + types status
+2025-12-30 11:55:26.073356,K3,K3_Values_2G,table_csv,R-scripts/K3/outputs/K3_Values_2G.csv,10,NA
 2025-12-30 11:55:27.959226,K3,sessioninfo,sessioninfo,R-scripts/K3/outputs/sessioninfo_K3.txt,NA,NA
 2025-12-30 11:55:39.405826,K4,K4_Values_2G_Transposed,table_csv,R-scripts/K4/outputs/K4_Values_2G_Transposed.csv,46,NA
-K6_main,table,K6_main_main_results.csv,"K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)",NA,NA,NA
-K6_main,plot,K6_FOF_PainVAS0_G2_emmeans.png,Emmeans-interaktiokuva: FOF x kipuluokka (PainVAS0_G2),NA,NA,NA
-K6_main,plot,K6_FOF_SRH3_emmeans.png,Emmeans-interaktiokuva: FOF x self-rated health (SRH_3class),NA,NA,NA
-K6_main,plot,K6_FOF_SRM3_emmeans.png,Emmeans-interaktiokuva: FOF x self-rated mobility (SRM_3class),NA,NA,NA
-K6_main,plot,K6_FOF_contrasts_forest.png,FOF vs non_FOF erot Delta_Composite_Z:ssa moderaattoreiden ja luokkien mukaan (forest-kuva),NA,NA,NA
-K6_main,plot,K6_PainVAS0_G2_main_effect.png,Päävaikutuskuva: kipuluokat (PainVAS0_G2 low vs high) ja säädetty 12 kk muutos komposiitissa,NA,NA,NA
-K6_main,plot,K6_PainVAS0_continuous_effect.png,Päävaikutuskuva: jatkuvan kivun (PainVAS0) yhteys säädettyyn 12 kk muutokseen komposiitissa,NA,NA,NA
-K6_main,plot,K6_Age_effect.png,Päävaikutuskuva: iän (Age) yhteys säädettyyn 12 kk muutokseen komposiitissa,NA,NA,NA
-K7,table,K7/K7_delta_desc_by_FOF.csv,"Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD).",NA,NA,NA
-K7,table,K7/K7_cell_means_DeltaComposite_by_subgroup.csv,"Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST).",NA,NA,NA
-K7,table,K7/K7_ANCOVA_type3_all_models.csv,"Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes).",NA,NA,NA
-K7,table,K7/K7_contrasts_CompositePBT_by_subgroups.csv,"Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",NA,NA,NA
-K7,table,K7/K7_contrasts_test_specific_by_subgroups.csv,"Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",NA,NA,NA
-K7,table,K7/K7_sample_sizes_by_subgroup.csv,"Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup).",NA,NA,NA
-K7,plot,K7/K7_box_DeltaComposite_FOF.png,Boxplot of change in composite physical performance (DeltaComposite) by FOF status.,NA,NA,NA
-K7,plot,K7/K7_MWS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).,NA,NA,NA
-K7,plot,K7/K7_SLS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.,NA,NA,NA
-K7,plot,K7/K7_FTSST_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.,NA,NA,NA
-K7,plot,K7/K7_MWS_composite_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.,NA,NA,NA
-K7,plot,K7/K7_SLS_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.,NA,NA,NA
-K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.,NA,NA,NA
-K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.,NA,NA,NA
-K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.,NA,NA,NA
-K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.,NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/interaction_summary_FOFxG_ANCOVA.csv,"FOF × moderaattori (Balance_problem / Walk500m_G_final) — interaktiotermit, Type III ANOVA",NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/contrast_summary_withinG_nonFOF_minus_FOF.csv,NonFOF – FOF LS-mean -kontrastit kunkin moderaattoritason sisällä (emmeans),NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_3class.csv,FOF × Walk500m alkuperäinen 3-luokkainen ristiintaulukko,NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_G_final.csv,FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Balance.png,Adjusted ΔComposite – EMM-kuva moderaattorina balance problems,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Walk500.png,Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_problem_main_effect.png,Päävaikutuskuva: tasapaino-ongelma ja säädetty ΔComposite,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_main_effect.png,Päävaikutuskuva: 500 m kävelykyky ja säädetty ΔComposite,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_Walk_fourpanel.png,"Nelikenttäkuva: ΔComposite FOF-statuksen, tasapaino-ongelman ja 500 m kävelykyvyn mukaan",NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/K8_Spearman_subjective_vs_objective.csv,"Spearman-korrelaatiot: subjektiiviset tasapaino-/kävelyvaikeudet vs. objektiiviset mittarit (SLS, MWS)",NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Balance_vs_SLS.csv,Ryhmätasoiset SLS0/SLS2-keskiarvot tasapaino-ongelman (Balance_problem) mukaan,NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Walk500m_vs_MWS.csv,Ryhmätasoiset MWS0/MWS2-keskiarvot 500 m kävelykyvyn (Walk500m_G_final) mukaan,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_vs_SLS0_boxplot.png,Validointiboksikuva: tasapaino-ongelma vs. SLS0 (baseline),NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_vs_MWS0_boxplot.png,Validointiboksikuva: 500 m kävelyvaikeus vs. MWS0 (baseline),NA,NA,NA
-K9,table,K9/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
-K9,table,K9/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
-K9,table,K9/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
-K9,table,K9/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
-K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
 2025-12-30 11:56:44.077544,K11,fit_primary_ancova,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
 2025-12-30 11:56:44.215369,K11,fit_primary_ancova_pvalues,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
 2025-12-30 11:56:44.685387,K11,missing_data_pattern,table_csv,R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
@@ -1131,7 +994,6 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2025-12-30 11:57:32.285774,K13,sessioninfo,sessioninfo,R-scripts/K13/outputs/sessioninfo_K13.txt,NA,NA
 2025-12-30 11:57:34.351315,K14,K14_baseline_by_FOF,table_csv,R-scripts/K14/outputs/K14_baseline_by_FOF.csv,NA,NA
 2025-12-30 11:57:34.507794,K14,K14_baseline_by_FOF,table_html,R-scripts/K14/outputs/K14_baseline_by_FOF.html,NA,NA
-K14,table,K14/K14_baseline_by_FOF.csv,Baseline characteristics by FOF-status (Table 1; unadjusted).,NA,NA,NA
 2025-12-30 11:57:34.641251,K14,sessioninfo,sessioninfo,R-scripts/K14/outputs/sessioninfo_K14.txt,NA,NA
 2025-12-30 11:57:36.4554,K15,K15_frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
 2025-12-30 11:57:36.611591,K15,K15_frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
@@ -1160,68 +1022,11 @@ K14,table,K14/K14_baseline_by_FOF.csv,Baseline characteristics by FOF-status (Ta
 2025-12-30 11:57:53.955393,K16,sessioninfo,sessioninfo,R-scripts/K16/outputs/sessioninfo_K16.txt,NA,NA
 2025-12-30 12:06:10.987183,K14,K14_baseline_by_FOF,table_csv,R-scripts/K14/outputs/K14_baseline_by_FOF.csv,NA,NA
 2025-12-30 12:06:11.388273,K14,K14_baseline_by_FOF,table_html,R-scripts/K14/outputs/K14_baseline_by_FOF.html,NA,NA
-K14,table,K14/K14_baseline_by_FOF.csv,Baseline characteristics by FOF-status (Table 1; unadjusted).,NA,NA,NA
 2025-12-30 12:06:11.755298,K14,sessioninfo,sessioninfo,R-scripts/K14/outputs/sessioninfo_K14.txt,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/interaction_summary_FOFxG_ANCOVA.csv,"FOF × moderaattori (Balance_problem / Walk500m_G_final) — interaktiotermit, Type III ANOVA",NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/contrast_summary_withinG_nonFOF_minus_FOF.csv,NonFOF – FOF LS-mean -kontrastit kunkin moderaattoritason sisällä (emmeans),NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_3class.csv,FOF × Walk500m alkuperäinen 3-luokkainen ristiintaulukko,NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_G_final.csv,FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Balance.png,Adjusted ΔComposite – EMM-kuva moderaattorina balance problems,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Walk500.png,Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_problem_main_effect.png,Päävaikutuskuva: tasapaino-ongelma ja säädetty ΔComposite,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_main_effect.png,Päävaikutuskuva: 500 m kävelykyky ja säädetty ΔComposite,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_Walk_fourpanel.png,"Nelikenttäkuva: ΔComposite FOF-statuksen, tasapaino-ongelman ja 500 m kävelykyvyn mukaan",NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/K8_Spearman_subjective_vs_objective.csv,"Spearman-korrelaatiot: subjektiiviset tasapaino-/kävelyvaikeudet vs. objektiiviset mittarit (SLS, MWS)",NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Balance_vs_SLS.csv,Ryhmätasoiset SLS0/SLS2-keskiarvot tasapaino-ongelman (Balance_problem) mukaan,NA,NA,NA
-K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Walk500m_vs_MWS.csv,Ryhmätasoiset MWS0/MWS2-keskiarvot 500 m kävelykyvyn (Walk500m_G_final) mukaan,NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_vs_SLS0_boxplot.png,Validointiboksikuva: tasapaino-ongelma vs. SLS0 (baseline),NA,NA,NA
-K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_vs_MWS0_boxplot.png,Validointiboksikuva: 500 m kävelyvaikeus vs. MWS0 (baseline),NA,NA,NA
-K9,table,K9/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
-K9,table,K9/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
-K9,table,K9/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
-K9,table,K9/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,table,K9/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
-K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
-K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
-K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
-K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
 2025-12-30 12:08:09.434122,K12,lm_models_all_outcomes,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/lm_models_all_outcomes.csv,95,NA
 2025-12-30 12:08:09.713058,K12,FOF_effects_by_outcome,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_by_outcome.csv,10,NA
 2025-12-30 12:08:09.906664,K12,FOF_effects_standardized_extended,table_csv,C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_standardized_extended.csv,5,NA
 2025-12-30 12:08:10.59966,K12,sessioninfo,sessioninfo,R-scripts/K12/outputs/sessionInfo_K12.txt,NA,NA
-2026-01-03 13:30:19.447684,K18,qc_variable_standardization_renames,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
-2026-01-03 13:30:31.796558,K18,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
-2026-01-03 13:30:38.41801,K18,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
-2026-01-03 13:30:38.908818,K18_QC,qc_profile,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_profile.csv,NA,QC profile
-2026-01-03 13:30:39.251019,K18_QC,qc_types_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types_status.csv,NA,Required columns + types status
-2026-01-03 13:30:39.608436,K18_QC,qc_types,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types.csv,NA,Required columns types
-2026-01-03 13:30:39.911131,K18_QC,qc_uniqueness,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_uniqueness.csv,NA,"Uniqueness of (id,time)"
-2026-01-03 13:30:40.173978,K18,qc_id_timepoint_coverage_dist,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_id_timepoint_coverage_dist.csv,NA,ID timepoint coverage distribution
-2026-01-03 13:30:41.437391,K18_QC,qc_time_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels.csv,NA,Observed time levels
-2026-01-03 13:55:05.661395,K18,qc_variable_standardization_renames,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
-2026-01-03 13:55:06.258936,K18,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
-2026-01-03 13:55:06.627308,K18,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
-2026-01-03 13:55:06.941014,K18_QC,qc_profile,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_profile.csv,NA,QC profile
-2026-01-03 13:55:07.214218,K18_QC,qc_types_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types_status.csv,NA,Required columns + types status
-2026-01-03 13:55:07.473112,K18_QC,qc_types,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types.csv,NA,Required columns types
-2026-01-03 13:55:08.006819,K18_QC,qc_uniqueness,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_uniqueness.csv,NA,"Uniqueness of (id,time)"
-2026-01-03 13:55:08.300336,K18,qc_id_timepoint_coverage_dist,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_id_timepoint_coverage_dist.csv,NA,ID timepoint coverage distribution
-2026-01-03 13:55:08.698149,K18_QC,qc_time_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels.csv,NA,Observed time levels
-2026-01-03 13:55:09.46509,K18_QC,qc_time_levels_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels_status.csv,NA,Time levels status
-2026-01-03 13:55:09.895158,K18_QC,qc_fof_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_fof_levels.csv,NA,FOF_status levels
-2026-01-03 13:55:10.299792,K18_QC,qc_missingness_overall,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_overall.csv,NA,Missingness overall
-2026-01-03 13:55:10.667788,K18_QC,qc_missingness_by_fof_time,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_by_fof_time.csv,NA,Missingness by FOF_status x time
-2026-01-03 13:55:11.169133,K18_QC,qc_delta_check,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_delta_check.csv,NA,Delta check (optional)
-2026-01-03 13:55:11.516557,K18_QC,qc_outcome_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_summary.csv,NA,Outcome summary
-2026-01-03 13:55:11.873574,K18_QC,qc_outcome_hist,qc_png,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_hist.png,NA,Outcome distribution histogram
-2026-01-03 13:55:12.30871,K18_QC,qc_row_id_watch,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_row_id_watch.csv,NA,Row/id watch
-2026-01-03 13:55:12.714091,K18,qc_status_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_status_summary.csv,NA,QC status summary
-2026-01-03 13:55:13.102867,K18_QC,qc_sessioninfo,sessionInfo,R-scripts/K18/outputs/K18_QC/qc/qc_sessioninfo.txt,NA,NA
-2026-01-03 13:55:32.456471,K18_QC,qc_renv_diagnostics,renv diagnostics,R-scripts/K18/outputs/K18_QC/qc/qc_renv_diagnostics.txt,NA,NA
-2026-01-03 22:23:44.229936,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
-2026-01-03 22:23:45.095353,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
 2026-01-03 13:30:19.447684,K18,qc_variable_standardization_renames,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
 2026-01-03 13:30:31.796558,K18,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
 2026-01-03 13:30:38.41801,K18,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
@@ -1363,9 +1168,6 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2026-01-27 10:45:00.000000,K00_META,audit_outputs_structure,audit_csv,R-scripts/K00_META/outputs/K00_META/audit_outputs_structure.csv,39,FOF-002 audit: R-scripts output directory structure
 2026-01-27 10:45:01.000000,K00_META,audit_manifest_coverage,audit_csv,R-scripts/K00_META/outputs/K00_META/audit_manifest_coverage.csv,10,FOF-002 audit: manifest coverage metrics
 2026-01-27 11:00:00.000000,K00_META,RENV_STATUS,doc_md,docs/RENV_STATUS.md,NA,FOF-003: renv environment documentation
-2026-02-24 09:38:18,K23_TABLE2,table2_paper01_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv,7,Paper_01 Table 2 dataframe
-2026-02-24 09:38:18,K23_TABLE2,table2_paper01_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html,7,gt HTML output
-2026-02-24 09:38:18,K23_TABLE2,sessionInfo,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt,NA,sessionInfo + renv diagnostics
 2026-02-24 08:03:25.337872,K23_TABLE2,table2_paper01_v2_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.csv,7,Paper_01 Table 2 V2 aligned dataframe
 2026-02-24 08:03:26.304667,K23_TABLE2,table2_paper01_v2_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.html,7,gt HTML output V2
 2026-02-24 08:03:47.149002,K23_TABLE2,sessionInfo_v2,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2.txt,NA,sessionInfo + renv diagnostics (V2)
@@ -1379,6 +1181,9 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2026-02-24 08:55:48.60814,K23_TABLE2,sessionInfo_v2_3,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2_3.txt,NA,sessionInfo + renv diagnostics (V2.3)
 2026-02-24 09:33:27.620126,K23_TABLE2,table2_paper01_v2_3_paranoia_diff_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_diff.csv,75,V2.4 paranoia-check cell-level numeric diffs vs manuscript gold standard
 2026-02-24 09:33:27.799561,K23_TABLE2,table2_paper01_v2_3_paranoia_summary_txt,qc_text,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_summary.txt,NA,V2.4 paranoia-check summary (max diff + tolerance verdict)
+2026-02-24 09:38:18,K23_TABLE2,sessionInfo,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt,NA,sessionInfo + renv diagnostics
+2026-02-24 09:38:18,K23_TABLE2,table2_paper01_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv,7,Paper_01 Table 2 dataframe
+2026-02-24 09:38:18,K23_TABLE2,table2_paper01_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html,7,gt HTML output
 2026-02-24 09:59:52.720055,K24_TABLE2A,table2A_delta_by_test_with_frailty_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv,6,K24 Table 2A delta-by-test with joint FOF+frailty model
 2026-02-24 09:59:53.487361,K24_TABLE2A,table2A_delta_by_test_with_frailty_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html,6,K24 Table 2A HTML
 2026-02-24 10:00:08.943782,K24_TABLE2A,sessionInfo,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo.txt,NA,K24 sessionInfo + renv diagnostics
@@ -1486,8 +1291,6 @@ K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitiss
 2026-02-24 14:54:23.546105,K26_VIS,K26_VIS_provenance_txt,txt,R-scripts/K26/outputs/K26_VIS/K26_VIS_provenance.txt,NA,K26_VIS input/model/grid provenance trace
 2026-02-24 14:54:23.765328,K26_VIS,K26_VIS_qc_summary_csv,qc_table_csv,R-scripts/K26/outputs/K26_VIS/qc_summary.csv,5,K26_VIS QC checks for grid/prediction completeness
 2026-02-24 14:54:24.023581,K26_VIS,K26_VIS_sessionInfo_txt,sessioninfo,R-scripts/K26/outputs/K26_VIS/sessionInfo.txt,NA,K26_VIS sessionInfo + renv diagnostics
-manifest/sessionInfo.txt,2026-02-25 16.32.33,REPRO,54821c8,NA,NA,NA
-manifest/renv_diagnostics.txt,2026-02-25 16.32.33,REPRO,54821c8,NA,NA,NA
 2026-02-25 16:33:12.026489,K15,K15.3._frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15.3._frailty_count_3_overall.csv,NA,NA
 2026-02-25 16:33:12.357774,K15,K15.3._frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15.3._frailty_count_3_overall.html,NA,NA
 2026-02-25 16:33:12.620481,K15,K15.3._frailty_cat_3_overall,table_csv,R-scripts/K15/outputs/K15.3._frailty_cat_3_overall.csv,NA,NA
@@ -1521,8 +1324,6 @@ manifest/renv_diagnostics.txt,2026-02-25 16.32.33,REPRO,54821c8,NA,NA,NA
 2026-02-25 16:37:26.645362,K22,K22_sls_evidence_note,doc_md,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_evidence_note.md,NA,Manuscript-ready interpretation for K22 SLS checks
 2026-02-25 16:37:26.6498,K22,K22_sls_delta_vs_sls,plot_png,R-scripts/K22/outputs/sls_predicts_change_and_level/K22_sls_delta_vs_sls.png,256,Single-panel scatter with linear and loess fits
 2026-02-25 16:37:30.370653,K23_TABLE2,table2_paper01_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv,7,Paper_01 Table 2 dataframe
-manifest/sessionInfo.txt,2026-02-25 16.37.32,REPRO,54821c8,NA,NA,NA
-manifest/renv_diagnostics.txt,2026-02-25 16.37.32,REPRO,54821c8,NA,NA,NA
 2026-02-25 16:44:28.9821,K21,compare_frailty_proxies_delta_composite_z,table_csv,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.csv,12,Model A vs B on delta_composite_z using common-sample and non-nested fit metrics
 2026-02-25 16:44:29.494142,K21,compare_frailty_proxies_delta_composite_z,doc_md,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.md,NA,Narrative summary crosschecked against CSV
 2026-02-25 16:44:29.8728,K21,compare_frailty_proxies_delta_forest,plot_png,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_forest.png,239,Single-panel forest plot: frail vs robust estimate (A vs B)
@@ -1533,36 +1334,19 @@ manifest/renv_diagnostics.txt,2026-02-25 16.37.32,REPRO,54821c8,NA,NA,NA
 2026-02-25 16:44:37.936561,K23_TABLE2,table2_paper01_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv,7,Paper_01 Table 2 dataframe
 2026-02-25 16:44:38.804081,K23_TABLE2,table2_paper01_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html,7,gt HTML output
 2026-02-25 16:44:48.373433,K23_TABLE2,sessionInfo,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt,NA,sessionInfo + renv diagnostics
-R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt,2026-02-25 16.44.49,K23_TABLE2,54821c8,NA,NA,NA
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html,2026-02-25 16.44.49,K23_TABLE2,54821c8,NA,NA,NA
 2026-02-25 16:44:51.748779,K23_TABLE2,table2_cohort_attrition_qc_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_cohort_attrition_qc.csv,7,K23 Table2 manuscript cohort attrition steps (raw -> covariates -> outcomes -> intersection)
 2026-02-25 16:44:52.126987,K23_TABLE2,table2_missingness_matrix_qc_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_missingness_matrix_by_fof.csv,11,K23 Table2 variable missingness matrix by FOF group
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_cohort_attrition_qc.csv,2026-02-25 16.44.52,K23_TABLE2,54821c8,NA,NA,NA
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_missingness_matrix_by_fof.csv,2026-02-25 16.44.52,K23_TABLE2,54821c8,NA,NA,NA
 2026-02-25 16:44:55.699165,K23_TABLE2,table2_paper01_v2_2_debug_models_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_models.csv,56,V2.2 model+population debug grid (followup vs delta ANCOVA)
 2026-02-25 16:44:56.008853,K23_TABLE2,table2_paper01_v2_2_debug_summary_txt,qc_text,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_summary.txt,NA,V2.2 deterministic mismatch diagnostics summary
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_models.csv,2026-02-25 16.44.56,K23_TABLE2,54821c8,NA,NA,NA
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_summary.txt,2026-02-25 16.44.56,K23_TABLE2,54821c8,NA,NA,NA
 2026-02-25 16:44:59.421196,K23_TABLE2,table2_paper01_v2_3_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.csv,7,Published replica Table 2 (raw pop + delta models + fixed N header)
 2026-02-25 16:44:59.953206,K23_TABLE2,table2_paper01_v2_3_modelN_audit_csv,qc_table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_modelN_audit.csv,21,"Model-wise actual N audit for V2.3 (A/B/C, outcome/strata)"
 2026-02-25 16:45:00.662371,K23_TABLE2,table2_paper01_v2_3_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.html,7,Published replica Table 2 HTML (V2.3)
 2026-02-25 16:45:10.632707,K23_TABLE2,sessionInfo_v2_3,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2_3.txt,NA,sessionInfo + renv diagnostics (V2.3)
-R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2_3.txt,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_modelN_audit.csv,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.csv,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.html,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
 2026-02-25 16:45:13.159201,K23_TABLE2,table2_paper01_v2_3_paranoia_diff_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_diff.csv,75,V2.4 paranoia-check cell-level numeric diffs vs manuscript gold standard
 2026-02-25 16:45:13.55379,K23_TABLE2,table2_paper01_v2_3_paranoia_summary_txt,qc_text,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_summary.txt,NA,V2.4 paranoia-check summary (max diff + tolerance verdict)
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_diff.csv,2026-02-25 16.45.14,K23_TABLE2,54821c8,NA,NA,NA
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_summary.txt,2026-02-25 16.45.14,K23_TABLE2,54821c8,NA,NA,NA
 2026-02-25 16:45:16.874019,K23_TABLE2,table2_paper01_v2_csv,table_csv,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.csv,7,Paper_01 Table 2 V2 aligned dataframe
 2026-02-25 16:45:17.642943,K23_TABLE2,table2_paper01_v2_html,table_html,R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.html,7,gt HTML output V2
 2026-02-25 16:45:26.241382,K23_TABLE2,sessionInfo_v2,sessioninfo,R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2.txt,NA,sessionInfo + renv diagnostics (V2)
-R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2.txt,2026-02-25 16.45.26,K23_TABLE2,54821c8,NA,NA,NA
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.csv,2026-02-25 16.45.26,K23_TABLE2,54821c8,NA,NA,NA
-R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.html,2026-02-25 16.45.26,K23_TABLE2,54821c8,NA,NA,NA
-manifest/sessionInfo.txt,2026-02-25 16.45.37,REPRO,54821c8,NA,NA,NA
-manifest/renv_diagnostics.txt,2026-02-25 16.45.37,REPRO,54821c8,NA,NA,NA
 2026-02-25 16:46:15.420904,K15,K15_frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
 2026-02-25 16:46:15.775741,K15,K15_frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
 2026-02-25 16:46:16.053782,K15,K15_frailty_cat_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv,NA,NA
@@ -1616,26 +1400,14 @@ manifest/renv_diagnostics.txt,2026-02-25 16.45.37,REPRO,54821c8,NA,NA,NA
 2026-02-25 16:50:32.81993,K24_TABLE2A,table2A_audit_v1_1_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_v1_1.csv,6,K24 Table 2A audit CSV (includes pooled HGS + frailty contrasts)
 2026-02-25 16:50:33.551149,K24_TABLE2A,table2A_paper_ready_v1_1_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.html,5,K24 Table 2A paper-ready HTML (no pooled HGS)
 2026-02-25 16:50:42.682995,K24_TABLE2A,sessionInfo_v1_1,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_1.txt,NA,K24 V1.1 sessionInfo + renv diagnostics
-R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_1.txt,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
-R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_v1_1.csv,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
-R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.csv,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
-R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.html,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
 2026-02-25 16:50:46.397485,K24_TABLE2A,table2A_paper_ready_score_v1_2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.csv,5,K24 Table 2A paper-ready score-mode CSV (no pooled HGS)
 2026-02-25 16:50:46.750001,K24_TABLE2A,table2A_audit_score_v1_2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_score_v1_2.csv,6,K24 Table 2A audit score-mode CSV (includes pooled HGS)
 2026-02-25 16:50:47.094774,K24_TABLE2A,table2A_cat_vs_score_compare_v1_2_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_v1_2.csv,6,K24 cat vs score frailty comparison (AIC + effects + agreement flag)
 2026-02-25 16:50:47.713184,K24_TABLE2A,table2A_paper_ready_score_v1_2_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.html,5,K24 Table 2A paper-ready score-mode HTML (no pooled HGS)
 2026-02-25 16:50:56.335251,K24_TABLE2A,sessionInfo_v1_2,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_2.txt,NA,K24 V1.2 sessionInfo + renv diagnostics
-R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_2.txt,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
-R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_score_v1_2.csv,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
-R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_v1_2.csv,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
-R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.csv,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
-R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.html,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
 2026-02-25 16:50:59.755921,K24_TABLE2A,table2A_delta_by_test_with_frailty_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv,6,K24 Table 2A delta-by-test with joint FOF+frailty model
 2026-02-25 16:51:00.428263,K24_TABLE2A,table2A_delta_by_test_with_frailty_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html,6,K24 Table 2A HTML
 2026-02-25 16:51:09.871234,K24_TABLE2A,sessionInfo,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/sessionInfo.txt,NA,K24 sessionInfo + renv diagnostics
-R-scripts/K24/outputs/K24_TABLE2A/sessionInfo.txt,2026-02-25 16.51.10,K24_TABLE2A,54821c8,NA,NA,NA
-R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv,2026-02-25 16.51.10,K24_TABLE2A,54821c8,NA,NA,NA
-R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html,2026-02-25 16.51.10,K24_TABLE2A,54821c8,NA,NA,NA
 2026-02-25 16:51:22.393691,K24_TABLE2A,table2A_paper_ready_canonical_cat_v2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.csv,5,K24 V2 canonical cat paper-ready CSV
 2026-02-25 16:51:22.761033,K24_TABLE2A,table2A_paper_ready_canonical_cat_v2_html,table_html,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.html,5,K24 V2 canonical cat paper-ready HTML
 2026-02-25 16:51:23.153957,K24_TABLE2A,table2A_paper_ready_canonical_score_v2_csv,table_csv,R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_score_v2.csv,5,K24 V2 canonical score paper-ready CSV
@@ -1647,25 +1419,14 @@ R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html,2026-0
 2026-02-25 16:51:44.91886,K25_RESULTS,results_table2A_from_K24_v1_1_narrative_md,doc_md,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.md,5,K25 V1.1 paper-ready results text from K24 paper-ready Table 2A CSV
 2026-02-25 16:51:45.279576,K25_RESULTS,results_table2A_from_K24_v1_1_narrative_txt,text,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.txt,5,K25 V1.1 plain-text results narrative from K24 paper-ready Table 2A CSV
 2026-02-25 16:51:54.226004,K25_RESULTS,sessionInfo_v1_1,sessioninfo,R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v1_1.txt,NA,K25 V1.1 sessionInfo + renv diagnostics
-R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.md,2026-02-25 16.51.55,K25_RESULTS,54821c8,NA,NA,NA
-R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.txt,2026-02-25 16.51.55,K25_RESULTS,54821c8,NA,NA,NA
-R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v1_1.txt,2026-02-25 16.51.55,K25_RESULTS,54821c8,NA,NA,NA
 2026-02-25 16:51:57.042522,K25_RESULTS,results_table2A_from_K24_v1_1_md,doc_md,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.md,5,K25 results text generated from K24 paper-ready Table 2A CSV
 2026-02-25 16:51:57.425781,K25_RESULTS,results_table2A_from_K24_v1_1_txt,text,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.txt,5,K25 plain-text results paragraph from K24 paper-ready Table 2A CSV
 2026-02-25 16:52:07.164073,K25_RESULTS,sessionInfo,sessioninfo,R-scripts/K25/outputs/K25_RESULTS/sessionInfo.txt,NA,K25 sessionInfo + renv diagnostics
-R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.md,2026-02-25 16.52.08,K25_RESULTS,54821c8,NA,NA,NA
-R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.txt,2026-02-25 16.52.08,K25_RESULTS,54821c8,NA,NA,NA
-R-scripts/K25/outputs/K25_RESULTS/sessionInfo.txt,2026-02-25 16.52.08,K25_RESULTS,54821c8,NA,NA,NA
 2026-02-25 16:52:10.216489,K25_RESULTS,results_table2A_from_K24_canonical_v2_md,doc_md,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.md,5,K25 V2 list style results text from K24 canonical CSV
 2026-02-25 16:52:10.653179,K25_RESULTS,results_table2A_from_K24_canonical_v2_txt,text,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.txt,5,K25 V2 list style plain text from K24 canonical CSV
 2026-02-25 16:52:10.991999,K25_RESULTS,results_table2A_from_K24_canonical_v2_narrative_md,doc_md,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.md,5,K25 V2 narrative results text from K24 canonical CSV
 2026-02-25 16:52:11.343805,K25_RESULTS,results_table2A_from_K24_canonical_v2_narrative_txt,text,R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.txt,5,K25 V2 narrative plain text from K24 canonical CSV
 2026-02-25 16:52:20.52582,K25_RESULTS,sessionInfo_v2,sessioninfo,R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v2.txt,NA,K25 V2 sessionInfo + renv diagnostics
-R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.md,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
-R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.txt,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
-R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.md,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
-R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.txt,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
-R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v2.txt,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
 2026-02-25 16:52:26.543758,K26_LMM_MOD,K26_LRT_primary_vs_mod_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_cat.csv,2,K26 LRT: primary vs moderation
 2026-02-25 16:52:27.016089,K26_LMM_MOD,K26_fixed_effects_primary_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_cat.csv,12,K26 fixed effects primary
 2026-02-25 16:52:27.468208,K26_LMM_MOD,K26_fixed_effects_moderation_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_cat.csv,18,K26 fixed effects moderation
@@ -1682,11 +1443,6 @@ R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v2.txt,2026-02-25 16.52.21,K25_RES
 2026-02-25 16:52:31.981663,K26_LMM_MOD,K26_model_moderation_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_score.rds,NA,K26 lmer moderation model object
 2026-02-25 16:52:32.287331,K26_LMM_MOD,K26_frailty_provenance_txt,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt,NA,K26 frailty source/fallback/crosscheck trace
 2026-02-25 16:52:41.269998,K26_LMM_MOD,K26_sessionInfo,sessioninfo,R-scripts/K26/outputs/K26/K26_LMM_MOD/sessionInfo.txt,NA,K26 sessionInfo + renv diagnostics
-R-scripts/K26/outputs/K26_VIS/K26_VIS_provenance.txt,2026-02-25 16.53.00,K26_VIS,54821c8,NA,NA,NA
-R-scripts/K26/outputs/K26_VIS/qc_summary.csv,2026-02-25 16.53.00,K26_VIS,54821c8,NA,NA,NA
-R-scripts/K26/outputs/K26_VIS/sessionInfo.txt,2026-02-25 16.53.00,K26_VIS,54821c8,NA,NA,NA
-manifest/sessionInfo.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
-manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
 2026-02-25 20:03:53.931041,K15_MAIN,qc_missingness_overall,table_csv,R-scripts/K15_MAIN/outputs/K15_MAIN_qc_missingness_overall.csv,1,NA
 2026-02-25 20:03:54.202585,K15_MAIN,qc_sanity_checks,table_csv,R-scripts/K15_MAIN/outputs/K15_MAIN_qc_sanity_checks.csv,1,NA
 2026-02-25 20:03:54.411416,K15_MAIN,frailty_cat_3_overall,table_csv,R-scripts/K15_MAIN/outputs/frailty_cat_3_overall.csv,4,NA
@@ -1749,6 +1505,10 @@ manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
 2026-02-25 20:04:50.91414,K15,K15.3._balance_model_nested_test_M0_vs_M2,table_csv,R-scripts/K15/outputs/K15.3._balance_model_nested_test_M0_vs_M2.csv,NA,NA
 2026-02-25 20:04:50.958645,K15,K15.3._balance_model_nested_test_M0_vs_M2,table_html,R-scripts/K15/outputs/K15.3._balance_model_nested_test_M0_vs_M2.html,NA,NA
 2026-02-25 20:04:51.07997,K15,sessioninfo,sessioninfo,R-scripts/K15/outputs/sessioninfo_K15.txt,NA,NA
+2026-02-25 20:18:01.33778,K24_VIS,K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men.png,NA,K24_VIS V1 forest plot artifact
+2026-02-25 20:18:01.633207,K24_VIS,K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men_pdf,figure_pdf,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men.pdf,NA,K24_VIS V1 forest plot artifact
+2026-02-25 20:24:35.878024,K24_VIS,K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men.png,NA,K24_VIS V1 forest plot artifact
+2026-02-25 20:24:36.253071,K24_VIS,K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men_pdf,figure_pdf,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men.pdf,NA,K24_VIS V1 forest plot artifact
 2026-02-25 22:04:37.418859,K18,qc_variable_standardization_renames,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
 2026-02-25 22:04:37.830024,K18,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
 2026-02-25 22:04:37.88032,K18,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
@@ -1874,10 +1634,6 @@ manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
 2026-02-25 22:29:50.110577,K27,K27_baseline_by_frailty,table_csv,R-scripts/K27/outputs/K27_baseline_by_frailty.csv,250,NA
 2026-02-25 22:29:50.250173,K27,K27_baseline_by_frailty,table_html,R-scripts/K27/outputs/K27_baseline_by_frailty.html,250,NA
 2026-02-25 22:29:50.36321,K27,sessioninfo,sessioninfo,R-scripts/K27/outputs/sessioninfo_K27.txt,NA,NA
-2026-02-25 20:18:01.33778,K24_VIS,K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men.png,NA,K24_VIS V1 forest plot artifact
-2026-02-25 20:18:01.633207,K24_VIS,K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men_pdf,figure_pdf,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized_excl_HGS_Men.pdf,NA,K24_VIS V1 forest plot artifact
-2026-02-25 20:24:35.878024,K24_VIS,K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men.png,NA,K24_VIS V1 forest plot artifact
-2026-02-25 20:24:36.253071,K24_VIS,K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men_pdf,figure_pdf,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts_standardized_excl_HGS_Men.pdf,NA,K24_VIS V1 forest plot artifact
 2026-02-26 10:16:35.60121,K21,compare_frailty_proxies_delta_composite_z,table_csv,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.csv,12,Model A vs B on delta_composite_z using common-sample and non-nested fit metrics
 2026-02-26 10:16:36.037995,K21,compare_frailty_proxies_delta_composite_z,doc_md,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_composite_z.md,NA,Narrative summary crosschecked against CSV
 2026-02-26 10:16:36.262383,K21,compare_frailty_proxies_delta_forest,plot_png,R-scripts/K21/outputs/compare_frailty_proxies_delta/compare_frailty_proxies_delta_forest.png,239,Single-panel forest plot: frail vs robust estimate (A vs B)
@@ -2305,3 +2061,460 @@ manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
 2026-02-26 16:45:19.128868,K29_INTERACTION,interaction_plot_score,figure_png,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_plot_score.png,NA,NA
 2026-02-26 16:45:19.479382,K29_INTERACTION,interaction_report_md,text_md,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_report.md,NA,NA
 2026-02-26 16:45:19.87955,K29,sessioninfo,sessioninfo,R-scripts/K29/outputs/sessioninfo_K29.txt,NA,NA
+2026-03-01 09:34:57.853145,K31,k31_cfa_primary_summary,text,R-scripts/K31/outputs/k31_cfa_primary_summary.txt,NA,NA
+2026-03-01 09:34:57.881243,K31,k31_cfa_primary_loadings,table_csv,R-scripts/K31/outputs/k31_cfa_primary_loadings.csv,NA,NA
+2026-03-01 09:34:57.933975,K31,k31_cfa_sensitivity_summary,text,R-scripts/K31/outputs/k31_cfa_sensitivity_summary.txt,NA,NA
+2026-03-01 09:34:57.990839,K31,k31_cfa_sensitivity_loadings,table_csv,R-scripts/K31/outputs/k31_cfa_sensitivity_loadings.csv,NA,NA
+2026-03-01 09:34:58.044544,K31,k31_cfa_diagnostics,table_csv,R-scripts/K31/outputs/k31_cfa_diagnostics.csv,276,NA
+2026-03-01 09:34:58.123113,K31,k31_scores_summary,table_csv,R-scripts/K31/outputs/k31_scores_summary.csv,276,NA
+2026-03-01 09:34:58.25325,K31,k31_patient_level_output_receipt,text,R-scripts/K31/outputs/k31_patient_level_output_receipt.txt,276,Patient-level CSV/RDS written to DATA_ROOT external path.
+2026-03-01 09:34:58.348722,K31,k31_sessioninfo,text,R-scripts/K31/outputs/k31_sessioninfo.txt,NA,NA
+2026-03-01 09:35:10.840232,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 09:35:11.216976,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 09:47:32.130567,K32,k32_columns_after_clean_names,text,R-scripts/K32/outputs/k32_columns_after_clean_names.txt,NA,NA
+2026-03-01 09:47:32.402107,K32,k32_audit_continuous,table_csv,R-scripts/K32/outputs/k32_audit_continuous.csv,276,NA
+2026-03-01 09:47:32.463922,K32,k32_audit_self_report_freq,table_csv,R-scripts/K32/outputs/k32_audit_self_report_freq.csv,276,NA
+2026-03-01 09:47:32.513806,K32,k32_audit_correlations,table_csv,R-scripts/K32/outputs/k32_audit_correlations.csv,276,NA
+2026-03-01 09:47:32.555635,K32,k32_red_flags,table_csv,R-scripts/K32/outputs/k32_red_flags.csv,276,NA
+2026-03-01 09:47:32.593054,K32,k32_decision_log,text,R-scripts/K32/outputs/k32_decision_log.txt,276,NA
+2026-03-01 09:47:33.475115,K32,k32_cfa_primary_summary,text,R-scripts/K32/outputs/k32_cfa_primary_summary.txt,NA,NA
+2026-03-01 09:47:33.559737,K32,k32_cfa_primary_loadings,table_csv,R-scripts/K32/outputs/k32_cfa_primary_loadings.csv,NA,NA
+2026-03-01 09:47:33.624147,K32,k32_cfa_sensitivity_summary,text,R-scripts/K32/outputs/k32_cfa_sensitivity_summary.txt,NA,NA
+2026-03-01 09:47:33.673497,K32,k32_cfa_sensitivity_loadings,table_csv,R-scripts/K32/outputs/k32_cfa_sensitivity_loadings.csv,NA,NA
+2026-03-01 09:47:33.722876,K32,k32_cfa_diagnostics,table_csv,R-scripts/K32/outputs/k32_cfa_diagnostics.csv,276,NA
+2026-03-01 09:47:33.791934,K32,k32_scores_summary,table_csv,R-scripts/K32/outputs/k32_scores_summary.csv,276,NA
+2026-03-01 09:47:49.215517,K32,k32_columns_after_clean_names,text,R-scripts/K32/outputs/k32_columns_after_clean_names.txt,NA,NA
+2026-03-01 09:47:49.728379,K32,k32_audit_continuous,table_csv,R-scripts/K32/outputs/k32_audit_continuous.csv,276,NA
+2026-03-01 09:47:49.79775,K32,k32_audit_self_report_freq,table_csv,R-scripts/K32/outputs/k32_audit_self_report_freq.csv,276,NA
+2026-03-01 09:47:49.875959,K32,k32_audit_correlations,table_csv,R-scripts/K32/outputs/k32_audit_correlations.csv,276,NA
+2026-03-01 09:47:49.920861,K32,k32_red_flags,table_csv,R-scripts/K32/outputs/k32_red_flags.csv,276,NA
+2026-03-01 09:47:49.963798,K32,k32_decision_log,text,R-scripts/K32/outputs/k32_decision_log.txt,276,NA
+2026-03-01 09:47:50.860695,K32,k32_cfa_primary_summary,text,R-scripts/K32/outputs/k32_cfa_primary_summary.txt,NA,NA
+2026-03-01 09:47:50.946462,K32,k32_cfa_primary_loadings,table_csv,R-scripts/K32/outputs/k32_cfa_primary_loadings.csv,NA,NA
+2026-03-01 09:47:51.009893,K32,k32_cfa_sensitivity_summary,text,R-scripts/K32/outputs/k32_cfa_sensitivity_summary.txt,NA,NA
+2026-03-01 09:47:51.060832,K32,k32_cfa_sensitivity_loadings,table_csv,R-scripts/K32/outputs/k32_cfa_sensitivity_loadings.csv,NA,NA
+2026-03-01 09:47:51.106746,K32,k32_cfa_diagnostics,table_csv,R-scripts/K32/outputs/k32_cfa_diagnostics.csv,276,NA
+2026-03-01 09:47:51.169423,K32,k32_scores_summary,table_csv,R-scripts/K32/outputs/k32_scores_summary.csv,276,NA
+2026-03-01 09:47:51.266119,K32,k32_patient_level_output_receipt,text,R-scripts/K32/outputs/k32_patient_level_output_receipt.txt,276,Patient-level CSV/RDS written to DATA_ROOT external path.
+2026-03-01 09:47:51.35554,K32,k32_sessioninfo,text,R-scripts/K32/outputs/k32_sessioninfo.txt,NA,NA
+2026-03-01 10:31:23.875664,K32,k32_columns_after_clean_names,text,R-scripts/K32/outputs/k32_columns_after_clean_names.txt,NA,NA
+2026-03-01 10:31:24.342253,K32,k32_audit_continuous,table_csv,R-scripts/K32/outputs/k32_audit_continuous.csv,276,NA
+2026-03-01 10:31:24.418647,K32,k32_audit_self_report_freq,table_csv,R-scripts/K32/outputs/k32_audit_self_report_freq.csv,276,NA
+2026-03-01 10:31:24.506209,K32,k32_audit_correlations,table_csv,R-scripts/K32/outputs/k32_audit_correlations.csv,276,NA
+2026-03-01 10:31:24.557529,K32,k32_red_flags,table_csv,R-scripts/K32/outputs/k32_red_flags.csv,276,NA
+2026-03-01 10:31:24.60949,K32,k32_decision_log,text,R-scripts/K32/outputs/k32_decision_log.txt,276,NA
+2026-03-01 10:31:25.477636,K32,k32_cfa_primary_summary,text,R-scripts/K32/outputs/k32_cfa_primary_summary.txt,NA,NA
+2026-03-01 10:31:25.553569,K32,k32_cfa_primary_loadings,table_csv,R-scripts/K32/outputs/k32_cfa_primary_loadings.csv,NA,NA
+2026-03-01 10:31:25.600172,K32,k32_cfa_sensitivity_summary,text,R-scripts/K32/outputs/k32_cfa_sensitivity_summary.txt,NA,NA
+2026-03-01 10:31:25.664001,K32,k32_cfa_sensitivity_loadings,table_csv,R-scripts/K32/outputs/k32_cfa_sensitivity_loadings.csv,NA,NA
+2026-03-01 10:31:25.73464,K32,k32_cfa_diagnostics,table_csv,R-scripts/K32/outputs/k32_cfa_diagnostics.csv,276,NA
+2026-03-01 10:31:25.798317,K32,k32_scores_summary,table_csv,R-scripts/K32/outputs/k32_scores_summary.csv,276,NA
+2026-03-01 10:31:25.899822,K32,k32_patient_level_output_receipt,text,R-scripts/K32/outputs/k32_patient_level_output_receipt.txt,276,Patient-level CSV/RDS written to DATA_ROOT external path.
+2026-03-01 10:31:25.975936,K32,k32_sessioninfo,text,R-scripts/K32/outputs/k32_sessioninfo.txt,NA,NA
+2026-03-01 10:33:49.704918,K32,k32_columns_after_clean_names,text,R-scripts/K32/outputs/k32_columns_after_clean_names.txt,NA,NA
+2026-03-01 10:33:50.193842,K32,k32_audit_continuous,table_csv,R-scripts/K32/outputs/k32_audit_continuous.csv,276,NA
+2026-03-01 10:33:50.271736,K32,k32_audit_self_report_freq,table_csv,R-scripts/K32/outputs/k32_audit_self_report_freq.csv,276,NA
+2026-03-01 10:33:50.347698,K32,k32_audit_correlations,table_csv,R-scripts/K32/outputs/k32_audit_correlations.csv,276,NA
+2026-03-01 10:33:50.400477,K32,k32_red_flags,table_csv,R-scripts/K32/outputs/k32_red_flags.csv,276,NA
+2026-03-01 10:33:50.445911,K32,k32_decision_log,text,R-scripts/K32/outputs/k32_decision_log.txt,276,NA
+2026-03-01 10:35:36.927629,K32,k32_columns_after_clean_names,text,R-scripts/K32/outputs/k32_columns_after_clean_names.txt,NA,NA
+2026-03-01 10:35:37.390207,K32,k32_audit_continuous,table_csv,R-scripts/K32/outputs/k32_audit_continuous.csv,276,NA
+2026-03-01 10:35:37.48698,K32,k32_audit_self_report_freq,table_csv,R-scripts/K32/outputs/k32_audit_self_report_freq.csv,276,NA
+2026-03-01 10:35:37.594928,K32,k32_audit_correlations,table_csv,R-scripts/K32/outputs/k32_audit_correlations.csv,276,NA
+2026-03-01 10:35:37.640282,K32,k32_red_flags,table_csv,R-scripts/K32/outputs/k32_red_flags.csv,276,NA
+2026-03-01 10:35:37.688638,K32,k32_decision_log,text,R-scripts/K32/outputs/k32_decision_log.txt,276,NA
+2026-03-01 10:35:38.47761,K32,k32_cfa_primary_summary,text,R-scripts/K32/outputs/k32_cfa_primary_summary.txt,NA,NA
+2026-03-01 10:35:38.565434,K32,k32_cfa_primary_loadings,table_csv,R-scripts/K32/outputs/k32_cfa_primary_loadings.csv,NA,NA
+2026-03-01 10:35:38.636994,K32,k32_cfa_sensitivity_summary,text,R-scripts/K32/outputs/k32_cfa_sensitivity_summary.txt,NA,NA
+2026-03-01 10:35:38.698668,K32,k32_cfa_sensitivity_loadings,table_csv,R-scripts/K32/outputs/k32_cfa_sensitivity_loadings.csv,NA,NA
+2026-03-01 10:35:38.759438,K32,k32_cfa_diagnostics,table_csv,R-scripts/K32/outputs/k32_cfa_diagnostics.csv,276,NA
+2026-03-01 10:35:38.833827,K32,k32_scores_summary,table_csv,R-scripts/K32/outputs/k32_scores_summary.csv,276,NA
+2026-03-01 10:35:38.935942,K32,k32_patient_level_output_receipt,text,R-scripts/K32/outputs/k32_patient_level_output_receipt.txt,276,Patient-level CSV/RDS written to DATA_ROOT external path.
+2026-03-01 10:35:39.043424,K32,k32_sessioninfo,text,R-scripts/K32/outputs/k32_sessioninfo.txt,NA,NA
+2026-03-01 11:14:28.21869,K32_VALIDATION,k32_validation_correlations,table_csv,R-scripts/K32/outputs/k32_validation_correlations.csv,276,NA
+2026-03-01 11:14:28.385215,K32_VALIDATION,k32_validation_known_groups,table_csv,R-scripts/K32/outputs/k32_validation_known_groups.csv,276,NA
+2026-03-01 11:14:28.467104,K32_VALIDATION,k32_validation_distribution,table_csv,R-scripts/K32/outputs/k32_validation_distribution.csv,276,NA
+2026-03-01 11:14:28.515687,K32_VALIDATION,k32_validation_latent_vs_z5,table_csv,R-scripts/K32/outputs/k32_validation_latent_vs_z5.csv,276,NA
+2026-03-01 11:14:56.706524,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 11:14:56.960486,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 11:54:28.131432,K32_VALIDATION,k32_validation_correlations,table_csv,R-scripts/K32/outputs/k32_validation_correlations.csv,276,NA
+2026-03-01 11:54:28.362152,K32_VALIDATION,k32_validation_known_groups,table_csv,R-scripts/K32/outputs/k32_validation_known_groups.csv,276,NA
+2026-03-01 11:54:28.500122,K32_VALIDATION,k32_validation_distribution,table_csv,R-scripts/K32/outputs/k32_validation_distribution.csv,276,NA
+2026-03-01 11:54:28.599741,K32_VALIDATION,k32_validation_latent_vs_z5,table_csv,R-scripts/K32/outputs/k32_validation_latent_vs_z5.csv,276,NA
+2026-03-01 11:55:13.670205,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 11:55:14.141443,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 12:31:19.154017,K15,K15_frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
+2026-03-01 12:31:19.335623,K15,K15_frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
+2026-03-01 12:31:19.400307,K15,K15_frailty_cat_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv,NA,NA
+2026-03-01 12:31:19.460201,K15,K15_frailty_cat_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_3_overall.html,NA,NA
+2026-03-01 12:31:19.510375,K15,K15_frailty_count_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_4_overall.csv,NA,NA
+2026-03-01 12:31:19.56642,K15,K15_frailty_count_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_4_overall.html,NA,NA
+2026-03-01 12:31:19.612942,K15,K15_frailty_cat_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv,NA,NA
+2026-03-01 12:31:19.657421,K15,K15_frailty_cat_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_4_overall.html,NA,NA
+2026-03-01 12:31:19.812976,K15,K15_frailty_components_missingness,table_csv,R-scripts/K15/outputs/K15_frailty_components_missingness.csv,9,NA
+2026-03-01 12:31:19.861243,K15,K15_frailty_score_missingness,table_csv,R-scripts/K15/outputs/K15_frailty_score_missingness.csv,2,NA
+2026-03-01 12:31:19.929367,K15,K15_frailty_legacy_vs_new,table_csv,R-scripts/K15/outputs/K15_frailty_legacy_vs_new.csv,15,NA
+2026-03-01 12:31:20.004924,K15,K15_frailty_cat3_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.csv,NA,NA
+2026-03-01 12:31:20.049276,K15,K15_frailty_cat3_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.html,NA,NA
+2026-03-01 12:31:20.098819,K15,K15_frailty_cat4_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.csv,NA,NA
+2026-03-01 12:31:20.144097,K15,K15_frailty_cat4_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.html,NA,NA
+2026-03-01 12:31:20.283285,K15,K15_chisq_FOF_by_frailty_cat3,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.csv,NA,NA
+2026-03-01 12:31:20.332107,K15,K15_chisq_FOF_by_frailty_cat3,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.html,NA,NA
+2026-03-01 12:31:20.377798,K15,K15_chisq_FOF_by_frailty_cat4,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.csv,NA,NA
+2026-03-01 12:31:20.423256,K15,K15_chisq_FOF_by_frailty_cat4,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.html,NA,NA
+2026-03-01 12:31:21.221196,K15,K15_frailty_cat3_by_FOF,figure_png,/root/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.png,NA,Stacked proportion plot: frailty_cat_3 distribution by FOF-status.
+2026-03-01 12:31:21.428416,K15,k15_patient_level_frailty_output_receipt,text,R-scripts/K15/outputs/k15_patient_level_frailty_output_receipt.txt,276,Patient-level frailty CSV/RDS written to DATA_ROOT external path.
+2026-03-01 12:31:21.528777,K15,sessioninfo,sessioninfo,R-scripts/K15/outputs/sessioninfo_K15.txt,NA,NA
+2026-03-01 12:31:41.551272,K32_VALIDATION,k32_validation_correlations,table_csv,R-scripts/K32/outputs/k32_validation_correlations.csv,276,NA
+2026-03-01 12:31:41.736802,K32_VALIDATION,k32_validation_known_groups,table_csv,R-scripts/K32/outputs/k32_validation_known_groups.csv,276,NA
+2026-03-01 12:31:41.808083,K32_VALIDATION,k32_validation_distribution,table_csv,R-scripts/K32/outputs/k32_validation_distribution.csv,276,NA
+2026-03-01 12:31:41.871086,K32_VALIDATION,k32_validation_latent_vs_z5,table_csv,R-scripts/K32/outputs/k32_validation_latent_vs_z5.csv,276,NA
+2026-03-01 12:32:16.241144,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 12:32:16.489216,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 12:58:38.098615,K15,K15_frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
+2026-03-01 12:58:38.275054,K15,K15_frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
+2026-03-01 12:58:38.370348,K15,K15_frailty_cat_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv,NA,NA
+2026-03-01 12:58:38.447842,K15,K15_frailty_cat_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_3_overall.html,NA,NA
+2026-03-01 12:58:38.519407,K15,K15_frailty_count_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_4_overall.csv,NA,NA
+2026-03-01 12:58:38.602638,K15,K15_frailty_count_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_4_overall.html,NA,NA
+2026-03-01 12:58:38.670171,K15,K15_frailty_cat_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv,NA,NA
+2026-03-01 12:58:38.717038,K15,K15_frailty_cat_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_4_overall.html,NA,NA
+2026-03-01 12:58:38.931982,K15,K15_frailty_components_missingness,table_csv,R-scripts/K15/outputs/K15_frailty_components_missingness.csv,9,NA
+2026-03-01 12:58:39.040516,K15,K15_frailty_score_missingness,table_csv,R-scripts/K15/outputs/K15_frailty_score_missingness.csv,2,NA
+2026-03-01 12:58:39.16464,K15,K15_frailty_legacy_vs_new,table_csv,R-scripts/K15/outputs/K15_frailty_legacy_vs_new.csv,15,NA
+2026-03-01 12:58:39.269131,K15,K15_frailty_cat3_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.csv,NA,NA
+2026-03-01 12:58:39.344555,K15,K15_frailty_cat3_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.html,NA,NA
+2026-03-01 12:58:39.437386,K15,K15_frailty_cat4_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.csv,NA,NA
+2026-03-01 12:58:39.533165,K15,K15_frailty_cat4_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.html,NA,NA
+2026-03-01 12:58:39.677039,K15,K15_chisq_FOF_by_frailty_cat3,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.csv,NA,NA
+2026-03-01 12:58:39.775727,K15,K15_chisq_FOF_by_frailty_cat3,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.html,NA,NA
+2026-03-01 12:58:39.85546,K15,K15_chisq_FOF_by_frailty_cat4,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.csv,NA,NA
+2026-03-01 12:58:39.945204,K15,K15_chisq_FOF_by_frailty_cat4,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.html,NA,NA
+2026-03-01 12:58:40.880543,K15,K15_frailty_cat3_by_FOF,figure_png,/root/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.png,NA,Stacked proportion plot: frailty_cat_3 distribution by FOF-status.
+2026-03-01 12:58:41.088905,K15,k15_patient_level_frailty_output_receipt,text,R-scripts/K15/outputs/k15_patient_level_frailty_output_receipt.txt,276,Patient-level frailty CSV/RDS written to DATA_ROOT external path.
+2026-03-01 12:58:41.276421,K15,sessioninfo,sessioninfo,R-scripts/K15/outputs/sessioninfo_K15.txt,NA,NA
+2026-03-01 12:59:34.598385,K32_VALIDATION,k32_validation_correlations,table_csv,R-scripts/K32/outputs/k32_validation_correlations.csv,276,NA
+2026-03-01 12:59:34.894426,K32_VALIDATION,k32_validation_known_groups,table_csv,R-scripts/K32/outputs/k32_validation_known_groups.csv,276,NA
+2026-03-01 12:59:35.059061,K32_VALIDATION,k32_validation_distribution,table_csv,R-scripts/K32/outputs/k32_validation_distribution.csv,276,NA
+2026-03-01 12:59:35.177815,K32_VALIDATION,k32_validation_latent_vs_z5,table_csv,R-scripts/K32/outputs/k32_validation_latent_vs_z5.csv,276,NA
+2026-03-01 12:59:54.472235,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 12:59:54.978774,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 13:30:41.231754,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 13:30:41.59517,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 13:32:01.020162,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 13:32:01.353901,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 13:48:36.904881,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 13:48:37.3037,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 14:01:22.869745,K33,k33_qc_gates,table_csv,R-scripts/K33/outputs/k33_qc_gates.csv,6,K33 canonical dataset QC gates
+2026-03-01 14:01:37.585475,K18,qc_variable_standardization_renames,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_renames.csv,NA,Variable standardization renames
+2026-03-01 14:01:38.033059,K18,qc_variable_standardization_verify_hits,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_verify_hits.csv,NA,Variable standardization verify hits
+2026-03-01 14:01:38.119807,K18,qc_variable_standardization_conflicts,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_variable_standardization_conflicts.csv,NA,Variable standardization conflicts
+2026-03-01 14:01:38.229519,K18_QC,qc_profile,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_profile.csv,NA,QC profile
+2026-03-01 14:01:38.315779,K18_QC,qc_types_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types_status.csv,NA,Required columns + types status
+2026-03-01 14:01:38.409978,K18_QC,qc_types,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_types.csv,NA,Required columns types
+2026-03-01 14:01:38.516008,K18_QC,qc_uniqueness,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_uniqueness.csv,NA,"Uniqueness of (id,time)"
+2026-03-01 14:01:38.59735,K18_QC,qc_id_timepoint_coverage_dist,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_id_timepoint_coverage_dist.csv,NA,ID timepoint coverage distribution
+2026-03-01 14:01:38.720277,K18_QC,qc_time_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels.csv,NA,Observed time levels
+2026-03-01 14:01:38.809675,K18_QC,qc_time_levels_status,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_time_levels_status.csv,NA,Time levels status
+2026-03-01 14:01:38.940695,K18_QC,qc_fof_levels,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_fof_levels.csv,NA,FOF_status levels
+2026-03-01 14:01:39.026967,K18_QC,qc_missingness_overall,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_overall.csv,NA,Missingness overall
+2026-03-01 14:01:39.179281,K18_QC,qc_missingness_by_fof_time,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_missingness_by_fof_time.csv,NA,Missingness by FOF_status x time
+2026-03-01 14:01:39.299533,K18_QC,qc_delta_check,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_delta_check.csv,NA,Delta check (optional)
+2026-03-01 14:01:39.40935,K18_QC,qc_outcome_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_summary.csv,NA,Outcome summary
+2026-03-01 14:01:39.666413,K18_QC,qc_outcome_hist,qc_png,R-scripts/K18/outputs/K18_QC/qc/qc_outcome_hist.png,NA,Outcome distribution histogram
+2026-03-01 14:01:39.805864,K18_QC,qc_row_id_watch,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_row_id_watch.csv,NA,Row/id watch
+2026-03-01 14:01:39.891134,K18,qc_status_summary,qc_csv,R-scripts/K18/outputs/K18_QC/qc/qc_status_summary.csv,NA,QC status summary
+2026-03-01 14:01:40.031692,K18_QC,qc_sessioninfo,sessionInfo,R-scripts/K18/outputs/K18_QC/qc/qc_sessioninfo.txt,NA,NA
+2026-03-01 14:01:57.686808,K18_QC,qc_renv_diagnostics,renv diagnostics,R-scripts/K18/outputs/K18_QC/qc/qc_renv_diagnostics.txt,NA,NA
+2026-03-01 14:01:57.927779,K33,k33_patient_level_output_receipt,text,R-scripts/K33/outputs/k33_patient_level_output_receipt.txt,276,External patient-level K33 long/wide datasets written to DATA_ROOT
+2026-03-01 14:01:58.128341,K33,k33_sessioninfo,sessioninfo,R-scripts/K33/outputs/k33_sessioninfo.txt,NA,NA
+2026-03-01 14:03:54.756185,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 14:03:55.063682,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 14:35:04.493416,K34,k34_lmm_primary_coefficients,table_csv,R-scripts/K34/outputs/k34_lmm_primary_coefficients.csv,13,LMM fixed effects with CI
+2026-03-01 14:35:04.634911,K34,k34_lmm_primary_summary,text,R-scripts/K34/outputs/k34_lmm_primary_summary.txt,472,LMM model summary
+2026-03-01 14:35:04.707285,K34,k34_ancova_coefficients,table_csv,R-scripts/K34/outputs/k34_ancova_coefficients.csv,9,ANCOVA coefficients with CI
+2026-03-01 14:35:04.760488,K34,k34_ancova_summary,text,R-scripts/K34/outputs/k34_ancova_summary.txt,236,ANCOVA model summary
+2026-03-01 14:35:04.824162,K34,k34_sensitivity_frailty_proxy_comparison,table_csv,R-scripts/K34/outputs/k34_sensitivity_frailty_proxy_comparison.csv,239,AIC + adjusted R2 comparison on common sample
+2026-03-01 14:35:04.880461,K34,k34_decision_log,text,R-scripts/K34/outputs/k34_decision_log.txt,NA,Model decisions and path resolution
+2026-03-01 14:35:04.939856,K34,k34_sessioninfo,sessioninfo,R-scripts/K34/outputs/k34_sessioninfo.txt,NA,NA
+2026-03-01 14:35:40.688501,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 14:35:41.022093,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 15:06:38.912936,K26_LMM_MOD,K26_LRT_primary_vs_mod_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_cat.csv,2,K26 LRT: primary vs moderation
+2026-03-01 15:06:39.1167,K26_LMM_MOD,K26_fixed_effects_primary_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_cat.csv,12,K26 fixed effects primary
+2026-03-01 15:06:39.224228,K26_LMM_MOD,K26_fixed_effects_moderation_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_cat.csv,18,K26 fixed effects moderation
+2026-03-01 15:06:39.344091,K26_LMM_MOD,K26_simple_slopes_change_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_cat.csv,9,K26 simple slopes change 12-0
+2026-03-01 15:06:39.458679,K26_LMM_MOD,K26_results_text_fi_cat,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_cat.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 15:06:39.580836,K26_LMM_MOD,K26_model_primary_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_cat.rds,NA,K26 lmer primary model object
+2026-03-01 15:06:39.697522,K26_LMM_MOD,K26_model_moderation_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_cat.rds,NA,K26 lmer moderation model object
+2026-03-01 15:06:40.773059,K26_LMM_MOD,K26_LRT_primary_vs_mod_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_score.csv,2,K26 LRT: primary vs moderation
+2026-03-01 15:06:40.872471,K26_LMM_MOD,K26_fixed_effects_primary_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_score.csv,10,K26 fixed effects primary
+2026-03-01 15:06:40.976333,K26_LMM_MOD,K26_fixed_effects_moderation_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_score.csv,14,K26 fixed effects moderation
+2026-03-01 15:06:41.097506,K26_LMM_MOD,K26_simple_slopes_change_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_score.csv,12,K26 simple slopes change 12-0
+2026-03-01 15:06:41.202469,K26_LMM_MOD,K26_results_text_fi_score,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_score.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 15:06:41.303022,K26_LMM_MOD,K26_model_primary_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_score.rds,NA,K26 lmer primary model object
+2026-03-01 15:06:41.436877,K26_LMM_MOD,K26_model_moderation_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_score.rds,NA,K26 lmer moderation model object
+2026-03-01 15:06:41.566992,K26_LMM_MOD,K26_frailty_provenance_txt,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt,NA,K26 frailty source/fallback/crosscheck trace
+2026-03-01 15:07:04.496166,K26_LMM_MOD,K26_sessionInfo,sessioninfo,R-scripts/K26/outputs/K26/K26_LMM_MOD/sessionInfo.txt,NA,K26 sessionInfo + renv diagnostics
+2026-03-01 15:07:47.734262,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 15:07:48.232433,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 15:14:22.329426,K26_LMM_MOD,K26_LRT_primary_vs_mod_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_cat.csv,2,K26 LRT: primary vs moderation
+2026-03-01 15:14:22.463861,K26_LMM_MOD,K26_fixed_effects_primary_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_cat.csv,12,K26 fixed effects primary
+2026-03-01 15:14:22.562523,K26_LMM_MOD,K26_fixed_effects_moderation_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_cat.csv,18,K26 fixed effects moderation
+2026-03-01 15:14:22.620193,K26_LMM_MOD,K26_simple_slopes_change_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_cat.csv,9,K26 simple slopes change 12-0
+2026-03-01 15:14:22.676806,K26_LMM_MOD,K26_results_text_fi_cat,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_cat.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 15:14:22.728886,K26_LMM_MOD,K26_model_primary_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_cat.rds,NA,K26 lmer primary model object
+2026-03-01 15:14:22.785451,K26_LMM_MOD,K26_model_moderation_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_cat.rds,NA,K26 lmer moderation model object
+2026-03-01 15:14:23.232256,K26_LMM_MOD,K26_LRT_primary_vs_mod_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_score.csv,2,K26 LRT: primary vs moderation
+2026-03-01 15:14:23.323708,K26_LMM_MOD,K26_fixed_effects_primary_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_score.csv,10,K26 fixed effects primary
+2026-03-01 15:14:23.388065,K26_LMM_MOD,K26_fixed_effects_moderation_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_score.csv,14,K26 fixed effects moderation
+2026-03-01 15:14:23.450596,K26_LMM_MOD,K26_simple_slopes_change_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_score.csv,12,K26 simple slopes change 12-0
+2026-03-01 15:14:23.535329,K26_LMM_MOD,K26_results_text_fi_score,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_score.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 15:14:23.613268,K26_LMM_MOD,K26_model_primary_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_score.rds,NA,K26 lmer primary model object
+2026-03-01 15:14:23.670726,K26_LMM_MOD,K26_model_moderation_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_score.rds,NA,K26 lmer moderation model object
+2026-03-01 15:14:23.799583,K26_LMM_MOD,K26_frailty_provenance_txt,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt,NA,K26 frailty source/fallback/crosscheck trace
+2026-03-01 15:14:39.909099,K26_LMM_MOD,K26_sessionInfo,sessioninfo,R-scripts/K26/outputs/K26/K26_LMM_MOD/sessionInfo.txt,NA,K26 sessionInfo + renv diagnostics
+2026-03-01 15:15:13.877329,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 15:15:14.282084,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 15:24:46.279094,K26_LMM_MOD,K26_LRT_primary_vs_mod_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_cat.csv,2,K26 LRT: primary vs moderation
+2026-03-01 15:24:46.489305,K26_LMM_MOD,K26_fixed_effects_primary_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_cat.csv,12,K26 fixed effects primary
+2026-03-01 15:24:46.604277,K26_LMM_MOD,K26_fixed_effects_moderation_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_cat.csv,18,K26 fixed effects moderation
+2026-03-01 15:24:46.721683,K26_LMM_MOD,K26_simple_slopes_change_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_cat.csv,9,K26 simple slopes change 12-0
+2026-03-01 15:24:46.851661,K26_LMM_MOD,K26_results_text_fi_cat,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_cat.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 15:24:46.986991,K26_LMM_MOD,K26_model_primary_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_cat.rds,NA,K26 lmer primary model object
+2026-03-01 15:24:47.152934,K26_LMM_MOD,K26_model_moderation_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_cat.rds,NA,K26 lmer moderation model object
+2026-03-01 15:24:48.110101,K26_LMM_MOD,K26_LRT_primary_vs_mod_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_score.csv,2,K26 LRT: primary vs moderation
+2026-03-01 15:24:48.23546,K26_LMM_MOD,K26_fixed_effects_primary_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_score.csv,10,K26 fixed effects primary
+2026-03-01 15:24:48.342462,K26_LMM_MOD,K26_fixed_effects_moderation_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_score.csv,14,K26 fixed effects moderation
+2026-03-01 15:24:48.464647,K26_LMM_MOD,K26_simple_slopes_change_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_score.csv,12,K26 simple slopes change 12-0
+2026-03-01 15:24:48.586524,K26_LMM_MOD,K26_results_text_fi_score,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_score.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 15:24:48.721929,K26_LMM_MOD,K26_model_primary_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_score.rds,NA,K26 lmer primary model object
+2026-03-01 15:24:48.872078,K26_LMM_MOD,K26_model_moderation_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_score.rds,NA,K26 lmer moderation model object
+2026-03-01 15:24:49.013724,K26_LMM_MOD,K26_frailty_provenance_txt,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt,NA,K26 frailty source/fallback/crosscheck trace
+2026-03-01 15:25:12.131512,K26_LMM_MOD,K26_sessionInfo,sessioninfo,R-scripts/K26/outputs/K26/K26_LMM_MOD/sessionInfo.txt,NA,K26 sessionInfo + renv diagnostics
+2026-03-01 15:25:51.863671,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 15:25:52.289495,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 15:52:19.730403,K26_LMM_MOD,K26_LRT_primary_vs_mod_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_cat.csv,2,K26 LRT: primary vs moderation
+2026-03-01 15:52:19.962246,K26_LMM_MOD,K26_fixed_effects_primary_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_cat.csv,12,K26 fixed effects primary
+2026-03-01 15:52:20.056262,K26_LMM_MOD,K26_fixed_effects_moderation_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_cat.csv,18,K26 fixed effects moderation
+2026-03-01 15:52:20.163923,K26_LMM_MOD,K26_simple_slopes_change_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_cat.csv,9,K26 simple slopes change 12-0
+2026-03-01 15:52:20.289972,K26_LMM_MOD,K26_results_text_fi_cat,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_cat.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 15:52:20.393308,K26_LMM_MOD,K26_model_primary_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_cat.rds,NA,K26 lmer primary model object
+2026-03-01 15:52:20.515402,K26_LMM_MOD,K26_model_moderation_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_cat.rds,NA,K26 lmer moderation model object
+2026-03-01 15:52:21.608472,K26_LMM_MOD,K26_LRT_primary_vs_mod_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_score.csv,2,K26 LRT: primary vs moderation
+2026-03-01 15:52:21.720794,K26_LMM_MOD,K26_fixed_effects_primary_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_score.csv,10,K26 fixed effects primary
+2026-03-01 15:52:21.830866,K26_LMM_MOD,K26_fixed_effects_moderation_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_score.csv,14,K26 fixed effects moderation
+2026-03-01 15:52:21.952803,K26_LMM_MOD,K26_simple_slopes_change_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_score.csv,12,K26 simple slopes change 12-0
+2026-03-01 15:52:22.079275,K26_LMM_MOD,K26_results_text_fi_score,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_score.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 15:52:22.191536,K26_LMM_MOD,K26_model_primary_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_score.rds,NA,K26 lmer primary model object
+2026-03-01 15:52:22.332891,K26_LMM_MOD,K26_model_moderation_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_score.rds,NA,K26 lmer moderation model object
+2026-03-01 15:52:22.473279,K26_LMM_MOD,K26_frailty_provenance_txt,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt,NA,K26 frailty source/fallback/crosscheck trace
+2026-03-01 15:52:44.741055,K26_LMM_MOD,K26_sessionInfo,sessioninfo,R-scripts/K26/outputs/K26/K26_LMM_MOD/sessionInfo.txt,NA,K26 sessionInfo + renv diagnostics
+2026-03-01 15:53:24.824043,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 15:53:25.163286,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 16:19:32.693533,K35,k35_capacity_behavior_summary,table_csv,R-scripts/K35/outputs/k35_capacity_behavior_summary.csv,1,Aggregate K32 behavior summary
+2026-03-01 16:19:32.891413,K35,k35_capacity_distribution,table_csv,R-scripts/K35/outputs/k35_capacity_distribution.csv,3,Aggregate score distribution diagnostics
+2026-03-01 16:19:33.014003,K35,k35_capacity_vs_z_composite,table_csv,R-scripts/K35/outputs/k35_capacity_vs_z_composite.csv,4,Latent vs z5 aggregate comparison
+2026-03-01 16:19:33.132643,K35,k35_capacity_reporting_notes,text,R-scripts/K35/outputs/k35_capacity_reporting_notes.txt,NA,K35 aggregate reporting notes
+2026-03-01 16:19:33.320393,K35,k35_sessioninfo,sessioninfo,R-scripts/K35/outputs/k35_sessioninfo.txt,NA,K35 session info
+2026-03-01 16:20:18.012737,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 16:20:18.535773,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 16:33:07.632512,K36,k36_lmm_primary_fixed_effects,table_csv,R-scripts/K36/outputs/k36_lmm_primary_fixed_effects.csv,13,K36 baseline (primary) long LMM fixed effects
+2026-03-01 16:33:07.781383,K36,k36_lmm_extended_fixed_effects,table_csv,R-scripts/K36/outputs/k36_lmm_extended_fixed_effects.csv,15,K36 extended long LMM fixed effects with capacity terms
+2026-03-01 16:33:07.839913,K36,k36_lmm_model_comparison,table_csv,R-scripts/K36/outputs/k36_lmm_model_comparison.csv,2,K36 long-model comparison primary vs extended
+2026-03-01 16:33:07.904148,K36,k36_ancova_primary_coefficients,table_csv,R-scripts/K36/outputs/k36_ancova_primary_coefficients.csv,9,K36 baseline wide ANCOVA coefficients
+2026-03-01 16:33:07.961198,K36,k36_ancova_extended_coefficients,table_csv,R-scripts/K36/outputs/k36_ancova_extended_coefficients.csv,10,K36 extended wide ANCOVA coefficients with capacity covariate
+2026-03-01 16:33:08.0616,K36,k36_ancova_model_comparison,table_csv,R-scripts/K36/outputs/k36_ancova_model_comparison.csv,2,K36 wide-model comparison primary vs extended
+2026-03-01 16:33:08.171472,K36,k36_decision_log,text,R-scripts/K36/outputs/k36_decision_log.txt,NA,K36 modeling decisions and sample sizes
+2026-03-01 16:33:08.294863,K36,k36_external_input_receipt,text,R-scripts/K36/outputs/k36_external_input_receipt.txt,NA,K36 external input provenance receipt
+2026-03-01 16:33:08.445929,K36,k36_sessioninfo,sessioninfo,R-scripts/K36/outputs/k36_sessioninfo.txt,NA,K36 session info
+2026-03-01 16:33:50.931892,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 16:33:51.417501,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 16:35:03.696262,K26_LMM_MOD,K26_LRT_primary_vs_mod_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_cat.csv,2,K26 LRT: primary vs moderation
+2026-03-01 16:35:03.828704,K26_LMM_MOD,K26_fixed_effects_primary_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_cat.csv,12,K26 fixed effects primary
+2026-03-01 16:35:03.911977,K26_LMM_MOD,K26_fixed_effects_moderation_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_cat.csv,18,K26 fixed effects moderation
+2026-03-01 16:35:03.983967,K26_LMM_MOD,K26_simple_slopes_change_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_cat.csv,9,K26 simple slopes change 12-0
+2026-03-01 16:35:04.047432,K26_LMM_MOD,K26_results_text_fi_cat,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_cat.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 16:35:04.129915,K26_LMM_MOD,K26_model_primary_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_cat.rds,NA,K26 lmer primary model object
+2026-03-01 16:35:04.204664,K26_LMM_MOD,K26_model_moderation_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_cat.rds,NA,K26 lmer moderation model object
+2026-03-01 16:35:04.641081,K26_LMM_MOD,K26_LRT_primary_vs_mod_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_score.csv,2,K26 LRT: primary vs moderation
+2026-03-01 16:35:04.716089,K26_LMM_MOD,K26_fixed_effects_primary_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_score.csv,10,K26 fixed effects primary
+2026-03-01 16:35:04.802249,K26_LMM_MOD,K26_fixed_effects_moderation_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_score.csv,14,K26 fixed effects moderation
+2026-03-01 16:35:04.89476,K26_LMM_MOD,K26_simple_slopes_change_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_score.csv,12,K26 simple slopes change 12-0
+2026-03-01 16:35:04.961464,K26_LMM_MOD,K26_results_text_fi_score,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_score.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 16:35:05.04312,K26_LMM_MOD,K26_model_primary_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_score.rds,NA,K26 lmer primary model object
+2026-03-01 16:35:05.1383,K26_LMM_MOD,K26_model_moderation_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_score.rds,NA,K26 lmer moderation model object
+2026-03-01 16:35:05.228761,K26_LMM_MOD,K26_frailty_provenance_txt,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt,NA,K26 frailty source/fallback/crosscheck trace
+2026-03-01 16:35:22.638656,K26_LMM_MOD,K26_sessionInfo,sessioninfo,R-scripts/K26/outputs/K26/K26_LMM_MOD/sessionInfo.txt,NA,K26 sessionInfo + renv diagnostics
+2026-03-01 16:36:06.951214,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 16:36:07.46001,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 17:02:28.338637,K26_LMM_MOD,K26_LRT_primary_vs_mod_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_cat.csv,2,K26 LRT: primary vs moderation
+2026-03-01 17:02:28.463087,K26_LMM_MOD,K26_fixed_effects_primary_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_cat.csv,12,K26 fixed effects primary
+2026-03-01 17:02:28.529862,K26_LMM_MOD,K26_fixed_effects_moderation_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_cat.csv,18,K26 fixed effects moderation
+2026-03-01 17:02:28.588473,K26_LMM_MOD,K26_simple_slopes_change_cat,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_cat.csv,9,K26 simple slopes change 12-0
+2026-03-01 17:02:28.649404,K26_LMM_MOD,K26_results_text_fi_cat,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_cat.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 17:02:28.71217,K26_LMM_MOD,K26_model_primary_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_cat.rds,NA,K26 lmer primary model object
+2026-03-01 17:02:28.768912,K26_LMM_MOD,K26_model_moderation_cat,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_cat.rds,NA,K26 lmer moderation model object
+2026-03-01 17:02:29.197094,K26_LMM_MOD,K26_LRT_primary_vs_mod_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_score.csv,2,K26 LRT: primary vs moderation
+2026-03-01 17:02:29.268617,K26_LMM_MOD,K26_fixed_effects_primary_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_score.csv,10,K26 fixed effects primary
+2026-03-01 17:02:29.332227,K26_LMM_MOD,K26_fixed_effects_moderation_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_moderation_score.csv,14,K26 fixed effects moderation
+2026-03-01 17:02:29.401221,K26_LMM_MOD,K26_simple_slopes_change_score,table_csv,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_simple_slopes_change_score.csv,12,K26 simple slopes change 12-0
+2026-03-01 17:02:29.459987,K26_LMM_MOD,K26_results_text_fi_score,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_results_text_fi_score.txt,NA,K26 Finnish results text generated from model tables
+2026-03-01 17:02:29.528437,K26_LMM_MOD,K26_model_primary_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_primary_score.rds,NA,K26 lmer primary model object
+2026-03-01 17:02:29.587498,K26_LMM_MOD,K26_model_moderation_score,rds,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_score.rds,NA,K26 lmer moderation model object
+2026-03-01 17:02:29.668912,K26_LMM_MOD,K26_frailty_provenance_txt,txt,R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt,NA,K26 frailty source/fallback/crosscheck trace
+2026-03-01 17:02:37.709576,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 17:02:38.105816,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 17:02:48.309092,K26_LMM_MOD,K26_sessionInfo,sessioninfo,R-scripts/K26/outputs/K26/K26_LMM_MOD/sessionInfo.txt,NA,K26 sessionInfo + renv diagnostics
+2026-03-01 17:30:01.257812,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 17:30:01.530317,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-01 18:08:35.002007,K38,k38_table_primary_vs_extended,table_csv,R-scripts/K38/outputs/k38_table_primary_vs_extended.csv,49,Primary vs extended coefficients and model-comparison summary
+2026-03-01 18:08:35.008026,K38,k38_results_snippet,text,R-scripts/K38/outputs/k38_results_snippet.txt,NA,English neutral Results snippet
+2026-03-01 18:08:35.016501,K38,k38_methods_snippet,text,R-scripts/K38/outputs/k38_methods_snippet.txt,NA,English Methods snippet
+2026-03-01 18:08:35.019486,K38,k38_discussion_snippet,text,R-scripts/K38/outputs/k38_discussion_snippet.txt,NA,English Discussion snippet
+2026-03-01 18:08:35.023181,K38,k38_figure_callouts,text,R-scripts/K38/outputs/k38_figure_callouts.txt,NA,Figure callouts referencing K37 outputs
+2026-03-01 18:08:35.02703,K38,k38_sessioninfo,sessioninfo,R-scripts/K38/outputs/k38_sessioninfo.txt,NA,Session info for K38 reporting pack
+2026-03-01 18:09:12.479364,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-01 18:09:12.97286,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+Breusch–Pagan heteroskedastisuustesti (FOF-status ryhmittäjänä).,K11,NA,NA,NA,NA,NA
+FOF vs nonFOF -odds ratio kussakin ikäkvartiilissa (emmeans-contrasts).,K11,NA,NA,NA,NA,NA
+FOF-statusin frekvenssijakauma (nonFOF vs FOF).,K11,NA,NA,NA,NA,NA
+FOF-statusin kerroin ja 95 % LV perus- ja laajennetussa mallissa rinnakkain.,K11,NA,NA,NA,NA,NA
+GLS-mallien vertailu: homoskedastinen vs FOF-spesifinen residuaalivarianssi.,K11,NA,NA,NA,NA,NA
+GLS: residuaalivarianssien suhteet FOF vs nonFOF -ryhmissä.,K11,NA,NA,NA,NA,NA
+K14,table,K14/K14_baseline_by_FOF.csv,Baseline characteristics by FOF-status (Table 1; unadjusted).,NA,NA,NA
+K17,table,K17/K17_baseline_by_FOF_with_frailty.csv,Baseline characteristics by FOF-status (Table 1) + frailty_cat_3 (robust/pre-frail/frail).,NA,NA,NA
+K5.1_MA,plot,K5.1_MA/jn_slope_plot_centered.png,JN-slope-kuva: FOF 1 vs 0 -ero ΔComposite_Z:ssa moderaattorin funktiona (keskitetty),NA,NA,NA
+K5.1_MA,plot,K5.1_MA/spline_interaction_plot.png,Spline-interaktiokuva: FOF x lähtötason komposiitti (keskitetty),NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_effectsize_hedges_g.csv,Hedges g -efektikoko (FOF 1 vs 0) koko aineistossa,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_eta_sq_partial.csv,Osittainen eta-neliö (partial eta^2) jatkuvassa moderointimallissa,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_jn_summary_all.csv,Johnson–Neyman-alueiden yhteenveto (keskitetty ja standardoitu moderaattori),NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_model_r2.csv,Mallin selitysaste (R2 ja adj. R2) jatkuvassa moderointimallissa,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_multiplicity_pvalues.csv,P-arvojen monen vertailun korjaus (Holm ja BH) keskeisille termeille,NA,NA,NA
+K5.1_MA,table,K5.1_MA/K5.1_MA_tidy_jn_c.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_status * cComposite_Z0 + kovariaatit),NA,NA,NA
+K5.1_MA,text,K5.1_MA/results_addendum_finnish.txt,Suomenkielinen tulosteksti moderointianalyysin lisäselvitykselle,NA,NA,NA
+K5.2_JN,plot,R-scripts/K5/outputs/K5.2_JN/jn_obs_plot.png,JN-alueen ero ΔComposite_Z:ssa (FOF 1 vs 0) moderaattorin funktiona,NA,NA,NA
+K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/JN_counts_summary.csv,JN-alueen määrälaskennan yhteenvetotaulukko,NA,NA,NA
+K5.2_JN,table,R-scripts/K5/outputs/K5.2_JN/K5.2_JN_main_results.csv,Päämoderointimallin regressiokertoimet (lm: Delta_Composite_Z ~ FOF_num * cComposite_Z0_plot),NA,NA,NA
+K6_main,plot,K6_Age_effect.png,Päävaikutuskuva: iän (Age) yhteys säädettyyn 12 kk muutokseen komposiitissa,NA,NA,NA
+K6_main,plot,K6_FOF_PainVAS0_G2_emmeans.png,Emmeans-interaktiokuva: FOF x kipuluokka (PainVAS0_G2),NA,NA,NA
+K6_main,plot,K6_FOF_SRH3_emmeans.png,Emmeans-interaktiokuva: FOF x self-rated health (SRH_3class),NA,NA,NA
+K6_main,plot,K6_FOF_SRM3_emmeans.png,Emmeans-interaktiokuva: FOF x self-rated mobility (SRM_3class),NA,NA,NA
+K6_main,plot,K6_FOF_contrasts_forest.png,FOF vs non_FOF erot Delta_Composite_Z:ssa moderaattoreiden ja luokkien mukaan (forest-kuva),NA,NA,NA
+K6_main,plot,K6_PainVAS0_G2_main_effect.png,Päävaikutuskuva: kipuluokat (PainVAS0_G2 low vs high) ja säädetty 12 kk muutos komposiitissa,NA,NA,NA
+K6_main,plot,K6_PainVAS0_continuous_effect.png,Päävaikutuskuva: jatkuvan kivun (PainVAS0) yhteys säädettyyn 12 kk muutokseen komposiitissa,NA,NA,NA
+K6_main,table,K6_main_main_results.csv,"K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)",NA,NA,NA
+K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.,NA,NA,NA
+K7,plot,K7/K7_FTSST_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.,NA,NA,NA
+K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.,NA,NA,NA
+K7,plot,K7/K7_MWS_composite_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.,NA,NA,NA
+K7,plot,K7/K7_MWS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).,NA,NA,NA
+K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.,NA,NA,NA
+K7,plot,K7/K7_SLS_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.,NA,NA,NA
+K7,plot,K7/K7_SLS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.,NA,NA,NA
+K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.,NA,NA,NA
+K7,plot,K7/K7_box_DeltaComposite_FOF.png,Boxplot of change in composite physical performance (DeltaComposite) by FOF status.,NA,NA,NA
+K7,table,K7/K7_ANCOVA_type3_all_models.csv,"Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes).",NA,NA,NA
+K7,table,K7/K7_cell_means_DeltaComposite_by_subgroup.csv,"Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST).",NA,NA,NA
+K7,table,K7/K7_contrasts_CompositePBT_by_subgroups.csv,"Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",NA,NA,NA
+K7,table,K7/K7_contrasts_test_specific_by_subgroups.csv,"Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",NA,NA,NA
+K7,table,K7/K7_delta_desc_by_FOF.csv,"Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD).",NA,NA,NA
+K7,table,K7/K7_sample_sizes_by_subgroup.csv,"Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup).",NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_Walk_fourpanel.png,"Nelikenttäkuva: ΔComposite FOF-statuksen, tasapaino-ongelman ja 500 m kävelykyvyn mukaan",NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_problem_main_effect.png,Päävaikutuskuva: tasapaino-ongelma ja säädetty ΔComposite,NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_vs_SLS0_boxplot.png,Validointiboksikuva: tasapaino-ongelma vs. SLS0 (baseline),NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_main_effect.png,Päävaikutuskuva: 500 m kävelykyky ja säädetty ΔComposite,NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_vs_MWS0_boxplot.png,Validointiboksikuva: 500 m kävelyvaikeus vs. MWS0 (baseline),NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Balance.png,Adjusted ΔComposite – EMM-kuva moderaattorina balance problems,NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Walk500.png,Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability,NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/K8_Spearman_subjective_vs_objective.csv,"Spearman-korrelaatiot: subjektiiviset tasapaino-/kävelyvaikeudet vs. objektiiviset mittarit (SLS, MWS)",NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Balance_vs_SLS.csv,Ryhmätasoiset SLS0/SLS2-keskiarvot tasapaino-ongelman (Balance_problem) mukaan,NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Walk500m_vs_MWS.csv,Ryhmätasoiset MWS0/MWS2-keskiarvot 500 m kävelykyvyn (Walk500m_G_final) mukaan,NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_3class.csv,FOF × Walk500m alkuperäinen 3-luokkainen ristiintaulukko,NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_G_final.csv,FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko,NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/contrast_summary_withinG_nonFOF_minus_FOF.csv,NonFOF – FOF LS-mean -kontrastit kunkin moderaattoritason sisällä (emmeans),NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/interaction_summary_FOFxG_ANCOVA.csv,"FOF × moderaattori (Balance_problem / Walk500m_G_final) — interaktiotermit, Type III ANOVA",NA,NA,NA
+K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
+K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
+K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
+K9,table,K9/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
+K9,table,K9/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
+K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
+K9,table,K9/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
+K9,table,K9/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
+K9,table,K9/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
+K9,table,K9/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
+K9,table,K9/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
+Laajennetun lineaarisen mallin standardoidut kertoimet.,K11,NA,NA,NA,NA,NA
+MICE-missing data -kuvio: puuttuvuuspatterni analyysimuuttujille.,K11,NA,NA,NA,NA,NA
+MICE: FOF-statusin vaikutus (kerroin + LV) perus- ja laajennetussa mallissa (imputoitu data).,K11,NA,NA,NA,NA,NA
+MICE: poolattu laajennettu malli (lm) imputoidussa datassa.,K11,NA,NA,NA,NA,NA
+MICE: poolattu perusmalli (lm) imputoidussa datassa.,K11,NA,NA,NA,NA,NA
+Ordinaalimallin (polr) odds ratio -kertoimet (heikentynyt–stabiili–parantunut).,K11,NA,NA,NA,NA,NA
+Peruslineaarisen mallin (lm) kertoimet: Delta_Composite_Z ~ FOF_status + kovariaatit.,K11,NA,NA,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt,2026-02-25 16.44.49,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2.txt,2026-02-25 16.45.26,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/sessionInfo_v2_3.txt,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html,2026-02-25 16.44.49,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_cohort_attrition_qc.csv,2026-02-25 16.44.52,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_missingness_matrix_by_fof.csv,2026-02-25 16.44.52,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_models.csv,2026-02-25 16.44.56,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_2_debug_summary.txt,2026-02-25 16.44.56,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_modelN_audit.csv,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_diff.csv,2026-02-25 16.45.14,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_paranoia_summary.txt,2026-02-25 16.45.14,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.csv,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_3_replica.html,2026-02-25 16.45.11,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.csv,2026-02-25 16.45.26,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K23/outputs/K23_TABLE2/table2_paper01_v2_align.html,2026-02-25 16.45.26,K23_TABLE2,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/sessionInfo.txt,2026-02-25 16.51.10,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_1.txt,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/sessionInfo_v1_2.txt,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_score_v1_2.csv,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_v1_1.csv,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_v1_2.csv,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv,2026-02-25 16.51.10,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html,2026-02-25 16.51.10,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.csv,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_score_v1_2.html,2026-02-25 16.50.57,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.csv,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_v1_1.html,2026-02-25 16.50.43,K24_TABLE2A,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.md,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2.txt,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.md,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_canonical_v2_narrative.txt,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.md,2026-02-25 16.52.08,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1.txt,2026-02-25 16.52.08,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.md,2026-02-25 16.51.55,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/results_table2A_from_K24_v1_1_narrative.txt,2026-02-25 16.51.55,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/sessionInfo.txt,2026-02-25 16.52.08,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v1_1.txt,2026-02-25 16.51.55,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K25/outputs/K25_RESULTS/sessionInfo_v2.txt,2026-02-25 16.52.21,K25_RESULTS,54821c8,NA,NA,NA
+R-scripts/K26/outputs/K26_VIS/K26_VIS_provenance.txt,2026-02-25 16.53.00,K26_VIS,54821c8,NA,NA,NA
+R-scripts/K26/outputs/K26_VIS/qc_summary.csv,2026-02-25 16.53.00,K26_VIS,54821c8,NA,NA,NA
+R-scripts/K26/outputs/K26_VIS/sessionInfo.txt,2026-02-25 16.53.00,K26_VIS,54821c8,NA,NA,NA
+Responder-logistisen regressiomallin (OR-kertoimet) FOF- ja kovariaattivaikutuksille.,K11,NA,NA,NA,NA,NA
+Responder-osuudet ikäkvartiileittain ja FOF-statusen mukaan.,K11,NA,NA,NA,NA,NA
+Responder-osuuksien (proportio) pylväsdiagrammi ikäkvartiileittain FOF/nonFOF mukaan.,K11,NA,NA,NA,NA,NA
+Ristiintaulukko FOF-status x AgeClass.,K11,NA,NA,NA,NA,NA
+ipts/K18/outputs/K18_EXPLORATORY_contrasts_M2.png,276,NA,NA,NA,NA,NA
+manifest/renv_diagnostics.txt,2026-02-25 16.32.33,REPRO,54821c8,NA,NA,NA
+manifest/renv_diagnostics.txt,2026-02-25 16.37.32,REPRO,54821c8,NA,NA,NA
+manifest/renv_diagnostics.txt,2026-02-25 16.45.37,REPRO,54821c8,NA,NA,NA
+manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
+manifest/sessionInfo.txt,2026-02-25 16.32.33,REPRO,54821c8,NA,NA,NA
+manifest/sessionInfo.txt,2026-02-25 16.37.32,REPRO,54821c8,NA,NA,NA
+manifest/sessionInfo.txt,2026-02-25 16.45.37,REPRO,54821c8,NA,NA,NA
+manifest/sessionInfo.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
+ng/R-scripts/K13/outputs/simple_slopes_FOF_by_SRM.csv,NA,NA,NA,NA,NA,NA
+smoke_test_k6_k16,plot,smoke_test_k6_k16/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
+smoke_test_k6_k16,plot,smoke_test_k6_k16/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
+smoke_test_k6_k16,plot,smoke_test_k6_k16/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
+smoke_test_k6_k16,table,smoke_test_k6_k16/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
+smoke_test_k6_k16,table,smoke_test_k6_k16/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
+smoke_test_k6_k16,table,smoke_test_k6_k16/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
+smoke_test_k6_k16,table,smoke_test_k6_k16/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
+smoke_test_k6_k16,table,smoke_test_k6_k16/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
+smoke_test_k6_k16,table,smoke_test_k6_k16/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
+smoke_test_k6_k16,table,smoke_test_k6_k16/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
+smoke_test_k6_k16,table,smoke_test_k6_k16/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
+timestamp,script,label,kind,path,n,notes

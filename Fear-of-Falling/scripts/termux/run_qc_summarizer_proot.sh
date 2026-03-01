@@ -64,6 +64,15 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 cd '$FOF_ROOT' || exit 1
 
+if [ -f config/.env ]; then
+  set -a
+  . config/.env
+  set +a
+fi
+
+: "${DATA_ROOT:=}"
+echo "DATA_ROOT=\${DATA_ROOT:-UNSET}"
+
 echo '=== RSCRIPT gate ==='
 echo \"Rscript=\$(command -v Rscript || true)\"
 Rscript --version || { echo 'FATAL: Rscript missing in this environment'; exit 1; }

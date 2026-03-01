@@ -49,6 +49,11 @@ temp/.RData
 **/renv/library/
 **/renv/staging/
 
+# Manifest transient runtime diagnostics (generated per run)
+manifest/run_meta_*.txt
+manifest/sessionInfo_*.txt
+manifest/renv_diagnostics_*.txt
+
 
 # R-scripts outputs: välioutput, testiajot, raskaat kuvat
 R-scripts/*/outputs/*.png

@@ -91,15 +91,108 @@ get_arg <- function(flag, default = NULL) {
   args[[i + 1]]
 }
 
-data_path <- get_arg("--data")
 shape <- toupper(get_arg("--shape", "AUTO")) # AUTO | LONG | WIDE
 dict_path <- get_arg("--dict", "data/data_dictionary.csv")
 
-if (is.null(data_path) || !nzchar(data_path)) {
-  stop("ERROR: --data is required (path to CSV).", call. = FALSE)
+read_receipt_candidates <- function(receipt_path) {
+  if (!file.exists(receipt_path)) return(character(0))
+  lines <- readLines(receipt_path, warn = FALSE)
+  vals <- sub("^[^=]+=", "", lines[grepl("^(csv_path|rds_path)=", lines)])
+  vals[nzchar(vals)]
 }
+
+resolve_data_path <- function(data_arg = NULL, project_root = ".") {
+  tried <- character(0)
+
+  add_tried <- function(paths) {
+    tried <<- unique(c(tried, paths[nzchar(paths)]))
+  }
+
+  choose_existing <- function(paths) {
+    add_tried(paths)
+    hit <- paths[file.exists(paths)][1]
+    if (!is.na(hit) && nzchar(hit)) return(normalizePath(hit, winslash = "/", mustWork = FALSE))
+    NULL
+  }
+
+  # 1) Explicit --data
+  if (!is.null(data_arg) && nzchar(data_arg)) {
+    add_tried(data_arg)
+    if (!file.exists(data_arg)) {
+      stop(
+        paste0(
+          "ERROR: --data path does not exist: ", data_arg, "\n",
+          "Provide a valid --data path, set DATA_PATH, or set DATA_ROOT in config/.env."
+        ),
+        call. = FALSE
+      )
+    }
+    return(normalizePath(data_arg, winslash = "/", mustWork = FALSE))
+  }
+
+  # 2) DATA_PATH override
+  env_data_path <- Sys.getenv("DATA_PATH", unset = "")
+  if (nzchar(env_data_path)) {
+    hit <- choose_existing(env_data_path)
+    if (!is.null(hit)) return(hit)
+  }
+
+  # 3) Small repo-relative fallback search
+  repo_candidates <- c(
+    file.path(project_root, "data", "KaatumisenPelko.csv"),
+    file.path(project_root, "data", "raw", "KaatumisenPelko.csv"),
+    file.path(project_root, "data", "external", "KaatumisenPelko.csv"),
+    file.path(project_root, "R-scripts", "K30", "outputs", "kaatumisenpelko_with_capacity_scores.rds"),
+    file.path(project_root, "R-scripts", "K30", "outputs", "kaatumisenpelko_with_capacity_scores.csv"),
+    file.path(project_root, "R-scripts", "K31", "outputs", "kaatumisenpelko_with_capacity_scores_k31.rds"),
+    file.path(project_root, "R-scripts", "K31", "outputs", "kaatumisenpelko_with_capacity_scores_k31.csv")
+  )
+  hit <- choose_existing(repo_candidates)
+  if (!is.null(hit)) return(hit)
+
+  # 4) DATA_ROOT defaults (externalized analysis-ready outputs)
+  data_root <- Sys.getenv("DATA_ROOT", unset = "")
+  if (nzchar(data_root)) {
+    root_candidates <- c(
+      file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores.rds"),
+      file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores.csv"),
+      file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores_k31.rds"),
+      file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores_k31.csv")
+    )
+    hit <- choose_existing(root_candidates)
+    if (!is.null(hit)) return(hit)
+  }
+
+  # 5) Receipt pointers (repo-resident metadata only)
+  receipt_candidates <- c(
+    file.path(project_root, "R-scripts", "K30", "outputs", "k30_patient_level_output_receipt.txt"),
+    file.path(project_root, "R-scripts", "K31", "outputs", "k31_patient_level_output_receipt.txt")
+  )
+  add_tried(receipt_candidates)
+  pointed <- unlist(lapply(receipt_candidates, read_receipt_candidates), use.names = FALSE)
+  if (length(pointed) > 0) {
+    hit <- choose_existing(pointed)
+    if (!is.null(hit)) return(hit)
+  }
+
+  stop(
+    paste0(
+      "ERROR: could not resolve input dataset for K18 QC.\n",
+      "Tried paths:\n- ", paste(tried, collapse = "\n- "), "\n\n",
+      "Fix one of:\n",
+      "1) pass --data /path/to/data.(rds|csv)\n",
+      "2) set DATA_PATH=/path/to/data.(rds|csv)\n",
+      "3) set DATA_ROOT in config/.env and run with env loaded\n"
+    ),
+    call. = FALSE
+  )
+}
+
+data_path <- resolve_data_path(get_arg("--data"), project_root)
+cat("Resolved data path:", data_path, "\n")
+
 if (!file.exists(data_path)) {
-  stop("ERROR: data file not found: ", data_path, call. = FALSE)
+  stop("ERROR: resolved data file not found: ", data_path, call. = FALSE)
 }
 if (!file.exists(dict_path)) {
   stop("ERROR: dictionary file not found: ", dict_path, call. = FALSE)
@@ -123,7 +216,18 @@ mapping <- list(
   wide = c("id", "FOF_status", "composite_z0", "composite_z12")
 )
 
-df_raw <- utils::read.csv(data_path, stringsAsFactors = FALSE, check.names = FALSE)
+data_ext <- tolower(tools::file_ext(data_path))
+if (data_ext == "rds") {
+  df_raw <- readRDS(data_path)
+  if (!is.data.frame(df_raw)) {
+    stop("ERROR: RDS did not contain a data.frame/tibble: ", data_path, call. = FALSE)
+  }
+  df_raw <- as.data.frame(df_raw, stringsAsFactors = FALSE, check.names = FALSE)
+} else if (data_ext == "csv") {
+  df_raw <- utils::read.csv(data_path, stringsAsFactors = FALSE, check.names = FALSE)
+} else {
+  stop("ERROR: unsupported data file extension (expected .csv or .rds): ", data_path, call. = FALSE)
+}
 
 # --- Variable Standardization ------------------------------------------------
 # Try to locate spec relative to project root or current dir

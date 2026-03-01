@@ -759,11 +759,88 @@ if (!("frailty_score_3" %in% names(analysis_data))) {
   message("K15: frailty_score_3 derived as as.numeric(frailty_count_3).")
 }
 
-# Tallenna analysis_data K16:ta varten (sisältää kaikki frailty-muuttujat)
-rdata_path <- here::here("R-scripts", "K15", "outputs",
-                         "K15_frailty_analysis_data.RData")
-save(analysis_data, file = rdata_path)
-message("K15: analysis_data tallennettu: ", rdata_path)
+# Externalize patient-level frailty data to DATA_ROOT (not repo outputs).
+resolve_data_root <- function() {
+  data_root <- Sys.getenv("DATA_ROOT", unset = "")
+  if (!nzchar(data_root)) {
+    stop(
+      paste0(
+        "DATA_ROOT is not set. Refusing to write patient-level frailty outputs into repo.\n",
+        "Set config/.env with: export DATA_ROOT=/absolute/path/to/local_data\n",
+        "Run via runner/pattern that sources config/.env."
+      ),
+      call. = FALSE
+    )
+  }
+  normalizePath(data_root, winslash = "/", mustWork = FALSE)
+}
+
+dir_create <- function(path) {
+  if (!dir.exists(path)) dir.create(path, recursive = TRUE, showWarnings = FALSE)
+  invisible(path)
+}
+
+data_root <- resolve_data_root()
+frailty_dir <- file.path(data_root, "paper_01", "frailty")
+dir_create(frailty_dir)
+
+# Canonical aliases for downstream consumers (K32 known-groups join).
+analysis_data <- analysis_data %>%
+  mutate(
+    frailty_cat = as.character(frailty_cat_3),
+    frailty_score = as.numeric(frailty_score_3)
+  )
+
+out_csv_k15 <- file.path(frailty_dir, "kaatumisenpelko_with_frailty_k15.csv")
+out_rds_k15 <- file.path(frailty_dir, "kaatumisenpelko_with_frailty_k15.rds")
+out_csv_generic <- file.path(frailty_dir, "kaatumisenpelko_with_frailty_scores.csv")
+out_rds_generic <- file.path(frailty_dir, "kaatumisenpelko_with_frailty_scores.rds")
+
+readr::write_csv(analysis_data, out_csv_k15, na = "")
+saveRDS(analysis_data, out_rds_k15)
+readr::write_csv(analysis_data, out_csv_generic, na = "")
+saveRDS(analysis_data, out_rds_generic)
+
+csv_md5 <- unname(tools::md5sum(out_csv_k15)[1])
+rds_md5 <- unname(tools::md5sum(out_rds_k15)[1])
+
+receipt_path <- file.path(outputs_dir, "k15_patient_level_frailty_output_receipt.txt")
+writeLines(
+  c(
+    paste0("script=", script_label),
+    paste0("timestamp_utc=", format(Sys.time(), tz = "UTC", usetz = TRUE)),
+    paste0("data_root=", data_root),
+    paste0("external_dir=", frailty_dir),
+    paste0("csv_path=", out_csv_k15),
+    paste0("csv_md5=", csv_md5),
+    paste0("rds_path=", out_rds_k15),
+    paste0("rds_md5=", rds_md5),
+    paste0("nrow=", nrow(analysis_data)),
+    paste0("ncol=", ncol(analysis_data)),
+    "notes=frailty_cat and frailty_score_3 included for downstream joins."
+  ),
+  con = receipt_path,
+  useBytes = TRUE
+)
+
+append_manifest(
+  manifest_row(
+    script = script_label,
+    label = "k15_patient_level_frailty_output_receipt",
+    path = get_relpath(receipt_path),
+    kind = "text",
+    n = nrow(analysis_data),
+    notes = "Patient-level frailty CSV/RDS written to DATA_ROOT external path."
+  ),
+  manifest_path
+)
+
+# Remove legacy in-repo patient-level file if present.
+legacy_rdata_path <- here::here("R-scripts", "K15", "outputs", "K15_frailty_analysis_data.RData")
+if (file.exists(legacy_rdata_path)) {
+  file.remove(legacy_rdata_path)
+}
+message("K15: patient-level frailty data externalized to: ", frailty_dir)
 
 message("K15: modified 3-item physical frailty proxy (motor-oriented) built; does not include exhaustion or weight loss.")
 

@@ -1,5 +1,5 @@
 K26 frailty provenance
-input_path=C:/GitWork/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_analysis_data.RData
+input_path=/data/data/com.termux/files/home/FOF_LOCAL_DATA/paper_01/analysis/fof_analysis_k33_wide.rds + /data/data/com.termux/files/home/FOF_LOCAL_DATA/paper_01/frailty/kaatumisenpelko_with_frailty_k15.rds
 frailty_score_source=K15_RData
 frailty_cat_source=K15_RData
 derived_rule=none

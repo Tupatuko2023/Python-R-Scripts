@@ -92,7 +92,7 @@ options(fof.outputs_dir = out_subdir, fof.manifest_path = manifest_path, fof.scr
 
 parse_cli <- function(args) {
   out <- list(
-    input = "R-scripts/K15/outputs/K15_frailty_analysis_data.RData",
+    input = "",
     include_balance = TRUE,
     run_cat = TRUE,
     run_score = TRUE,
@@ -106,19 +106,6 @@ parse_cli <- function(args) {
     if (startsWith(arg, "--balance_var=")) out$balance_var <- sub("^--balance_var=", "", arg)
   }
   out
-}
-
-choose_input_path <- function(p) {
-  candidates <- c(
-    p,
-    here::here("R-scripts", "K15", "outputs", "K15_frailty_analysis_data.RData"),
-    here::here("R-scripts", "K15_MAIN", "outputs", "K15_frailty_analysis_data.RData")
-  )
-  hit <- candidates[file.exists(candidates)][1]
-  if (is.na(hit) || !nzchar(hit)) {
-    stop("Input data not found. Provide --input=/path/to/K15_frailty_analysis_data.RData")
-  }
-  normalizePath(hit, winslash = "/", mustWork = TRUE)
 }
 
 load_rdata_input <- function(path) {
@@ -163,10 +150,183 @@ load_rdata_input <- function(path) {
   get(matching[1], envir = e)
 }
 
+load_input_as_df <- function(path) {
+  ext <- tolower(tools::file_ext(path))
+  if (ext %in% c("rdata", "rda")) {
+    return(load_rdata_input(path))
+  }
+  if (ext == "rds") {
+    x <- readRDS(path)
+    if (!inherits(x, c("data.frame", "tbl_df", "tbl"))) {
+      stop("Resolved input is not a data.frame/tibble: ", path)
+    }
+    return(as_tibble(x))
+  }
+  if (ext == "csv") {
+    return(readr::read_csv(path, show_col_types = FALSE))
+  }
+  stop("Unsupported input extension for K26 resolver: ", ext, " (path: ", path, ")")
+}
+
 first_existing <- function(df, candidates) {
   hit <- candidates[candidates %in% names(df)]
   if (length(hit) == 0) return(NA_character_)
   hit[1]
+}
+
+normalize_id_key <- function(x) {
+  trimws(as.character(x))
+}
+
+attach_k15_frailty_to_k33 <- function(k33, k15) {
+  k33_id <- first_existing(k33, c("id", "ID", "Jnro", "NRO"))
+  k15_id <- first_existing(k15, c("id", "ID", "Jnro", "NRO"))
+  if (is.na(k33_id) || is.na(k15_id)) return(k33)
+
+  k15_score_col <- first_existing(k15, c("frailty_score_3", "frailty_score"))
+  k15_cat_col <- first_existing(k15, c("frailty_cat_3", "frailty_cat"))
+  if (is.na(k15_score_col) && is.na(k15_cat_col)) return(k33)
+
+  k15_join <- k15 %>%
+    transmute(
+      .id_key = normalize_id_key(.data[[k15_id]]),
+      frailty_score_3_k15 = if (!is.na(k15_score_col)) suppressWarnings(as.numeric(.data[[k15_score_col]])) else NA_real_,
+      frailty_cat_3_k15 = if (!is.na(k15_cat_col)) normalize_frailty_cat(.data[[k15_cat_col]]) else factor(NA)
+    ) %>%
+    arrange(.id_key) %>%
+    distinct(.id_key, .keep_all = TRUE)
+
+  out <- k33 %>%
+    mutate(.id_key = normalize_id_key(.data[[k33_id]])) %>%
+    left_join(k15_join, by = ".id_key")
+
+  if ("frailty_score_3" %in% names(out)) {
+    out <- out %>%
+      mutate(
+        frailty_score_3 = dplyr::coalesce(
+          suppressWarnings(as.numeric(.data$frailty_score_3)),
+          .data$frailty_score_3_k15
+        )
+      )
+  } else {
+    out <- out %>% mutate(frailty_score_3 = .data$frailty_score_3_k15)
+  }
+
+  if ("frailty_cat_3" %in% names(out)) {
+    out <- out %>%
+      mutate(
+        frailty_cat_3 = dplyr::coalesce(
+          normalize_frailty_cat(.data$frailty_cat_3),
+          .data$frailty_cat_3_k15
+        )
+      )
+  } else {
+    out <- out %>% mutate(frailty_cat_3 = .data$frailty_cat_3_k15)
+  }
+
+  out %>% select(-any_of(c(".id_key", "frailty_score_3_k15", "frailty_cat_3_k15")))
+}
+
+resolve_input_data <- function(cli_input) {
+  attempts <- character()
+  note_attempt <- function(label, path) {
+    attempts <<- c(attempts, paste0(label, ": ", path))
+  }
+  fail_unresolved <- function() {
+    stop(
+      paste0(
+        "K26 input resolution failed.\n",
+        "Tried paths:\n- ",
+        paste(attempts, collapse = "\n- "),
+        "\nRequired columns include canonical frailty_score_3 (+ K26 required vars).\n",
+        "Use one of:\n",
+        "1) --input=/path/to/input.(RData|rds|csv)\n",
+        "2) DATA_PATH=/path/to/input.(RData|rds|csv)\n",
+        "3) DATA_ROOT with K33/K15 externalized datasets under paper_01."
+      )
+    )
+  }
+
+  if (nzchar(cli_input)) {
+    note_attempt("--input", cli_input)
+    if (!file.exists(cli_input)) fail_unresolved()
+    return(list(
+      data = load_input_as_df(cli_input),
+      source_path = normalizePath(cli_input, winslash = "/", mustWork = TRUE),
+      source_note = "--input",
+      attempts = attempts
+    ))
+  }
+
+  data_path <- Sys.getenv("DATA_PATH", unset = "")
+  if (nzchar(data_path)) {
+    note_attempt("DATA_PATH", data_path)
+    if (file.exists(data_path)) {
+      return(list(
+        data = load_input_as_df(data_path),
+        source_path = normalizePath(data_path, winslash = "/", mustWork = TRUE),
+        source_note = "DATA_PATH",
+        attempts = attempts
+      ))
+    }
+  }
+
+  data_root <- Sys.getenv("DATA_ROOT", unset = "")
+  if (nzchar(data_root)) {
+    k33_candidates <- c(
+      file.path(data_root, "paper_01", "analysis", "fof_analysis_k33_wide.rds"),
+      file.path(data_root, "paper_01", "analysis", "fof_analysis_k33_wide.csv")
+    )
+    k15_candidates <- c(
+      file.path(data_root, "paper_01", "frailty", "kaatumisenpelko_with_frailty_k15.rds"),
+      file.path(data_root, "paper_01", "frailty", "kaatumisenpelko_with_frailty_scores.rds"),
+      file.path(data_root, "paper_01", "frailty", "kaatumisenpelko_with_frailty_k15.csv"),
+      file.path(data_root, "paper_01", "frailty", "kaatumisenpelko_with_frailty_scores.csv")
+    )
+
+    for (kp in k33_candidates) note_attempt("DATA_ROOT:k33", kp)
+    for (kp in k15_candidates) note_attempt("DATA_ROOT:k15", kp)
+
+    k33_path <- k33_candidates[file.exists(k33_candidates)][1]
+    k15_path <- k15_candidates[file.exists(k15_candidates)][1]
+
+    if (!is.na(k33_path) && nzchar(k33_path)) {
+      k33_df <- load_input_as_df(k33_path)
+      if (any(c("frailty_score_3", "frailty_score") %in% names(k33_df))) {
+        return(list(
+          data = k33_df,
+          source_path = normalizePath(k33_path, winslash = "/", mustWork = TRUE),
+          source_note = "DATA_ROOT:k33",
+          attempts = attempts
+        ))
+      }
+      if (!is.na(k15_path) && nzchar(k15_path)) {
+        k15_df <- load_input_as_df(k15_path)
+        merged <- attach_k15_frailty_to_k33(k33_df, k15_df)
+        return(list(
+          data = merged,
+          source_path = paste0(
+            normalizePath(k33_path, winslash = "/", mustWork = TRUE),
+            " + ",
+            normalizePath(k15_path, winslash = "/", mustWork = TRUE)
+          ),
+          source_note = "DATA_ROOT:k33_plus_k15",
+          attempts = attempts
+        ))
+      }
+    }
+
+    if (!is.na(k15_path) && nzchar(k15_path)) {
+      return(list(
+        data = load_input_as_df(k15_path),
+        source_path = normalizePath(k15_path, winslash = "/", mustWork = TRUE),
+        source_note = "DATA_ROOT:k15",
+        attempts = attempts
+      ))
+    }
+  }
+
+  fail_unresolved()
 }
 
 normalize_fof <- function(x) {
@@ -429,16 +589,9 @@ run_mode <- function(mode, long_df, include_balance) {
 }
 
 cli <- parse_cli(commandArgs(trailingOnly = TRUE))
-input_path <- choose_input_path(cli$input)
-input_ext <- tolower(tools::file_ext(input_path))
-if (input_ext %in% c("csv", "txt")) {
-  stop("K26 canonical-only: do not use raw CSV. Use K15 frailty-augmented .RData output as --input.")
-}
-if (!(input_ext %in% c("rdata", "rda"))) {
-  stop("Unsupported input extension for K26 canonical-only mode: ", input_ext, ". Use a .RData/.rda from K15 outputs.")
-}
-
-raw <- load_rdata_input(input_path)
+resolved <- resolve_input_data(cli$input)
+input_path <- resolved$source_path
+raw <- resolved$data
 
 col_id <- first_existing(raw, c("ID", "id", "Jnro", "NRO"))
 col_age <- first_existing(raw, c("age"))
@@ -446,10 +599,10 @@ col_sex <- first_existing(raw, c("sex"))
 col_bmi <- first_existing(raw, c("BMI"))
 col_fof <- first_existing(raw, c("FOF_status", "kaatumisenpelkoOn"))
 col_balance <- first_existing(raw, c(cli$balance_var, "tasapainovaikeus"))
-col_cz0 <- first_existing(raw, c("Composite_Z0", "ToimintaKykySummary0"))
-col_cz12 <- first_existing(raw, c("Composite_Z12", "ToimintaKykySummary2"))
-col_fcat <- first_existing(raw, c("frailty_cat_3"))
-col_fscore <- first_existing(raw, c("frailty_score_3"))
+col_cz0 <- first_existing(raw, c("Composite_Z0", "ToimintaKykySummary0", "Composite_Z_baseline"))
+col_cz12 <- first_existing(raw, c("Composite_Z12", "ToimintaKykySummary2", "Composite_Z_12m"))
+col_fcat <- first_existing(raw, c("frailty_cat_3", "frailty_cat"))
+col_fscore <- first_existing(raw, c("frailty_score_3", "frailty_score"))
 
 frailty_score_source <- "K15_RData"
 frailty_cat_source <- "K15_RData"
