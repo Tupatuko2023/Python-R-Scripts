@@ -69,3 +69,6 @@ data/testing/mock_*.csv
 # Local-only artifacts and scratch directories
 analysis/
 docs/plans/
+manifest/renv_diagnostics_*.txt
+manifest/run_meta_*.txt
+manifest/sessionInfo_*.txt
