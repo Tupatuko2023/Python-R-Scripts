@@ -42,6 +42,7 @@ script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[[1]]) else
 script_base <- if (nzchar(script_path)) sub("\\.R$", "", basename(script_path)) else "K40"
 script_label <- sub("\\.V.*$", "", script_base)
 if (is.na(script_label) || script_label == "") script_label <- "K40"
+script_dir <- if (nzchar(script_path)) dirname(normalizePath(script_path, winslash = "/", mustWork = FALSE)) else here::here("R-scripts", "K40")
 
 project_root <- if (nzchar(script_path)) {
   dirname(dirname(dirname(normalizePath(script_path, winslash = "/", mustWork = FALSE))))
@@ -68,6 +69,13 @@ RUN_AGE_TREND_DIAG <- TRUE
 RUN_CEILING_DIAG <- TRUE
 RUN_DOMAIN_BALANCE <- TRUE
 STRICT_ORDINAL_REQUIRES_MAP <- FALSE
+
+domain_overrides_path <- file.path(script_dir, "config", "k40_domain_overrides.csv")
+domain_overrides <- NULL
+if (file.exists(domain_overrides_path)) {
+  domain_overrides <- readr::read_csv(domain_overrides_path, show_col_types = FALSE) %>%
+    dplyr::mutate(var_name = tolower(var_name))
+}
 
 append_artifact <- function(label, kind, path, n = NA_integer_, notes = NA_character_) {
   append_manifest(
@@ -290,6 +298,11 @@ score_continuous <- function(x, var_name) {
 
 domain_label <- function(var_name) {
   v <- tolower(var_name)
+
+  if (!is.null(domain_overrides)) {
+    hit <- domain_overrides$domain[match(v, domain_overrides$var_name)]
+    if (!is.na(hit)) return(hit)
+  }
 
   if (stringr::str_detect(v, "(adl|iadl|toimintakyky|functional|bathing|dressing|toilet|transfer|feeding|shopping|cooking|housework)")) {
     return("function_adl_iadl")
@@ -583,6 +596,17 @@ write_agg_csv(
   selected %>% select(var_name, type, n_miss, p_miss, prevalence, n_levels, domain),
   "k40_deficit_missingness_prevalence.csv",
   notes = "Per-deficit missingness/prevalence"
+)
+
+other_vars <- eligible %>%
+  mutate(domain = vapply(var_name, domain_label, character(1))) %>%
+  filter(domain == "other") %>%
+  select(var_name, type, p_miss, prevalence, n_levels, top_levels) %>%
+  arrange(p_miss, var_name)
+write_agg_csv(
+  other_vars,
+  "k40_other_vars_to_classify.csv",
+  notes = "Eligible deficits classified as 'other' - use to build domain overrides"
 )
 
 prop_other <- NA_real_
