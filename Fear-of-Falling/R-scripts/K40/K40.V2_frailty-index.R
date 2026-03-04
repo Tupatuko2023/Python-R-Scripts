@@ -427,10 +427,14 @@ exposure_regex <- "^fof_status($|_)|^kaatumisenpelko|^tasapainovaikeus($|_)"
 outcome_regex <- "^composite_z|toimintakykysummary|delta_composite_z"
 derived_construct_regex <- "^frailty_|^frailty_index|^fi$|^fi_z$"
 admin_regex <- "^id$|^time$|^visit$|^aika$|^measurement_time$|capacity_score"
+demographic_regex <- "^sex($|_)|^gender($|_)|^agelka$|^age($|_)"
+behavior_exposure_regex <- "^tupakointi$|^alkoholi$|^viinaon$|^smok|^alcohol"
 
 exclusion_reason <- function(vn) {
   if (grepl(perf_regex, vn, ignore.case = TRUE)) return("performance_test_pattern")
   if (grepl(exposure_regex, vn, ignore.case = TRUE)) return("primary_exposure")
+  if (grepl(behavior_exposure_regex, vn, ignore.case = TRUE)) return("behavior_exposure_not_deficit")
+  if (grepl(demographic_regex, vn, ignore.case = TRUE)) return("demographic_not_deficit")
   if (grepl(outcome_regex, vn, ignore.case = TRUE)) return("outcome_or_component")
   if (grepl(derived_construct_regex, vn, ignore.case = TRUE)) return("derived_frailty_construct")
   if (grepl(admin_regex, vn, ignore.case = TRUE)) return("administrative_or_non_deficit")
