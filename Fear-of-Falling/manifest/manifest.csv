@@ -2305,3 +2305,164 @@ manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
 2026-02-26 16:45:19.128868,K29_INTERACTION,interaction_plot_score,figure_png,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_plot_score.png,NA,NA
 2026-02-26 16:45:19.479382,K29_INTERACTION,interaction_report_md,text_md,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_report.md,NA,NA
 2026-02-26 16:45:19.87955,K29,sessioninfo,sessioninfo,R-scripts/K29/outputs/sessioninfo_K29.txt,NA,NA
+2026-03-02 16:01:30.775215,K39,k39_column_inventory.csv,table_csv,R-scripts/K39/outputs/k39_column_inventory.csv,150,Phase A clean_names column inventory
+2026-03-02 16:01:31.051725,K39,k39_excluded_vars.csv,table_csv,R-scripts/K39/outputs/k39_excluded_vars.csv,51,Hard exclusions by governance and overlap guard
+2026-03-02 16:01:31.432378,K39,k39_candidate_inventory.csv,table_csv,R-scripts/K39/outputs/k39_candidate_inventory.csv,99,Phase A non-performance candidate inventory
+2026-03-02 16:01:31.631228,K39,k39_candidate_vs_compositez_cor.csv,table_csv,R-scripts/K39/outputs/k39_candidate_vs_compositez_cor.csv,99,Phase A overlap diagnostics vs Composite_Z_baseline
+2026-03-02 16:01:31.987082,K39,k39_red_flags.csv,table_csv,R-scripts/K39/outputs/k39_red_flags.csv,85,Phase A red flags
+2026-03-02 16:01:32.163213,K39,k39_mapping_suggestions.csv,table_csv,R-scripts/K39/outputs/k39_mapping_suggestions.csv,6,Closest-match suggestions + manual mapping block
+2026-03-02 16:01:32.405848,K39,k39_selected_indicators.csv,table_csv,R-scripts/K39/outputs/k39_selected_indicators.csv,6,Selected indicators after deterministic Phase B rule
+2026-03-02 16:01:33.07576,K39,k39_cfa_admissibility.csv,table_csv,R-scripts/K39/outputs/k39_cfa_admissibility.csv,1,CFA admissibility gate
+2026-03-02 16:01:33.321844,K39,k39_decision_log.txt,text,R-scripts/K39/outputs/k39_decision_log.txt,11,Deterministic Phase A->B rule and outcome
+2026-03-02 16:01:33.484992,K39,k39_external_output_receipt.txt,text,R-scripts/K39/outputs/k39_external_output_receipt.txt,7,External patient-level output receipt
+2026-03-02 16:01:33.696743,K39,sessioninfo,sessioninfo,R-scripts/K39/outputs/sessioninfo_K39.txt,NA,NA
+2026-03-02 16:02:11.638995,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-02 16:02:12.093932,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-02 16:03:45.43054,K39,k39_column_inventory.csv,table_csv,R-scripts/K39/outputs/k39_column_inventory.csv,150,Phase A clean_names column inventory
+2026-03-02 16:03:45.727748,K39,k39_excluded_vars.csv,table_csv,R-scripts/K39/outputs/k39_excluded_vars.csv,51,Hard exclusions by governance and overlap guard
+2026-03-02 16:03:46.096439,K39,k39_candidate_inventory.csv,table_csv,R-scripts/K39/outputs/k39_candidate_inventory.csv,99,Phase A non-performance candidate inventory
+2026-03-02 16:03:46.338012,K39,k39_candidate_vs_compositez_cor.csv,table_csv,R-scripts/K39/outputs/k39_candidate_vs_compositez_cor.csv,99,Phase A overlap diagnostics vs Composite_Z_baseline
+2026-03-02 16:03:46.641015,K39,k39_red_flags.csv,table_csv,R-scripts/K39/outputs/k39_red_flags.csv,85,Phase A red flags
+2026-03-02 16:03:46.896843,K39,k39_mapping_suggestions.csv,table_csv,R-scripts/K39/outputs/k39_mapping_suggestions.csv,6,Closest-match suggestions + manual mapping block
+2026-03-02 16:03:47.088506,K39,k39_selected_indicators.csv,table_csv,R-scripts/K39/outputs/k39_selected_indicators.csv,6,Selected indicators after deterministic Phase B rule
+2026-03-02 16:04:28.943447,K39,k39_column_inventory.csv,table_csv,R-scripts/K39/outputs/k39_column_inventory.csv,150,Phase A clean_names column inventory
+2026-03-02 16:04:29.201815,K39,k39_excluded_vars.csv,table_csv,R-scripts/K39/outputs/k39_excluded_vars.csv,51,Hard exclusions by governance and overlap guard
+2026-03-02 16:04:29.605961,K39,k39_candidate_inventory.csv,table_csv,R-scripts/K39/outputs/k39_candidate_inventory.csv,99,Phase A non-performance candidate inventory
+2026-03-02 16:04:29.799737,K39,k39_candidate_vs_compositez_cor.csv,table_csv,R-scripts/K39/outputs/k39_candidate_vs_compositez_cor.csv,99,Phase A overlap diagnostics vs Composite_Z_baseline
+2026-03-02 16:04:30.081221,K39,k39_red_flags.csv,table_csv,R-scripts/K39/outputs/k39_red_flags.csv,85,Phase A red flags
+2026-03-02 16:04:30.268389,K39,k39_mapping_suggestions.csv,table_csv,R-scripts/K39/outputs/k39_mapping_suggestions.csv,6,Closest-match suggestions + manual mapping block
+2026-03-02 16:04:30.53862,K39,k39_selected_indicators.csv,table_csv,R-scripts/K39/outputs/k39_selected_indicators.csv,6,Selected indicators after deterministic Phase B rule
+2026-03-02 16:05:44.772363,K39,k39_column_inventory.csv,table_csv,R-scripts/K39/outputs/k39_column_inventory.csv,150,Phase A clean_names column inventory
+2026-03-02 16:05:44.981705,K39,k39_excluded_vars.csv,table_csv,R-scripts/K39/outputs/k39_excluded_vars.csv,51,Hard exclusions by governance and overlap guard
+2026-03-02 16:05:45.360801,K39,k39_candidate_inventory.csv,table_csv,R-scripts/K39/outputs/k39_candidate_inventory.csv,99,Phase A non-performance candidate inventory
+2026-03-02 16:05:45.56941,K39,k39_candidate_vs_compositez_cor.csv,table_csv,R-scripts/K39/outputs/k39_candidate_vs_compositez_cor.csv,99,Phase A overlap diagnostics vs Composite_Z_baseline
+2026-03-02 16:05:45.880877,K39,k39_red_flags.csv,table_csv,R-scripts/K39/outputs/k39_red_flags.csv,85,Phase A red flags
+2026-03-02 16:05:46.099343,K39,k39_mapping_suggestions.csv,table_csv,R-scripts/K39/outputs/k39_mapping_suggestions.csv,6,Closest-match suggestions + manual mapping block
+2026-03-02 16:05:46.298649,K39,k39_selected_indicators.csv,table_csv,R-scripts/K39/outputs/k39_selected_indicators.csv,6,Selected indicators after deterministic Phase B rule
+2026-03-02 16:05:46.900025,K39,k39_cfa_admissibility.csv,table_csv,R-scripts/K39/outputs/k39_cfa_admissibility.csv,1,CFA admissibility gate
+2026-03-02 16:05:47.088813,K39,k39_cfa_diagnostics.csv,table_csv,R-scripts/K39/outputs/k39_cfa_diagnostics.csv,1,CFA diagnostics alias
+2026-03-02 16:05:47.292263,K39,k39_cfa_primary_loadings.csv,table_csv,R-scripts/K39/outputs/k39_cfa_primary_loadings.csv,6,CFA standardized loadings
+2026-03-02 16:05:47.489138,K39,k39_cfa_primary_summary.txt,text,R-scripts/K39/outputs/k39_cfa_primary_summary.txt,6,CFA primary summary
+2026-03-02 16:05:47.728826,K39,k39_decision_log.txt,text,R-scripts/K39/outputs/k39_decision_log.txt,11,Deterministic Phase A->B rule and outcome
+2026-03-02 16:05:47.915602,K39,k39_patient_level_output_receipt.txt,text,R-scripts/K39/outputs/k39_patient_level_output_receipt.txt,10,External patient-level output receipt
+2026-03-02 16:05:48.081843,K39,k39_external_output_receipt.txt,text,R-scripts/K39/outputs/k39_external_output_receipt.txt,10,External patient-level output receipt (legacy alias)
+2026-03-02 16:05:48.318249,K39,sessioninfo,sessioninfo,R-scripts/K39/outputs/sessioninfo_K39.txt,NA,NA
+2026-03-02 16:05:48.560184,K39,k39_sessioninfo.txt,sessioninfo,R-scripts/K39/outputs/k39_sessioninfo.txt,NA,K39 session info alias
+2026-03-02 16:06:20.212723,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-02 16:06:20.641928,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-02 17:24:24.327394,K40,k40_column_inventory.csv,table_csv,R-scripts/K40/outputs/k40_column_inventory.csv,16,K40 full column inventory
+2026-03-02 17:24:24.579086,K40,k40_excluded_vars.csv,table_csv,R-scripts/K40/outputs/k40_excluded_vars.csv,12,Deterministic hard exclusions
+2026-03-02 17:24:24.834496,K40,k40_candidate_inventory.csv,table_csv,R-scripts/K40/outputs/k40_candidate_inventory.csv,4,Candidate inventory after hard exclusions
+2026-03-02 17:24:25.149323,K40,k40_selected_deficits.csv,table_csv,R-scripts/K40/outputs/k40_selected_deficits.csv,2,Selected deficits after deterministic screening and redundancy rule
+2026-03-02 17:24:25.294427,K40,k40_deficit_missingness_prevalence.csv,table_csv,R-scripts/K40/outputs/k40_deficit_missingness_prevalence.csv,2,Per-deficit missingness/prevalence
+2026-03-02 17:24:25.511727,K40,k40_fi_distribution_summary.csv,table_csv,R-scripts/K40/outputs/k40_fi_distribution_summary.csv,10,FI and FI_z aggregate distribution summary
+2026-03-02 17:24:25.733583,K40,k40_fi_vs_compositez_correlation.csv,table_csv,R-scripts/K40/outputs/k40_fi_vs_compositez_correlation.csv,1,FI correlation with Composite_Z baseline
+2026-03-02 17:24:25.915987,K40,k40_fi_vs_capacity_correlation.csv,table_csv,R-scripts/K40/outputs/k40_fi_vs_capacity_correlation.csv,1,FI correlation with capacity score
+2026-03-02 17:24:26.071541,K40,k40_red_flags.csv,table_csv,R-scripts/K40/outputs/k40_red_flags.csv,4,Deterministic red flag checks
+2026-03-02 17:24:26.272238,K40,k40_patient_level_output_receipt.txt,text,R-scripts/K40/outputs/k40_patient_level_output_receipt.txt,12,External patient-level output receipt
+2026-03-02 17:24:26.448141,K40,k40_decision_log.txt,text,R-scripts/K40/outputs/k40_decision_log.txt,13,Deterministic K40 decisions and thresholds
+2026-03-02 17:24:26.650553,K40,sessioninfo,sessioninfo,R-scripts/K40/outputs/sessioninfo_K40.txt,NA,NA
+2026-03-02 17:24:26.845001,K40,k40_sessioninfo.txt,sessioninfo,R-scripts/K40/outputs/k40_sessioninfo.txt,NA,K40 session info alias
+2026-03-02 17:24:55.649209,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-02 17:24:56.123113,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-02 17:26:44.360535,K40,k40_column_inventory.csv,table_csv,R-scripts/K40/outputs/k40_column_inventory.csv,156,K40 full column inventory
+2026-03-02 17:26:44.629976,K40,k40_excluded_vars.csv,table_csv,R-scripts/K40/outputs/k40_excluded_vars.csv,59,Deterministic hard exclusions
+2026-03-02 17:26:44.973123,K40,k40_candidate_inventory.csv,table_csv,R-scripts/K40/outputs/k40_candidate_inventory.csv,97,Candidate inventory after hard exclusions
+2026-03-02 17:26:45.353181,K40,k40_selected_deficits.csv,table_csv,R-scripts/K40/outputs/k40_selected_deficits.csv,60,Selected deficits after deterministic screening and redundancy rule
+2026-03-02 17:26:45.569848,K40,k40_deficit_missingness_prevalence.csv,table_csv,R-scripts/K40/outputs/k40_deficit_missingness_prevalence.csv,60,Per-deficit missingness/prevalence
+2026-03-02 17:26:45.756562,K40,k40_fi_distribution_summary.csv,table_csv,R-scripts/K40/outputs/k40_fi_distribution_summary.csv,10,FI and FI_z aggregate distribution summary
+2026-03-02 17:26:45.916404,K40,k40_fi_vs_compositez_correlation.csv,table_csv,R-scripts/K40/outputs/k40_fi_vs_compositez_correlation.csv,1,FI correlation with Composite_Z baseline
+2026-03-02 17:26:46.07748,K40,k40_fi_vs_capacity_correlation.csv,table_csv,R-scripts/K40/outputs/k40_fi_vs_capacity_correlation.csv,1,FI correlation with capacity score
+2026-03-02 17:26:46.228309,K40,k40_red_flags.csv,table_csv,R-scripts/K40/outputs/k40_red_flags.csv,4,Deterministic red flag checks
+2026-03-02 17:26:46.486514,K40,k40_patient_level_output_receipt.txt,text,R-scripts/K40/outputs/k40_patient_level_output_receipt.txt,12,External patient-level output receipt
+2026-03-02 17:26:46.667877,K40,k40_decision_log.txt,text,R-scripts/K40/outputs/k40_decision_log.txt,13,Deterministic K40 decisions and thresholds
+2026-03-02 17:26:46.859923,K40,sessioninfo,sessioninfo,R-scripts/K40/outputs/sessioninfo_K40.txt,NA,NA
+2026-03-02 17:26:47.022999,K40,k40_sessioninfo.txt,sessioninfo,R-scripts/K40/outputs/k40_sessioninfo.txt,NA,K40 session info alias
+2026-03-02 17:28:03.683401,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-02 17:28:04.100375,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-02 17:41:31.809755,K40,k40_column_inventory.csv,table_csv,R-scripts/K40/outputs/k40_column_inventory.csv,126,K40 full column inventory
+2026-03-02 17:41:32.064213,K40,k40_excluded_vars.csv,table_csv,R-scripts/K40/outputs/k40_excluded_vars.csv,59,Deterministic hard exclusions
+2026-03-02 17:41:32.336996,K40,k40_candidate_inventory.csv,table_csv,R-scripts/K40/outputs/k40_candidate_inventory.csv,67,Candidate inventory after hard exclusions
+2026-03-02 17:41:32.678294,K40,k40_selected_deficits.csv,table_csv,R-scripts/K40/outputs/k40_selected_deficits.csv,34,Selected deficits after deterministic screening and redundancy rule
+2026-03-02 17:41:32.883907,K40,k40_deficit_missingness_prevalence.csv,table_csv,R-scripts/K40/outputs/k40_deficit_missingness_prevalence.csv,34,Per-deficit missingness/prevalence
+2026-03-02 17:41:33.056139,K40,k40_fi_distribution_summary.csv,table_csv,R-scripts/K40/outputs/k40_fi_distribution_summary.csv,10,FI and FI_z aggregate distribution summary
+2026-03-02 17:41:33.249612,K40,k40_fi_vs_compositez_correlation.csv,table_csv,R-scripts/K40/outputs/k40_fi_vs_compositez_correlation.csv,1,FI correlation with Composite_Z baseline
+2026-03-02 17:41:33.421307,K40,k40_fi_vs_capacity_correlation.csv,table_csv,R-scripts/K40/outputs/k40_fi_vs_capacity_correlation.csv,1,FI correlation with capacity score
+2026-03-02 17:41:33.602203,K40,k40_red_flags.csv,table_csv,R-scripts/K40/outputs/k40_red_flags.csv,4,Deterministic red flag checks
+2026-03-02 17:41:33.8373,K40,k40_patient_level_output_receipt.txt,text,R-scripts/K40/outputs/k40_patient_level_output_receipt.txt,12,External patient-level output receipt
+2026-03-02 17:41:33.994622,K40,k40_decision_log.txt,text,R-scripts/K40/outputs/k40_decision_log.txt,13,Deterministic K40 decisions and thresholds
+2026-03-02 17:41:34.173494,K40,sessioninfo,sessioninfo,R-scripts/K40/outputs/sessioninfo_K40.txt,NA,NA
+2026-03-02 17:41:34.361531,K40,k40_sessioninfo.txt,sessioninfo,R-scripts/K40/outputs/k40_sessioninfo.txt,NA,K40 session info alias
+2026-03-02 18:11:55.318246,K41,k41_common_sample_counts.csv,table_csv,R-scripts/K41/outputs/k41_common_sample_counts.csv,12,Primary/extended/common counts for long and wide
+2026-03-02 18:11:56.672157,K41,k41_lmm_primary_coefficients.csv,table_csv,R-scripts/K41/outputs/k41_lmm_primary_coefficients.csv,13,Canonical K26-equivalent long LMM on common sample
+2026-03-02 18:11:56.916096,K41,k41_lmm_extended_coefficients.csv,table_csv,R-scripts/K41/outputs/k41_lmm_extended_coefficients.csv,15,Long LMM with FI extension on same common sample
+2026-03-02 18:11:57.180981,K41,k41_lmm_model_comparison.csv,table_csv,R-scripts/K41/outputs/k41_lmm_model_comparison.csv,2,Primary vs FI-extended long LMM comparison (common sample)
+2026-03-02 18:11:57.469865,K41,k41_ancova_primary_coefficients.csv,table_csv,R-scripts/K41/outputs/k41_ancova_primary_coefficients.csv,9,Canonical ANCOVA on common sample
+2026-03-02 18:11:57.717353,K41,k41_ancova_extended_coefficients.csv,table_csv,R-scripts/K41/outputs/k41_ancova_extended_coefficients.csv,10,ANCOVA with FI extension on same common sample
+2026-03-02 18:11:57.88412,K41,k41_ancova_model_comparison.csv,table_csv,R-scripts/K41/outputs/k41_ancova_model_comparison.csv,2,Primary vs FI-extended ANCOVA comparison (common sample)
+2026-03-02 18:11:58.060445,K41,k41_decision_log.txt,text,R-scripts/K41/outputs/k41_decision_log.txt,19,K41 canonical-vs-extended decision trace
+2026-03-02 18:12:02.833741,K41,k41_sessioninfo,sessioninfo,R-scripts/K41/outputs/k41_sessioninfo.txt,NA,K41 sessionInfo + renv status
+2026-03-02 18:12:03.028334,K41,k41_external_input_receipt.txt,text,R-scripts/K41/outputs/k41_external_input_receipt.txt,14,K41 external input receipt with path/md5/nrow/ncol
+2026-03-02 18:12:56.968558,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-02 18:12:57.489326,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-02 19:01:06.383383,K42,k42_common_sample_counts.csv,table_csv,R-scripts/K42/outputs/k42_common_sample_counts.csv,20,Common-sample counts for all four model sets
+2026-03-02 19:01:07.571723,K42,k42_lmm_primary_coefficients.csv,table_csv,R-scripts/K42/outputs/k42_lmm_primary_coefficients.csv,13,Long model primary
+2026-03-02 19:01:07.701792,K42,k42_lmm_capacity_coefficients.csv,table_csv,R-scripts/K42/outputs/k42_lmm_capacity_coefficients.csv,15,Long model + capacity
+2026-03-02 19:01:07.83828,K42,k42_lmm_fi_coefficients.csv,table_csv,R-scripts/K42/outputs/k42_lmm_fi_coefficients.csv,15,Long model + FI
+2026-03-02 19:01:08.030936,K42,k42_lmm_both_coefficients.csv,table_csv,R-scripts/K42/outputs/k42_lmm_both_coefficients.csv,17,Long model + both
+2026-03-02 19:01:08.199094,K42,k42_ancova_primary_coefficients.csv,table_csv,R-scripts/K42/outputs/k42_ancova_primary_coefficients.csv,9,Wide ANCOVA primary
+2026-03-02 19:01:08.339231,K42,k42_ancova_capacity_coefficients.csv,table_csv,R-scripts/K42/outputs/k42_ancova_capacity_coefficients.csv,10,Wide ANCOVA + capacity
+2026-03-02 19:01:08.468924,K42,k42_ancova_fi_coefficients.csv,table_csv,R-scripts/K42/outputs/k42_ancova_fi_coefficients.csv,10,Wide ANCOVA + FI
+2026-03-02 19:01:08.606226,K42,k42_ancova_both_coefficients.csv,table_csv,R-scripts/K42/outputs/k42_ancova_both_coefficients.csv,11,Wide ANCOVA + both
+2026-03-02 19:01:08.777179,K42,k42_lmm_model_comparison.csv,table_csv,R-scripts/K42/outputs/k42_lmm_model_comparison.csv,4,LMM model comparison and nested LRT summaries
+2026-03-02 19:01:08.93229,K42,k42_ancova_model_comparison.csv,table_csv,R-scripts/K42/outputs/k42_ancova_model_comparison.csv,4,ANCOVA model comparison and nested F-test summaries
+2026-03-02 19:01:09.082851,K42,k42_capacity_fi_collinearity.csv,table_csv,R-scripts/K42/outputs/k42_capacity_fi_collinearity.csv,13,Capacity-FI correlation and VIF diagnostics
+2026-03-02 19:01:09.193756,K42,k42_lmm_both_predicted_trajectories.csv,table_csv,R-scripts/K42/outputs/k42_lmm_both_predicted_trajectories.csv,18,Aggregate prediction grid for collinearity fallback interpretation
+2026-03-02 19:01:09.323967,K42,k42_red_flags.csv,table_csv,R-scripts/K42/outputs/k42_red_flags.csv,7,Deterministic red flags and collinearity gate
+2026-03-02 19:01:09.451335,K42,k42_decision_log.txt,text,R-scripts/K42/outputs/k42_decision_log.txt,11,K42 decision trace and collinearity fallback status
+2026-03-02 19:01:13.065874,K42,k42_sessioninfo,sessioninfo,R-scripts/K42/outputs/k42_sessioninfo.txt,NA,K42 sessionInfo + renv status
+2026-03-02 19:01:13.216227,K42,k42_external_input_receipt.txt,text,R-scripts/K42/outputs/k42_external_input_receipt.txt,18,K42 external input receipt
+2026-03-02 19:01:49.497467,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-02 19:01:49.925197,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-03 07:08:34 +0200,K43,conceptual_model_k42_svg,figure_svg,docs/figures/conceptual_model_k42.svg,NA,K42 conceptual framework vector figure
+2026-03-03 07:08:34 +0200,K43,conceptual_model_k42_pdf,figure_pdf,docs/figures/conceptual_model_k42.pdf,NA,K42 conceptual framework vector figure
+2026-03-03 07:08:34 +0200,K43,conceptual_model_k42_caption,text,docs/figures/conceptual_model_k42_caption.txt,3,K42 conceptual figure caption
+2026-03-03 16:41:13.487315,K44,k44_both_gradients.png,figure_png,R-scripts/K44/outputs/k44_both_gradients.png,NA,K42 BOTH model deterministic gradient panels
+2026-03-03 16:41:13.946935,K44,k44_extreme_profiles.png,figure_png,R-scripts/K44/outputs/k44_extreme_profiles.png,NA,K42 BOTH model extreme reference profiles
+2026-03-03 16:41:14.11369,K44,k44_figure_caption.txt,text,R-scripts/K44/outputs/k44_figure_caption.txt,8,K44 figure caption and interpretation constraints
+2026-03-03 16:41:14.256185,K44,k44_decision_log.txt,text,R-scripts/K44/outputs/k44_decision_log.txt,28,K44 deterministic decisions and K42 references
+2026-03-03 16:41:14.371149,K44,k44_external_input_receipt.txt,text,R-scripts/K44/outputs/k44_external_input_receipt.txt,3,K44 external input receipt
+2026-03-03 16:41:14.53485,K44,k44_sessioninfo,sessioninfo,R-scripts/K44/outputs/k44_sessioninfo.txt,NA,K44 sessionInfo
+2026-03-03 16:41:56.884298,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-03 16:41:57.253499,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-03 17:06:13.566933,K45,k45_mice_missingness_summary.csv,table_csv,R-scripts/K45/outputs/k45_mice_missingness_summary.csv,11,Missingness summary before MICE (outcome-complete participants only)
+2026-03-03 17:06:18.905894,K45,k45_mice_methods_and_predictor_matrix.txt,text,R-scripts/K45/outputs/k45_mice_methods_and_predictor_matrix.txt,65,Deterministic MICE method and predictor matrix
+2026-03-03 17:06:19.075458,K45,k45_mice_diagnostics_traceplot.png,figure_png,R-scripts/K45/outputs/k45_mice_diagnostics_traceplot.png,NA,MICE chain diagnostics
+2026-03-03 17:06:54.579546,K45,k45_mice_missingness_summary.csv,table_csv,R-scripts/K45/outputs/k45_mice_missingness_summary.csv,11,Missingness summary before MICE (outcome-complete participants only)
+2026-03-03 17:06:59.947003,K45,k45_mice_methods_and_predictor_matrix.txt,text,R-scripts/K45/outputs/k45_mice_methods_and_predictor_matrix.txt,65,Deterministic MICE method and predictor matrix
+2026-03-03 17:07:00.138787,K45,k45_mice_diagnostics_traceplot.png,figure_png,R-scripts/K45/outputs/k45_mice_diagnostics_traceplot.png,NA,MICE chain diagnostics
+2026-03-03 17:07:00.326862,K45,k45_mice_diagnostics_density.png,figure_png,R-scripts/K45/outputs/k45_mice_diagnostics_density.png,NA,MICE density diagnostics for numeric imputed variables
+2026-03-03 17:07:41.853333,K45,k45_mice_missingness_summary.csv,table_csv,R-scripts/K45/outputs/k45_mice_missingness_summary.csv,11,Missingness summary before MICE (outcome-complete participants only)
+2026-03-03 17:07:47.271769,K45,k45_mice_methods_and_predictor_matrix.txt,text,R-scripts/K45/outputs/k45_mice_methods_and_predictor_matrix.txt,65,Deterministic MICE method and predictor matrix
+2026-03-03 17:07:47.47714,K45,k45_mice_diagnostics_traceplot.png,figure_png,R-scripts/K45/outputs/k45_mice_diagnostics_traceplot.png,NA,MICE chain diagnostics
+2026-03-03 17:07:47.693985,K45,k45_mice_diagnostics_density.png,figure_png,R-scripts/K45/outputs/k45_mice_diagnostics_density.png,NA,MICE density diagnostics for numeric imputed variables
+2026-03-03 17:07:49.251102,K45,k45_pooled_coefficients_k42_both.csv,table_csv,R-scripts/K45/outputs/k45_pooled_coefficients_k42_both.csv,28,Rubin-pooled estimates for K42 BOTH-model analogs
+2026-03-03 17:07:49.451087,K45,k45_fraction_missing_information.csv,table_csv,R-scripts/K45/outputs/k45_fraction_missing_information.csv,28,Fraction of missing information by pooled coefficient
+2026-03-03 17:07:49.758609,K45,k45_complete_case_vs_pooled_comparison.csv,table_csv,R-scripts/K45/outputs/k45_complete_case_vs_pooled_comparison.csv,28,Local complete-case vs Rubin-pooled coefficient comparison
+2026-03-03 17:07:49.941885,K45,k45_decision_log.txt,text,R-scripts/K45/outputs/k45_decision_log.txt,14,"K45 deterministic decisions, Ns, and direction consistency"
+2026-03-03 17:07:54.906772,K45,k45_sessioninfo,sessioninfo,R-scripts/K45/outputs/k45_sessioninfo.txt,NA,K45 sessionInfo + renv status
+2026-03-03 17:07:55.04232,K45,k45_external_input_receipt.txt,text,R-scripts/K45/outputs/k45_external_input_receipt.txt,20,K45 external input receipt
+2026-03-03 17:08:26.162204,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-03 17:08:26.456057,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-03 17:10:34.726986,K45,k45_mice_missingness_summary.csv,table_csv,R-scripts/K45/outputs/k45_mice_missingness_summary.csv,10,Missingness summary before MICE (outcome-complete participants only)
+2026-03-03 17:10:39.944568,K45,k45_mice_methods_and_predictor_matrix.txt,text,R-scripts/K45/outputs/k45_mice_methods_and_predictor_matrix.txt,65,Deterministic MICE method and predictor matrix
+2026-03-03 17:10:40.085098,K45,k45_mice_diagnostics_traceplot.png,figure_png,R-scripts/K45/outputs/k45_mice_diagnostics_traceplot.png,NA,MICE chain diagnostics
+2026-03-03 17:10:40.238821,K45,k45_mice_diagnostics_density.png,figure_png,R-scripts/K45/outputs/k45_mice_diagnostics_density.png,NA,MICE density diagnostics for numeric imputed variables
+2026-03-03 17:10:41.293396,K45,k45_pooled_coefficients_k42_both.csv,table_csv,R-scripts/K45/outputs/k45_pooled_coefficients_k42_both.csv,28,Rubin-pooled estimates for K42 BOTH-model analogs
+2026-03-03 17:10:41.437722,K45,k45_fraction_missing_information.csv,table_csv,R-scripts/K45/outputs/k45_fraction_missing_information.csv,28,Fraction of missing information by pooled coefficient
+2026-03-03 17:10:41.618222,K45,k45_complete_case_vs_pooled_comparison.csv,table_csv,R-scripts/K45/outputs/k45_complete_case_vs_pooled_comparison.csv,28,Local complete-case vs Rubin-pooled coefficient comparison
+2026-03-03 17:10:41.763363,K45,k45_decision_log.txt,text,R-scripts/K45/outputs/k45_decision_log.txt,14,"K45 deterministic decisions, Ns, and direction consistency"
+2026-03-03 17:10:44.895093,K45,k45_sessioninfo,sessioninfo,R-scripts/K45/outputs/k45_sessioninfo.txt,NA,K45 sessionInfo + renv status
+2026-03-03 17:10:45.058764,K45,k45_external_input_receipt.txt,text,R-scripts/K45/outputs/k45_external_input_receipt.txt,20,K45 external input receipt
+2026-03-03 17:11:24.882298,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-03 17:11:25.310884,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
