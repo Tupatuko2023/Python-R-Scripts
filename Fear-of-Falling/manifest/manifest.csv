@@ -2466,3 +2466,15 @@ manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
 2026-03-03 17:10:45.058764,K45,k45_external_input_receipt.txt,text,R-scripts/K45/outputs/k45_external_input_receipt.txt,20,K45 external input receipt
 2026-03-03 17:11:24.882298,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
 2026-03-03 17:11:25.310884,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-04 12:19:04.917688,K46,k46_table_head_to_head_primary_capacity_fi_both.csv,table_csv,R-scripts/K46/outputs/k46_table_head_to_head_primary_capacity_fi_both.csv,27,K42 head-to-head + K45 sensitivity pooled comparison rows
+2026-03-04 12:19:05.150782,K46,k46_results_snippet.txt,text,R-scripts/K46/outputs/k46_results_snippet.txt,5,Paste-ready results text (EN)
+2026-03-04 12:19:05.392984,K46,k46_methods_snippet.txt,text,R-scripts/K46/outputs/k46_methods_snippet.txt,4,Paste-ready methods/statistical analysis text (EN)
+2026-03-04 12:19:05.595245,K46,k46_sensitivity_snippet_mice.txt,text,R-scripts/K46/outputs/k46_sensitivity_snippet_mice.txt,2,Paste-ready MICE sensitivity snippet (EN)
+2026-03-04 12:19:05.82429,K46,k46_discussion_snippet.txt,text,R-scripts/K46/outputs/k46_discussion_snippet.txt,4,Paste-ready discussion integration text (EN)
+2026-03-04 12:19:06.025701,K46,k46_figure_callouts.txt,text,R-scripts/K46/outputs/k46_figure_callouts.txt,3,K44 figure citation guidance
+2026-03-04 12:19:06.241349,K46,k46_reviewer_defense_8bullets.txt,text,R-scripts/K46/outputs/k46_reviewer_defense_8bullets.txt,8,Reviewer defense micro-bullets
+2026-03-04 12:19:06.54738,K46,k46_input_inventory.csv,table_csv,R-scripts/K46/outputs/k46_input_inventory.csv,20,K46 input discovery inventory with hashes
+2026-03-04 12:19:06.712254,K46,k46_decision_log.txt,text,R-scripts/K46/outputs/k46_decision_log.txt,7,K46 processing decisions
+2026-03-04 12:19:06.95953,K46,k46_sessioninfo.txt,sessioninfo,R-scripts/K46/outputs/k46_sessioninfo.txt,NA,R sessionInfo()
+2026-03-04 12:19:54.914683,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
+2026-03-04 12:19:55.481544,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
