@@ -1,0 +1,2 @@
+Sensitivity analyses using covariate-only multiple imputation (outcome not imputed; m=20, seed=20260303) restored the sample to outcome-complete size (wide 276 vs complete-case 236; long 552 vs complete-case 472).
+Key longitudinal terms retained direction with modest attenuation: time×capacity pooled 0.01327 vs complete-case 0.01409; time×FI pooled -0.00707 vs complete-case -0.01024.

@@ -122,3 +122,32 @@ Append rows to `manifest/manifest.csv` for all K46 artifacts.
 - Table includes both frameworks and clearly labels primary vs extended sets.
 - Snippets are paste-ready, non-causal, consistent with K42/K44/K45.
 - No changes to K42/K44/K45 outputs or any analysis model code.
+
+## Log
+
+- 2026-03-04 moved card `tasks/01-ready/ -> tasks/02-in-progress/`.
+- 2026-03-04 implemented:
+  - `R-scripts/K46/k46.r`
+  - `scripts/termux/run_k46_proot.sh`
+- 2026-03-04 execution commands:
+  - `bash scripts/termux/run_k46_proot.sh` -> PASS (exit 0)
+  - `bash scripts/termux/run_qc_summarizer_proot.sh` -> PASS (exit 0)
+  - `bash ../tools/run-gates.sh --mode analysis --project Fear-of-Falling` -> PASS (exit 0)
+  - `rg -n "^id,|participant|jnro|nro" R-scripts/K46/outputs/*.csv || true` -> no hits
+- 2026-03-04 outputs produced under `R-scripts/K46/outputs/`:
+  - `k46_table_head_to_head_primary_capacity_fi_both.csv`
+  - `k46_results_snippet.txt`
+  - `k46_methods_snippet.txt`
+  - `k46_sensitivity_snippet_mice.txt`
+  - `k46_discussion_snippet.txt`
+  - `k46_figure_callouts.txt`
+  - `k46_reviewer_defense_8bullets.txt`
+  - `k46_input_inventory.csv`
+  - `k46_decision_log.txt`
+  - `k46_sessioninfo.txt`
+- 2026-03-04 manifest rows appended for all K46 artifacts.
+- 2026-03-04 scope lock confirmation: no K42/K44/K45 code changes and no model refit performed.
+
+## Blockers
+
+- None.

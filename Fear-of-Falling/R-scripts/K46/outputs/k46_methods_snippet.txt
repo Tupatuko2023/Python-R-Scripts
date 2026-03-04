@@ -1,0 +1,4 @@
+Primary analyses used pre-specified canonical model structures and were compared against extended models (+capacity, +FI, +both) on identical common samples.
+For head-to-head reporting, K42 aggregate outputs were consolidated without model refitting (n_wide=236, n_long=472).
+Missing-data robustness was assessed via K45 sensitivity analysis using multiple imputation for baseline covariates/exposures only (m=20, seed=20260303); follow-up outcomes were not imputed.
+All K46 outputs are aggregate-only reporting artifacts with repository-relative references.

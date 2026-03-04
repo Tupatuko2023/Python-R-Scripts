@@ -1,0 +1,3 @@
+Main figure callout (K44): cite R-scripts/K44/outputs/k44_both_gradients.png when describing model-based trajectory gradients from the K42 BOTH model.
+Supplementary figure callout (K44): cite R-scripts/K44/outputs/k44_extreme_profiles.png for reference-profile contrasts (not prevalence-weighted groups).
+Interpretation sentence: Fixed-effect model predictions indicate independent reserve (capacity) and vulnerability (FI) gradients; no causal inference is implied.
