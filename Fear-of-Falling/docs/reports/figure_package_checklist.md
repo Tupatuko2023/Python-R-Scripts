@@ -49,4 +49,3 @@ Submission-ready figure package for conceptual and trajectory figures tied to K4
 - Supporting logs available:
   - `R-scripts/K44/outputs/k44_decision_log.txt`
   - `R-scripts/K44/outputs/k44_external_input_receipt.txt`
-

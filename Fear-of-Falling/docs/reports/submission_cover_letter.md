@@ -9,6 +9,7 @@ This retrospective cohort study evaluates older adults participating in a multif
 Our primary models were held constant, and all extended analyses were performed in common analytical samples. We then conducted head-to-head models including both locomotor capacity and frailty index terms, showing moderate correlation but non-collinearity between constructs. Capacity showed a stronger time-dynamic association, while frailty index contributed additional independent information. To test robustness, we performed a covariates-only multiple imputation sensitivity analysis (without follow-up outcome imputation), which restored outcome-complete sample size and preserved direction of key effects.
 
 Methodologically, the manuscript is designed to be transparent and reviewer-safe:
+
 - pre-specified canonical framework preserved;
 - construct separation to avoid circularity;
 - common-sample comparisons;
@@ -23,4 +24,3 @@ Sincerely,
 [Corresponding Author Name]  
 [Affiliation]  
 [Email]
-
