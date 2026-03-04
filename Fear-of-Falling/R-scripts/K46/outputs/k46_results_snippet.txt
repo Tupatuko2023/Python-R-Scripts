@@ -1,0 +1,5 @@
+Head-to-head extended analyses were evaluated in a common analytical sample (n_wide=236, n_long=472), preserving comparability across primary, +capacity, +FI, and +both model sets.
+Capacity and FI were moderately correlated but not collinear (r=-0.508; high-collinearity flag=0).
+In the K42 BOTH LMM, higher baseline capacity was associated with more favorable change over time (time×capacity estimate=0.01409, p=<1e-04), while higher FI was associated with less favorable change (time×FI estimate=-0.01024, p=0.000715).
+Adjusted FOF-by-time moderation was not statistically robust in this model (time×FOF estimate=-0.00287, p=0.602).
+These patterns are visualized in Figure X (K44 gradients), generated from fixed-effect predictions without model refitting; interpretations remain descriptive and non-causal.

@@ -1,0 +1,8 @@
+- Primary canonical model specifications were preserved; K46 performs reporting-only consolidation.
+- Head-to-head comparisons use identical common samples (wide and long) across model sets.
+- Capacity and FI are explicitly treated as non-overlapping constructs with moderate correlation.
+- Collinearity diagnostics are reported from K42 aggregate outputs.
+- Visualization references are coefficient-consistent fixed-effect predictions (no refit).
+- Missingness robustness is addressed via covariate-only multiple imputation (K45).
+- Governance remains aggregate-only; no patient-level exports are written by K46.
+- Results language is descriptive and non-causal.

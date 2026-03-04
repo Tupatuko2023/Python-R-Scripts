@@ -1,0 +1,7 @@
+K46 decision log
+- No model refit performed; reporting-only consolidation from K42/K44/K45 aggregate artifacts.
+- Required inputs present: yes
+- Common samples used in text: n_wide=236, n_long=472
+- Capacity/FI correlation from K42 collinearity: r=-0.508277
+- Coefficient extraction fallback: missing coefficient files produce NA values in summary table rows (non-fatal).
+- Governance: aggregate-only outputs; no DATA_ROOT reads; repository-relative references only.

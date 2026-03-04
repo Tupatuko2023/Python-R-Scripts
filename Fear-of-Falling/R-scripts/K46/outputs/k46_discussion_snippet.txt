@@ -1,0 +1,4 @@
+Across head-to-head models, locomotor capacity and frailty index behaved as related but non-redundant constructs.
+Capacity provided a stronger longitudinal reserve gradient, while FI contributed additional vulnerability information in both-model adjustment.
+This pattern is consistent with a multidimensional frailty interpretation (reserve + vulnerability) rather than interchangeable operationalizations.
+All associations are descriptive and non-causal.
