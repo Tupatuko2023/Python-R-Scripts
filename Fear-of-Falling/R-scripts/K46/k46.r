@@ -30,6 +30,21 @@ paths <- init_paths(script_label)
 outputs_dir <- getOption("fof.outputs_dir")
 manifest_path <- getOption("fof.manifest_path")
 
+# ---- K46 constants (reporting-only) ----
+TERMS <- list(
+  time_capacity = "time:capacity_score_latent_primary",
+  time_fi = "time:frailty_index_fi_k40_z",
+  time_fof = "time:fof_statusFOF",
+  ancova_capacity = "capacity_score_latent_primary",
+  ancova_fi = "frailty_index_fi_k40_z",
+  ancova_fof = "fof_statusFOF"
+)
+
+DEFAULTS <- list(
+  mice_m_default = 20L,
+  mice_seed_default = 20260303L
+)
+
 append_artifact <- function(label, kind, path, n = NA_integer_, notes = NA_character_) {
   append_manifest(
     manifest_row(script = script_label, label = label, path = get_relpath(path), kind = kind, n = n, notes = notes),
@@ -149,8 +164,15 @@ if (length(high_corr) == 0) high_corr <- NA_real_
 
 build_framework_table <- function(framework, comp_df, coef_list, key_terms) {
   if (is.null(comp_df)) return(tibble())
-  base_aic <- comp_df %>% filter(model == "primary") %>% pull(AIC) %>% suppressWarnings(as.numeric(.))
-  if (length(base_aic) == 0) base_aic <- NA_real_
+  base_aic <- comp_df %>%
+    filter(model == "primary") %>%
+    slice(1) %>%
+    pull(AIC) %>%
+    suppressWarnings(as.numeric(.))
+  if (length(base_aic) == 0 || !is.finite(base_aic[[1]])) {
+    stop("K46 requires a finite scalar AIC for model=='primary' in model comparison input.", call. = FALSE)
+  }
+  base_aic <- base_aic[[1]]
 
   model_rows <- lapply(c("primary", "capacity", "fi", "both"), function(ms) {
     comp_row <- comp_df %>% filter(model == ms) %>% slice(1)
@@ -184,8 +206,8 @@ build_framework_table <- function(framework, comp_df, coef_list, key_terms) {
   bind_rows(model_rows)
 }
 
-lmm_terms <- c("time:capacity_score_latent_primary", "time:frailty_index_fi_k40_z", "time:fof_statusFOF")
-ancova_terms <- c("capacity_score_latent_primary", "frailty_index_fi_k40_z", "fof_statusFOF")
+lmm_terms <- c(TERMS$time_capacity, TERMS$time_fi, TERMS$time_fof)
+ancova_terms <- c(TERMS$ancova_capacity, TERMS$ancova_fi, TERMS$ancova_fof)
 
 k42_table <- bind_rows(
   build_framework_table("LMM", lmm_comp, coef_map$LMM, lmm_terms),
@@ -194,7 +216,7 @@ k42_table <- bind_rows(
 
 k45_compare_rows <- tibble()
 if (!is.null(k45_cc_pool)) {
-  keep_terms <- c("time:capacity_score_latent_primary", "time:frailty_index_fi_k40_z", "time:fof_statusFOF")
+  keep_terms <- c(TERMS$time_capacity, TERMS$time_fi, TERMS$time_fof)
   k45_compare_rows <- k45_cc_pool %>%
     filter(.data$term %in% keep_terms) %>%
     transmute(
@@ -227,12 +249,12 @@ write_agg_csv(
 # Compose snippets --------------------------------------------------------------
 
 lmm_both <- coef_map$LMM$both
-cap_row <- extract_coeff_term(lmm_both, "time:capacity_score_latent_primary")
-fi_row <- extract_coeff_term(lmm_both, "time:frailty_index_fi_k40_z")
-fof_row <- extract_coeff_term(lmm_both, "time:fof_statusFOF")
+cap_row <- extract_coeff_term(lmm_both, TERMS$time_capacity)
+fi_row <- extract_coeff_term(lmm_both, TERMS$time_fi)
+fof_row <- extract_coeff_term(lmm_both, TERMS$time_fof)
 
-k45_cap <- if (!is.null(k45_cc_pool)) k45_cc_pool %>% filter(term == "time:capacity_score_latent_primary") %>% slice(1) else NULL
-k45_fi <- if (!is.null(k45_cc_pool)) k45_cc_pool %>% filter(term == "time:frailty_index_fi_k40_z") %>% slice(1) else NULL
+k45_cap <- if (!is.null(k45_cc_pool)) k45_cc_pool %>% filter(term == TERMS$time_capacity) %>% slice(1) else NULL
+k45_fi <- if (!is.null(k45_cc_pool)) k45_cc_pool %>% filter(term == TERMS$time_fi) %>% slice(1) else NULL
 
 results_snippet <- c(
   paste0(
@@ -262,8 +284,8 @@ write_agg_txt(results_snippet, "k46_results_snippet.txt", notes = "Paste-ready r
 mice_methods <- if (file.exists(inputs$k45_methods)) readLines(inputs$k45_methods, warn = FALSE) else character(0)
 m_line <- mice_methods[str_detect(mice_methods, "^m=")]
 seed_line <- mice_methods[str_detect(mice_methods, "^seed=")]
-m_txt <- if (length(m_line) > 0) sub("^m=", "", m_line[[1]]) else "20"
-seed_txt <- if (length(seed_line) > 0) sub("^seed=", "", seed_line[[1]]) else "20260303"
+m_txt <- if (length(m_line) > 0) sub("^m=", "", m_line[[1]]) else as.character(DEFAULTS$mice_m_default)
+seed_txt <- if (length(seed_line) > 0) sub("^seed=", "", seed_line[[1]]) else as.character(DEFAULTS$mice_seed_default)
 
 methods_snippet <- c(
   "Primary analyses used pre-specified canonical model structures and were compared against extended models (+capacity, +FI, +both) on identical common samples.",
