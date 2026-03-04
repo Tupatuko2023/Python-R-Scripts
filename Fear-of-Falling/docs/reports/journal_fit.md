@@ -17,7 +17,7 @@
 - Risk:
   - Requires clear practical implications for geriatric care pathways.
 - Scope page:
-  - https://bmcgeriatr.biomedcentral.com/about
+  - [BMC Geriatrics - About](https://bmcgeriatr.biomedcentral.com/about)
 
 ### 2) Journal of the American Medical Directors Association (JAMDA)
 
@@ -28,7 +28,7 @@
 - Risk:
   - Higher selectivity; discussion must stay tightly clinical.
 - Journal page:
-  - https://www.jamda.com/
+  - [JAMDA](https://www.jamda.com/)
 
 ### 3) Age and Ageing
 
@@ -38,7 +38,7 @@
 - Risk:
   - Requires concise contribution statement and high narrative clarity.
 - Journal page:
-  - https://academic.oup.com/ageing
+  - [Age and Ageing](https://academic.oup.com/ageing)
 
 ## Recommended Submission Order
 
