@@ -49,3 +49,13 @@ install_r_pkgs.R
 data_root_test/
 .snakemake/
 dag.png
+
+# Analysis artifacts
+R/40_FI/outputs/
+R-scripts/
+
+# Runtime temp
+tmp/
+
+# Manifest runtime metadata
+manifest/manifest.csv
