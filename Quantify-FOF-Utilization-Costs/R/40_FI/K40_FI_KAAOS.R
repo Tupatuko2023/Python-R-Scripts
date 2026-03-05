@@ -116,7 +116,8 @@ data_root <- resolve_data_root_early(subproject_root)
 
 paths <- init_paths(script_label)
 # Override outputs location to project-standard R/ tree
-outputs_dir <- file.path("R", "40_FI", "outputs")
+run_id <- format(Sys.time(), "%Y%m%d_%H%M%S")
+outputs_dir <- file.path("R", "40_FI", "outputs", run_id)
 dir.create(outputs_dir, recursive = TRUE, showWarnings = FALSE)
 manifest_path <- getOption("fof.manifest_path")
 
@@ -319,6 +320,7 @@ min_deficits_prop <- 0.80
 run_optional_diagnostics <- TRUE
 scrub_label_contamination_enabled <- TRUE
 scrub_label_max_share <- 0.01
+exclude_falls_by_label <- TRUE
 
 # Filled after sheet read; used by exclusion/domain/priority helpers.
 var_labels <- list()
@@ -536,20 +538,24 @@ base_df <- base_df %>%
 # -----------------------------------------------------------------------------
 # 2) Candidate inventory and exclusions (same deterministic rules as k40.r)
 # -----------------------------------------------------------------------------
-perf_regex <- "puristus|grip|kavely|gait|tuoli|chair|seisom|single_leg|balance|sls"
-exposure_regex <- "^fof_status($|_)|^kaatumisenpelko|^tasapainovaikeus($|_)"
+perf_regex <- "puristus|grip|kavely|kävely|velynopeus|gait|10\\s*m|10m|tug|timed|tuoli|chair|seisom|single_leg|balance|sls"
+exposure_regex <- "^fof_status($|_)|^kaatumisen[_\\s]*pelko|^tasapainovaikeus($|_)"
 outcome_regex <- "^composite_z|toimintakykysummary|delta_composite_z"
 derived_construct_regex <- "^frailty_|^frailty_index|^fi$|^fi_z$"
 admin_regex <- "^id$|^time$|^visit$|^aika$|capacity_score"
 
 exclusion_reason <- function(vn) {
   key <- paste(vn, var_label(vn))
-  if (grepl(perf_regex, key, ignore.case = TRUE)) return("performance_test_pattern")
-  if (grepl(exposure_regex, key, ignore.case = TRUE)) return("primary_exposure")
+  if (grepl(perf_regex, key, ignore.case = TRUE)) return("exclude: performance test (K40 non-performance)")
+  if (grepl(exposure_regex, key, ignore.case = TRUE)) return("exclude: primary exposure")
   if (grepl(outcome_regex, key, ignore.case = TRUE)) return("outcome_or_component")
   if (grepl(derived_construct_regex, key, ignore.case = TRUE)) return("derived_frailty_construct")
   if (grepl(admin_regex, key, ignore.case = TRUE)) return("administrative_or_non_deficit")
-  if (grepl("age|ikä|sex|gender|sukupuoli", key, ignore.case = TRUE)) return("demographic_non_deficit")
+  if (grepl("age|ikä|sex|gender|sukupuoli", key, ignore.case = TRUE)) return("exclude: demographic non-deficit")
+  if (grepl("kaatumisen|fear\\s*of\\s*falling|\\bfof\\b", key, ignore.case = TRUE)) return("exclude: outcome/exposure (FOF)")
+  if (isTRUE(exclude_falls_by_label) && grepl("\\bkaatuminen\\b|\\bfalls?\\b", key, ignore.case = TRUE)) return("exclude: falls history (sensitivity-safe)")
+  if (grepl("tupak|smok|alkohol|alcohol|liikuntaharr|physical\\s*activity|exercise", key, ignore.case = TRUE)) return("exclude: lifestyle exposure (not a deficit)")
+  if (grepl("vanhemp|\\bsiblings?\\b|sisaru", key, ignore.case = TRUE)) return("exclude: non-health/background variable")
   NA_character_
 }
 
@@ -778,6 +784,7 @@ saveRDS(patient_out, external_rds)
 
 receipt_lines <- c(
   sprintf("timestamp=%s", format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
+  sprintf("run_id=%s", run_id),
   sprintf("input_relpath=%s", xlsx_rel),
   sprintf("sheet_selected=%s", sheet_use),
   sprintf("baseline_filter_used=%s", as.character(baseline_rule_used)),
@@ -799,6 +806,7 @@ write_agg_txt(receipt_lines, "k40_kaaos_patient_level_output_receipt.txt", notes
 # Decision log (no absolute paths)
 log_lines <- c(
   sprintf("timestamp=%s", format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
+  sprintf("run_id=%s", run_id),
   sprintf("input_relpath=%s", xlsx_rel),
   sprintf("sheet_selected=%s", sheet_use),
   sprintf("baseline_filter_used=%s", as.character(baseline_rule_used)),
@@ -809,6 +817,7 @@ log_lines <- c(
   sprintf("n_labels_captured=%d", n_labels_captured),
   sprintf("scrub_enabled=%s", as.character(scrub_label_contamination_enabled)),
   sprintf("scrub_values_replaced=%d", scrub_values_replaced),
+  sprintf("exclude_falls_by_label=%s", as.character(exclude_falls_by_label)),
   sprintf("helpers_origin=%s", helpers_origin),
   sprintf("primary_missingness_threshold=%.2f", pmiss_thr_primary),
   sprintf("sensitivity_missingness_threshold=%.2f", pmiss_thr_sensitivity),
