@@ -317,6 +317,68 @@ N_deficits_min <- 10L
 use_proportional_min_deficits <- FALSE
 min_deficits_prop <- 0.80
 run_optional_diagnostics <- TRUE
+scrub_label_contamination_enabled <- TRUE
+scrub_label_max_share <- 0.01
+
+# Filled after sheet read; used by exclusion/domain/priority helpers.
+var_labels <- list()
+
+detect_label_row <- function(df, id_col) {
+  if (nrow(df) == 0 || is.na(id_col) || !(id_col %in% names(df))) {
+    return(list(detected = FALSE, id_token = NA_character_, labelish_hits = 0L))
+  }
+
+  first_row <- df[1, , drop = FALSE]
+  id_token <- tolower(trimws(as.character(first_row[[id_col]][1])))
+  id_ok <- id_token %in% c("nro", "id", "participant", "participant_id", "subject", "subject_id")
+
+  other_cols <- setdiff(names(df), id_col)
+  other_vals <- trimws(as.character(first_row[1, other_cols, drop = TRUE]))
+  labelish_hits <- sum(
+    !is.na(other_vals) &
+      (
+        nchar(other_vals) >= 20 |
+        grepl("0\\s*=|1\\s*=|2\\s*=", other_vals, perl = TRUE)
+      )
+  )
+
+  list(detected = isTRUE(id_ok && labelish_hits >= 2), id_token = id_token, labelish_hits = as.integer(labelish_hits))
+}
+
+capture_var_labels <- function(df_row) {
+  out <- list()
+  for (vn in names(df_row)) {
+    val <- trimws(as.character(df_row[[vn]][1]))
+    if (!is.na(val) && nzchar(val)) out[[vn]] <- val
+  }
+  out
+}
+
+scrub_label_contamination <- function(df, labels, enabled = TRUE, max_share = 0.01) {
+  if (!enabled || length(labels) == 0) return(list(df = df, n_replaced = 0L))
+
+  n_replaced <- 0L
+  for (vn in names(labels)) {
+    if (!(vn %in% names(df))) next
+    lbl <- trimws(as.character(labels[[vn]]))
+    if (!nzchar(lbl)) next
+    x <- as.character(df[[vn]])
+    hit <- !is.na(x) & trimws(x) == lbl
+    share <- if (length(x) > 0) mean(hit) else 0
+    if (share > 0 && share <= max_share) {
+      df[[vn]][hit] <- NA
+      n_replaced <- n_replaced + sum(hit)
+    }
+  }
+
+  list(df = df, n_replaced = as.integer(n_replaced))
+}
+
+var_label <- function(vn) {
+  lbl <- var_labels[[vn]]
+  if (is.null(lbl) || !nzchar(trimws(lbl))) return(vn)
+  tolower(trimws(as.character(lbl)))
+}
 
 score_binary_safe <- function(x) {
   if (is.logical(x)) return(ifelse(is.na(x), NA_real_, ifelse(x, 1, 0)))
@@ -389,18 +451,20 @@ score_deficit <- function(x, var_name, var_type) {
 }
 
 domain_label <- function(var_name) {
-  if (grepl("comorb|diag|disease|icd|sairaus", var_name, ignore.case = TRUE)) return("comorbidity")
-  if (grepl("adl|iadl|toimintakyky|limitation|difficulty|rajoit", var_name, ignore.case = TRUE)) return("functional")
-  if (grepl("fatigue|exhaust|uup|weight|appetite|pain|symptom|self_rated|energy", var_name, ignore.case = TRUE)) return("symptom")
-  if (grepl("med|drug|rx|laake|medication", var_name, ignore.case = TRUE)) return("medication_proxy")
-  paste0("other_", substr(var_name, 1, 20))
+  key <- paste(var_name, var_label(var_name))
+  if (grepl("comorb|diag|disease|icd|sairaus", key, ignore.case = TRUE)) return("comorbidity")
+  if (grepl("adl|iadl|toimintakyky|limitation|difficulty|rajoit", key, ignore.case = TRUE)) return("functional")
+  if (grepl("fatigue|exhaust|uup|weight|appetite|pain|symptom|self_rated|energy", key, ignore.case = TRUE)) return("symptom")
+  if (grepl("med|drug|rx|laake|medication", key, ignore.case = TRUE)) return("medication_proxy")
+  paste0("other_", substr(clean_names_simple(var_label(var_name)), 1, 20))
 }
 
 priority_rank <- function(var_name) {
-  if (grepl("diag|doctor|icd|disease|sairaus|comorb", var_name, ignore.case = TRUE)) return(1L)
-  if (grepl("adl|iadl|toimintakyky|limitation|difficulty|rajoit", var_name, ignore.case = TRUE)) return(2L)
-  if (grepl("symptom|fatigue|exhaust|uup|weight|appetite|pain|self_rated|energy", var_name, ignore.case = TRUE)) return(3L)
-  if (grepl("med|drug|rx|laake|medication", var_name, ignore.case = TRUE)) return(4L)
+  key <- paste(var_name, var_label(var_name))
+  if (grepl("diag|doctor|icd|disease|sairaus|comorb", key, ignore.case = TRUE)) return(1L)
+  if (grepl("adl|iadl|toimintakyky|limitation|difficulty|rajoit", key, ignore.case = TRUE)) return(2L)
+  if (grepl("symptom|fatigue|exhaust|uup|weight|appetite|pain|self_rated|energy", key, ignore.case = TRUE)) return(3L)
+  if (grepl("med|drug|rx|laake|medication", key, ignore.case = TRUE)) return(4L)
   5L
 }
 
@@ -430,6 +494,27 @@ id_resolved <- resolve_id_column(base_df)
 id_col <- id_resolved$col
 id_resolution_method <- id_resolved$method
 
+label_row_info <- detect_label_row(base_df, id_col)
+label_row_detected <- label_row_info$detected
+label_row_removed <- FALSE
+if (label_row_detected && nrow(base_df) >= 1) {
+  var_labels <- capture_var_labels(base_df[1, , drop = FALSE])
+  base_df <- base_df[-1, , drop = FALSE]
+  label_row_removed <- TRUE
+} else {
+  var_labels <- list()
+}
+n_labels_captured <- length(var_labels)
+
+scrub_res <- scrub_label_contamination(
+  base_df,
+  labels = var_labels,
+  enabled = scrub_label_contamination_enabled,
+  max_share = scrub_label_max_share
+)
+base_df <- scrub_res$df
+scrub_values_replaced <- scrub_res$n_replaced
+
 # If long, keep baseline deterministically (baseline/bl/0/0m/m0/t0).
 time_col <- find_col(names(base_df), c("time", "timepoint", "visit", "aika"))
 baseline_rule_used <- FALSE
@@ -458,11 +543,13 @@ derived_construct_regex <- "^frailty_|^frailty_index|^fi$|^fi_z$"
 admin_regex <- "^id$|^time$|^visit$|^aika$|capacity_score"
 
 exclusion_reason <- function(vn) {
-  if (grepl(perf_regex, vn, ignore.case = TRUE)) return("performance_test_pattern")
-  if (grepl(exposure_regex, vn, ignore.case = TRUE)) return("primary_exposure")
-  if (grepl(outcome_regex, vn, ignore.case = TRUE)) return("outcome_or_component")
-  if (grepl(derived_construct_regex, vn, ignore.case = TRUE)) return("derived_frailty_construct")
-  if (grepl(admin_regex, vn, ignore.case = TRUE)) return("administrative_or_non_deficit")
+  key <- paste(vn, var_label(vn))
+  if (grepl(perf_regex, key, ignore.case = TRUE)) return("performance_test_pattern")
+  if (grepl(exposure_regex, key, ignore.case = TRUE)) return("primary_exposure")
+  if (grepl(outcome_regex, key, ignore.case = TRUE)) return("outcome_or_component")
+  if (grepl(derived_construct_regex, key, ignore.case = TRUE)) return("derived_frailty_construct")
+  if (grepl(admin_regex, key, ignore.case = TRUE)) return("administrative_or_non_deficit")
+  if (grepl("age|ikä|sex|gender|sukupuoli", key, ignore.case = TRUE)) return("demographic_non_deficit")
   NA_character_
 }
 
@@ -717,6 +804,11 @@ log_lines <- c(
   sprintf("baseline_filter_used=%s", as.character(baseline_rule_used)),
   sprintf("id_col=%s", id_col),
   sprintf("id_resolution_method=%s", id_resolution_method),
+  sprintf("label_row_detected=%s", as.character(label_row_detected)),
+  sprintf("label_row_removed=%s", as.character(label_row_removed)),
+  sprintf("n_labels_captured=%d", n_labels_captured),
+  sprintf("scrub_enabled=%s", as.character(scrub_label_contamination_enabled)),
+  sprintf("scrub_values_replaced=%d", scrub_values_replaced),
   sprintf("helpers_origin=%s", helpers_origin),
   sprintf("primary_missingness_threshold=%.2f", pmiss_thr_primary),
   sprintf("sensitivity_missingness_threshold=%.2f", pmiss_thr_sensitivity),
