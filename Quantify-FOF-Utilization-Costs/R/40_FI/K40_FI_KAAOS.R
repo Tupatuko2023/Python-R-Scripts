@@ -272,6 +272,18 @@ infer_type <- function(x) {
   if (nlev <= 1) return("constant")
   if (nlev == 2) return("binary")
   if (is.factor(x) || is.character(x)) {
+    # If character/factor is mostly numeric-like, treat it as numeric for FI typing.
+    xn <- suppressWarnings(as.numeric(as.character(x)))
+    n_nonmissing <- sum(!is.na(x))
+    n_numeric <- sum(!is.na(xn))
+    if (n_nonmissing > 0 && n_numeric >= floor(0.8 * n_nonmissing)) {
+      xnn <- xn[!is.na(xn)]
+      nlev_num <- length(unique(xnn))
+      if (nlev_num <= 1) return("constant")
+      if (nlev_num == 2) return("binary")
+      if (all(abs(xnn - round(xnn)) < 1e-9) && nlev_num <= 10) return("ordinal")
+      return("continuous")
+    }
     if (nlev <= 10) return("ordinal")
     return("categorical")
   }
@@ -302,8 +314,10 @@ reverse_coded_by_lineage <- c(
 )
 
 continuous_thresholds <- list(
-  # Keep empty until there is a documented cutoff + direction rule.
-  # Example: some_cont_var = list(cutoff = 0.0, direction = "lower_worse")
+  # FI_v5 deterministic non-performance continuous deficits (source var ids from KAAOS labels).
+  # 15 = BMI (kg/m^2), 38 = TK: VAS (cm; 0-10 scale in label context)
+  "15" = list(cutoff = c(18.5, 30.0), direction = "outside_range"),
+  "38" = list(cutoff = 7.0, direction = "higher_worse")
 )
 
 # --- Deterministic FI configuration ---------------------------------------------------
@@ -377,6 +391,14 @@ scrub_label_contamination <- function(df, labels, enabled = TRUE, max_share = 0.
   list(df = df, n_replaced = as.integer(n_replaced))
 }
 
+recode_sentinel_missing <- function(x) {
+  # KAAOS uses E/E1 style sentinels for unknown/non-assessable values.
+  if (!(is.character(x) || is.factor(x))) return(x)
+  xc <- trimws(as.character(x))
+  xc[xc %in% c("E", "E1", "e", "e1")] <- NA_character_
+  xc
+}
+
 var_label <- function(vn) {
   lbl <- var_labels[[vn]]
   if (is.null(lbl) || !nzchar(trimws(lbl))) return(vn)
@@ -447,6 +469,11 @@ score_deficit <- function(x, var_name, var_type) {
     xn <- coerce_numeric(x)
     if (rule$direction == "lower_worse") return(ifelse(is.na(xn), NA_real_, ifelse(xn <= rule$cutoff, 1, 0)))
     if (rule$direction == "higher_worse") return(ifelse(is.na(xn), NA_real_, ifelse(xn >= rule$cutoff, 1, 0)))
+    if (rule$direction == "outside_range" && length(rule$cutoff) == 2) {
+      lo <- min(rule$cutoff)
+      hi <- max(rule$cutoff)
+      return(ifelse(is.na(xn), NA_real_, ifelse(xn < lo | xn >= hi, 1, 0)))
+    }
     return(rep(NA_real_, length(x)))
   }
 
@@ -542,6 +569,9 @@ base_df <- base_df %>%
   slice(1L) %>%
   ungroup()
 
+# Recode known sentinel codes before inventory/type inference.
+base_df <- base_df %>% mutate(across(everything(), recode_sentinel_missing))
+
 # -----------------------------------------------------------------------------
 # 2) Candidate inventory and exclusions (same deterministic rules as k40.r)
 # -----------------------------------------------------------------------------
@@ -603,6 +633,29 @@ candidate_inventory <- lapply(candidate_names, function(vn) {
   )
 }) %>% bind_rows()
 write_agg_csv(candidate_inventory, "k40_kaaos_candidate_inventory.csv", notes = "Candidate inventory after hard exclusions (KAAOS)")
+
+# Numeric candidate diagnostics to support documented continuous cutoff expansion.
+numeric_candidates <- lapply(candidate_names, function(vn) {
+  x_raw <- base_df[[vn]]
+  x_num <- suppressWarnings(as.numeric(as.character(x_raw)))
+  n_nonmissing <- sum(!is.na(x_raw))
+  n_numeric <- sum(!is.na(x_num))
+  p_numeric <- if (n_nonmissing > 0) n_numeric / n_nonmissing else NA_real_
+  tibble(
+    var_name = vn,
+    label = var_label(vn),
+    n_nonmissing = n_nonmissing,
+    n_numeric = n_numeric,
+    p_numeric = p_numeric,
+    min = suppressWarnings(min(x_num, na.rm = TRUE)),
+    median = suppressWarnings(median(x_num, na.rm = TRUE)),
+    p95 = suppressWarnings(as.numeric(quantile(x_num, probs = 0.95, na.rm = TRUE))),
+    max = suppressWarnings(max(x_num, na.rm = TRUE))
+  )
+}) %>% bind_rows() %>%
+  mutate(across(c(min, median, p95, max), ~ ifelse(is.infinite(.x), NA_real_, .x))) %>%
+  arrange(desc(p_numeric), var_name)
+write_agg_csv(numeric_candidates, "k40_kaaos_numeric_candidates.csv", notes = "Numeric candidate diagnostics for continuous cutoff registry")
 
 # -----------------------------------------------------------------------------
 # 3) Deterministic screening + sensitivity + redundancy
