@@ -9,6 +9,8 @@
 #
 # Data Source (Option B):
 #   ${DATA_ROOT}/paper_02/KAAOS_data.xlsx   (RAW XLSX; do not use Kaatumisenpelko.csv)
+# Optional override if ID column header is ambiguous:
+#   export ID_COL="...1"
 #
 # Outputs + manifest (repo-local, aggregated only):
 #   - outputs dir: (init_paths(script_label))
