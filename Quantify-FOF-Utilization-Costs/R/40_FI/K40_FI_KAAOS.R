@@ -305,26 +305,73 @@ continuous_thresholds <- list(
   # Example: some_cont_var = list(cutoff = 0.0, direction = "lower_worse")
 )
 
+# --- Deterministic FI configuration ---------------------------------------------------
+pmiss_thr_primary <- 0.20
+pmiss_thr_sensitivity <- 0.30
+prev_min <- 0.01
+prev_max <- 0.80
+target_n_deficits <- 40L
+max_per_domain <- 12L
+coverage_min <- 0.60
+N_deficits_min <- 10L
+use_proportional_min_deficits <- FALSE
+min_deficits_prop <- 0.80
+run_optional_diagnostics <- TRUE
+
+score_binary_safe <- function(x) {
+  if (is.logical(x)) return(ifelse(is.na(x), NA_real_, ifelse(x, 1, 0)))
+
+  xn <- suppressWarnings(as.numeric(as.character(x)))
+  if (sum(!is.na(xn)) >= floor(0.8 * sum(!is.na(x)))) {
+    vals <- sort(unique(xn[!is.na(xn)]))
+    if (length(vals) != 2) return(rep(NA_real_, length(x)))
+    if (all(vals %in% c(0, 1))) return(ifelse(is.na(xn), NA_real_, xn))
+    if (all(vals %in% c(1, 2))) return(ifelse(is.na(xn), NA_real_, ifelse(xn == 2, 1, 0)))
+    return(rep(NA_real_, length(x)))
+  }
+
+  xc <- tolower(trimws(as.character(x)))
+  yes <- c("yes", "y", "kylla", "kyl", "1", "true")
+  no <- c("no", "n", "ei", "0", "false")
+  if (all(na.omit(unique(xc)) %in% c(yes, no))) {
+    return(ifelse(is.na(xc), NA_real_, ifelse(xc %in% yes, 1, 0)))
+  }
+
+  rep(NA_real_, length(x))
+}
+
+ordinal_to_0_1 <- function(x) {
+  xn <- suppressWarnings(as.numeric(as.character(x)))
+  ok_num <- sum(!is.na(xn)) >= floor(0.8 * sum(!is.na(x)))
+  if (ok_num) {
+    vals <- sort(unique(xn[!is.na(xn)]))
+    if (length(vals) < 3) return(rep(NA_real_, length(x)))
+    pos <- match(xn, vals)
+    out <- (pos - 1) / (length(vals) - 1)
+    out[is.na(x)] <- NA_real_
+    return(out)
+  }
+
+  xf <- factor(as.character(x))
+  levs <- levels(xf)
+  if (length(levs) < 3) return(rep(NA_real_, length(x)))
+  out <- (as.numeric(xf) - 1) / (length(levs) - 1)
+  out[is.na(x)] <- NA_real_
+  attr(out, "ordinal_ordering") <- "alphabetical_fallback_NEEDS_REVIEW"
+  out
+}
+
 score_deficit <- function(x, var_name, var_type) {
   reverse_dir <- var_name %in% reverse_coded_by_lineage
 
   if (var_type == "binary") {
-    vals <- sort(unique(x[!is.na(x)]))
-    if (length(vals) != 2) return(rep(NA_real_, length(x)))
-    xn <- coerce_numeric(x)
-    valsn <- sort(unique(xn[!is.na(xn)]))
-    out <- ifelse(is.na(xn), NA_real_, ifelse(xn == max(valsn), 1, 0))
+    out <- score_binary_safe(x)
     if (reverse_dir) out <- ifelse(is.na(out), NA_real_, 1 - out)
     return(out)
   }
 
   if (var_type == "ordinal") {
-    xf <- if (is.factor(x)) x else factor(x)
-    levs <- levels(xf)
-    if (length(levs) < 3) return(rep(NA_real_, length(x)))
-    r <- as.numeric(xf)
-    out <- (r - 1) / (length(levs) - 1)
-    out[is.na(xf)] <- NA_real_
+    out <- ordinal_to_0_1(x)
     if (reverse_dir) out <- ifelse(is.na(out), NA_real_, 1 - out)
     return(out)
   }
@@ -441,6 +488,7 @@ candidate_inventory <- lapply(candidate_names, function(vn) {
   vtype <- infer_type(x)
   d <- score_deficit(x, vn, vtype)
   prev <- if (vtype == "binary") mean(d == 1, na.rm = TRUE) else NA_real_
+  ord_flag <- if (!is.null(attr(d, "ordinal_ordering"))) attr(d, "ordinal_ordering") else NA_character_
   tibble(
     var_name = vn,
     type = vtype,
@@ -450,7 +498,8 @@ candidate_inventory <- lapply(candidate_names, function(vn) {
     prevalence = prev,
     n_levels = length(unique(x[!is.na(x)])),
     top_levels = mode_top_levels(x),
-    direction_rule = ifelse(vn %in% reverse_coded_by_lineage, "reverse_by_codebook_lineage", "as_coded")
+    direction_rule = ifelse(vn %in% reverse_coded_by_lineage, "reverse_by_codebook_lineage", "as_coded"),
+    ordinal_ordering_flag = ord_flag
   )
 }) %>% bind_rows()
 write_agg_csv(candidate_inventory, "k40_kaaos_candidate_inventory.csv", notes = "Candidate inventory after hard exclusions (KAAOS)")
@@ -462,7 +511,7 @@ eligibility_core <- function(df, miss_thr) {
   df %>%
     mutate(
       miss_ok = p_miss <= miss_thr,
-      binary_ok = ifelse(type == "binary", !is.na(prevalence) & prevalence >= 0.01 & prevalence <= 0.80, TRUE),
+      binary_ok = ifelse(type == "binary", !is.na(prevalence) & prevalence >= prev_min & prevalence <= prev_max, TRUE),
       ordinal_ok = ifelse(type == "ordinal", n_levels >= 3, TRUE),
       continuous_ok = ifelse(type == "continuous", var_name %in% names(continuous_thresholds), TRUE),
       type_ok = type %in% c("binary", "ordinal", "continuous"),
@@ -470,23 +519,27 @@ eligibility_core <- function(df, miss_thr) {
     )
 }
 
-primary_screen <- eligibility_core(candidate_inventory, miss_thr = 0.20)
+primary_screen <- eligibility_core(candidate_inventory, miss_thr = pmiss_thr_primary)
 primary_eligible <- primary_screen %>% filter(eligible)
 
 use_sensitivity <- nrow(primary_eligible) < 10
-active_screen <- if (use_sensitivity) eligibility_core(candidate_inventory, miss_thr = 0.30) else primary_screen
+active_screen <- if (use_sensitivity) eligibility_core(candidate_inventory, miss_thr = pmiss_thr_sensitivity) else primary_screen
 eligible <- active_screen %>% filter(eligible)
 
-selected <- eligible %>%
+ranked <- eligible %>%
   mutate(
     domain = vapply(var_name, domain_label, character(1)),
     priority = vapply(var_name, priority_rank, integer(1))
   ) %>%
-  arrange(domain, priority, p_miss, var_name) %>%
+  arrange(priority, p_miss, var_name) %>%
   group_by(domain) %>%
-  slice(1L) %>%
-  ungroup() %>%
-  arrange(priority, p_miss, var_name)
+  mutate(domain_rank = row_number()) %>%
+  ungroup()
+
+selected <- ranked %>%
+  filter(domain_rank <= max_per_domain) %>%
+  arrange(priority, p_miss, var_name) %>%
+  slice_head(n = target_n_deficits)
 
 write_agg_csv(
   selected %>% select(var_name, type, p_miss, prevalence, domain, priority, direction_rule),
@@ -503,9 +556,6 @@ write_agg_csv(
 # -----------------------------------------------------------------------------
 # 4) Compute FI (0-1) and FI_z with fixed thresholds
 # -----------------------------------------------------------------------------
-N_deficits_min <- 10L
-coverage_min <- 0.60
-
 score_df <- tibble(id = base_df[[id_col]])
 for (vn in selected$var_name) {
   vtype <- selected$type[selected$var_name == vn]
@@ -514,6 +564,11 @@ for (vn in selected$var_name) {
 
 deficit_cols <- grep("^d_", names(score_df), value = TRUE)
 n_deficits <- length(deficit_cols)
+min_deficits_required <- if (use_proportional_min_deficits) {
+  max(N_deficits_min, as.integer(ceiling(min_deficits_prop * n_deficits)))
+} else {
+  N_deficits_min
+}
 
 if (n_deficits == 0) {
   score_df$fi <- NA_real_
@@ -527,7 +582,7 @@ if (n_deficits == 0) {
   fi_raw <- rowMeans(score_df[, deficit_cols, drop = FALSE], na.rm = TRUE)
   fi_raw[!is.finite(fi_raw)] <- NA_real_
 
-  fi_eligible <- coverage >= coverage_min & observed_counts >= N_deficits_min
+  fi_eligible <- coverage >= coverage_min & observed_counts >= min_deficits_required
   fi <- ifelse(fi_eligible, fi_raw, NA_real_)
   fi_z <- as.numeric(scale(fi))
 
@@ -556,10 +611,53 @@ fi_summary <- tibble(
 )
 write_agg_csv(fi_summary, "k40_kaaos_fi_distribution_summary.csv", notes = "FI and FI_z aggregate distribution summary (KAAOS)")
 
+if (run_optional_diagnostics && n_deficits > 0) {
+  q <- quantile(score_df$fi, probs = c(0.50, 0.75, 0.90, 0.95, 0.99), na.rm = TRUE, names = TRUE)
+  ceiling_checks <- tibble(
+    metric = c(names(q), "p_over_0_70", "p_over_0_66"),
+    value = c(as.numeric(q), mean(score_df$fi > 0.70, na.rm = TRUE), mean(score_df$fi > 0.66, na.rm = TRUE))
+  )
+  write_agg_csv(ceiling_checks, "k40_kaaos_fi_ceiling_checks.csv", notes = "Ceiling/submaximal checks (aggregated)")
+
+  domain_balance <- selected %>% count(domain, sort = TRUE)
+  write_agg_csv(domain_balance, "k40_kaaos_domain_balance.csv", notes = "Selected deficit counts by domain")
+
+  dmat <- score_df[, deficit_cols, drop = FALSE]
+  cm <- suppressWarnings(cor(dmat, use = "pairwise.complete.obs"))
+  if (is.matrix(cm) && ncol(cm) >= 2) {
+    pairs <- which(abs(cm) >= 0.80 & upper.tri(cm), arr.ind = TRUE)
+    redund <- if (nrow(pairs) == 0) {
+      tibble(var1 = character(), var2 = character(), cor = numeric())
+    } else {
+      tibble(var1 = colnames(cm)[pairs[, 1]], var2 = colnames(cm)[pairs[, 2]], cor = cm[pairs])
+    }
+    write_agg_csv(redund, "k40_kaaos_redundancy_cor_pairs_ge_0_80.csv", notes = "Potential redundant deficit pairs (|r|>=0.80)")
+  }
+
+  if ("age" %in% names(base_df)) {
+    tmp_age <- tibble(age = suppressWarnings(as.numeric(base_df$age)), fi = score_df$fi) %>%
+      filter(!is.na(age), !is.na(fi))
+    if (nrow(tmp_age) >= 30) {
+      fit <- lm(fi ~ age, data = tmp_age)
+      age_grad <- tibble(
+        metric = c("n", "beta_age", "se_age", "p_age", "r2"),
+        value = c(
+          nrow(tmp_age),
+          coef(summary(fit))["age", "Estimate"],
+          coef(summary(fit))["age", "Std. Error"],
+          coef(summary(fit))["age", "Pr(>|t|)"],
+          summary(fit)$r.squared
+        )
+      )
+      write_agg_csv(age_grad, "k40_kaaos_age_gradient_lm.csv", notes = "FI ~ age (aggregated)")
+    }
+  }
+}
+
 red_flags <- bind_rows(
   tibble(flag = "rows_below_coverage_or_min_deficits",
          value = sum(!score_df$fi_eligible, na.rm = TRUE),
-         detail = sprintf("coverage_min=%.2f;N_deficits_min=%d", coverage_min, N_deficits_min)),
+         detail = sprintf("coverage_min=%.2f;N_deficits_min=%d;min_deficits_required=%d", coverage_min, N_deficits_min, min_deficits_required)),
   tibble(flag = "selected_deficits_lt_10",
          value = as.integer(n_deficits < 10),
          detail = sprintf("selected_deficits=%d", n_deficits)),
@@ -568,7 +666,10 @@ red_flags <- bind_rows(
          detail = ifelse(use_sensitivity, "primary eligible deficits < 10", "primary branch sufficient")),
   tibble(flag = "fi_all_na",
          value = as.integer(all(is.na(score_df$fi))),
-         detail = "All rows NA after eligibility gate")
+         detail = "All rows NA after eligibility gate"),
+  tibble(flag = "continuous_thresholds_defined",
+         value = length(continuous_thresholds),
+         detail = "Count of continuous thresholds available")
 )
 write_agg_csv(red_flags, "k40_kaaos_red_flags.csv", notes = "Deterministic red flag checks (KAAOS)")
 
@@ -603,6 +704,7 @@ receipt_lines <- c(
   sprintf("n_selected_deficits=%d", n_deficits),
   sprintf("coverage_min=%.2f", coverage_min),
   sprintf("N_deficits_min=%d", N_deficits_min),
+  sprintf("min_deficits_required=%d", min_deficits_required),
   "governance=patient-level outputs written only under DATA_ROOT"
 )
 write_agg_txt(receipt_lines, "k40_kaaos_patient_level_output_receipt.txt", notes = "External patient-level output receipt (KAAOS)")
@@ -616,12 +718,16 @@ log_lines <- c(
   sprintf("id_col=%s", id_col),
   sprintf("id_resolution_method=%s", id_resolution_method),
   sprintf("helpers_origin=%s", helpers_origin),
-  sprintf("primary_missingness_threshold=%.2f", 0.20),
-  sprintf("sensitivity_missingness_threshold=%.2f", 0.30),
+  sprintf("primary_missingness_threshold=%.2f", pmiss_thr_primary),
+  sprintf("sensitivity_missingness_threshold=%.2f", pmiss_thr_sensitivity),
   sprintf("used_sensitivity=%s", as.character(use_sensitivity)),
   sprintf("eligible_deficits_primary=%d", nrow(primary_eligible)),
   sprintf("selected_deficits=%d", n_deficits),
+  sprintf("target_n_deficits=%d", target_n_deficits),
+  sprintf("max_per_domain=%d", max_per_domain),
   sprintf("N_deficits_min=%d", N_deficits_min),
+  sprintf("min_deficits_required=%d", min_deficits_required),
+  sprintf("use_proportional_min_deficits=%s", as.character(use_proportional_min_deficits)),
   sprintf("coverage_min=%.2f", coverage_min),
   "direction_rule=no_correlation_driven_flipping;codebook_or_lineage_only",
   "redundancy_rule=diagnosis>functional_limitation>symptom_self_report>medication_proxy"
