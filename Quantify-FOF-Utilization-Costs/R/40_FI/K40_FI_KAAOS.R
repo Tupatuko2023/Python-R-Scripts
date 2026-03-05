@@ -309,6 +309,7 @@ continuous_thresholds <- list(
 # --- Deterministic FI configuration ---------------------------------------------------
 pmiss_thr_primary <- 0.20
 pmiss_thr_sensitivity <- 0.30
+try_sensitivity_if_selected_lt <- 30L
 prev_min <- 0.01
 prev_max <- 0.80
 target_n_deficits <- 40L
@@ -507,6 +508,12 @@ if (label_row_detected && nrow(base_df) >= 1) {
   var_labels <- list()
 }
 n_labels_captured <- length(var_labels)
+var_labels_df <- if (n_labels_captured > 0) {
+  tibble(var_name = names(var_labels), label = unlist(var_labels, use.names = FALSE))
+} else {
+  tibble(var_name = character(), label = character())
+}
+write_agg_csv(var_labels_df, "k40_kaaos_var_labels.csv", notes = "Captured label row mapping (aggregate metadata)")
 
 scrub_res <- scrub_label_contamination(
   base_df,
@@ -615,24 +622,34 @@ eligibility_core <- function(df, miss_thr) {
 primary_screen <- eligibility_core(candidate_inventory, miss_thr = pmiss_thr_primary)
 primary_eligible <- primary_screen %>% filter(eligible)
 
-use_sensitivity <- nrow(primary_eligible) < 10
-active_screen <- if (use_sensitivity) eligibility_core(candidate_inventory, miss_thr = pmiss_thr_sensitivity) else primary_screen
-eligible <- active_screen %>% filter(eligible)
+select_deficits <- function(screen_df) {
+  screen_df %>%
+    filter(eligible) %>%
+    mutate(
+      domain = vapply(var_name, domain_label, character(1)),
+      priority = vapply(var_name, priority_rank, integer(1))
+    ) %>%
+    arrange(priority, p_miss, var_name) %>%
+    group_by(domain) %>%
+    mutate(domain_rank = row_number()) %>%
+    ungroup() %>%
+    filter(domain_rank <= max_per_domain) %>%
+    arrange(priority, p_miss, var_name) %>%
+    slice_head(n = target_n_deficits)
+}
 
-ranked <- eligible %>%
-  mutate(
-    domain = vapply(var_name, domain_label, character(1)),
-    priority = vapply(var_name, priority_rank, integer(1))
-  ) %>%
-  arrange(priority, p_miss, var_name) %>%
-  group_by(domain) %>%
-  mutate(domain_rank = row_number()) %>%
-  ungroup()
+selected_primary <- select_deficits(primary_screen)
+augmentation_used <- nrow(selected_primary) < try_sensitivity_if_selected_lt
+use_sensitivity <- augmentation_used
+pmiss_thr_used <- if (augmentation_used) pmiss_thr_sensitivity else pmiss_thr_primary
 
-selected <- ranked %>%
-  filter(domain_rank <= max_per_domain) %>%
-  arrange(priority, p_miss, var_name) %>%
-  slice_head(n = target_n_deficits)
+active_screen <- if (augmentation_used) {
+  eligibility_core(candidate_inventory, miss_thr = pmiss_thr_sensitivity)
+} else {
+  primary_screen
+}
+
+selected <- select_deficits(active_screen)
 
 write_agg_csv(
   selected %>% select(var_name, type, p_miss, prevalence, domain, priority, direction_rule),
@@ -756,7 +773,9 @@ red_flags <- bind_rows(
          detail = sprintf("selected_deficits=%d", n_deficits)),
   tibble(flag = "used_missingness_sensitivity_pmiss_0_30",
          value = as.integer(use_sensitivity),
-         detail = ifelse(use_sensitivity, "primary eligible deficits < 10", "primary branch sufficient")),
+         detail = ifelse(use_sensitivity,
+                         sprintf("selected_primary_lt_%d", try_sensitivity_if_selected_lt),
+                         "primary branch sufficient")),
   tibble(flag = "fi_all_na",
          value = as.integer(all(is.na(score_df$fi))),
          detail = "All rows NA after eligibility gate"),
@@ -818,6 +837,9 @@ log_lines <- c(
   sprintf("scrub_enabled=%s", as.character(scrub_label_contamination_enabled)),
   sprintf("scrub_values_replaced=%d", scrub_values_replaced),
   sprintf("exclude_falls_by_label=%s", as.character(exclude_falls_by_label)),
+  sprintf("augmentation_used=%s", as.character(augmentation_used)),
+  sprintf("pmiss_thr_used=%.2f", pmiss_thr_used),
+  sprintf("try_sensitivity_if_selected_lt=%d", try_sensitivity_if_selected_lt),
   sprintf("helpers_origin=%s", helpers_origin),
   sprintf("primary_missingness_threshold=%.2f", pmiss_thr_primary),
   sprintf("sensitivity_missingness_threshold=%.2f", pmiss_thr_sensitivity),
