@@ -72,3 +72,8 @@ docs/plans/
 manifest/renv_diagnostics_*.txt
 manifest/run_meta_*.txt
 manifest/sessionInfo_*.txt
+k40_phase*.log
+k40_*.log
+env_probe.log
+probe*.out
+probe*.err
