@@ -160,6 +160,19 @@ Rscript K18.R
 - TODO: jos Kxx-skriptit sijaitsevat `R-scripts/Kxx/`, käytä sitä polkua ja
   varmista Kxx-konventiot (script_label + outputs/manifest).
 
+### K40 workstation note (mandatory on this machine)
+
+K40 on tällä työasemalla ajettava aina vanilla-eristyksessä, koska non-vanilla
+startup (`.Rprofile -> source("renv/activate.R")`) voi jumittaa ennen
+skriptin omaa suoritusta.
+
+```powershell
+$env:R_PROFILE_USER = "NUL"
+$env:R_ENVIRON_USER = "NUL"
+$env:DATA_ROOT      = "C:/GitWork/FOF_LOCAL_DATA"
+Rscript --vanilla .\R-scripts\K40\K40.V2_frailty-index.R
+```
+
 1. Raportti
 
 - Jos käytössä Quarto:
