@@ -1,0 +1,15 @@
+var_name,domain
+avh,disease_comorbidity
+kadet_apuna_noustessa,mobility_balance_falls
+n_low_activity_flags,mobility_balance_falls
+oma_arvio_liikuntakyky,mobility_balance_falls
+vaikeus_liikkua_2km,mobility_balance_falls
+vaikeus500m,mobility_balance_falls
+vaikeus_liikkua_500m,mobility_balance_falls
+muisti,cognition
+kuulo,sensory
+nako,sensory
+ravitsemus,nutrition_weight
+pituudenlyhentyma,nutrition_weight
+koettuterveydentila,symptoms_general
+srh,symptoms_general
