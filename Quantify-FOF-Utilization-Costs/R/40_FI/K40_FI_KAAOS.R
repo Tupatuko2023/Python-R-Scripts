@@ -320,6 +320,8 @@ base_continuous_thresholds <- list(
   "38" = list(cutoff = 7.0, direction = "higher_worse")
 )
 continuous_thresholds <- base_continuous_thresholds
+fi_variant <- "FI22_nonperformance_KAAOS"
+fi_variant_role <- "sensitivity_index"
 
 # --- Deterministic FI configuration ---------------------------------------------------
 pmiss_thr_primary <- 0.20
@@ -1072,6 +1074,9 @@ red_flags <- bind_rows(
   tibble(flag = "selected_deficits_lt_10",
          value = as.integer(n_deficits < 10),
          detail = sprintf("selected_deficits=%d", n_deficits)),
+  tibble(flag = "selected_deficits_lt_30",
+         value = as.integer(n_deficits < 30),
+         detail = sprintf("selected_deficits=%d", n_deficits)),
   tibble(flag = "used_missingness_sensitivity_pmiss_0_30",
          value = as.integer(use_sensitivity),
          detail = ifelse(use_sensitivity,
@@ -1128,6 +1133,8 @@ receipt_lines <- c(
   sprintf("md5_csv=%s", md5_file(external_csv)),
   sprintf("md5_rds=%s", md5_file(external_rds)),
   sprintf("n_selected_deficits=%d", n_deficits),
+  sprintf("fi_variant=%s", fi_variant),
+  sprintf("fi_variant_role=%s", fi_variant_role),
   sprintf("coverage_min=%.2f", coverage_min),
   sprintf("N_deficits_min=%d", N_deficits_min),
   sprintf("min_deficits_required=%d", min_deficits_required),
@@ -1157,6 +1164,8 @@ log_lines <- c(
   sprintf("deficit_map_path=%s", deficit_map_path),
   sprintf("deficit_map_loaded=%s", as.character(deficit_map_loaded)),
   sprintf("deficit_map_rows=%d", deficit_map_rows),
+  sprintf("fi_variant=%s", fi_variant),
+  sprintf("fi_variant_role=%s", fi_variant_role),
   sprintf("map_missing_codes_applied_n=%d", map_missing_codes_applied_n),
   sprintf("mapped_type_overrides_n=%d", mapped_type_overrides_n),
   sprintf("mapped_exclusions_n=%d", mapped_exclusions_n),
