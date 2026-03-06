@@ -343,6 +343,9 @@ var_labels <- list()
 deficit_map_path <- file.path("R", "40_FI", "deficit_map.csv")
 deficit_map_loaded <- FALSE
 deficit_map_rows <- 0L
+map_missing_codes_applied_n <- 0L
+mapped_type_overrides_n <- 0L
+mapped_exclusions_n <- 0L
 deficit_map <- tibble(
   var_name = character(),
   keep = character(),
@@ -354,6 +357,7 @@ deficit_map <- tibble(
   cutoff_low = numeric(),
   cutoff_high = numeric(),
   priority = integer(),
+  missing_codes = character(),
   exclude_reason = character(),
   notes = character()
 )
@@ -361,6 +365,14 @@ deficit_map <- tibble(
 parse_keep_bool <- function(x) {
   xc <- tolower(trimws(as.character(x)))
   xc %in% c("1", "true", "yes", "y", "keep")
+}
+
+normalize_token <- function(x) {
+  x <- tolower(trimws(as.character(x)))
+  x <- gsub("[^a-z0-9]+", "_", x)
+  x <- gsub("_+", "_", x)
+  x <- gsub("^_|_$", "", x)
+  x
 }
 
 read_deficit_map <- function(path) {
@@ -383,21 +395,22 @@ read_deficit_map <- function(path) {
     stop("deficit_map.csv must include columns: var_name, keep", call. = FALSE)
   }
 
-  for (cn in c("domain", "type", "direction", "cutoff", "cutoff_low", "cutoff_high", "priority", "exclude_reason", "notes")) {
+  for (cn in c("domain", "type", "direction", "cutoff", "cutoff_low", "cutoff_high", "priority", "missing_codes", "exclude_reason", "notes")) {
     if (!(cn %in% names(dm))) dm[[cn]] <- NA
   }
 
   dm <- dm %>%
     mutate(
-      var_name = clean_names_simple(var_name),
+      var_name = normalize_token(var_name),
       keep_bool = parse_keep_bool(keep),
-      domain = clean_names_simple(domain),
+      domain = normalize_token(domain),
       type = tolower(trimws(type)),
       direction = tolower(trimws(direction)),
+      missing_codes = trimws(missing_codes),
       exclude_reason = trimws(exclude_reason),
       notes = trimws(notes)
     ) %>%
-    select(var_name, keep, keep_bool, domain, type, direction, cutoff, cutoff_low, cutoff_high, priority, exclude_reason, notes)
+    select(var_name, keep, keep_bool, domain, type, direction, cutoff, cutoff_low, cutoff_high, priority, missing_codes, exclude_reason, notes)
 
   if (anyDuplicated(dm$var_name) > 0) {
     stop("deficit_map.csv has duplicate var_name entries; keep unique rows only.", call. = FALSE)
@@ -455,6 +468,36 @@ thresholds_from_map <- function(dm, valid_vars) {
     }
   }
   out
+}
+
+parse_missing_codes <- function(x) {
+  if (is.na(x) || !nzchar(x)) return(character())
+  parts <- unlist(strsplit(x, "\\|", fixed = FALSE))
+  parts <- trimws(parts)
+  unique(parts[nzchar(parts)])
+}
+
+apply_missing_codes_from_map <- function(df, dm) {
+  if (nrow(dm) == 0) return(list(df = df, n_replaced = 0L))
+  replaced <- 0L
+
+  rows <- dm %>% filter(var_name %in% names(df), !is.na(missing_codes), nzchar(missing_codes))
+  if (nrow(rows) == 0) return(list(df = df, n_replaced = 0L))
+
+  for (i in seq_len(nrow(rows))) {
+    vn <- rows$var_name[[i]]
+    miss_codes <- parse_missing_codes(rows$missing_codes[[i]])
+    if (length(miss_codes) == 0) next
+
+    x_chr <- trimws(as.character(df[[vn]]))
+    hit <- !is.na(x_chr) & x_chr %in% miss_codes
+    if (any(hit)) {
+      df[[vn]][hit] <- NA
+      replaced <- replaced + sum(hit)
+    }
+  }
+
+  list(df = df, n_replaced = as.integer(replaced))
 }
 
 detect_label_row <- function(df, id_col) {
@@ -567,9 +610,20 @@ ordinal_to_0_1 <- function(x) {
 
 score_deficit <- function(x, var_name, var_type) {
   reverse_dir <- var_name %in% reverse_coded_by_lineage
+  mr <- map_row(var_name)
+  map_direction <- if (!is.null(mr) && !is.na(mr$direction[[1]]) && nzchar(mr$direction[[1]])) mr$direction[[1]] else "as_coded"
 
   if (var_type == "binary") {
-    out <- score_binary_safe(x)
+    if (map_direction == "higher_worse") {
+      xn <- suppressWarnings(as.numeric(as.character(x)))
+      if (sum(!is.na(xn)) > 0) {
+        out <- ifelse(is.na(xn), NA_real_, ifelse(xn > 0, 1, 0))
+      } else {
+        out <- score_binary_safe(x)
+      }
+    } else {
+      out <- score_binary_safe(x)
+    }
     if (reverse_dir) out <- ifelse(is.na(out), NA_real_, 1 - out)
     return(out)
   }
@@ -708,6 +762,10 @@ write_agg_csv(
   notes = "Optional deficit map rows that matched current data columns"
 )
 
+map_missing_res <- apply_missing_codes_from_map(base_df, deficit_map)
+base_df <- map_missing_res$df
+map_missing_codes_applied_n <- map_missing_res$n_replaced
+
 # -----------------------------------------------------------------------------
 # 2) Candidate inventory and exclusions (same deterministic rules as k40.r)
 # -----------------------------------------------------------------------------
@@ -752,19 +810,24 @@ write_agg_csv(col_inventory, "k40_kaaos_column_inventory.csv", notes = "K40 KAAO
 excluded_vars <- tibble(var_name = names(base_df)) %>%
   mutate(reason = vapply(var_name, exclusion_reason, character(1))) %>%
   filter(!is.na(reason))
+mapped_exclusions_n <- sum(grepl("^exclude: deficit_map", excluded_vars$reason))
 write_agg_csv(excluded_vars, "k40_kaaos_excluded_vars.csv", notes = "Deterministic hard exclusions (KAAOS)")
 
 candidate_names <- setdiff(names(base_df), excluded_vars$var_name)
 
 candidate_inventory <- lapply(candidate_names, function(vn) {
   x <- base_df[[vn]]
-  vtype <- map_type(vn, infer_type(x))
+  inferred_type <- infer_type(x)
+  vtype <- map_type(vn, inferred_type)
+  type_overridden <- !identical(vtype, inferred_type)
   d <- score_deficit(x, vn, vtype)
   prev <- if (vtype == "binary") mean(d == 1, na.rm = TRUE) else NA_real_
   ord_flag <- if (!is.null(attr(d, "ordinal_ordering"))) attr(d, "ordinal_ordering") else NA_character_
   tibble(
     var_name = vn,
     type = vtype,
+    type_inferred = inferred_type,
+    type_overridden = type_overridden,
     n = length(x),
     n_miss = sum(is.na(x)),
     p_miss = mean(is.na(x)),
@@ -775,6 +838,7 @@ candidate_inventory <- lapply(candidate_names, function(vn) {
     ordinal_ordering_flag = ord_flag
   )
 }) %>% bind_rows()
+mapped_type_overrides_n <- sum(candidate_inventory$type_overridden, na.rm = TRUE)
 write_agg_csv(candidate_inventory, "k40_kaaos_candidate_inventory.csv", notes = "Candidate inventory after hard exclusions (KAAOS)")
 
 # Numeric candidate diagnostics to support documented continuous cutoff expansion.
@@ -846,6 +910,47 @@ active_screen <- if (augmentation_used) {
 }
 
 selected <- select_deficits(active_screen)
+
+map_drop_reasons <- if (nrow(deficit_map) == 0) {
+  tibble(
+    var_name = character(),
+    in_map_keep1 = logical(),
+    in_candidate_pool = logical(),
+    passes_type_ok = logical(),
+    passes_missingness = logical(),
+    passes_prevalence = logical(),
+    passes_levels = logical(),
+    passes_continuous = logical(),
+    final_selected = logical(),
+    drop_reason = character()
+  )
+} else {
+  keep_vars <- deficit_map %>% filter(keep_bool) %>% pull(var_name)
+  tibble(var_name = keep_vars) %>%
+    left_join(active_screen %>% select(var_name, type_ok, miss_ok, binary_ok, ordinal_ok, continuous_ok, eligible), by = "var_name") %>%
+    mutate(
+      in_map_keep1 = TRUE,
+      in_candidate_pool = !is.na(type_ok),
+      passes_type_ok = ifelse(is.na(type_ok), FALSE, type_ok),
+      passes_missingness = ifelse(is.na(miss_ok), FALSE, miss_ok),
+      passes_prevalence = ifelse(is.na(binary_ok), FALSE, binary_ok),
+      passes_levels = ifelse(is.na(ordinal_ok), FALSE, ordinal_ok),
+      passes_continuous = ifelse(is.na(continuous_ok), FALSE, continuous_ok),
+      final_selected = var_name %in% selected$var_name,
+      drop_reason = case_when(
+        final_selected ~ "selected",
+        !in_candidate_pool ~ "excluded_or_missing_from_candidate_pool",
+        !passes_type_ok ~ "type_not_ok",
+        !passes_continuous ~ "continuous_cutoff_missing_or_invalid",
+        !passes_missingness ~ "missingness",
+        !passes_prevalence ~ "prev_out_of_range_or_binary_not_scored",
+        !passes_levels ~ "n_levels_lt_3",
+        TRUE ~ "other"
+      )
+    ) %>%
+    arrange(drop_reason, var_name)
+}
+write_agg_csv(map_drop_reasons, "k40_kaaos_map_drop_reasons.csv", notes = "Drop reasons for deficit_map keep=1 rows")
 
 write_agg_csv(
   selected %>% select(var_name, type, p_miss, prevalence, domain, priority, direction_rule),
@@ -977,7 +1082,19 @@ red_flags <- bind_rows(
          detail = "All rows NA after eligibility gate"),
   tibble(flag = "continuous_thresholds_defined",
          value = length(continuous_thresholds),
-         detail = "Count of continuous thresholds available")
+         detail = "Count of continuous thresholds available"),
+  tibble(flag = "map_missing_codes_applied_n",
+         value = map_missing_codes_applied_n,
+         detail = "Number of values recoded to NA via deficit_map missing_codes"),
+  tibble(flag = "mapped_type_overrides_n",
+         value = mapped_type_overrides_n,
+         detail = "Number of candidate vars with map type override"),
+  tibble(flag = "mapped_exclusions_n",
+         value = mapped_exclusions_n,
+         detail = "Number of vars excluded by deficit_map keep=false"),
+  tibble(flag = "n_selected_deficits_after_map",
+         value = n_deficits,
+         detail = "Selected deficits count after map adjustments")
 )
 write_agg_csv(red_flags, "k40_kaaos_red_flags.csv", notes = "Deterministic red flag checks (KAAOS)")
 
@@ -1040,6 +1157,10 @@ log_lines <- c(
   sprintf("deficit_map_path=%s", deficit_map_path),
   sprintf("deficit_map_loaded=%s", as.character(deficit_map_loaded)),
   sprintf("deficit_map_rows=%d", deficit_map_rows),
+  sprintf("map_missing_codes_applied_n=%d", map_missing_codes_applied_n),
+  sprintf("mapped_type_overrides_n=%d", mapped_type_overrides_n),
+  sprintf("mapped_exclusions_n=%d", mapped_exclusions_n),
+  sprintf("n_selected_deficits_after_map=%d", n_deficits),
   sprintf("primary_missingness_threshold=%.2f", pmiss_thr_primary),
   sprintf("sensitivity_missingness_threshold=%.2f", pmiss_thr_sensitivity),
   sprintf("used_sensitivity=%s", as.character(use_sensitivity)),

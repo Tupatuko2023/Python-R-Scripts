@@ -1,0 +1,23 @@
+var_name,keep,domain,type,direction,cutoff,cutoff_low,cutoff_high,priority,missing_codes,exclude_reason,notes
+29,1,mobility_balance,binary,higher_worse,,,,3,2,,tasapaino-vaikeudet
+18,1,sensory,ordinal,higher_worse,,,,5,4,,kuulo
+19,1,sensory,ordinal,higher_worse,,,,5,4,,näkö
+20,1,cognition,ordinal,higher_worse,,,,5,3,,muisti
+21,1,mood,ordinal,higher_worse,,,,5,3,,mieliala
+22,1,sleep,ordinal,higher_worse,,,,5,5,,nukkuminen
+23,1,nutrition,ordinal,higher_worse,,,,5,3,,ravitsemus
+24,1,physical_function,ordinal,higher_worse,,,,5,3,,oma arvio liikuntakyvystä
+25,1,mobility,ordinal,higher_worse,,,,5,3,,500m vaikeus liikkua
+26,1,mobility,ordinal,higher_worse,,,,5,3,,2km vaikeus liikkua
+27,1,mobility,ordinal,higher_worse,,,,5,2,,liikkuminen vaikeutunut 6kk
+28,1,mobility,ordinal,higher_worse,,,,5,2,,liikkuminen vaikeutunut 12kk
+34,1,iadl_participation,ordinal,higher_worse,,,,5,3,,kodin ulkopuolella asiointi
+4,1,comorbidity,binary,as_coded,,,,5,,,diabetes
+7,1,comorbidity,binary,as_coded,,,,5,,,AVH
+11,1,health_conditions,ordinal,higher_worse,,,,5,3,,pituuden lyhentymä
+31,1,injury_history,binary,higher_worse,,,,5,2,,murtumia
+5,1,comorbidity,binary,as_coded,,,,5,,,alzheimer
+6,1,comorbidity,binary,as_coded,,,,5,,,parkinson
+8,1,global_health,ordinal,higher_worse,,,,5,5,,koettu terveydentila
+15,1,nutrition,continuous,outside_range,,18.5,30,3,E1,,BMI two-sided
+38,1,symptom,continuous,higher_worse,7,,,3,E|E1,,TK VAS
