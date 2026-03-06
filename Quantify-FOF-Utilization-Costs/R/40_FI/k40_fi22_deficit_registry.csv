@@ -1,0 +1,102 @@
+"var_name","label","domain","type","coding_rule","direction","cutoff","cutoff_low","cutoff_high","missing_codes"
+4,"diabetes 
+(0= ei,
+1= kyllä)","comorbidity","binary","binary: map/as_coded","as_coded",,,,""
+5,"alzheimer 
+(0= ei,
+1= kyllä)","comorbidity","binary","binary: map/as_coded","as_coded",,,,""
+6,"parkinson 
+(0= ei, 
+1= kyllä)","comorbidity","binary","binary: map/as_coded","as_coded",,,,""
+7,"AVH 
+(0= ei
+1= kyllä)","comorbidity","binary","binary: map/as_coded","as_coded",,,,""
+8,"koettu terveydentila 
+(0= erinomainen,
+1= hyvä,
+2= kohtalainen, 
+3= melko huono,
+4= huono, 
+5= ei tietoa)","global_health","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"5"
+11,"pituuden lyhentymä
+(0= ei (< 3cm),
+1= kyllä (3-4cm),
+2= kyllä (≥5cm),
+3= ei tietoa)","health_conditions","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"3"
+15,"BMI 
+(kg/m^2, E1= ei tietoa)","nutrition","continuous","continuous: threshold rule from map","outside_range",,18.5,30,"E1"
+18,"kuulo 
+(0= hyvä kuulo,
+1= heikentynyt,
+2= kuulolaite,
+3= kuuro, 
+4= ei tietoa)","sensory","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"4"
+19,"näkö 
+(0= ei ongelmaa näön kanssa, 
+1= heikentynyt näkö, 
+2= silmälasit käytössä, 
+3= sokea, 
+4= ei tietoa)","sensory","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"4"
+20,"muisti 
+(0= ei ongelmaa muistin kanssa, 
+1= heikentynyt muisti, 
+2= muistamaton, 3= ei tietoa)","cognition","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"3"
+21,"mieliala
+(0= ei mieliala-ongelmaa (hyvä), 
+1= kohtalainen mieliala, 
+2= masentunut,
+3= ei tietoa)","mood","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"3"
+22,"nukkuminen 
+(0= nukkuu hyvin,
+1= nukkuu vaihtelevasti,
+2= unilääke,
+3= nukkuu huonosti, 
+4= ei nuku,
+5= ei tietoa)","sleep","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"5"
+23,"ravitsemus 
+(0= täyttää ravitsemussuositukset,
+1= ei täytä, mutta kalkki+D-vitamiinit käytössä, 
+2= ei täytä ravitsemussuosituksia,
+3= ei tietoa)","nutrition","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"3"
+24,"oma arvio liikuntakyvystä 
+(0= hyvä
+1= kohtalainen
+2= heikko
+3= ei tietoa)","physical_function","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"3"
+25,"500m vaikeus liikkua 
+(0= ei vaikeuksia 
+1= vaikeuksia
+/apuväline
+2= ei onnistu, 
+3= ei tietoa)","mobility","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"3"
+26,"2km vaikeus liikkua
+(0= ei vaikeuksia 
+1= vaikeuksia
+/apuväline
+2=ei onnistu,
+3= ei tietoa)","mobility","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"3"
+27,"liikkuminen vaikeutunut 6kk
+(0= ei, 
+1= kyllä,
+2= ei tietoa)","mobility","binary","binary: value > 0 => deficit=1","higher_worse",,,,"2"
+28,"liikkuminen vaikeutunut 12kk  
+(0= ei, 
+1= kyllä,
+2= ei tietoa)","mobility","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"2"
+29,"tasapaino- vaikeudet 
+(0= ei, 
+1= kyllä,
+2= ei tietoa)","mobility_balance","binary","binary: value > 0 => deficit=1","higher_worse",,,,"2"
+31,"murtumia  
+(0= ei, 
+1= kyllä,
+2= ei tietoa)","injury_history","binary","binary: value > 0 => deficit=1","higher_worse",,,,"2"
+34,"kodin ulkopuolella asiointi  
+(0= ei vaikeuksia, 
+1= vaikeuksia/ apuväline,
+2= ei pysty asioimaan itsenäisesti,  
+3= ei tietoa)","iadl_participation","ordinal","ordinal: scaled to [0,1] over observed ordered levels","higher_worse",,,,"3"
+38,"TK: VAS 
+(cm, 
+E= ei osaa arvioida, 
+E1= ei tietoa)","symptom","continuous","continuous: threshold rule from map","higher_worse",7,,,"E|E1"

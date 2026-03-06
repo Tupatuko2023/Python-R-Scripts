@@ -3,6 +3,8 @@
 ## Methods (Locked Variant)
 Frailty was operationalized as a deficit accumulation index from the single-sheet KAAOS baseline block (`paper_02/KAAOS_data.xlsx`).
 The locked construct is `FI22_nonperformance_KAAOS` and is used as a `sensitivity_index`.
+Candidate deficits were required to represent health deficits (symptoms, diseases, functional limitations, or sensory impairments), while exposures, outcomes, performance tests, lifestyle variables, and non-health background variables were excluded deterministically.
+Item-specific unknown / not-known response categories were recoded to missing using map-defined `missing_codes` before deficit scoring.
 
 Deterministic preprocessing and scoring steps:
 - label-row detection and removal before candidate screening
