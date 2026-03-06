@@ -69,6 +69,28 @@ RUN_AGE_TREND_DIAG <- TRUE
 RUN_CEILING_DIAG <- TRUE
 RUN_DOMAIN_BALANCE <- TRUE
 STRICT_ORDINAL_REQUIRES_MAP <- FALSE
+# Debug / runtime toggles (defaults preserve normal K40 behavior).
+FAST_MODE <- identical(toupper(Sys.getenv("K40_FAST_MODE")), "TRUE")
+SKIP_K15 <- FAST_MODE || identical(toupper(Sys.getenv("K40_SKIP_K15")), "TRUE")
+SKIP_K32 <- FAST_MODE || identical(toupper(Sys.getenv("K40_SKIP_K32")), "TRUE")
+
+t0 <- Sys.time()
+PHASE_LOG <- Sys.getenv("K40_PHASE_LOG", unset = "")
+if (nzchar(PHASE_LOG)) {
+  dir.create(dirname(PHASE_LOG), recursive = TRUE, showWarnings = FALSE)
+  cat(sprintf("[K40 BOOT] %s phase log initialized\n", format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
+      file = PHASE_LOG, append = TRUE, sep = "")
+}
+phase <- function(label) {
+  dt <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
+  line <- sprintf("[K40 PHASE +%0.1fs] %s", dt, label)
+  message(line)
+  if (nzchar(PHASE_LOG)) {
+    dir.create(dirname(PHASE_LOG), recursive = TRUE, showWarnings = FALSE)
+    cat(line, "\n", file = PHASE_LOG, append = TRUE, sep = "")
+  }
+  flush.console()
+}
 
 domain_overrides_path <- file.path(script_dir, "config", "k40_domain_overrides.csv")
 domain_overrides <- NULL
@@ -234,6 +256,32 @@ continuous_thresholds <- list(
   # var_name = list(cutoff = 0.0, direction = "lower_worse" | "higher_worse")
 )
 
+RULE_PATTERNS <- list(
+  exclusions = list(
+    performance = "puristus|grip|kavely|gait|tuoli|chair|seisom|single_leg|balance|sls",
+    exposure = "^fof_status($|_)|^kaatumisenpelko|^tasapainovaikeus($|_)",
+    outcome = "^composite_z|toimintakykysummary|delta_composite_z",
+    derived_construct = "^frailty_|^frailty_index|^fi$|^fi_z$",
+    administrative = "^id$|^time$|^visit$|^aika$|^measurement_time$|capacity_score",
+    demographic = "^sex($|_)|^gender($|_)|^agelka$|^age($|_)",
+    behavior_exposure = "^tupakointi$|^alkoholi$|^viinaon$|^smok|^alcohol",
+    redundant_construct = "^srh$"
+  ),
+  domains = list(
+    function_adl_iadl = "(adl|iadl|toimintakyky|functional|bathing|dressing|toilet|transfer|feeding|shopping|cooking|housework)",
+    mobility_balance_falls = "(mobility|gait|walk|walking|stairs|chair|stand|standing|balance|dizziness|vertigo|fall|falls|kaatu|tasapaino|huima)",
+    disease_comorbidity = "(dx_|diagnos|disease|comorbid|hypertens|heart|cardio|chf|mi|stroke|tia|af|copd|asthma|diabet|cancer|tumou?r|kidney|renal|ckd|arthritis|osteo|rheum|parkinson|dement|alzheimer)",
+    symptoms_general = "(symptom|breath|dyspn|cough|nausea|vomit|constipat|diarr|incontinen|urinar|bowel|edema|swelling|appetite|anorex|weak|weakness|tremor|palpitat|chest_pain|fatigue|tired|exhaust|fever|selfrated|general_health)",
+    pain = "(pain|ache|sore|kipu)",
+    mood_mental = "(depress|anx|anxiety|stress|panic|mood|apathy|lonely|loneliness|psychiat|mental|ghq|cesd|phq)",
+    cognition = "(cognit|memory|mmse|mo?a?ca|clock|orientation|confus|dement|delir)",
+    sensory = "(vision|visual|sight|blind|hearing|hear|deaf|ear|tinnitus|glasses|audi)",
+    nutrition_weight = "(weight|bmi|underweight|malnutrition|nutrition|diet|protein|albumin|loss_of_weight|weight_loss|pudot|laihtu)",
+    sleep_fatigue = "(sleep|insomnia|nap|somnol|unett|väsymys)",
+    medication = "(polypharm|medication|drug|rx_|prescrip|lääke)"
+  )
+)
+
 score_binary <- function(x, var_name) {
   reverse_dir <- var_name %in% reverse_coded_by_lineage
 
@@ -304,37 +352,37 @@ domain_label <- function(var_name) {
     if (!is.na(hit)) return(hit)
   }
 
-  if (stringr::str_detect(v, "(adl|iadl|toimintakyky|functional|bathing|dressing|toilet|transfer|feeding|shopping|cooking|housework)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$function_adl_iadl)) {
     return("function_adl_iadl")
   }
-  if (stringr::str_detect(v, "(mobility|gait|walk|walking|stairs|chair|stand|standing|balance|dizziness|vertigo|fall|falls|kaatu|tasapaino|huima)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$mobility_balance_falls)) {
     return("mobility_balance_falls")
   }
-  if (stringr::str_detect(v, "(dx_|diagnos|disease|comorbid|hypertens|heart|cardio|chf|mi|stroke|tia|af|copd|asthma|diabet|cancer|tumou?r|kidney|renal|ckd|arthritis|osteo|rheum|parkinson|dement|alzheimer)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$disease_comorbidity)) {
     return("disease_comorbidity")
   }
-  if (stringr::str_detect(v, "(symptom|breath|dyspn|cough|nausea|vomit|constipat|diarr|incontinen|urinar|bowel|edema|swelling|appetite|anorex|weak|weakness|tremor|palpitat|chest_pain|fatigue|tired|exhaust|fever|selfrated|general_health)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$symptoms_general)) {
     return("symptoms_general")
   }
-  if (stringr::str_detect(v, "(pain|ache|sore|kipu)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$pain)) {
     return("pain")
   }
-  if (stringr::str_detect(v, "(depress|anx|anxiety|stress|panic|mood|apathy|lonely|loneliness|psychiat|mental|ghq|cesd|phq)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$mood_mental)) {
     return("mood_mental")
   }
-  if (stringr::str_detect(v, "(cognit|memory|mmse|mo?a?ca|clock|orientation|confus|dement|delir)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$cognition)) {
     return("cognition")
   }
-  if (stringr::str_detect(v, "(vision|visual|sight|blind|hearing|hear|deaf|ear|tinnitus|glasses|audi)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$sensory)) {
     return("sensory")
   }
-  if (stringr::str_detect(v, "(weight|bmi|underweight|malnutrition|nutrition|diet|protein|albumin|loss_of_weight|weight_loss|pudot|laihtu)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$nutrition_weight)) {
     return("nutrition_weight")
   }
-  if (stringr::str_detect(v, "(sleep|insomnia|nap|somnol|unett|väsymys)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$sleep_fatigue)) {
     return("sleep_fatigue")
   }
-  if (stringr::str_detect(v, "(polypharm|medication|drug|rx_|prescrip|lääke)")) {
+  if (stringr::str_detect(v, RULE_PATTERNS$domains$medication)) {
     return("medication")
   }
   return("other")
@@ -351,16 +399,21 @@ priority_rank <- function(var_name) {
 # -----------------------------------------------------------------------------
 # 1) Resolve inputs and read base datasets
 # -----------------------------------------------------------------------------
+phase("startup")
+phase("before resolve_inputs")
 data_root <- infer_data_root()
 resolved <- resolve_inputs(data_root)
+phase(sprintf("resolved inputs (k33_wide=%s; k33_long=%s)", !is.na(resolved$k33_wide), !is.na(resolved$k33_long)))
 
 if (is.na(resolved$k33_wide) && is.na(resolved$k33_long)) {
   stop("K40 requires K33 analysis dataset under DATA_ROOT/paper_01/analysis", call. = FALSE)
 }
 
 base_path <- if (!is.na(resolved$k33_wide)) resolved$k33_wide else resolved$k33_long
+phase(sprintf("read K33 start (%s)", base_path))
 base_df <- load_tabular(base_path)
 names(base_df) <- clean_names_simple(names(base_df))
+phase(sprintf("read K33 done (n=%d, p=%d)", nrow(base_df), ncol(base_df)))
 
 id_col <- find_col(names(base_df), c("id", "participant_id", "subject_id", "study_id"))
 if (is.na(id_col)) stop("Could not resolve id column in K33 input", call. = FALSE)
@@ -389,9 +442,10 @@ base_df <- base_df %>%
   group_by(.data[[id_col]]) %>%
   slice(1L) %>%
   ungroup()
+phase(sprintf("baseline derivation done (n=%d, p=%d; logic=%s)", nrow(base_df), ncol(base_df), baseline_logic))
 
 # Optional joins for diagnostics only.
-if (!is.na(resolved$k32)) {
+if (!SKIP_K32 && !is.na(resolved$k32)) {
   k32_df <- load_tabular(resolved$k32)
   names(k32_df) <- clean_names_simple(names(k32_df))
   k32_id <- find_col(names(k32_df), c("id", "participant_id", "subject_id", "study_id"))
@@ -402,9 +456,10 @@ if (!is.na(resolved$k32)) {
     base_df <- base_df %>% left_join(k32_df[, keep, drop = FALSE], by = id_col)
   }
 }
+phase(sprintf("K32 join done (skip=%s; path_present=%s; n=%d, p=%d)", SKIP_K32, !is.na(resolved$k32), nrow(base_df), ncol(base_df)))
 
 # Optional K15 join for additional non-performance deficit candidates.
-if (!is.na(resolved$k15)) {
+if (!SKIP_K15 && !is.na(resolved$k15)) {
   k15_df <- load_tabular(resolved$k15)
   names(k15_df) <- clean_names_simple(names(k15_df))
   k15_id <- find_col(names(k15_df), c("id", "participant_id", "subject_id", "study_id"))
@@ -418,22 +473,25 @@ if (!is.na(resolved$k15)) {
     }
   }
 }
+phase(sprintf("K15 join done (skip=%s; path_present=%s; n=%d, p=%d)", SKIP_K15, !is.na(resolved$k15), nrow(base_df), ncol(base_df)))
 
 # -----------------------------------------------------------------------------
 # 2) Candidate inventory and exclusions
 # -----------------------------------------------------------------------------
-perf_regex <- "puristus|grip|kavely|gait|tuoli|chair|seisom|single_leg|balance|sls"
-exposure_regex <- "^fof_status($|_)|^kaatumisenpelko|^tasapainovaikeus($|_)"
-outcome_regex <- "^composite_z|toimintakykysummary|delta_composite_z"
-derived_construct_regex <- "^frailty_|^frailty_index|^fi$|^fi_z$"
-admin_regex <- "^id$|^time$|^visit$|^aika$|^measurement_time$|capacity_score"
-demographic_regex <- "^sex($|_)|^gender($|_)|^agelka$|^age($|_)"
-behavior_exposure_regex <- "^tupakointi$|^alkoholi$|^viinaon$|^smok|^alcohol"
+perf_regex <- RULE_PATTERNS$exclusions$performance
+exposure_regex <- RULE_PATTERNS$exclusions$exposure
+outcome_regex <- RULE_PATTERNS$exclusions$outcome
+derived_construct_regex <- RULE_PATTERNS$exclusions$derived_construct
+admin_regex <- RULE_PATTERNS$exclusions$administrative
+demographic_regex <- RULE_PATTERNS$exclusions$demographic
+behavior_exposure_regex <- RULE_PATTERNS$exclusions$behavior_exposure
+redundant_construct_regex <- RULE_PATTERNS$exclusions$redundant_construct
 
 exclusion_reason <- function(vn) {
   if (grepl(perf_regex, vn, ignore.case = TRUE)) return("performance_test_pattern")
   if (grepl(exposure_regex, vn, ignore.case = TRUE)) return("primary_exposure")
   if (grepl(behavior_exposure_regex, vn, ignore.case = TRUE)) return("behavior_exposure_not_deficit")
+  if (grepl(redundant_construct_regex, vn, ignore.case = TRUE)) return("redundant_general_health_measure_drop_srh_keep_koettuterveydentila")
   if (grepl(demographic_regex, vn, ignore.case = TRUE)) return("demographic_not_deficit")
   if (grepl(outcome_regex, vn, ignore.case = TRUE)) return("outcome_or_component")
   if (grepl(derived_construct_regex, vn, ignore.case = TRUE)) return("derived_frailty_construct")
@@ -529,7 +587,9 @@ for (vn in candidate_names) {
   )
 }
 
-candidate_inventory <- bind_rows(candidate_rows)
+candidate_inventory <- bind_rows(candidate_rows) %>%
+  mutate(domain = vapply(var_name, domain_label, character(1)))
+phase(sprintf("candidate inventory done (candidates=%d)", nrow(candidate_inventory)))
 write_agg_csv(candidate_inventory, "k40_candidate_inventory.csv", notes = "Candidate inventory after hard exclusions")
 
 write_agg_csv(
@@ -574,7 +634,6 @@ eligible <- active_screen %>% filter(eligible)
 
 selected_pre <- eligible %>%
   mutate(
-    domain = vapply(var_name, domain_label, character(1)),
     priority = vapply(var_name, priority_rank, integer(1))
   ) %>%
   arrange(domain, priority, p_miss, var_name)
@@ -589,6 +648,7 @@ selected <- if (is.finite(MAX_PER_DOMAIN)) {
   selected_pre %>%
   arrange(priority, p_miss, var_name)
 }
+phase(sprintf("eligibility/screening done (eligible=%d; selected=%d)", nrow(eligible), nrow(selected)))
 
 write_agg_csv(
   selected %>% select(var_name, type, p_miss, prevalence, domain, priority, direction_rule, binary_status, ordinal_status, continuous_status),
@@ -603,7 +663,6 @@ write_agg_csv(
 )
 
 other_vars <- eligible %>%
-  mutate(domain = vapply(var_name, domain_label, character(1))) %>%
   filter(domain == "other") %>%
   select(var_name, type, p_miss, prevalence, n_levels, top_levels) %>%
   arrange(p_miss, var_name)
@@ -616,7 +675,6 @@ write_agg_csv(
 prop_other <- NA_real_
 if (RUN_DOMAIN_BALANCE) {
   domain_balance <- selected %>%
-    mutate(domain = vapply(var_name, domain_label, character(1))) %>%
     count(domain, sort = TRUE) %>%
     mutate(prop = n / sum(n))
   write_agg_csv(domain_balance, "k40_domain_balance.csv", notes = "Selected deficits count by methodological domain")
@@ -628,6 +686,7 @@ if (RUN_DOMAIN_BALANCE) {
 # 4) Compute FI (0-1) and FI_z with fixed thresholds
 # -----------------------------------------------------------------------------
 score_df <- tibble(id = base_df[[id_col]])
+phase("deficit scoring start")
 for (vn in selected$var_name) {
   vtype <- selected$type[selected$var_name == vn][1]
   if (vtype == "binary") {
@@ -640,6 +699,7 @@ for (vn in selected$var_name) {
     score_df[[paste0("d_", vn)]] <- NA_real_
   }
 }
+phase(sprintf("deficit scoring done (n=%d; k=%d)", nrow(score_df), nrow(selected)))
 
 deficit_cols <- grep("^d_", names(score_df), value = TRUE)
 n_deficits <- length(deficit_cols)
@@ -784,6 +844,7 @@ patient_out <- score_df %>%
   select(id, fi, fi_z, n_deficits_observed, coverage, fi_eligible) %>%
   rename(frailty_index_fi = fi, frailty_index_fi_z = fi_z)
 
+phase("write exports start")
 readr::write_csv(patient_out, external_csv)
 saveRDS(patient_out, external_rds)
 
@@ -796,6 +857,7 @@ append_artifact(
   n = nrow(selected),
   notes = "Selected deficit inventory for K40 (externalized to DATA_ROOT)"
 )
+phase("write exports done")
 
 receipt_lines <- c(
   sprintf("timestamp=%s", format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
