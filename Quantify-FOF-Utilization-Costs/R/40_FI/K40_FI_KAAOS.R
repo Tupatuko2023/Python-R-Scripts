@@ -313,12 +313,13 @@ reverse_coded_by_lineage <- c(
   "self_rated_health", "energy_score", "quality_of_life", "general_health"
 )
 
-continuous_thresholds <- list(
+base_continuous_thresholds <- list(
   # FI_v5 deterministic non-performance continuous deficits (source var ids from KAAOS labels).
   # 15 = BMI (kg/m^2), 38 = TK: VAS (cm; 0-10 scale in label context)
   "15" = list(cutoff = c(18.5, 30.0), direction = "outside_range"),
   "38" = list(cutoff = 7.0, direction = "higher_worse")
 )
+continuous_thresholds <- base_continuous_thresholds
 
 # --- Deterministic FI configuration ---------------------------------------------------
 pmiss_thr_primary <- 0.20
@@ -339,6 +340,122 @@ exclude_falls_by_label <- TRUE
 
 # Filled after sheet read; used by exclusion/domain/priority helpers.
 var_labels <- list()
+deficit_map_path <- file.path("R", "40_FI", "deficit_map.csv")
+deficit_map_loaded <- FALSE
+deficit_map_rows <- 0L
+deficit_map <- tibble(
+  var_name = character(),
+  keep = character(),
+  keep_bool = logical(),
+  domain = character(),
+  type = character(),
+  direction = character(),
+  cutoff = numeric(),
+  cutoff_low = numeric(),
+  cutoff_high = numeric(),
+  priority = integer(),
+  exclude_reason = character(),
+  notes = character()
+)
+
+parse_keep_bool <- function(x) {
+  xc <- tolower(trimws(as.character(x)))
+  xc %in% c("1", "true", "yes", "y", "keep")
+}
+
+read_deficit_map <- function(path) {
+  if (!file.exists(path)) return(deficit_map)
+
+  dm <- suppressMessages(readr::read_csv(
+    path,
+    show_col_types = FALSE,
+    col_types = readr::cols(
+      .default = readr::col_character(),
+      cutoff = readr::col_double(),
+      cutoff_low = readr::col_double(),
+      cutoff_high = readr::col_double(),
+      priority = readr::col_integer()
+    )
+  ))
+
+  required_cols <- c("var_name", "keep")
+  if (!all(required_cols %in% names(dm))) {
+    stop("deficit_map.csv must include columns: var_name, keep", call. = FALSE)
+  }
+
+  for (cn in c("domain", "type", "direction", "cutoff", "cutoff_low", "cutoff_high", "priority", "exclude_reason", "notes")) {
+    if (!(cn %in% names(dm))) dm[[cn]] <- NA
+  }
+
+  dm <- dm %>%
+    mutate(
+      var_name = clean_names_simple(var_name),
+      keep_bool = parse_keep_bool(keep),
+      domain = clean_names_simple(domain),
+      type = tolower(trimws(type)),
+      direction = tolower(trimws(direction)),
+      exclude_reason = trimws(exclude_reason),
+      notes = trimws(notes)
+    ) %>%
+    select(var_name, keep, keep_bool, domain, type, direction, cutoff, cutoff_low, cutoff_high, priority, exclude_reason, notes)
+
+  if (anyDuplicated(dm$var_name) > 0) {
+    stop("deficit_map.csv has duplicate var_name entries; keep unique rows only.", call. = FALSE)
+  }
+
+  dm
+}
+
+map_row <- function(var_name) {
+  if (nrow(deficit_map) == 0) return(NULL)
+  hit <- deficit_map[deficit_map$var_name == var_name, , drop = FALSE]
+  if (nrow(hit) == 0) return(NULL)
+  hit
+}
+
+map_type <- function(var_name, inferred_type) {
+  mr <- map_row(var_name)
+  if (is.null(mr)) return(inferred_type)
+  if (!is.na(mr$type[[1]]) && nzchar(mr$type[[1]]) && mr$type[[1]] %in% c("binary", "ordinal", "continuous")) {
+    return(mr$type[[1]])
+  }
+  inferred_type
+}
+
+thresholds_from_map <- function(dm, valid_vars) {
+  out <- list()
+  if (nrow(dm) == 0) return(out)
+
+  rows <- dm %>%
+    filter(keep_bool, type == "continuous", var_name %in% valid_vars)
+
+  if (nrow(rows) == 0) return(out)
+
+  for (i in seq_len(nrow(rows))) {
+    vn <- rows$var_name[[i]]
+    dir <- rows$direction[[i]]
+
+    if (!(dir %in% c("lower_worse", "higher_worse", "outside_range"))) {
+      stop(sprintf("deficit_map.csv continuous row '%s' has invalid direction '%s'.", vn, dir), call. = FALSE)
+    }
+
+    if (dir == "outside_range") {
+      lo <- rows$cutoff_low[[i]]
+      hi <- rows$cutoff_high[[i]]
+      if (is.na(lo) || is.na(hi)) {
+        stop(sprintf("deficit_map.csv row '%s' requires cutoff_low and cutoff_high for outside_range.", vn), call. = FALSE)
+      }
+      out[[vn]] <- list(cutoff = c(lo, hi), direction = dir)
+    } else {
+      co <- rows$cutoff[[i]]
+      if (is.na(co)) {
+        stop(sprintf("deficit_map.csv row '%s' requires cutoff for %s.", vn, dir), call. = FALSE)
+      }
+      out[[vn]] <- list(cutoff = co, direction = dir)
+    }
+  }
+  out
+}
 
 detect_label_row <- function(df, id_col) {
   if (nrow(df) == 0 || is.na(id_col) || !(id_col %in% names(df))) {
@@ -481,6 +598,8 @@ score_deficit <- function(x, var_name, var_type) {
 }
 
 domain_label <- function(var_name) {
+  mr <- map_row(var_name)
+  if (!is.null(mr) && !is.na(mr$domain[[1]]) && nzchar(mr$domain[[1]])) return(mr$domain[[1]])
   key <- paste(var_name, var_label(var_name))
   if (grepl("comorb|diag|disease|icd|sairaus", key, ignore.case = TRUE)) return("comorbidity")
   if (grepl("adl|iadl|toimintakyky|limitation|difficulty|rajoit", key, ignore.case = TRUE)) return("functional")
@@ -490,6 +609,8 @@ domain_label <- function(var_name) {
 }
 
 priority_rank <- function(var_name) {
+  mr <- map_row(var_name)
+  if (!is.null(mr) && !is.na(mr$priority[[1]])) return(as.integer(mr$priority[[1]]))
   key <- paste(var_name, var_label(var_name))
   if (grepl("diag|doctor|icd|disease|sairaus|comorb", key, ignore.case = TRUE)) return(1L)
   if (grepl("adl|iadl|toimintakyky|limitation|difficulty|rajoit", key, ignore.case = TRUE)) return(2L)
@@ -572,6 +693,21 @@ base_df <- base_df %>%
 # Recode known sentinel codes before inventory/type inference.
 base_df <- base_df %>% mutate(across(everything(), recode_sentinel_missing))
 
+deficit_map <- read_deficit_map(deficit_map_path)
+if (nrow(deficit_map) > 0) {
+  deficit_map <- deficit_map %>% filter(var_name %in% names(base_df))
+  deficit_map_rows <- nrow(deficit_map)
+  continuous_thresholds <- modifyList(base_continuous_thresholds, thresholds_from_map(deficit_map, names(base_df)))
+  deficit_map_loaded <- TRUE
+} else {
+  deficit_map_rows <- 0L
+}
+write_agg_csv(
+  deficit_map,
+  "k40_kaaos_deficit_map_applied.csv",
+  notes = "Optional deficit map rows that matched current data columns"
+)
+
 # -----------------------------------------------------------------------------
 # 2) Candidate inventory and exclusions (same deterministic rules as k40.r)
 # -----------------------------------------------------------------------------
@@ -593,6 +729,13 @@ exclusion_reason <- function(vn) {
   if (isTRUE(exclude_falls_by_label) && grepl("\\bkaatuminen\\b|\\bfalls?\\b", key, ignore.case = TRUE)) return("exclude: falls history (sensitivity-safe)")
   if (grepl("tupak|smok|alkohol|alcohol|liikuntaharr|physical\\s*activity|exercise", key, ignore.case = TRUE)) return("exclude: lifestyle exposure (not a deficit)")
   if (grepl("vanhemp|\\bsiblings?\\b|sisaru", key, ignore.case = TRUE)) return("exclude: non-health/background variable")
+  mr <- map_row(vn)
+  if (!is.null(mr) && !is.na(mr$keep_bool[[1]]) && !isTRUE(mr$keep_bool[[1]])) {
+    if (!is.na(mr$exclude_reason[[1]]) && nzchar(mr$exclude_reason[[1]])) {
+      return(paste0("exclude: deficit_map (", mr$exclude_reason[[1]], ")"))
+    }
+    return("exclude: deficit_map keep=false")
+  }
   NA_character_
 }
 
@@ -615,7 +758,7 @@ candidate_names <- setdiff(names(base_df), excluded_vars$var_name)
 
 candidate_inventory <- lapply(candidate_names, function(vn) {
   x <- base_df[[vn]]
-  vtype <- infer_type(x)
+  vtype <- map_type(vn, infer_type(x))
   d <- score_deficit(x, vn, vtype)
   prev <- if (vtype == "binary") mean(d == 1, na.rm = TRUE) else NA_real_
   ord_flag <- if (!is.null(attr(d, "ordinal_ordering"))) attr(d, "ordinal_ordering") else NA_character_
@@ -894,6 +1037,9 @@ log_lines <- c(
   sprintf("pmiss_thr_used=%.2f", pmiss_thr_used),
   sprintf("try_sensitivity_if_selected_lt=%d", try_sensitivity_if_selected_lt),
   sprintf("helpers_origin=%s", helpers_origin),
+  sprintf("deficit_map_path=%s", deficit_map_path),
+  sprintf("deficit_map_loaded=%s", as.character(deficit_map_loaded)),
+  sprintf("deficit_map_rows=%d", deficit_map_rows),
   sprintf("primary_missingness_threshold=%.2f", pmiss_thr_primary),
   sprintf("sensitivity_missingness_threshold=%.2f", pmiss_thr_sensitivity),
   sprintf("used_sensitivity=%s", as.character(use_sensitivity)),

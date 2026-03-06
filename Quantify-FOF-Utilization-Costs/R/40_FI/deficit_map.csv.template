@@ -1,0 +1,6 @@
+var_name,keep,domain,type,direction,cutoff,cutoff_low,cutoff_high,priority,exclude_reason,notes
+15,1,symptom,continuous,outside_range,,18.5,30,3,,BMI two-sided risk
+38,1,symptom,continuous,higher_worse,7,,,3,,TK VAS high symptom burden
+39,0,physiology,continuous,higher_worse,350,,,5,performance/physiology excluded,K40 non-performance variant
+9,1,symptom,continuous,higher_worse,15,,,3,,MOI-index candidate (verify clinical meaning)
+30,0,event,binary,as_coded,,,,5,falls history sensitivity-safe,Set keep=1 only in falls-variant
