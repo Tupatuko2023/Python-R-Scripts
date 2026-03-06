@@ -9,7 +9,7 @@ var_name,keep,domain,type,direction,cutoff,cutoff_low,cutoff_high,priority,missi
 24,1,physical_function,ordinal,higher_worse,,,,5,3,,oma arvio liikuntakyvystä
 25,1,mobility,ordinal,higher_worse,,,,5,3,,500m vaikeus liikkua
 26,1,mobility,ordinal,higher_worse,,,,5,3,,2km vaikeus liikkua
-27,1,mobility,ordinal,higher_worse,,,,5,2,,liikkuminen vaikeutunut 6kk
+27,1,mobility,binary,higher_worse,,,,5,2,,liikkuminen vaikeutunut 6kk
 28,1,mobility,ordinal,higher_worse,,,,5,2,,liikkuminen vaikeutunut 12kk
 34,1,iadl_participation,ordinal,higher_worse,,,,5,3,,kodin ulkopuolella asiointi
 4,1,comorbidity,binary,as_coded,,,,5,,,diabetes
