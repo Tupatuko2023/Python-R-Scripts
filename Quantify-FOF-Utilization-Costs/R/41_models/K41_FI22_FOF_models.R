@@ -43,7 +43,7 @@ resolve_id_column <- function(df) {
     type_ok <- is.character(x) || is.integer(x) || is.numeric(x)
     miss_rate <- mean(is.na(x))
     uniq_ratio <- dplyr::n_distinct(x[!is.na(x)]) / n
-    tibble(var_name = vn, type_ok = type_ok, miss_rate = miss_rate, uniq_ratio = uniq_ratio)
+    tibble::tibble(var_name = vn, type_ok = type_ok, miss_rate = miss_rate, uniq_ratio = uniq_ratio)
   }) %>% bind_rows() %>%
     filter(type_ok, miss_rate <= 0.05, uniq_ratio >= 0.90) %>%
     arrange(desc(uniq_ratio), miss_rate, var_name)
@@ -123,7 +123,7 @@ model_df <- base_df %>%
   filter(!is.na(fi), !is.na(fof_yes), !is.na(age), !is.na(sex)) %>%
   mutate(sex = factor(sex, levels = c("female", "male")))
 
-summary_tbl <- tibble(
+summary_tbl <- tibble::tibble(
   metric = c("run_id", "n_rows_model", "fof_yes_rate", "fi_mean", "fi_sd", "age_mean", "age_sd"),
   value = c(
     run_id,
@@ -168,6 +168,9 @@ hist(model_df$fi,
 dev.off()
 
 # Figure 2: FI vs age with linear trend
+fi_age_fit <- lm(fi ~ age, data = model_df)
+fi_age_coef <- coef(summary(fi_age_fit))
+
 fig_age_path <- open_plot_device(file.path(outputs_dir, "k41_fi22_vs_age"))
 plot(model_df$age, model_df$fi,
   pch = 16,
@@ -176,13 +179,13 @@ plot(model_df$age, model_df$fi,
   ylab = "Frailty Index (FI)",
   main = "FI22 vs Age"
 )
-abline(lm(fi ~ age, data = model_df), col = "#D62728", lwd = 2)
+abline(fi_age_fit, col = "#D62728", lwd = 2)
 dev.off()
 
 fit <- glm(fof_yes ~ fi + age + sex, data = model_df, family = binomial())
 co <- coef(summary(fit))
 
-or_tbl <- tibble(
+or_tbl <- tibble::tibble(
   term = rownames(co),
   estimate = co[, "Estimate"],
   std_error = co[, "Std. Error"],
@@ -194,12 +197,12 @@ or_tbl <- tibble(
 )
 readr::write_csv(or_tbl, file.path(outputs_dir, "k41_fi22_fof_model_or.csv"))
 
-fi_age_tbl <- tibble(
+fi_age_tbl <- tibble::tibble(
   metric = c("corr_fi_age", "beta_age_lm_fi_on_age", "p_age_lm_fi_on_age"),
   value = c(
     suppressWarnings(cor(model_df$fi, model_df$age, use = "complete.obs")),
-    coef(summary(lm(fi ~ age, data = model_df)))["age", "Estimate"],
-    coef(summary(lm(fi ~ age, data = model_df)))["age", "Pr(>|t|)"]
+    fi_age_coef["age", "Estimate"],
+    fi_age_coef["age", "Pr(>|t|)"]
   )
 )
 readr::write_csv(fi_age_tbl, file.path(outputs_dir, "k41_fi22_age_trend_summary.csv"))
