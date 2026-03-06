@@ -10,6 +10,7 @@ The analytic dataset included `n = 476` participants with complete data for FI, 
 ## Frailty distribution
 
 The `FI22_nonperformance_KAAOS` index showed a plausible right-skewed distribution, consistent with deficit-accumulation measures. Mean FI was 0.362 (SD 0.122).
+The index ranges from 0 to 1 and represents the proportion of present deficits among 22 predefined items.
 
 A positive FI-age trend was observed in linear modeling (beta 0.00415 per year, p < 0.001).
 
@@ -19,6 +20,7 @@ In adjusted logistic regression (`FOF ~ FI + age + sex`), higher frailty was ass
 
 - OR per 1.0 FI unit: 52.17 (95% CI 8.28-328.74, p < 0.001)
 - OR per 0.1 FI increase: 1.49 (95% CI 1.24-1.79)
+Model estimates are derived from the run-specific artifact `R/41_models/outputs/20260306_140934/k41_fi22_fof_model_or.csv`.
 
 Age showed an inverse adjusted association with FOF (OR 0.95 per year, 95% CI 0.92-0.98, p < 0.001). Male sex was associated with lower odds of FOF compared with female sex (OR 0.39, 95% CI 0.20-0.74, p = 0.004).
 
