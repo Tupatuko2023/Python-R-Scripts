@@ -24,16 +24,41 @@ Jokainen analyysiskripti sijaitsee omassa kansiossaan `R/`-hakemiston alla ja ki
 outputit sekä lokit vain omaan `outputs/` ja `logs/` -alihakemistoonsa (gitignored).
 Yhteisiä `outputs/`-hakemistoja ei käytetä.
 
-Quickstart (synthetic / CI-safe)
-From repo root:
+Fresh Clone (CI-safe)
 
-1. Run tests:
-   python -m unittest discover -s Quantify-FOF-Utilization-Costs/tests
+This subproject uses a Makefile for standard operations. These commands use synthetic data (`data/sample/`) and do not require `DATA_ROOT`.
 
-2. Smoke-run QC on synthetic sample:
-   python Quantify-FOF-Utilization-Costs/scripts/30_qc_summary.py --use-sample
+**Windows (PowerShell) / macOS / Linux:**
 
-NOTE: Run python Quantify-FOF-Utilization-Costs/scripts/00_inventory_manifest.py --scan paper_02 whenever you receive a new paper_02 data batch so the manifest stays in sync.
+1. **Setup Python Environment:**
+
+   ```bash
+   cd Quantify-FOF-Utilization-Costs
+   make setup
+   ```
+
+2. **Run Tests (CI-safe):**
+
+   ```bash
+   make test
+   ```
+
+   _Verifies Python scripts and security guardrails._
+
+3. **Run Smoke QC (Sample Data):**
+
+   ```bash
+   make qc
+   ```
+
+   _Generates non-sensitive QC reports in `outputs/qc/`._
+
+Legacy commands (from repo root):
+
+- Run tests: `python -m unittest discover -s Quantify-FOF-Utilization-Costs/tests`
+- Smoke-run QC: `python Quantify-FOF-Utilization-Costs/scripts/30_qc_summary.py --use-sample`
+
+NOTE: Run `python scripts/00_inventory_manifest.py --scan paper_02` (from subproject dir) whenever you receive a new paper_02 data batch so the manifest stays in sync.
 
 Quickstart (local with sensitive data)
 
@@ -48,9 +73,9 @@ If data is missing, scripts will exit with actionable instructions.
 
 This subproject supports two primary execution environments:
 
-*   **Windows (Standard):** Uses PowerShell 7.0. Follow the guidelines in `GEMINI.md`.
-*   **Android (Termux):** Uses Bash and `termux-wake-lock`. Follow the guidelines in `GEMINI_TERMUX.md`.
-    *   **Note:** In Termux, the Python-based builder (`scripts/build_real_panel.py`) is used instead of the R-based builder to prevent memory-related segmentation faults.
+- **Windows (Standard):** Uses PowerShell 7.0. Follow the guidelines in `GEMINI.md`.
+- **Android (Termux):** Uses Bash and `termux-wake-lock`. Follow the guidelines in `GEMINI_TERMUX.md`.
+  - **Note:** In Termux, the Python-based builder (`scripts/build_real_panel.py`) is used instead of the R-based builder to prevent memory-related segmentation faults.
 
 How to obtain data (high level)
 Register linkage and extraction are handled by designated controllers under permits. This repo intentionally does not encode sensitive locations, keys, or any participant-level data.
@@ -59,15 +84,15 @@ Register linkage and extraction are handled by designated controllers under perm
 
 **Status:** Ready for Data (R Scripts)
 
-*Note: In accordance with project standards, all new R scripts should be placed in the `R/` directory. Existing scripts in `scripts/` will be migrated to `R/`.*
+_Note: In accordance with project standards, all new R scripts should be placed in the `R/` directory. Existing scripts in `scripts/` will be migrated to `R/`._
 
 1. **Environment Setup:**
    `Rscript R/00_setup_env.R`
    (Initializes `renv` and installs dependencies: tidyverse, MASS, sandwich, etc.)
 2. **Data Build (Secure):**
-   *   **Windows:** `Rscript R/10_build_panel_person_period.R`
-   *   **Android (Termux):** `python scripts/build_real_panel.py`
-   (Reads `DATA_ROOT`, applies `data/VARIABLE_STANDARDIZATION.csv`, saves `derived/aim2_panel.csv`)
+   - **Windows:** `Rscript R/10_build_panel_person_period.R`
+   - **Android (Termux):** `python scripts/build_real_panel.py`
+     (Reads `DATA_ROOT`, applies `data/VARIABLE_STANDARDIZATION.csv`, saves `derived/aim2_panel.csv`)
 3. **Quality Control:**
    `Rscript R/20_qc_panel_summary.R`
    (Checks derived panel for logical consistency and zeros; outputs to `outputs/qc_summary_aim2.txt`)
