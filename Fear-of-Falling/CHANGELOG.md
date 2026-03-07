@@ -3,6 +3,10 @@
 ## [Unreleased]
 
 ### Added
+- **Gemini CLI Policy Engine Migration**: Siirretty tyÃ¶kaluoikeuksien hallinta vanhentuneesta `tools.allowed` -asetuksesta uuteen Policy Engineen (yhteensopiva v1.0+).
+  - Luotu globaali policy-tiedosto: `~/.gemini/policies/s-fof-policy.toml`.
+  - MÃ¤Ã¤ritetty sallitut tyÃ¶kalut (`read_file`, `write_file`, `replace`, `glob`, `run_shell_command`) prioriteetilla 100.
+  - Puhdistettu projektikohtainen `.gemini/settings.json` vanhentuneista asetuksista.
 - **K20-K26 Analysis Pipeline Completion**: Suoritettu koko K20-K26 analyysiputki PowerShell 7 -orkestraattorilla.
   - Ratkaistu kriittiset riippuvuudet (K15 frailty-datan päivitys, `gt` ja `readxl` pakettien asennus).
   - Tuotettu toistettavat analyysitulokset, mallit ja manifest-merkinnät.

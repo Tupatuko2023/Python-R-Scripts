@@ -85,6 +85,12 @@ sessionInfo()
 
 ---
 
+## 4) Gemini CLI Policy Engine (Oikeudet)
+
+v1.0+ versiossa agentin oikeudet hallitaan globaalilla policy-tiedostolla (`~/.gemini/policies/s-fof-policy.toml`). Älä käytä vanhentunutta `tools.allowed` -asetusta. Katso asennusohjeet `PS7_GEMINI_CLI_BOOTSTRAP.md`.
+
+---
+
 ## 5) How to run (standard)
 
 Jos repo tarjoaa runnerin (Makefile / justfile), suosi sitä (TODO: vahvista).

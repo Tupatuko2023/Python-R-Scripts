@@ -20,7 +20,46 @@ Get-Command gemini, git, Rscript, python -ErrorAction SilentlyContinue
 
 ```
 
-## 2. Ajoskriptin käynnistäminen
+## 2. Gemini CLI Policy Engine (Oikeudet)
+
+Gemini CLI v1.0+ vaatii Policy Engine -asetukset työkalujen suorittamiseen. Luo vaadittu policy-tiedosto kerran (globaalisti):
+
+```powershell
+# 1. Luo policy-hakemisto
+$policyDir = "$env:USERPROFILE\.gemini\policies"
+New-Item -ItemType Directory -Force -Path $policyDir
+
+# 2. Luo s-fof-policy.toml
+$tomlContent = @"
+[[rule]]
+toolName = "read_file"
+decision = "allow"
+priority = 100
+
+[[rule]]
+toolName = "write_file"
+decision = "allow"
+priority = 100
+
+[[rule]]
+toolName = "replace"
+decision = "allow"
+priority = 100
+
+[[rule]]
+toolName = "glob"
+decision = "allow"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+decision = "allow"
+priority = 100
+"@
+Set-Content -Path "$policyDir\s-fof-policy.toml" -Value $tomlContent -Encoding UTF8
+```
+
+## 3. Ajoskriptin käynnistäminen
 
 Kaikki agentin suoritukset on ajettava orkestrointiskriptin kautta. Skripti takaa, että agentti saa aina uusimman järjestelmäkehotteen (System Prompt) ja että ajo lokitetaan turvallisesti.
 
@@ -33,7 +72,7 @@ Aja orkestroija:
 
 ```
 
-## 3. Yleiset vikatilanteet (Common failure signatures)
+## 4. Yleiset vikatilanteet (Common failure signatures)
 
 * **`Get-Command : The term 'gemini' is not recognized...`**
 * **Syy:** Gemini CLI -työkalua ei ole asennettu tai se ei ole järjestelmän PATH-ympäristömuuttujassa.

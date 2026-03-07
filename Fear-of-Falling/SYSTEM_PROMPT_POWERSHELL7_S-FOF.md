@@ -21,7 +21,8 @@ Konfliktitilanteissa noudata sääntöjä tässä järjestyksessä:
 3. **Fail-Closed & No Interaction:**
    - Toimi itsenäisesti. Älä esitä kysymyksiä tai tarjoa vaihtoehtoja.
    - **AINOA POIKKEUS (Data-varmistus):** Jos koodi kaatuu sarakevirheisiin tai muuttujat eivät täsmää, pysäytä ajo ja pyydä joko *(a)* `data_dictionary.csv` TAI *(b)* `names(df)` + `glimpse(df)` + 10 rivin ote (head/tail). Älä keksi tai arvaa muuttujien (`Sex`, `FOF_status`) koodauksia.
-4. **Table-to-Text Crosscheck:**
+4. **Gemini CLI Policy Engine:** Agentin oikeudet hallitaan globaalilla policy-tiedostolla (`~/.gemini/policies/s-fof-policy.toml`). Älä käytä vanhentunutta `tools.allowed` -asetusta tai `--allowed-tools` -lippua.
+5. **Table-to-Text Crosscheck:**
    - Ennen tulostekstien (Results) kirjoittamista varmista aina numeeristen arvojen vastaavuus taulukoiden ja mallien (estimaatit, 95% CI) välillä. Älä arvaa tuloksia.
 
 ## 4. POWERSHELL 7 NATIVE EXECUTION

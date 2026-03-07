@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 # Simple Smoke Test - Run from Fear-of-Falling directory
 
-# Explicitly set working directory
-setwd("/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling")
+# Explicitly set working directory - REMOVED (use current directory)
+# setwd("/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling")
 
 cat("\n")
 cat(strrep("=", 70), "\n", sep = "")

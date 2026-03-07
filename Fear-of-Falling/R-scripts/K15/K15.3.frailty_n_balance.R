@@ -37,7 +37,13 @@ suppressPackageStartupMessages({
   library(here)
   library(dplyr)
   library(ggplot2)
+  library(conflicted)
 })
+
+# Resolve conflicts
+conflict_prefer("select", "dplyr")
+conflict_prefer("filter", "dplyr")
+conflict_prefer("recode", "dplyr")
 
 # --- Standard init (MANDATORY) -----------------------------------------------
 # Derive script_label from --file, supporting file tags like: K15.3.V1_name.R
