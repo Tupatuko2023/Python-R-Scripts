@@ -167,10 +167,7 @@ startup (`.Rprofile -> source("renv/activate.R")`) voi jumittaa ennen
 skriptin omaa suoritusta.
 
 ```powershell
-$env:R_PROFILE_USER = "NUL"
-$env:R_ENVIRON_USER = "NUL"
-$env:DATA_ROOT      = "C:/GitWork/FOF_LOCAL_DATA"
-Rscript --vanilla .\R-scripts\K40\K40.V2_frailty-index.R
+.\scripts\ps7\run_k40_vanilla.ps1
 ```
 
 1. Raportti
