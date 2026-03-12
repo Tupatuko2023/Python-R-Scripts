@@ -1,5 +1,9 @@
 # TASK: FOF Analysis Plan Aim 1 Update (FOF + Frailty + Balance)
 
+## Status
+
+Superseded by K50 analysis plan refactor.
+
 ## Context
 
 Fear-of-Falling `docs/ANALYSIS_PLAN.md` was FOF-only in Objective/Primary Comparison and models. Requested update is to align Aim 1 framing to FOF + frailty + balance with explicit operationalization of independent vs relative effects.
@@ -33,6 +37,7 @@ Fear-of-Falling `docs/ANALYSIS_PLAN.md` was FOF-only in Objective/Primary Compar
   - balance: `tasapainovaikeus`; objective candidates `Seisominen0/Seisominen2` and `SLS0/SLS2`
 - 2026-02-21 18:54:15 Updated `docs/ANALYSIS_PLAN.md` Objective, Variables, Models, and QC gates.
 - 2026-02-21 18:54:15 Added `docs/CHANGELOG_NOTE.md` including TODO for objective balance canonical naming.
+- 2026-03-12 Review outcome: superseded by K50 analysis plan refactor; retained for audit trail and moved to `tasks/04-done/` by user-approved workflow action.
 
 ## Blockers
 
