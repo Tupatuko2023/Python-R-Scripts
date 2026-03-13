@@ -2478,3 +2478,251 @@ manifest/renv_diagnostics.txt,2026-02-25 16.53.10,REPRO,54821c8,NA,NA,NA
 2026-03-04 12:19:06.95953,K46,k46_sessioninfo.txt,sessioninfo,R-scripts/K46/outputs/k46_sessioninfo.txt,NA,R sessionInfo()
 2026-03-04 12:19:54.914683,K18_QC_SUMMARY,qc_summary,qc_summary_csv,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.csv,15,aggregate_only
 2026-03-04 12:19:55.481544,K18_QC_SUMMARY,qc_summary_notes,qc_summary_txt,R-scripts/K18_QC/outputs/K18_QC/qc_summary/qc_summary.txt,15,aggregate_only
+2026-03-09 17:09:43.767006,K1,K1_Z_Score_Change_2G,table_csv,R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv,8,NA
+2026-03-09 17:09:43.878611,K1,sessioninfo,sessioninfo,R-scripts/K1/outputs/sessioninfo_K1.txt,NA,NA
+2026-03-09 17:09:52.012224,K2,K2_Z_Score_Change_2G_Transposed,table_csv,R-scripts/K2/outputs/K2_Z_Score_Change_2G_Transposed.csv,46,NA
+2026-03-09 17:09:53.714144,K3,K3_Values_2G,table_csv,R-scripts/K3/outputs/K3_Values_2G.csv,10,NA
+2026-03-09 17:09:53.821944,K3,sessioninfo,sessioninfo,R-scripts/K3/outputs/sessioninfo_K3.txt,NA,NA
+2026-03-09 17:09:55.025532,K4,K4_Values_2G_Transposed,table_csv,R-scripts/K4/outputs/K4_Values_2G_Transposed.csv,46,NA
+2026-03-09 17:18:28.575224,K1,K1_Z_Score_Change_2G,table_csv,R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv,8,NA
+2026-03-09 17:18:28.71519,K1,sessioninfo,sessioninfo,R-scripts/K1/outputs/sessioninfo_K1.txt,NA,NA
+2026-03-09 17:18:31.102184,K2,K2_Z_Score_Change_2G_Transposed,table_csv,R-scripts/K2/outputs/K2_Z_Score_Change_2G_Transposed.csv,46,NA
+2026-03-09 17:18:34.806443,K3,K3_Values_2G,table_csv,R-scripts/K3/outputs/K3_Values_2G.csv,10,NA
+2026-03-09 17:18:34.98609,K3,sessioninfo,sessioninfo,R-scripts/K3/outputs/sessioninfo_K3.txt,NA,NA
+2026-03-09 17:18:37.72124,K4,K4_Values_2G_Transposed,table_csv,R-scripts/K4/outputs/K4_Values_2G_Transposed.csv,46,NA
+2026-03-09 17:19:01.149524,K13,lm_MOI_int_extended_full,table_csv,R-scripts/K13/outputs/lm_MOI_int_extended_full.csv,NA,NA
+2026-03-09 17:19:01.471635,K13,lm_MOI_int_extended_full,table_html,R-scripts/K13/outputs/lm_MOI_int_extended_full.html,NA,NA
+2026-03-09 17:19:01.635457,K13,lm_Pain_int_extended_full,table_csv,R-scripts/K13/outputs/lm_Pain_int_extended_full.csv,NA,NA
+2026-03-09 17:19:01.807128,K13,lm_Pain_int_extended_full,table_html,R-scripts/K13/outputs/lm_Pain_int_extended_full.html,NA,NA
+2026-03-09 17:19:01.951743,K13,lm_SRH_int_extended_full,table_csv,R-scripts/K13/outputs/lm_SRH_int_extended_full.csv,NA,NA
+2026-03-09 17:19:02.1065,K13,lm_SRH_int_extended_full,table_html,R-scripts/K13/outputs/lm_SRH_int_extended_full.html,NA,NA
+2026-03-09 17:19:02.242932,K13,lm_SRM_int_extended_full,table_csv,R-scripts/K13/outputs/lm_SRM_int_extended_full.csv,NA,NA
+2026-03-09 17:19:02.394988,K13,lm_SRM_int_extended_full,table_html,R-scripts/K13/outputs/lm_SRM_int_extended_full.html,NA,NA
+2026-03-09 17:19:02.542065,K13,lm_age_int_extended_full,table_csv,R-scripts/K13/outputs/lm_age_int_extended_full.csv,NA,NA
+2026-03-09 17:19:02.68844,K13,lm_age_int_extended_full,table_html,R-scripts/K13/outputs/lm_age_int_extended_full.html,NA,NA
+2026-03-09 17:19:02.828159,K13,lm_BMI_int_extended_full,table_csv,R-scripts/K13/outputs/lm_BMI_int_extended_full.csv,NA,NA
+2026-03-09 17:19:02.964455,K13,lm_BMI_int_extended_full,table_html,R-scripts/K13/outputs/lm_BMI_int_extended_full.html,NA,NA
+2026-03-09 17:19:03.115507,K13,lm_sex_int_extended_full,table_csv,R-scripts/K13/outputs/lm_sex_int_extended_full.csv,NA,NA
+2026-03-09 17:19:03.250656,K13,lm_sex_int_extended_full,table_html,R-scripts/K13/outputs/lm_sex_int_extended_full.html,NA,NA
+2026-03-09 17:19:03.403361,K13,lm_all_int_extended_full,table_csv,R-scripts/K13/outputs/lm_all_int_extended_full.csv,NA,NA
+2026-03-09 17:19:03.536164,K13,lm_all_int_extended_full,table_html,R-scripts/K13/outputs/lm_all_int_extended_full.html,NA,NA
+2026-03-09 17:19:03.695304,K13,FOF_interaction_effects_overview,table_csv,R-scripts/K13/outputs/FOF_interaction_effects_overview.csv,NA,NA
+2026-03-09 17:19:03.852003,K13,FOF_interaction_effects_overview,table_html,R-scripts/K13/outputs/FOF_interaction_effects_overview.html,NA,NA
+2026-03-09 17:19:03.999845,K13,FOF_interaction_effects_symptoms,table_csv,R-scripts/K13/outputs/FOF_interaction_effects_symptoms.csv,NA,NA
+2026-03-09 17:19:04.15944,K13,FOF_interaction_effects_symptoms,table_html,R-scripts/K13/outputs/FOF_interaction_effects_symptoms.html,NA,NA
+2026-03-09 17:19:04.595765,K13,simple_slopes_FOF_by_age,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_age.csv,NA,NA
+2026-03-09 17:19:04.747718,K13,simple_slopes_FOF_by_age,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_age.html,NA,NA
+2026-03-09 17:19:05.825661,K13,simple_slopes_FOF_by_BMI,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_BMI.csv,NA,NA
+2026-03-09 17:19:05.975009,K13,simple_slopes_FOF_by_BMI,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_BMI.html,NA,NA
+2026-03-09 17:19:06.780259,K13,simple_slopes_FOF_by_sex,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_sex.csv,NA,NA
+2026-03-09 17:19:06.914474,K13,simple_slopes_FOF_by_sex,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_sex.html,NA,NA
+2026-03-09 17:19:07.823113,K13,simple_slopes_FOF_by_MOI,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_MOI.csv,NA,NA
+2026-03-09 17:19:07.961916,K13,simple_slopes_FOF_by_MOI,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_MOI.html,NA,NA
+2026-03-09 17:19:08.881998,K13,simple_slopes_FOF_by_Pain,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_Pain.csv,NA,NA
+2026-03-09 17:19:09.029138,K13,simple_slopes_FOF_by_Pain,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_Pain.html,NA,NA
+2026-03-09 17:19:09.879637,K13,simple_slopes_FOF_by_SRH,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_SRH.csv,NA,NA
+2026-03-09 17:19:10.015275,K13,simple_slopes_FOF_by_SRH,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_SRH.html,NA,NA
+2026-03-09 17:19:10.857353,K13,simple_slopes_FOF_by_SRM,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_SRM.csv,NA,NA
+2026-03-09 17:19:10.999794,K13,simple_slopes_FOF_by_SRM,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_SRM.html,NA,NA
+2026-03-09 17:19:18.206789,K15,K15_frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
+2026-03-09 17:19:18.419079,K15,K15_frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
+2026-03-09 17:19:18.589782,K15,K15_frailty_cat_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv,NA,NA
+2026-03-09 17:19:18.763901,K15,K15_frailty_cat_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_3_overall.html,NA,NA
+2026-03-09 17:19:18.924546,K15,K15_frailty_count_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_4_overall.csv,NA,NA
+2026-03-09 17:19:19.067352,K15,K15_frailty_count_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_4_overall.html,NA,NA
+2026-03-09 17:19:19.227968,K15,K15_frailty_cat_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv,NA,NA
+2026-03-09 17:19:19.36168,K15,K15_frailty_cat_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_4_overall.html,NA,NA
+2026-03-09 17:19:19.638247,K15,K15_frailty_components_missingness,table_csv,R-scripts/K15/outputs/K15_frailty_components_missingness.csv,9,NA
+2026-03-09 17:19:19.77704,K15,K15_frailty_score_missingness,table_csv,R-scripts/K15/outputs/K15_frailty_score_missingness.csv,2,NA
+2026-03-09 17:19:19.962762,K15,K15_frailty_legacy_vs_new,table_csv,R-scripts/K15/outputs/K15_frailty_legacy_vs_new.csv,15,NA
+2026-03-09 17:19:20.162312,K15,K15_frailty_cat3_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.csv,NA,NA
+2026-03-09 17:19:20.299405,K15,K15_frailty_cat3_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.html,NA,NA
+2026-03-09 17:19:20.443172,K15,K15_frailty_cat4_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.csv,NA,NA
+2026-03-09 17:19:20.580413,K15,K15_frailty_cat4_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.html,NA,NA
+2026-03-09 17:19:20.805821,K15,K15_chisq_FOF_by_frailty_cat3,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.csv,NA,NA
+2026-03-09 17:19:20.946119,K15,K15_chisq_FOF_by_frailty_cat3,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.html,NA,NA
+2026-03-09 17:19:21.095135,K15,K15_chisq_FOF_by_frailty_cat4,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.csv,NA,NA
+2026-03-09 17:19:21.248914,K15,K15_chisq_FOF_by_frailty_cat4,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.html,NA,NA
+2026-03-09 17:19:22.396225,K15,K15_frailty_cat3_by_FOF,figure_png,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.png,NA,Stacked proportion plot: frailty_cat_3 distribution by FOF-status.
+2026-03-09 17:19:22.579616,K15,sessioninfo,sessioninfo,R-scripts/K15/outputs/sessioninfo_K15.txt,NA,NA
+2026-03-09 17:27:43.567047,K1,K1_Z_Score_Change_2G,table_csv,R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv,8,NA
+2026-03-09 17:27:43.802343,K1,sessioninfo,sessioninfo,R-scripts/K1/outputs/sessioninfo_K1.txt,NA,NA
+2026-03-09 17:27:46.460317,K2,K2_Z_Score_Change_2G_Transposed,table_csv,R-scripts/K2/outputs/K2_Z_Score_Change_2G_Transposed.csv,46,NA
+2026-03-09 17:27:50.045328,K3,K3_Values_2G,table_csv,R-scripts/K3/outputs/K3_Values_2G.csv,10,NA
+2026-03-09 17:27:50.277322,K3,sessioninfo,sessioninfo,R-scripts/K3/outputs/sessioninfo_K3.txt,NA,NA
+2026-03-09 17:27:53.089918,K4,K4_Values_2G_Transposed,table_csv,R-scripts/K4/outputs/K4_Values_2G_Transposed.csv,46,NA
+K6_main,table,K6_main_main_results.csv,"K6 ANCOVA -paamallien yhteenvetotaulukko (FOF x PainVAS0_G2, SRH_3class, SRM_3class)",NA,NA,NA
+K6_main,plot,K6_FOF_PainVAS0_G2_emmeans.png,Emmeans-interaktiokuva: FOF x kipuluokka (PainVAS0_G2),NA,NA,NA
+K6_main,plot,K6_FOF_SRH3_emmeans.png,Emmeans-interaktiokuva: FOF x self-rated health (SRH_3class),NA,NA,NA
+K6_main,plot,K6_FOF_SRM3_emmeans.png,Emmeans-interaktiokuva: FOF x self-rated mobility (SRM_3class),NA,NA,NA
+K6_main,plot,K6_FOF_contrasts_forest.png,FOF vs non_FOF erot Delta_Composite_Z:ssa moderaattoreiden ja luokkien mukaan (forest-kuva),NA,NA,NA
+K6_main,plot,K6_PainVAS0_G2_main_effect.png,Päävaikutuskuva: kipuluokat (PainVAS0_G2 low vs high) ja säädetty 12 kk muutos komposiitissa,NA,NA,NA
+K6_main,plot,K6_PainVAS0_continuous_effect.png,Päävaikutuskuva: jatkuvan kivun (PainVAS0) yhteys säädettyyn 12 kk muutokseen komposiitissa,NA,NA,NA
+K6_main,plot,K6_Age_effect.png,Päävaikutuskuva: iän (Age) yhteys säädettyyn 12 kk muutokseen komposiitissa,NA,NA,NA
+K7,table,K7/K7_delta_desc_by_FOF.csv,"Descriptive statistics for change variables (DeltaComposite, Delta_HGS, Delta_MWS, Delta_FTSST, Delta_SLS) by FOF status (n, mean, SD).",NA,NA,NA
+K7,table,K7/K7_cell_means_DeltaComposite_by_subgroup.csv,"Cell means for change in composite physical performance (DeltaComposite) by FOF status and baseline subgroups (MWS, SLS, FTSST).",NA,NA,NA
+K7,table,K7/K7_ANCOVA_type3_all_models.csv,"Type III ANCOVA results for all moderation models (MWS1, MWS2, SLS, FTSST; composite PBT and test-specific outcomes).",NA,NA,NA
+K7,table,K7/K7_contrasts_CompositePBT_by_subgroups.csv,"Contrasts for change in composite physical performance (non-FOF minus FOF) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",NA,NA,NA
+K7,table,K7/K7_contrasts_test_specific_by_subgroups.csv,"Contrasts for test-specific changes (Delta_MWS, Delta_SLS, Delta_FTSST) by baseline subgroups (MWS, SLS, FTSST) with 95% CIs.",NA,NA,NA
+K7,table,K7/K7_sample_sizes_by_subgroup.csv,"Sample sizes for all FOF by subgroup combinations (MWS, SLS, FTSST; n and total per subgroup).",NA,NA,NA
+K7,plot,K7/K7_box_DeltaComposite_FOF.png,Boxplot of change in composite physical performance (DeltaComposite) by FOF status.,NA,NA,NA
+K7,plot,K7/K7_MWS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline MWS subgroup (<1.3 vs >=1.3 m/s).,NA,NA,NA
+K7,plot,K7/K7_SLS_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline SLS subgroup.,NA,NA,NA
+K7,plot,K7/K7_FTSST_composite_interaction.png,Interaction plot: change in composite PBT by FOF status and baseline FTSST subgroup.,NA,NA,NA
+K7,plot,K7/K7_MWS_composite_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline MWS subgroup.,NA,NA,NA
+K7,plot,K7/K7_SLS_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline SLS subgroup.,NA,NA,NA
+K7,plot,K7/K7_FTSST_comp_forest.png,Forest plot of contrasts in change in composite PBT (non-FOF minus FOF) by baseline FTSST subgroup.,NA,NA,NA
+K7,plot,K7/K7_MWS_own_forest.png,Forest plot of contrasts in change in maximal walking speed (Delta_MWS) by baseline MWS subgroup.,NA,NA,NA
+K7,plot,K7/K7_SLS_own_forest.png,Forest plot of contrasts in change in single-leg stance (Delta_SLS) by baseline SLS subgroup.,NA,NA,NA
+K7,plot,K7/K7_FTSST_own_forest.png,Forest plot of contrasts in change in five-times sit-to-stand (Delta_FTSST) by baseline FTSST subgroup.,NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/interaction_summary_FOFxG_ANCOVA.csv,"FOF × moderaattori (Balance_problem / Walk500m_G_final) — interaktiotermit, Type III ANOVA",NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/contrast_summary_withinG_nonFOF_minus_FOF.csv,NonFOF – FOF LS-mean -kontrastit kunkin moderaattoritason sisällä (emmeans),NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_3class.csv,FOF × Walk500m alkuperäinen 3-luokkainen ristiintaulukko,NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/cell_counts_FOF_by_Walk500m_G_final.csv,FOF × Walk500m yhdistetty 2-luokkainen ristiintaulukko,NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Balance.png,Adjusted ΔComposite – EMM-kuva moderaattorina balance problems,NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/plot_DeltaComposite_Walk500.png,Adjusted ΔComposite – EMM-kuva moderaattorina walking 500 m ability,NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_problem_main_effect.png,Päävaikutuskuva: tasapaino-ongelma ja säädetty ΔComposite,NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_main_effect.png,Päävaikutuskuva: 500 m kävelykyky ja säädetty ΔComposite,NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_Walk_fourpanel.png,"Nelikenttäkuva: ΔComposite FOF-statuksen, tasapaino-ongelman ja 500 m kävelykyvyn mukaan",NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/K8_Spearman_subjective_vs_objective.csv,"Spearman-korrelaatiot: subjektiiviset tasapaino-/kävelyvaikeudet vs. objektiiviset mittarit (SLS, MWS)",NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Balance_vs_SLS.csv,Ryhmätasoiset SLS0/SLS2-keskiarvot tasapaino-ongelman (Balance_problem) mukaan,NA,NA,NA
+K8_ANCOVA,table,K8_ANCOVA/K8_groupmeans_Walk500m_vs_MWS.csv,Ryhmätasoiset MWS0/MWS2-keskiarvot 500 m kävelykyvyn (Walk500m_G_final) mukaan,NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Balance_vs_SLS0_boxplot.png,Validointiboksikuva: tasapaino-ongelma vs. SLS0 (baseline),NA,NA,NA
+K8_ANCOVA,plot,K8_ANCOVA/K8_Walk500m_vs_MWS0_boxplot.png,Validointiboksikuva: 500 m kävelyvaikeus vs. MWS0 (baseline),NA,NA,NA
+K9,table,K9/K9_tidy_composite_women.csv,"Naiset: ANCOVA-mallin regressiokertoimet (DeltaComposite, FOF_status × AgeClass_final, kovariaatit).",NA,NA,NA
+K9,table,K9/K9_anova_composite_women_typeIII.csv,"Naiset: ANCOVA-mallin Type III -varianssianalyysi (FOF_status, AgeClass_final, interaktio ja kovariaatit).",NA,NA,NA
+K9,table,K9/K9_contrast_composite_women.csv,Naiset: emmeans-kontrastit (nonFOF – FOF) DeltaComposite-muutokselle ikäluokittain.,NA,NA,NA
+K9,table,K9/K9_desc_deltas_women.csv,Naiset: deskriptiiviset keskiarvomuutokset DeltaComposite- ja PBT-muuttujissa FOF-ryhmittäin.,NA,NA,NA
+K9,table,K9/K9_baseline_by_FOF_Age_women.csv,Naiset: lähtötilanteen taustatiedot ja PBT-arvot FOF-statuksen ja ikäluokan mukaan.,NA,NA,NA
+K9,table,K9/K9_cell_counts_women_final.csv,Naiset: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
+K9,table,K9/K9_desc_deltas_men.csv,Miehet: deskriptiiviset keskiarvomuutokset DeltaComposite-muutoksesta FOF-ryhmittäin.,NA,NA,NA
+K9,table,K9/K9_cell_counts_men.csv,Miehet: solukoot FOF_status × AgeClass_final -ristiintaulukossa.,NA,NA,NA
+K9,plot,K9/DeltaComposite_FOF_Age_women.png,"Naiset: DeltaComposite-muutos FOF-statuksen ja ikäluokan funktiona (emmeans, ANCOVA).",NA,NA,NA
+K9,plot,K9/K9_BMI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa BMI:n funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
+K9,plot,K9/K9_MOI_effect_women.png,"Naiset: säädetty 12 kk muutos komposiitissa MOI-indeksin funktiona (FOF_status = nonFOF, ikäluokka 65–84 v, muut kovariaatit keskiarvoissa).",NA,NA,NA
+2026-03-09 17:28:40.697454,K11,fit_primary_ancova,table_csv,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova.csv,266,NA
+2026-03-09 17:28:40.933818,K11,fit_primary_ancova_pvalues,table_csv,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K11/outputs/fit_primary_ancova_pvalues.csv,266,NA
+2026-03-09 17:28:41.353765,K11,missing_data_pattern,table_csv,R-scripts/K11/outputs/missing_data_pattern.csv,266,NA
+2026-03-09 17:28:41.644235,K11,missing_data_pattern,table_html,R-scripts/K11/outputs/missing_data_pattern.html,266,NA
+2026-03-09 17:28:44.271951,K11,mice_pooled_model_base,table_csv,R-scripts/K11/outputs/mice_pooled_model_base.csv,NA,NA
+2026-03-09 17:28:44.483574,K11,mice_pooled_model_base,table_html,R-scripts/K11/outputs/mice_pooled_model_base.html,NA,NA
+2026-03-09 17:28:44.66702,K11,mice_pooled_model_extended,table_csv,R-scripts/K11/outputs/mice_pooled_model_extended.csv,NA,NA
+2026-03-09 17:28:44.827394,K11,mice_pooled_model_extended,table_html,R-scripts/K11/outputs/mice_pooled_model_extended.html,NA,NA
+2026-03-09 17:28:46.697392,K11,Age_quartile_Age_counts,table_csv,R-scripts/K11/outputs/Age_quartile_Age_counts.csv,NA,NA
+2026-03-09 17:28:46.947792,K11,Age_quartile_Age_counts,table_html,R-scripts/K11/outputs/Age_quartile_Age_counts.html,NA,NA
+2026-03-09 17:28:47.11542,K11,freq_FOF_status,table_csv,R-scripts/K11/outputs/freq_FOF_status.csv,NA,NA
+2026-03-09 17:28:47.309936,K11,freq_FOF_status,table_html,R-scripts/K11/outputs/freq_FOF_status.html,NA,NA
+2026-03-09 17:28:47.510137,K11,freq_AgeClass,table_csv,R-scripts/K11/outputs/freq_AgeClass.csv,NA,NA
+2026-03-09 17:28:47.677953,K11,freq_AgeClass,table_html,R-scripts/K11/outputs/freq_AgeClass.html,NA,NA
+2026-03-09 17:28:47.871682,K11,cross_FOF_AgeClass,table_csv,R-scripts/K11/outputs/cross_FOF_AgeClass.csv,NA,NA
+2026-03-09 17:28:48.053777,K11,cross_FOF_AgeClass,table_html,R-scripts/K11/outputs/cross_FOF_AgeClass.html,NA,NA
+2026-03-09 17:28:48.219724,K11,Age_quartile_summary,table_csv,R-scripts/K11/outputs/Age_quartile_summary.csv,NA,NA
+2026-03-09 17:28:48.38083,K11,Age_quartile_summary,table_html,R-scripts/K11/outputs/Age_quartile_summary.html,NA,NA
+2026-03-09 17:28:48.58856,K11,lm_base_model_full,table_csv,R-scripts/K11/outputs/lm_base_model_full.csv,NA,NA
+2026-03-09 17:28:48.765534,K11,lm_base_model_full,table_html,R-scripts/K11/outputs/lm_base_model_full.html,NA,NA
+2026-03-09 17:28:48.929592,K11,lm_extended_model_full,table_csv,R-scripts/K11/outputs/lm_extended_model_full.csv,NA,NA
+2026-03-09 17:28:49.088141,K11,lm_extended_model_full,table_html,R-scripts/K11/outputs/lm_extended_model_full.html,NA,NA
+2026-03-09 17:28:49.264684,K11,FOF_effect_base_vs_extended,table_csv,R-scripts/K11/outputs/FOF_effect_base_vs_extended.csv,NA,NA
+2026-03-09 17:28:49.435661,K11,FOF_effect_base_vs_extended,table_html,R-scripts/K11/outputs/FOF_effect_base_vs_extended.html,NA,NA
+2026-03-09 17:28:49.781256,K11,lm_extended_standardized,table_csv,R-scripts/K11/outputs/lm_extended_standardized.csv,NA,NA
+2026-03-09 17:28:49.999255,K11,lm_extended_standardized,table_html,R-scripts/K11/outputs/lm_extended_standardized.html,NA,NA
+2026-03-09 17:28:50.199068,K11,FOF_effect_MICE_base_vs_extended,table_csv,R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.csv,NA,NA
+2026-03-09 17:28:50.365118,K11,FOF_effect_MICE_base_vs_extended,table_html,R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html,NA,NA
+2026-03-09 17:28:50.614158,K11,logit_responder_model,table_csv,R-scripts/K11/outputs/logit_responder_model.csv,NA,NA
+2026-03-09 17:28:50.808847,K11,logit_responder_model,table_html,R-scripts/K11/outputs/logit_responder_model.html,NA,NA
+2026-03-09 17:28:50.995044,K11,ordinal_polr_coefficients,table_csv,R-scripts/K11/outputs/ordinal_polr_coefficients.csv,NA,NA
+2026-03-09 17:28:51.150829,K11,ordinal_polr_coefficients,table_html,R-scripts/K11/outputs/ordinal_polr_coefficients.html,NA,NA
+2026-03-09 17:28:51.341238,K11,ordinal_polr_OR,table_csv,R-scripts/K11/outputs/ordinal_polr_OR.csv,NA,NA
+2026-03-09 17:28:51.499593,K11,ordinal_polr_OR,table_html,R-scripts/K11/outputs/ordinal_polr_OR.html,NA,NA
+2026-03-09 17:28:51.661823,K11,responder_by_Age_and_FOF,table_csv,R-scripts/K11/outputs/responder_by_Age_and_FOF.csv,NA,NA
+2026-03-09 17:28:51.844871,K11,responder_by_Age_and_FOF,table_html,R-scripts/K11/outputs/responder_by_Age_and_FOF.html,NA,NA
+2026-03-09 17:28:52.010918,K11,responder_pvalues_by_Age_quartile,table_csv,R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.csv,NA,NA
+2026-03-09 17:28:52.16358,K11,responder_pvalues_by_Age_quartile,table_html,R-scripts/K11/outputs/responder_pvalues_by_Age_quartile.html,NA,NA
+2026-03-09 17:28:52.352214,K11,emmeans_FOF_vs_nonFOF_by_agequartile,table_csv,R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.csv,NA,NA
+2026-03-09 17:28:52.562929,K11,emmeans_FOF_vs_nonFOF_by_agequartile,table_html,R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html,NA,NA
+2026-03-09 17:28:52.73043,K11,BP_test_FOF_status,table_csv,R-scripts/K11/outputs/BP_test_FOF_status.csv,NA,NA
+2026-03-09 17:28:52.888104,K11,BP_test_FOF_status,table_html,R-scripts/K11/outputs/BP_test_FOF_status.html,NA,NA
+2026-03-09 17:28:53.053181,K11,gls_hom_vs_het_comparison,table_csv,R-scripts/K11/outputs/gls_hom_vs_het_comparison.csv,NA,NA
+2026-03-09 17:28:53.214834,K11,gls_hom_vs_het_comparison,table_html,R-scripts/K11/outputs/gls_hom_vs_het_comparison.html,NA,NA
+2026-03-09 17:28:53.383373,K11,gls_residual_variance_by_FOF,table_csv,R-scripts/K11/outputs/gls_residual_variance_by_FOF.csv,NA,NA
+2026-03-09 17:28:53.549523,K11,gls_residual_variance_by_FOF,table_html,R-scripts/K11/outputs/gls_residual_variance_by_FOF.html,NA,NA
+2026-03-09 17:28:53.712346,K11,quantile_reg_FOF_effect,table_csv,R-scripts/K11/outputs/quantile_reg_FOF_effect.csv,NA,NA
+2026-03-09 17:28:53.889935,K11,quantile_reg_FOF_effect,table_html,R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
+2026-03-09 17:28:54.194366,K11,sessioninfo,sessioninfo,R-scripts/K11/outputs/sessioninfo_K11.txt,NA,NA
+2026-03-09 17:28:59.457109,K12,lm_models_all_outcomes,table_csv,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/lm_models_all_outcomes.csv,95,NA
+2026-03-09 17:28:59.64065,K12,FOF_effects_by_outcome,table_csv,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_by_outcome.csv,10,NA
+2026-03-09 17:28:59.843201,K12,FOF_effects_standardized_extended,table_csv,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K12/outputs/FOF_effects_standardized_extended.csv,5,NA
+2026-03-09 17:29:01.167254,K12,sessioninfo,sessioninfo,R-scripts/K12/outputs/sessioninfo_K12.txt,NA,NA
+2026-03-09 17:29:05.32557,K13,lm_MOI_int_extended_full,table_csv,R-scripts/K13/outputs/lm_MOI_int_extended_full.csv,NA,NA
+2026-03-09 17:29:05.687143,K13,lm_MOI_int_extended_full,table_html,R-scripts/K13/outputs/lm_MOI_int_extended_full.html,NA,NA
+2026-03-09 17:29:05.887143,K13,lm_Pain_int_extended_full,table_csv,R-scripts/K13/outputs/lm_Pain_int_extended_full.csv,NA,NA
+2026-03-09 17:29:06.08875,K13,lm_Pain_int_extended_full,table_html,R-scripts/K13/outputs/lm_Pain_int_extended_full.html,NA,NA
+2026-03-09 17:29:06.253429,K13,lm_SRH_int_extended_full,table_csv,R-scripts/K13/outputs/lm_SRH_int_extended_full.csv,NA,NA
+2026-03-09 17:29:06.397469,K13,lm_SRH_int_extended_full,table_html,R-scripts/K13/outputs/lm_SRH_int_extended_full.html,NA,NA
+2026-03-09 17:29:06.55057,K13,lm_SRM_int_extended_full,table_csv,R-scripts/K13/outputs/lm_SRM_int_extended_full.csv,NA,NA
+2026-03-09 17:29:06.702349,K13,lm_SRM_int_extended_full,table_html,R-scripts/K13/outputs/lm_SRM_int_extended_full.html,NA,NA
+2026-03-09 17:29:06.860936,K13,lm_age_int_extended_full,table_csv,R-scripts/K13/outputs/lm_age_int_extended_full.csv,NA,NA
+2026-03-09 17:29:07.018459,K13,lm_age_int_extended_full,table_html,R-scripts/K13/outputs/lm_age_int_extended_full.html,NA,NA
+2026-03-09 17:29:07.189381,K13,lm_BMI_int_extended_full,table_csv,R-scripts/K13/outputs/lm_BMI_int_extended_full.csv,NA,NA
+2026-03-09 17:29:07.363448,K13,lm_BMI_int_extended_full,table_html,R-scripts/K13/outputs/lm_BMI_int_extended_full.html,NA,NA
+2026-03-09 17:29:07.535303,K13,lm_sex_int_extended_full,table_csv,R-scripts/K13/outputs/lm_sex_int_extended_full.csv,NA,NA
+2026-03-09 17:29:07.692365,K13,lm_sex_int_extended_full,table_html,R-scripts/K13/outputs/lm_sex_int_extended_full.html,NA,NA
+2026-03-09 17:29:07.86431,K13,lm_all_int_extended_full,table_csv,R-scripts/K13/outputs/lm_all_int_extended_full.csv,NA,NA
+2026-03-09 17:29:08.029311,K13,lm_all_int_extended_full,table_html,R-scripts/K13/outputs/lm_all_int_extended_full.html,NA,NA
+2026-03-09 17:29:08.21061,K13,FOF_interaction_effects_overview,table_csv,R-scripts/K13/outputs/FOF_interaction_effects_overview.csv,NA,NA
+2026-03-09 17:29:08.361137,K13,FOF_interaction_effects_overview,table_html,R-scripts/K13/outputs/FOF_interaction_effects_overview.html,NA,NA
+2026-03-09 17:29:08.53869,K13,FOF_interaction_effects_symptoms,table_csv,R-scripts/K13/outputs/FOF_interaction_effects_symptoms.csv,NA,NA
+2026-03-09 17:29:08.708516,K13,FOF_interaction_effects_symptoms,table_html,R-scripts/K13/outputs/FOF_interaction_effects_symptoms.html,NA,NA
+2026-03-09 17:29:09.849517,K13,FOF_interaction_effects_standardized,table_csv,R-scripts/K13/outputs/FOF_interaction_effects_standardized.csv,NA,NA
+2026-03-09 17:29:10.048153,K13,FOF_interaction_effects_standardized,table_html,R-scripts/K13/outputs/FOF_interaction_effects_standardized.html,NA,NA
+2026-03-09 17:29:10.282153,K13,simple_slopes_FOF_by_age,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_age.csv,NA,NA
+2026-03-09 17:29:10.469742,K13,simple_slopes_FOF_by_age,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_age.html,NA,NA
+2026-03-09 17:29:11.51447,K13,simple_slopes_FOF_by_BMI,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_BMI.csv,NA,NA
+2026-03-09 17:29:11.750134,K13,simple_slopes_FOF_by_BMI,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_BMI.html,NA,NA
+2026-03-09 17:29:12.231012,K13,simple_slopes_FOF_by_sex,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_sex.csv,NA,NA
+2026-03-09 17:29:12.436815,K13,simple_slopes_FOF_by_sex,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_sex.html,NA,NA
+2026-03-09 17:29:12.858757,K13,simple_slopes_FOF_by_MOI,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_MOI.csv,NA,NA
+2026-03-09 17:29:13.011331,K13,simple_slopes_FOF_by_MOI,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_MOI.html,NA,NA
+2026-03-09 17:29:13.411284,K13,simple_slopes_FOF_by_Pain,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_Pain.csv,NA,NA
+2026-03-09 17:29:13.553082,K13,simple_slopes_FOF_by_Pain,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_Pain.html,NA,NA
+2026-03-09 17:29:13.941815,K13,simple_slopes_FOF_by_SRH,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_SRH.csv,NA,NA
+2026-03-09 17:29:14.10702,K13,simple_slopes_FOF_by_SRH,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_SRH.html,NA,NA
+2026-03-09 17:29:14.489522,K13,simple_slopes_FOF_by_SRM,table_csv,R-scripts/K13/outputs/simple_slopes_FOF_by_SRM.csv,NA,NA
+2026-03-09 17:29:14.680965,K13,simple_slopes_FOF_by_SRM,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_SRM.html,NA,NA
+2026-03-09 17:29:15.154958,K13,VIF_interaction_models,table_csv,R-scripts/K13/outputs/VIF_interaction_models.csv,NA,NA
+2026-03-09 17:29:15.379148,K13,VIF_interaction_models,table_html,R-scripts/K13/outputs/VIF_interaction_models.html,NA,NA
+2026-03-09 17:29:15.662136,K13,FOF_interaction_effects_interpretation,table_csv,R-scripts/K13/outputs/FOF_interaction_effects_interpretation.csv,NA,NA
+2026-03-09 17:29:15.856425,K13,FOF_interaction_effects_interpretation,table_html,R-scripts/K13/outputs/FOF_interaction_effects_interpretation.html,NA,NA
+2026-03-09 17:29:16.14024,K13,sessioninfo,sessioninfo,R-scripts/K13/outputs/sessioninfo_K13.txt,NA,NA
+2026-03-09 17:29:19.108607,K14,K14_baseline_by_FOF,table_csv,R-scripts/K14/outputs/K14_baseline_by_FOF.csv,NA,NA
+2026-03-09 17:29:19.408172,K14,K14_baseline_by_FOF,table_html,R-scripts/K14/outputs/K14_baseline_by_FOF.html,NA,NA
+K14,table,K14/K14_baseline_by_FOF.csv,Baseline characteristics by FOF-status (Table 1; unadjusted).,NA,NA,NA
+2026-03-09 17:29:19.600056,K14,sessioninfo,sessioninfo,R-scripts/K14/outputs/sessioninfo_K14.txt,NA,NA
+2026-03-09 17:29:23.523471,K15,K15_frailty_count_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_3_overall.csv,NA,NA
+2026-03-09 17:29:23.874315,K15,K15_frailty_count_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_3_overall.html,NA,NA
+2026-03-09 17:29:24.128787,K15,K15_frailty_cat_3_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_3_overall.csv,NA,NA
+2026-03-09 17:29:24.318215,K15,K15_frailty_cat_3_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_3_overall.html,NA,NA
+2026-03-09 17:29:24.527364,K15,K15_frailty_count_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_count_4_overall.csv,NA,NA
+2026-03-09 17:29:24.71271,K15,K15_frailty_count_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_count_4_overall.html,NA,NA
+2026-03-09 17:29:24.899753,K15,K15_frailty_cat_4_overall,table_csv,R-scripts/K15/outputs/K15_frailty_cat_4_overall.csv,NA,NA
+2026-03-09 17:29:25.085908,K15,K15_frailty_cat_4_overall,table_html,R-scripts/K15/outputs/K15_frailty_cat_4_overall.html,NA,NA
+2026-03-09 17:29:25.432611,K15,K15_frailty_components_missingness,table_csv,R-scripts/K15/outputs/K15_frailty_components_missingness.csv,9,NA
+2026-03-09 17:29:25.641306,K15,K15_frailty_score_missingness,table_csv,R-scripts/K15/outputs/K15_frailty_score_missingness.csv,2,NA
+2026-03-09 17:29:25.8626,K15,K15_frailty_legacy_vs_new,table_csv,R-scripts/K15/outputs/K15_frailty_legacy_vs_new.csv,15,NA
+2026-03-09 17:29:26.117888,K15,K15_frailty_cat3_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.csv,NA,NA
+2026-03-09 17:29:26.265532,K15,K15_frailty_cat3_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.html,NA,NA
+2026-03-09 17:29:26.473396,K15,K15_frailty_cat4_by_FOF,table_csv,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.csv,NA,NA
+2026-03-09 17:29:26.643953,K15,K15_frailty_cat4_by_FOF,table_html,R-scripts/K15/outputs/K15_frailty_cat4_by_FOF.html,NA,NA
+2026-03-09 17:29:26.91998,K15,K15_chisq_FOF_by_frailty_cat3,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.csv,NA,NA
+2026-03-09 17:29:27.075977,K15,K15_chisq_FOF_by_frailty_cat3,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat3.html,NA,NA
+2026-03-09 17:29:27.264373,K15,K15_chisq_FOF_by_frailty_cat4,table_csv,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.csv,NA,NA
+2026-03-09 17:29:27.421209,K15,K15_chisq_FOF_by_frailty_cat4,table_html,R-scripts/K15/outputs/K15_chisq_FOF_by_frailty_cat4.html,NA,NA
+2026-03-09 17:29:28.587666,K15,K15_frailty_cat3_by_FOF,figure_png,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K15/outputs/K15_frailty_cat3_by_FOF.png,NA,Stacked proportion plot: frailty_cat_3 distribution by FOF-status.
+2026-03-09 17:29:28.910651,K15,sessioninfo,sessioninfo,R-scripts/K15/outputs/sessioninfo_K15.txt,NA,NA
+2026-03-09 17:29:38.149044,K16,Frailty-adjusted model results tables,table_docx,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_frailty_models_tables.docx,276,NA
+2026-03-09 17:29:38.872222,K16,All frailty-adjusted model objects,rdata,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-03-09 17:29:39.601881,K16,All frailty-adjusted model objects,rdata,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-03-09 17:29:40.416286,K16,All frailty-adjusted model objects,rdata,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-03-09 17:29:40.630795,K16,All frailty-adjusted model objects,rdata,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-03-09 17:29:40.851027,K16,All frailty-adjusted model objects,rdata,/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K16/outputs/K16_all_models.RData,276,NA
+2026-03-09 17:29:41.172993,K16,sessioninfo,sessioninfo,R-scripts/K16/outputs/sessioninfo_K16.txt,NA,NA

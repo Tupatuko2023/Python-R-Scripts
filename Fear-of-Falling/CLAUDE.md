@@ -120,12 +120,12 @@ args_all <- commandArgs(trailingOnly = FALSE)
 file_arg <- grep("^--file=", args_all, value = TRUE)
 
 script_base <- if (length(file_arg) > 0) {
-  sub("\.R$", "", basename(sub("^--file=", "", file_arg[1])))
-} else {
-  "{{SCRIPT_ID}}"  # interactive fallback
-}
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+  } else {
+  "K11_MAIN"  # interactive fallback
+  }
 
-script_label <- sub("\.V.*$", "", script_base)  # canonical SCRIPT_ID
+  script_label <- sub("\\.V.*$", "", script_base)  # canonical SCRIPT_ID
 if (is.na(script_label) || script_label == "") script_label <- "{{SCRIPT_ID}}"
 
 # init_paths() must set outputs_dir + manifest_path (+ options fof.*)

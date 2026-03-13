@@ -166,9 +166,15 @@ K40 on tällä työasemalla ajettava aina vanilla-eristyksessä, koska non-vanil
 startup (`.Rprofile -> source("renv/activate.R")`) voi jumittaa ennen
 skriptin omaa suoritusta.
 
-```powershell
+**Option A (PS7 script):**
 .\scripts\ps7\run_k40_vanilla.ps1
-```
+
+**Option B (Inline PS7):**
+$env:R_PROFILE_USER = "NUL"
+$env:R_ENVIRON_USER = "NUL"
+$env:DATA_ROOT      = "C:/GitWork/FOF_LOCAL_DATA"
+Rscript --vanilla ./R-scripts/K40/K40.V2_frailty-index.R
+
 
 1. Raportti
 

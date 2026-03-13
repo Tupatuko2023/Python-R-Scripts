@@ -209,13 +209,13 @@ args_all <- commandArgs(trailingOnly = FALSE)
 file_arg <- grep("^--file=", args_all, value = TRUE)
 
 script_base <- if (length(file_arg) > 0) {
-  sub("\.R$", "", basename(sub("^--file=", "", file_arg[1])))
+  sub("\\.R$", "", basename(sub("^--file=", "", file_arg[1])))
 } else {
   "{{SCRIPT_ID}}"  # interactive fallback
 }
 
 # Canonical SCRIPT_ID (e.g. K11_MAIN)
-script_id_raw <- sub("\.V.*$", "", script_base)
+script_id_raw <- sub("\\.V.*$", "", script_base)
 if (is.na(script_id_raw) || script_id_raw == "") script_id_raw <- "{{SCRIPT_ID}}"
 
 # Derive script_label for folder mapping (e.g. K11_MAIN -> K11)
