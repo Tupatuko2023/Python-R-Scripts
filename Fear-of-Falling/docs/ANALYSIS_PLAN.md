@@ -27,20 +27,20 @@ It does not define upstream variable construction or QC procedures in detail. Th
 
 All analysis must use these **canonical variable names**. Do not invent aliases or mix naming systems across scripts and reports.
 
-| Canonical Name | Source / Derivation | Type | Levels / Coding |
-| :--- | :--- | :--- | :--- |
-| **id** | `id` (from source) | Identifier | Unique per participant |
-| **time** | `time` / `time_months` | Factor | `0` (Baseline), `12` (Follow-up) |
-| **FOF_status** | `kaatumisenpelkoOn` | Factor | `0`="Ei FOF" (Ref), `1`="FOF" |
-| **age** | `age` | Numeric | Years |
-| **sex** | `sex` | Factor | Verify: Male/Female |
-| **BMI** | `BMI` | Numeric | kg/m2 |
-| **locomotor_capacity** | CFA 3-item latent score | Numeric | Current primary outcome |
-| **z3** | Standardized gait + chair rise + balance composite | Numeric | Deterministic fallback / sensitivity measure |
-| **Composite_Z** | Legacy `ToimintaKykySummary0` & `ToimintaKykySummary2` mapping | Numeric | Legacy outcome only; bridge analysis if verified |
-| **FI22_nonperformance_KAAOS** / **FI_22** | Locked FI22 variant | Numeric | Sensitivity index; not default primary predictor |
-| **tasapainovaikeus** | Raw source / K08/K14 usage | Binary/Factor | Use only if modeled separately as covariate/predictor, not as outcome indicator |
-| **grip_r0 / grip_l0 / grip_r2 / grip_l2** | Raw grip fields | Numeric | Subset-only auxiliary data |
+| Canonical Name                            | Source / Derivation                                            | Type          | Levels / Coding                                                                 |
+| :---------------------------------------- | :------------------------------------------------------------- | :------------ | :------------------------------------------------------------------------------ |
+| **id**                                    | `id` (from source)                                             | Identifier    | Unique per participant                                                          |
+| **time**                                  | `time` / `time_months`                                         | Factor        | `0` (Baseline), `12` (Follow-up)                                                |
+| **FOF_status**                            | `kaatumisenpelkoOn`                                            | Factor        | `0`="Ei FOF" (Ref), `1`="FOF"                                                   |
+| **age**                                   | `age`                                                          | Numeric       | Years                                                                           |
+| **sex**                                   | `sex`                                                          | Factor        | Verify: Male/Female                                                             |
+| **BMI**                                   | `BMI`                                                          | Numeric       | kg/m2                                                                           |
+| **locomotor_capacity**                    | CFA 3-item latent score                                        | Numeric       | Current primary outcome                                                         |
+| **z3**                                    | Standardized gait + chair rise + balance composite             | Numeric       | Deterministic fallback / sensitivity measure                                    |
+| **Composite_Z**                           | Legacy `ToimintaKykySummary0` & `ToimintaKykySummary2` mapping | Numeric       | Legacy outcome only; bridge analysis if verified                                |
+| **FI22_nonperformance_KAAOS** / **FI_22** | Locked FI22 variant                                            | Numeric       | Sensitivity index; not default primary predictor                                |
+| **tasapainovaikeus**                      | Raw source / K08/K14 usage                                     | Binary/Factor | Use only if modeled separately as covariate/predictor, not as outcome indicator |
+| **grip_r0 / grip_l0 / grip_r2 / grip_l2** | Raw grip fields                                                | Numeric       | Subset-only auxiliary data                                                      |
 
 **Notes:**
 
@@ -82,8 +82,29 @@ The following documents define upstream construction and validation of derived v
 - locomotor capacity QC appendix
 - FI22 methods appendix
 - project QC pipeline documentation
+- `docs/FOF_UPSTREAM_LOCOMOTOR_OUTCOME_SPEC.md`
 
 These documents must be considered authoritative for variable construction.
+
+### 2.5 Variable Architecture / Outcome Roles
+
+Current outcome architecture is locked to three outcome branches and separate
+auxiliary branches:
+
+- `locomotor_capacity` = current primary outcome
+- `z3` = deterministic fallback / sensitivity outcome
+- `Composite_Z` = legacy bridge only
+- `FI22_nonperformance_KAAOS` = separate sensitivity index, not part of the
+  locomotor outcome branch
+- `tasapainovaikeus` = separate auxiliary covariate/predictor, not an outcome
+  indicator
+- `grip_*` = auxiliary/subset-only branch, kept separate from the core
+  locomotor outcome architecture
+- `locomotor_capacity_0`, `locomotor_capacity_12m`, `z3_0`, `z3_12m`,
+  `delta_locomotor_capacity`, and `delta_z3` are the canonical time-mapped
+  names for wide/QC usage
+
+No new ad hoc composite outcome names are permitted in the current plan.
 
 ## 3. Outcome, Predictor, and Covariate Roles
 
@@ -98,12 +119,17 @@ These documents must be considered authoritative for variable construction.
 - **Primary exposure of interest:** `FOF_status`
 - **Core covariates:** `age`, `sex`, `BMI`
 - **Optional additional covariate:** `tasapainovaikeus`, only if treated explicitly as a separate covariate/predictor and not recycled from the locomotor outcome indicator set
+- **Retained frailty/vulnerability sensitivity index:**
+  `FI22_nonperformance_KAAOS`, only as an external frailty/vulnerability
+  sensitivity index and never as part of the locomotor outcome construction
 
 ### 3.3 Secondary / Sensitivity Indices
 
-- `FI22_nonperformance_KAAOS` / `FI_22` is a locked **sensitivity index**. It should not be written as an undisputed primary predictor unless stronger documentation is found.
-- `frailty_cat_3` may be analyzed as a secondary / sensitivity frailty structure. It is not the current primary anchor of the analysis plan.
-- Numeric frailty variants such as `frailty_score_3` remain sensitivity-only unless a separate locked protocol states otherwise.
+- `FI22_nonperformance_KAAOS` / `FI_22` is the retained
+  frailty/vulnerability sensitivity index in the current plan.
+- Categorical frailty structures such as `frailty_cat_3` are not part of the
+  active analytical contract and may appear only in historical audit-trail
+  materials, not as active analysis-plan terms.
 
 ## 4. Grip Handling
 
@@ -112,6 +138,9 @@ Grip strength is kept separate from the whole-sample locomotor capacity primary 
 - The CFA 3-item locomotor capacity documentation excludes grip strength from the core model because grip data is not consistently available and the construct focus is locomotor performance.
 - Functional test schema documentation shows a separate grip branch with Excel classification issues and `kg_candidate` handling.
 - Grip can be used in separate subset analyses where valid kg data is available, but Excel grip classes and CSV kg values must not be pooled automatically into the main locomotor composite.
+
+For implementation-layer harmonization and preprocessing details, see
+`docs/FOF_UPSTREAM_LOCOMOTOR_OUTCOME_SPEC.md`.
 
 ## 5. Statistical Models
 
@@ -123,6 +152,16 @@ Model structure defined here corresponds to the K50 analysis stage; upstream der
 
 - **If the dataset is wide with two timepoints:** primary analysis is ANCOVA on follow-up outcome with baseline adjustment.
 - **If the dataset is long / repeated:** primary analysis is a mixed model with `time * FOF_status`.
+
+### 5.1.1 Primary Branch Selection Rule
+
+Primary branch selection must be deterministic and explicitly declared in the analysis run.
+
+- **Wide branch** is used only when the analysis dataset has one row per `id` and explicit baseline/follow-up outcome columns such as `locomotor_capacity_0` and `locomotor_capacity_12m`. The same structural rule applies to fallback outcomes `z3_0` and `z3_12m`.
+- **Long branch** is used only when the analysis dataset has repeated rows per `id`, one outcome column such as `locomotor_capacity` or `z3`, and `time` encodes the measurement occasion with `time in {0, 12}`.
+- **Canonical long-format time rule:** The current analytical contract accepts only numeric canonical time-coding `0 = baseline` and `12 = 12-month follow-up` in the primary long-branch model. If upstream data use other time codes or labels, they must be recoded to canonical `0/12` before primary modeling.
+- The selected branch must be declared explicitly in the run configuration via a documented selector such as `analysis_shape = wide|long` or an equivalent CLI flag such as `--shape WIDE|LONG`.
+- `AUTO` is acceptable in QC to detect dataset shape, but primary-analysis branch selection must not rely on a silent ad hoc choice.
 
 ### 5.2 Primary Model for Wide Data: ANCOVA
 
@@ -147,8 +186,8 @@ locomotor_capacity ~ time * FOF_status + age + sex + BMI + (1 | id)
 ```
 
 - This is the default primary branch when the working dataset is long / repeated.
-- `time * frailty_cat_3` is not the default primary formula.
-- Secondary long-format checks may add frailty or FI22 terms only when explicitly labeled as secondary / sensitivity analyses.
+- Long-format secondary checks may add `FI22_nonperformance_KAAOS` only as an
+  explicitly labeled external sensitivity index.
 - A parallel mixed model using `z3` may be used as a deterministic fallback / sensitivity check.
 
 ### 5.4 Secondary / Sensitivity Analyses
@@ -156,9 +195,6 @@ locomotor_capacity ~ time * FOF_status + age + sex + BMI + (1 | id)
 Examples of acceptable secondary analyses:
 
 ```r
-# Secondary frailty sensitivity
-locomotor_capacity ~ time * FOF_status + frailty_cat_3 + age + sex + BMI + (1 | id)
-
 # FI22 sensitivity index
 locomotor_capacity ~ time * FOF_status + FI22_nonperformance_KAAOS + age + sex + BMI + (1 | id)
 ```
@@ -226,18 +262,22 @@ Follow this sequence to reproduce the results.
 3. **Primary Analysis:**
 
    ```bash
-   # Wide data -> ANCOVA on follow-up outcome with baseline adjustment
-   # Long data -> mixed model with time * FOF_status
+   # Declare branch explicitly: analysis_shape=wide|long or --shape WIDE|LONG
+   # Primary analysis output and manifest rows must include both branch
+   # (wide/long) and outcome (locomotor_capacity/z3/Composite_Z).
    ```
+
+   **Entrypoint Freeze Gap:** Primary model entrypoint scripts are not yet frozen in this document. The K50 contract currently freezes the branch-selection rule and model formulas; concrete script paths must match the eventual verified implementation entrypoints.
 
 4. **Sensitivity / Bridge Analyses:**
 
    ```bash
    # z3 fallback / sensitivity
-   # frailty_cat_3 secondary analysis
    # FI22 sensitivity index analysis
    # Composite_Z legacy bridge analysis only if original definition is verified
    ```
+
+   **Entrypoint Freeze Gap:** Sensitivity and bridge entrypoint scripts are also not frozen here. Use only verified implementation-layer paths once they are locked, and include branch plus outcome labels in output filenames and manifest entries.
 
 ### Downstream Outputs Reference
 
