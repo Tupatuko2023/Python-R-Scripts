@@ -19,3 +19,5 @@ out/
 # Renv cache and temporary run directories
 Fear-of-Falling/renv/.cache/
 Fear-of-Falling/R-scripts/_runs/
+tmp/
+.gemini/
