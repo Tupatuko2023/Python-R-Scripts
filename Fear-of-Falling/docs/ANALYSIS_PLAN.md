@@ -27,20 +27,20 @@ It does not define upstream variable construction or QC procedures in detail. Th
 
 All analysis must use these **canonical variable names**. Do not invent aliases or mix naming systems across scripts and reports.
 
-| Canonical Name | Source / Derivation | Type | Levels / Coding |
-| :--- | :--- | :--- | :--- |
-| **id** | `id` (from source) | Identifier | Unique per participant |
-| **time** | `time` / `time_months` | Factor | `0` (Baseline), `12` (Follow-up) |
-| **FOF_status** | `kaatumisenpelkoOn` | Factor | `0`="Ei FOF" (Ref), `1`="FOF" |
-| **age** | `age` | Numeric | Years |
-| **sex** | `sex` | Factor | Verify: Male/Female |
-| **BMI** | `BMI` | Numeric | kg/m2 |
-| **locomotor_capacity** | CFA 3-item latent score | Numeric | Current primary outcome |
-| **z3** | Standardized gait + chair rise + balance composite | Numeric | Deterministic fallback / sensitivity measure |
-| **Composite_Z** | Legacy `ToimintaKykySummary0` & `ToimintaKykySummary2` mapping | Numeric | Legacy outcome only; bridge analysis if verified |
-| **FI22_nonperformance_KAAOS** / **FI_22** | Locked FI22 variant | Numeric | Sensitivity index; not default primary predictor |
-| **tasapainovaikeus** | Raw source / K08/K14 usage | Binary/Factor | Use only if modeled separately as covariate/predictor, not as outcome indicator |
-| **grip_r0 / grip_l0 / grip_r2 / grip_l2** | Raw grip fields | Numeric | Subset-only auxiliary data |
+| Canonical Name                            | Source / Derivation                                            | Type          | Levels / Coding                                                                 |
+| :---------------------------------------- | :------------------------------------------------------------- | :------------ | :------------------------------------------------------------------------------ |
+| **id**                                    | `id` (from source)                                             | Identifier    | Unique per participant                                                          |
+| **time**                                  | `time` / `time_months`                                         | Factor        | `0` (Baseline), `12` (Follow-up)                                                |
+| **FOF_status**                            | `kaatumisenpelkoOn`                                            | Factor        | `0`="Ei FOF" (Ref), `1`="FOF"                                                   |
+| **age**                                   | `age`                                                          | Numeric       | Years                                                                           |
+| **sex**                                   | `sex`                                                          | Factor        | Verify: Male/Female                                                             |
+| **BMI**                                   | `BMI`                                                          | Numeric       | kg/m2                                                                           |
+| **locomotor_capacity**                    | CFA 3-item latent score                                        | Numeric       | Current primary outcome                                                         |
+| **z3**                                    | Standardized gait + chair rise + balance composite             | Numeric       | Deterministic fallback / sensitivity measure                                    |
+| **Composite_Z**                           | Legacy `ToimintaKykySummary0` & `ToimintaKykySummary2` mapping | Numeric       | Legacy outcome only; bridge analysis if verified                                |
+| **FI22_nonperformance_KAAOS** / **FI_22** | Locked FI22 variant                                            | Numeric       | Sensitivity index; not default primary predictor                                |
+| **tasapainovaikeus**                      | Raw source / K08/K14 usage                                     | Binary/Factor | Use only if modeled separately as covariate/predictor, not as outcome indicator |
+| **grip_r0 / grip_l0 / grip_r2 / grip_l2** | Raw grip fields                                                | Numeric       | Subset-only auxiliary data                                                      |
 
 **Notes:**
 
