@@ -5,6 +5,15 @@
 without replacing `ANALYSIS_PLAN.md` as the modeling/governance source of
 truth.
 
+## Status Label Definitions
+
+- **Verified:** Directly supported by the current source documents or locked
+  appendices.
+- **Inference:** Recommended interpretation consistent with current source
+  documents, but not explicitly locked as a verbatim rule.
+- **Needs verification:** Not yet locked and must be confirmed from the
+  implementation layer or source documentation before code freeze.
+
 ## Inputs
 
 - **Verified:** The current primary locomotor outcome branch is based on gait,
@@ -50,11 +59,16 @@ truth.
   construct as the CFA branch.
 - **Inference:** Baseline-anchored standardization for follow-up values is
   methodologically coherent and preferred for longitudinal comparability.
+- **Inference:** Baseline-anchored means that each indicator's baseline mean
+  and standard deviation are estimated from the baseline analysis frame only,
+  and both baseline and 12-month values are standardized using those same
+  baseline parameters.
 - **Needs verification:** This document does not lock whether z3 requires 2/3
   versus 3/3 indicators; the threshold must be frozen explicitly in the
   eventual implementation layer.
 - **Needs verification:** The exact z3 standardization implementation should be
-  matched against the verified measurement/QC implementation before code freeze.
+  matched against the verified measurement/QC implementation before code freeze,
+  even when baseline-anchored standardization is used.
 
 ## CFA Branch
 

@@ -159,6 +159,7 @@ Primary branch selection must be deterministic and explicitly declared in the an
 
 - **Wide branch** is used only when the analysis dataset has one row per `id` and explicit baseline/follow-up outcome columns such as `locomotor_capacity_0` and `locomotor_capacity_12m`. The same structural rule applies to fallback outcomes `z3_0` and `z3_12m`.
 - **Long branch** is used only when the analysis dataset has repeated rows per `id`, one outcome column such as `locomotor_capacity` or `z3`, and `time` encodes the measurement occasion with `time in {0, 12}`.
+- **Canonical long-format time rule:** The current analytical contract accepts only numeric canonical time-coding `0 = baseline` and `12 = 12-month follow-up` in the primary long-branch model. If upstream data use other time codes or labels, they must be recoded to canonical `0/12` before primary modeling.
 - The selected branch must be declared explicitly in the run configuration via a documented selector such as `analysis_shape = wide|long` or an equivalent CLI flag such as `--shape WIDE|LONG`.
 - `AUTO` is acceptable in QC to detect dataset shape, but primary-analysis branch selection must not rely on a silent ad hoc choice.
 

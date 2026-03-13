@@ -40,6 +40,9 @@ architecture without introducing a new composite outcome.
 
 - 2026-03-12 18:00:00 Created from `tasks/_template.md` for K50 upstream
   outcome-architecture governance lock.
+- 2026-03-13 00:00:00 Review follow-up clarified canonical long-format
+  `time = 0/12`, status-label definitions, and baseline-anchored `z3`
+  standardization wording.
 
 ## Blockers
 
