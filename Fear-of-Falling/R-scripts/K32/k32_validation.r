@@ -220,38 +220,54 @@ join_res <- join_frailty_from_k15(d)
 d <- join_res$df
 
 latent_col <- resolve_col(names(d), c("capacity_score_latent_primary", "capacity_score_cfa_primary"))
-z5_col <- resolve_col(names(d), c("capacity_score_z5_primary"))
+z3_col <- resolve_col(names(d), c("capacity_score_z3_primary"))
 gait_col <- resolve_col(names(d), c("indicator_gait_primary", "kavelynopeus_m_sek0"))
-grip_col <- resolve_col(names(d), c("indicator_grip", "puristus0_clean", "puristus0"))
+chair_col <- resolve_col(names(d), c("indicator_chair_capacity", "tuoli0"))
+balance_col <- resolve_col(names(d), c("indicator_balance_capacity", "seisominen0"))
 frailty_col <- if (isTRUE(join_res$joined) && "frailty_cat_from_k15" %in% names(d)) {
   "frailty_cat_from_k15"
 } else {
   resolve_col(names(d), c("frailty_group", "frailtycat", "frailty_cat"))
 }
 
-if (is.na(latent_col) || is.na(z5_col) || is.na(gait_col) || is.na(grip_col)) {
+if (is.na(latent_col) || is.na(z3_col) || is.na(gait_col) || is.na(chair_col) || is.na(balance_col)) {
   stop(
     paste0(
       "Missing required columns for validation.\n",
-      "latent=", latent_col, ", z5=", z5_col, ", gait=", gait_col, ", grip=", grip_col
+      "latent=", latent_col,
+      ", z3=", z3_col,
+      ", gait=", gait_col,
+      ", chair=", chair_col,
+      ", balance=", balance_col
     ),
     call. = FALSE
   )
 }
 
 latent <- safe_num(d[[latent_col]])
-z5 <- safe_num(d[[z5_col]])
+z3 <- safe_num(d[[z3_col]])
 gait <- safe_num(d[[gait_col]])
-grip <- safe_num(d[[grip_col]])
+chair <- safe_num(d[[chair_col]])
+balance <- safe_num(d[[balance_col]])
 
 # --- 1) Convergent validity ---------------------------------------------------
 corr_tbl <- tibble(
-  metric = c("latent_vs_z5", "latent_vs_gait", "latent_vs_grip"),
+  metric = c("latent_vs_z3", "latent_vs_gait", "latent_vs_chair", "latent_vs_balance"),
   method = "pearson",
-  n_complete = c(sum(complete.cases(latent, z5)), sum(complete.cases(latent, gait)), sum(complete.cases(latent, grip))),
-  r = c(safe_cor(latent, z5), safe_cor(latent, gait), safe_cor(latent, grip)),
+  n_complete = c(
+    sum(complete.cases(latent, z3)),
+    sum(complete.cases(latent, gait)),
+    sum(complete.cases(latent, chair)),
+    sum(complete.cases(latent, balance))
+  ),
+  r = c(
+    safe_cor(latent, z3),
+    safe_cor(latent, gait),
+    safe_cor(latent, chair),
+    safe_cor(latent, balance)
+  ),
   latent_col = latent_col,
-  comparator_col = c(z5_col, gait_col, grip_col)
+  comparator_col = c(z3_col, gait_col, chair_col, balance_col)
 )
 path_corr <- file.path(outputs_dir, "k32_validation_correlations.csv")
 write_csv_safely(corr_tbl, path_corr)
@@ -346,19 +362,19 @@ path_dist <- file.path(outputs_dir, "k32_validation_distribution.csv")
 write_csv_safely(dist_tbl, path_dist)
 append_manifest_safe("k32_validation_distribution", "table_csv", path_dist, n = nrow(d))
 
-# --- 4) Latent vs z5 comparison -----------------------------------------------
-ok_lz <- complete.cases(latent, z5)
-diff_lz <- latent[ok_lz] - z5[ok_lz]
+# --- 4) Latent vs z3 comparison -----------------------------------------------
+ok_lz <- complete.cases(latent, z3)
+diff_lz <- latent[ok_lz] - z3[ok_lz]
 
 lz_tbl <- tibble(
   n_complete = sum(ok_lz),
-  r_latent_z5 = safe_cor(latent, z5),
+  r_latent_z3 = safe_cor(latent, z3),
   bland_altman_mean_diff = mean(diff_lz, na.rm = TRUE),
   bland_altman_sd_diff = sd(diff_lz, na.rm = TRUE)
 )
 
-path_lz <- file.path(outputs_dir, "k32_validation_latent_vs_z5.csv")
+path_lz <- file.path(outputs_dir, "k32_validation_latent_vs_z3.csv")
 write_csv_safely(lz_tbl, path_lz)
-append_manifest_safe("k32_validation_latent_vs_z5", "table_csv", path_lz, n = nrow(d))
+append_manifest_safe("k32_validation_latent_vs_z3", "table_csv", path_lz, n = nrow(d))
 
 message("K32 validation complete. Outputs written to: ", outputs_dir)

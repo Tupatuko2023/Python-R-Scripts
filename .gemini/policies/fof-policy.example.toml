@@ -8,7 +8,7 @@ description = "Ported from Claude Code permissions: deny secrets, ask risky comm
 [[policy]]
 action = "deny"
 commandPrefix = ["read_file", "read_many_files", "glob", "search_file_content"]
-argsPattern = ".*(\.env|secrets/|\.aws/|\.ssh/|id_rsa).*"
+argsPattern = ".*(\\.env|secrets/|\\.aws/|\\.ssh/|id_rsa).*"
 
 # 2. Ask User for Risky Commands
 [[policy]]

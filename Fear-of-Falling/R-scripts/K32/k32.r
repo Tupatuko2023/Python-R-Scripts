@@ -1,12 +1,12 @@
 #!/usr/bin/env Rscript
 # ==============================================================================
-# K32_EXTENDED_CAPACITY_PRIMARY - Deterministic 4-5 Indicator Capacity Model
+# K32_CORE_LOCOMOTOR_CAPACITY - Deterministic 3-Indicator Capacity Model
 # File: k32.r
 #
 # Purpose
-# - Implement a controlled extended latent capacity model with a deterministic
-#   indicator set and admissibility gate.
-# - Keep K30/K31 unchanged; K32 is a new parallel script.
+# - Implement a controlled core locomotor capacity model from raw Excel with a
+#   deterministic indicator set and admissibility gate.
+# - Keep K30/K31 unchanged; K32 is a parallel script.
 # - Always compute z-composite fallback scores.
 # ==============================================================================
 suppressPackageStartupMessages({
@@ -41,7 +41,6 @@ manifest_path <- paths$manifest_path
 
 # --- Deterministic indicator defaults -----------------------------------------
 manual_map <- c(
-  grip = NA_character_,
   gait = NA_character_,
   chair = "tuoli0",
   balance = "seisominen0",
@@ -49,14 +48,12 @@ manual_map <- c(
 )
 
 candidates <- list(
-  grip = c("puristus0_clean", "puristus0", "puristusvoima_kg_oik_0", "puristusvoima_kg_vas_0"),
   gait = c("kavelynopeus_m_sek0", "kavelynopeus0"),
   chair = c("tuoli0", "tuoliltanousu0"),
   balance = c("seisominen0"),
   self_report = c("vaikeus_liikkua_500m", "vaikeus500m", "vaikeus_liikkua_2km")
 )
 
-GRIP_VERY_HIGH_KG <- 80
 SCORE_NA_SHARE_MAX <- 0.20
 
 # --- Helpers ------------------------------------------------------------------
@@ -180,7 +177,7 @@ build_mapping <- function(df_names) {
   mapped <- setNames(rep(NA_character_, length(keys)), keys)
   for (k in keys) mapped[[k]] <- resolve_one(df_names, k)
 
-  required <- c("grip", "gait", "chair", "balance")
+  required <- c("gait", "chair", "balance")
   unresolved_required <- required[is.na(mapped[required])]
 
   list(
@@ -199,55 +196,137 @@ find_input_dataset <- function() {
       stop("DATA_PATH is set but file does not exist: ", env_path, call. = FALSE)
     }
     ext <- tolower(tools::file_ext(env_path))
-    kind <- if (ext == "rds") "rds" else "csv"
+    kind <- dplyr::case_when(
+      ext == "rds" ~ "rds",
+      ext %in% c("xlsx", "xls") ~ "excel",
+      TRUE ~ "csv"
+    )
     return(list(kind = kind, path = normalizePath(env_path), tried = tried))
   }
 
   data_root <- Sys.getenv("DATA_ROOT", unset = "")
   if (nzchar(data_root)) {
-    root_candidates <- c(
-      file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores_k31.rds"),
-      file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores_k31.csv"),
-      file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores.rds"),
-      file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores.csv")
-    )
-    tried <- c(tried, root_candidates)
-    hit <- root_candidates[file.exists(root_candidates)][1]
-    if (!is.na(hit) && nzchar(hit)) {
-      ext <- tolower(tools::file_ext(hit))
-      kind <- if (ext == "rds") "rds" else "csv"
-      return(list(kind = kind, path = normalizePath(hit), tried = tried))
+    raw_excel <- file.path(data_root, "paper_02", "KAAOS_data_sotullinen.xlsx")
+    tried <- c(tried, raw_excel)
+    if (file.exists(raw_excel)) {
+      return(list(kind = "excel", path = normalizePath(raw_excel), tried = tried))
     }
-  }
-
-  repo_candidates <- c(
-    here::here("R-scripts", "K31", "outputs", "kaatumisenpelko_with_capacity_scores_k31.rds"),
-    here::here("R-scripts", "K31", "outputs", "kaatumisenpelko_with_capacity_scores_k31.csv"),
-    here::here("R-scripts", "K30", "outputs", "kaatumisenpelko_with_capacity_scores.rds"),
-    here::here("R-scripts", "K30", "outputs", "kaatumisenpelko_with_capacity_scores.csv"),
-    here::here("data", "raw", "KaatumisenPelko.csv"),
-    here::here("data", "external", "KaatumisenPelko.csv"),
-    here::here("data", "KaatumisenPelko.csv"),
-    here::here("dataset", "KaatumisenPelko.csv"),
-    here::here("KaatumisenPelko.csv")
-  )
-  tried <- c(tried, repo_candidates)
-  hit <- repo_candidates[file.exists(repo_candidates)][1]
-  if (!is.na(hit) && nzchar(hit)) {
-    ext <- tolower(tools::file_ext(hit))
-    kind <- if (ext == "rds") "rds" else "csv"
-    return(list(kind = kind, path = normalizePath(hit), tried = tried))
   }
 
   stop(
     paste0(
-      "Could not locate K32 input dataset.\n",
+      "Could not locate K32 raw input dataset.\n",
       "Tried paths:\n- ", paste(unique(tried), collapse = "\n- "), "\n\n",
       "Set one of:\n",
-      "1) --DATA_PATH=/absolute/path/to/input.(rds|csv)\n",
-      "2) DATA_ROOT with paper_01/capacity_scores outputs available."
+      "1) DATA_PATH=/absolute/path/to/input.(xlsx|xls|rds|csv)\n",
+      "2) DATA_ROOT with paper_02/KAAOS_data_sotullinen.xlsx available."
     ),
     call. = FALSE
+  )
+}
+
+inspect_excel_layouts <- function(path) {
+  if (!requireNamespace("readxl", quietly = TRUE)) {
+    stop(
+      "Package 'readxl' is required to read K32 raw Excel input. Install or restore the project R environment before running K32.",
+      call. = FALSE
+    )
+  }
+
+  sheets <- readxl::excel_sheets(path)
+  if (length(sheets) == 0) {
+    stop("Excel workbook has no sheets: ", path, call. = FALSE)
+  }
+
+  layouts <- purrr::map_dfr(sheets, function(sheet_name) {
+    purrr::map_dfr(c(0, 1), function(skip_n) {
+      probe <- tryCatch(
+        readxl::read_excel(path, sheet = sheet_name, skip = skip_n, n_max = 0, .name_repair = "minimal"),
+        error = function(e) e
+      )
+      if (inherits(probe, "error")) {
+        return(tibble(
+          sheet = sheet_name,
+          skip = skip_n,
+          matched_required = NA_integer_,
+          matched_total = NA_integer_,
+          unresolved_required = "read_error",
+          error = conditionMessage(probe)
+        ))
+      }
+
+      clean_names <- janitor::make_clean_names(names(probe))
+      map_res <- build_mapping(clean_names)
+      tibble(
+        sheet = sheet_name,
+        skip = skip_n,
+        matched_required = sum(!is.na(map_res$mapped[c("gait", "chair", "balance")])),
+        matched_total = sum(!is.na(map_res$mapped)),
+        unresolved_required = paste(map_res$unresolved_required, collapse = ";"),
+        error = NA_character_
+      )
+    })
+  })
+
+  layouts
+}
+
+load_input_dataset <- function(input_info) {
+  if (input_info$kind == "rds") {
+    df_raw <- readRDS(input_info$path)
+    return(list(
+      df = janitor::clean_names(as_tibble(df_raw)),
+      source_kind = "rds",
+      source_path = input_info$path,
+      source_sheet = NA_character_,
+      source_skip = NA_integer_
+    ))
+  }
+
+  if (input_info$kind == "csv") {
+    df_raw <- readr::read_csv(input_info$path, show_col_types = FALSE)
+    return(list(
+      df = janitor::clean_names(as_tibble(df_raw)),
+      source_kind = "csv",
+      source_path = input_info$path,
+      source_sheet = NA_character_,
+      source_skip = NA_integer_
+    ))
+  }
+
+  layouts <- inspect_excel_layouts(input_info$path)
+  layouts_path <- file.path(outputs_dir, "k32_excel_layout_candidates.csv")
+  write_csv_safely(layouts, layouts_path)
+  append_manifest_safe("k32_excel_layout_candidates", "table_csv", layouts_path)
+
+  candidates_ok <- layouts %>%
+    filter(is.na(.data$error), .data$matched_required == 3)
+
+  if (nrow(candidates_ok) != 1) {
+    stop(
+      paste0(
+        "K32 raw Excel sheet/layout resolution failed for ", input_info$path, ". ",
+        "Expected exactly one sheet+skip combination with gait/chair/balance mapping, found ", nrow(candidates_ok), ". ",
+        "See: ", layouts_path
+      ),
+      call. = FALSE
+    )
+  }
+
+  selected <- candidates_ok %>% slice(1)
+  df_raw <- readxl::read_excel(
+    input_info$path,
+    sheet = selected$sheet[[1]],
+    skip = selected$skip[[1]],
+    .name_repair = "minimal"
+  )
+
+  list(
+    df = janitor::clean_names(as_tibble(df_raw)),
+    source_kind = "excel",
+    source_path = input_info$path,
+    source_sheet = selected$sheet[[1]],
+    source_skip = selected$skip[[1]]
   )
 }
 
@@ -279,13 +358,11 @@ recode_self_report_capacity <- function(x) {
   rep(NA_real_, length(x_num))
 }
 
-fit_capacity_cfa <- function(df_model, use_self_report) {
-  rhs <- c("grip", "gait", "chair", "balance")
-  if (isTRUE(use_self_report)) rhs <- c(rhs, "self_report")
-
+fit_capacity_cfa <- function(df_model) {
+  rhs <- c("gait", "chair", "balance")
   model_cfa <- paste0("Capacity =~ ", paste(rhs, collapse = " + "))
-  ordered_vars <- if (isTRUE(use_self_report)) "self_report" else character(0)
-  estimator <- if (length(ordered_vars) > 0) "WLSMV" else "MLR"
+  ordered_vars <- character(0)
+  estimator <- "MLR"
 
   cfa_warn <- character(0)
   fit <- withCallingHandlers(
@@ -326,7 +403,7 @@ fit_capacity_cfa <- function(df_model, use_self_report) {
   pe <- parameterEstimates(fit, standardized = TRUE) %>% as_tibble()
   loadings <- pe %>% filter(op == "=~")
   resid_vars <- pe %>%
-    filter(op == "~~", lhs == rhs, lhs %in% c("grip", "gait", "chair", "balance", "self_report"))
+    filter(op == "~~", lhs == rhs, lhs %in% c("gait", "chair", "balance"))
 
   fs <- tryCatch(lavaan::lavPredict(fit, method = "EBM"), error = function(e) NULL)
   score <- if (is.null(fs)) rep(NA_real_, nrow(df_model)) else as.numeric(fs[, 1])
@@ -337,11 +414,9 @@ fit_capacity_cfa <- function(df_model, use_self_report) {
   score_na_share <- mean(is.na(score))
 
   expected_sign_map <- c(
-    grip = 1,
     gait = 1,
     chair = -1,
-    balance = 1,
-    self_report = 1
+    balance = 1
   )
 
   load_sign_tbl <- loadings %>%
@@ -394,7 +469,7 @@ fit_capacity_cfa <- function(df_model, use_self_report) {
       loading_signs_ok = loading_signs_ok,
       orientation_flip_applied = orientation_flip_applied,
       gait_loading_std_all = gait_loading,
-      expected_sign_map = "grip:+;gait:+;chair:-;balance:+;self_report:+",
+      expected_sign_map = "gait:+;chair:-;balance:+",
       admissible = admissible,
       reason = paste(reason, collapse = ";"),
       warning_count = length(cfa_warn),
@@ -435,20 +510,19 @@ save_lavaan_outputs <- function(fit, prefix) {
 # --- 1) Load input -------------------------------------------------------------
 dir_create(outputs_dir)
 input_info <- find_input_dataset()
-
-if (input_info$kind == "rds") {
-  df_raw <- readRDS(input_info$path)
-} else {
-  df_raw <- readr::read_csv(input_info$path, show_col_types = FALSE)
-}
-
-df <- janitor::clean_names(as_tibble(df_raw))
+loaded_input <- load_input_dataset(input_info)
+df <- loaded_input$df
 
 colnames_path <- file.path(outputs_dir, "k32_columns_after_clean_names.txt")
 write_lines_safely(sort(names(df)), colnames_path)
 append_manifest_safe(label = "k32_columns_after_clean_names", kind = "text", path = colnames_path)
 
-message("Loaded input: ", basename(input_info$path), " (rows=", nrow(df), ", cols=", ncol(df), ")")
+message(
+  "Loaded input: ", basename(loaded_input$source_path),
+  " (sheet=", ifelse(is.na(loaded_input$source_sheet), "NA", loaded_input$source_sheet),
+  ", skip=", ifelse(is.na(loaded_input$source_skip), "NA", as.character(loaded_input$source_skip)),
+  ", rows=", nrow(df), ", cols=", ncol(df), ")"
+)
 
 # --- 2) Resolve indicator mapping ---------------------------------------------
 map_res <- build_mapping(names(df))
@@ -474,11 +548,9 @@ if (length(map_res$unresolved_required) > 0) {
 self_raw <- if (!is.na(map[["self_report"]])) df[[map[["self_report"]]]] else rep(NA_real_, nrow(df))
 self_capacity <- recode_self_report_capacity(self_raw)
 self_capacity_ord <- factor(self_capacity, levels = c(0, 1, 2), ordered = TRUE)
-self_present <- any(!is.na(self_capacity))
 
 df_scored <- df %>%
   mutate(
-    indicator_grip = safe_num(.data[[map[["grip"]]]]),
     indicator_gait_raw = safe_num(.data[[map[["gait"]]]]),
     indicator_chair_raw = safe_num(.data[[map[["chair"]]]]),
     indicator_balance_raw = safe_num(.data[[map[["balance"]]]]),
@@ -491,13 +563,8 @@ df_scored <- df %>%
     indicator_self_report_ordered = self_capacity_ord
   )
 
-if ("puristus0_clean" != map[["grip"]] && "puristus0" == map[["grip"]]) {
-  df_scored <- df_scored %>% mutate(indicator_grip = if_else(indicator_grip <= 0, NA_real_, indicator_grip))
-}
-
 # --- 4) Audits ----------------------------------------------------------------
 cont_audit <- bind_rows(
-  audit_cont(df_scored$indicator_grip) %>% mutate(var = "indicator_grip"),
   audit_cont(df_scored$indicator_gait_primary) %>% mutate(var = "indicator_gait_primary"),
   audit_cont(df_scored$indicator_gait_sensitivity) %>% mutate(var = "indicator_gait_sensitivity"),
   audit_cont(df_scored$indicator_chair_capacity) %>% mutate(var = "indicator_chair_capacity"),
@@ -513,7 +580,6 @@ write_csv_safely(self_tbl, self_path)
 append_manifest_safe(label = "k32_audit_self_report_freq", kind = "table_csv", path = self_path, n = nrow(df_scored))
 
 corr_vars <- df_scored %>% transmute(
-  grip = indicator_grip,
   gait_primary = indicator_gait_primary,
   chair = indicator_chair_capacity,
   balance = indicator_balance_capacity,
@@ -529,51 +595,64 @@ append_manifest_safe(label = "k32_audit_correlations", kind = "table_csv", path 
 
 flags <- tibble(
   flag_walkspeed_zero = mean(df_scored$indicator_gait_raw == 0, na.rm = TRUE),
-  flag_grip_very_high = mean(df_scored$indicator_grip > GRIP_VERY_HIGH_KG, na.rm = TRUE),
-  flag_chair_nonpositive_raw = mean(df_scored$indicator_chair_raw <= 0, na.rm = TRUE),
-  grip_very_high_threshold = GRIP_VERY_HIGH_KG
+  flag_chair_nonpositive_raw = mean(df_scored$indicator_chair_raw <= 0, na.rm = TRUE)
 )
 flags_path <- file.path(outputs_dir, "k32_red_flags.csv")
 write_csv_safely(flags, flags_path)
 append_manifest_safe(label = "k32_red_flags", kind = "table_csv", path = flags_path, n = nrow(df_scored))
 
+primary_complete <- complete.cases(
+  df_scored$indicator_gait_primary,
+  df_scored$indicator_chair_capacity,
+  df_scored$indicator_balance_capacity
+)
+sensitivity_complete <- complete.cases(
+  df_scored$indicator_gait_sensitivity,
+  df_scored$indicator_chair_capacity,
+  df_scored$indicator_balance_capacity
+)
+
 decision_lines <- c(
-  "K32 decisions (extended deterministic capacity model)",
-  paste0("Input source: ", input_info$path),
+  "K32 decisions (core performance-based locomotor capacity model)",
+  paste0("Input source: ", loaded_input$source_path),
+  paste0("Input kind: ", loaded_input$source_kind),
+  paste0("Input sheet: ", ifelse(is.na(loaded_input$source_sheet), "NA", loaded_input$source_sheet)),
+  paste0("Input skip: ", ifelse(is.na(loaded_input$source_skip), "NA", as.character(loaded_input$source_skip))),
+  paste0("Rows loaded: ", nrow(df)),
   "Indicator defaults:",
-  paste0("- grip: ", map[["grip"]]),
   paste0("- gait: ", map[["gait"]], " (primary 0->NA; sensitivity retains 0)"),
   paste0("- chair: ", map[["chair"]], " transformed to capacity as -chair_time"),
   paste0("- balance: ", map[["balance"]]),
-  paste0("- self-report: ", ifelse(!is.na(map[["self_report"]]), map[["self_report"]], "not available")),
-  "Self-report recode is deterministic (0/1/2 or 1/2/3 to high-is-better capacity scale).",
-  "Expected loading sign map: grip(+), gait(+), chair(-), balance(+), self_report(+ high-is-better coding).",
+  paste0("- self-report: ", ifelse(!is.na(map[["self_report"]]), map[["self_report"]], "not available; not used in primary core score")),
+  "Self-report recode is deterministic (0/1/2 or 1/2/3 to high-is-better capacity scale) and retained for optional extension work only.",
+  "Primary factor uses gait, chair, balance.",
+  "Expected loading sign map: gait(+), chair(-), balance(+).",
   "Factor score orientation rule: if gait loading is negative OR majority expected-positive indicators load negative, multiply latent score by -1.",
   "CFA admissibility gate: converged, no Heywood, no Std.all>1, signs coherent vs expected map (after deterministic orientation), low score NA share.",
-  paste0("Admissibility threshold score_na_share <= ", SCORE_NA_SHARE_MAX)
+  paste0("Admissibility threshold score_na_share <= ", SCORE_NA_SHARE_MAX),
+  paste0("Rows retained in primary core model: ", sum(primary_complete)),
+  paste0("Rows retained in sensitivity core model: ", sum(sensitivity_complete)),
+  paste0("Rows excluded from primary due to missing/zero gait or missing chair/balance: ", sum(!primary_complete)),
+  paste0("Rows excluded from sensitivity due to missing gait/chair/balance: ", sum(!sensitivity_complete))
 )
 dec_path <- file.path(outputs_dir, "k32_decision_log.txt")
 write_lines_safely(decision_lines, dec_path)
 append_manifest_safe(label = "k32_decision_log", kind = "text", path = dec_path, n = nrow(df_scored))
 
 # --- 5) CFA (primary + sensitivity) -------------------------------------------
-build_model_df <- function(gait_col, include_self) {
-  out <- df_scored %>% transmute(
-    grip = indicator_grip,
+build_model_df <- function(gait_col) {
+  df_scored %>% transmute(
     gait = .data[[gait_col]],
     chair = indicator_chair_capacity,
-    balance = indicator_balance_capacity,
-    self_report = indicator_self_report_ordered
+    balance = indicator_balance_capacity
   )
-  if (!include_self) out <- out %>% select(-self_report)
-  out
 }
 
-cfa_primary_in <- build_model_df("indicator_gait_primary", self_present)
-cfa_sens_in <- build_model_df("indicator_gait_sensitivity", self_present)
+cfa_primary_in <- build_model_df("indicator_gait_primary")
+cfa_sens_in <- build_model_df("indicator_gait_sensitivity")
 
-cfa_primary <- fit_capacity_cfa(cfa_primary_in, use_self_report = self_present)
-cfa_sens <- fit_capacity_cfa(cfa_sens_in, use_self_report = self_present)
+cfa_primary <- fit_capacity_cfa(cfa_primary_in)
+cfa_sens <- fit_capacity_cfa(cfa_sens_in)
 
 df_scored <- df_scored %>% mutate(
   capacity_score_latent_primary = cfa_primary$score,
@@ -584,75 +663,54 @@ save_lavaan_outputs(cfa_primary$fit, "k32_cfa_primary")
 save_lavaan_outputs(cfa_sens$fit, "k32_cfa_sensitivity")
 
 cfa_diag <- bind_rows(
-  cfa_primary$diagnostics %>% mutate(model = "primary_zero_to_na", ordered_self_report = self_present),
-  cfa_sens$diagnostics %>% mutate(model = "sensitivity_zero_retained", ordered_self_report = self_present)
-) %>% select(model, ordered_self_report, everything())
+  cfa_primary$diagnostics %>% mutate(model = "primary_zero_to_na", core_model = TRUE),
+  cfa_sens$diagnostics %>% mutate(model = "sensitivity_zero_retained", core_model = TRUE)
+) %>% select(model, core_model, everything())
 cfa_diag_path <- file.path(outputs_dir, "k32_cfa_diagnostics.csv")
 write_csv_safely(cfa_diag, cfa_diag_path)
 append_manifest_safe(label = "k32_cfa_diagnostics", kind = "table_csv", path = cfa_diag_path, n = nrow(df_scored))
 
 # --- 6) Always-available z-composites -----------------------------------------
-z4_primary <- df_scored %>% transmute(
-  z_grip = as.numeric(scale(indicator_grip)),
+z3_primary <- df_scored %>% transmute(
   z_gait = as.numeric(scale(indicator_gait_primary)),
   z_chair = as.numeric(scale(indicator_chair_capacity)),
   z_balance = as.numeric(scale(indicator_balance_capacity))
 )
-z4_sens <- df_scored %>% transmute(
-  z_grip = as.numeric(scale(indicator_grip)),
+z3_sens <- df_scored %>% transmute(
   z_gait = as.numeric(scale(indicator_gait_sensitivity)),
   z_chair = as.numeric(scale(indicator_chair_capacity)),
   z_balance = as.numeric(scale(indicator_balance_capacity))
 )
 
-if (self_present) {
-  z_self <- as.numeric(scale(df_scored$indicator_self_report_capacity))
-  z5_primary <- cbind(as.matrix(z4_primary), z_self = z_self)
-  z5_sens <- cbind(as.matrix(z4_sens), z_self = z_self)
-} else {
-  z5_primary <- NULL
-  z5_sens <- NULL
-}
-
 df_scored <- df_scored %>% mutate(
-  capacity_score_z4_primary = na_row_mean(as.matrix(z4_primary)),
-  capacity_score_z4_sensitivity = na_row_mean(as.matrix(z4_sens)),
-  capacity_score_z5_primary = if (self_present) na_row_mean(z5_primary) else NA_real_,
-  capacity_score_z5_sensitivity = if (self_present) na_row_mean(z5_sens) else NA_real_
+  capacity_score_z3_primary = na_row_mean(as.matrix(z3_primary)),
+  capacity_score_z3_sensitivity = na_row_mean(as.matrix(z3_sens))
 )
 
 score_summ <- tibble(
   score = c(
     "capacity_score_latent_primary",
     "capacity_score_latent_sensitivity",
-    "capacity_score_z4_primary",
-    "capacity_score_z4_sensitivity",
-    "capacity_score_z5_primary",
-    "capacity_score_z5_sensitivity"
+    "capacity_score_z3_primary",
+    "capacity_score_z3_sensitivity"
   ),
   n = c(
     sum(!is.na(df_scored$capacity_score_latent_primary)),
     sum(!is.na(df_scored$capacity_score_latent_sensitivity)),
-    sum(!is.na(df_scored$capacity_score_z4_primary)),
-    sum(!is.na(df_scored$capacity_score_z4_sensitivity)),
-    sum(!is.na(df_scored$capacity_score_z5_primary)),
-    sum(!is.na(df_scored$capacity_score_z5_sensitivity))
+    sum(!is.na(df_scored$capacity_score_z3_primary)),
+    sum(!is.na(df_scored$capacity_score_z3_sensitivity))
   ),
   mean = c(
     mean(df_scored$capacity_score_latent_primary, na.rm = TRUE),
     mean(df_scored$capacity_score_latent_sensitivity, na.rm = TRUE),
-    mean(df_scored$capacity_score_z4_primary, na.rm = TRUE),
-    mean(df_scored$capacity_score_z4_sensitivity, na.rm = TRUE),
-    mean(df_scored$capacity_score_z5_primary, na.rm = TRUE),
-    mean(df_scored$capacity_score_z5_sensitivity, na.rm = TRUE)
+    mean(df_scored$capacity_score_z3_primary, na.rm = TRUE),
+    mean(df_scored$capacity_score_z3_sensitivity, na.rm = TRUE)
   ),
   sd = c(
     sd(df_scored$capacity_score_latent_primary, na.rm = TRUE),
     sd(df_scored$capacity_score_latent_sensitivity, na.rm = TRUE),
-    sd(df_scored$capacity_score_z4_primary, na.rm = TRUE),
-    sd(df_scored$capacity_score_z4_sensitivity, na.rm = TRUE),
-    sd(df_scored$capacity_score_z5_primary, na.rm = TRUE),
-    sd(df_scored$capacity_score_z5_sensitivity, na.rm = TRUE)
+    sd(df_scored$capacity_score_z3_primary, na.rm = TRUE),
+    sd(df_scored$capacity_score_z3_sensitivity, na.rm = TRUE)
   )
 )
 scores_path <- file.path(outputs_dir, "k32_scores_summary.csv")
@@ -676,13 +734,19 @@ receipt_lines <- c(
   paste0("script=", script_label),
   paste0("timestamp_utc=", format(Sys.time(), tz = "UTC", usetz = TRUE)),
   paste0("data_root=", data_root),
+  paste0("input_source=", loaded_input$source_path),
+  paste0("input_kind=", loaded_input$source_kind),
+  paste0("input_sheet=", ifelse(is.na(loaded_input$source_sheet), "NA", loaded_input$source_sheet)),
+  paste0("input_skip=", ifelse(is.na(loaded_input$source_skip), "NA", as.character(loaded_input$source_skip))),
   paste0("external_dir=", external_dir),
   paste0("csv_path=", out_csv),
   paste0("csv_md5=", csv_md5),
   paste0("rds_path=", out_rds),
   paste0("rds_md5=", rds_md5),
   paste0("nrow=", nrow(df_scored)),
-  paste0("ncol=", ncol(df_scored))
+  paste0("ncol=", ncol(df_scored)),
+  paste0("rows_primary_complete=", sum(primary_complete)),
+  paste0("rows_sensitivity_complete=", sum(sensitivity_complete))
 )
 write_lines_safely(receipt_lines, receipt_path)
 append_manifest_safe(
