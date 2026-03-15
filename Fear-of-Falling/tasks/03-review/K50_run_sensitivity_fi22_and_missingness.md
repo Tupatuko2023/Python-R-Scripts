@@ -150,3 +150,7 @@ robustness stage focused on FI22 adjustment and missingness bias review.
 - 2026-03-14T00:00:00+02:00 Task is ready for `tasks/03-review/`. `K50.r`
   remained analytically unchanged, `Composite_Z` remained verification-only, and
   `FI22_nonperformance_KAAOS` remained a sensitivity-only covariate.
+- 2026-03-15T00:00:00+02:00 Publication note: the reviewed K50 sensitivity
+  package was published directly to `origin/main` in commit `f16d704`. This
+  means the effective merge already occurred at push time, so no artificial
+  follow-up PR is opened for the same change set.

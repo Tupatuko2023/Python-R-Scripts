@@ -128,3 +128,8 @@ n=644` vs `650`).
   fidelity, and pipeline governance were all judged strong, while the remaining
   substantive caveats were limited to missingness bias risk, interaction power,
   and ordinary latent-score measurement uncertainty rather than pipeline error.
+- 2026-03-15T00:00:00+02:00 Publication note: the integrated K50 package was
+  published directly to `origin/main` in commit `f16d704`, which already
+  places the locked review materials on the target branch. No retroactive
+  branch-to-main PR is needed unless repository policy later demands separate
+  audit handling for already-published commits.

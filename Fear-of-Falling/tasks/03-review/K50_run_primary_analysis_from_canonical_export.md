@@ -139,3 +139,8 @@ first actual K50 analysis run on top of the canonical upstream export.
   will cover `--fi22 on` runs, missingness robustness review, and explicit
   `WIDE` versus `LONG` population-difference checking, while this primary task
   remains in `tasks/03-review/`.
+- 2026-03-15T00:00:00+02:00 Publication note: the locked K50 package containing
+  this primary review baseline was published directly to `origin/main` by
+  commit `f16d704` (`Lock and publish K50 pipeline through results,
+  diagnostics, robustness, visualization, and manuscript support`). No
+  retroactive PR+merge step is required for this already-published change set.
