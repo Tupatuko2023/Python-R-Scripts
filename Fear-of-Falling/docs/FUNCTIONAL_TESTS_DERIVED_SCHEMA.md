@@ -36,10 +36,15 @@ Metadatassa käytetään kenttiä:
 | `kavelynopeus_m_sek0`, `kavelynopeus_m_sek2` | raaka/johdettu | Ensisijaisesti valmiit m/s-sarakkeet; fallback `10 / kavelynopeus(sec)` |
 
 ## Operointisäännöt
+- Aikapistekartta on lukittu functional-test branchissa: suffix `0` =
+  baseline ja suffix `2` = 12 kk.
 - Puristusvoimassa säilytetään sekä `mean` että `best` (kätisyys ei tiedossa).
 - SLS: päämuuttuja `SLS_mean`, lisäksi `SLS_best` sensitiivisyysanalyyseille.
 - FTSST: käytetään aina raakaa `tuoliltanousu0/2`.
 - `Tuoli0/2`-sarakkeita ei käytetä FTSST-raakamuuttujina (johdannaismuuttuja).
+- Sama `0/2`-aikapistekartta toimii locomotor-CFA:n kolmelle
+  lähdekomponentille (`kavelynopeus_m_sek`, `FTSST`, `SLS_mean` /
+  `Seisominen`) eikä ole vain `Composite_Z`-haaran konventio.
 - Excel-puristuksessa mixed-field-sääntö:
   - arvot `1..5` tulkitaan luokaksi (`*_class`)
   - arvot `>5` tulkitaan kg-ehdokkaiksi (`grip_*`)
