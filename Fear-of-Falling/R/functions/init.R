@@ -54,12 +54,19 @@ manifest_row <- function(script, label, path, kind,
 append_manifest <- function(row, manifest_path) {
   stopifnot(is.data.frame(row))
   dir.create(dirname(manifest_path), recursive = TRUE, showWarnings = FALSE)
+  row <- dplyr::mutate(row, dplyr::across(dplyr::everything(), as.character))
   
   if (!file.exists(manifest_path)) {
     readr::write_csv(row, manifest_path)
   } else {
     # suppressMessages to avoid "New names: ..." noise
-    old <- suppressMessages(readr::read_csv(manifest_path, show_col_types = FALSE))
+    old <- suppressMessages(
+      readr::read_csv(
+        manifest_path,
+        show_col_types = FALSE,
+        col_types = readr::cols(.default = readr::col_character())
+      )
+    )
     out <- dplyr::bind_rows(old, row)
     readr::write_csv(out, manifest_path)
   }
