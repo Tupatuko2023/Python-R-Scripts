@@ -45,7 +45,14 @@ resolve_data_root <- function() {
   if (!nzchar(data_root)) {
     stop("DATA_ROOT is required for K50 diagnostics.", call. = FALSE)
   }
-  normalizePath(data_root, winslash = "/", mustWork = FALSE)
+  data_root <- normalizePath(data_root, winslash = "/", mustWork = FALSE)
+  if (!dir.exists(data_root)) {
+    stop(
+      sprintf("Resolved DATA_ROOT does not exist: %s", data_root),
+      call. = FALSE
+    )
+  }
+  data_root
 }
 
 safe_num <- function(x) suppressWarnings(as.numeric(x))
