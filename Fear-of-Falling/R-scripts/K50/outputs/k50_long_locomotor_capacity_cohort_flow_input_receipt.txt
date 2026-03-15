@@ -1,0 +1,10 @@
+script=K50.1_COHORT_FLOW
+timestamp_utc=2026-03-15 11:55:05 UTC
+input_path=/data/data/com.termux/files/home/FOF_LOCAL_DATA/paper_01/analysis/fof_analysis_k50_long.rds
+input_md5=a678028d501186e362121a55813ea1ed
+shape=LONG
+outcome=locomotor_capacity
+rows_loaded=1102
+participants_modeled=239
+fi22_enabled=FALSE
+allow_composite_z_verified=FALSE

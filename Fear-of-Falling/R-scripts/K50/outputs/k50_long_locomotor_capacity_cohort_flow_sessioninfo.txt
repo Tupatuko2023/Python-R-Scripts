@@ -1,0 +1,26 @@
+R version 4.5.2 (2025-10-31)
+Platform: aarch64-unknown-linux-android
+
+Matrix products: default
+BLAS:   /data/data/com.termux/files/usr/lib/R/lib/libRblas.so 
+LAPACK: /data/data/com.termux/files/usr/lib/R/lib/libRlapack.so;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8
+
+time zone: NA
+tzcode source: system
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] here_1.0.2   tibble_3.3.1 tidyr_1.3.2  readr_2.1.6  dplyr_1.2.0 
+
+loaded via a namespace (and not attached):
+ [1] R6_2.6.1         bit_4.6.0        tidyselect_1.2.1 tzdb_0.3.0      
+ [5] magrittr_2.0.4   glue_1.8.0       parallel_4.5.2   pkgconfig_2.0.3 
+ [9] bit64_4.6.0-1    generics_0.1.4   lifecycle_1.0.5  cli_3.6.5       
+[13] vctrs_0.7.1      compiler_4.5.2   rprojroot_2.1.1  tools_4.5.2     
+[17] purrr_1.2.1      hms_1.1.4        pillar_1.11.1    crayon_1.5.3    
+[21] rlang_1.1.7      vroom_1.7.0     
