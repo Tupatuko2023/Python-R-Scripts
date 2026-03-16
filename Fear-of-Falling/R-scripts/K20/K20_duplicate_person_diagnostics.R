@@ -1,4 +1,18 @@
 #!/usr/bin/env Rscript
+# ==============================================================================
+# K20 - Duplicate Person Diagnostics
+# File tag: K20_duplicate_person_diagnostics.R
+# Purpose: Classify workbook-derived duplicate persons at aggregate-only level
+#          after the verified K50 person-dedup bridge has been applied.
+#
+# Required vars (canonical K50 LONG input):
+# id, time, FOF_status, age, sex, BMI, locomotor_capacity, FI22_nonperformance_KAAOS
+#
+# Outputs + manifest:
+# - script_label: K20
+# - outputs dir: R-scripts/K20/outputs/
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+# ==============================================================================
 
 suppressPackageStartupMessages({
   library(dplyr)
@@ -9,6 +23,7 @@ suppressPackageStartupMessages({
 })
 
 source(here::here("R", "functions", "init.R"))
+source(here::here("R", "functions", "person_dedup_lookup.R"))
 paths <- init_paths("K20")
 outputs_dir <- paths$outputs_dir
 manifest_path <- paths$manifest_path
@@ -39,125 +54,10 @@ write_table_with_manifest <- function(tbl, label, notes) {
   out_path
 }
 
-load_data_root_from_env_file <- function() {
-  current <- Sys.getenv("DATA_ROOT", unset = "")
-  if (nzchar(current)) return(current)
-
-  env_path <- here::here("config", ".env")
-  if (!file.exists(env_path)) return(current)
-
-  env_lines <- readLines(env_path, warn = FALSE, encoding = "UTF-8")
-  data_root_line <- grep("^\\s*export\\s+DATA_ROOT=", env_lines, value = TRUE)
-  if (length(data_root_line) == 0L) return(current)
-
-  value <- sub("^\\s*export\\s+DATA_ROOT=", "", data_root_line[[1]])
-  value <- trimws(gsub('^"(.*)"$', "\\1", gsub("^'(.*)'$", "\\1", value)))
-  if (!nzchar(value)) return(current)
-
-  Sys.setenv(DATA_ROOT = value)
-  value
-}
-
-resolve_data_root <- function() {
-  load_data_root_from_env_file()
-  dr <- Sys.getenv("DATA_ROOT", unset = "")
-  if (!nzchar(dr)) {
-    stop("K20 duplicate diagnostics requires DATA_ROOT.", call. = FALSE)
-  }
-  normalizePath(dr, winslash = "/", mustWork = FALSE)
-}
-
-normalize_id <- function(x) {
-  out <- trimws(as.character(x))
-  out[out == "" | tolower(out) %in% c("na", "nan", "null")] <- NA_character_
-  out
-}
-
-normalize_ssn <- function(x) {
-  out <- toupper(trimws(as.character(x)))
-  out <- gsub("[[:space:][:punct:]]+", "", out)
-  out[out == "" | out %in% c("NA", "NAN", "NULL")] <- NA_character_
-  out
-}
-
-normalize_time <- function(x) {
-  s <- tolower(trimws(as.character(x)))
-  out <- rep(NA_integer_, length(s))
-  out[s %in% c("0", "baseline", "base", "t0")] <- 0L
-  out[s %in% c("12", "12m", "m12", "followup", "follow-up", "12_months")] <- 12L
-  suppressWarnings(num <- as.integer(s))
-  use_num <- is.na(out) & !is.na(num) & num %in% c(0L, 12L)
-  out[use_num] <- num[use_num]
-  out
-}
-
-normalize_fof <- function(x) {
-  s <- tolower(trimws(as.character(x)))
-  out <- rep(NA_integer_, length(s))
-  out[s %in% c("0", "nonfof", "ei fof", "no fof", "false")] <- 0L
-  out[s %in% c("1", "fof", "true")] <- 1L
-  suppressWarnings(num <- as.integer(s))
-  use_num <- is.na(out) & !is.na(num) & num %in% c(0L, 1L)
-  out[use_num] <- num[use_num]
-  out
-}
-
-normalize_sex <- function(x) {
-  out <- trimws(as.character(x))
-  out[out == ""] <- NA_character_
-  out
-}
-
-safe_num <- function(x) suppressWarnings(as.numeric(x))
-
-is_ssn_name <- function(x) {
-  x %in% c("hetu", "sotu", "ssn", "socialsecuritynumber")
-}
-
-resolve_bridge_key <- function(canonical_names, lookup_names) {
-  canonical_norm <- tolower(canonical_names)
-  lookup_norm <- tolower(lookup_names)
-  shared_norm <- intersect(canonical_norm, lookup_norm)
-  bridge_alias_map <- c(id = "nro")
-
-  if ("id" %in% shared_norm) {
-    return(list(canonical_col = canonical_names[match("id", canonical_norm)], lookup_col = lookup_names[match("id", lookup_norm)]))
-  }
-
-  alias_hits <- names(bridge_alias_map)[
-    names(bridge_alias_map) %in% canonical_norm &
-      unname(bridge_alias_map) %in% lookup_norm
-  ]
-  if (length(alias_hits) != 1L) {
-    stop("K20 duplicate diagnostics could not verify the production bridge key.", call. = FALSE)
-  }
-
-  canonical_hit <- alias_hits[[1]]
-  lookup_hit <- unname(bridge_alias_map[[canonical_hit]])
-  list(
-    canonical_col = canonical_names[match(canonical_hit, canonical_norm)],
-    lookup_col = lookup_names[match(lookup_hit, lookup_norm)]
-  )
-}
-
-read_lookup <- function(path, canonical_names) {
-  if (!requireNamespace("readxl", quietly = TRUE)) {
-    stop("K20 duplicate diagnostics requires readxl.", call. = FALSE)
-  }
-
-  lookup_df <- tibble::as_tibble(readxl::read_excel(path, sheet = "Taul1", skip = 1L))
-  bridge <- resolve_bridge_key(canonical_names, names(lookup_df))
-  ssn_col <- names(lookup_df)[match("sotu", tolower(names(lookup_df)))]
-  if (is.na(ssn_col)) stop("K20 duplicate diagnostics could not find Sotu column.", call. = FALSE)
-
-  lookup_df %>%
-    transmute(
-      bridge_value = normalize_id(.data[[bridge$lookup_col]]),
-      normalized_ssn = normalize_ssn(.data[[ssn_col]])
-    ) %>%
-    filter(!is.na(bridge_value), !is.na(normalized_ssn)) %>%
-    distinct()
-}
+normalize_time <- pd_normalize_time
+normalize_fof <- function(x) as.integer(as.character(pd_normalize_fof(x)))
+normalize_sex <- function(x) as.character(pd_normalize_sex(x))
+safe_num <- pd_safe_num
 
 row_signature <- function(df) {
   cols <- c("time", "FOF_status", "age", "sex", "BMI", "outcome_value", "FI22_nonperformance_KAAOS")
@@ -172,49 +72,10 @@ count_non_missing <- function(df, cols) {
 }
 
 detect_k50_ambiguous <- function(person_df) {
-  fof_values <- sort(unique(stats::na.omit(as.character(person_df$FOF_status))))
-  if (length(fof_values) > 1L) return(TRUE)
-
-  candidate_groups <- split(person_df, person_df$id, drop = TRUE)
-  if (length(candidate_groups) <= 1L) return(FALSE)
-
-  meta_rows <- vector("list", length(candidate_groups))
-  signatures <- character(length(candidate_groups))
-
-  for (idx in seq_along(candidate_groups)) {
-    candidate_df <- candidate_groups[[idx]]
-    time_values <- sort(unique(stats::na.omit(candidate_df$time)))
-    branch_eligible <- nrow(candidate_df) == 2L &&
-      length(time_values) == 2L &&
-      identical(as.integer(time_values), c(0L, 12L))
-    outcome_complete <- branch_eligible && all(!is.na(candidate_df$outcome_value))
-    covariate_complete <- all(!is.na(candidate_df$age)) &&
-      all(!is.na(candidate_df$sex)) &&
-      all(!is.na(candidate_df$BMI))
-
-    meta_rows[[idx]] <- tibble(
-      candidate_idx = idx,
-      canonical_id = sort(unique(candidate_df$id))[1],
-      branch_eligible = branch_eligible,
-      outcome_complete = outcome_complete,
-      covariate_complete = covariate_complete,
-      non_missing_fields = count_non_missing(candidate_df, c("time", "FOF_status", "age", "sex", "BMI", "outcome_value", "FI22_nonperformance_KAAOS"))
-    )
-    signatures[[idx]] <- row_signature(candidate_df)
-  }
-
-  meta_df <- bind_rows(meta_rows) %>%
-    arrange(desc(branch_eligible), desc(outcome_complete), desc(covariate_complete), desc(non_missing_fields), canonical_id)
-  top <- meta_df[1, , drop = FALSE]
-  tied <- meta_df %>%
-    filter(
-      branch_eligible == top$branch_eligible[[1]],
-      outcome_complete == top$outcome_complete[[1]],
-      covariate_complete == top$covariate_complete[[1]],
-      non_missing_fields == top$non_missing_fields[[1]]
-    )
-
-  length(unique(signatures[match(tied$candidate_idx, meta_df$candidate_idx)])) > 1L
+  pd_is_ambiguous_long_person(
+    person_df = person_df,
+    compare_cols = c("time", "FOF_status", "age", "sex", "BMI", "outcome_value", "FI22_nonperformance_KAAOS")
+  )
 }
 
 has_conflict <- function(x) {
@@ -295,12 +156,11 @@ categorize_person <- function(person_df) {
 
 data_root <- resolve_data_root()
 canonical_path <- file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long.rds")
-lookup_path <- file.path(data_root, "paper_02", "KAAOS_data_sotullinen.xlsx")
 
 canonical_df <- as_tibble(readRDS(canonical_path)) %>%
   transmute(
     id = normalize_id(id),
-    bridge_value = normalize_id(id),
+    bridge_value = normalize_join_key(id),
     time = normalize_time(time),
     FOF_status = normalize_fof(FOF_status),
     age = safe_num(age),
@@ -311,7 +171,7 @@ canonical_df <- as_tibble(readRDS(canonical_path)) %>%
   ) %>%
   filter(!is.na(id))
 
-lookup_df <- read_lookup(lookup_path, names(canonical_df))
+lookup_df <- read_ssn_lookup(resolve_ssn_lookup_path(), names(canonical_df))$lookup_df
 duplicate_lookup_df <- lookup_df %>%
   add_count(normalized_ssn, name = "lookup_rows_n") %>%
   filter(lookup_rows_n > 1L)

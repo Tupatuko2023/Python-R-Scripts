@@ -62,6 +62,7 @@ script_label <- "K50"
 helper_label <- sub("\\.V.*$", "", script_base)
 
 source(here::here("R", "functions", "init.R"))
+source(here::here("R", "functions", "person_dedup_lookup.R"))
 paths <- init_paths(script_label)
 outputs_dir <- paths$outputs_dir
 manifest_path <- paths$manifest_path
@@ -136,32 +137,6 @@ resolve_existing <- function(candidates) {
   normalizePath(hits[[1]], winslash = "/", mustWork = TRUE)
 }
 
-load_data_root_from_env_file <- function() {
-  current <- Sys.getenv("DATA_ROOT", unset = "")
-  if (nzchar(current)) return(current)
-
-  env_path <- here::here("config", ".env")
-  if (!file.exists(env_path)) return(current)
-
-  env_lines <- readLines(env_path, warn = FALSE, encoding = "UTF-8")
-  data_root_line <- grep("^\\s*export\\s+DATA_ROOT=", env_lines, value = TRUE)
-  if (length(data_root_line) == 0L) return(current)
-
-  value <- sub("^\\s*export\\s+DATA_ROOT=", "", data_root_line[[1]])
-  value <- trimws(gsub('^"(.*)"$', "\\1", gsub("^'(.*)'$", "\\1", value)))
-  if (!nzchar(value)) return(current)
-
-  Sys.setenv(DATA_ROOT = value)
-  value
-}
-
-resolve_data_root <- function() {
-  load_data_root_from_env_file()
-  dr <- Sys.getenv("DATA_ROOT", unset = "")
-  if (!nzchar(dr)) return(NA_character_)
-  normalizePath(dr, winslash = "/", mustWork = FALSE)
-}
-
 resolve_input_path <- function(shape, cli_data) {
   if (!is.null(cli_data) && nzchar(cli_data)) {
     if (!file.exists(cli_data)) {
@@ -210,343 +185,9 @@ read_dataset <- function(path) {
 
 safe_num <- function(x) suppressWarnings(as.numeric(x))
 
-normalize_id <- function(x) {
-  out <- trimws(as.character(x))
-  out[is.na(out) | out == "" | tolower(out) %in% c("na", "nan", "null")] <- NA_character_
-  out
-}
-
-normalize_join_key <- function(x) {
-  normalize_id(x)
-}
-
-normalize_ssn <- function(x) {
-  out <- toupper(trimws(as.character(x)))
-  out <- gsub("[[:space:][:punct:]]+", "", out)
-  out[out == "" | out %in% c("NA", "NAN", "NULL")] <- NA_character_
-  out
-}
-
-resolve_ssn_lookup_path <- function() {
-  data_root <- resolve_data_root()
-  if (is.na(data_root)) {
-    stop("K50 cohort flow SSN dedup requires DATA_ROOT for paper_02 lookup resolution.", call. = FALSE)
-  }
-  lookup_path <- file.path(data_root, "paper_02", "KAAOS_data_sotullinen.xlsx")
-  if (!file.exists(lookup_path)) {
-    stop("K50 cohort flow SSN dedup lookup not found: ", lookup_path, call. = FALSE)
-  }
-  normalizePath(lookup_path, winslash = "/", mustWork = TRUE)
-}
-
-is_bridge_candidate_name <- function(x) {
-  grepl("(^id$|_id$|^nro$|_nro$|participant|record|study|subject|person)", x)
-}
-
-is_ssn_name <- function(x) {
-  x %in% c("hetu", "sotu", "ssn", "socialsecuritynumber")
-}
-
-resolve_bridge_key <- function(canonical_names, lookup_names) {
-  canonical_norm <- tolower(canonical_names)
-  lookup_norm <- tolower(lookup_names)
-  shared_norm <- intersect(canonical_norm, lookup_norm)
-  bridge_norm <- shared_norm[is_bridge_candidate_name(shared_norm)]
-  bridge_alias_map <- c(id = "nro")
-
-  if (length(bridge_norm) == 1L) {
-    return(list(
-      canonical_col = canonical_names[match(bridge_norm[[1]], canonical_norm)],
-      lookup_col = lookup_names[match(bridge_norm[[1]], lookup_norm)],
-      bridge_norm = bridge_norm[[1]]
-    ))
-  }
-
-  alias_hits <- names(bridge_alias_map)[
-    names(bridge_alias_map) %in% canonical_norm &
-      unname(bridge_alias_map) %in% lookup_norm
-  ]
-
-  if (length(alias_hits) != 1L) {
-    stop(
-      "K50 cohort flow could not verify exactly one shared bridge column between canonical input and SSN lookup workbook.",
-      call. = FALSE
-    )
-  }
-
-  canonical_hit <- alias_hits[[1]]
-  lookup_hit <- unname(bridge_alias_map[[canonical_hit]])
-
-  list(
-    canonical_col = canonical_names[match(canonical_hit, canonical_norm)],
-    lookup_col = lookup_names[match(lookup_hit, lookup_norm)],
-    bridge_norm = paste0(canonical_hit, "<->", lookup_hit)
-  )
-}
-
-read_ssn_lookup <- function(path, canonical_names) {
-  if (!requireNamespace("readxl", quietly = TRUE)) {
-    stop("K50 cohort flow SSN dedup requires the readxl package.", call. = FALSE)
-  }
-
-  sheets <- readxl::excel_sheets(path)
-  found <- list()
-  read_specs <- list(
-    list(skip = 0L, preferred_sheet = NA_character_),
-    list(skip = 1L, preferred_sheet = "Taul1")
-  )
-
-  for (sheet in sheets) {
-    for (spec in read_specs) {
-      if (!is.na(spec$preferred_sheet) && !identical(sheet, spec$preferred_sheet)) next
-
-      sheet_df <- tibble::as_tibble(
-        readxl::read_excel(path, sheet = sheet, skip = spec$skip, n_max = Inf)
-      )
-      lookup_names <- names(sheet_df)
-      lookup_norm <- tolower(lookup_names)
-      ssn_hits <- which(is_ssn_name(lookup_norm))
-      if (length(ssn_hits) != 1L) next
-
-      bridge <- tryCatch(
-        resolve_bridge_key(canonical_names, lookup_names),
-        error = function(e) NULL
-      )
-      if (is.null(bridge)) next
-      ssn_col <- lookup_names[[ssn_hits[[1]]]]
-
-      clean_df <- sheet_df %>%
-        transmute(
-          bridge_value = normalize_join_key(.data[[bridge$lookup_col]]),
-          normalized_ssn = normalize_ssn(.data[[ssn_col]])
-        ) %>%
-        filter(!is.na(bridge_value), !is.na(normalized_ssn)) %>%
-        distinct()
-
-      if (nrow(clean_df) == 0) next
-
-      bridge_conflicts <- clean_df %>%
-        count(bridge_value, name = "n_ssn") %>%
-        filter(n_ssn > 1L)
-
-      if (nrow(bridge_conflicts) > 0) {
-        stop(
-          "K50 cohort flow SSN dedup bridge candidate is not 1:1 or 1:many from SSN to bridge value in lookup workbook.",
-          call. = FALSE
-        )
-      }
-
-      found[[length(found) + 1L]] <- list(
-        sheet = sheet,
-        skip = spec$skip,
-        bridge_col = bridge$canonical_col,
-        lookup_bridge_col = bridge$lookup_col,
-        lookup_df = clean_df
-      )
-    }
-  }
-
-  if (length(found) != 1L) {
-    stop(
-      "K50 cohort flow SSN dedup could not verify a unique workbook sheet with one SSN column and one shared bridge key.",
-      call. = FALSE
-    )
-  }
-
-  found[[1L]]
-}
-
-attach_person_key <- function(analysis_df, lookup_info) {
-  attached_df <- analysis_df %>%
-    left_join(lookup_info$lookup_df, by = "bridge_value") %>%
-    mutate(
-      person_key_source = if_else(!is.na(normalized_ssn), "verified_ssn", "id_fallback"),
-      person_key = case_when(
-        !is.na(normalized_ssn) ~ paste0("ssn:", normalized_ssn),
-        !is.na(id) ~ paste0("id:", id),
-        TRUE ~ NA_character_
-      )
-    ) %>%
-    select(-normalized_ssn)
-
-  list(
-    data = attached_df,
-    diagnostics = list(
-      matched_rows = sum(attached_df$person_key_source == "verified_ssn", na.rm = TRUE),
-      unmatched_rows = sum(attached_df$person_key_source == "id_fallback", na.rm = TRUE)
-    )
-  )
-}
-
 count_non_missing <- function(df, cols) {
   if (length(cols) == 0L) return(0L)
   sum(!is.na(as.data.frame(df[, cols, drop = FALSE])))
-}
-
-candidate_signature_long <- function(df) {
-  cmp_cols <- c("time", "FOF_status", "age", "sex", "BMI", "outcome_value", "FI22_nonperformance_KAAOS")
-  ordered_df <- df[order(df$time, na.last = TRUE), cmp_cols, drop = FALSE]
-  row_sig <- apply(ordered_df, 1, function(row) paste(ifelse(is.na(row), "<NA>", as.character(row)), collapse = "|"))
-  paste(row_sig, collapse = "||")
-}
-
-candidate_signature_wide <- function(df) {
-  cmp_cols <- c("FOF_status", "age", "sex", "BMI", "outcome_0", "outcome_12m", "FI22_nonperformance_KAAOS")
-  row <- df[1, cmp_cols, drop = FALSE]
-  paste(ifelse(is.na(row), "<NA>", as.character(row)), collapse = "|")
-}
-
-select_best_candidate <- function(meta_df, signatures) {
-  ordered <- meta_df %>%
-    arrange(desc(branch_eligible), desc(outcome_complete), desc(covariate_complete), desc(non_missing_fields), canonical_id)
-  top <- ordered[1, , drop = FALSE]
-  tied <- ordered %>%
-    filter(
-      branch_eligible == top$branch_eligible[[1]],
-      outcome_complete == top$outcome_complete[[1]],
-      covariate_complete == top$covariate_complete[[1]],
-      non_missing_fields == top$non_missing_fields[[1]]
-    )
-
-  tied_idx <- tied$candidate_idx
-  if (length(unique(signatures[match(tied_idx, meta_df$candidate_idx)])) > 1L) {
-    return(list(ambiguous = TRUE, candidate_idx = NA_integer_))
-  }
-
-  list(ambiguous = FALSE, candidate_idx = tied_idx[[1]])
-}
-
-dedup_person_records_long <- function(df) {
-  verified_df <- df %>% filter(person_key_source == "verified_ssn", !is.na(person_key))
-  fallback_df <- df %>% filter(person_key_source != "verified_ssn", !is.na(person_key))
-
-  if (nrow(verified_df) == 0L) {
-    return(list(
-      data = bind_rows(fallback_df),
-      diagnostics = list(ex_duplicate_ssn_rows = 0L, ex_person_conflict_ambiguous = 0L)
-    ))
-  }
-
-  kept <- list()
-  duplicate_rows <- 0L
-  ambiguous_people <- 0L
-
-  for (person_df in split(verified_df, verified_df$person_key, drop = TRUE)) {
-    fof_values <- sort(unique(stats::na.omit(as.character(person_df$FOF_status))))
-    if (length(fof_values) > 1L) {
-      ambiguous_people <- ambiguous_people + 1L
-      next
-    }
-
-    candidate_groups <- split(person_df, person_df$id, drop = TRUE)
-    candidates <- vector("list", length(candidate_groups))
-    meta_rows <- vector("list", length(candidate_groups))
-    signatures <- character(length(candidate_groups))
-    idx <- 1L
-
-    for (candidate_df in candidate_groups) {
-      candidate_df <- candidate_df[order(candidate_df$time, na.last = TRUE), , drop = FALSE]
-      time_values <- sort(unique(stats::na.omit(candidate_df$time)))
-      branch_eligible <- nrow(candidate_df) == 2L &&
-        length(time_values) == 2L &&
-        identical(as.integer(time_values), c(0L, 12L))
-      outcome_complete <- branch_eligible && all(!is.na(candidate_df$outcome_value))
-      covariate_complete <- all(!is.na(candidate_df$age)) &&
-        all(!is.na(candidate_df$sex)) &&
-        all(!is.na(candidate_df$BMI))
-
-      candidates[[idx]] <- candidate_df
-      meta_rows[[idx]] <- tibble(
-        candidate_idx = idx,
-        canonical_id = sort(unique(candidate_df$id))[1],
-        branch_eligible = branch_eligible,
-        outcome_complete = outcome_complete,
-        covariate_complete = covariate_complete,
-        non_missing_fields = count_non_missing(candidate_df, c("time", "FOF_status", "age", "sex", "BMI", "outcome_value", "FI22_nonperformance_KAAOS"))
-      )
-      signatures[[idx]] <- candidate_signature_long(candidate_df)
-      idx <- idx + 1L
-    }
-
-    choice <- select_best_candidate(bind_rows(meta_rows), signatures)
-    if (isTRUE(choice$ambiguous)) {
-      ambiguous_people <- ambiguous_people + 1L
-      next
-    }
-
-    chosen <- candidates[[choice$candidate_idx]]
-    duplicate_rows <- duplicate_rows + (nrow(person_df) - nrow(chosen))
-    kept[[length(kept) + 1L]] <- chosen
-  }
-
-  list(
-    data = bind_rows(fallback_df, bind_rows(kept)),
-    diagnostics = list(
-      ex_duplicate_ssn_rows = duplicate_rows,
-      ex_person_conflict_ambiguous = ambiguous_people
-    )
-  )
-}
-
-dedup_person_records_wide <- function(df) {
-  verified_df <- df %>% filter(person_key_source == "verified_ssn", !is.na(person_key))
-  fallback_df <- df %>% filter(person_key_source != "verified_ssn", !is.na(person_key))
-
-  if (nrow(verified_df) == 0L) {
-    return(list(
-      data = bind_rows(fallback_df),
-      diagnostics = list(ex_duplicate_ssn_rows = 0L, ex_person_conflict_ambiguous = 0L)
-    ))
-  }
-
-  kept <- list()
-  duplicate_rows <- 0L
-  ambiguous_people <- 0L
-
-  for (person_df in split(verified_df, verified_df$person_key, drop = TRUE)) {
-    fof_values <- sort(unique(stats::na.omit(as.character(person_df$FOF_status))))
-    if (length(fof_values) > 1L) {
-      ambiguous_people <- ambiguous_people + 1L
-      next
-    }
-
-    candidates <- split(person_df, seq_len(nrow(person_df)))
-    meta_rows <- vector("list", length(candidates))
-    signatures <- character(length(candidates))
-
-    for (idx in seq_along(candidates)) {
-      candidate_df <- candidates[[idx]]
-      meta_rows[[idx]] <- tibble(
-        candidate_idx = idx,
-        canonical_id = candidate_df$id[[1]],
-        branch_eligible = nrow(candidate_df) == 1L,
-        outcome_complete = !is.na(candidate_df$outcome_0[[1]]) && !is.na(candidate_df$outcome_12m[[1]]),
-        covariate_complete = !is.na(candidate_df$age[[1]]) &&
-          !is.na(candidate_df$sex[[1]]) &&
-          !is.na(candidate_df$BMI[[1]]),
-        non_missing_fields = count_non_missing(candidate_df, c("FOF_status", "age", "sex", "BMI", "outcome_0", "outcome_12m", "FI22_nonperformance_KAAOS"))
-      )
-      signatures[[idx]] <- candidate_signature_wide(candidate_df)
-    }
-
-    choice <- select_best_candidate(bind_rows(meta_rows), signatures)
-    if (isTRUE(choice$ambiguous)) {
-      ambiguous_people <- ambiguous_people + 1L
-      next
-    }
-
-    chosen <- candidates[[choice$candidate_idx]]
-    duplicate_rows <- duplicate_rows + (nrow(person_df) - nrow(chosen))
-    kept[[length(kept) + 1L]] <- chosen
-  }
-
-  list(
-    data = bind_rows(fallback_df, bind_rows(kept)),
-    diagnostics = list(
-      ex_duplicate_ssn_rows = duplicate_rows,
-      ex_person_conflict_ambiguous = ambiguous_people
-    )
-  )
 }
 
 normalize_fof <- function(x) {
@@ -638,8 +279,6 @@ build_missing_placeholders <- function(missing_tbl) {
   bind_rows(rows)
 }
 
-source(here::here("R", "functions", "person_dedup_lookup.R"))
-
 shape <- parse_shape(get_arg("--shape"))
 outcome <- parse_outcome(get_arg("--outcome", "locomotor_capacity"))
 allow_composite_z <- identical(toupper(get_arg("--allow-composite-z", "off")), "VERIFIED")
@@ -688,20 +327,6 @@ if (shape == "LONG") {
   if (fi22_enabled && is.na(fi22_col)) {
     stop("K50 cohort flow --fi22 on requires canonical `FI22_nonperformance_KAAOS`.", call. = FALSE)
   }
-
-  analysis_df <- input_df %>%
-    transmute(
-      id = normalize_id(.data[[id_col]]),
-      bridge_value = normalize_join_key(.data[[ssn_lookup_info$bridge_col]]),
-      time = normalize_time(.data[[time_col]]),
-      FOF_status = normalize_fof(.data[[fof_col]]),
-      age = safe_num(.data[[age_col]]),
-      sex = normalize_sex(.data[[sex_col]]),
-      BMI = safe_num(.data[[bmi_col]]),
-      outcome_value = safe_num(.data[[outcome_col]]),
-      FI22_nonperformance_KAAOS = if (!is.na(fi22_col)) safe_num(.data[[fi22_col]]) else NA_real_
-    ) %>%
-    arrange(id, time)
 
   raw_rows <- dedup_prep$diagnostics$raw_rows
   raw_id_n <- dedup_prep$diagnostics$raw_id_n
@@ -801,19 +426,6 @@ if (shape == "LONG") {
   if (fi22_enabled && is.na(fi22_col)) {
     stop("K50 cohort flow --fi22 on requires canonical `FI22_nonperformance_KAAOS`.", call. = FALSE)
   }
-
-  analysis_df <- input_df %>%
-    transmute(
-      id = normalize_id(.data[[id_col]]),
-      bridge_value = normalize_join_key(.data[[ssn_lookup_info$bridge_col]]),
-      FOF_status = normalize_fof(.data[[fof_col]]),
-      age = safe_num(.data[[age_col]]),
-      sex = normalize_sex(.data[[sex_col]]),
-      BMI = safe_num(.data[[bmi_col]]),
-      outcome_0 = safe_num(.data[[wide_outcome_cols$baseline]]),
-      outcome_12m = safe_num(.data[[wide_outcome_cols$followup]]),
-      FI22_nonperformance_KAAOS = if (!is.na(fi22_col)) safe_num(.data[[fi22_col]]) else NA_real_
-    )
 
   raw_rows <- dedup_prep$diagnostics$raw_rows
   raw_id_n <- dedup_prep$diagnostics$raw_id_n
