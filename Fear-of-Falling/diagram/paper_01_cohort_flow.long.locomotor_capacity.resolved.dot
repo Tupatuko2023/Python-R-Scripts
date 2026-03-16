@@ -32,10 +32,10 @@ digraph PAPER01_Cohort_Flow {
     label=<
       <TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2">
         <TR><TD ALIGN="LEFT"><B>Group x Time missingness</B></TD></TR>
-        <TR><TD ALIGN="LEFT">FOF=0, time=0: n=146, outcome miss=16, age miss=0, sex miss=0, BMI miss=5</TD></TR>
-        <TR><TD ALIGN="LEFT">FOF=0, time=12: n=146, outcome miss=74, age miss=0, sex miss=0, BMI miss=5</TD></TR>
-        <TR><TD ALIGN="LEFT">FOF=1, time=0: n=340, outcome miss=56, age miss=0, sex miss=1, BMI miss=17</TD></TR>
-        <TR><TD ALIGN="LEFT">FOF=1, time=12: n=340, outcome miss=146, age miss=0, sex miss=1, BMI miss=17</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=0, time=0: n=144, outcome miss=16, age miss=0, sex miss=0, BMI miss=5</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=0, time=12: n=144, outcome miss=73, age miss=0, sex miss=0, BMI miss=5</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=1, time=0: n=328, outcome miss=53, age miss=0, sex miss=1, BMI miss=17</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=1, time=12: n=328, outcome miss=142, age miss=0, sex miss=1, BMI miss=17</TD></TR>
         <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10" COLOR="#6b7280">FI22 optional sensitivity only; excluded for FI22 completeness if enabled: 4</FONT></TD></TR>
       </TABLE>
     >,
@@ -47,7 +47,7 @@ digraph PAPER01_Cohort_Flow {
   ];
 
   n1 [
-    label="Input dataset\nRows = 1102\nUnique id = 551",
+    label="Input dataset\nRows = 1070\nUnique id = 535",
     fillcolor="#eef2ff"
   ];
 
@@ -59,19 +59,19 @@ digraph PAPER01_Cohort_Flow {
   ];
 
   n2 [
-    label="N = 551 participants with non-missing id\n(50.0% of raw rows)",
+    label="N = 535 participants with non-missing id\n(50.0% of raw rows)",
     fillcolor="#eef2ff"
   ];
 
   e1 [
-    label="Excluded n = 65\nMissing or invalid FOF_status\n(11.8% of N_VALID_ID)",
+    label="Excluded n = 63\nMissing or invalid FOF_status\n(11.8% of N_VALID_ID)",
     fillcolor="#fff1f2",
     color="#b91c1c",
     fontcolor="#7f1d1d"
   ];
 
   n3 [
-    label="N = 486 with valid baseline FOF_status\n(88.2% of N_VALID_ID)",
+    label="N = 472 with valid baseline FOF_status\n(88.2% of N_VALID_ID)",
     fillcolor="#eef2ff"
   ];
 
@@ -83,43 +83,43 @@ digraph PAPER01_Cohort_Flow {
   ];
 
   n4 [
-    label="N = 486 branch-eligible participants\n(100.0% of N_WITH_FOF)",
+    label="N = 472 branch-eligible participants\n(100.0% of N_WITH_FOF)",
     fillcolor="#eef2ff"
   ];
 
   e3 [
-    label="Excluded n = 237\nMissing required locomotor_capacity observations\n(48.8% of N_BRANCH_ELIGIBLE)",
+    label="Excluded n = 232\nMissing required locomotor_capacity observations\n(49.2% of N_BRANCH_ELIGIBLE)",
     fillcolor="#fff1f2",
     color="#b91c1c",
     fontcolor="#7f1d1d"
   ];
 
   n5 [
-    label="N = 249 with complete primary outcome\n(51.2% of N_BRANCH_ELIGIBLE)",
+    label="N = 240 with complete primary outcome\n(50.8% of N_BRANCH_ELIGIBLE)",
     fillcolor="#eef2ff"
   ];
 
   e4 [
-    label="Excluded n = 10\nMissing age, sex, or BMI\n(4.0% of N_OUTCOME_COMPLETE)",
+    label="Excluded n = 10\nMissing age, sex, or BMI\n(4.2% of N_OUTCOME_COMPLETE)",
     fillcolor="#fff1f2",
     color="#b91c1c",
     fontcolor="#7f1d1d"
   ];
 
   n6 [
-    label="Final eligible analytic cohort\nN = 239\n(96.0% of N_OUTCOME_COMPLETE)",
+    label="Final eligible analytic cohort\nN = 230\n(95.8% of N_OUTCOME_COMPLETE)",
     fillcolor="#eef2ff"
   ];
 
   g1 [
-    label="FOF: Yes\nn = 169\n(70.7% of N_ANALYTIC_PRIMARY)",
+    label="FOF: Yes\nn = 161\n(70.0% of N_ANALYTIC_PRIMARY)",
     fillcolor="#ecfdf5",
     color="#047857",
     fontcolor="#064e3b"
   ];
 
   g2 [
-    label="FOF: No\nn = 70\n(29.3% of N_ANALYTIC_PRIMARY)",
+    label="FOF: No\nn = 69\n(30.0% of N_ANALYTIC_PRIMARY)",
     fillcolor="#ecfdf5",
     color="#047857",
     fontcolor="#064e3b"
