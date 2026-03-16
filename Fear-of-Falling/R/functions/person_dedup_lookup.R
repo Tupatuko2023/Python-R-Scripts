@@ -52,11 +52,11 @@ normalize_ssn <- function(x) {
 resolve_ssn_lookup_path <- function() {
   data_root <- resolve_data_root()
   if (is.na(data_root)) {
-    stop("Person dedup requires DATA_ROOT for paper_02 lookup resolution.", call. = FALSE)
+    stop("Person dedup lookup could not resolve DATA_ROOT for workbook lookup.", call. = FALSE)
   }
   lookup_path <- file.path(data_root, "paper_02", "KAAOS_data_sotullinen.xlsx")
   if (!file.exists(lookup_path)) {
-    stop("Person dedup lookup not found: ", lookup_path, call. = FALSE)
+    stop("Person dedup lookup could not resolve workbook lookup path: ", lookup_path, call. = FALSE)
   }
   normalizePath(lookup_path, winslash = "/", mustWork = TRUE)
 }
@@ -91,7 +91,7 @@ resolve_bridge_key <- function(canonical_names, lookup_names) {
 
   if (length(alias_hits) != 1L) {
     stop(
-      "Person dedup could not verify exactly one shared bridge column between canonical input and SSN lookup workbook.",
+      "Person dedup lookup could not verify exactly one shared bridge column between canonical input and identity lookup workbook.",
       call. = FALSE
     )
   }
@@ -108,7 +108,7 @@ resolve_bridge_key <- function(canonical_names, lookup_names) {
 
 read_ssn_lookup <- function(path, canonical_names) {
   if (!requireNamespace("readxl", quietly = TRUE)) {
-    stop("Person dedup requires the readxl package.", call. = FALSE)
+    stop("Person dedup lookup requires the readxl package.", call. = FALSE)
   }
 
   sheets <- readxl::excel_sheets(path)
@@ -153,7 +153,7 @@ read_ssn_lookup <- function(path, canonical_names) {
 
       if (nrow(bridge_conflicts) > 0) {
         stop(
-          "Person dedup bridge candidate is not 1:1 or 1:many from SSN to bridge value in lookup workbook.",
+          "Person dedup lookup bridge candidate is not 1:1 or 1:many from identity value to bridge value in the workbook lookup.",
           call. = FALSE
         )
       }
@@ -170,7 +170,7 @@ read_ssn_lookup <- function(path, canonical_names) {
 
   if (length(found) != 1L) {
     stop(
-      "Person dedup could not verify a unique workbook sheet with one SSN column and one shared bridge key.",
+      "Person dedup lookup could not verify a unique workbook sheet with one identity column and one shared bridge key.",
       call. = FALSE
     )
   }
@@ -258,6 +258,111 @@ count_non_missing <- function(df, cols) {
   sum(!is.na(as.data.frame(df[, cols, drop = FALSE])))
 }
 
+pd_choose_long_candidate <- function(person_df,
+                                     id_col = "id",
+                                     time_col = "time",
+                                     fof_col = "FOF_status",
+                                     outcome_cols = c("outcome_value"),
+                                     covariate_cols = c("age", "sex", "BMI"),
+                                     compare_cols = NULL) {
+  candidate_groups <- split(person_df, person_df[[id_col]], drop = TRUE)
+  if (length(candidate_groups) == 0L) {
+    return(list(ambiguous = FALSE, candidate_idx = NA_integer_, candidates = list()))
+  }
+  if (is.null(compare_cols)) {
+    compare_cols <- c(time_col, fof_col, covariate_cols, outcome_cols, "FI22_nonperformance_KAAOS")
+  }
+
+  candidates <- vector("list", length(candidate_groups))
+  meta_rows <- vector("list", length(candidate_groups))
+  signatures <- character(length(candidate_groups))
+  idx <- 1L
+
+  for (candidate_df in candidate_groups) {
+    candidate_df <- candidate_df[order(candidate_df[[time_col]], na.last = TRUE), , drop = FALSE]
+    time_values <- sort(unique(stats::na.omit(candidate_df[[time_col]])))
+    branch_eligible <- nrow(candidate_df) == 2L &&
+      length(time_values) == 2L &&
+      identical(as.integer(time_values), c(0L, 12L))
+    outcome_complete <- branch_eligible &&
+      all(stats::complete.cases(candidate_df[, outcome_cols[outcome_cols %in% names(candidate_df)], drop = FALSE]))
+    covariate_complete <- all(stats::complete.cases(candidate_df[, covariate_cols[covariate_cols %in% names(candidate_df)], drop = FALSE]))
+
+    candidates[[idx]] <- candidate_df
+      compare_cols_present <- compare_cols[compare_cols %in% names(candidate_df)]
+      meta_rows[[idx]] <- tibble(
+        candidate_idx = idx,
+        canonical_id = sort(unique(candidate_df[[id_col]]))[1],
+        branch_eligible = branch_eligible,
+        outcome_complete = outcome_complete,
+        covariate_complete = covariate_complete,
+        non_missing_fields = count_non_missing(candidate_df, compare_cols_present)
+      )
+      signatures[[idx]] <- candidate_signature_long(candidate_df, compare_cols)
+      idx <- idx + 1L
+  }
+
+  choice <- select_best_candidate(bind_rows(meta_rows), signatures)
+  c(choice, list(candidates = candidates))
+}
+
+pd_choose_wide_candidate <- function(person_df,
+                                     id_col = "id",
+                                     fof_col = "FOF_status",
+                                     value_cols = c("outcome_0", "outcome_12m"),
+                                     covariate_cols = c("age", "sex", "BMI"),
+                                     compare_cols = NULL) {
+  candidates <- split(person_df, seq_len(nrow(person_df)))
+  if (length(candidates) == 0L) {
+    return(list(ambiguous = FALSE, candidate_idx = NA_integer_, candidates = list()))
+  }
+  if (is.null(compare_cols)) {
+    compare_cols <- c(fof_col, covariate_cols, value_cols, "FI22_nonperformance_KAAOS")
+  }
+
+  meta_rows <- vector("list", length(candidates))
+  signatures <- character(length(candidates))
+
+  for (idx in seq_along(candidates)) {
+    candidate_df <- candidates[[idx]]
+    compare_cols_present <- compare_cols[compare_cols %in% names(candidate_df)]
+    meta_rows[[idx]] <- tibble(
+      candidate_idx = idx,
+      canonical_id = candidate_df[[id_col]][[1]],
+      branch_eligible = nrow(candidate_df) == 1L,
+      outcome_complete = all(stats::complete.cases(candidate_df[, value_cols[value_cols %in% names(candidate_df)], drop = FALSE])),
+      covariate_complete = all(stats::complete.cases(candidate_df[, covariate_cols[covariate_cols %in% names(candidate_df)], drop = FALSE])),
+      non_missing_fields = count_non_missing(candidate_df, compare_cols_present)
+    )
+    signatures[[idx]] <- candidate_signature_wide(candidate_df, compare_cols)
+  }
+
+  choice <- select_best_candidate(bind_rows(meta_rows), signatures)
+  c(choice, list(candidates = candidates))
+}
+
+pd_is_ambiguous_long_person <- function(person_df,
+                                        id_col = "id",
+                                        time_col = "time",
+                                        fof_col = "FOF_status",
+                                        outcome_cols = c("outcome_value"),
+                                        covariate_cols = c("age", "sex", "BMI"),
+                                        compare_cols = NULL) {
+  fof_values <- sort(unique(stats::na.omit(as.character(person_df[[fof_col]]))))
+  if (length(fof_values) > 1L) return(TRUE)
+  if (dplyr::n_distinct(stats::na.omit(person_df[[id_col]])) <= 1L) return(FALSE)
+
+  isTRUE(pd_choose_long_candidate(
+    person_df = person_df,
+    id_col = id_col,
+    time_col = time_col,
+    fof_col = fof_col,
+    outcome_cols = outcome_cols,
+    covariate_cols = covariate_cols,
+    compare_cols = compare_cols
+  )$ambiguous)
+}
+
 candidate_signature_long <- function(df, compare_cols) {
   cmp_cols <- compare_cols[compare_cols %in% names(df)]
   ordered_df <- df[order(df$time, na.last = TRUE), cmp_cols, drop = FALSE]
@@ -327,42 +432,21 @@ dedup_person_records_long <- function(df,
       next
     }
 
-    candidate_groups <- split(person_df, person_df[[id_col]], drop = TRUE)
-    candidates <- vector("list", length(candidate_groups))
-    meta_rows <- vector("list", length(candidate_groups))
-    signatures <- character(length(candidate_groups))
-    idx <- 1L
-
-    for (candidate_df in candidate_groups) {
-      candidate_df <- candidate_df[order(candidate_df[[time_col]], na.last = TRUE), , drop = FALSE]
-      time_values <- sort(unique(stats::na.omit(candidate_df[[time_col]])))
-      branch_eligible <- nrow(candidate_df) == 2L &&
-        length(time_values) == 2L &&
-        identical(as.integer(time_values), c(0L, 12L))
-      outcome_complete <- branch_eligible &&
-        all(stats::complete.cases(candidate_df[, outcome_cols[outcome_cols %in% names(candidate_df)], drop = FALSE]))
-      covariate_complete <- all(stats::complete.cases(candidate_df[, covariate_cols[covariate_cols %in% names(candidate_df)], drop = FALSE]))
-
-      candidates[[idx]] <- candidate_df
-      meta_rows[[idx]] <- tibble(
-        candidate_idx = idx,
-        canonical_id = sort(unique(candidate_df[[id_col]]))[1],
-        branch_eligible = branch_eligible,
-        outcome_complete = outcome_complete,
-        covariate_complete = covariate_complete,
-        non_missing_fields = count_non_missing(candidate_df, compare_cols)
-      )
-      signatures[[idx]] <- candidate_signature_long(candidate_df, compare_cols)
-      idx <- idx + 1L
-    }
-
-    choice <- select_best_candidate(bind_rows(meta_rows), signatures)
+    choice <- pd_choose_long_candidate(
+      person_df = person_df,
+      id_col = id_col,
+      time_col = time_col,
+      fof_col = fof_col,
+      outcome_cols = outcome_cols,
+      covariate_cols = covariate_cols,
+      compare_cols = compare_cols
+    )
     if (isTRUE(choice$ambiguous)) {
       ambiguous_people <- ambiguous_people + 1L
       next
     }
 
-    chosen <- candidates[[choice$candidate_idx]]
+    chosen <- choice$candidates[[choice$candidate_idx]]
     duplicate_rows <- duplicate_rows + (nrow(person_df) - nrow(chosen))
     kept[[length(kept) + 1L]] <- chosen
   }
@@ -407,30 +491,20 @@ dedup_person_records_wide <- function(df,
       next
     }
 
-    candidates <- split(person_df, seq_len(nrow(person_df)))
-    meta_rows <- vector("list", length(candidates))
-    signatures <- character(length(candidates))
-
-    for (idx in seq_along(candidates)) {
-      candidate_df <- candidates[[idx]]
-      meta_rows[[idx]] <- tibble(
-        candidate_idx = idx,
-        canonical_id = candidate_df[[id_col]][[1]],
-        branch_eligible = nrow(candidate_df) == 1L,
-        outcome_complete = all(stats::complete.cases(candidate_df[, value_cols[value_cols %in% names(candidate_df)], drop = FALSE])),
-        covariate_complete = all(stats::complete.cases(candidate_df[, covariate_cols[covariate_cols %in% names(candidate_df)], drop = FALSE])),
-        non_missing_fields = count_non_missing(candidate_df, compare_cols)
-      )
-      signatures[[idx]] <- candidate_signature_wide(candidate_df, compare_cols)
-    }
-
-    choice <- select_best_candidate(bind_rows(meta_rows), signatures)
+    choice <- pd_choose_wide_candidate(
+      person_df = person_df,
+      id_col = id_col,
+      fof_col = fof_col,
+      value_cols = value_cols,
+      covariate_cols = covariate_cols,
+      compare_cols = compare_cols
+    )
     if (isTRUE(choice$ambiguous)) {
       ambiguous_people <- ambiguous_people + 1L
       next
     }
 
-    chosen <- candidates[[choice$candidate_idx]]
+    chosen <- choice$candidates[[choice$candidate_idx]]
     duplicate_rows <- duplicate_rows + (nrow(person_df) - nrow(chosen))
     kept[[length(kept) + 1L]] <- chosen
   }
