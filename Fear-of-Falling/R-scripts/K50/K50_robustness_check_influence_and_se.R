@@ -78,6 +78,8 @@ normalize_sex <- function(x) {
   factor(out)
 }
 
+source(file.path(project_root, "R", "functions", "person_dedup_lookup.R"))
+
 write_table <- function(df, label, notes) {
   out_path <- file.path(outputs_dir, paste0(label, ".csv"))
   utils::write.csv(df, out_path, row.names = FALSE, na = "")
@@ -128,6 +130,7 @@ bootstrap_stat <- function(data, indices) {
 data_root <- resolve_data_root()
 wide_path <- file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_wide.rds")
 wide_raw <- readRDS(wide_path)
+wide_raw <- prepare_k50_person_dedup(wide_raw, "WIDE", "locomotor_capacity")$data
 
 wide_df <- data.frame(
   id = trimws(as.character(wide_raw$id)),

@@ -270,6 +270,8 @@ resolve_long_col <- function(outcome, nms) {
   first_present(nms, c(outcome))
 }
 
+source(here::here("R", "functions", "person_dedup_lookup.R"))
+
 fit_branch_model <- function(df, shape, outcome, fi22_enabled = FALSE) {
   fi22_term <- if (fi22_enabled) " + FI22_nonperformance_KAAOS" else ""
   if (shape == "WIDE") {
@@ -316,6 +318,8 @@ if (identical(outcome, "Composite_Z") && !allow_composite_z) {
 
 # --- Load ---------------------------------------------------------------------
 input_df <- read_dataset(data_path)
+ddup <- prepare_k50_person_dedup(input_df, shape, outcome)
+input_df <- ddup$data
 source_ext <- tolower(tools::file_ext(data_path))
 id_col <- first_present(names(input_df), c("id"))
 fof_col <- first_present(names(input_df), c("FOF_status"))
@@ -335,6 +339,10 @@ decision_lines <- c(
   paste0("input_path=", data_path),
   paste0("shape=", shape),
   paste0("outcome=", outcome),
+  paste0("n_raw_person_lookup=", ddup$diagnostics$n_raw_person_lookup),
+  paste0("ex_duplicate_person_lookup=", ddup$diagnostics$ex_duplicate_person_lookup),
+  paste0("ex_duplicate_person_rows=", ddup$diagnostics$ex_duplicate_person_rows),
+  paste0("ex_person_conflict_ambiguous=", ddup$diagnostics$ex_person_conflict_ambiguous),
   paste0("fi22_enabled=", fi22_enabled),
   paste0("allow_composite_z_verified=", allow_composite_z),
   "Canonical naming discipline is enforced. K50 does not invent ad hoc outcome aliases."
@@ -583,6 +591,10 @@ receipt_lines <- c(
   paste0("shape=", shape),
   paste0("outcome=", outcome),
   paste0("rows_loaded=", nrow(input_df)),
+  paste0("n_raw_person_lookup=", ddup$diagnostics$n_raw_person_lookup),
+  paste0("ex_duplicate_person_lookup=", ddup$diagnostics$ex_duplicate_person_lookup),
+  paste0("ex_duplicate_person_rows=", ddup$diagnostics$ex_duplicate_person_rows),
+  paste0("ex_person_conflict_ambiguous=", ddup$diagnostics$ex_person_conflict_ambiguous),
   paste0("rows_modeled=", nrow(model_df)),
   paste0("fi22_enabled=", fi22_enabled),
   paste0("allow_composite_z_verified=", allow_composite_z)

@@ -277,6 +277,8 @@ build_mapping <- function(df_names) {
   )
 }
 
+source(here::here("R", "functions", "person_dedup_lookup.R"))
+
 find_input_dataset <- function() {
   tried <- character(0)
 
@@ -734,9 +736,14 @@ dir_create(outputs_dir)
 input_info <- find_input_dataset()
 loaded_input <- load_input_dataset(input_info)
 df <- loaded_input$df
+public_input_source <- if (identical(loaded_input$source_kind, "excel")) {
+  "paper_02/workbook.xlsx"
+} else {
+  basename(loaded_input$source_path)
+}
 
 colnames_path <- file.path(outputs_dir, "k32_columns_after_clean_names.txt")
-write_lines_safely(sort(names(df)), colnames_path)
+write_lines_safely(sort(setdiff(names(df), "sotu")), colnames_path)
 append_manifest_safe(label = "k32_columns_after_clean_names", kind = "text", path = colnames_path)
 
 message(
@@ -813,6 +820,7 @@ balance_2 <- build_balance_capacity(
 )
 
 wide_export <- tibble(
+  .source_row = seq_len(nrow(df)),
   id = pick_chr("id"),
   FOF_status = normalize_binary01(pick_num("fof_status")),
   age = pick_num("age"),
@@ -838,6 +846,59 @@ wide_export <- tibble(
     indicator_balance_capacity_12m = indicator_balance_raw_2
   ) %>%
   filter(!is.na(id), nzchar(id))
+
+sotu_col <- if ("sotu" %in% names(df)) "sotu" else NA_character_
+if (is.na(sotu_col)) {
+  stop("K32 person dedup requires workbook column `sotu` after clean_names().", call. = FALSE)
+}
+
+wide_export <- wide_export %>%
+  mutate(
+    bridge_value = normalize_join_key(id),
+    normalized_ssn = normalize_ssn(df[[sotu_col]][.source_row]),
+    person_key_source = if_else(!is.na(normalized_ssn), "verified_ssn", "id_fallback"),
+    person_key = case_when(
+      !is.na(normalized_ssn) ~ paste0("ssn:", normalized_ssn),
+      !is.na(bridge_value) ~ paste0("id:", bridge_value),
+      TRUE ~ NA_character_
+    )
+  )
+
+k32_raw_person_lookup <- wide_export %>%
+  filter(person_key_source == "verified_ssn", !is.na(person_key)) %>%
+  summarise(n = dplyr::n_distinct(person_key)) %>%
+  pull(n)
+if (length(k32_raw_person_lookup) == 0L) k32_raw_person_lookup <- 0L
+k32_verified_id_n <- wide_export %>%
+  filter(person_key_source == "verified_ssn", !is.na(id)) %>%
+  summarise(n = dplyr::n_distinct(id)) %>%
+  pull(n)
+if (length(k32_verified_id_n) == 0L) k32_verified_id_n <- 0L
+
+k32_dedup <- dedup_person_records_wide(
+  wide_export,
+  id_col = "id",
+  fof_col = "FOF_status",
+  value_cols = c(
+    "indicator_gait_primary_0", "indicator_gait_primary_12m",
+    "indicator_chair_capacity_0", "indicator_chair_capacity_12m",
+    "indicator_balance_capacity_0", "indicator_balance_capacity_12m"
+  ),
+  covariate_cols = c("age", "sex", "BMI"),
+  compare_cols = c(
+    "FOF_status", "age", "sex", "BMI", "tasapainovaikeus",
+    "indicator_gait_primary_0", "indicator_gait_primary_12m",
+    "indicator_chair_capacity_0", "indicator_chair_capacity_12m",
+    "indicator_balance_capacity_0", "indicator_balance_capacity_12m"
+  )
+)
+
+wide_export <- k32_dedup$data %>%
+  arrange(id) %>%
+  select(-.source_row, -bridge_value, -normalized_ssn, -person_key_source, -person_key)
+k32_ex_duplicate_person_lookup <- max(k32_verified_id_n - k32_raw_person_lookup, 0L)
+k32_ex_duplicate_person_rows <- k32_dedup$diagnostics$ex_duplicate_ssn_rows
+k32_ex_person_conflict_ambiguous <- k32_dedup$diagnostics$ex_person_conflict_ambiguous
 
 long_primary <- bind_rows(
   wide_export %>%
@@ -895,7 +956,7 @@ primary_complete <- complete.cases(long_primary$gait, long_primary$chair, long_p
 
 decision_lines <- c(
   "K32 decisions (core performance-based locomotor capacity model)",
-  paste0("Input source: ", loaded_input$source_path),
+  paste0("Input source: ", public_input_source),
   paste0("Input kind: ", loaded_input$source_kind),
   paste0("Input sheet: ", ifelse(is.na(loaded_input$source_sheet), "NA", loaded_input$source_sheet)),
   paste0("Input skip: ", ifelse(is.na(loaded_input$source_skip), "NA", as.character(loaded_input$source_skip))),
@@ -914,6 +975,10 @@ decision_lines <- c(
   paste0("Hard CFA gate: primary admissibility must be TRUE and each canonical score column must satisfy completeness >= ", MIN_CANONICAL_SCORE_COMPLETENESS, "."),
   "z3 is baseline-anchored using baseline indicator mean/sd for both baseline and 12-month values.",
   "Composite_Z is not used in this export step. FI22 is joined only as a separate sensitivity-only external index and remains outside locomotor construction.",
+  paste0("n_raw_person_lookup=", k32_raw_person_lookup),
+  paste0("ex_duplicate_person_lookup=", k32_ex_duplicate_person_lookup),
+  paste0("ex_duplicate_person_rows=", k32_ex_duplicate_person_rows),
+  paste0("ex_person_conflict_ambiguous=", k32_ex_person_conflict_ambiguous),
   paste0("Rows retained in primary core model: ", sum(primary_complete))
 )
 dec_path <- file.path(outputs_dir, "k32_decision_log.txt")
@@ -1112,7 +1177,7 @@ receipt_lines <- c(
   paste0("script=", script_label),
   paste0("timestamp_utc=", format(Sys.time(), tz = "UTC", usetz = TRUE)),
   paste0("data_root=", data_root),
-  paste0("input_source=", loaded_input$source_path),
+  paste0("input_source=", public_input_source),
   paste0("input_kind=", loaded_input$source_kind),
   paste0("input_sheet=", ifelse(is.na(loaded_input$source_sheet), "NA", loaded_input$source_sheet)),
   paste0("input_skip=", ifelse(is.na(loaded_input$source_skip), "NA", as.character(loaded_input$source_skip))),
@@ -1132,6 +1197,10 @@ receipt_lines <- c(
   paste0("k50_long_csv_md5=", unname(tools::md5sum(long_csv)[1])),
   paste0("k50_long_rds_path=", long_rds),
   paste0("k50_long_rds_md5=", unname(tools::md5sum(long_rds)[1])),
+  paste0("n_raw_person_lookup=", k32_raw_person_lookup),
+  paste0("ex_duplicate_person_lookup=", k32_ex_duplicate_person_lookup),
+  paste0("ex_duplicate_person_rows=", k32_ex_duplicate_person_rows),
+  paste0("ex_person_conflict_ambiguous=", k32_ex_person_conflict_ambiguous),
   paste0("wide_nrow=", nrow(canonical_wide)),
   paste0("long_nrow=", nrow(canonical_long))
 )

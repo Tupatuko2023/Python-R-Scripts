@@ -194,14 +194,14 @@ join_frailty_from_k15 <- function(k32_df) {
 
   k15_join <- k15_df %>%
     transmute(
-      .join_key = .data[[join_key]],
+      .join_key = trimws(as.character(.data[[join_key]])),
       frailty_cat_from_k15 = as.character(.data[[prep$frailty_col]])
     ) %>%
     filter(!is.na(.join_key), .join_key != "") %>%
     distinct(.join_key, .keep_all = TRUE)
 
   out <- k32_df %>%
-    mutate(.join_key = .data[[join_key]]) %>%
+    mutate(.join_key = trimws(as.character(.data[[join_key]]))) %>%
     left_join(k15_join, by = ".join_key")
 
   list(
@@ -221,9 +221,9 @@ d <- join_res$df
 
 latent_col <- resolve_col(names(d), c("capacity_score_latent_primary", "capacity_score_cfa_primary"))
 z3_col <- resolve_col(names(d), c("capacity_score_z3_primary"))
-gait_col <- resolve_col(names(d), c("indicator_gait_primary", "kavelynopeus_m_sek0"))
-chair_col <- resolve_col(names(d), c("indicator_chair_capacity", "tuoli0"))
-balance_col <- resolve_col(names(d), c("indicator_balance_capacity", "seisominen0"))
+gait_col <- resolve_col(names(d), c("indicator_gait_primary_0", "indicator_gait_primary", "kavelynopeus_m_sek0"))
+chair_col <- resolve_col(names(d), c("indicator_chair_capacity_0", "indicator_chair_capacity", "tuoli0"))
+balance_col <- resolve_col(names(d), c("indicator_balance_capacity_0", "indicator_balance_capacity", "seisominen0"))
 frailty_col <- if (isTRUE(join_res$joined) && "frailty_cat_from_k15" %in% names(d)) {
   "frailty_cat_from_k15"
 } else {
@@ -376,5 +376,15 @@ lz_tbl <- tibble(
 path_lz <- file.path(outputs_dir, "k32_validation_latent_vs_z3.csv")
 write_csv_safely(lz_tbl, path_lz)
 append_manifest_safe("k32_validation_latent_vs_z3", "table_csv", path_lz, n = nrow(d))
+
+note_path <- file.path(outputs_dir, "k32_validation_upstream_dedup_note.txt")
+note_lines <- c(
+  "K32 validation upstream dedup note",
+  "Validation reads the upstream K32 output as produced.",
+  "Upstream `k32.r` now applies workbook-grounded person dedup before score derivation and canonical K50 export.",
+  "This validation script does not run a second person-dedup pass."
+)
+writeLines(note_lines, con = note_path)
+append_manifest_safe("k32_validation_upstream_dedup_note", "text", note_path, n = length(note_lines))
 
 message("K32 validation complete. Outputs written to: ", outputs_dir)
