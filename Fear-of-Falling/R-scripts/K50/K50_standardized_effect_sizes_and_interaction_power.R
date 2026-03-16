@@ -5,6 +5,8 @@ outputs_dir <- file.path(project_root, "R-scripts", "K50", "outputs")
 manifest_path <- file.path(project_root, "manifest", "manifest.csv")
 dir.create(outputs_dir, recursive = TRUE, showWarnings = FALSE)
 
+source(file.path(project_root, "R", "functions", "person_dedup_lookup.R"))
+
 resolve_data_root <- function() {
   data_root <- Sys.getenv("DATA_ROOT", unset = "")
   if (!nzchar(data_root)) {
@@ -132,6 +134,8 @@ long_path <- file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long
 
 wide_raw <- readRDS(wide_path)
 long_raw <- readRDS(long_path)
+wide_raw <- prepare_k50_person_dedup(wide_raw, "WIDE", "locomotor_capacity")$data
+long_raw <- prepare_k50_person_dedup(long_raw, "LONG", "locomotor_capacity")$data
 
 wide_df <- data.frame(
   FOF_status = normalize_fof(wide_raw$FOF_status),
