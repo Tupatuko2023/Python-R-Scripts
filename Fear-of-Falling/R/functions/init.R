@@ -88,13 +88,26 @@ normalize_manifest_df <- function(df) {
 append_manifest <- function(row, manifest_path) {
   stopifnot(is.data.frame(row))
   dir.create(dirname(manifest_path), recursive = TRUE, showWarnings = FALSE)
+  row <- dplyr::mutate(row, dplyr::across(dplyr::everything(), as.character))
   
   if (!file.exists(manifest_path)) {
     write_manifest_csv(normalize_manifest_df(row), manifest_path)
   } else {
-    old <- normalize_manifest_df(read_manifest_csv(manifest_path))
-    out <- dplyr::bind_rows(old, normalize_manifest_df(row))
-    write_manifest_csv(out, manifest_path)
+    if (is_termux_runtime()) {
+      old <- normalize_manifest_df(read_manifest_csv(manifest_path))
+      out <- dplyr::bind_rows(old, normalize_manifest_df(row))
+      write_manifest_csv(out, manifest_path)
+    } else {
+      old <- suppressMessages(
+        readr::read_csv(
+          manifest_path,
+          show_col_types = FALSE,
+          col_types = readr::cols(.default = readr::col_character())
+        )
+      )
+      out <- dplyr::bind_rows(old, row)
+      readr::write_csv(out, manifest_path)
+    }
   }
   invisible(manifest_path)
 }
