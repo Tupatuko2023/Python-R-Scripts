@@ -52,11 +52,11 @@ normalize_ssn <- function(x) {
 resolve_ssn_lookup_path <- function() {
   data_root <- resolve_data_root()
   if (is.na(data_root)) {
-    stop("Person dedup requires DATA_ROOT for paper_02 lookup resolution.", call. = FALSE)
+    stop("Person dedup lookup could not resolve DATA_ROOT for workbook lookup.", call. = FALSE)
   }
   lookup_path <- file.path(data_root, "paper_02", "KAAOS_data_sotullinen.xlsx")
   if (!file.exists(lookup_path)) {
-    stop("Person dedup lookup not found: ", lookup_path, call. = FALSE)
+    stop("Person dedup lookup could not resolve workbook lookup path: ", lookup_path, call. = FALSE)
   }
   normalizePath(lookup_path, winslash = "/", mustWork = TRUE)
 }
@@ -91,7 +91,7 @@ resolve_bridge_key <- function(canonical_names, lookup_names) {
 
   if (length(alias_hits) != 1L) {
     stop(
-      "Person dedup could not verify exactly one shared bridge column between canonical input and SSN lookup workbook.",
+      "Person dedup lookup could not verify exactly one shared bridge column between canonical input and identity lookup workbook.",
       call. = FALSE
     )
   }
@@ -108,7 +108,7 @@ resolve_bridge_key <- function(canonical_names, lookup_names) {
 
 read_ssn_lookup <- function(path, canonical_names) {
   if (!requireNamespace("readxl", quietly = TRUE)) {
-    stop("Person dedup requires the readxl package.", call. = FALSE)
+    stop("Person dedup lookup requires the readxl package.", call. = FALSE)
   }
 
   sheets <- readxl::excel_sheets(path)
@@ -153,7 +153,7 @@ read_ssn_lookup <- function(path, canonical_names) {
 
       if (nrow(bridge_conflicts) > 0) {
         stop(
-          "Person dedup bridge candidate is not 1:1 or 1:many from SSN to bridge value in lookup workbook.",
+          "Person dedup lookup bridge candidate is not 1:1 or 1:many from identity value to bridge value in the workbook lookup.",
           call. = FALSE
         )
       }
@@ -170,7 +170,7 @@ read_ssn_lookup <- function(path, canonical_names) {
 
   if (length(found) != 1L) {
     stop(
-      "Person dedup could not verify a unique workbook sheet with one SSN column and one shared bridge key.",
+      "Person dedup lookup could not verify a unique workbook sheet with one identity column and one shared bridge key.",
       call. = FALSE
     )
   }
@@ -289,16 +289,17 @@ pd_choose_long_candidate <- function(person_df,
     covariate_complete <- all(stats::complete.cases(candidate_df[, covariate_cols[covariate_cols %in% names(candidate_df)], drop = FALSE]))
 
     candidates[[idx]] <- candidate_df
-    meta_rows[[idx]] <- tibble(
-      candidate_idx = idx,
-      canonical_id = sort(unique(candidate_df[[id_col]]))[1],
-      branch_eligible = branch_eligible,
-      outcome_complete = outcome_complete,
-      covariate_complete = covariate_complete,
-      non_missing_fields = count_non_missing(candidate_df, compare_cols)
-    )
-    signatures[[idx]] <- candidate_signature_long(candidate_df, compare_cols)
-    idx <- idx + 1L
+      compare_cols_present <- compare_cols[compare_cols %in% names(candidate_df)]
+      meta_rows[[idx]] <- tibble(
+        candidate_idx = idx,
+        canonical_id = sort(unique(candidate_df[[id_col]]))[1],
+        branch_eligible = branch_eligible,
+        outcome_complete = outcome_complete,
+        covariate_complete = covariate_complete,
+        non_missing_fields = count_non_missing(candidate_df, compare_cols_present)
+      )
+      signatures[[idx]] <- candidate_signature_long(candidate_df, compare_cols)
+      idx <- idx + 1L
   }
 
   choice <- select_best_candidate(bind_rows(meta_rows), signatures)
@@ -324,13 +325,14 @@ pd_choose_wide_candidate <- function(person_df,
 
   for (idx in seq_along(candidates)) {
     candidate_df <- candidates[[idx]]
+    compare_cols_present <- compare_cols[compare_cols %in% names(candidate_df)]
     meta_rows[[idx]] <- tibble(
       candidate_idx = idx,
       canonical_id = candidate_df[[id_col]][[1]],
       branch_eligible = nrow(candidate_df) == 1L,
       outcome_complete = all(stats::complete.cases(candidate_df[, value_cols[value_cols %in% names(candidate_df)], drop = FALSE])),
       covariate_complete = all(stats::complete.cases(candidate_df[, covariate_cols[covariate_cols %in% names(candidate_df)], drop = FALSE])),
-      non_missing_fields = count_non_missing(candidate_df, compare_cols)
+      non_missing_fields = count_non_missing(candidate_df, compare_cols_present)
     )
     signatures[[idx]] <- candidate_signature_wide(candidate_df, compare_cols)
   }

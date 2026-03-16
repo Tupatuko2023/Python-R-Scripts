@@ -55,8 +55,8 @@ write_table_with_manifest <- function(tbl, label, notes) {
 }
 
 normalize_time <- pd_normalize_time
-normalize_fof <- function(x) as.integer(as.character(pd_normalize_fof(x)))
-normalize_sex <- function(x) as.character(pd_normalize_sex(x))
+normalize_fof <- pd_normalize_fof
+normalize_sex <- pd_normalize_sex
 safe_num <- pd_safe_num
 
 row_signature <- function(df) {

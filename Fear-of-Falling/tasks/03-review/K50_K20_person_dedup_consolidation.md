@@ -19,6 +19,7 @@ Reduce drift risk after PR review by consolidating duplicated DATA_ROOT, bridge-
 - `K50.1_COHORT_FLOW.V1_derive-cohort-flow.R` now consumes shared helper output instead of maintaining its own parallel chooser
 - `K20_duplicate_person_diagnostics.R` now uses shared DATA_ROOT, lookup-path, bridge-key, and ambiguity logic
 - `fof-preflight` now passes at WARN level only
+- PR #124 follow-up addressed review feedback by neutralizing shared-helper error messages, removing extra K20 normalization type flips, and hardening `count_non_missing` call sites without changing behavior
 
 ### Validation Notes
 - `Rscript -e 'parse(...)'` passed for helper, K20, and K50 cohort-flow
