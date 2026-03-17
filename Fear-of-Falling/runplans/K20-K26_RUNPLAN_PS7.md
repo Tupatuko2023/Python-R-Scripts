@@ -96,4 +96,3 @@ Löydetyt skriptit (Ref: PROJECT_FILE_MAP.md & hakemistohaku):
   - Polku: C:\GitWork\Python-R-Scripts\Fear-of-Falling\R-scripts\K26\K26_VIS.V1_composite-delta-predicted-plots.R
   - Script Label: K26_VIS
   - Odotettu Output: R-scripts\K26\outputs\K26_VIS
-

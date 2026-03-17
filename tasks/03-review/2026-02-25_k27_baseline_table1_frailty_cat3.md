@@ -1,15 +1,18 @@
 # K27: Baseline Table 1 frailty_cat_3 -ryhmittäin
 
 ## Context
+
 `codex_task_packet` pyytää toteuttamaan Fear-of-Falling -aliprojektiin uuden skriptin `R-scripts/K27/K27.R`, ajamaan sen renv-yhteensopivasti ja validoimaan CSV/HTML/log/manifest/sessionInfo -artefaktit.
 
 ## Inputs
+
 - Working directory: `Python-R-Scripts/Fear-of-Falling/`
 - Input data: `data/external/KaatumisenPelko.csv`
 - Helperit: `R/functions/io.R`, `R/functions/checks.R`, `R/functions/modeling.R`, `R/functions/reporting.R`
 - K27-logiikan lähde: `FOFxtime_mixed_model_copilot_3.txt`
 
 ## Outputs
+
 - `R-scripts/K27/K27.R`
 - `R-scripts/K27/outputs/K27_run.log`
 - `R-scripts/K27/outputs/K27_baseline_by_frailty.csv`
@@ -18,6 +21,7 @@
 - sessionInfo-artefakti `save_sessioninfo_manifest()`-konvention mukaan
 
 ## Definition of Done (DoD)
+
 - Tehtävä on siirretty `tasks/01-ready/` -> `tasks/02-in-progress/` ennen toteutusta.
 - K27-skripti luotu ja ajettu onnistuneesti (`exit code 0`).
 - CSV + HTML + run-log + manifest-rivit + sessionInfo syntyneet ja validoitu.

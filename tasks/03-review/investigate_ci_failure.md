@@ -34,17 +34,17 @@ The GitHub Actions CI pipeline is currently failing. We need to identify the roo
 
 - [x] Task moved to In Progress (Consolidated from Quantify-FOF-Utilization-Costs)
 - [x] List recent GH runs
-    - Found failure in "Lint Markdown" workflow (Run ID: 21544269004)
+  - Found failure in "Lint Markdown" workflow (Run ID: 21544269004)
 - [x] Analyze failure logs
-    - **Root Cause:** Prettier formatting check failed for 9 markdown files.
+  - **Root Cause:** Prettier formatting check failed for 9 markdown files.
 - [x] Fix formatting (Attempt 1)
-    - Applied prettier --write to all files.
-    - Merged PR #73.
-    - **Result:** Failed again on `Quantify-FOF-Utilization-Costs/docs/ANALYSIS_PLAN.md` (Run ID: 21544637502).
+  - Applied prettier --write to all files.
+  - Merged PR #73.
+  - **Result:** Failed again on `Quantify-FOF-Utilization-Costs/docs/ANALYSIS_PLAN.md` (Run ID: 21544637502).
 - [x] Fix formatting (Attempt 2)
-    - Re-ran prettier specifically on `Quantify-FOF-Utilization-Costs/docs/ANALYSIS_PLAN.md`.
-    - Confirmed git modification (likely line endings or persistent issue).
-    - Committing fix.
+  - Re-ran prettier specifically on `Quantify-FOF-Utilization-Costs/docs/ANALYSIS_PLAN.md`.
+  - Confirmed git modification (likely line endings or persistent issue).
+  - Committing fix.
 - [x] Verification
-    - CI passed (Run ID: 21544657903).
-    - Task moved to Review.
+  - CI passed (Run ID: 21544657903).
+  - Task moved to Review.

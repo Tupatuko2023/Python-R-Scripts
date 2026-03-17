@@ -1,19 +1,23 @@
 # K24_TABLE2A delta-by-test with joint FOF + frailty model
 
 ## Context
+
 Implement K24 Table 2A analysis per docs/ANALYSIS_PLAN.md canonical variables: `FOF_status`, `frailty_cat_3` / `frailty_score_3`, `tasapainovaikeus`, `age`, `sex`, `BMI`.
 
 ## Inputs
+
 - `data/external/KaatumisenPelko.csv` (default)
 - CLI override: `--input`
 
 ## Outputs
+
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.html`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv`
 - `R-scripts/K24/outputs/K24_TABLE2A/sessionInfo.txt`
 - Manifest rows in `manifest/manifest.csv`
 
 ## Definition of Done (DoD)
+
 - New script added at `R-scripts/K24/K24_TABLE2A.V1_delta-by-test-fof-frailty.R`.
 - Delta models include FOF + frailty in same model with baseline + covariates.
 - HGS women/men strata included and sex dropped within strata models.
@@ -22,6 +26,7 @@ Implement K24 Table 2A analysis per docs/ANALYSIS_PLAN.md canonical variables: `
 - Smoke checks pass (`fof-preflight`, run-gates, script run).
 
 ## Log
+
 - 2026-02-24 00:00:00 Task created in 01-ready.
 - 2026-02-24 00:02:00 Moved 01-ready -> 02-in-progress.
 - 2026-02-24 00:05:00 Added `R-scripts/K24/K24_TABLE2A.V1_delta-by-test-fof-frailty.R` with canonical mapping block, CLI (`--input --output_html --output_csv --frailty_mode --include_balance --balance_var`), delta-per-test models with joint FOF+frailty effects, HGS sex strata, and Model_N output.
@@ -35,9 +40,11 @@ Implement K24 Table 2A analysis per docs/ANALYSIS_PLAN.md canonical variables: `
 - 2026-02-24 00:16:00 V1.1 run succeeded in proot (`--frailty_mode cat --include_balance FALSE`) and produced paper/audit/session outputs + manifest rows.
 
 ## Blockers
+
 - None.
 
 ## Links
+
 - `docs/ANALYSIS_PLAN.md`
 - `R-scripts/K24/K24_TABLE2A.V1_delta-by-test-fof-frailty.R`
 - `R-scripts/K24/outputs/K24_TABLE2A/table2A_delta_by_test_with_frailty.csv`
@@ -93,6 +100,7 @@ Implement K24 Table 2A analysis per docs/ANALYSIS_PLAN.md canonical variables: `
   - Compare CSV provides side-by-side `AIC_cat` vs `AIC_score`, frailty cat contrasts, frailty score effect, and deterministic `Agreement_Flag`.
 
 ## Frailty provenance (K24/K25 check)
+
 - Provenance artifacts:
   - `R-scripts/K24/outputs/K24_TABLE2A/k24_k25_frailty_provenance_check.csv`
   - `R-scripts/K24/outputs/K24_TABLE2A/k24_k25_frailty_provenance_check.txt`
@@ -101,6 +109,7 @@ Implement K24 Table 2A analysis per docs/ANALYSIS_PLAN.md canonical variables: `
 - Compare/audit outputs remain consistent with cat/score modeling, but do not themselves encode a `frailty_source` column; source inference is code+input driven.
 
 ## V2 canonical rerun (K15_RData) - DONE
+
 - New script: `R-scripts/K24/K24_TABLE2A.V2_canonical-delta-by-test-fof-frailty.R` (canonical-only loader, no fallback derivation).
 - Canonical run used: `--input R-scripts/K15/outputs/K15_frailty_analysis_data.RData`.
 - V2 outputs generated and manifest-appended:
@@ -118,6 +127,7 @@ Implement K24 Table 2A analysis per docs/ANALYSIS_PLAN.md canonical variables: `
 - Methodological status: V1/V1.1/V1.2 fallback-era runs are retained as historical audit trail and marked `HISTORICAL/REJECTED` for primary canonical conclusions.
 
 ## 04-done signoff checklist (K24/K25 V2 canonical)
+
 1. Provenance gate file exists and is canonical:
    `R-scripts/K24/outputs/K24_TABLE2A/K24_frailty_provenance_v2.txt`.
 2. Provenance content PASS:
@@ -149,7 +159,9 @@ Implement K24 Table 2A analysis per docs/ANALYSIS_PLAN.md canonical variables: `
     `run-gates --mode pre-push --smoke` exits OK (known non-blocking WARN notes allowed if unchanged).
 
 ### Commands
+
 `[TERMUX]`
+
 ```bash
 cd ~/Python-R-Scripts/Fear-of-Falling
 sed -n '1,220p' R-scripts/K24/outputs/K24_TABLE2A/K24_frailty_provenance_v2.txt
@@ -164,17 +176,20 @@ grep "K25_RESULTS" manifest/manifest.csv | tail -80
 ```
 
 `[PROOT:DEBIAN]`
+
 ```bash
 proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin && cd ~/Python-R-Scripts/Fear-of-Falling && /usr/bin/Rscript R-scripts/K25/K25_RESULTS.V2_table2A-results-text-canonical.R --input R-scripts/K24/outputs/K24_TABLE2A/table2A_paper_ready_canonical_cat_v2.csv --style narrative'
 proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin && cd ~/Python-R-Scripts/Fear-of-Falling && bash ../tools/run-gates.sh --mode pre-push --smoke'
 ```
 
 ### PASS decision rule
+
 - PASS: all 12 checks above succeed.
 - HOLD: any mismatch in provenance, missing artifact, duplicate manifest label, or CSV↔text mismatch.
 - Note: this checklist prepares human signoff only; task move to `04-done` is manual.
 
 ## K24_VIS forest plots (canonical V2)
+
 - New script:
   - `R-scripts/K24/K24_VIS.V1_forestplots_table2A_cat_vs_score.R`
 - Run command:
@@ -200,6 +215,7 @@ proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin
   - one row appended per figure + qc csv + plot_manifest + sessionInfo under `script=K24_VIS`.
 
 ## K24_VIS enhancements (contrasts + standardized beta)
+
 - Added new reviewer-oriented plots (no analysis/model changes):
   - `K24_canonicalV2_forest_FrailtyCatContrasts.{png,pdf}` (pre-frail vs robust; frail vs robust)
   - `K24_canonicalV2_forest_FOF_standardized.{png,pdf}`
@@ -214,6 +230,7 @@ proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin
   - unique new K24_VIS rows appended for the three new plot pairs; duplicate key check (`script,label,kind,path`) remains enforced by script.
 
 ## Gate status (local PASS vs infra FAIL)
+
 - K24_VIS local run PASS evidence:
   - Proot run command exits with code `0`:
     - `/usr/bin/Rscript R-scripts/K24/K24_VIS.V1_forestplots_table2A_cat_vs_score.R --input R-scripts/K24/outputs/K24_TABLE2A/table2A_cat_vs_score_compare_canonical_v2.csv --audit_input R-scripts/K24/outputs/K24_TABLE2A/table2A_audit_canonical_v2.csv --format both --make_cat_p TRUE --qc_strict FALSE --z_tol 1.96`
@@ -237,7 +254,7 @@ proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin
 
 ## Synchronization Update (2026-02-26)
 
-- **Ghost file resolution**: Identifed that 	able2A_audit_canonical_v3_with_std.csv contained historical values (N=237) due to a failed overwrite (file lock).
+- **Ghost file resolution**: Identifed that able2A_audit_canonical_v3_with_std.csv contained historical values (N=237) due to a failed overwrite (file lock).
 - **Mitigation**: Created wrapper script K24_TABLE2A.V2.1_canonical-run-plus-std.R to ensure V2 and V3 are always generated in sequence from the same environment.
 - **Verification**: K24_sync_check.txt confirms core columns (Outcome, Model_N, FOF_Beta_CI, P_FOF) are identical between the raw V2 and standardized V3 artifacts. Current Model_N for MWS is 235 (matching the methodological fix in K15).
 - **Manifest**: sync_check.txt is now tracked in manifest/manifest.csv.

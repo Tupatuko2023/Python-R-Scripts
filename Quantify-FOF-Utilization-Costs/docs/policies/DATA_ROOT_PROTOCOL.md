@@ -1,76 +1,76 @@
-2.  **DATA_ROOT:** Raakadata luetaan VAIN ympäristömuuttujan `DATA_ROOT` osoittamasta polusta (ulkoinen tallennus).
-    **AGENTTIOHJE: DATA_ROOT – ainoa sallittu toimintatapa**
+1. **DATA_ROOT:** Raakadata luetaan VAIN ympäristömuuttujan `DATA_ROOT` osoittamasta polusta (ulkoinen tallennus).
+   **AGENTTIOHJE: DATA_ROOT – ainoa sallittu toimintatapa**
 
-    Ennen kuin ajat mitään tässä repossa
+   Ennen kuin ajat mitään tässä repossa
 
-    Aina, ilman poikkeuksia, tee tämä ensin:
+   Aina, ilman poikkeuksia, tee tämä ensin:
 
-    `bash Quantify-FOF-Utilization-Costs/scripts/bootstrap_env.sh`
+   `bash Quantify-FOF-Utilization-Costs/scripts/bootstrap_env.sh`
 
-    Tulkinta bootstrapin tuloksesta
+   Tulkinta bootstrapin tuloksesta
 
-    Jos bootstrap onnistuu (exit 0 / OK):
+   Jos bootstrap onnistuu (exit 0 / OK):
 
-    DATA_ROOT on asetettu oikein
+   DATA_ROOT on asetettu oikein
 
-    jatka välittömästi QC-, smoke- tai R-ajoihin
+   jatka välittömästi QC-, smoke- tai R-ajoihin
 
-    älä tulosta DATA_ROOT-arvoa
+   älä tulosta DATA_ROOT-arvoa
 
-    Jos bootstrap epäonnistuu (exit ≠ 0 / FAIL):
+   Jos bootstrap epäonnistuu (exit ≠ 0 / FAIL):
 
-    älä kysy DATA_ROOT-polkuja chatissa
+   älä kysy DATA_ROOT-polkuja chatissa
 
-    älä yritä arvata tai etsiä dataa
+   älä yritä arvata tai etsiä dataa
 
-    ilmoita tehtävä BLOCKED (environment missing)
+   ilmoita tehtävä BLOCKED (environment missing)
 
-    ohjaa käyttäjää asettamaan DATA_ROOT paikallisesti tiedostoon:
+   ohjaa käyttäjää asettamaan DATA_ROOT paikallisesti tiedostoon:
 
-    `Quantify-FOF-Utilization-Costs/config/.env`
+   `Quantify-FOF-Utilization-Costs/config/.env`
 
-    rivi:
+   rivi:
 
-    `DATA_ROOT=<OMA_PAIKALLINEN_ABSOLUUTTINEN_POLKU>`
+   `DATA_ROOT=<OMA_PAIKALLINEN_ABSOLUUTTINEN_POLKU>`
 
-    Tämän jälkeen bootstrap ajetaan uudelleen.
+   Tämän jälkeen bootstrap ajetaan uudelleen.
 
-    Sallitut ja kielletyt toimet
+   Sallitut ja kielletyt toimet
 
-    ✅ Sallittua
+   ✅ Sallittua
 
-    Ajaa DATA_ROOTiin perustuvat ajot vain bootstrapin jälkeen
+   Ajaa DATA_ROOTiin perustuvat ajot vain bootstrapin jälkeen
 
-    Tarkistaa DATA_ROOT vain OK/FAIL-muodossa
+   Tarkistaa DATA_ROOT vain OK/FAIL-muodossa
 
-    Ohjata stdout/stderr lokitiedostoon
+   Ohjata stdout/stderr lokitiedostoon
 
-    Merkitä tehtävä blockediksi ympäristösyistä
+   Merkitä tehtävä blockediksi ympäristösyistä
 
-    ❌ Kiellettyä
+   ❌ Kiellettyä
 
-    Tulostaa DATA_ROOT-arvoa (stdout, stderr, logit, chat)
+   Tulostaa DATA_ROOT-arvoa (stdout, stderr, logit, chat)
 
-    Echoa, printata tai debugata polkua
+   Echoa, printata tai debugata polkua
 
-    Skannata tiedostojärjestelmää DATA_ROOTin löytämiseksi
+   Skannata tiedostojärjestelmää DATA_ROOTin löytämiseksi
 
-    Kysyä käyttäjältä DATA_ROOT-polkuja chatissa
+   Kysyä käyttäjältä DATA_ROOT-polkuja chatissa
 
-    Ajaa skriptejä, jos bootstrap epäonnistuu
+   Ajaa skriptejä, jos bootstrap epäonnistuu
 
-    (Valinnainen) direnv
+   (Valinnainen) direnv
 
-    Jos direnv on käytössä:
+   Jos direnv on käytössä:
 
-    `cd Quantify-FOF-Utilization-Costs`
+   `cd Quantify-FOF-Utilization-Costs`
 
-    `direnv allow`
+   `direnv allow`
 
-    Tämä helpottaa uusia sessioita, mutta ei korvaa bootstrapia.
-    Bootstrap on aina sallittu ja suositeltu.
+   Tämä helpottaa uusia sessioita, mutta ei korvaa bootstrapia.
+   Bootstrap on aina sallittu ja suositeltu.
 
-    Yleinen periaate (muista tämä)
+   Yleinen periaate (muista tämä)
 
-    Oikeus ajaa ≠ kyky ajaa.
-    Jos DATA_ROOT ei ole saatavilla ajoympäristössä, tehtävä pysähtyy oikein fail-closed-tilaan.
+   Oikeus ajaa ≠ kyky ajaa.
+   Jos DATA_ROOT ei ole saatavilla ajoympäristössä, tehtävä pysähtyy oikein fail-closed-tilaan.

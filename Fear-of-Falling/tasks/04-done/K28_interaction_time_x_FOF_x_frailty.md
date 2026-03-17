@@ -1,6 +1,7 @@
 # K28 interaction: time × FOF × frailty
 
 ## Context
+
 Tuotantovalmis K28-analyysi tarvitaan long-datalle: 3-way interaktio
 `time × FOF_status_f × frailty_score_3` (jatkuva) ja optionaalinen
 `time × FOF_status_f × frailty_cat_3` (kategorinen), mixed model
@@ -8,12 +9,14 @@ Tuotantovalmis K28-analyysi tarvitaan long-datalle: 3-way interaktio
 projektin CLAUDE/AGENTS/manifest-konventioilla.
 
 ## Inputs
+
 - `analysis_long` (objekti tai projektin tukema CSV-lataus)
 - Pakolliset sarakkeet: `id`, `time`, `Composite_Z`, `FOF_status`, `frailty_score_3`
 - Optionaalinen sarake: `frailty_cat_3`
 - Ohjeet: `CLAUDE.md`, `AGENTS.md`, `WORKFLOW.md`, `agent_workflow.md`
 
 ## Outputs
+
 - `R-scripts/K28/k28.r`
 - `R-scripts/K28/outputs/FOF_x_time_x_frailtyScore_on_CompositeZ_fixed_terms.csv`
 - `R-scripts/K28/outputs/FOF_x_time_x_frailtyScore_on_CompositeZ_fixed_terms.rds`
@@ -28,6 +31,7 @@ projektin CLAUDE/AGENTS/manifest-konventioilla.
 - Uudet rivit `manifest/manifest.csv`
 
 ## Definition of Done (DoD)
+
 - K28-skriptissä on STANDARD SCRIPT INTRO, `script_label <- "K28"` ja `init_paths(script_label)`.
 - Input-validoinnit pysäyttävät ajon selkeästi virhetilanteissa.
 - Continuous-outputit syntyvät aina ja categorical-outputit vain jos `frailty_cat_3` on saatavilla.
@@ -36,6 +40,7 @@ projektin CLAUDE/AGENTS/manifest-konventioilla.
 - Smoke run `/usr/bin/Rscript R-scripts/K28/k28.r` onnistuu.
 
 ## Log
+
 - 2026-02-26 14:58:00 Created backlog task from template; waiting for move to `tasks/01-ready/` before execution.
 - 2026-02-26 14:58:40 Moved task to `tasks/01-ready/` and immediately to `tasks/02-in-progress/`.
 - 2026-02-26 15:10:00 Implemented `R-scripts/K28/k28.r` with standard intro, validations, models, exports, report text, and manifest logging.
@@ -49,7 +54,9 @@ projektin CLAUDE/AGENTS/manifest-konventioilla.
 - 2026-02-26 15:41:44 Acceptance granted; moved task to `tasks/04-done/`.
 
 ## Blockers
+
 - Ei aktiivisia blockereita (manifest-idempotenssi vahvistettu review-smokessa).
 
 ## Links
+
 - `tasks/04-done/K28_interaction_time_x_FOF_x_frailty.md`

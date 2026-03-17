@@ -11,16 +11,19 @@ Workflow: ready for human move to tasks/04-done/ for tasks/01-ready/K15_add_frai
 Status now: canonical rerun PASS (K15_RData; fallback_used=FALSE); previous fallback-based run rejected.
 
 ## Context
+
 Implement K26 long-LMM backbone (time×FOF) with exploratory moderation (time×frailty×cComposite_Z0) and run both frailty modes (cat + score) in one script, following init_paths/reporting manifest conventions.
 
 **Metodologinen päätös (gate):** frailty-fallback (`derived_morbidity` + `score->cat`) hylätty analyysispesifikaatiosta. Uusi rerun-tehtävä luotu: `tasks/01-ready/K26_rerun_canonical_frailty.md`.
 **Pipeline-päivitys:** canonical-only K26 käyttää vain K15 frailty-augmented `.RData`-inputtia (`--input`), ei raw CSV:tä.
 
 ## Inputs
+
 - `R-scripts/K15/outputs/K15_frailty_analysis_data.RData` (canonical)
 - CLI override: `--input` (`.RData` only in canonical-only mode; raw CSV blocked)
 
 ## Outputs
+
 - `R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_cat.csv`
 - `R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_LRT_primary_vs_mod_score.csv`
 - `R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_fixed_effects_primary_cat.csv`
@@ -31,6 +34,7 @@ Implement K26 long-LMM backbone (time×FOF) with exploratory moderation (time×f
 - manifest rows in `manifest/manifest.csv` (one per artifact)
 
 ## Definition of Done (DoD)
+
 - K26 script exists with STANDARD SCRIPT INTRO and explicit mapping/req cols checks.
 - Script runs cat+score modes and writes artifacts to K26 output subdir.
 - Manifest rows appended using `manifest_row()` + `append_manifest()`.
@@ -38,7 +42,9 @@ Implement K26 long-LMM backbone (time×FOF) with exploratory moderation (time×f
 - `PROJECT_FILE_MAP.md` has a minimal K26 entry.
 
 ## Log
+
 Historical entries below include pre-canonical runs; current gate status is defined by REVIEW SUMMARY + current provenance.
+
 - 2026-02-24 00:00:00 Task created in 00-backlog.
 - 2026-02-24 00:01:00 Moved 00-backlog -> 01-ready -> 02-in-progress.
 - 2026-02-24 00:10:00 Added script `R-scripts/K26/K26_LMM_MOD.V1_time-frailty-CompositeZ0-moderation.R`.
@@ -69,6 +75,7 @@ Historical entries below include pre-canonical runs; current gate status is defi
 ## Deliverable Summary
 
 ### Changed files
+
 - `R-scripts/K26/K26_LMM_MOD.V1_time-frailty-CompositeZ0-moderation.R` (new)
 - `PROJECT_FILE_MAP.md` (K26 minimal map entry)
 - `scripts/termux/run_proot_r_clean.sh` (new)
@@ -77,6 +84,7 @@ Historical entries below include pre-canonical runs; current gate status is defi
 - `tasks/03-review/K26_LMM_MOD_time-frailty-CompositeZ0_moderation.md` (this report)
 
 ### Commands run (historical + canonical)
+
 - `proot-distro login debian --termux-home -- /usr/bin/Rscript R-scripts/K26/K26_LMM_MOD.V1_time-frailty-CompositeZ0-moderation.R --input data/external/KaatumisenPelko.csv --include_balance TRUE --run_cat TRUE --run_score TRUE`
 - `proot-distro login debian --termux-home -- bash -lc 'cd ~/Python-R-Scripts/Fear-of-Falling && /usr/bin/Rscript ...'`
 - `Rscript R-scripts/K26/K26_LMM_MOD.V1_time-frailty-CompositeZ0-moderation.R --input data/external/KaatumisenPelko.csv --include_balance TRUE --run_cat TRUE --run_score TRUE`
@@ -86,6 +94,7 @@ Historical entries below include pre-canonical runs; current gate status is defi
 - `scripts/termux/run_k26_proot_clean.sh --input data/external/KaatumisenPelko.csv --include_balance TRUE --run_cat TRUE --run_score TRUE`
 
 ### Produced artifacts
+
 - Runtime artifacts produced in:
   - `R-scripts/K26/outputs/K26/K26_LMM_MOD/`
   - includes `K26_LRT_*`, `K26_fixed_effects_*`, `K26_simple_slopes_*`, `K26_results_text_fi_*`, `K26_model_*.rds`, `sessionInfo.txt`
@@ -94,6 +103,7 @@ Historical entries below include pre-canonical runs; current gate status is defi
 - Manifest rows appended for all K26 artifacts and deduped to one row per `(script,label,kind,path)` key.
 
 ### Assumptions / fallbacks used
+
 - ID mapping fallback order: `ID` -> `id` -> `Jnro` -> `NRO`.
 - FOF mapping fallback: `FOF_status` or `kaatumisenpelkoOn` (0/1 -> `nonFOF`/`FOF`).
 - Composite mapping fallback: `Composite_Z0`/`Composite_Z12` or `ToimintaKykySummary0`/`ToimintaKykySummary2`.
@@ -108,10 +118,12 @@ Historical entries below include pre-canonical runs; current gate status is defi
   - `R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt`
 
 ## Blockers
+
 - No active blockers for K26 canonical run via wrapper.
 - Root cause of earlier `bad ELF magic`: Termux env contamination (`LD_PRELOAD` + PATH selecting Termux Rscript) into proot; fixed by clean-env wrappers forcing `/usr/bin/Rscript`.
 
 ## Links
+
 - `CLAUDE.md`
 - `R/functions/reporting.R`
 - `R/functions/init.R`
@@ -125,6 +137,7 @@ Use this command for all K26 runs to avoid Termux->proot contamination:
 `scripts/termux/run_k26_proot_clean.sh --input R-scripts/K15/outputs/K15_frailty_analysis_data.RData --include_balance TRUE --run_cat TRUE --run_score TRUE`
 
 This wrapper always:
+
 - unsets `LD_PRELOAD`, `LD_LIBRARY_PATH`, `R_HOME`, `R_LIBS`, `R_LIBS_USER`
 - sets clean Debian `PATH`
 - executes `/usr/bin/Rscript` in proot Debian.
@@ -144,10 +157,12 @@ This section documents an earlier run that was rejected. Superseded by canonical
   - `crosscheck_ok=TRUE` for both `cat` and `score` modes
 
 ### Review checklist (human approval)
+
 - Do not use fallback history for gate decisions.
 - Use canonical rerun evidence (`fallback_used=FALSE`, `frailty_*_source=K15_RData`) for 04-done decision.
 
 ## K26_VIS reviewer figure set
+
 - New script: `R-scripts/K26/K26_VIS.V1_composite-delta-predicted-plots.R`
 - Canonical inputs used:
   - `R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_model_moderation_cat.rds`

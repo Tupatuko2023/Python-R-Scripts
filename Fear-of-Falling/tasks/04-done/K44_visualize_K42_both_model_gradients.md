@@ -13,18 +13,21 @@ Task-gate status: review (`tasks/03-review/`).
 ## Objective
 
 Produce publication-ready trajectory visualizations from K42 BOTH-model fixed effects:
+
 - Main figure: 2-panel gradient plot (capacity gradient and FI gradient).
 - Supplementary figure: 4 extreme model-based reference profiles.
 
 ## Scope
 
 In scope:
+
 - Create `R-scripts/K44/k44.r`.
 - Create `scripts/termux/run_k44_proot.sh`.
 - Create K44 aggregate outputs under `R-scripts/K44/outputs/`.
 - Append K44 rows to `manifest/manifest.csv`.
 
 Out of scope:
+
 - No model refitting.
 - No changes to K42 model specification.
 - No patient-level exports to repository.
@@ -32,14 +35,17 @@ Out of scope:
 ## Inputs
 
 Required repository inputs:
+
 - `R-scripts/K42/outputs/k42_lmm_both_coefficients.csv`
 - `R-scripts/K42/outputs/k42_capacity_fi_collinearity.csv`
 - `R-scripts/K42/outputs/k42_common_sample_counts.csv`
 
 Optional repository input:
+
 - `R-scripts/K42/outputs/k42_lmm_model_comparison.csv`
 
 Optional DATA_ROOT inputs (summary-stat fallback only):
+
 - canonical K33 analysis data
 - K32 capacity data
 - K40 FI data
@@ -57,11 +63,13 @@ Optional DATA_ROOT inputs (summary-stat fallback only):
 ## Figure Outputs
 
 Main figure:
+
 - `R-scripts/K44/outputs/k44_both_gradients.png`
 - Panel A: capacity at `{-1 SD, mean, +1 SD}`, FI fixed at mean.
 - Panel B: FI at `{-1 SD, mean, +1 SD}`, capacity fixed at mean.
 
 Supplementary figure:
+
 - `R-scripts/K44/outputs/k44_extreme_profiles.png`
 - Profiles:
   - cap -1 SD, FI -1 SD
@@ -70,6 +78,7 @@ Supplementary figure:
   - cap +1 SD, FI +1 SD
 
 Optional (if input exists):
+
 - `R-scripts/K44/outputs/k44_model_comparison.png`
 
 ## Governance

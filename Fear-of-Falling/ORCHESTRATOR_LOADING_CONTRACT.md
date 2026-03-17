@@ -26,9 +26,9 @@ Ennen kuin kutsu lähetetään mallille, skripti tulostaa konsoliin ja transkrip
 
 ```
 
-*Tarkistamalla lokin SHA256-tiivisteen käyttäjä voi aukottomasti todentaa, että tehty muutos `SYSTEM_PROMPT_POWERSHELL7_S-FOF.md` -tiedostoon on siirtynyt agentin kontekstiin.*
+_Tarkistamalla lokin SHA256-tiivisteen käyttäjä voi aukottomasti todentaa, että tehty muutos `SYSTEM_PROMPT_POWERSHELL7_S-FOF.md` -tiedostoon on siirtynyt agentin kontekstiin._
 
 ## 3. Rajoitteet (Mikä EI ole mahdollista)
 
-* Et voi pyytää agenttia "muistamaan" sääntöjä tästä hetkestä eteenpäin pelkällä chat-komennolla. Kaikki pysyvät säännöt on kirjattava `SYSTEM_PROMPT_POWERSHELL7_S-FOF.md` -tiedostoon.
-* Agentti ei pysty päivittämään System Promptiaan itse lennosta siten, että se vaikuttaisi meneillään olevaan CLI-istuntoon ilman skriptin uudelleenkäynnistystä.
+- Et voi pyytää agenttia "muistamaan" sääntöjä tästä hetkestä eteenpäin pelkällä chat-komennolla. Kaikki pysyvät säännöt on kirjattava `SYSTEM_PROMPT_POWERSHELL7_S-FOF.md` -tiedostoon.
+- Agentti ei pysty päivittämään System Promptiaan itse lennosta siten, että se vaikuttaisi meneillään olevaan CLI-istuntoon ilman skriptin uudelleenkäynnistystä.

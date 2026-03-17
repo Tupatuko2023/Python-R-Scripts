@@ -230,7 +230,7 @@ Rscript R-scripts/K24/K24_TABLE2A.V2.1_canonical-run-plus-std.R \
   --include_balance=FALSE
 ```
 
-*Huom: Historialliset V1/V1.1/V1.2 skriptit on siirretty hakemistoon `R-scripts/K24/legacy/scripts/` auditointitarkoituksia varten.*
+_Huom: Historialliset V1/V1.1/V1.2 skriptit on siirretty hakemistoon `R-scripts/K24/legacy/scripts/` auditointitarkoituksia varten._
 
 V2/V2.1 tuotokset:
 
@@ -1251,6 +1251,7 @@ Rscript R-scripts/K29/K29_INTERACTION.V1_time-fof-frailty-compositeZ.R
 ```
 
 Outputs:
+
 - `R-scripts/K29_INTERACTION/outputs/K29_interaction_report.md` (Summary)
 - `R-scripts/K29_INTERACTION/outputs/K29_interaction_plot_score.png` (Visual)
 

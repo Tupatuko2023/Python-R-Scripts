@@ -189,7 +189,7 @@ Lopuksi hahmotellaan **agenttiystävällinen työnkulku**, jonka avulla tekoäly
 
 - _reports/_: sisältää esim. artikkeliluonnoksen tekstiä tai esitysdioja. Näistä agentti löytää lauserakenteita, joilla voi vastata selittävämmin.
 
-Indeksointisäännöissä voidaan painottaa tiettyjä tiedostoja: esim. Muuttujasanakirja.md ja analysis*report.md ovat “ensisijaisia” lähteitä tietyntyyppisille kysymyksille. Tiettyä hienosäätöä voi tehdä antamalla agentille ohjeita: *“Jos kysymys koskee muuttujien definioita, katso data/Muuttujasanakirja.md”\_. Yleisesti RAG-pipeline toteutetaan niin, että agentti suorittaa ensin vektorihakua sisällöistä ja saa top-n relevanttia chunkia kontekstiksi.
+Indeksointisäännöissä voidaan painottaa tiettyjä tiedostoja: esim. Muuttujasanakirja.md ja analysis*report.md ovat “ensisijaisia” lähteitä tietyntyyppisille kysymyksille. Tiettyä hienosäätöä voi tehdä antamalla agentille ohjeita:*“Jos kysymys koskee muuttujien definioita, katso data/Muuttujasanakirja.md”\_. Yleisesti RAG-pipeline toteutetaan niin, että agentti suorittaa ensin vektorihakua sisällöistä ja saa top-n relevanttia chunkia kontekstiksi.
 
 - **Tiivistelmät ja ground truth \-artefaktit:** Jotta agentti suoriutuu tehokkaasti, sille tarjotaan valmiiksi pureskeltua tietoa keskeisistä asioista:
 

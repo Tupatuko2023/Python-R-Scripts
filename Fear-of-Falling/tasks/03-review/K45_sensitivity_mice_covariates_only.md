@@ -17,11 +17,13 @@ Implement a deterministic, governance-safe MICE sensitivity workflow that impute
 ## Critical Scope Lock
 
 In scope:
+
 - MICE for baseline covariates/exposures only.
 - Pooled model estimates via Rubin's rules.
 - Side-by-side comparison tables (pooled vs complete-case).
 
 Out of scope:
+
 - Do not impute 12-month outcome (`Composite_Z_12m`) or other follow-up outcome measurements.
 - Do not replace or rewrite primary complete-case analyses.
 - No patient-level exports to repository.
@@ -29,11 +31,13 @@ Out of scope:
 ## Inputs
 
 Primary inputs from DATA_ROOT:
+
 - K33 canonical long/wide analysis datasets.
 - K32 capacity score dataset.
 - K40 frailty index dataset.
 
 Reference inputs from repository:
+
 - K41/K42 complete-case aggregate outputs for comparison anchors.
 
 ## Deterministic Imputation Rules
@@ -59,6 +63,7 @@ Reference inputs from repository:
 ## Required Outputs (Aggregate-Only)
 
 Under `R-scripts/K45/outputs/`:
+
 - `k45_mice_missingness_summary.csv`
 - `k45_mice_methods_and_predictor_matrix.txt`
 - `k45_pooled_coefficients_k42_both.csv`
@@ -71,6 +76,7 @@ Under `R-scripts/K45/outputs/`:
 - `k45_sessioninfo.txt`
 
 Optional:
+
 - `k45_model_comparison_summary.csv` (if K41/K36/K42 pooled comparisons are all included).
 
 ## Governance
@@ -83,6 +89,7 @@ Optional:
 ## Core Reporting Requirements
 
 K45 must explicitly report:
+
 - `N` before and after covariate-only imputation eligibility.
 - Whether key terms retain direction and approximate magnitude.
 - Whether conclusions are directionally consistent with complete-case analyses.

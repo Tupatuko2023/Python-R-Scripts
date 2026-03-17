@@ -1,25 +1,110 @@
-# Agent/Audit artifacts (generated; do not commit)
+# ==============================================================================
+# Python-R-Scripts Monorepo - Global .gitignore (Safety Net)
+# ==============================================================================
+
+# --- 1) DATATURVALLISUUS (KRIITTINEN) ---
+# Estetään raakadata ja työtiedostot globaalisti
+*.csv
+*.rds
+*.RData
+*.rda
+*.xlsx
+*.sav
+*.dta
+*.sqlite
+*.db
+
+# POIKKEUKSET: Sallitaan nimenomaiset metadatatiedostot ja koodikirjat
+!data_dictionary.csv
+!VARIABLE_STANDARDIZATION.csv
+!codebook.csv
+!**/metadata/*.csv
+!**/docs/*.csv
+!**/codebook/*.csv
+
+# Estetään datakansiot laajemmin
+**/data/
+**/dataset/
+**/raw_data/
+**/external_data/
+
+# --- 2) SALAISUUDET JA AVAIMET (KRIITTINEN) ---
+.env
+.env.*
+.Renviron
+*.pem
+secrets.json
+*.key
+*.secret
+codex-auth-backup.tgz
+
+# --- 3) OUTPUT-KURI (OUTPUTS & ARTIFACTS) ---
+# Estetään tulosteet ja raportit globaalisti
+**/outputs/
+*.html
+*.docx
+*.pdf
+*.png
+*.jpeg
+*.jpg
+*.svg
+*.pptx
+*.zip
+*.tar.gz
+*.7z
+
+# POIKKEUKSET: Sallitaan kriittiset toistettavuusmanifestit
+!**/manifest/manifest.csv
+!**/manifest/sessionInfo.txt
+!**/manifest/renv_diagnostics.txt
+!**/manifest/sessionInfo.R
+
+# --- 4) R (TOISTETTAVUUS) ---
+.Rhistory
+.Ruserdata
+.Rproj.user/
+*.Rout
+*.log
+
+# renv (Estetään library/staging, sallitaan lock/profile)
+**/renv/library/
+**/renv/staging/
+**/renv/local/
+**/renv/python/
+**/renv/cache/
+# Huom: .Rprofile ja renv.lock pidetään versiohallinnassa
+
+# --- 5) PYTHON (YMPÄRISTÖ) ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+venv/
+.venv/
+env/
+.env/
+pip-log.txt
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
+
+# --- 6) AGENTIT & AUDITOINTI (PROJEKTIKOHTAISET) ---
 Fear-of-Falling/artifacts/
 Fear-of-Falling/repo_audit/
 Fear-of-Falling/tests/smoke_test/logs_*/
 SMOKE_TEST_REPORT*.md
 Fear-of-Falling/SMOKE_TEST_REPORT*.md
 Fear-of-Falling/docs/DELIVERY_NOTE.md
-Microsoft.PowerShell_profile.ps1
-codex-auth-backup.tgz
-
-# Local agent prompts (do not version)
 prompts/
 **/prompts/*.txt
-.Rproj.user
-out/
-
-.pytest_cache/
-__pycache__/
-*.pyc
-
-# Renv cache and temporary run directories
-Fear-of-Falling/renv/.cache/
-Fear-of-Falling/R-scripts/_runs/
-tmp/
 .gemini/
+tmp/
+Microsoft.PowerShell_profile.ps1
+Fear-of-Falling/R-scripts/_runs/
+
+# --- 7) KÄYTTÖJÄRJESTELMÄT ---
+.DS_Store
+Thumbs.db
+Desktop.ini

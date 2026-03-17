@@ -17,7 +17,7 @@ Steps
 2. **Update Mapping**:
 
 - Edit \data/VARIABLE_STANDARDIZATION.csv\.
-- Update the \original*variable\ column for \util_visits*_\ and \cost\__\ rows to match the actual file headers exactly.
+- Update the \original*variable\ column for \util_visits*\_\ and \cost\_\_\ rows to match the actual file headers exactly.
 
 1. **Rerun ETL**: Run \python scripts/10_preprocess_tabular.py\.
 2. **Verify**: Check \outputs/intermediate/analysis*ready.csv\ columns again. It MUST contain \util*\ or \cost\_\ columns.

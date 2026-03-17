@@ -1,6 +1,7 @@
 # K32 Extended Capacity Primary (Secondary Model)
 
 ## Context
+
 Create a new controlled task for a deterministic 4-5 indicator extended latent Capacity model as a new script `R-scripts/K32/k32.r`.
 
 No code changes are allowed until this task is moved to `tasks/01-ready/`, then to `tasks/02-in-progress/`.
@@ -8,6 +9,7 @@ No code changes are allowed until this task is moved to `tasks/01-ready/`, then 
 K30 and K31 must remain unchanged.
 
 ## Inputs
+
 - Source dataset:
   - Prefer analysis-ready input from K30/K31 flow when available.
   - Support deterministic loader strategy during implementation phase.
@@ -19,6 +21,7 @@ K30 and K31 must remain unchanged.
   - `vaikeus_liikkua_500m` (ordered self-report; max one self-report indicator)
 
 ## Outputs
+
 - Backlog task spec only in this phase:
   - `tasks/00-backlog/K32_extended_capacity_primary.md`
 - Future implementation artifacts (only after task is 01-ready):
@@ -27,6 +30,7 @@ K30 and K31 must remain unchanged.
   - `manifest/manifest.csv` appended with one row per in-repo artifact
 
 ## Definition of Done (DoD)
+
 - Backlog task exists and clearly specifies:
   - fixed indicator set above
   - CFA estimator: `lavaan` with `WLSMV` (ordered mobility variable)
@@ -43,6 +47,7 @@ K30 and K31 must remain unchanged.
 - No execution of `k32.r` in backlog phase.
 
 ## Log
+
 - 2026-03-01 Created backlog task from template with deterministic K32 extended CFA specification.
 - 2026-03-01 Moved task: `tasks/00-backlog/K32_extended_capacity_primary.md` -> `tasks/01-ready/K32_extended_capacity_primary.md` -> `tasks/02-in-progress/K32_extended_capacity_primary.md`.
 - 2026-03-01 Implemented `R-scripts/K32/k32.r` as deterministic 4-5 indicator extended CFA + admissibility gate + z-composite fallback.
@@ -61,9 +66,11 @@ K30 and K31 must remain unchanged.
   - latest `k32_scores_summary.csv`: latent `n=276`
 
 ## Blockers
+
 - No active technical blocker. Pending human approval to move task to `04-done`.
 
 ## Links
+
 - Planned implementation target: `R-scripts/K32/k32.r`
 - Related prior tasks:
   - `K30_capacity_score`

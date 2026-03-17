@@ -3,9 +3,11 @@
 ## Context
 
 ### Objective
+
 Stage an optional secondary latent capacity analysis in a new script `R-scripts/K31/k31.r` using >=4 theory-aligned baseline indicators, while leaving K30 composite primary analysis unchanged.
 
 ### Reproduction commands
+
 - `cd Python-R-Scripts/Fear-of-Falling`
 - Confirm K30 remains primary/diagnostic baseline reference:
   - `proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; cd Python-R-Scripts/Fear-of-Falling && /usr/bin/Rscript R-scripts/K30/k30.r'`
@@ -13,6 +15,7 @@ Stage an optional secondary latent capacity analysis in a new script `R-scripts/
   - `proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; cd Python-R-Scripts/Fear-of-Falling && /usr/bin/Rscript -e "d<-read.csv(\"R-scripts/K30/outputs/kaatumisenpelko_with_capacity_scores.csv\"); cat(paste(names(d), collapse=\"\\n\"))"'`
 
 ### Proposed minimal fix (for when task moves to 01-ready)
+
 - Create new script `R-scripts/K31/k31.r`:
   - use deterministic 4-5 indicator set with max 1 self-report:
     - objective core (required): grip + gait + chair + balance
@@ -31,11 +34,13 @@ Stage an optional secondary latent capacity analysis in a new script `R-scripts/
 - Keep K30 unchanged as primary pipeline by design.
 
 ## Inputs
+
 - New script path: `R-scripts/K31/k31.r`
 - Existing primary outputs from K30
 - Shared manifest/reporting helpers in `R/functions/reporting.R`
 
 ## Outputs
+
 - Secondary diagnostics artifacts under `R-scripts/K31/outputs/`
 - Secondary latent scores only if model admissibility criteria are met
 - Manifest rows for K31 artifacts
@@ -43,6 +48,7 @@ Stage an optional secondary latent capacity analysis in a new script `R-scripts/
 ## Definition of Done (DoD)
 
 ### Acceptance criteria
+
 - `R-scripts/K31/k31.r` runs and writes diagnostics.
 - If model admissible, latent scores are written and compared to K30 composite.
 - If model inadmissible, no latent scores are published and diagnostics clearly state fallback to composite.
@@ -69,9 +75,11 @@ Stage an optional secondary latent capacity analysis in a new script `R-scripts/
 - 2026-02-28 18:38:00 `fof-preflight` after implementation: PASS.
 
 ## Blockers
+
 - Optional theory refinement: confirm whether chair/balance directional transforms should be fixed a priori in codebook docs for future consistency.
 
 ## Links
+
 - `prompts/Frailty_Model_Copilot_2.txt`
 - `R-scripts/K30/k30.r`
 - Planned new script: `R-scripts/K31/k31.r`

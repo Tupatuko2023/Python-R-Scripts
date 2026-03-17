@@ -172,9 +172,8 @@ skriptin omaa suoritusta.
 **Option B (Inline PS7):**
 $env:R_PROFILE_USER = "NUL"
 $env:R_ENVIRON_USER = "NUL"
-$env:DATA_ROOT      = "C:/GitWork/FOF_LOCAL_DATA"
+$env:DATA_ROOT = "C:/GitWork/FOF_LOCAL_DATA"
 Rscript --vanilla ./R-scripts/K40/K40.V2_frailty-index.R
-
 
 1. Raportti
 
