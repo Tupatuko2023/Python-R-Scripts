@@ -2,7 +2,7 @@
 
 Tervetuloa kehittämään `Tupatuko2023/Python-R-Scripts` -monorepoa! Arvostamme panostasi. Tämä dokumentti määrittelee säännöt ja käytännöt, joiden avulla varmistamme koodin laadun, tutkimuksen toistettavuuden ja ehdottoman dataturvallisuuden.
 
-## 1. Tervetuloa & mitä tähän repoan kuuluu
+## 1. Tervetuloa & mitä tähän repositorioon kuuluu
 
 Tämä on R- ja Python-pohjainen analyysimonorepo, joka koostuu useista aliprojekteista (esim. `Fear-of-Falling`, `Electronic-Frailty-Index`, `Quantify-FOF-Utilization-Costs`). Kukin aliprojekti sisältää oman analyysiputkensa, omat skriptinsä (esim. Kxx-skriptit) ja oman raportointinsa.
 

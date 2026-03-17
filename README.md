@@ -7,9 +7,22 @@
 
 Tämä monorepositorio sisältää R- ja Python-pohjaisia analyysiputkia, skriptejä ja työkaluja lääketieteelliseen tutkimukseen ja terveysdatan analysointiin. Projekti on osa laajempaa väitöskirjatyötä ja tutkimuskokonaisuutta.
 
+## English Summary
+
+This is a monorepo for Python and R based medical research pipelines.
+
+**Security First:** STRICTLY NO PHI / PII or raw data allowed in this repository. All data must remain external or gitignored. Report vulnerabilities privately via GitHub Security Advisories, DO NOT open a public issue. See [SECURITY.md](.github/SECURITY.md).
+
+**Subprojects:**
+- `Fear-of-Falling`: R-based pipeline for physical performance and FOF analysis.
+- `Electronic-Frailty-Index`: Python & R tools for EFI calculation.
+- `Quantify-FOF-Utilization-Costs`: Hybrid pipeline for healthcare utilization costs.
+
+**Contributing:** Please read [CONTRIBUTING.md](.github/CONTRIBUTING.md) before making changes. All artifacts must be logged, and reproducibility must be ensured.
+
 ---
 
-## 🛡️ Tärkeää: Tietoturva ja datapolitiikka
+## Tärkeää: Tietoturva ja datapolitiikka
 
 Tietoturva ja tutkimusetiikka ovat tämän projektin keskiössä.
 
@@ -19,7 +32,7 @@ Tietoturva ja tutkimusetiikka ovat tämän projektin keskiössä.
 
 ---
 
-## 📂 Aliprojektit (Subprojects)
+## Aliprojektit (Subprojects)
 
 Repositorio on jaettu useisiin itsenäisiin aliprojekteihin, joilla on oma dokumentaationsa ja ympäristönsä:
 
@@ -29,7 +42,7 @@ Repositorio on jaettu useisiin itsenäisiin aliprojekteihin, joilla on oma dokum
 
 ---
 
-## 🤝 Kontribuointi ja kehitys
+## Kontribuointi ja kehitys
 
 Arvostamme apuasi koodin ja analyysien parantamisessa.
 
@@ -39,7 +52,7 @@ Arvostamme apuasi koodin ja analyysien parantamisessa.
 
 ---
 
-## 📜 Viittaaminen (Citation) ja Lisenssi
+## Viittaaminen (Citation) ja Lisenssi
 
 *   **Viittaaminen:** Jos käytät tämän repositorion koodia tutkimuksessasi, viittaa siihen **[CITATION.cff](CITATION.cff)** -tiedoston ohjeiden mukaisesti.
 *   **Lisenssi:** Projekti on lisensoitu [MIT-lisenssillä](LICENSE).
@@ -47,7 +60,7 @@ Arvostamme apuasi koodin ja analyysien parantamisessa.
 
 ---
 
-## 🚀 Pikastartti (Quick Start)
+## Pikastartti (Quick Start)
 
 Katso tarkemmat ajo-ohjeet kunkin aliprojektin omasta README-tiedostosta.
 
@@ -68,7 +81,7 @@ python Electronic-Frailty-Index/src/efi/cli.py --input data/external/synthetic_p
 
 ---
 
-## 🛠️ Kehittäjän työkalut (CLI)
+## Kehittäjän työkalut (CLI)
 
 *   **Kimi CLI:** `tools/kimi_cli.py` (NVIDIA NIM -pohjainen tekoälyavustaja).
 *   **Markdown Linting:** Käytä `npm run lint` tai `pre-commit` hookeja Markdown-muotoilun varmistamiseen.
