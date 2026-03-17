@@ -1,212 +1,78 @@
 ![Python and R Scripts cover](docs/assets/cover/python-r-scripts-cover.jpg)
 
-﻿# Python and R Scripts
+# Python-R-Scripts Monorepo
 
 ![python-ci](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/python-ci.yml/badge.svg)
 ![r-ci](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/r-ci.yml/badge.svg)
 
-This repository contains Python and R projects for data analysis and research
-workflows. Each subfolder is a standalone project with its own docs.
+Tämä monorepositorio sisältää R- ja Python-pohjaisia analyysiputkia, skriptejä ja työkaluja lääketieteelliseen tutkimukseen ja terveysdatan analysointiin. Projekti on osa laajempaa väitöskirjatyötä ja tutkimuskokonaisuutta.
 
-## Execution Environments
+---
 
-This monorepo supports multiple execution environments with specific configurations:
+## 🛡️ Tärkeää: Tietoturva ja datapolitiikka
 
-*   **Windows (Standard):** Primary environment using PowerShell 7.0 and `GEMINI.md` guidance.
-*   **Android (Termux):** Mobile environment using Bash and `GEMINI_TERMUX.md` guidance. Requires `termux-wake-lock` for long-running scripts.
-*   **Git Bash / Linux:** Standard Unix-like environments.
+Tietoturva ja tutkimusetiikka ovat tämän projektin keskiössä.
 
-## Main project
+*   **EHDOTON KIELTO:** Tähän repositorioon **ei saa koskaan viedä raakadataa, henkilötietoja (PII) tai potilastietoja (PHI)**.
+*   **Data-asetukset:** Raakadata säilytetään aina repositorion ulkopuolella (esim. `DATA_ROOT`-polussa) tai se on `.gitignore`-listattu. Repo sisältää vain koodia, dokumentaatiota ja synteettistä esimerkkidataa.
+*   **Tietoturvavuodot:** Jos huomaat repositoriossa arkaluontoista dataa, raportoi se välittömästi [yksityisen tietoturvakäytännön mukaisesti](.github/SECURITY.md). **Älä avaa julkista issue-tikettiä.**
 
-- [Electronic Frailty Index](Electronic-Frailty-Index/README.md)
-- [Fear of Falling](Fear-of-Falling/README.md)
-- [Quantify FOF Utilization Costs](Quantify-FOF-Utilization-Costs/README.md)
+---
 
-## Quick start
+## 📂 Aliprojektit (Subprojects)
 
-### Electronic Frailty Index (Python)
+Repositorio on jaettu useisiin itsenäisiin aliprojekteihin, joilla on oma dokumentaationsa ja ympäristönsä:
 
-```bash
-python src/efi/cli.py \
-  --input data/external/synthetic_patients.csv \
-  --out out/efi_scores.csv \
-  --report-md out/report.md
-```
+1.  **[Fear-of-Falling (FOF)](Fear-of-Falling/README.md):** R-analyysiputki kaatumisen pelon ja toimintakyvyn välisen yhteyden tutkimiseen. Sisältää Kxx-analyysiskriptit, `renv`-ympäristön ja manifesti-pohjaisen tuloshallinnan.
+2.  **[Electronic-Frailty-Index (EFI)](Electronic-Frailty-Index/README.md):** Python- ja R-työkaluja haurausindeksin (EFI) laskemiseen ja validointiin. Sisältää kliinisen datan prosessointiin ja logistiseen regressioon tarkoitettuja skriptejä.
+3.  **[Quantify-FOF-Utilization-Costs](Quantify-FOF-Utilization-Costs/README.md):** Hybridiputki (R + Python) kaatumisen pelkoon liittyvän palvelukäytön ja kustannusten kvantifiointiin. Painottaa turvallista aggregointia ja raportointia (Option B).
+
+---
+
+## 🤝 Kontribuointi ja kehitys
+
+Arvostamme apuasi koodin ja analyysien parantamisessa.
+
+*   **Ohjeet:** Lue ehdottomasti **[Kontribuutio-ohjeet (CONTRIBUTING.md)](.github/CONTRIBUTING.md)** ennen muutosten tekemistä. Se määrittelee vaaditut QC-tarkistukset, manifesti-lokituksen ja koodausstandardit.
+*   **Pull Requests:** Käytä [PR-mallipohjaa](.github/pull_request_template.md) varmistaaksesi, että kaikki laatutarkistukset on tehty.
+*   **Ympäristöt:** Projekti tukee Windows (PowerShell 7), Linux ja Android (Termux) -ympäristöjä.
+
+---
+
+## 📜 Viittaaminen (Citation) ja Lisenssi
+
+*   **Viittaaminen:** Jos käytät tämän repositorion koodia tutkimuksessasi, viittaa siihen **[CITATION.cff](CITATION.cff)** -tiedoston ohjeiden mukaisesti.
+*   **Lisenssi:** Projekti on lisensoitu [MIT-lisenssillä](LICENSE).
+*   **Vastuunvapautus:** Lue myös [DISCLAIMER.md](DISCLAIMER.md).
+
+---
+
+## 🚀 Pikastartti (Quick Start)
+
+Katso tarkemmat ajo-ohjeet kunkin aliprojektin omasta README-tiedostosta.
 
 ### Fear of Falling (R)
-
-Run from the Fear-of-Falling project root (required working directory).
-
 ```bash
 cd Fear-of-Falling
-
-# Restore the locked R environment
-R -q -e 'if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv"); renv::restore(prompt = FALSE)'
-
-# Pick a Kxx script and run it
-find R-scripts -maxdepth 3 -type f -name "*.R" | head -30
-Rscript "R-scripts/<K_FOLDER>/<FILE_TAG>.R"
-
-# Verify outputs and manifest logging
-ls -la "R-scripts/<K_FOLDER>/outputs/"
-tail -n 10 manifest/manifest.csv
+Rscript -e 'renv::restore()'
+# Aja skripti (esim. K11)
+Rscript "R-scripts/K11/K11_MAIN.V1_primary-ancova.R"
 ```
 
-Notes:
-
-- Default data path used by multiple scripts: `data/external/KaatumisenPelko.csv`.
-- Outputs follow the project convention under `R-scripts/<K_FOLDER>/outputs/` and each artifact is logged to `manifest/manifest.csv`.
-
-### Kimi CLI (NVIDIA NIM)
-
-Kimi chat CLI is available at `tools/kimi_cli.py` (Python stdlib only, no extra dependencies).
-
+### Electronic Frailty Index (Python)
 ```bash
-# Set API key in your shell (do not commit secrets)
-export NVIDIA_API_KEY=...
-
-# Argument mode
-python3 tools/kimi_cli.py "Say hello in Finnish"
-
-# stdin mode
-echo "List 5 fall-risk assessment points." | python3 tools/kimi_cli.py
-
-# Optional executable usage
-tools/kimi_cli.py --model moonshotai/kimi-k2-instruct --temperature 0.2 "Explain frailty in clinical research."
+python Electronic-Frailty-Index/src/efi/cli.py --input data/external/synthetic_patients.csv --out out/efi_scores.csv
 ```
 
-Optional shell alias:
+---
+
+## 🛠️ Kehittäjän työkalut (CLI)
+
+*   **Kimi CLI:** `tools/kimi_cli.py` (NVIDIA NIM -pohjainen tekoälyavustaja).
+*   **Markdown Linting:** Käytä `npm run lint` tai `pre-commit` hookeja Markdown-muotoilun varmistamiseen.
 
 ```bash
-alias kimi='python3 tools/kimi_cli.py'
-```
-
-## License and citation
-
-- License: [MIT License](LICENSE)
-- How to cite: [CITATION.cff](CITATION.cff)
-
-## Disclaimer
-
-See [DISCLAIMER.md](DISCLAIMER.md). No PHI or PII in this repository.
-
-## Developer workflows
-
-### Markdown formatting & linting
-
-All Markdown files are checked for formatting (Prettier) and linting (markdownlint-cli2)
-in CI. **CI runs checks only** — it will not auto-fix your files.
-
-**Local setup:**
-
-```bash
-# Install dependencies
-npm ci
-
-# Format all Markdown files (fixes Prettier issues)
+# Markdown-korjaukset lokaalisti
 npx prettier --write "**/*.md"
-
-# Auto-fix markdownlint violations
 npx markdownlint-cli2 --fix "**/*.md"
-
-# Check without fixing (same as CI)
-npx prettier --check "**/*.md"
-npx markdownlint-cli2 "**/*.md"
 ```
-
-**Pre-commit hooks (recommended):**
-
-Install pre-commit to auto-format and auto-fix before each commit:
-
-```bash
-# Install pre-commit (requires Python)
-pip install pre-commit
-
-# Install hooks
-pre-commit install
-
-# Run manually on all files
-pre-commit run --all-files
-```
-
-**When CI fails:**
-
-If the "Lint Markdown" check fails on your PR:
-
-1. Run locally: `npx prettier --write "**/*.md"`
-2. Run locally: `npx markdownlint-cli2 --fix "**/*.md"`
-3. Fix any remaining violations manually (check error messages)
-4. Verify: `npx prettier --check "**/*.md" && npx markdownlint-cli2 "**/*.md"`
-5. Commit and push
-
-**Common violations:**
-
-- **MD040**: Missing language in code blocks → Add language tag (e.g., ` ```bash `)
-- **MD013**: Line too long → Break lines or disable for specific sections
-- **MD029**: Ordered list numbering → Use sequential numbers or disable
-
-### PowerShell Setup
-
-For convenience, you can configure your PowerShell profile to automatically `cd` into this
-repository root when opening a new terminal.
-
-**Auto-cd & Disable Switch:**
-
-If configured, the profile checks for `FOF_SKIP_CD`. To bypass auto-cd for a session:
-
-```powershell
-$env:FOF_SKIP_CD='1'
-```
-
-To disable permanently (affects new windows):
-
-```powershell
-setx FOF_SKIP_CD 1
-```
-
-To re-enable: `setx FOF_SKIP_CD 0` or remove the variable.
-
-**Rollback (if needed):**
-
-To revert the profile change, run this one-liner:
-
-```powershell
-$dir=Split-Path -LiteralPath $PROFILE; $leaf=Split-Path -Leaf $PROFILE; $latest=Get-ChildItem -LiteralPath $dir -Filter "$leaf.bak-*" | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if($latest){Copy-Item -LiteralPath $latest.FullName -Destination $PROFILE -Force; "Restored from $($latest.Name)"} else {"No backup found."}
-```
-
-### CI optimization
-
-CI workflows use path filters to run only when relevant files change:
-
-- **Lint Markdown**: Runs on `.md`, `.prettierrc`, `.markdownlint-cli2.jsonc`, `package.json`
-- **Python CI**: Runs on `**/*.py`, `**/requirements*.txt`, `**/pyproject.toml`
-- **R CI**: Runs on `**/*.R`, `renv.lock`, `renv/**`
-- **Smoke Tests**: Runs on `Fear-of-Falling/**` (except `.md` files)
-
-Docs-only changes skip expensive test runs, saving CI minutes.
-
-## Layout (high level)
-
-```text
-├─ Electronic-Frailty-Index/
-│  ├─ docs/                   # EFI documentation and reports
-│  ├─ env/                    # conda environment
-│  ├─ figures/                # images and figures
-│  ├─ BMI/                    # BMI features and scripts
-│  ├─ CCI/                    # CCI features and scripts
-│  ├─ HFRS/                   # HFRS features and scripts
-│  └─ logistic_regression/    # logistic regression models and scripts
-├─ src/efi/                   # Python CLI
-├─ data/external/             # synthetic example data
-├─ tests/                     # pytest tests
-├─ .github/workflows/         # continuous integration workflows
-└─ out/                       # outputs, ignored in VCS
-```
-
-## Quantify-FOF-Utilization-Costs
-
-Aim 2: Quantify FOF-related health-service utilisation and costs (Option B: raw data outside repo). Includes safe-by-default QC, double-gated aggregates, non-sensitive reporting, layout-aware PDF/PPTX chunking, and an agent-ready knowledge package.
-
-- Project: Quantify-FOF-Utilization-Costs/
-- Runbook: Quantify-FOF-Utilization-Costs/docs/runbook.md
-- E2E smoke: python -m unittest Quantify-FOF-Utilization-Costs.tests.test_end_to_end_smoke

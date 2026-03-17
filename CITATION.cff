@@ -1,32 +1,46 @@
 cff-version: 1.2.0
-message: If you use this work, please cite it as below.
-title: Electronic Frailty Index (EFI) utilities in the Python-R-Scripts repository
+message: "Jos käytät tämän repositorion koodia tai dokumentaatiota tutkimuksessasi, viittaa siihen alla olevien ohjeiden mukaisesti."
+title: "Python-R-Scripts: Analyysimonorepo lääketieteelliseen tutkimukseen"
 authors:
   - family-names: Korpi
     given-names: Tomi
     affiliation: Tampere University
 type: software
 license: MIT
-version: 1.0.0
-date-released: 2025-10-25
-repository-code: https://github.com/Tupatuko2023/Python-R-Scripts
+version: 2.0.0
+date-released: "2026-03-17"
+repository-code: "https://github.com/Tupatuko2023/Python-R-Scripts"
 keywords:
+  - Fear of Falling
   - Electronic Frailty Index
-  - EFI
-  - health data
-  - Python
+  - Health data
+  - Longitudinal analysis
+  - Mixed models
   - R
+  - Python
 abstract: >
-  This citation refers to the EFI subproject located under Electronic-Frailty-Index/.
-  Use this reference when you reuse code, documentation, or synthetic examples from that folder.
+  Tämä monorepositorio sisältää analyysiputket ja skriptit useille 
+  tutkimuskokonaisuuksille (mm. Fear-of-Falling ja Electronic Frailty Index). 
+  Se sisältää R- ja Python-koodia pitkittäisaineistojen sekamalleihin, 
+  data-analyysiin ja tulosten toistettavaan raportointiin.
 preferred-citation:
-  type: article
-  title: Electronic Frailty Index (EFI) utilities
+  type: software
+  title: "Python-R-Scripts: Analyysimonorepo lääketieteelliseen tutkimukseen"
   authors:
     - family-names: Korpi
       given-names: Tomi
-  year: 2025
+  year: 2026
+  url: "https://github.com/Tupatuko2023/Python-R-Scripts"
 references:
   - type: software
-    title: Electronic-Frailty-Index subproject path
-    repository-code: https://github.com/Tupatuko2023/Python-R-Scripts/tree/main/Electronic-Frailty-Index
+    title: "Electronic-Frailty-Index (EFI) utilities"
+    repository-code: "https://github.com/Tupatuko2023/Python-R-Scripts/tree/main/Electronic-Frailty-Index"
+    authors:
+      - family-names: Korpi
+        given-names: Tomi
+  - type: software
+    title: "Fear-of-Falling (FOF) Analysis Pipeline"
+    repository-code: "https://github.com/Tupatuko2023/Python-R-Scripts/tree/main/Fear-of-Falling"
+    authors:
+      - family-names: Korpi
+        given-names: Tomi
