@@ -67,6 +67,7 @@ Projekti tukee useita ympäristöjä (Windows PowerShell 7, Termux/PRoot Android
   ```
 
   _(Tee `renv::snapshot()` vain, jos lisäät uusia paketteja ja se on hyväksytty PR:ssä.)_
+
 - **Python-ympäristö:**
   Käytä virtuaaliympäristöjä (esim. `venv`) ja asenna riippuvuudet repojuurta vastaavasta
   `requirements.txt`-tiedostosta, ellei aliprojektilla ole omaa konfiguraatiota.
