@@ -1,0 +1,156 @@
+digraph PAPER01_Cohort_Flow {
+  graph [
+    label="Fear-of-Falling paper_01 analytic cohort derivation\nPrimary branch: LONG | outcome: locomotor_capacity\n",
+    labelloc="t",
+    fontsize=18,
+    fontname="Helvetica",
+    rankdir=TB,
+    bgcolor="white",
+    splines=ortho,
+    nodesep=0.35,
+    ranksep=0.55,
+    pad="0.25"
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=12,
+    color="#4b5563",
+    penwidth=1.1,
+    margin="0.18,0.12"
+  ];
+
+  edge [
+    color="#374151",
+    penwidth=1.1,
+    arrowsize=0.75
+  ];
+
+  note_missing [
+    label=<
+      <TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2">
+        <TR><TD ALIGN="LEFT"><B>Group x Time missingness</B></TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=0, time=0: n=144, outcome miss=16, age miss=0, sex miss=0, BMI miss=5</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=0, time=12: n=144, outcome miss=73, age miss=0, sex miss=0, BMI miss=5</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=1, time=0: n=328, outcome miss=53, age miss=0, sex miss=1, BMI miss=17</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=1, time=12: n=328, outcome miss=142, age miss=0, sex miss=1, BMI miss=17</TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10" COLOR="#6b7280">FI22 optional sensitivity only; excluded for FI22 completeness if enabled: 4</FONT></TD></TR>
+      </TABLE>
+    >,
+    shape=note,
+    style="filled",
+    fillcolor="#f9fafb",
+    color="#e5e7eb",
+    fontcolor="#374151"
+  ];
+
+  n1 [
+    label="Input dataset\nRows = 1070\nUnique id = 535",
+    fillcolor="#eef2ff"
+  ];
+
+  e_id [
+    label="Excluded rows = 0\nMissing or blank id\n(0.0% of raw rows)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n2 [
+    label="N = 535 participants with non-missing id\n(50.0% of raw rows)",
+    fillcolor="#eef2ff"
+  ];
+
+  e1 [
+    label="Excluded n = 63\nMissing or invalid FOF_status\n(11.8% of N_VALID_ID)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n3 [
+    label="N = 472 with valid baseline FOF_status\n(88.2% of N_VALID_ID)",
+    fillcolor="#eef2ff"
+  ];
+
+  e2 [
+    label="Excluded n = 0\nNot eligible for declared LONG structure\nTime missing/invalid in LONG branch = 0\n(0.0% of N_WITH_FOF)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n4 [
+    label="N = 472 branch-eligible participants\n(100.0% of N_WITH_FOF)",
+    fillcolor="#eef2ff"
+  ];
+
+  e3 [
+    label="Excluded n = 232\nMissing required locomotor_capacity observations\n(49.2% of N_BRANCH_ELIGIBLE)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n5 [
+    label="N = 240 with complete primary outcome\n(50.8% of N_BRANCH_ELIGIBLE)",
+    fillcolor="#eef2ff"
+  ];
+
+  e4 [
+    label="Excluded n = 10\nMissing age, sex, or BMI\n(4.2% of N_OUTCOME_COMPLETE)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n6 [
+    label="Final eligible analytic cohort\nN = 230\n(95.8% of N_OUTCOME_COMPLETE)",
+    fillcolor="#eef2ff"
+  ];
+
+  g1 [
+    label="FOF: Yes\nn = 161\n(70.0% of N_ANALYTIC_PRIMARY)",
+    fillcolor="#ecfdf5",
+    color="#047857",
+    fontcolor="#064e3b"
+  ];
+
+  g2 [
+    label="FOF: No\nn = 69\n(30.0% of N_ANALYTIC_PRIMARY)",
+    fillcolor="#ecfdf5",
+    color="#047857",
+    fontcolor="#064e3b"
+  ];
+
+  n1 -> n2 [constraint=true];
+  n2 -> n3 [constraint=true];
+  n3 -> n4 [constraint=true];
+  n4 -> n5 [constraint=true];
+  n5 -> n6 [constraint=true];
+  n6 -> g1;
+  n6 -> g2;
+
+  n1 -> e_id [dir=none, constraint=false];
+  n2 -> e1 [dir=none, constraint=false];
+  n3 -> e2 [dir=none, constraint=false];
+  n4 -> e3 [dir=none, constraint=false];
+  n5 -> e4 [dir=none, constraint=false];
+
+  { rank=same; n1; e_id; }
+  { rank=same; n2; e1; }
+  { rank=same; n3; e2; }
+  { rank=same; n4; e3; }
+  { rank=same; n5; e4; }
+  { rank=same; g1; g2; }
+
+  n1 -> e_id [style=invis, weight=10];
+  n2 -> e1 [style=invis, weight=10];
+  n3 -> e2 [style=invis, weight=10];
+  n4 -> e3 [style=invis, weight=10];
+  n5 -> e4 [style=invis, weight=10];
+  g1 -> g2 [style=invis, weight=1];
+  note_missing -> n1 [style=invis, weight=1];
+}

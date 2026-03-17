@@ -1,0 +1,156 @@
+digraph PAPER01_Cohort_Flow {
+  graph [
+    label="__GRAPH_TITLE__\nPrimary branch: __PRIMARY_BRANCH__ | outcome: __PRIMARY_OUTCOME__\n",
+    labelloc="t",
+    fontsize=18,
+    fontname="Helvetica",
+    rankdir=TB,
+    bgcolor="white",
+    splines=ortho,
+    nodesep=0.35,
+    ranksep=0.55,
+    pad="0.25"
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=12,
+    color="#4b5563",
+    penwidth=1.1,
+    margin="0.18,0.12"
+  ];
+
+  edge [
+    color="#374151",
+    penwidth=1.1,
+    arrowsize=0.75
+  ];
+
+  note_missing [
+    label=<
+      <TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2">
+        <TR><TD ALIGN="LEFT"><B>Group x Time missingness</B></TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=0, time=0: n=__MISS_F0_T0_N__, outcome miss=__MISS_F0_T0_OUT__, age miss=__MISS_F0_T0_AGE__, sex miss=__MISS_F0_T0_SEX__, BMI miss=__MISS_F0_T0_BMI__</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=0, time=12: n=__MISS_F0_T12_N__, outcome miss=__MISS_F0_T12_OUT__, age miss=__MISS_F0_T12_AGE__, sex miss=__MISS_F0_T12_SEX__, BMI miss=__MISS_F0_T12_BMI__</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=1, time=0: n=__MISS_F1_T0_N__, outcome miss=__MISS_F1_T0_OUT__, age miss=__MISS_F1_T0_AGE__, sex miss=__MISS_F1_T0_SEX__, BMI miss=__MISS_F1_T0_BMI__</TD></TR>
+        <TR><TD ALIGN="LEFT">FOF=1, time=12: n=__MISS_F1_T12_N__, outcome miss=__MISS_F1_T12_OUT__, age miss=__MISS_F1_T12_AGE__, sex miss=__MISS_F1_T12_SEX__, BMI miss=__MISS_F1_T12_BMI__</TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10" COLOR="#6b7280">__FI22_NOTE__</FONT></TD></TR>
+      </TABLE>
+    >,
+    shape=note,
+    style="filled",
+    fillcolor="#f9fafb",
+    color="#e5e7eb",
+    fontcolor="#374151"
+  ];
+
+  n1 [
+    label="Input dataset\nRows = __N_RAW_ROWS__\nUnique id = __N_RAW_ID__",
+    fillcolor="#eef2ff"
+  ];
+
+  e_id [
+    label="Excluded rows = __EX_ID_MISSING__\nMissing or blank id\n(__EX_ID_MISSING_PCT__% of raw rows)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n2 [
+    label="N = __N_VALID_ID__ participants with non-missing id\n(__N_VALID_ID_PCT__% of raw rows)",
+    fillcolor="#eef2ff"
+  ];
+
+  e1 [
+    label="Excluded n = __EX_FOF_MISSING_OR_INVALID__\nMissing or invalid FOF_status\n(__EX_FOF_MISSING_OR_INVALID_PCT__% of N_VALID_ID)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n3 [
+    label="N = __N_WITH_FOF__ with valid baseline FOF_status\n(__N_WITH_FOF_PCT__% of N_VALID_ID)",
+    fillcolor="#eef2ff"
+  ];
+
+  e2 [
+    label="Excluded n = __EX_BRANCH_STRUCTURE__\nNot eligible for declared __PRIMARY_BRANCH__ structure\nTime missing/invalid in LONG branch = __EX_TIME_MISSING_OR_INVALID__\n(__EX_BRANCH_STRUCTURE_PCT__% of N_WITH_FOF)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n4 [
+    label="N = __N_BRANCH_ELIGIBLE__ branch-eligible participants\n(__N_BRANCH_ELIGIBLE_PCT__% of N_WITH_FOF)",
+    fillcolor="#eef2ff"
+  ];
+
+  e3 [
+    label="Excluded n = __EX_OUTCOME_MISSING_PRIMARY__\nMissing required __PRIMARY_OUTCOME__ observations\n(__EX_OUTCOME_MISSING_PRIMARY_PCT__% of N_BRANCH_ELIGIBLE)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n5 [
+    label="N = __N_OUTCOME_COMPLETE__ with complete primary outcome\n(__N_OUTCOME_COMPLETE_PCT__% of N_BRANCH_ELIGIBLE)",
+    fillcolor="#eef2ff"
+  ];
+
+  e4 [
+    label="Excluded n = __EX_COVARIATE_MISSING_PRIMARY__\nMissing age, sex, or BMI\n(__EX_COVARIATE_MISSING_PRIMARY_PCT__% of N_OUTCOME_COMPLETE)",
+    fillcolor="#fff1f2",
+    color="#b91c1c",
+    fontcolor="#7f1d1d"
+  ];
+
+  n6 [
+    label="Final eligible analytic cohort\nN = __N_ANALYTIC_PRIMARY__\n(__N_ANALYTIC_PRIMARY_PCT__% of N_OUTCOME_COMPLETE)",
+    fillcolor="#eef2ff"
+  ];
+
+  g1 [
+    label="FOF: Yes\nn = __FOF_YES_ANALYTIC__\n(__FOF_YES_ANALYTIC_PCT__% of N_ANALYTIC_PRIMARY)",
+    fillcolor="#ecfdf5",
+    color="#047857",
+    fontcolor="#064e3b"
+  ];
+
+  g2 [
+    label="FOF: No\nn = __FOF_NO_ANALYTIC__\n(__FOF_NO_ANALYTIC_PCT__% of N_ANALYTIC_PRIMARY)",
+    fillcolor="#ecfdf5",
+    color="#047857",
+    fontcolor="#064e3b"
+  ];
+
+  n1 -> n2 [constraint=true];
+  n2 -> n3 [constraint=true];
+  n3 -> n4 [constraint=true];
+  n4 -> n5 [constraint=true];
+  n5 -> n6 [constraint=true];
+  n6 -> g1;
+  n6 -> g2;
+
+  n1 -> e_id [dir=none, constraint=false];
+  n2 -> e1 [dir=none, constraint=false];
+  n3 -> e2 [dir=none, constraint=false];
+  n4 -> e3 [dir=none, constraint=false];
+  n5 -> e4 [dir=none, constraint=false];
+
+  { rank=same; n1; e_id; }
+  { rank=same; n2; e1; }
+  { rank=same; n3; e2; }
+  { rank=same; n4; e3; }
+  { rank=same; n5; e4; }
+  { rank=same; g1; g2; }
+
+  n1 -> e_id [style=invis, weight=10];
+  n2 -> e1 [style=invis, weight=10];
+  n3 -> e2 [style=invis, weight=10];
+  n4 -> e3 [style=invis, weight=10];
+  n5 -> e4 [style=invis, weight=10];
+  g1 -> g2 [style=invis, weight=1];
+  note_missing -> n1 [style=invis, weight=1];
+}

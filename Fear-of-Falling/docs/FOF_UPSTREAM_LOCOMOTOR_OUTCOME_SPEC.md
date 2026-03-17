@@ -28,6 +28,8 @@ truth.
 
 ## Functional Test Harmonization
 
+- **Verified:** Time mapping for the locomotor functional-test source variables
+  is `*0 = baseline` and `*2 = 12 months`.
 - **Verified:** Gait is represented as gait speed using
   `kavelynopeus_m_sek0` and `kavelynopeus_m_sek2` when available.
 - **Verified:** Fallback gait derivation is `10 / timed_seconds` when only
@@ -45,6 +47,8 @@ truth.
 - **Verified:** Gait must be oriented as higher = better gait speed.
 - **Verified:** Chair must be transformed to a capacity-oriented direction
   before CFA or z3 construction so that higher = better.
+- **Verified:** After that reorientation, the expected chair loading sign in
+  the CFA branch is positive, consistent with gait and balance.
 - **Needs verification:** The exact mathematical chair transformation is not
   frozen here unless restated from the verified implementation layer.
 - **Verified:** Balance is built from `SLS_mean*`.
@@ -75,11 +79,24 @@ truth.
 - **Verified:** `locomotor_capacity` is the current primary outcome.
 - **Verified:** The CFA branch uses one latent factor with gait, chair, and
   balance as indicators.
+- **Verified:** The source-indicator time map for the CFA branch follows the
+  same project convention as the functional-test schema: `0 = baseline`,
+  `2 = 12 months`.
 - **Verified:** The latent score is the primary locomotor outcome branch, while
   `z3` remains the deterministic fallback / sensitivity branch.
+- **Verified:** The accepted factor-score method for the current upstream
+  export is regression-based scoring from the baseline-fitted CFA model, with
+  the same baseline measurement model used to score both baseline and 12-month
+  rows.
 - **Inference:** Wide outputs should map explicitly to
   `locomotor_capacity_0` and `locomotor_capacity_12m`, while long outputs use
   `locomotor_capacity` with `time`.
+- **Verified:** Even with the `0/2` source time map accepted, `K50` must not
+  derive CFA or z3 directly from raw variables; an explicit upstream export
+  step must materialize the canonical output columns first.
+- **Verified:** Canonical export must fail closed before writing K50-ready
+  outputs if the primary baseline-fitted CFA is inadmissible or if canonical
+  locomotor score completeness falls below the implementation-layer threshold.
 
 ## Legacy Bridge Branch
 
