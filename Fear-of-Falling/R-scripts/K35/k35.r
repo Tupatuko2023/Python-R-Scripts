@@ -1,10 +1,53 @@
 #!/usr/bin/env Rscript
+# ==============================================================================
+# K35 - Aggregate K32 Capacity Reporting
+# File tag: K35.V1_capacity-behavior-report.R
+# Purpose: Summarize aggregate behavior of the canonical K32 capacity outputs.
+#
+# Outcome: Aggregate K32 capacity summary tables
+# Predictors: capacity_score_latent_primary, capacity_score_z3_primary
+# Moderator/interaction: None
+# Grouping variable: None
+# Covariates: None
+#
+# Required vars (DO NOT INVENT; must match req_cols check in code):
+# id
+# capacity_score_latent_primary
+# capacity_score_z3_primary
+#
+# Mapping example (optional; raw -> analysis; keep minimal + explicit):
+# capacity_score_z3_primary -> z-standardized fallback comparator
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: NA (set only when randomness is used: MI/bootstrap/resampling)
+#
+# Outputs + manifest:
+# - script_label: K35 (canonical)
+# - outputs dir: R-scripts/K35/outputs/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths)
+# 02) Load aggregate K32 artifacts + patient-level externalized K32 dataset
+# 03) Standardize vars + QC (sanity checks early)
+# 04) Derive primary/fallback comparator labels
+# 05) Prepare analysis dataset
+# 06) Summarize score behavior
+# 07) Save reporting tables
+# 08) Save artifacts -> R-scripts/K35/outputs/
+# 09) Append manifest row per artifact
+# 10) Save sessionInfo / renv diagnostics to manifest/
+# 11) EOF marker
+# ==============================================================================
 suppressPackageStartupMessages({
   library(dplyr)
   library(readr)
   library(tibble)
   library(here)
 })
+
+req_cols <- c("id", "capacity_score_latent_primary", "capacity_score_z3_primary")
 
 script_label <- "K35"
 source(here::here("R", "functions", "reporting.R"))
@@ -88,17 +131,15 @@ k32_scores <- readr::read_csv(k32_scores_path, show_col_types = FALSE)
 in_obj <- resolve_k32()
 d <- read_dataset(in_obj)
 
-latent_col <- first_existing(d, c("capacity_score_cfa_primary", "capacity_score_latent_primary"))
-z5_col <- first_existing(d, c("capacity_score_z5_primary"))
-z4_col <- first_existing(d, c("capacity_score_z4_primary"))
+primary_col <- first_existing(d, c("capacity_score_cfa_primary", "capacity_score_latent_primary"))
+fallback_col <- first_existing(d, c("capacity_score_z3_primary", "capacity_score_z3_sensitivity", "capacity_score_z5_primary"))
 
-if (is.na(latent_col) || is.na(z5_col)) {
-  stop(paste0("Missing required score columns in K32 dataset. latent=", latent_col, ", z5=", z5_col), call. = FALSE)
+if (is.na(primary_col) || is.na(fallback_col)) {
+  stop(paste0("Missing required score columns in K32 dataset. primary=", primary_col, ", fallback=", fallback_col), call. = FALSE)
 }
 
-latent <- suppressWarnings(as.numeric(d[[latent_col]]))
-z5 <- suppressWarnings(as.numeric(d[[z5_col]]))
-z4 <- if (!is.na(z4_col)) suppressWarnings(as.numeric(d[[z4_col]])) else rep(NA_real_, length(latent))
+primary_score <- suppressWarnings(as.numeric(d[[primary_col]]))
+fallback_score <- suppressWarnings(as.numeric(d[[fallback_col]]))
 
 # 1) behavior summary
 admissible_flag <- if ("admissible" %in% names(k32_diag)) {
@@ -112,20 +153,19 @@ behavior_tbl <- tibble(
   source_kind = in_obj$kind,
   n_rows = nrow(d),
   n_cols = ncol(d),
-  latent_col = latent_col,
-  z5_col = z5_col,
+  primary_col = primary_col,
+  fallback_col = fallback_col,
   admissible = admissible_flag,
-  latent_non_missing_n = sum(!is.na(latent)),
-  latent_missing_n = sum(is.na(latent)),
-  latent_missing_share = mean(is.na(latent)),
-  z5_non_missing_n = sum(!is.na(z5))
+  primary_non_missing_n = sum(!is.na(primary_score)),
+  primary_missing_n = sum(is.na(primary_score)),
+  primary_missing_share = mean(is.na(primary_score)),
+  fallback_non_missing_n = sum(!is.na(fallback_score))
 )
 
 # 2) distribution
 dist_tbl <- bind_rows(
-  tibble(score = "latent_primary", value = latent),
-  tibble(score = "z5_primary", value = z5),
-  tibble(score = "z4_primary", value = z4)
+  tibble(score = "locomotor_capacity_primary", value = primary_score),
+  tibble(score = "z3_fallback", value = fallback_score)
 ) %>%
   group_by(score) %>%
   summarise(
@@ -140,13 +180,13 @@ dist_tbl <- bind_rows(
     .groups = "drop"
   )
 
-# 3) latent vs z composite
-ok <- complete.cases(latent, z5)
-diff_vec <- latent[ok] - z5[ok]
+# 3) primary vs fallback
+ok <- complete.cases(primary_score, fallback_score)
+diff_vec <- primary_score[ok] - fallback_score[ok]
 vs_tbl <- tibble(
   metric = c("pearson_r", "bland_altman_mean_diff", "bland_altman_sd_diff", "n_complete"),
   value = c(
-    safe_cor(latent, z5),
+    safe_cor(primary_score, fallback_score),
     ifelse(length(diff_vec) > 0, mean(diff_vec), NA_real_),
     ifelse(length(diff_vec) > 1, stats::sd(diff_vec), NA_real_),
     sum(ok)
@@ -155,26 +195,28 @@ vs_tbl <- tibble(
 
 notes_path <- file.path(outputs_dir, "k35_capacity_reporting_notes.txt")
 notes <- c(
-  "K35 Capacity CFA Behavior Report",
+  "K35 locomotor_capacity primary / z3 fallback behavior report",
   paste0("timestamp_utc=", format(Sys.time(), tz = "UTC", usetz = TRUE)),
   paste0("input_path=", in_obj$path),
+  paste0("primary_col=", primary_col),
+  paste0("fallback_col=", fallback_col),
   paste0("admissible_flag=", as.character(admissible_flag)),
-  "Scope: aggregate-only reporting; no K32/K26 model-logic modifications.",
+  "Scope: aggregate-only reporting; locomotor_capacity is primary and z3 is deterministic fallback/sensitivity.",
   "Governance: patient-level data read from DATA_ROOT/external sources; no row-level repo exports."
 )
 writeLines(notes, notes_path)
 
-p_behavior <- file.path(outputs_dir, "k35_capacity_behavior_summary.csv")
-p_dist <- file.path(outputs_dir, "k35_capacity_distribution.csv")
-p_vs <- file.path(outputs_dir, "k35_capacity_vs_z_composite.csv")
+p_behavior <- file.path(outputs_dir, "k35_locomotor_capacity_behavior_summary.csv")
+p_dist <- file.path(outputs_dir, "k35_locomotor_capacity_distribution.csv")
+p_vs <- file.path(outputs_dir, "k35_locomotor_capacity_vs_z3_fallback.csv")
 
 readr::write_csv(behavior_tbl, p_behavior, na = "")
 readr::write_csv(dist_tbl, p_dist, na = "")
 readr::write_csv(vs_tbl, p_vs, na = "")
 
-append_manifest_safe("k35_capacity_behavior_summary", "table_csv", p_behavior, n = nrow(behavior_tbl), notes = "Aggregate K32 behavior summary")
-append_manifest_safe("k35_capacity_distribution", "table_csv", p_dist, n = nrow(dist_tbl), notes = "Aggregate score distribution diagnostics")
-append_manifest_safe("k35_capacity_vs_z_composite", "table_csv", p_vs, n = nrow(vs_tbl), notes = "Latent vs z5 aggregate comparison")
+append_manifest_safe("k35_locomotor_capacity_behavior_summary", "table_csv", p_behavior, n = nrow(behavior_tbl), notes = "Aggregate K32 primary/fallback behavior summary")
+append_manifest_safe("k35_locomotor_capacity_distribution", "table_csv", p_dist, n = nrow(dist_tbl), notes = "Aggregate locomotor_capacity and z3 distribution diagnostics")
+append_manifest_safe("k35_locomotor_capacity_vs_z3_fallback", "table_csv", p_vs, n = nrow(vs_tbl), notes = "locomotor_capacity primary vs z3 fallback comparison")
 append_manifest_safe("k35_capacity_reporting_notes", "text", notes_path, notes = "K35 aggregate reporting notes")
 
 session_path <- file.path(outputs_dir, "k35_sessioninfo.txt")

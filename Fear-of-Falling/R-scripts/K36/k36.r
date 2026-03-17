@@ -1,12 +1,69 @@
 #!/usr/bin/env Rscript
+# ==============================================================================
+# K36 - Primary locomotor_capacity and z3 fallback models
+# File tag: K36.V2_locomotor-capacity-primary-z3-fallback.R
+# Purpose: Fit the current primary locomotor_capacity models and parallel z3 fallback models.
+#
+# Outcome: locomotor_capacity (primary), z3 (fallback/sensitivity)
+# Predictors: FOF_status
+# Moderator/interaction: time x FOF_status
+# Grouping variable: id
+# Covariates: age, sex, BMI, tasapainovaikeus
+#
+# Required vars (DO NOT INVENT; must match req_cols check in code):
+# id
+# time
+# FOF_status
+# age
+# sex
+# BMI
+# tasapainovaikeus
+# locomotor_capacity
+# z3
+# locomotor_capacity_0
+# locomotor_capacity_12m
+# z3_0
+# z3_12m
+#
+# Mapping example (optional; raw -> analysis; keep minimal + explicit):
+# fof_analysis_k50_long$locomotor_capacity -> primary long outcome
+# fof_analysis_k50_long$z3 -> fallback long outcome
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: NA (set only when randomness is used: MI/bootstrap/resampling)
+#
+# Outputs + manifest:
+# - script_label: K36 (canonical)
+# - outputs dir: R-scripts/K36/outputs/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths)
+# 02) Load canonical K50 long/wide datasets
+# 03) Standardize vars + QC (sanity checks early)
+# 04) Prepare primary and fallback analysis datasets
+# 05) Fit long primary/fallback models
+# 06) Fit wide primary/fallback ANCOVA checks
+# 07) Save aggregate artifacts -> R-scripts/K36/outputs/
+# 08) Append manifest row per artifact
+# 09) Save sessionInfo / renv diagnostics to manifest/
+# 10) EOF marker
+# ==============================================================================
 suppressPackageStartupMessages({
   library(dplyr)
   library(readr)
   library(tibble)
+  library(tidyr)
   library(here)
   library(lme4)
   library(lmerTest)
 })
+
+req_cols <- c(
+  "id", "time", "FOF_status", "age", "sex", "BMI", "tasapainovaikeus",
+  "locomotor_capacity", "z3", "locomotor_capacity_0", "locomotor_capacity_12m", "z3_0", "z3_12m"
+)
 
 script_label <- "K36"
 source(here::here("R", "functions", "reporting.R"))
@@ -42,12 +99,6 @@ read_dataset <- function(path) {
   stop("Unsupported dataset extension: ", ext, call. = FALSE)
 }
 
-first_existing <- function(nms, candidates) {
-  hits <- candidates[candidates %in% nms]
-  if (length(hits) == 0) return(NA_character_)
-  hits[1]
-}
-
 normalize_fof <- function(x) {
   s <- tolower(trimws(as.character(x)))
   out <- rep(NA_character_, length(s))
@@ -69,23 +120,12 @@ normalize_binary <- function(x) {
   out
 }
 
-normalize_frailty <- function(x) {
-  s <- tolower(trimws(as.character(x)))
-  out <- rep(NA_character_, length(s))
-  out[s %in% c("robust", "0")] <- "robust"
-  out[s %in% c("pre-frail", "prefrail", "pre frail", "1")] <- "pre-frail"
-  out[s %in% c("frail", "2", "3", "4")] <- "frail"
-  factor(out, levels = c("robust", "pre-frail", "frail"))
-}
-
 tidy_fixed <- function(model) {
-  if (requireNamespace("broom.mixed", quietly = TRUE)) {
-    return(broom.mixed::tidy(model, effects = "fixed", conf.int = TRUE))
-  }
   sm <- summary(model)$coefficients
   p_col <- grep("Pr\\(>", colnames(sm), value = TRUE)
   stat_col <- grep("(t value|z value)", colnames(sm), value = TRUE)
   out <- tibble(
+    effect = "fixed",
     term = rownames(sm),
     estimate = sm[, "Estimate"],
     std.error = sm[, "Std. Error"],
@@ -101,131 +141,11 @@ tidy_fixed <- function(model) {
   out
 }
 
-# ---- resolve inputs ----------------------------------------------------------
-data_root <- resolve_data_root()
-
-k33_long_path <- resolve_existing(c(
-  file.path(data_root, "paper_01", "analysis", "fof_analysis_k33_long.rds"),
-  file.path(data_root, "paper_01", "analysis", "fof_analysis_k33_long.csv")
-))
-k33_wide_path <- resolve_existing(c(
-  file.path(data_root, "paper_01", "analysis", "fof_analysis_k33_wide.rds"),
-  file.path(data_root, "paper_01", "analysis", "fof_analysis_k33_wide.csv")
-))
-k32_path <- resolve_existing(c(
-  file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores_k32.rds"),
-  file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores_k32.csv")
-))
-
-if (any(is.na(c(k33_long_path, k33_wide_path, k32_path)))) {
-  stop(
-    paste0(
-      "K36 could not resolve required external inputs.\n",
-      "k33_long=", k33_long_path, "\n",
-      "k33_wide=", k33_wide_path, "\n",
-      "k32=", k32_path
-    ),
-    call. = FALSE
-  )
-}
-
-long_raw <- read_dataset(k33_long_path)
-wide_raw <- read_dataset(k33_wide_path)
-k32_raw <- read_dataset(k32_path)
-
-id_col_k32 <- first_existing(names(k32_raw), c("id", "ID", "Jnro", "NRO"))
-cap_col_k32 <- first_existing(names(k32_raw), c("capacity_score_latent_primary", "capacity_score_cfa_primary"))
-if (is.na(id_col_k32) || is.na(cap_col_k32)) {
-  stop("K36 missing id/capacity column in K32 dataset.", call. = FALSE)
-}
-
-k32_key <- k32_raw %>%
-  transmute(
-    id = trimws(as.character(.data[[id_col_k32]])),
-    capacity_score_latent_primary = suppressWarnings(as.numeric(.data[[cap_col_k32]]))
-  ) %>%
-  filter(!is.na(id), id != "") %>%
-  distinct(id, .keep_all = TRUE)
-
-# ---- prepare long ------------------------------------------------------------
-long <- long_raw %>%
-  mutate(id = trimws(as.character(.data[[first_existing(names(long_raw), c("id", "ID", "Jnro", "NRO"))]]))) %>%
-  left_join(k32_key, by = "id") %>%
-  transmute(
-    id = id,
-    time_f = factor(as.integer(.data[[first_existing(names(long_raw), c("time"))]]), levels = c(0, 12), labels = c("0", "12")),
-    Composite_Z = as.numeric(.data[[first_existing(names(long_raw), c("Composite_Z"))]]),
-    FOF_status = normalize_fof(.data[[first_existing(names(long_raw), c("FOF_status"))]]),
-    frailty_cat_3 = normalize_frailty(.data[[first_existing(names(long_raw), c("frailty_cat_3"))]]),
-    tasapainovaikeus = normalize_binary(.data[[first_existing(names(long_raw), c("tasapainovaikeus"))]]),
-    age = suppressWarnings(as.numeric(.data[[first_existing(names(long_raw), c("age"))]])),
-    sex = factor(as.character(.data[[first_existing(names(long_raw), c("sex"))]])),
-    BMI = suppressWarnings(as.numeric(.data[[first_existing(names(long_raw), c("BMI"))]])),
-    capacity_score_latent_primary = capacity_score_latent_primary
-  )
-
-long_primary <- long %>% tidyr::drop_na(Composite_Z, time_f, FOF_status, frailty_cat_3, tasapainovaikeus, age, sex, BMI)
-long_extended <- long %>% tidyr::drop_na(Composite_Z, time_f, FOF_status, frailty_cat_3, tasapainovaikeus, age, sex, BMI, capacity_score_latent_primary)
-
-long_common <- long_extended
-
-f_lmm_primary <- as.formula("Composite_Z ~ time_f * FOF_status + time_f * frailty_cat_3 + time_f * tasapainovaikeus + age + sex + BMI + (1 | id)")
-f_lmm_extended <- as.formula("Composite_Z ~ time_f * FOF_status + time_f * frailty_cat_3 + time_f * tasapainovaikeus + age + sex + BMI + capacity_score_latent_primary + time_f:capacity_score_latent_primary + (1 | id)")
-
-m_lmm_primary <- lmerTest::lmer(f_lmm_primary, data = long_primary, REML = FALSE)
-m_lmm_extended <- lmerTest::lmer(f_lmm_extended, data = long_extended, REML = FALSE)
-m_lmm_primary_common <- lmerTest::lmer(f_lmm_primary, data = long_common, REML = FALSE)
-m_lmm_extended_common <- lmerTest::lmer(f_lmm_extended, data = long_common, REML = FALSE)
-
-lmm_primary_tbl <- tidy_fixed(m_lmm_primary)
-lmm_extended_tbl <- tidy_fixed(m_lmm_extended)
-
-lrt <- anova(m_lmm_primary_common, m_lmm_extended_common)
-lmm_cmp <- tibble(
-  model = rownames(lrt),
-  npar = lrt$npar,
-  AIC = lrt$AIC,
-  BIC = lrt$BIC,
-  logLik = lrt$logLik,
-  deviance = lrt$deviance,
-  Chisq = if ("Chisq" %in% names(lrt)) lrt$Chisq else NA_real_,
-  Df = if ("Df" %in% names(lrt)) lrt$Df else NA_real_,
-  p.value = if ("Pr(>Chisq)" %in% names(lrt)) lrt[["Pr(>Chisq)"]] else NA_real_,
-  n_primary = nrow(long_primary),
-  n_extended = nrow(long_extended),
-  n_common = nrow(long_common)
-)
-
-# ---- prepare wide ------------------------------------------------------------
-wide <- wide_raw %>%
-  mutate(id = trimws(as.character(.data[[first_existing(names(wide_raw), c("id", "ID", "Jnro", "NRO"))]]))) %>%
-  left_join(k32_key, by = "id") %>%
-  transmute(
-    id = id,
-    Composite_Z_baseline = as.numeric(.data[[first_existing(names(wide_raw), c("Composite_Z_baseline"))]]),
-    Composite_Z_12m = as.numeric(.data[[first_existing(names(wide_raw), c("Composite_Z_12m"))]]),
-    FOF_status = normalize_fof(.data[[first_existing(names(wide_raw), c("FOF_status"))]]),
-    frailty_cat_3 = normalize_frailty(.data[[first_existing(names(wide_raw), c("frailty_cat_3"))]]),
-    tasapainovaikeus = normalize_binary(.data[[first_existing(names(wide_raw), c("tasapainovaikeus"))]]),
-    age = suppressWarnings(as.numeric(.data[[first_existing(names(wide_raw), c("age"))]])),
-    sex = factor(as.character(.data[[first_existing(names(wide_raw), c("sex"))]])),
-    BMI = suppressWarnings(as.numeric(.data[[first_existing(names(wide_raw), c("BMI"))]])),
-    capacity_score_latent_primary = capacity_score_latent_primary
-  )
-
-wide_primary <- wide %>% tidyr::drop_na(Composite_Z_12m, Composite_Z_baseline, FOF_status, frailty_cat_3, tasapainovaikeus, age, sex, BMI)
-wide_extended <- wide %>% tidyr::drop_na(Composite_Z_12m, Composite_Z_baseline, FOF_status, frailty_cat_3, tasapainovaikeus, age, sex, BMI, capacity_score_latent_primary)
-
-f_ancova_primary <- as.formula("Composite_Z_12m ~ Composite_Z_baseline + FOF_status + frailty_cat_3 + tasapainovaikeus + age + sex + BMI")
-f_ancova_extended <- as.formula("Composite_Z_12m ~ Composite_Z_baseline + FOF_status + frailty_cat_3 + tasapainovaikeus + age + sex + BMI + capacity_score_latent_primary")
-
-m_ancova_primary <- stats::lm(f_ancova_primary, data = wide_primary)
-m_ancova_extended <- stats::lm(f_ancova_extended, data = wide_extended)
-
 coef_tbl <- function(model) {
   sm <- summary(model)$coefficients
   ci <- suppressWarnings(confint(model))
   tibble(
+    effect = "fixed",
     term = rownames(sm),
     estimate = sm[, 1],
     std.error = sm[, 2],
@@ -236,41 +156,136 @@ coef_tbl <- function(model) {
   )
 }
 
-ancova_primary_tbl <- coef_tbl(m_ancova_primary)
-ancova_extended_tbl <- coef_tbl(m_ancova_extended)
-ancova_cmp <- tibble(
-  model = c("primary", "extended"),
-  n = c(nobs(m_ancova_primary), nobs(m_ancova_extended)),
-  AIC = c(AIC(m_ancova_primary), AIC(m_ancova_extended)),
-  BIC = c(BIC(m_ancova_primary), BIC(m_ancova_extended)),
-  adj_r2 = c(summary(m_ancova_primary)$adj.r.squared, summary(m_ancova_extended)$adj.r.squared)
+data_root <- resolve_data_root()
+k50_long_path <- resolve_existing(c(
+  file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long.rds"),
+  file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long.csv")
+))
+k50_wide_path <- resolve_existing(c(
+  file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_wide.rds"),
+  file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_wide.csv")
+))
+
+if (any(is.na(c(k50_long_path, k50_wide_path)))) {
+  stop(
+    paste0(
+      "K36 could not resolve canonical K50 inputs.\n",
+      "k50_long=", k50_long_path, "\n",
+      "k50_wide=", k50_wide_path
+    ),
+    call. = FALSE
+  )
+}
+
+long_raw <- read_dataset(k50_long_path)
+wide_raw <- read_dataset(k50_wide_path)
+
+long_required <- c("id", "time", "FOF_status", "age", "sex", "BMI", "tasapainovaikeus", "locomotor_capacity", "z3")
+wide_required <- c("id", "FOF_status", "age", "sex", "BMI", "tasapainovaikeus", "locomotor_capacity_0", "locomotor_capacity_12m", "z3_0", "z3_12m")
+miss_long <- setdiff(long_required, names(long_raw))
+miss_wide <- setdiff(wide_required, names(wide_raw))
+if (length(miss_long) > 0 || length(miss_wide) > 0) {
+  stop(
+    paste0(
+      "K36 canonical K50 inputs are missing required columns.\n",
+      "long: ", paste(miss_long, collapse = ", "), "\n",
+      "wide: ", paste(miss_wide, collapse = ", ")
+    ),
+    call. = FALSE
+  )
+}
+
+long <- long_raw %>%
+  transmute(
+    id = trimws(as.character(.data$id)),
+    time_f = factor(as.integer(.data$time), levels = c(0, 12), labels = c("0", "12")),
+    FOF_status = normalize_fof(.data$FOF_status),
+    age = suppressWarnings(as.numeric(.data$age)),
+    sex = factor(as.character(.data$sex)),
+    BMI = suppressWarnings(as.numeric(.data$BMI)),
+    tasapainovaikeus = normalize_binary(.data$tasapainovaikeus),
+    locomotor_capacity = suppressWarnings(as.numeric(.data$locomotor_capacity)),
+    z3 = suppressWarnings(as.numeric(.data$z3))
+  )
+
+wide <- wide_raw %>%
+  transmute(
+    id = trimws(as.character(.data$id)),
+    FOF_status = normalize_fof(.data$FOF_status),
+    age = suppressWarnings(as.numeric(.data$age)),
+    sex = factor(as.character(.data$sex)),
+    BMI = suppressWarnings(as.numeric(.data$BMI)),
+    tasapainovaikeus = normalize_binary(.data$tasapainovaikeus),
+    locomotor_capacity_0 = suppressWarnings(as.numeric(.data$locomotor_capacity_0)),
+    locomotor_capacity_12m = suppressWarnings(as.numeric(.data$locomotor_capacity_12m)),
+    z3_0 = suppressWarnings(as.numeric(.data$z3_0)),
+    z3_12m = suppressWarnings(as.numeric(.data$z3_12m))
+  )
+
+long_primary <- long %>% drop_na(locomotor_capacity, time_f, FOF_status, age, sex, BMI, tasapainovaikeus)
+long_fallback <- long %>% drop_na(z3, time_f, FOF_status, age, sex, BMI, tasapainovaikeus)
+
+wide_primary <- wide %>% drop_na(locomotor_capacity_0, locomotor_capacity_12m, FOF_status, age, sex, BMI, tasapainovaikeus)
+wide_fallback <- wide %>% drop_na(z3_0, z3_12m, FOF_status, age, sex, BMI, tasapainovaikeus)
+
+f_lmm_primary <- locomotor_capacity ~ time_f * FOF_status + age + sex + BMI + tasapainovaikeus + (1 | id)
+f_lmm_fallback <- z3 ~ time_f * FOF_status + age + sex + BMI + tasapainovaikeus + (1 | id)
+f_ancova_primary <- locomotor_capacity_12m ~ locomotor_capacity_0 + FOF_status + age + sex + BMI + tasapainovaikeus
+f_ancova_fallback <- z3_12m ~ z3_0 + FOF_status + age + sex + BMI + tasapainovaikeus
+
+m_lmm_primary <- lmerTest::lmer(f_lmm_primary, data = long_primary, REML = FALSE)
+m_lmm_fallback <- lmerTest::lmer(f_lmm_fallback, data = long_fallback, REML = FALSE)
+m_ancova_primary <- stats::lm(f_ancova_primary, data = wide_primary)
+m_ancova_fallback <- stats::lm(f_ancova_fallback, data = wide_fallback)
+
+lmm_primary_tbl <- tidy_fixed(m_lmm_primary) %>% mutate(outcome = "locomotor_capacity", role = "primary", framework = "LMM")
+lmm_fallback_tbl <- tidy_fixed(m_lmm_fallback) %>% mutate(outcome = "z3", role = "fallback", framework = "LMM")
+ancova_primary_tbl <- coef_tbl(m_ancova_primary) %>% mutate(outcome = "locomotor_capacity", role = "primary", framework = "ANCOVA")
+ancova_fallback_tbl <- coef_tbl(m_ancova_fallback) %>% mutate(outcome = "z3", role = "fallback", framework = "ANCOVA")
+
+overview_tbl <- bind_rows(
+  tibble(
+    framework = "LMM",
+    outcome = c("locomotor_capacity", "z3"),
+    role = c("primary", "fallback"),
+    n = c(nrow(long_primary), nrow(long_fallback)),
+    AIC = c(AIC(m_lmm_primary), AIC(m_lmm_fallback)),
+    BIC = c(BIC(m_lmm_primary), BIC(m_lmm_fallback)),
+    adj_r2 = NA_real_
+  ),
+  tibble(
+    framework = "ANCOVA",
+    outcome = c("locomotor_capacity", "z3"),
+    role = c("primary", "fallback"),
+    n = c(nobs(m_ancova_primary), nobs(m_ancova_fallback)),
+    AIC = c(AIC(m_ancova_primary), AIC(m_ancova_fallback)),
+    BIC = c(BIC(m_ancova_primary), BIC(m_ancova_fallback)),
+    adj_r2 = c(summary(m_ancova_primary)$adj.r.squared, summary(m_ancova_fallback)$adj.r.squared)
+  )
 )
 
-# ---- write outputs -----------------------------------------------------------
-out_lmm_p <- file.path(outputs_dir, "k36_lmm_primary_fixed_effects.csv")
-out_lmm_e <- file.path(outputs_dir, "k36_lmm_extended_fixed_effects.csv")
-out_lmm_c <- file.path(outputs_dir, "k36_lmm_model_comparison.csv")
-out_a_p <- file.path(outputs_dir, "k36_ancova_primary_coefficients.csv")
-out_a_e <- file.path(outputs_dir, "k36_ancova_extended_coefficients.csv")
-out_a_c <- file.path(outputs_dir, "k36_ancova_model_comparison.csv")
+out_lmm_primary <- file.path(outputs_dir, "k36_locomotor_capacity_lmm_fixed_effects.csv")
+out_lmm_fallback <- file.path(outputs_dir, "k36_z3_fallback_lmm_fixed_effects.csv")
+out_ancova_primary <- file.path(outputs_dir, "k36_locomotor_capacity_ancova_coefficients.csv")
+out_ancova_fallback <- file.path(outputs_dir, "k36_z3_fallback_ancova_coefficients.csv")
+out_overview <- file.path(outputs_dir, "k36_outcome_model_overview.csv")
 out_notes <- file.path(outputs_dir, "k36_decision_log.txt")
 out_receipt <- file.path(outputs_dir, "k36_external_input_receipt.txt")
 out_session <- file.path(outputs_dir, "k36_sessioninfo.txt")
 
-readr::write_csv(lmm_primary_tbl, out_lmm_p, na = "")
-readr::write_csv(lmm_extended_tbl, out_lmm_e, na = "")
-readr::write_csv(lmm_cmp, out_lmm_c, na = "")
-readr::write_csv(ancova_primary_tbl, out_a_p, na = "")
-readr::write_csv(ancova_extended_tbl, out_a_e, na = "")
-readr::write_csv(ancova_cmp, out_a_c, na = "")
+readr::write_csv(lmm_primary_tbl, out_lmm_primary, na = "")
+readr::write_csv(lmm_fallback_tbl, out_lmm_fallback, na = "")
+readr::write_csv(ancova_primary_tbl, out_ancova_primary, na = "")
+readr::write_csv(ancova_fallback_tbl, out_ancova_fallback, na = "")
+readr::write_csv(overview_tbl, out_overview, na = "")
 
 notes <- c(
-  "K36 extended canonical models (K26-path)",
-  "Primary models are preserved; extended models add capacity terms.",
-  "Long LMM extended terms: + capacity_score_latent_primary + time_f:capacity_score_latent_primary",
-  "Wide ANCOVA extended term: + capacity_score_latent_primary",
-  paste0("n_long_primary=", nrow(long_primary), "; n_long_extended=", nrow(long_extended), "; n_long_common=", nrow(long_common)),
-  paste0("n_wide_primary=", nrow(wide_primary), "; n_wide_extended=", nrow(wide_extended))
+  "K36 outcome architecture aligned to ANALYSIS_PLAN.md",
+  "Primary outcome line: locomotor_capacity",
+  "Fallback/sensitivity outcome line: z3",
+  "Composite_Z is not modeled here; legacy bridge work remains outside the active primary branch.",
+  paste0("n_long_primary=", nrow(long_primary), "; n_long_fallback=", nrow(long_fallback)),
+  paste0("n_wide_primary=", nrow(wide_primary), "; n_wide_fallback=", nrow(wide_fallback))
 )
 writeLines(notes, out_notes)
 
@@ -278,29 +293,26 @@ receipt <- c(
   "script=K36",
   paste0("timestamp_utc=", format(Sys.time(), tz = "UTC", usetz = TRUE)),
   paste0("data_root=", data_root),
-  paste0("k33_long_path=", k33_long_path),
-  paste0("k33_long_md5=", unname(tools::md5sum(k33_long_path))),
-  paste0("k33_wide_path=", k33_wide_path),
-  paste0("k33_wide_md5=", unname(tools::md5sum(k33_wide_path))),
-  paste0("k32_path=", k32_path),
-  paste0("k32_md5=", unname(tools::md5sum(k32_path))),
-  paste0("k33_long_nrow=", nrow(long_raw), "; k33_long_ncol=", ncol(long_raw)),
-  paste0("k33_wide_nrow=", nrow(wide_raw), "; k33_wide_ncol=", ncol(wide_raw)),
-  paste0("k32_nrow=", nrow(k32_raw), "; k32_ncol=", ncol(k32_raw)),
+  paste0("k50_long_path=", k50_long_path),
+  paste0("k50_long_md5=", unname(tools::md5sum(k50_long_path))),
+  paste0("k50_wide_path=", k50_wide_path),
+  paste0("k50_wide_md5=", unname(tools::md5sum(k50_wide_path))),
+  "primary_outcome=locomotor_capacity",
+  "fallback_outcome=z3",
+  paste0("k50_long_nrow=", nrow(long_raw), "; k50_long_ncol=", ncol(long_raw)),
+  paste0("k50_wide_nrow=", nrow(wide_raw), "; k50_wide_ncol=", ncol(wide_raw)),
   "governance=aggregate-only outputs in repo; patient-level data externalized in DATA_ROOT"
 )
 writeLines(receipt, out_receipt)
-
 writeLines(capture.output(sessionInfo()), out_session)
 
-append_manifest_safe("k36_lmm_primary_fixed_effects", "table_csv", out_lmm_p, n = nrow(lmm_primary_tbl), notes = "K36 baseline (primary) long LMM fixed effects")
-append_manifest_safe("k36_lmm_extended_fixed_effects", "table_csv", out_lmm_e, n = nrow(lmm_extended_tbl), notes = "K36 extended long LMM fixed effects with capacity terms")
-append_manifest_safe("k36_lmm_model_comparison", "table_csv", out_lmm_c, n = nrow(lmm_cmp), notes = "K36 long-model comparison primary vs extended")
-append_manifest_safe("k36_ancova_primary_coefficients", "table_csv", out_a_p, n = nrow(ancova_primary_tbl), notes = "K36 baseline wide ANCOVA coefficients")
-append_manifest_safe("k36_ancova_extended_coefficients", "table_csv", out_a_e, n = nrow(ancova_extended_tbl), notes = "K36 extended wide ANCOVA coefficients with capacity covariate")
-append_manifest_safe("k36_ancova_model_comparison", "table_csv", out_a_c, n = nrow(ancova_cmp), notes = "K36 wide-model comparison primary vs extended")
-append_manifest_safe("k36_decision_log", "text", out_notes, notes = "K36 modeling decisions and sample sizes")
-append_manifest_safe("k36_external_input_receipt", "text", out_receipt, notes = "K36 external input provenance receipt")
+append_manifest_safe("k36_locomotor_capacity_lmm_fixed_effects", "table_csv", out_lmm_primary, n = nrow(lmm_primary_tbl), notes = "K36 primary locomotor_capacity LMM fixed effects")
+append_manifest_safe("k36_z3_fallback_lmm_fixed_effects", "table_csv", out_lmm_fallback, n = nrow(lmm_fallback_tbl), notes = "K36 fallback z3 LMM fixed effects")
+append_manifest_safe("k36_locomotor_capacity_ancova_coefficients", "table_csv", out_ancova_primary, n = nrow(ancova_primary_tbl), notes = "K36 primary locomotor_capacity ANCOVA coefficients")
+append_manifest_safe("k36_z3_fallback_ancova_coefficients", "table_csv", out_ancova_fallback, n = nrow(ancova_fallback_tbl), notes = "K36 fallback z3 ANCOVA coefficients")
+append_manifest_safe("k36_outcome_model_overview", "table_csv", out_overview, n = nrow(overview_tbl), notes = "K36 primary vs fallback outcome overview")
+append_manifest_safe("k36_decision_log", "text", out_notes, notes = "K36 outcome architecture decisions")
+append_manifest_safe("k36_external_input_receipt", "text", out_receipt, notes = "K36 canonical K50 input provenance receipt")
 append_manifest_safe("k36_sessioninfo", "sessioninfo", out_session, notes = "K36 session info")
 
 cat("K36 outputs written to:", outputs_dir, "\n")

@@ -75,9 +75,11 @@ qc_id_integrity_long <- function(df, id_col, time_col) {
   n_dup_keys <- sum(duplicated(key))
   tab <- with(df, table(df[[id_col]], df[[time_col]]))
   n_timepoints <- rowSums(tab > 0)
-  coverage_dist <- as.data.frame(table(n_timepoints), stringsAsFactors = FALSE)
-  names(coverage_dist) <- c("n_timepoints", "n_ids")
-  coverage_dist$n_timepoints <- as.integer(as.character(coverage_dist$n_timepoints))
+  coverage_tab <- table(n_timepoints)
+  coverage_dist <- tibble(
+    n_timepoints = as.integer(names(coverage_tab)),
+    n_ids = as.integer(unname(coverage_tab))
+  )
 
   summary <- data.frame(
     check = "id_integrity",
@@ -253,7 +255,7 @@ qc_outcome_summary <- function(df, outcome_col) {
   data.frame(
     n = length(x),
     n_missing = sum(is.na(x)),
-    n_nonfinite = sum(!is.finite(x), na.rm = TRUE),
+    n_nonfinite = sum(!is.na(x) & !is.finite(x)),
     mean = mean(x, na.rm = TRUE),
     sd = stats::sd(x, na.rm = TRUE),
     q01 = as.numeric(stats::quantile(x, 0.01, na.rm = TRUE)),

@@ -1,4 +1,49 @@
 #!/usr/bin/env Rscript
+# ==============================================================================
+# K37 - Aggregate Capacity Visualizations
+# File tag: K37.V1_capacity-visualizations.R
+# Purpose: Build aggregate visualizations from K36 primary/fallback outcome outputs and canonical K50 inputs.
+#
+# Outcome: Aggregate figures and captions
+# Predictors: locomotor_capacity, z3, FOF_status
+# Moderator/interaction: time x FOF_status
+# Grouping variable: id
+# Covariates: age, BMI
+#
+# Required vars (DO NOT INVENT; must match req_cols check in code):
+# id
+# time
+# locomotor_capacity
+# age
+# BMI
+# locomotor_capacity_0
+# z3_0
+#
+# Mapping example (optional; raw -> analysis; keep minimal + explicit):
+# fof_analysis_k50_long$locomotor_capacity -> primary long outcome
+#
+# Reproducibility:
+# - renv restore/snapshot REQUIRED
+# - seed: NA (set only when randomness is used: MI/bootstrap/resampling)
+#
+# Outputs + manifest:
+# - script_label: K37 (canonical)
+# - outputs dir: R-scripts/K37/outputs/  (resolved via init_paths(script_label))
+# - manifest: append 1 row per artifact to manifest/manifest.csv
+#
+# Workflow (tick off; do not skip):
+# 01) Init paths + options + dirs (init_paths)
+# 02) Load aggregate K36 outputs + externalized K33/K32 datasets
+# 03) Standardize vars + QC (sanity checks early)
+# 04) Derive plotting datasets
+# 05) Prepare aggregate figure layers
+# 06) Render figures
+# 07) Save captions
+# 08) Save artifacts -> R-scripts/K37_CAPACITY_VIS/outputs/
+# 09) Append manifest row per artifact
+# 10) Save sessionInfo / renv diagnostics to manifest/
+# 11) EOF marker
+# ==============================================================================
 
 suppressPackageStartupMessages({
   library(dplyr)
@@ -6,7 +51,31 @@ suppressPackageStartupMessages({
   library(readr)
   library(tidyr)
   library(tibble)
+  library(here)
 })
+
+req_cols <- c("id", "time", "FOF_status", "age", "BMI", "locomotor_capacity", "locomotor_capacity_0", "z3_0")
+
+script_label <- "K37"
+
+source(here::here("R", "functions", "reporting.R"))
+paths <- init_paths(script_label)
+out_dir <- paths$outputs_dir
+manifest_path <- paths$manifest_path
+
+append_manifest_safe <- function(label, kind, path, n = NA_integer_, notes = NA_character_) {
+  append_manifest(
+    manifest_row(
+      script = script_label,
+      label = label,
+      path = get_relpath(path),
+      kind = kind,
+      n = n,
+      notes = notes
+    ),
+    manifest_path
+  )
+}
 
 resolve_data_root <- function() {
   dr <- Sys.getenv("DATA_ROOT", unset = "")
@@ -31,152 +100,126 @@ read_external <- function(base_no_ext) {
   stop(sprintf("Missing external input: %s(.rds|.csv)", base_no_ext), call. = FALSE)
 }
 
+to_id_chr <- function(x) trimws(as.character(x))
+
 get_beta <- function(df, term) {
   row <- df %>% filter(.data$effect == "fixed", .data$term == term)
   if (nrow(row) == 0) return(0)
   as.numeric(row$estimate[[1]])
 }
 
-fof_root <- normalizePath(getwd(), winslash = "/", mustWork = TRUE)
-out_dir <- file.path(fof_root, "R-scripts", "K37", "outputs")
-dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
-
 data_root <- resolve_data_root()
 
-k36_lmm_ext <- readr::read_csv(
-  file.path(fof_root, "R-scripts", "K36", "outputs", "k36_lmm_extended_fixed_effects.csv"),
+k36_lmm_primary <- readr::read_csv(
+  here::here("R-scripts", "K36", "outputs", "k36_locomotor_capacity_lmm_fixed_effects.csv"),
   show_col_types = FALSE
 )
-k36_lmm_cmp <- readr::read_csv(
-  file.path(fof_root, "R-scripts", "K36", "outputs", "k36_lmm_model_comparison.csv"),
+k36_lmm_fallback <- readr::read_csv(
+  here::here("R-scripts", "K36", "outputs", "k36_z3_fallback_lmm_fixed_effects.csv"),
   show_col_types = FALSE
 )
-k36_ancova_cmp <- readr::read_csv(
-  file.path(fof_root, "R-scripts", "K36", "outputs", "k36_ancova_model_comparison.csv"),
+k36_overview <- readr::read_csv(
+  here::here("R-scripts", "K36", "outputs", "k36_outcome_model_overview.csv"),
   show_col_types = FALSE
 )
 
-k33_long <- read_external(file.path(data_root, "paper_01", "analysis", "fof_analysis_k33_long"))
-k33_wide <- read_external(file.path(data_root, "paper_01", "analysis", "fof_analysis_k33_wide"))
-k32 <- read_external(file.path(data_root, "paper_01", "capacity_scores", "kaatumisenpelko_with_capacity_scores_k32"))
+k50_long <- read_external(file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long"))
+k50_wide <- read_external(file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_wide"))
 
-req_long <- c("id", "time", "Composite_Z", "age", "BMI")
-req_wide <- c("id", "Composite_Z_baseline")
-req_k32 <- c("id", "capacity_score_latent_primary")
+req_long <- c("id", "time", "FOF_status", "locomotor_capacity", "age", "BMI")
+req_wide <- c("id", "locomotor_capacity_0", "z3_0")
 
-miss_long <- setdiff(req_long, names(k33_long))
-miss_wide <- setdiff(req_wide, names(k33_wide))
-miss_k32 <- setdiff(req_k32, names(k32))
-if (length(miss_long) > 0 || length(miss_wide) > 0 || length(miss_k32) > 0) {
+miss_long <- setdiff(req_long, names(k50_long))
+miss_wide <- setdiff(req_wide, names(k50_wide))
+if (length(miss_long) > 0 || length(miss_wide) > 0) {
   stop(
     paste0(
       "Missing required columns.",
       " long:", paste(miss_long, collapse = ","),
-      " wide:", paste(miss_wide, collapse = ","),
-      " k32:", paste(miss_k32, collapse = ",")
+      " wide:", paste(miss_wide, collapse = ",")
     ),
     call. = FALSE
   )
 }
 
-baseline_df <- k33_wide %>%
-  select(all_of(c("id", "Composite_Z_baseline"))) %>%
-  left_join(k32 %>% select(all_of(c("id", "capacity_score_latent_primary"))), by = "id") %>%
-  filter(!is.na(.data$Composite_Z_baseline), !is.na(.data$capacity_score_latent_primary))
+baseline_df <- k50_wide %>%
+  transmute(
+    id = to_id_chr(.data$id),
+    locomotor_capacity_0 = as.numeric(.data$locomotor_capacity_0),
+    z3_0 = as.numeric(.data$z3_0)
+  ) %>%
+  filter(!is.na(.data$locomotor_capacity_0), !is.na(.data$z3_0))
 
-cap_mean <- mean(baseline_df$capacity_score_latent_primary)
-cap_sd <- sd(baseline_df$capacity_score_latent_primary)
+mean_age <- mean(k50_long$age, na.rm = TRUE)
+mean_bmi <- mean(k50_long$BMI, na.rm = TRUE)
+mean_balance <- mean(as.numeric(k50_long$tasapainovaikeus), na.rm = TRUE)
 
-cap_levels <- tibble(
-  cap_label = c("Capacity -1 SD", "Capacity mean", "Capacity +1 SD"),
-  capacity_score_latent_primary = c(cap_mean - cap_sd, cap_mean, cap_mean + cap_sd)
-)
-
-b0 <- get_beta(k36_lmm_ext, "(Intercept)")
-b_time <- get_beta(k36_lmm_ext, "time_f12")
-b_cap <- get_beta(k36_lmm_ext, "capacity_score_latent_primary")
-b_time_cap <- get_beta(k36_lmm_ext, "time_f12:capacity_score_latent_primary")
-b_age <- get_beta(k36_lmm_ext, "age")
-b_bmi <- get_beta(k36_lmm_ext, "BMI")
-
-mean_age <- mean(k33_long$age, na.rm = TRUE)
-mean_bmi <- mean(k33_long$BMI, na.rm = TRUE)
+b0 <- get_beta(k36_lmm_primary, "(Intercept)")
+b_time <- get_beta(k36_lmm_primary, "time_f12")
+b_fof <- get_beta(k36_lmm_primary, "FOF_statusFOF")
+b_time_fof <- get_beta(k36_lmm_primary, "time_f12:FOF_statusFOF")
+b_age <- get_beta(k36_lmm_primary, "age")
+b_bmi <- get_beta(k36_lmm_primary, "BMI")
+b_balance <- get_beta(k36_lmm_primary, "tasapainovaikeus")
 
 traj <- tidyr::expand_grid(
-  cap_levels,
+  fof_label = c("nonFOF", "FOF"),
   time = c(0, 12)
 ) %>%
   mutate(
     t12 = ifelse(.data$time == 12, 1, 0),
+    fof_bin = ifelse(.data$fof_label == "FOF", 1, 0),
     pred = b0 +
       b_age * mean_age +
       b_bmi * mean_bmi +
+      b_balance * mean_balance +
       b_time * .data$t12 +
-      b_cap * .data$capacity_score_latent_primary +
-      b_time_cap * .data$t12 * .data$capacity_score_latent_primary
+      b_fof * .data$fof_bin +
+      b_time_fof * .data$t12 * .data$fof_bin
   )
 
-p_traj <- ggplot(traj, aes(x = factor(time), y = pred, color = cap_label, group = cap_label)) +
+p_traj <- ggplot(traj, aes(x = factor(time), y = pred, color = fof_label, group = fof_label)) +
   geom_line(linewidth = 1.1) +
   geom_point(size = 2.4) +
-  scale_color_manual(values = c("#1b9e77", "#7570b3", "#d95f02")) +
+  scale_color_manual(values = c("#1b9e77", "#d95f02")) +
   labs(
-    title = "Predicted Composite_Z Trajectories by Baseline Capacity",
-    subtitle = "K36 extended LMM fixed effects (capacity at -1 SD / mean / +1 SD)",
+    title = "Predicted locomotor_capacity Trajectories by FOF Status",
+    subtitle = "K36 primary LMM fixed effects at mean covariates",
     x = "Time (months)",
-    y = "Predicted Composite_Z",
-    color = "Baseline capacity"
+    y = "Predicted locomotor_capacity",
+    color = "FOF status"
   ) +
   theme_classic(base_size = 12)
 
 ggsave(
-  filename = file.path(out_dir, "k37_predicted_trajectories.png"),
+  filename = file.path(out_dir, "k37_locomotor_capacity_predicted_trajectories.png"),
   plot = p_traj,
   width = 8.5,
   height = 5.3,
   dpi = 320
 )
 
-lmm_primary <- k36_lmm_cmp %>% filter(.data$model == "m_lmm_primary_common")
-lmm_extended <- k36_lmm_cmp %>% filter(.data$model == "m_lmm_extended_common")
-
-anc_primary <- k36_ancova_cmp %>% filter(.data$model == "primary")
-anc_extended <- k36_ancova_cmp %>% filter(.data$model == "extended")
-
-model_cmp <- tibble(
-  model_family = c("LMM", "ANCOVA"),
-  delta_aic = c(
-    as.numeric(lmm_extended$AIC) - as.numeric(lmm_primary$AIC),
-    as.numeric(anc_extended$AIC) - as.numeric(anc_primary$AIC)
-  ),
-  delta_r2 = c(
-    NA_real_,
-    as.numeric(anc_extended$adj_r2) - as.numeric(anc_primary$adj_r2)
-  )
+coef_compare <- bind_rows(
+  k36_lmm_primary %>% filter(.data$term %in% c("time_f12", "FOF_statusFOF", "time_f12:FOF_statusFOF")) %>% mutate(outcome = "locomotor_capacity"),
+  k36_lmm_fallback %>% filter(.data$term %in% c("time_f12", "FOF_statusFOF", "time_f12:FOF_statusFOF")) %>% mutate(outcome = "z3")
 )
 
-cmp_long <- model_cmp %>%
-  tidyr::pivot_longer(cols = c("delta_aic", "delta_r2"), names_to = "metric", values_to = "value") %>%
-  filter(!is.na(.data$value)) %>%
-  mutate(
-    metric = recode(.data$metric, delta_aic = "Delta AIC (Extended - Primary)", delta_r2 = "Delta Adj R2 (Extended - Primary)")
-  )
-
-p_cmp <- ggplot(cmp_long, aes(x = model_family, y = value, fill = metric)) +
-  geom_col(position = position_dodge(width = 0.7), width = 0.62) +
+p_cmp <- ggplot(coef_compare, aes(x = term, y = estimate, color = outcome)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
-  scale_fill_manual(values = c("Delta AIC (Extended - Primary)" = "#4c78a8", "Delta Adj R2 (Extended - Primary)" = "#f58518")) +
+  geom_point(position = position_dodge(width = 0.4), size = 2.3) +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width = 0.12, position = position_dodge(width = 0.4)) +
+  scale_color_manual(values = c("locomotor_capacity" = "#4c78a8", "z3" = "#f58518")) +
   labs(
-    title = "Primary vs Extended Model Improvement (K36)",
-    subtitle = "Lower Delta AIC and higher Delta Adj R2 indicate improved fit",
-    x = "Model family",
-    y = "Change from primary model",
-    fill = "Metric"
+    title = "Primary vs Fallback Outcome Estimates (K36 LMM)",
+    subtitle = "Fixed-effect estimates with 95% CI for the key FOF terms",
+    x = "LMM term",
+    y = "Estimate",
+    color = "Outcome"
   ) +
   theme_classic(base_size = 12)
 
 ggsave(
-  filename = file.path(out_dir, "k37_model_comparison.png"),
+  filename = file.path(out_dir, "k37_locomotor_capacity_vs_z3_model_comparison.png"),
   plot = p_cmp,
   width = 8.2,
   height = 5.2,
@@ -185,20 +228,20 @@ ggsave(
 
 p_scatter <- ggplot(
   baseline_df,
-  aes(x = .data$capacity_score_latent_primary, y = .data$Composite_Z_baseline)
+  aes(x = .data$locomotor_capacity_0, y = .data$z3_0)
 ) +
   geom_point(alpha = 0.55, size = 1.8, color = "#1f77b4") +
   geom_smooth(method = "lm", se = TRUE, color = "#d62728", linewidth = 0.9) +
   labs(
-    title = "Baseline Association: Capacity Latent Score vs Composite_Z",
-    subtitle = "Participant-level baseline values (aggregate visualization only)",
-    x = "capacity_score_latent_primary",
-    y = "Composite_Z_baseline"
+    title = "Baseline Association: locomotor_capacity vs z3",
+    subtitle = "Primary outcome and deterministic fallback at baseline",
+    x = "locomotor_capacity_0",
+    y = "z3_0"
   ) +
   theme_classic(base_size = 12)
 
 ggsave(
-  filename = file.path(out_dir, "k37_capacity_vs_baseline.png"),
+  filename = file.path(out_dir, "k37_locomotor_capacity_vs_z3_baseline.png"),
   plot = p_scatter,
   width = 8.2,
   height = 5.2,
@@ -206,14 +249,13 @@ ggsave(
 )
 
 caption_lines <- c(
-  "Figure 1 (k37_predicted_trajectories.png): Predicted 0 to 12 month Composite_Z trajectories from K36 extended LMM fixed effects.",
-  "Capacity is shown at -1 SD, mean, and +1 SD of baseline capacity_score_latent_primary.",
-  "Predictions hold categorical terms at reference and continuous covariates at sample means.",
+  "Figure 1 (k37_locomotor_capacity_predicted_trajectories.png): Predicted 0 to 12 month locomotor_capacity trajectories from the K36 primary LMM.",
+  "Predictions are shown for nonFOF and FOF at mean covariates.",
   "",
-  "Figure 2 (k37_model_comparison.png): Primary vs extended model changes.",
-  "Delta AIC is shown for LMM and ANCOVA; Delta Adj R2 is shown where available from aggregate K36 outputs (ANCOVA).",
+  "Figure 2 (k37_locomotor_capacity_vs_z3_model_comparison.png): Key FOF-related LMM terms for locomotor_capacity primary versus z3 fallback.",
+  "Points show estimates and vertical bars show 95% confidence intervals.",
   "",
-  "Figure 3 (k37_capacity_vs_baseline.png): Baseline association between capacity_score_latent_primary and Composite_Z_baseline.",
+  "Figure 3 (k37_locomotor_capacity_vs_z3_baseline.png): Baseline association between locomotor_capacity_0 and z3_0.",
   "A linear trend line with confidence band is provided for interpretation.",
   "",
   "All outputs are aggregate-only repository artifacts; patient-level data remain externalized under DATA_ROOT."
@@ -224,5 +266,11 @@ sink(file.path(out_dir, "k37_sessioninfo.txt"))
 cat("K37 session info\n")
 print(sessionInfo())
 sink()
+
+append_manifest_safe("k37_locomotor_capacity_predicted_trajectories", "figure_png", file.path(out_dir, "k37_locomotor_capacity_predicted_trajectories.png"), notes = "Aggregate primary locomotor_capacity trajectories by FOF status")
+append_manifest_safe("k37_locomotor_capacity_vs_z3_model_comparison", "figure_png", file.path(out_dir, "k37_locomotor_capacity_vs_z3_model_comparison.png"), notes = "Aggregate primary versus fallback coefficient comparison")
+append_manifest_safe("k37_locomotor_capacity_vs_z3_baseline", "figure_png", file.path(out_dir, "k37_locomotor_capacity_vs_z3_baseline.png"), n = nrow(baseline_df), notes = "Aggregate baseline scatter of locomotor_capacity versus z3")
+append_manifest_safe("k37_figure_caption", "text", file.path(out_dir, "k37_figure_caption.txt"), notes = "K37 figure captions")
+append_manifest_safe("k37_sessioninfo", "sessioninfo", file.path(out_dir, "k37_sessioninfo.txt"), notes = "K37 session info")
 
 message("K37 outputs written to: ", out_dir)

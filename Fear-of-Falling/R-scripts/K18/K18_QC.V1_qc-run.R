@@ -5,15 +5,15 @@
 # Purpose: Run QC checks from QC_CHECKLIST.md on analysis data (long preferred;
 #          wide supported), write qc_* artifacts, and update manifest.
 #
-# Outcome: QC artifacts only (no modeling)
+# Outcome: QC artifacts only (no modeling); supports locomotor_capacity, z3, and legacy Composite_Z
 # Predictors: FOF_status, time
 # Grouping variable: id
 #
-# Required vars (long; from data_dictionary.csv):
-# id, time, FOF_status, Composite_Z
+# Required vars (from data_dictionary.csv; runtime resolves active outcome separately):
+# id, time, FOF_status
 #
-# Required vars (wide helper; from data_dictionary.csv):
-# id, FOF_status, composite_z0, composite_z12
+# Wide helper vars (runtime-resolved):
+# id, FOF_status, locomotor_capacity_0/12m | z3_0/12m | composite_z0/12
 #
 # Reproducibility:
 # - renv restore/snapshot REQUIRED
@@ -65,6 +65,8 @@ project_root <- if (nzchar(script_path)) {
 }
 setwd(project_root)
 
+req_cols <- c("id", "time", "FOF_status")
+
 rm(list = ls(pattern = "^(save_|init_paths$|append_manifest$|manifest_row$|qc_)"),
    envir = .GlobalEnv)
 
@@ -108,10 +110,35 @@ if (!shape %in% c("AUTO", "LONG", "WIDE")) {
   stop("ERROR: --shape must be one of AUTO|LONG|WIDE.", call. = FALSE)
 }
 
+read_input_dataset <- function(path) {
+  ext <- tolower(tools::file_ext(path))
+  if (ext == "rds") return(readRDS(path))
+  if (ext == "csv") return(utils::read.csv(path, stringsAsFactors = FALSE, check.names = FALSE))
+  stop("ERROR: unsupported input extension for QC runner: ", ext, call. = FALSE)
+}
+
+resolve_long_outcome <- function(df) {
+  candidates <- c("locomotor_capacity", "z3", "Composite_Z")
+  hit <- candidates[candidates %in% names(df)][1]
+  if (is.na(hit) || !nzchar(hit)) NA_character_ else hit
+}
+
+resolve_wide_outcome_pair <- function(df) {
+  candidates <- list(
+    locomotor_capacity = c("locomotor_capacity_0", "locomotor_capacity_12m"),
+    z3 = c("z3_0", "z3_12m"),
+    Composite_Z = c("composite_z0", "composite_z12"),
+    Composite_Z_legacy = c("Composite_Z0", "Composite_Z2")
+  )
+  for (nm in names(candidates)) {
+    pair <- candidates[[nm]]
+    if (all(pair %in% names(df))) return(list(outcome = nm, cols = pair))
+  }
+  NULL
+}
+
 dd <- utils::read.csv(dict_path, stringsAsFactors = FALSE, check.names = FALSE)
-# Update check to match data_dictionary.csv actual keys
-required_vars <- c("id", "time", "FOF_status", "Composite_Z", "Composite_Z0",
-                   "Composite_Z2", "Delta_Composite_Z")
+required_vars <- c("id", "time", "FOF_status")
 missing_req <- setdiff(required_vars, dd$variable)
 if (length(missing_req) > 0) {
   stop("ERROR: data_dictionary.csv is missing required variable rows: ",
@@ -119,11 +146,11 @@ if (length(missing_req) > 0) {
 }
 
 mapping <- list(
-  long = c("id", "time", "FOF_status", "Composite_Z"),
-  wide = c("id", "FOF_status", "composite_z0", "composite_z12")
+  long = c("id", "time", "FOF_status"),
+  wide = c("id", "FOF_status")
 )
 
-df_raw <- utils::read.csv(data_path, stringsAsFactors = FALSE, check.names = FALSE)
+df_raw <- read_input_dataset(data_path)
 
 # --- Variable Standardization ------------------------------------------------
 # Try to locate spec relative to project root or current dir
@@ -154,38 +181,53 @@ if (!is.na(spec_path)) {
 }
 # -----------------------------------------------------------------------------
 
-shape_detected <- detect_shape(df_raw, mapping)
+shape_detected <- if (all(mapping$long %in% names(df_raw)) && !is.na(resolve_long_outcome(df_raw))) {
+  "LONG"
+} else if (all(mapping$wide %in% names(df_raw)) && !is.null(resolve_wide_outcome_pair(df_raw))) {
+  "WIDE"
+} else {
+  "UNKNOWN"
+}
 if (shape == "AUTO" && shape_detected == "UNKNOWN") {
   stop("ERROR: could not detect LONG or WIDE shape from dictionary mapping.", call. = FALSE)
 }
 shape_final <- if (shape == "AUTO") shape_detected else shape
 
 df_long <- df_raw
+outcome_col <- NULL
 if (shape_final == "WIDE") {
-  if (!all(mapping$wide %in% names(df_raw))) {
+  outcome_pair <- resolve_wide_outcome_pair(df_raw)
+  if (!all(mapping$wide %in% names(df_raw)) || is.null(outcome_pair)) {
     stop("ERROR: WIDE requested but required columns missing: ",
-         paste(setdiff(mapping$wide, names(df_raw)), collapse = ", "),
+         paste(setdiff(c(mapping$wide, "outcome_pair"), names(df_raw)), collapse = ", "),
          call. = FALSE)
   }
+  outcome_col <- if (outcome_pair$outcome == "Composite_Z_legacy") "Composite_Z" else outcome_pair$outcome
   base <- data.frame(
     id = df_raw$id,
-    time = "baseline",
+    time = 0L,
     FOF_status = df_raw$FOF_status,
-    Composite_Z = df_raw$composite_z0,
+    outcome = df_raw[[outcome_pair$cols[[1]]]],
     stringsAsFactors = FALSE
   )
   foll <- data.frame(
     id = df_raw$id,
-    time = "12m",
+    time = 12L,
     FOF_status = df_raw$FOF_status,
-    Composite_Z = df_raw$composite_z12,
+    outcome = df_raw[[outcome_pair$cols[[2]]]],
     stringsAsFactors = FALSE
   )
   df_long <- rbind(base, foll)
+  names(df_long)[names(df_long) == "outcome"] <- outcome_col
+} else {
+  outcome_col <- resolve_long_outcome(df_raw)
+  if (is.na(outcome_col)) {
+    stop("ERROR: LONG requested but no supported outcome column found (locomotor_capacity|z3|Composite_Z).", call. = FALSE)
+  }
 }
 
-req_cols <- c("id", "time", "FOF_status", "Composite_Z")
-for (cname in req_cols) {
+req_cols_runtime <- c("id", "time", "FOF_status", outcome_col)
+for (cname in req_cols_runtime) {
   if (!cname %in% names(df_long)) df_long[[cname]] <- NA
 }
 
@@ -194,12 +236,13 @@ profile <- data.frame(
   shape = shape_final,
   n_rows = nrow(df_long),
   n_cols = ncol(df_long),
+  outcome = outcome_col,
   stringsAsFactors = FALSE
 )
 qc_write_csv(profile, file.path(qc_dir, "qc_profile.csv"), manifest_script_label, manifest_path, outputs_dir,
              notes = "QC profile")
 
-types_out <- qc_types(df_long, req_cols)
+types_out <- qc_types(df_long, req_cols_runtime)
 qc_write_csv(types_out$status, file.path(qc_dir, "qc_types_status.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Required columns + types status")
 qc_write_csv(types_out$types, file.path(qc_dir, "qc_types.csv"), manifest_script_label,
@@ -254,32 +297,41 @@ fof_details <- paste0(
   ";expected_canonical=", fof_out$expected_canonical[[1]]
 )
 
-miss_overall <- qc_missingness_overall(df_long, req_cols)
+miss_overall <- qc_missingness_overall(df_long, req_cols_runtime)
 qc_write_csv(miss_overall, file.path(qc_dir, "qc_missingness_overall.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Missingness overall")
 
-miss_group <- qc_missingness_by_fof_time(df_long, "FOF_status", "time", "Composite_Z")
+miss_group <- qc_missingness_by_fof_time(df_long, "FOF_status", "time", outcome_col)
 qc_write_csv(miss_group, file.path(qc_dir, "qc_missingness_by_fof_time.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Missingness by FOF_status x time")
 
-delta_out <- qc_delta_check_optional(df_raw, "id", "composite_z0", "composite_z12",
-                                     "delta_composite_z", tol = 1e-8)
+delta_out <- if (shape_final == "WIDE") {
+  if (outcome_col == "locomotor_capacity") {
+    qc_delta_check_optional(df_raw, "id", "locomotor_capacity_0", "locomotor_capacity_12m", "delta_locomotor_capacity", tol = 1e-8)
+  } else if (outcome_col == "z3") {
+    qc_delta_check_optional(df_raw, "id", "z3_0", "z3_12m", "delta_z3", tol = 1e-8)
+  } else {
+    qc_delta_check_optional(df_raw, "id", "composite_z0", "composite_z12", "delta_composite_z", tol = 1e-8)
+  }
+} else {
+  data.frame(applicable = FALSE, n_mismatch = NA_integer_)
+}
 qc_write_csv(delta_out, file.path(qc_dir, "qc_delta_check.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Delta check (optional)")
 
-outcome_summary <- qc_outcome_summary(df_long, "Composite_Z")
+outcome_summary <- qc_outcome_summary(df_long, outcome_col)
 qc_write_csv(outcome_summary, file.path(qc_dir, "qc_outcome_summary.csv"), manifest_script_label,
              manifest_path, outputs_dir, notes = "Outcome summary")
 qc_write_png(file.path(qc_dir, "qc_outcome_hist.png"), manifest_script_label,
              manifest_path, outputs_dir, plot_fn = function() {
-               x <- df_long$Composite_Z
+               x <- df_long[[outcome_col]]
                if (!is.numeric(x)) x <- suppressWarnings(as.numeric(x))
                if (all(is.na(x))) {
                  graphics::plot.new()
-                 graphics::title(main = "Composite_Z Distribution (not numeric)")
-                 graphics::text(0.5, 0.5, "Composite_Z is not numeric or all NA")
+                 graphics::title(main = paste0(outcome_col, " Distribution (not numeric)"))
+                 graphics::text(0.5, 0.5, paste0(outcome_col, " is not numeric or all NA"))
                } else {
-                 graphics::hist(x, main = "Composite_Z Distribution", xlab = "Composite_Z")
+                 graphics::hist(x, main = paste0(outcome_col, " Distribution"), xlab = outcome_col)
                }
              }, notes = "Outcome distribution histogram")
 
@@ -287,7 +339,8 @@ row_watch <- data.frame(
   step = "qc_input",
   n_rows = nrow(df_long),
   n_unique_id = length(unique(df_long$id)),
-  n_missing_Composite_Z = sum(is.na(df_long$Composite_Z)),
+  outcome = outcome_col,
+  n_missing_outcome = sum(is.na(df_long[[outcome_col]])),
   stringsAsFactors = FALSE
 )
 qc_write_csv(row_watch, file.path(qc_dir, "qc_row_id_watch.csv"), manifest_script_label,
@@ -296,7 +349,7 @@ qc_write_csv(row_watch, file.path(qc_dir, "qc_row_id_watch.csv"), manifest_scrip
 status_df <- data.frame(
   check = c("types", "id_integrity", "time_levels", "fof_levels", "delta_check", "outcome_nonfinite"),
   ok = c(
-    isTRUE(types_out$status$ok[[1]]) && is.numeric(df_long$Composite_Z),
+    isTRUE(types_out$status$ok[[1]]) && is.numeric(df_long[[outcome_col]]),
     id_out$summary$n_dup_id_time[[1]] == 0,
     isTRUE(time_out$status$ok[[1]]),
     isTRUE(fof_out$ok[[1]]),
