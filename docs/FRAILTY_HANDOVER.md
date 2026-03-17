@@ -4,7 +4,7 @@
 
 This document summarizes the final integration of Frailty Status into the Aim 2 (Health Service Utilization and Costs) panel. The cohort has been expanded to include the full baseline population using raw data mining.
 
-**Final Cohort Size: N=486**
+## Final Cohort Size: N=486
 
 ## 2. Sample Size Distribution
 
