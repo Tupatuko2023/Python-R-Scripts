@@ -1,20 +1,24 @@
 # K26 rerun with canonical frailty variables (frailty_cat_3 / frailty_score_3)
 
 ## Context
+
 Methodological gate for K26: fallback frailty derivations are explicitly rejected. K26 must be rerun only when canonical frailty columns exist in source data.
 
 ## Inputs
+
 - K15 frailty-augmented RData (canonical upstream output), for example:
   - `R-scripts/K15/outputs/K15_frailty_analysis_data.RData`
   - or `R-scripts/K15_MAIN/outputs/K15_frailty_analysis_data.RData`
 - Runner: `scripts/termux/run_k26_proot_clean.sh`
 
 ## Outputs
+
 - `R-scripts/K26/outputs/K26/K26_LMM_MOD/` updated K26 runtime artifacts
 - `manifest/manifest.csv` updated with new K26 rows
 - `R-scripts/K26/outputs/K26/K26_LMM_MOD/K26_frailty_provenance.txt` showing canonical sources and fallback flags
 
 ## Definition of Done (DoD)
+
 - K26 rerun executed with canonical frailty columns present.
 - Provenance shows:
   - `frailty_score_source=K15_RData`
@@ -25,6 +29,7 @@ Methodological gate for K26: fallback frailty derivations are explicitly rejecte
 - Manifest has one row per produced K26 artifact key (`script,label,kind,path`) for rerun outputs.
 
 ## Log
+
 - 2026-02-24 00:00:00 Task created in 00-backlog.
 - 2026-02-24 00:01:00 Moved to 01-ready.
 - 2026-02-24 00:10:00 Deterministic K15 input discovery:
@@ -56,13 +61,16 @@ Methodological gate for K26: fallback frailty derivations are explicitly rejecte
   - Manifest note: K26 artifact keys already existed; project append/dedupe flow retained single-key rows.
 
 ## Blockers
+
 - None. Blocker cleared by upstream K15 canonical score fix.
 
 ## Links
+
 - `R-scripts/K26/K26_LMM_MOD.V1_time-frailty-CompositeZ0-moderation.R`
 - `tasks/03-review/K26_LMM_MOD_time-frailty-CompositeZ0_moderation.md`
 
 ## Canonical run command
+
 - Find K15 RData path deterministically:
   - `grep -n "K15" manifest/manifest.csv | grep -i "rdata" | tail -n 40`
   - `find R-scripts/K15 R-scripts/K15_MAIN -maxdepth 4 -type f -name "*.RData" 2>/dev/null | sort`

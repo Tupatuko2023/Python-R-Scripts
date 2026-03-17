@@ -16,6 +16,7 @@ Create `docs/reports/k43.md` as a repository-safe report that documents the K43 
 ## Scope
 
 In scope:
+
 - Create report markdown only: `docs/reports/k43.md`.
 - Reference only existing repository artifacts:
   - `docs/figures/conceptual_model_k42.svg`
@@ -25,6 +26,7 @@ In scope:
 - Include deterministic reproduction commands for verification.
 
 Out of scope:
+
 - No new analysis models.
 - No changes to R scripts.
 - No patient-level exports.

@@ -1,20 +1,24 @@
 # K23_TABLE2 paper_01 table2 generator
 
 ## Context
+
 Lisätään Fear-of-Falling-aliprojektiin uusi Table 2 -generaattori (paper_01) K23-skriptinä repo-konventioiden mukaan. Toteutus pitää analyysilogiikan vakaana ja lisää vain CLI/polku/output/manifest/dokumentaatio-parannukset.
 
 ## Inputs
+
 - `data/external/KaatumisenPelko.csv` (default)
 - Mahdollinen override: `--input <path>`
 - Mahdollinen varmap override: `--varmap_json <path>`
 
 ## Outputs
+
 - `R-scripts/K23/outputs/K23_TABLE2/table2_paper01.html`
 - `R-scripts/K23/outputs/K23_TABLE2/table2_paper01.csv`
 - `R-scripts/K23/outputs/K23_TABLE2/sessionInfo.txt`
 - Manifest-rivit: `manifest/manifest.csv`
 
 ## Definition of Done (DoD)
+
 - Uusi skripti `R-scripts/K23/K23_TABLE2.V1_table2-paper01.R` toimii repo-rootista yhdellä komennolla.
 - Tuottaa vähintään HTML + konsoliprintin (ja CSV suosituksena).
 - Kirjaa kaikki artefaktit manifestiin (1 rivi / artefakti).
@@ -22,6 +26,7 @@ Lisätään Fear-of-Falling-aliprojektiin uusi Table 2 -generaattori (paper_01) 
 - Ei raw data -muutoksia eikä tarpeettomia refaktoreita.
 
 ## Log
+
 - 2026-02-24 00:00:00 Task created in backlog.
 - 2026-02-24 09:03:37 Moved backlog -> 01-ready -> 02-in-progress.
 - 2026-02-24 09:04:00 Added `R-scripts/K23/K23_TABLE2.V1_table2-paper01.R` with standard intro, CLI flags (`--input`, `--output_html`, `--output_csv`, `--varmap_json`), gt HTML + CSV output, console print, and manifest logging hooks.
@@ -40,6 +45,7 @@ Lisätään Fear-of-Falling-aliprojektiin uusi Table 2 -generaattori (paper_01) 
 - 2026-02-24 09:34-09:35 Table-to-text crosscheck completed for `table2_paper01.csv` (see section below).
 
 ## Blockers
+
 - None currently blocking K23 first successful run.
 
 ## Manifest Dedupe Done
@@ -66,6 +72,7 @@ Lisätään Fear-of-Falling-aliprojektiin uusi Table 2 -generaattori (paper_01) 
 - Note: full manuscript cell-by-cell Table 2 was not found as a separate file in this repo snapshot; crosscheck was done against available manuscript anchors and table structure/format sanity.
 
 ## Links
+
 - `R-scripts/K23/K23_TABLE2.V1_table2-paper01.R`
 - `README.md`
 - `manifest/manifest.csv`
@@ -115,12 +122,14 @@ Ready for human 03-review decision; keep in `tasks/03-review`.
   - `table2_missingness_matrix_qc_csv`
 
 Deterministic step breakdown (from `table2_paper01_cohort_attrition_qc.csv`):
+
 - `Step0_raw` (non-missing FOF): `77 / 199` (total 276)
 - `Step1_covariates` (age+sex_mapped+BMI complete): `75 / 191` (drop `-2 / -8`)
 - `Step3_all_outcomes` (Step1 + all outcome baseline+followup complete): `67 / 155` (drop vs Step1 `-8 / -36`)
 - This exactly matches K23 V2 manuscript-mode fixed cohort used in non-sex-stratified Table 2 rows.
 
 Largest missingness drivers (from `table2_paper01_missingness_matrix_by_fof.csv`):
+
 - `MWS0_missing`: `3 / 21`
 - `MWS2_missing`: `4 / 12`
 - `FTSST2_missing`: `5 / 10`
@@ -128,6 +137,7 @@ Largest missingness drivers (from `table2_paper01_missingness_matrix_by_fof.csv`
 - `BMI missing`: `2 / 8`
 
 Conclusion:
+
 - K23 Table 2 V2 manuscript-mode shrinks because it uses intersection logic:
   covariates complete AND all four outcomes available at baseline+12m for the same participants.
 - K14 Table 1 is baseline-oriented and does not require 12-month outcome availability in this way,
@@ -145,6 +155,7 @@ Conclusion:
   - `table2_paper01_v2_2_debug_summary_txt`
 
 Deterministic findings from V2.2:
+
 - Grid computed for all outcomes/strata across:
   - DV modes: `followup`, `delta`
   - Populations: `raw`, `covariate_complete`, `all_outcomes_intersection`, `per_outcome_cc`
@@ -160,6 +171,7 @@ Deterministic findings from V2.2:
   - follow-up ANCOVA for MWS is materially smaller (e.g. `p_A=0.0893` in raw mode).
 
 Conclusion from V2.2:
+
 - Available evidence favors **delta-model** p-values over follow-up ANCOVA for at least MWS crude.
 - With only one verified manuscript anchor, full-table replication method cannot be proven uniquely yet.
 - If full manuscript p-value grid is provided, the same V2.2 script can deterministically select the best matching
@@ -181,12 +193,14 @@ Conclusion from V2.2:
   - `sessionInfo_v2_3`
 
 Crosscheck:
+
 - Table 2 CSV now reports fixed raw-population anchor `N_without=77`, `N_with=199` on all rows (published style).
 - P-values are from delta models (A/B/C) in raw population.
 - MWS crude p-value matches manuscript anchor: `P_Model_A = 0.220`.
 - FTSST baseline/follow-up are positive raw seconds (`16.26 -> 15.22` without FOF; `18.87 -> 17.32` with FOF).
 
 Transparency/QC:
+
 - `table2_paper01_v2_3_modelN_audit.csv` records actual model-wise N after na.omit (A/B/C per outcome/strata).
 - Example from audit:
   - MWS model A/B use `nobs=247` (`72/175`), while model C uses `nobs=238` (`70/168`).
@@ -204,6 +218,7 @@ Transparency/QC:
   - `table2_paper01_v2_3_paranoia_summary_txt`
 
 Run result:
+
 - Input: `table2_paper01_v2_3_replica.csv`
 - Compared outcomes: `MWS`, `FTSST`, `SLS`, `HGS (female)`, `HGS (male)`
 - Compared fields per outcome: baseline mean/sd, delta mean/lcl/ucl, `p_A/p_B/p_C`, `N_without/N_with`
@@ -214,4 +229,5 @@ Run result:
 - Parsing warnings: `0`
 
 Largest differences:
+
 - All top differences are `0.000000` in this run (no non-zero deviations detected).

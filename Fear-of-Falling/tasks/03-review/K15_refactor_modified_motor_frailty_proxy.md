@@ -1,7 +1,9 @@
 # K15 refactor to modified 3-item physical frailty proxy (motor-oriented)
 
 ## Objective
+
 Refactor all K15 frailty derivation scripts so that:
+
 - falls (`kaatuminen`) is removed from low activity component
 - informative missingness is handled with parallel A/B paths
 - naming is updated to modified 3-item physical frailty proxy (motor-oriented)
@@ -9,20 +11,24 @@ Refactor all K15 frailty derivation scripts so that:
 - lightweight self-checks are added
 
 ## Scope
+
 - Fear-of-Falling subproject only
 - Primary targets under `R-scripts/K15` and related frailty scripts in `R-scripts`
 - Touch K18/QC only if smoke test shows downstream break from renamed variables
 
 ## Inputs
+
 - Objective/plan from codex task packet (2026-02-25)
 - Existing K15 scripts and current reporting/manifest helpers
 
 ## Outputs
+
 - Updated K15 frailty derivation scripts with A/B paths and self-checks
 - New QC tables (component missingness, score missingness, legacy vs new)
 - Manifest rows for each produced QC artifact
 
 ## Definition of Done (DoD)
+
 - Repo scan documented with file + line hits
 - No falls usage in active low-activity logic
 - A/B outputs produced: `frailty_count_3_A/B`, `frailty_cat_3_A/B`
@@ -32,6 +38,7 @@ Refactor all K15 frailty derivation scripts so that:
 - K15 + K18/QC smoke run passes (or documented blocker)
 
 ## Log
+
 - 2026-02-25 21:31:00 task created in `tasks/00-backlog`.
 - 2026-02-25 21:34:00 moved `00-backlog -> 01-ready -> 02-in-progress`.
 - 2026-02-25 21:35:00 repo scan recorded (key hits):
@@ -61,11 +68,13 @@ Refactor all K15 frailty derivation scripts so that:
   - restored generated `outputs/` files from git index to keep review diff focused.
 
 ## Blockers
+
 - K15 smoke/runtime blockers resolved.
 - K18 QC runner still not executable in this workspace because input file is missing:
   - `data/processed/analysis_long.csv` not found.
 
 ## Validation
+
 - Status: PASS (K15 review gate).
 - Runtime checks:
   - `proot-distro login debian --termux-home -- bash -lc 'command -v Rscript && /usr/bin/Rscript --version'` -> PASS
@@ -103,9 +112,11 @@ Refactor all K15 frailty derivation scripts so that:
   - This is documented as data availability issue, not a K15 runtime failure.
 
 ## Ready
+
 - Ready for human approval in `03-review`; human may move to `04-done`.
 
 ## Links
+
 - `AGENTS.md`
 - `.codex/skills/fof-preflight/SKILL.md`
 - `.codex/skills/fof-qc-summarizer/SKILL.md`

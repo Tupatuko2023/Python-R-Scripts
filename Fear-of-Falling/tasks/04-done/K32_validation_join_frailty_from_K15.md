@@ -1,11 +1,13 @@
 # K32 Validation Join Frailty From K15
 
 ## Context
+
 Enable known-groups validation in K32 by sourcing `frailty_cat` (and related frailty fields) from K15 outputs via `DATA_ROOT`.
 
 Scope is limited to K32 validation-layer enrichment. No hot edits are allowed until this task is moved to `tasks/01-ready/` and then `tasks/02-in-progress/`.
 
 ## Inputs
+
 - Current K32 validation script:
   - `R-scripts/K32/k32_validation.r`
 - Current K32 patient-level dataset location (external):
@@ -17,6 +19,7 @@ Scope is limited to K32 validation-layer enrichment. No hot edits are allowed un
   - `config/.env` with `DATA_ROOT`
 
 ## Outputs
+
 - Backlog planning artifact now:
   - `tasks/00-backlog/K32_validation_join_frailty_from_K15.md`
 - Future implementation artifact (after gate move):
@@ -25,6 +28,7 @@ Scope is limited to K32 validation-layer enrichment. No hot edits are allowed un
   - `R-scripts/K32/outputs/k32_validation_known_groups.csv` populated with real group comparisons when frailty input exists
 
 ## Definition of Done (DoD)
+
 - When implemented (future `01-ready` step), `k32_validation.r` must:
   - resolve optional K15-derived patient-level dataset from `DATA_ROOT/paper_01/...` (prefer `.rds`)
   - left join frailty category onto K32 validation data using deterministic keys (baseline-only)
@@ -39,6 +43,7 @@ Scope is limited to K32 validation-layer enrichment. No hot edits are allowed un
   - `K15 externalize frailty outputs to DATA_ROOT with receipt`
 
 ## Log
+
 - 2026-03-01 Created backlog task from template.
 - 2026-03-01 Reconnaissance:
   - `R-scripts/K15/outputs/` contains many aggregate CSV outputs.
@@ -60,10 +65,12 @@ Scope is limited to K32 validation-layer enrichment. No hot edits are allowed un
   - `qc-summarizer` PASS after change.
 
 ## Blockers
+
 - Possible prerequisite task:
   - K15 patient-level frailty externalization to `DATA_ROOT` (if missing)
   - and/or ensure externalized K15 dataset includes `frailty_cat`.
 
 ## Links
+
 - Related task:
   - `tasks/03-review/K32_final_validation_layer.md`

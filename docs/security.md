@@ -129,11 +129,11 @@ Status (as of PR #87): No ZipSlip-class risk detected.
 
 ## 8. Remaining Risk Surface (Low)
 
-| Risk | Likelihood | Impact | Mitigation |
-|---|---|---|---|
-| Developer forgets to use `safe_join_path` in future scripts | Medium | Medium | Add developer guideline |
-| External absolute path expectations broken | Low | Low | Document CLI hardening |
-| `DATA_ROOT` misuse via manual `os.path.join` | Low | Medium | Code review checklist |
+| Risk                                                        | Likelihood | Impact | Mitigation              |
+| ----------------------------------------------------------- | ---------- | ------ | ----------------------- |
+| Developer forgets to use `safe_join_path` in future scripts | Medium     | Medium | Add developer guideline |
+| External absolute path expectations broken                  | Low        | Low    | Document CLI hardening  |
+| `DATA_ROOT` misuse via manual `os.path.join`                | Low        | Medium | Code review checklist   |
 
 Overall residual risk: Low.
 
@@ -179,11 +179,11 @@ No active path traversal or uncontrolled write vectors were identified after har
 
 ## 11. ISO 27001 Control Mapping (As of PR #87/#89)
 
-| Control | Requirement | Project Control | Evidence | Control Effectiveness (Preventive / Detective) | Residual Risk |
-|---|---|---|---|---|---|
-| A.8.12 Secure coding | Secure coding practices prevent common implementation vulnerabilities. | Centralized safe_join_path(base_dir, user_path) enforces filesystem containment and deterministic failure behavior. | scripts/_io_utils.py; tests/security/test_path_traversal.py | Preventive | Low |
-| A.8.20 Input validation | External input is validated prior to processing or filesystem use. | CLI-provided output paths resolved via safe_join_path against defined output bases; absolute and traversal paths rejected. | scripts/20_extract_pdf_pptx.py; scripts/40_build_knowledge_package.py; scripts/50_build_report.py; PR #87 hardening commit | Preventive | Low |
-| A.8.28 Secure architecture | Security controls are embedded in system design and reused consistently. | Single canonical path-containment function reused across scripts; duplicate validation logic removed/delegated. | scripts/path_resolver.py; scripts/_io_utils.py; PR #87 | Preventive | Low |
-| A.8.9 Configuration management | Configuration-driven resources are handled in a controlled and consistent manner. | DATA_ROOT-derived path joins constrained through containment model for protected path construction. | scripts/path_resolver.py; docs/security.md (as of PR #87/#89) | Preventive | Low |
-| A.5.1 Information security policies | Security controls are documented and maintained. | Time-bound security posture documented for filesystem attack surface and invariants. | docs/security.md; PR #89 | Detective | Low |
-| A.5.8 Information security in project management | Security integrated into change management lifecycle. | Security fix (#87) and documentation refinement (#89) delivered via traceable, reviewable PR workflow. | PR #87; PR #89; repository PR history | Detective | Low |
+| Control                                          | Requirement                                                                       | Project Control                                                                                                            | Evidence                                                                                                                   | Control Effectiveness (Preventive / Detective) | Residual Risk |
+| ------------------------------------------------ | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ------------- |
+| A.8.12 Secure coding                             | Secure coding practices prevent common implementation vulnerabilities.            | Centralized safe_join_path(base_dir, user_path) enforces filesystem containment and deterministic failure behavior.        | scripts/\_io_utils.py; tests/security/test_path_traversal.py                                                               | Preventive                                     | Low           |
+| A.8.20 Input validation                          | External input is validated prior to processing or filesystem use.                | CLI-provided output paths resolved via safe_join_path against defined output bases; absolute and traversal paths rejected. | scripts/20_extract_pdf_pptx.py; scripts/40_build_knowledge_package.py; scripts/50_build_report.py; PR #87 hardening commit | Preventive                                     | Low           |
+| A.8.28 Secure architecture                       | Security controls are embedded in system design and reused consistently.          | Single canonical path-containment function reused across scripts; duplicate validation logic removed/delegated.            | scripts/path_resolver.py; scripts/\_io_utils.py; PR #87                                                                    | Preventive                                     | Low           |
+| A.8.9 Configuration management                   | Configuration-driven resources are handled in a controlled and consistent manner. | DATA_ROOT-derived path joins constrained through containment model for protected path construction.                        | scripts/path_resolver.py; docs/security.md (as of PR #87/#89)                                                              | Preventive                                     | Low           |
+| A.5.1 Information security policies              | Security controls are documented and maintained.                                  | Time-bound security posture documented for filesystem attack surface and invariants.                                       | docs/security.md; PR #89                                                                                                   | Detective                                      | Low           |
+| A.5.8 Information security in project management | Security integrated into change management lifecycle.                             | Security fix (#87) and documentation refinement (#89) delivered via traceable, reviewable PR workflow.                     | PR #87; PR #89; repository PR history                                                                                      | Detective                                      | Low           |

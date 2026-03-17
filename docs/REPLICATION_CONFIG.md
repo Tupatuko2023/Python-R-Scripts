@@ -27,7 +27,8 @@ This document provides the specific file paths and column names required to filt
 ## 4. Replication Filtering Logic (Heuristic)
 
 To identify an injury-related event:
-1.  Load the raw file.
-2.  Filter rows where any of the ICD-10 columns (`Pdgo` or `Sdg1o-9o`) starts with the letters **'S'** or **'T'** (specifically S00-S99, T00-T14).
-3.  Aggregate by ID and Year (extracted from the date column).
-4.  Merge back to the `aim2_panel.csv` to create new outcome variables (e.g., `util_inj_outpatient`, `util_inj_inpatient`).
+
+1. Load the raw file.
+2. Filter rows where any of the ICD-10 columns (`Pdgo` or `Sdg1o-9o`) starts with the letters **'S'** or **'T'** (specifically S00-S99, T00-T14).
+3. Aggregate by ID and Year (extracted from the date column).
+4. Merge back to the `aim2_panel.csv` to create new outcome variables (e.g., `util_inj_outpatient`, `util_inj_inpatient`).

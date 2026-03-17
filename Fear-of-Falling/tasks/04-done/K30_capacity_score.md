@@ -1,11 +1,13 @@
 # K30 Continuous Physical Capability / Locomotor Capacity Scoring
 
 ## Context
+
 Implement K30 continuous physical capability scoring from `KaatumisenPelko.csv` according to `Frailty_Model_Copilot_1.txt` and `CLAUDE.md` standards.
 
 Tasks gate rule from orchestrator prompt: if no matching K30 task exists in `tasks/01-ready/`, create this backlog task from template and stop implementation work.
 
 ## Inputs
+
 - `KaatumisenPelko.csv` from one of:
   - `data/raw/`
   - `data/external/`
@@ -18,6 +20,7 @@ Tasks gate rule from orchestrator prompt: if no matching K30 task exists in `tas
   - `R/functions/reporting.R` (manifest helper)
 
 ## Outputs
+
 - New script:
   - `R-scripts/K30/k30.r`
 - New artifacts under:
@@ -26,6 +29,7 @@ Tasks gate rule from orchestrator prompt: if no matching K30 task exists in `tas
   - one row per artifact in `manifest/manifest.csv`
 
 ## Definition of Done (DoD)
+
 - `k30.r` runs in a clean R session and finds data via candidate paths or `DATA_PATH`; otherwise fails with informative error.
 - Required variable mapping (`puristus0_clean`, `kavelynopeus_m_sek0`, `oma_arvio_liikuntakyky`) is robust; unresolved mapping fails hard with closest-match suggestions.
 - Script writes all audit artifacts, decision log, CFA outputs (primary+sensitivity), z-composite outputs, analysis-ready dataset (`.csv` + `.rds`), and `sessionInfo` under `R-scripts/K30/outputs/`.
@@ -38,6 +42,7 @@ Tasks gate rule from orchestrator prompt: if no matching K30 task exists in `tas
   - move to `tasks/03-review/` after validation with run log
 
 ## Log
+
 - 2026-02-28 16:03:00 Created backlog task from template because no K30 task was found in `tasks/01-ready/`.
 - 2026-02-28 16:34:00 Moved task `00-backlog -> 01-ready -> 02-in-progress` before code changes.
 - 2026-02-28 16:39:00 Implemented `R-scripts/K30/k30.r` (robust load, mapping/suggestions, audits, red flags, decision log, CFA primary+sensitivity, z-composites, output dataset, sessionInfo, manifest appends).
@@ -62,8 +67,10 @@ Tasks gate rule from orchestrator prompt: if no matching K30 task exists in `tas
 - 2026-02-28 16:55:00 CFA diagnostics confirmed inadmissible triad CFA in both variants (negative residual variance, standardized loading >1, score NA share 1.0), so composite remains defensible primary.
 
 ## Blockers
+
 - None after successful validation run.
 
 ## Links
+
 - Prompt packet: `prompts/1_11cafof.txt`
 - Follow-up prompt: `prompts/Frailty_Model_Copilot_2.txt`

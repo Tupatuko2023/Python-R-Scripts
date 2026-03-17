@@ -1,11 +1,13 @@
 # K32 Final Validation Layer
 
 ## Context
+
 Finalize K32 with a strict, analysis-only validation layer after metric construction is complete.
 
 This task must only add validation analyses and reporting artifacts. It must not alter the K32 model structure, scoring logic, orientation rules, governance mechanics, or K30/K31 scripts.
 
 ## Inputs
+
 - Existing K32 outputs and dataset:
   - `R-scripts/K32/outputs/k32_cfa_diagnostics.csv`
   - `R-scripts/K32/outputs/k32_scores_summary.csv`
@@ -15,7 +17,9 @@ This task must only add validation analyses and reporting artifacts. It must not
   - `R-scripts/K32/k32.r`
 
 ## Outputs
+
 Implementation target (after task is moved to `01-ready`):
+
 - New script:
   - `R-scripts/K32/k32_validation.r`
 - New validation artifacts (repo outputs, aggregate/reporting only):
@@ -27,6 +31,7 @@ Implementation target (after task is moved to `01-ready`):
   - append one row per in-repo validation artifact
 
 ## Definition of Done (DoD)
+
 - Script `k32_validation.r` produces all four validation artifacts:
   1. Convergent validity:
      - `cor(K32_latent, z5_composite)`
@@ -52,6 +57,7 @@ Implementation target (after task is moved to `01-ready`):
   - no manifest helper logic changes.
 
 ## Log
+
 - 2026-03-01 Created backlog task for K32 final validation layer (analysis/reporting only, no metric changes).
 - 2026-03-01 Moved task: `tasks/00-backlog/K32_final_validation_layer.md` -> `tasks/01-ready/K32_final_validation_layer.md` -> `tasks/02-in-progress/K32_final_validation_layer.md`.
 - 2026-03-01 Implemented validation-only script: `R-scripts/K32/k32_validation.r`.
@@ -70,9 +76,11 @@ Implementation target (after task is moved to `01-ready`):
     - no `with_capacity_scores*.csv/.rds` under repo `R-scripts/*/outputs/`.
 
 ## Blockers
+
 - Pending human review/approval in `tasks/03-review/`.
 
 ## Links
+
 - Related completed implementation:
   - `tasks/03-review/K32_extended_capacity_primary.md`
   - `tasks/03-review/K32_loading_sign_mismatch_resolution.md`

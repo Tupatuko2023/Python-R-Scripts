@@ -29,4 +29,4 @@ Fixes #
 ## Tekoäly / Agentit (AI Assistance)
 
 - [ ] Ei agenttia / Ihmisen kirjoittama.
-- [ ] Agentin generoima / avustama (Agentti toimi *fail-closed* -periaateella ohjeiden mukaisesti).
+- [ ] Agentin generoima / avustama (Agentti toimi _fail-closed_ -periaateella ohjeiden mukaisesti).

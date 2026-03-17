@@ -32,12 +32,12 @@ All artifacts must be logged, and reproducibility must be ensured.
 
 Tietoturva ja tutkimusetiikka ovat tämän projektin keskiössä.
 
-* **EHDOTON KIELTO:** Tähän repositorioon **ei saa koskaan viedä raakadataa,
+- **EHDOTON KIELTO:** Tähän repositorioon **ei saa koskaan viedä raakadataa,
   henkilötietoja (PII) tai potilastietoja (PHI)**.
-* **Data-asetukset:** Raakadata säilytetään aina repositorion ulkopuolella
+- **Data-asetukset:** Raakadata säilytetään aina repositorion ulkopuolella
   (esim. `DATA_ROOT`-polussa) tai se on `.gitignore`-listattu. Repo sisältää vain
   koodia, dokumentaatiota ja synteettistä esimerkkidataa.
-* **Tietoturvavuodot:** Jos huomaat repositoriossa arkaluontoista dataa, raportoi
+- **Tietoturvavuodot:** Jos huomaat repositoriossa arkaluontoista dataa, raportoi
   se välittömästi [yksityisen tietoturvakäytännön mukaisesti](.github/SECURITY.md).
   **Älä avaa julkista issue-tikettiä.**
 
@@ -64,21 +64,21 @@ dokumentaationsa ja ympäristönsä:
 
 Arvostamme apuasi koodin ja analyysien parantamisessa.
 
-* **Ohjeet:** Lue ehdottomasti **[Kontribuutio-ohjeet (CONTRIBUTING.md)](.github/CONTRIBUTING.md)**
+- **Ohjeet:** Lue ehdottomasti **[Kontribuutio-ohjeet (CONTRIBUTING.md)](.github/CONTRIBUTING.md)**
   ennen muutosten tekemistä. Se määrittelee vaaditut QC-tarkistukset,
   manifesti-lokituksen ja koodausstandardit.
-* **Pull Requests:** Käytä [PR-mallipohjaa](.github/pull_request_template.md)
+- **Pull Requests:** Käytä [PR-mallipohjaa](.github/pull_request_template.md)
   varmistaaksesi, että kaikki laatutarkistukset on tehty.
-* **Ympäristöt:** Projekti tukee Windows (PowerShell 7), Linux ja Android (Termux).
+- **Ympäristöt:** Projekti tukee Windows (PowerShell 7), Linux ja Android (Termux).
 
 ---
 
 ## Viittaaminen (Citation) ja Lisenssi
 
-* **Viittaaminen:** Jos käytät tämän repositorion koodia tutkimuksessasi, viittaa
+- **Viittaaminen:** Jos käytät tämän repositorion koodia tutkimuksessasi, viittaa
   siihen **[CITATION.cff](CITATION.cff)** -tiedoston ohjeiden mukaisesti.
-* **Lisenssi:** Projekti on lisensoitu [MIT-lisenssillä](LICENSE).
-* **Vastuunvapautus:** Lue myös [DISCLAIMER.md](DISCLAIMER.md).
+- **Lisenssi:** Projekti on lisensoitu [MIT-lisenssillä](LICENSE).
+- **Vastuunvapautus:** Lue myös [DISCLAIMER.md](DISCLAIMER.md).
 
 ---
 
@@ -105,8 +105,8 @@ python Electronic-Frailty-Index/src/efi/cli.py --input data/external/synthetic_p
 
 ## Kehittäjän työkalut (CLI)
 
-* **Kimi CLI:** `tools/kimi_cli.py` (NVIDIA NIM -pohjainen tekoälyavustaja).
-* **Markdown Linting:** Käytä `npm run lint` tai `pre-commit` hookeja Markdown-muotoilun varmistamiseen.
+- **Kimi CLI:** `tools/kimi_cli.py` (NVIDIA NIM -pohjainen tekoälyavustaja).
+- **Markdown Linting:** Käytä `npm run lint` tai `pre-commit` hookeja Markdown-muotoilun varmistamiseen.
 
 ```bash
 # Markdown-korjaukset lokaalisti

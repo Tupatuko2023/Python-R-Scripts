@@ -1,4 +1,3 @@
-
 # TASK: Sync, Push, and Clean Repository
 
 **Status**: 03-review
@@ -6,8 +5,9 @@
 **Created**: 2026-01-30
 
 ## LOG
-* 2026-02-17: Task started. Moved to 02-in-progress.
-* 2026-02-17: Synchronized with origin/main (rebase) and pushed HEAD. CI run 22095093056 status: success. Moved to 03-review.
+
+- 2026-02-17: Task started. Moved to 02-in-progress.
+- 2026-02-17: Synchronized with origin/main (rebase) and pushed HEAD. CI run 22095093056 status: success. Moved to 03-review.
 
 ## OBJECTIVE
 
@@ -15,30 +15,30 @@ Synchronize local repository state with remote origin, push pending changes, ver
 
 ## INPUTS
 
-* WORKFLOW.md (Remote Sync Rule)
-* Local git repository state
-* Remote git repository (origin)
+- WORKFLOW.md (Remote Sync Rule)
+- Local git repository state
+- Remote git repository (origin)
 
 ## STEPS
 
 1. Verify local git status (ensure no uncommitted critical changes outside of task scope).
 2. Execute Remote Sync Rule steps (from WORKFLOW.md):
-   * Local changes finalized.
-   * Synchronize: `git pull origin main --rebase`
-   * Publish: `git push origin [current_branch]`
+   - Local changes finalized.
+   - Synchronize: `git pull origin main --rebase`
+   - Publish: `git push origin [current_branch]`
 
 3. Verify remote integrity and CI status:
-   * Ensure remote reflects the current state.
-   * **Verify CI status:** Execute `gh run list --limit 1` to confirm the latest workflow triggered by the push shows 'success' (green).
-   * (Optional) If running, watch progress: `gh run watch`
+   - Ensure remote reflects the current state.
+   - **Verify CI status:** Execute `gh run list --limit 1` to confirm the latest workflow triggered by the push shows 'success' (green).
+   - (Optional) If running, watch progress: `gh run watch`
 
 4. Clean up merged local branches or artifacts not tracked in git.
 5. Ensure local HEAD is aligned with origin/main (if applicable) or current feature branch is fully synced.
 
 ## ACCEPTANCE CRITERIA
 
-* [x] 'git status' is clean.
-* [x] Local changes are successfully pushed to remote.
-* [x] **GitHub Actions workflow for the latest commit has passed (Status: success).**
-* [x] Local history is consistent with 'origin/main'.
-* [x] No untracked/stale files remain in critical directories.
+- [x] 'git status' is clean.
+- [x] Local changes are successfully pushed to remote.
+- [x] **GitHub Actions workflow for the latest commit has passed (Status: success).**
+- [x] Local history is consistent with 'origin/main'.
+- [x] No untracked/stale files remain in critical directories.

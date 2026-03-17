@@ -24,7 +24,7 @@ Jos havaitset tietoturvaongelman tai datavuodon, pyydämme raportoimaan sen
 välittömästi GitHubin turvallisen ja yksityisen raportointityökalun kautta:
 
 1. Siirry repositorion **Security**-välilehdelle.
-2. Valitse vasemmasta sivuvalikosta kohdasta *Vulnerability alerts*
+2. Valitse vasemmasta sivuvalikosta kohdasta _Vulnerability alerts_
    vaihtoehto **Advisories**.
 3. Klikkaa painiketta **Report a vulnerability**.
 4. Sisällytä raporttiin seuraavat tiedot:

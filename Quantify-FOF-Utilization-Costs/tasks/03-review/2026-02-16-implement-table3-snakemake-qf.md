@@ -1,23 +1,27 @@
 # Implement Table 3 generation + Snakemake integration (Quantify-FOF-Utilization-Costs)
 
 ## Scope
+
 - Add Table 3 R script under `R/20_table3/`
 - Integrate as Snakemake target
 - Outputs: `outputs/tables/table3.csv` + `outputs/tables/table3.md`
 - Log: `outputs/logs/table3.log`
 
 ## Deliverables
+
 - R script: `R/20_table3/20_table3_injury_usage_per_1000_py.R`
 - Snakemake rule: `workflow/Snakefile`
 - Config: `config/config.yaml` (`table3` section)
 - Readme: `R/20_table3/README.md`
 
 ## Acceptance criteria
+
 - `snakemake -n` succeeds
 - `snakemake --summary` succeeds
 - `snakemake -j 1 table3` produces `outputs/tables/table3.csv` and `outputs/tables/table3.md` when inputs exist
 
 ## Verification commands
+
 ```bash
 cd Quantify-FOF-Utilization-Costs
 snakemake -n
@@ -27,6 +31,7 @@ snakemake -j 1 --forcerun build_table3_inputs table3
 ```
 
 ## Log
+
 - 2026-02-16: Task created.
 - 2026-02-16: User-provided draft existed as untracked file; left untouched; integrated via clean copy under `R/20_table3/`.
 - 2026-02-16: Verification: `snakemake -n` and `snakemake --summary` passed; `snakemake -j 1 table3` reached script execution and failed only due to missing configured input files (`Visits input not found`).

@@ -1,4 +1,4 @@
-2.  **DATA_ROOT:** Raakadata luetaan VAIN ympäristömuuttujan `DATA_ROOT` osoittamasta polusta (ulkoinen tallennus).
+1. **DATA_ROOT:** Raakadata luetaan VAIN ympäristömuuttujan `DATA_ROOT` osoittamasta polusta (ulkoinen tallennus).
     **AGENTTIOHJE: DATA_ROOT – ainoa sallittu toimintatapa**
 
     Ennen kuin ajat mitään tässä repossa

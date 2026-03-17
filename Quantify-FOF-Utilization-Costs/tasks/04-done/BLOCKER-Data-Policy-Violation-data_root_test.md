@@ -13,6 +13,7 @@ According to the core mandates in `README.md` and `GEMINI.md`, no raw data or pr
 ## FINDINGS
 
 The directory `Quantify-FOF-Utilization-Costs/data_root_test/` contains:
+
 - `derived/aim2_panel.csv` (and potentially other files)
 
 This violates the principle that all data must reside in an external `DATA_ROOT` directory, and only metadata, code, or synthetic sample data (under `data/sample/` or `tests/`) are allowed in the repo.
@@ -20,14 +21,16 @@ This violates the principle that all data must reside in an external `DATA_ROOT`
 ## REQUIRED ACTIONS
 
 - [x] **Clarification**: Team confirmed purpose; unauthorized data must be moved.
-- [x] **Remediation**: 
-    - Moved data from `data_root_test/` to external `DATA_ROOT` (`/data/data/com.termux/files/home/FOF_LOCAL_DATA`).
-    - Purged `Quantify-FOF-Utilization-Costs/data_root_test/` from Git history using `git-filter-repo`.
-    - Performed force-push to synchronize clean history.
+- [x] **Remediation**:
+  - Moved data from `data_root_test/` to external `DATA_ROOT` (`/data/data/com.termux/files/home/FOF_LOCAL_DATA`).
+  - Purged `Quantify-FOF-Utilization-Costs/data_root_test/` from Git history using `git-filter-repo`.
+  - Performed force-push to synchronize clean history.
 - [x] **Verification**: Repository is now compliant with Option B.
 
 ## RESOLUTION
+
 The data has been safely relocated to the external path defined in `.env`. The repository tree and history are now free of production-like data tables.
 
 ## IMPACT
+
 **All production pipeline runs and commits are halted** until this blocker is resolved to prevent data leakage and maintain security compliance.

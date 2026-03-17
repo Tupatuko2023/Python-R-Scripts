@@ -48,10 +48,14 @@ Primary specification:
 8. Removed all `grip` logic.
 9. Removed all `self_report` remnants from the core path and default outputs.
 10. Wrote repo-local aggregate artifacts under:
-   - `R/32_cfa/outputs/<run_id>/`
-11. Wrote patient-level outputs only to:
-   - `DATA_ROOT/paper_02/capacity_scores/`
-12. Added manuscript-ready wording for Methods, Results, Discussion, and model
+
+- `R/32_cfa/outputs/<run_id>/`
+
+1. Wrote patient-level outputs only to:
+
+- `DATA_ROOT/paper_02/capacity_scores/`
+
+1. Added manuscript-ready wording for Methods, Results, Discussion, and model
     figure reuse.
 
 ## VALIDATION

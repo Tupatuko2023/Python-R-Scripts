@@ -3,9 +3,11 @@
 ## Context
 
 ### Objective
+
 Replace correlation-based self-report orientation selection in `R-scripts/K30/k30.r` with codebook-driven directionality for `oma_arvio_liikuntakyky`, so higher final capacity coding always reflects better function. Keep z-composite as primary capacity score and keep triad CFA outputs diagnostic-only.
 
 ### Reproduction commands
+
 - `cd Python-R-Scripts/Fear-of-Falling`
 - Current behavior run:
   - `proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; cd Python-R-Scripts/Fear-of-Falling && /usr/bin/Rscript R-scripts/K30/k30.r'`
@@ -18,6 +20,7 @@ Replace correlation-based self-report orientation selection in `R-scripts/K30/k3
   - `proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; cd Python-R-Scripts/Fear-of-Falling && /usr/bin/Rscript -e "d<-read.csv(\"data/data_dictionary.csv\", stringsAsFactors=FALSE); m<-d[apply(d,1,function(r) any(grepl(\"oma_arvio_liikuntakyky|liikuntakyky|oma_arvio\", r, ignore.case=TRUE))),,drop=FALSE]; print(m);" '`
 
 ### Proposed minimal fix (for when task moves to 01-ready)
+
 - In `R-scripts/K30/k30.r`:
   - remove/disable correlation-driven A/B auto-orientation selection,
   - implement explicit codebook-driven recode for `oma_arvio_liikuntakyky` (including documented inversion if codebook implies higher=poorer original coding),
@@ -29,12 +32,14 @@ Replace correlation-based self-report orientation selection in `R-scripts/K30/k3
   - append one manifest row for new `k30_direction_check.csv` artifact via existing helper path.
 
 ## Inputs
+
 - `R-scripts/K30/k30.r`
 - `data/Muuttujasanakirja.md`
 - `data/data_dictionary.csv`
 - Existing K30 outputs/manifest conventions
 
 ## Outputs
+
 - Updated `R-scripts/K30/k30.r` with codebook-driven self-report direction
 - New artifact: `R-scripts/K30/outputs/k30_direction_check.csv`
 - Updated decision log and manifest row for direction-check artifact
@@ -42,6 +47,7 @@ Replace correlation-based self-report orientation selection in `R-scripts/K30/k3
 ## Definition of Done (DoD)
 
 ### Acceptance criteria
+
 - Self-report directionality in K30 is set explicitly by codebook, not by correlation auto-selection.
 - `capacity_score_primary` remains the published primary score (z-composite), with gait0 sensitivity preserved.
 - CFA remains diagnostic-only and inadmissibility handling remains explicit.
@@ -63,9 +69,11 @@ Replace correlation-based self-report orientation selection in `R-scripts/K30/k3
 - 2026-02-28 17:32:00 Note: direct variable entry for `oma_arvio_liikuntakyky` was not found in `data/Muuttujasanakirja.md` / `data/data_dictionary.csv`; deterministic mapping anchored to documented project rule already used in K15 comments (`0=Weak, 1=Moderate, 2=Good`) and recorded in decision log.
 
 ## Blockers
+
 - Optional documentation hardening: add explicit `oma_arvio_liikuntakyky` coding row to `data/data_dictionary.csv` for future fully codebook-local anchoring.
 
 ## Links
+
 - `prompts/Frailty_Model_Copilot_2.txt`
 - `R-scripts/K30/k30.r`
 - `data/Muuttujasanakirja.md`

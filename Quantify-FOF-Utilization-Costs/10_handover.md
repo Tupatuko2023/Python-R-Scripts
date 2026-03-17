@@ -15,17 +15,17 @@ Table 1 script (single source of truth, current on origin/main)
 
 Quantify-FOF-Utilization-Costs/
 └── R/
-    └── 10_table1/
-        └── 12_table1_patient_characteristics_by_fof_wfrailty.R
+└── 10_table1/
+└── 12_table1_patient_characteristics_by_fof_wfrailty.R
 
 Output/logs location (workflow target, via PR #82)
 
 Quantify-FOF-Utilization-Costs/
 └── R/
-    └── 10_table1/
-        ├── .gitignore
-        ├── outputs/   (gitignored)
-        └── logs/      (gitignored)
+└── 10_table1/
+├── .gitignore
+├── outputs/ (gitignored)
+└── logs/ (gitignored)
 
 Rules:
 
@@ -66,7 +66,7 @@ CSV is written to:
 R/10_table1/outputs/table1_patient_characteristics_by_fof.csv
 
 Outputs and logs are never committed.
-.gitignore in R/10_table1/ ignores outputs/** and logs/** (PR #82).
+.gitignore in R/10_table1/ ignores outputs/**and logs/** (PR #82).
 
 ---
 
@@ -116,14 +116,13 @@ Before implementing frailty:
 
 1. Create a new task from the template
 
-Copy tasks/_template.md
+Copy tasks/\_template.md
 
 Name it something like:
 
 tasks/01-ready/table1_add_frailty.md
 
-
-2. Fill it according to WORKFLOW.md
+1. Fill it according to WORKFLOW.md
 
 Problem statement
 
@@ -131,15 +130,11 @@ Assumptions
 
 Planned steps
 
+1. Move it to 02-in-progress/ when starting work.
 
-3. Move it to 02-in-progress/ when starting work.
+2. Log decisions and checks in the task file.
 
-
-4. Log decisions and checks in the task file.
-
-
-5. Move to 04-done/ only when finished and reviewed.
-
+3. Move to 04-done/ only when finished and reviewed.
 
 No work should start without a task file.
 
@@ -164,9 +159,9 @@ Definition of Done (Frailty task)
 Table 1 includes a new block:
 
 Frailty (Fried), n (%)
-  robust
-  pre-frail
-  frail
+robust
+pre-frail
+frail
 
 Correct denominators per row
 
