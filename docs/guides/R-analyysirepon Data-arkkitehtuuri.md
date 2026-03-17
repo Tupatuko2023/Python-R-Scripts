@@ -156,8 +156,11 @@ Output luodaan aina "tyhjästä" tai korvataan kokonaan.
 ## F) Nopein etenemissuunnitelma (1-2 tuntia)
 
 ### Vaihe 1: Repon alustus ja Config
+
 ### Vaihe 2: Metadata ja Gating
+
 ### Vaihe 3: Ingest-skripti
+
 ### Vaihe 4: Mitä jätetään reposta POIS (Checklist)
 
 ---
@@ -166,4 +169,4 @@ Output luodaan aina "tyhjästä" tai korvataan kokonaan.
 
 1. [Structuring R projects](https://www.r-bloggers.com/2018/08/structuring-r-projects/)
 2. [Programming with R: Best Practices](https://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R.html)
-... (ja muut linkit listana)
+   ... (ja muut linkit listana)
