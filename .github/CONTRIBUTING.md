@@ -4,7 +4,7 @@ Tervetuloa kehittämään `Tupatuko2023/Python-R-Scripts` -monorepoa! Arvostamme
 
 ## 1. Tervetuloa & mitä tähän repoan kuuluu
 
-Tämä on R- ja Python-pohjainen analyysimonorepo, joka koostuu useista aliprojekteista (esim. `Fear-of-Falling`, `Electronic-Frailty-Index`, `Quantify-FOF-Utilization-Costs`). Kukin aliprojekti sisältää oman analyysiputkensa, omat skriptinsä (esim. Kxx-skriptit) ja oman raportointinsa. 
+Tämä on R- ja Python-pohjainen analyysimonorepo, joka koostuu useista aliprojekteista (esim. `Fear-of-Falling`, `Electronic-Frailty-Index`, `Quantify-FOF-Utilization-Costs`). Kukin aliprojekti sisältää oman analyysiputkensa, omat skriptinsä (esim. Kxx-skriptit) ja oman raportointinsa.
 
 Säännöt koskevat koko monorepoa, mutta huomioi aina työskentelemäsi aliprojektin omat spesifit ohjeet (kuten `Fear-of-Falling/CLAUDE.md` tai `GEMINI.md`).
 
@@ -18,9 +18,9 @@ Säännöt koskevat koko monorepoa, mutta huomioi aina työskentelemäsi aliproj
 
 ## 3. Miten osallistua
 
-1.  **Issues:** Etsi avoimia issueita tai avaa uusi issue keskustellaksesi isommista muutoksista ennen koodauksen aloittamista.
-2.  **Pull Requests (PR):** Tee muutokset omassa haarassasi (branch) ja avaa PR päähaaraa (esim. `main` tai `master`) vasten.
-3.  **Tehtäväjono:** Projektissa voidaan käyttää tekoälyagenttien tehtäväjonoja (`tasks/`). Varmista, että et tee päällekkäistä työtä meneillään olevien automaattiajojen kanssa.
+1. **Issues:** Etsi avoimia issueita tai avaa uusi issue keskustellaksesi isommista muutoksista ennen koodauksen aloittamista.
+2. **Pull Requests (PR):** Tee muutokset omassa haarassasi (branch) ja avaa PR päähaaraa (esim. `main` tai `master`) vasten.
+3. **Tehtäväjono:** Projektissa voidaan käyttää tekoälyagenttien tehtäväjonoja (`tasks/`). Varmista, että et tee päällekkäistä työtä meneillään olevien automaattiajojen kanssa.
 
 ## 4. Työskentelytapa
 
@@ -50,7 +50,7 @@ Projekti tukee useita ympäristöjä (Windows PowerShell 7, Termux/PRoot Android
 ## 6. Lint, format ja tyyliohjeet
 
 * **R:** Noudatamme yleisesti lintr-sääntöjä (konfiguraatio `.lintr`-tiedostossa, jos määritelty). Älä tee globaalia uudelleenmuotoilua (esim. `styler::style_dir(".")`) muiden tiedostoihin ilman lupaa, jotta git-historia pysyy selkeänä.
-* **Python:** Noudatamme repossa määriteltyjä formatointityökaluja (kuten pre-commit hookit, Black, Ruff, jos käytössä).
+* **Python:** Noudatamme repospa määriteltyjä formatointityökaluja (kuten pre-commit hookit, Black, Ruff, jos käytössä).
 * **Markdown:** Pidä dokumentaatio siistinä (huomioi markdownlint-säännöt, kuten pakolliset kielitagit koodiblokeissa).
 
 ## 7. Testit ja verifiointi
@@ -79,7 +79,7 @@ Ennen PR:n lähettämistä, varmista että koodi toimii end-to-end.
 
 ## 10. AI-avusteinen kontribuointi (Gemini, Claude, Copilot)
 
-Tämä projekti hyödyntää laajasti tekoälyagentteja (esim. S-FOF Orchestrator). 
+Tämä projekti hyödyntää laajasti tekoälyagentteja (esim. S-FOF Orchestrator).
 
 * **Autonomia vs. laadunvarmistus:** Jos toimit ohjaavana AI-agenttina, noudata tiukasti `GEMINI.md`, `CLAUDE.md` ja `AGENTS.md` -tiedostojen asettamia sääntöjä (erityisesti fail-closed -periaate).
 * **Koodausstandardit:** Agenttien tulee tuottaa valmiita, kohdistettuja "unified diff" -tyylisiä muutoksia ilman turhaa koodin tuhoamista.

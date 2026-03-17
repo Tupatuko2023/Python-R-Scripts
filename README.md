@@ -23,9 +23,9 @@ Tietoturva ja tutkimusetiikka ovat tämän projektin keskiössä.
 
 Repositorio on jaettu useisiin itsenäisiin aliprojekteihin, joilla on oma dokumentaationsa ja ympäristönsä:
 
-1.  **[Fear-of-Falling (FOF)](Fear-of-Falling/README.md):** R-analyysiputki kaatumisen pelon ja toimintakyvyn välisen yhteyden tutkimiseen. Sisältää Kxx-analyysiskriptit, `renv`-ympäristön ja manifesti-pohjaisen tuloshallinnan.
-2.  **[Electronic-Frailty-Index (EFI)](Electronic-Frailty-Index/README.md):** Python- ja R-työkaluja haurausindeksin (EFI) laskemiseen ja validointiin. Sisältää kliinisen datan prosessointiin ja logistiseen regressioon tarkoitettuja skriptejä.
-3.  **[Quantify-FOF-Utilization-Costs](Quantify-FOF-Utilization-Costs/README.md):** Hybridiputki (R + Python) kaatumisen pelkoon liittyvän palvelukäytön ja kustannusten kvantifiointiin. Painottaa turvallista aggregointia ja raportointia (Option B).
+1. **[Fear-of-Falling (FOF)](Fear-of-Falling/README.md):** R-analyysiputki kaatumisen pelon ja toimintakyvyn välisen yhteyden tutkimiseen. Sisältää Kxx-analyysiskriptit, `renv`-ympäristön ja manifesti-pohjaisen tuloshallinnan.
+2. **[Electronic-Frailty-Index (EFI)](Electronic-Frailty-Index/README.md):** Python- ja R-työkaluja haurausindeksin (EFI) laskemiseen ja validointiin. Sisältää kliinisen datan prosessointiin ja logistiseen regressioon tarkoitettuja skriptejä.
+3. **[Quantify-FOF-Utilization-Costs](Quantify-FOF-Utilization-Costs/README.md):** Hybridiputki (R + Python) kaatumisen pelkoon liittyvän palvelukäytön ja kustannusten kvantifiointiin. Painottaa turvallista aggregointia ja raportointia (Option B).
 
 ---
 
@@ -52,6 +52,7 @@ Arvostamme apuasi koodin ja analyysien parantamisessa.
 Katso tarkemmat ajo-ohjeet kunkin aliprojektin omasta README-tiedostosta.
 
 ### Fear of Falling (R)
+
 ```bash
 cd Fear-of-Falling
 Rscript -e 'renv::restore()'
@@ -60,6 +61,7 @@ Rscript "R-scripts/K11/K11_MAIN.V1_primary-ancova.R"
 ```
 
 ### Electronic Frailty Index (Python)
+
 ```bash
 python Electronic-Frailty-Index/src/efi/cli.py --input data/external/synthetic_patients.csv --out out/efi_scores.csv
 ```
