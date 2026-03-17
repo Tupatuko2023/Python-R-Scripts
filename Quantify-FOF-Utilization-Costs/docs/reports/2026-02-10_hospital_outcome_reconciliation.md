@@ -22,16 +22,16 @@ Päätös on tehty: Emme muuta lukuja, vaan etsimme kadonneen määritelmän. T�
 ### Hypoteesit (Testattava järjestyksessä)
 
 1. **Hypoteesi 1: Puuttuva Merge (Join Failure)**
-    - _Teoria:_ Käsikirjoituksen "Episodes" ei ole hallinnollinen jakso, vaan "Hoitojakso, johon liittyy diagnoosi".
-    - _Testi:_ Onnistuuko `episodefile` + `dxfile` yhdistäminen (Left Join on `visit_id`/`patient_id` + `date`)?
-    - _Indikaattori:_ Nouseeko episodimäärä tasolle ~300-500 kun kaikki diagnoosirivit lasketaan?
+   - _Teoria:_ Käsikirjoituksen "Episodes" ei ole hallinnollinen jakso, vaan "Hoitojakso, johon liittyy diagnoosi".
+   - _Testi:_ Onnistuuko `episodefile` + `dxfile` yhdistäminen (Left Join on `visit_id`/`patient_id` + `date`)?
+   - _Indikaattori:_ Nouseeko episodimäärä tasolle ~300-500 kun kaikki diagnoosirivit lasketaan?
 
 2. **Hypoteesi 2: Väärä Lähdetiedosto (Source Mismatch)**
-    - _Teoria:_ `DATA_ROOT`:ssa on toinen tiedosto (esim. `hospital_comprehensive.csv` tai `hilmo_raw`), jota ei ole vielä kartoitettu `data_dictionary.csv`:hen.
-    - _Testi:_ Turvallinen `list.files(DATA_ROOT)` -kartoitus ja sarakkeiden vertailu.
+   - _Teoria:_ `DATA_ROOT`:ssa on toinen tiedosto (esim. `hospital_comprehensive.csv` tai `hilmo_raw`), jota ei ole vielä kartoitettu `data_dictionary.csv`:hen.
+   - _Testi:_ Turvallinen `list.files(DATA_ROOT)` -kartoitus ja sarakkeiden vertailu.
 
 3. **Hypoteesi 3: Aggregointilogiikka (Calculation Mismatch)**
-    - _Teoria:_ Käsikirjoitus laskee "päiviä" tai "käyntejä" eri tavalla (esim. limittäiset jaksot yhdistetty).
+   - _Teoria:_ Käsikirjoitus laskee "päiviä" tai "käyntejä" eri tavalla (esim. limittäiset jaksot yhdistetty).
 
 ## 3. Instructions for Data Agent (Codex)
 
