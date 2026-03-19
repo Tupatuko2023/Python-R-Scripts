@@ -148,10 +148,10 @@ resolve_input_path <- function(shape, cli_data) {
   if (!is.na(data_root)) {
     candidates <- c(
       candidates,
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k50_", shape_lower, ".rds")),
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k50_", shape_lower, ".csv")),
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k33_", shape_lower, ".rds")),
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k33_", shape_lower, ".csv"))
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k50_", shape_lower, ".rds")),
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k50_", shape_lower, ".csv")),
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k33_", shape_lower, ".rds")),
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k33_", shape_lower, ".csv"))
     )
   }
   candidates <- c(

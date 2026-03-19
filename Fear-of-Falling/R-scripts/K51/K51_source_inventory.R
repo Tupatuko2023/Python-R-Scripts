@@ -48,8 +48,8 @@ resolve_input_path <- function() {
   data_root <- resolve_data_root()
   if (is.na(data_root)) stop("K51 source verification requires DATA_ROOT.", call. = FALSE)
   candidates <- c(
-    file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long.rds"),
-    file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long.csv")
+    file.path(data_root, "paper_02", "analysis", "fof_analysis_k50_long.rds"),
+    file.path(data_root, "paper_02", "analysis", "fof_analysis_k50_long.csv")
   )
   hits <- candidates[file.exists(candidates)]
   if (length(hits) == 0L) {

@@ -128,7 +128,7 @@ bootstrap_stat <- function(data, indices) {
 }
 
 data_root <- resolve_data_root()
-wide_path <- file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_wide.rds")
+wide_path <- file.path(data_root, "paper_02", "analysis", "fof_analysis_k50_wide.rds")
 wide_raw <- readRDS(wide_path)
 wide_raw <- prepare_k50_person_dedup(wide_raw, "WIDE", "locomotor_capacity")$data
 

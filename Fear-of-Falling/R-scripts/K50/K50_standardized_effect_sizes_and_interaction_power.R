@@ -129,8 +129,8 @@ standardize_table <- function(tbl, data_df, outcome_var, continuous_terms, binar
 }
 
 data_root <- resolve_data_root()
-wide_path <- file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_wide.rds")
-long_path <- file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long.rds")
+wide_path <- file.path(data_root, "paper_02", "analysis", "fof_analysis_k50_wide.rds")
+long_path <- file.path(data_root, "paper_02", "analysis", "fof_analysis_k50_long.rds")
 
 wide_raw <- readRDS(wide_path)
 long_raw <- readRDS(long_path)

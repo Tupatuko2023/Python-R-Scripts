@@ -27,41 +27,25 @@ suppressPackageStartupMessages({
   library(readxl)
 })
 
-# --- Resolve project root like k40.r -------------------------------------------------
-args_all <- commandArgs(trailingOnly = FALSE)
-file_arg <- grep("^--file=", args_all, value = TRUE)
-script_path <- if (length(file_arg) > 0) sub("^--file=", "", file_arg[[1]]) else ""
-
-# Anchor deterministically to Quantify-FOF-Utilization-Costs subproject root:
-# .../Quantify-FOF-Utilization-Costs/R/40_FI/K40_FI_KAAOS.R -> up 2 levels from script dir
-subproject_root <- if (nzchar(script_path)) {
-  normalizePath(file.path(dirname(script_path), "..", ".."), winslash = "/", mustWork = FALSE)
-} else {
-  # fallback: support execution from either monorepo root or subproject root
-  wd <- normalizePath(getwd(), winslash = "/", mustWork = FALSE)
-  if (file.exists(file.path(wd, "R", "40_FI", "K40_FI_KAAOS.R"))) {
-    wd
-  } else if (file.exists(file.path(wd, "Quantify-FOF-Utilization-Costs", "R", "40_FI", "K40_FI_KAAOS.R"))) {
-    file.path(wd, "Quantify-FOF-Utilization-Costs")
-  } else {
-    wd
-  }
-}
+# --- Resolve project root -----------------------------------------------------------
+if (!requireNamespace("here", quietly = TRUE)) install.packages("here")
+subproject_root <- here::here()
 setwd(subproject_root)
 
 find_functions_dir <- function(root) {
-  # Preferred: helpers in this subproject (if present)
+  # Standard project structure: Fear-of-Falling/R/functions
   p1 <- file.path(root, "R", "functions")
-  if (file.exists(file.path(p1, "init.R")) && file.exists(file.path(p1, "reporting.R"))) {
-    return(p1)
-  }
-  # Fallback: helpers in sibling Fear-of-Falling project (monorepo layout)
-  p2 <- file.path(root, "..", "Fear-of-Falling", "R", "functions")
-  if (file.exists(file.path(p2, "init.R")) && file.exists(file.path(p2, "reporting.R"))) {
-    return(p2)
-  }
-  # Fail closed without printing absolute paths (stdout safety)
-  stop("Missing required helper scripts init.R/reporting.R (expected in subproject or Fear-of-Falling).", call. = FALSE)
+  if (file.exists(file.path(p1, "init.R"))) return(p1)
+  
+  # Monorepo structure: Python-R-Scripts/Fear-of-Falling/R/functions
+  p2 <- file.path(root, "Fear-of-Falling", "R", "functions")
+  if (file.exists(file.path(p2, "init.R"))) return(p2)
+  
+  # Fallback: search from current working directory
+  p3 <- file.path(getwd(), "R", "functions")
+  if (file.exists(file.path(p3, "init.R"))) return(p3)
+
+  stop("Missing required helper scripts init.R (searched in Fear-of-Falling/R/functions).", call. = FALSE)
 }
 
 functions_dir <- find_functions_dir(subproject_root)
@@ -120,9 +104,9 @@ resolve_data_root_early <- function(root) {
 data_root <- resolve_data_root_early(subproject_root)
 
 paths <- init_paths(script_label)
-# Override outputs location to project-standard R/ tree
+# Override outputs location to project-standard R-scripts/ tree
 run_id <- format(Sys.time(), "%Y%m%d_%H%M%S")
-outputs_dir <- file.path("R", "40_FI", "outputs", run_id)
+outputs_dir <- file.path("R-scripts", "K40", "outputs", script_label, run_id)
 dir.create(outputs_dir, recursive = TRUE, showWarnings = FALSE)
 manifest_path <- getOption("fof.manifest_path")
 
@@ -347,7 +331,9 @@ exclude_falls_by_label <- TRUE
 
 # Filled after sheet read; used by exclusion/domain/priority helpers.
 var_labels <- list()
-deficit_map_path <- file.path("R", "40_FI", "deficit_map.csv")
+# Note: In Fear-of-Falling context, deficit_map might be in a different location
+# Adjusting to relative search or standard location if possible.
+deficit_map_path <- "deficit_map.csv"
 deficit_map_loaded <- FALSE
 deficit_map_rows <- 0L
 map_missing_codes_applied_n <- 0L
@@ -555,7 +541,7 @@ scrub_label_contamination <- function(df, labels, enabled = TRUE, max_share = 0.
     }
   }
 
-  list(df = df, n_replaced = as.integer(n_replaced))
+  list(df = df, n_replaced = n_replaced)
 }
 
 recode_sentinel_missing <- function(x) {
@@ -753,6 +739,17 @@ base_df <- base_df %>%
 
 # Recode known sentinel codes before inventory/type inference.
 base_df <- base_df %>% mutate(across(everything(), recode_sentinel_missing))
+
+# Search for deficit_map.csv in multiple locations if not found in root
+if (!file.exists(deficit_map_path)) {
+  candidates <- c("deficit_map.csv", "Fear-of-Falling/deficit_map.csv", "Quantify-FOF-Utilization-Costs/deficit_map.csv")
+  for (c in candidates) {
+    if (file.exists(c)) {
+      deficit_map_path <- c
+      break
+    }
+  }
+}
 
 deficit_map <- read_deficit_map(deficit_map_path)
 if (nrow(deficit_map) > 0) {

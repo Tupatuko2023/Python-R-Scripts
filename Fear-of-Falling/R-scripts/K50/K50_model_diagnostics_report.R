@@ -173,8 +173,8 @@ classify_abs_cor <- function(fitted, resid) {
 }
 
 data_root <- resolve_data_root()
-wide_path <- file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_wide.rds")
-long_path <- file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long.rds")
+wide_path <- file.path(data_root, "paper_02", "analysis", "fof_analysis_k50_wide.rds")
+long_path <- file.path(data_root, "paper_02", "analysis", "fof_analysis_k50_long.rds")
 
 wide_df <- readRDS(wide_path) %>%
   transmute(

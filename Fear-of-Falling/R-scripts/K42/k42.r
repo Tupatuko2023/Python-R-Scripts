@@ -100,13 +100,13 @@ infer_data_root <- function() {
 resolve_inputs <- function(data_root) {
   analysis_dir <- file.path(data_root, "paper_01", "analysis")
   capacity_dir <- file.path(data_root, "paper_01", "capacity_scores")
-  fv_dir <- file.path(data_root, "paper_01", "frailty_vulnerability")
+  fv_dir <- file.path(data_root, "paper_02", "frailty_vulnerability")
 
   list(
     k33_long = pick_first_existing(file.path(analysis_dir, c("fof_analysis_k33_long.rds", "fof_analysis_k33_long.csv"))),
     k33_wide = pick_first_existing(file.path(analysis_dir, c("fof_analysis_k33_wide.rds", "fof_analysis_k33_wide.csv"))),
     k32 = pick_first_existing(file.path(capacity_dir, c("kaatumisenpelko_with_capacity_scores_k32.rds", "kaatumisenpelko_with_capacity_scores_k32.csv"))),
-    k40 = pick_first_existing(file.path(fv_dir, c("kaatumisenpelko_with_frailty_index_k40.rds", "kaatumisenpelko_with_frailty_index_k40.csv")))
+    k40 = pick_first_existing(file.path(fv_dir, c("kaaos_with_frailty_index_k40.rds", "kaaos_with_frailty_index_k40.csv")))
   )
 }
 

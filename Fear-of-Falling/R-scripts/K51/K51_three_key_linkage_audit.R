@@ -79,7 +79,7 @@ normalize_fof <- function(x) {
 resolve_input_path <- function() {
   data_root <- resolve_data_root()
   if (is.na(data_root)) stop("Audit requires DATA_ROOT.", call. = FALSE)
-  path <- file.path(data_root, "paper_01", "analysis", "fof_analysis_k50_long.rds")
+  path <- file.path(data_root, "paper_02", "analysis", "fof_analysis_k50_long.rds")
   if (!file.exists(path)) stop("Audit could not resolve canonical K50 LONG input.", call. = FALSE)
   normalizePath(path, winslash = "/", mustWork = TRUE)
 }

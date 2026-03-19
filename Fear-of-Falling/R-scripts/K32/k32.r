@@ -1146,8 +1146,8 @@ if (!all(export_qc$ok)) {
 }
 
 # --- 6) Save datasets + reproducibility ---------------------------------------
-capacity_dir <- file.path(data_root, "paper_01", "capacity_scores")
-analysis_dir <- file.path(data_root, "paper_01", "analysis")
+capacity_dir <- file.path(data_root, "paper_02", "capacity_scores")
+analysis_dir <- file.path(data_root, "paper_02", "analysis")
 dir_create(capacity_dir)
 dir_create(analysis_dir)
 

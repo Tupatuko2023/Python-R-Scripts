@@ -2,7 +2,7 @@
 # ==============================================================================
 # K51 - Baseline Table for K50 Canonical Cohorts
 # File tag: K51.V1_baseline-table-k50-canonical.R
-# Purpose: Build paper_01 Table 1 style summaries from canonical K50-ready data
+# Purpose: Build paper_02 Table 1 style summaries from canonical K50-ready data
 #          using the shared person-dedup helper and the same participant gates
 #          as the current deduplicated K50 cohort-flow path.
 #
@@ -197,10 +197,10 @@ resolve_input_path <- function(shape, cli_data) {
   if (!is.na(data_root)) {
     candidates <- c(
       candidates,
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k50_", shape_lower, ".rds")),
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k50_", shape_lower, ".csv")),
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k33_", shape_lower, ".rds")),
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k33_", shape_lower, ".csv"))
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k50_", shape_lower, ".rds")),
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k50_", shape_lower, ".csv")),
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k33_", shape_lower, ".rds")),
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k33_", shape_lower, ".csv"))
     )
   }
 

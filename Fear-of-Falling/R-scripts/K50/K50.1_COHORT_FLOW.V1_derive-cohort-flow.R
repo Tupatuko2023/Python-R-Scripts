@@ -151,10 +151,10 @@ resolve_input_path <- function(shape, cli_data) {
   if (!is.na(data_root)) {
     candidates <- c(
       candidates,
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k50_", shape_lower, ".rds")),
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k50_", shape_lower, ".csv")),
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k33_", shape_lower, ".rds")),
-      file.path(data_root, "paper_01", "analysis", paste0("fof_analysis_k33_", shape_lower, ".csv"))
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k50_", shape_lower, ".rds")),
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k50_", shape_lower, ".csv")),
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k33_", shape_lower, ".rds")),
+      file.path(data_root, "paper_02", "analysis", paste0("fof_analysis_k33_", shape_lower, ".csv"))
     )
   }
   candidates <- c(
@@ -677,7 +677,7 @@ placeholder_tbl <- bind_rows(
       "FI22_NOTE"
     ),
     value = c(
-      "Fear-of-Falling paper_01 analytic cohort derivation",
+      "Fear-of-Falling paper_02 analytic cohort derivation",
       shape,
       outcome,
       as.character(raw_rows),
@@ -730,7 +730,7 @@ placeholder_tbl <- bind_rows(
 )
 
 counts_path <- write_table_with_manifest(counts_tbl, paste0(cohort_prefix, "_counts"), "Sequential cohort flow counts with verified person-lookup dedup and historical raw-id continuity")
-placeholders_path <- write_table_with_manifest(placeholder_tbl, paste0(cohort_prefix, "_placeholders"), "DOT placeholder values for paper_01 cohort flow with aggregate-only person-lookup dedup counts")
+placeholders_path <- write_table_with_manifest(placeholder_tbl, paste0(cohort_prefix, "_placeholders"), "DOT placeholder values for paper_02 cohort flow with aggregate-only person-lookup dedup counts")
 missing_path <- write_table_with_manifest(missing_tbl, paste0(cohort_prefix, "_missingness_group_time"), "Group x time missingness summary on deduplicated person basis")
 
 receipt_path <- file.path(outputs_dir, paste0(cohort_prefix, "_input_receipt.txt"))
