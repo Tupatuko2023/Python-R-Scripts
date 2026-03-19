@@ -7,6 +7,22 @@
 #   Build deterministic FI = proportion of deficits (0-1), with FI_z as
 #   standardized derived variable, using non-performance deficits only.
 #
+# Outcome: frailty_index_fi and frailty_index_fi_z (derived)
+# Predictors: dynamically detected KAAOS deficit candidates from the selected sheet
+# Moderator/interaction: none
+# Grouping variable: participant identifier column resolved dynamically
+# Covariates: none
+#
+# Required vars (dynamic raw-sheet contract; no fixed req_cols applies):
+# - `ID_COL` override or deterministic identifier-column inference from the KAAOS sheet
+# - `candidate deficit columns` read dynamically from the selected raw KAAOS sheet
+# - `label row` if the first row contains item labels used for readable outputs
+# - `time/visit column` only if baseline filtering is available in the raw sheet
+#
+# Mapping example (dynamic raw -> analysis; no static column inventory is declared here):
+# - raw identifier column -> `id_col`
+# - raw health/deficit columns -> candidate inventory -> selected deficits -> FI scores
+#
 # Data Source (Option B):
 #   ${DATA_ROOT}/paper_02/KAAOS_data.xlsx   (RAW XLSX; do not use Kaatumisenpelko.csv)
 # Optional override if ID column header is ambiguous:
@@ -153,6 +169,34 @@ write_agg_txt <- function(lines, filename, label = filename, notes = NA_characte
   writeLines(lines, out_path)
   append_artifact(label = label, kind = "text", path = out_path, n = length(lines), notes = notes)
   out_path
+}
+
+write_agg_md <- function(lines, filename, label = filename, notes = NA_character_) {
+  out_path <- file.path(outputs_dir, filename)
+  writeLines(lines, out_path)
+  append_artifact(label = label, kind = "text_md", path = out_path, n = length(lines), notes = notes)
+  out_path
+}
+
+write_manifest_diag <- function(run_id, label_suffix, prefer_renv = TRUE) {
+  diag_path <- file.path("manifest", paste0(label_suffix, "_", run_id, ".txt"))
+  dir.create(dirname(diag_path), recursive = TRUE, showWarnings = FALSE)
+
+  diag_lines <- if (prefer_renv && requireNamespace("renv", quietly = TRUE)) {
+    capture.output(renv::diagnostics())
+  } else {
+    capture.output(sessionInfo())
+  }
+
+  writeLines(diag_lines, diag_path)
+  append_artifact(
+    label = label_suffix,
+    kind = "diagnostic",
+    path = diag_path,
+    n = length(diag_lines),
+    notes = "K40 appendix export diagnostics saved under manifest/"
+  )
+  diag_path
 }
 
 md5_file <- function(path) unname(tools::md5sum(path))
@@ -468,6 +512,206 @@ parse_missing_codes <- function(x) {
   parts <- unlist(strsplit(x, "\\|", fixed = FALSE))
   parts <- trimws(parts)
   unique(parts[nzchar(parts)])
+}
+
+standardize_columns <- function(df) {
+  names(df) <- clean_names_simple(names(df))
+  df
+}
+
+detect_var_id_col <- function(df) {
+  preferred <- c("var_name", "variable_id", "item_id", "item", "variable", "id")
+  hit <- intersect(preferred, names(df))
+  if (length(hit) > 0) return(hit[[1]])
+
+  chr_cols <- names(df)[vapply(df, function(x) is.character(x) || is.factor(x), logical(1))]
+  if (length(chr_cols) == 0) {
+    stop("Appendix export could not detect an item-id column.", call. = FALSE)
+  }
+
+  scores <- vapply(chr_cols, function(vn) {
+    x <- trimws(as.character(df[[vn]]))
+    x <- x[!is.na(x) & nzchar(x)]
+    if (length(x) == 0) return(-1)
+    numeric_like <- mean(grepl("^[A-Za-z0-9._-]+$", x))
+    unique_n <- length(unique(x))
+    as.numeric(numeric_like * 1000 + unique_n)
+  }, numeric(1))
+
+  chr_cols[[order(scores, decreasing = TRUE)[1]]]
+}
+
+compose_scoring_rule <- function(item_type, direction, cutoff, cutoff_low, cutoff_high) {
+  item_type <- tolower(trimws(as.character(item_type)))
+  direction <- tolower(trimws(as.character(direction)))
+
+  if (item_type == "binary") {
+    if (direction == "higher_worse") return("Binary item: deficit = 1 for worse/present response, else 0.")
+    if (direction == "lower_worse") return("Binary item: lower/absent-coded response is treated as worse in current mapping.")
+    return("Binary item: scored as coded by the current mapping.")
+  }
+
+  if (item_type == "ordinal") {
+    if (direction == "higher_worse") return("Ordinal item: higher response levels are worse; scores are scaled to 0-1 by ordered levels.")
+    if (direction == "lower_worse") return("Ordinal item: lower response levels are worse; scores are scaled to 0-1 by ordered levels.")
+    return("Ordinal item: scored from ordered levels on a 0-1 scale using current coding.")
+  }
+
+  if (item_type == "continuous") {
+    if (direction == "outside_range" && !is.na(cutoff_low) && !is.na(cutoff_high)) {
+      return(sprintf("Continuous item: deficit = 1 outside [%s, %s), else 0.", cutoff_low, cutoff_high))
+    }
+    if (direction == "higher_worse" && !is.na(cutoff)) {
+      return(sprintf("Continuous item: deficit = 1 when value >= %s, else 0.", cutoff))
+    }
+    if (direction == "lower_worse" && !is.na(cutoff)) {
+      return(sprintf("Continuous item: deficit = 1 when value <= %s, else 0.", cutoff))
+    }
+    return("Continuous item: mapping row exists but threshold details are incomplete.")
+  }
+
+  "Scoring rule unavailable from current mapping."
+}
+
+escape_md_cell <- function(x) {
+  x <- as.character(x)
+  x[is.na(x)] <- ""
+  x <- gsub("\\|", "\\\\|", x)
+  x
+}
+
+appendix_markdown_lines <- function(tbl, title, sources, caveat) {
+  header <- paste0("# ", title)
+  meta <- c(
+    "",
+    paste0("Sources: ", paste(sources, collapse = "; ")),
+    paste0("Ordinal caveat: ", caveat),
+    ""
+  )
+
+  cols <- names(tbl)
+  md_header <- paste0("| ", paste(cols, collapse = " | "), " |")
+  md_sep <- paste0("| ", paste(rep("---", length(cols)), collapse = " | "), " |")
+  md_rows <- apply(tbl, 1, function(row) {
+    paste0("| ", paste(escape_md_cell(row), collapse = " | "), " |")
+  })
+
+  c(header, meta, md_header, md_sep, md_rows)
+}
+
+resolve_appendix_map <- function(deficit_map_df, map_source_path) {
+  if (nrow(deficit_map_df) > 0) {
+    return(list(df = standardize_columns(deficit_map_df), path = map_source_path))
+  }
+
+  candidates <- unique(c(
+    map_source_path,
+    "deficit_map.csv",
+    "Fear-of-Falling/deficit_map.csv",
+    "../Quantify-FOF-Utilization-Costs/R/40_FI/deficit_map.csv",
+    "Quantify-FOF-Utilization-Costs/R/40_FI/deficit_map.csv",
+    "../Quantify-FOF-Utilization-Costs/deficit_map.csv"
+  ))
+
+  for (candidate in candidates) {
+    if (is.na(candidate) || !nzchar(candidate) || !file.exists(candidate)) next
+    dm <- read_deficit_map(candidate)
+    if (nrow(dm) > 0) {
+      return(list(df = standardize_columns(dm), path = candidate))
+    }
+  }
+
+  list(df = standardize_columns(deficit_map_df), path = map_source_path)
+}
+
+build_appendix_export <- function(deficit_map_df, selected_path, outputs_dir, map_source_path) {
+  selected_source <- "keep_fallback"
+  selected_ids <- character()
+  if (!is.null(selected_path) && file.exists(selected_path)) {
+    selected_tbl <- suppressMessages(readr::read_csv(selected_path, show_col_types = FALSE))
+    selected_tbl <- standardize_columns(selected_tbl)
+    selected_col <- detect_var_id_col(selected_tbl)
+    selected_ids <- trimws(as.character(selected_tbl[[selected_col]]))
+    selected_ids <- selected_ids[!is.na(selected_ids) & nzchar(selected_ids)]
+    if (length(selected_ids) > 0) {
+      selected_source <- "selected_deficits"
+    }
+  }
+
+  resolved_map <- resolve_appendix_map(deficit_map_df, map_source_path)
+  dm <- resolved_map$df
+  item_col <- detect_var_id_col(dm)
+  dm[[item_col]] <- trimws(as.character(dm[[item_col]]))
+
+  if (length(selected_ids) > 0) {
+    appendix_df <- dm %>%
+      mutate(selection_order = match(.data[[item_col]], selected_ids)) %>%
+      filter(!is.na(selection_order)) %>%
+      arrange(selection_order, priority, .data[[item_col]])
+  } else {
+    appendix_df <- dm %>%
+      filter(isTRUE(keep_bool)) %>%
+      arrange(priority, .data[[item_col]])
+  }
+
+  appendix_df <- appendix_df %>%
+    mutate(
+      item_id = .data[[item_col]],
+      label = vapply(item_id, function(vn) {
+        lbl <- var_labels[[vn]]
+        if (!is.null(lbl) && nzchar(trimws(as.character(lbl)))) return(trimws(as.character(lbl)))
+        note <- notes[match(vn, item_id)]
+        if (!is.na(note) && nzchar(trimws(note))) return(trimws(note))
+        vn
+      }, character(1)),
+      domain = ifelse(is.na(domain) | !nzchar(domain), NA_character_, domain),
+      item_type = ifelse(is.na(type) | !nzchar(type), NA_character_, type),
+      direction = ifelse(is.na(direction) | !nzchar(direction), NA_character_, direction),
+      scoring_rule = vapply(
+        seq_len(n()),
+        function(i) compose_scoring_rule(item_type[[i]], direction[[i]], cutoff[[i]], cutoff_low[[i]], cutoff_high[[i]]),
+        character(1)
+      ),
+      missing_codes = ifelse(is.na(missing_codes) | !nzchar(missing_codes), NA_character_, missing_codes),
+      priority = ifelse(is.na(priority), NA_integer_, as.integer(priority)),
+      selection_source = selected_source
+    ) %>%
+    transmute(
+      item_id,
+      label,
+      domain,
+      item_type,
+      direction,
+      scoring_rule,
+      missing_codes,
+      priority,
+      notes
+    )
+
+  csv_path <- file.path(outputs_dir, "k40_fi22_appendix_deficit_definitions.csv")
+  md_path <- file.path(outputs_dir, "k40_fi22_appendix_deficit_definitions.md")
+  readr::write_csv(appendix_df, csv_path)
+
+  md_lines <- appendix_markdown_lines(
+    appendix_df,
+    title = "Frailty Index deficit definitions and scoring rules",
+    sources = c(
+      paste0("mapping=", resolved_map$path),
+      paste0("selector=", if (!is.null(selected_path) && file.exists(selected_path)) basename(selected_path) else "keep==1 fallback"),
+      paste0("selection_mode=", selected_source)
+    ),
+    caveat = "Some ordinal items may still need manuscript-facing verbal level descriptions if source labels do not encode them."
+  )
+  writeLines(md_lines, md_path)
+
+  list(
+    table = appendix_df,
+    csv_path = csv_path,
+    md_path = md_path,
+    selection_source = selected_source,
+    map_source_path = resolved_map$path,
+    ordinal_caveat = "Some ordinal items may still need manuscript-facing verbal level descriptions if source labels do not encode them."
+  )
 }
 
 apply_missing_codes_from_map <- function(df, dm) {
@@ -956,10 +1200,36 @@ map_drop_reasons <- if (nrow(deficit_map) == 0) {
 }
 write_agg_csv(map_drop_reasons, "k40_kaaos_map_drop_reasons.csv", notes = "Drop reasons for deficit_map keep=1 rows")
 
-write_agg_csv(
+selected_deficits_path <- write_agg_csv(
   selected %>% select(var_name, type, p_miss, prevalence, domain, priority, direction_rule),
   "k40_kaaos_selected_deficits.csv",
   notes = "Selected deficits after deterministic screening and redundancy rule (KAAOS)"
+)
+
+appendix_export <- build_appendix_export(
+  deficit_map_df = deficit_map,
+  selected_path = selected_deficits_path,
+  outputs_dir = outputs_dir,
+  map_source_path = deficit_map_path
+)
+append_artifact(
+  label = "k40_fi22_appendix_deficit_definitions",
+  kind = "table_csv",
+  path = appendix_export$csv_path,
+  n = nrow(appendix_export$table),
+  notes = "Appendix FI22 deficit definitions reconstructed from deficit_map + selected-deficits"
+)
+append_artifact(
+  label = "k40_fi22_appendix_deficit_definitions",
+  kind = "text_md",
+  path = appendix_export$md_path,
+  n = nrow(appendix_export$table),
+  notes = "Markdown appendix FI22 deficit definitions reconstructed from deficit_map + selected-deficits"
+)
+appendix_diag_path <- write_manifest_diag(
+  run_id = run_id,
+  label_suffix = "sessionInfo_k40_appendix_fi22_definitions",
+  prefer_renv = FALSE
 )
 
 write_agg_csv(
@@ -1135,11 +1405,19 @@ receipt_lines <- c(
   sprintf("md5_csv=%s", md5_file(external_csv)),
   sprintf("md5_rds=%s", md5_file(external_rds)),
   sprintf("n_selected_deficits=%d", n_deficits),
+  sprintf("appendix_rows=%d", nrow(appendix_export$table)),
+  sprintf("appendix_selection_source=%s", appendix_export$selection_source),
+  sprintf("appendix_csv=%s", basename(appendix_export$csv_path)),
+  sprintf("appendix_md=%s", basename(appendix_export$md_path)),
+  sprintf("appendix_diag=%s", basename(appendix_diag_path)),
   sprintf("fi_variant=%s", fi_variant),
   sprintf("fi_variant_role=%s", fi_variant_role),
   sprintf("coverage_min=%.2f", coverage_min),
   sprintf("N_deficits_min=%d", N_deficits_min),
   sprintf("min_deficits_required=%d", min_deficits_required),
+  sprintf("appendix_map_source=%s", appendix_export$map_source_path),
+  "appendix_sources=deficit_map.csv + k40_kaaos_selected_deficits.csv (fallback keep==1 if selector missing)",
+  sprintf("appendix_ordinal_caveat=%s", appendix_export$ordinal_caveat),
   "governance=patient-level outputs written only under DATA_ROOT"
 )
 write_agg_txt(receipt_lines, "k40_kaaos_patient_level_output_receipt.txt", notes = "External patient-level output receipt (KAAOS)")
@@ -1172,6 +1450,11 @@ log_lines <- c(
   sprintf("mapped_type_overrides_n=%d", mapped_type_overrides_n),
   sprintf("mapped_exclusions_n=%d", mapped_exclusions_n),
   sprintf("n_selected_deficits_after_map=%d", n_deficits),
+  sprintf("appendix_rows=%d", nrow(appendix_export$table)),
+  sprintf("appendix_selection_source=%s", appendix_export$selection_source),
+  sprintf("appendix_csv=%s", basename(appendix_export$csv_path)),
+  sprintf("appendix_md=%s", basename(appendix_export$md_path)),
+  sprintf("appendix_diag=%s", basename(appendix_diag_path)),
   sprintf("primary_missingness_threshold=%.2f", pmiss_thr_primary),
   sprintf("sensitivity_missingness_threshold=%.2f", pmiss_thr_sensitivity),
   sprintf("used_sensitivity=%s", as.character(use_sensitivity)),
@@ -1183,6 +1466,9 @@ log_lines <- c(
   sprintf("min_deficits_required=%d", min_deficits_required),
   sprintf("use_proportional_min_deficits=%s", as.character(use_proportional_min_deficits)),
   sprintf("coverage_min=%.2f", coverage_min),
+  sprintf("appendix_map_source=%s", appendix_export$map_source_path),
+  "appendix_sources=deficit_map.csv + selected-deficits; fallback keep==1 only when selector file is absent",
+  sprintf("appendix_ordinal_caveat=%s", appendix_export$ordinal_caveat),
   "direction_rule=no_correlation_driven_flipping;codebook_or_lineage_only",
   "redundancy_rule=diagnosis>functional_limitation>symptom_self_report>medication_proxy"
 )

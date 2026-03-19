@@ -242,9 +242,21 @@ def is_k15_derivation_exception(path):
     return bool(re.match(r"^K15[._]", base))
 
 
+def is_dynamic_k40_contract_exception(path, lines):
+    norm = path.replace("\\", "/")
+    if not norm.endswith("R-scripts/K40/K40_FI_KAAOS.R"):
+        return False
+    lowered = "\n".join(lines[:80]).lower()
+    return (
+        "required vars (dynamic raw-sheet contract; no fixed req_cols applies)" in lowered
+        and "selected raw kaaos sheet" in lowered
+    )
+
+
 def determine_requirements_source(script_path, lines):
     req_vars, req_err, req_debug = extract_required_vars(lines)
     req_cols, cols_err = extract_req_cols(lines)
+    dynamic_k40_contract = is_dynamic_k40_contract_exception(script_path, lines)
 
     out = {
         "source": None,
@@ -268,6 +280,11 @@ def determine_requirements_source(script_path, lines):
         out["source"] = "doc_block"
         out["parsed_vars"] = req_vars
         out["parsed_n"] = len(req_vars)
+    elif dynamic_k40_contract:
+        out["source"] = "dynamic_contract"
+        out["warnings"].append(
+            "dynamic K40 raw-sheet contract declared; skipped fixed req_cols check"
+        )
     else:
         if is_k15_derivation_exception(script_path):
             out["source"] = "warn_only"
