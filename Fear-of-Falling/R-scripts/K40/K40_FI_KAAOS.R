@@ -541,20 +541,114 @@ detect_var_id_col <- function(df) {
   chr_cols[[order(scores, decreasing = TRUE)[1]]]
 }
 
-compose_scoring_rule <- function(item_type, direction, cutoff, cutoff_low, cutoff_high) {
+format_score_value <- function(x) {
+  txt <- formatC(x, format = "f", digits = 2)
+  sub("\\.?0+$", "", txt)
+}
+
+count_char <- function(x, pattern) {
+  matches <- gregexpr(pattern, x, fixed = TRUE)[[1]]
+  if (length(matches) == 1 && matches[[1]] == -1) return(0L)
+  as.integer(length(matches))
+}
+
+trim_unmatched_trailing_delims <- function(x) {
+  piece <- trimws(as.character(x))
+  piece <- gsub("\u00A0", " ", piece, fixed = TRUE)
+  piece <- gsub("\\s+", " ", piece)
+  piece <- gsub("[,;]+\\s*$", "", piece)
+
+  repeat {
+    if (!nzchar(piece)) break
+    last_chr <- substr(piece, nchar(piece), nchar(piece))
+    if (last_chr == ")" && count_char(piece, "(") < count_char(piece, ")")) {
+      piece <- trimws(substr(piece, 1, nchar(piece) - 1))
+      next
+    }
+    if (last_chr == "]" && count_char(piece, "[") < count_char(piece, "]")) {
+      piece <- trimws(substr(piece, 1, nchar(piece) - 1))
+      next
+    }
+    break
+  }
+
+  piece
+}
+
+extract_level_mapping_entries <- function(label) {
+  if (is.na(label) || !nzchar(trimws(label))) return(NA_character_)
+
+  normalized <- gsub("[\r\n]+", " ", as.character(label))
+  normalized <- gsub("\u00A0", " ", normalized, fixed = TRUE)
+  normalized <- gsub("\\s+", " ", normalized)
+  matches <- gregexpr("(?<![A-Za-z0-9])(\\d+)\\s*=\\s*(.*?)(?=(?:\\s*,?\\s*(?<![A-Za-z0-9])\\d+\\s*=)|$)", normalized, perl = TRUE)
+  parts <- regmatches(normalized, matches)[[1]]
+  if (length(parts) == 0) return(tibble(code = character(), detail = character(), entry = character()))
+
+  codes <- vapply(parts, function(part) {
+    sub("^\\s*(\\d+)\\s*=.*$", "\\1", part, perl = TRUE)
+  }, character(1))
+  details <- vapply(parts, function(part) {
+    piece <- sub("^\\s*\\d+\\s*=\\s*", "", part, perl = TRUE)
+    trim_unmatched_trailing_delims(piece)
+  }, character(1))
+  entries <- ifelse(nzchar(details), paste0(codes, "= ", details), NA_character_)
+
+  tibble(
+    code = codes,
+    detail = details,
+    entry = entries
+  ) %>%
+    filter(!is.na(entry), nzchar(entry))
+}
+
+parse_level_mapping_detail <- function(label, missing_codes = NA_character_) {
+  parsed <- extract_level_mapping_entries(label)
+  if (all(is.na(parsed))) return(NA_character_)
+
+  excluded_codes <- parse_missing_codes(missing_codes)
+  if (length(excluded_codes) > 0) {
+    parsed <- parsed %>% filter(!(code %in% excluded_codes))
+  }
+
+  if (nrow(parsed) == 0) return(NA_character_)
+  paste(parsed$entry, collapse = "; ")
+}
+
+level_mapping_count <- function(level_mapping_detail) {
+  if (is.na(level_mapping_detail) || !nzchar(level_mapping_detail)) return(NA_integer_)
+  parts <- strsplit(level_mapping_detail, ";", fixed = TRUE)[[1]]
+  parts <- trimws(parts)
+  parts <- parts[nzchar(parts)]
+  if (length(parts) == 0) return(NA_integer_)
+  as.integer(length(parts))
+}
+
+compose_scoring_rule <- function(item_type, direction, cutoff, cutoff_low, cutoff_high, level_mapping_detail = NA_character_, missing_codes = NA_character_) {
   item_type <- tolower(trimws(as.character(item_type)))
   direction <- tolower(trimws(as.character(direction)))
+  n_levels <- level_mapping_count(level_mapping_detail)
+  has_missing_codes <- length(parse_missing_codes(missing_codes)) > 0
 
   if (item_type == "binary") {
-    if (direction == "higher_worse") return("Binary item: deficit = 1 for worse/present response, else 0.")
-    if (direction == "lower_worse") return("Binary item: lower/absent-coded response is treated as worse in current mapping.")
-    return("Binary item: scored as coded by the current mapping.")
+    if (direction == "lower_worse") {
+      return("Binary item: explicit 0/1 deficit coding is used; 1 = lower/worse level and 0 = higher/better level.")
+    }
+    return("Binary item: explicit 0/1 deficit coding is used; 0 = better/absent level and 1 = worse/present level.")
   }
 
   if (item_type == "ordinal") {
-    if (direction == "higher_worse") return("Ordinal item: higher response levels are worse; scores are scaled to 0-1 by ordered levels.")
-    if (direction == "lower_worse") return("Ordinal item: lower response levels are worse; scores are scaled to 0-1 by ordered levels.")
-    return("Ordinal item: scored from ordered levels on a 0-1 scale using current coding.")
+    missing_clause <- if (has_missing_codes) " Missing codes are excluded prior to scoring." else ""
+    if (!is.na(n_levels) && n_levels >= 2) {
+      score_grid <- seq(0, 1, length.out = n_levels)
+      score_text <- paste(vapply(score_grid, format_score_value, character(1)), collapse = ", ")
+      if (direction == "lower_worse") {
+        return(sprintf("Ordinal item: ordered valid categories are mapped to %s from worst to best level.%s", score_text, missing_clause))
+      }
+      return(sprintf("Ordinal item: ordered valid categories are mapped to %s from best to worst level.%s", score_text, missing_clause))
+    }
+    if (direction == "lower_worse") return(sprintf("Ordinal item: 0 = best level, intermediate ordered levels receive evenly spaced values, and 1 = worst level after reversing the raw order.%s", missing_clause))
+    return(sprintf("Ordinal item: 0 = best level, intermediate ordered levels receive evenly spaced values, and 1 = worst level.%s", missing_clause))
   }
 
   if (item_type == "continuous") {
@@ -571,6 +665,150 @@ compose_scoring_rule <- function(item_type, direction, cutoff, cutoff_low, cutof
   }
 
   "Scoring rule unavailable from current mapping."
+}
+
+appendix_translation_lookup <- tibble::tribble(
+  ~from, ~to,
+  "ei ongelmaa näön kanssa", "no vision problems",
+  "ei ongelmaa muistin kanssa", "no memory problems",
+  "ei mieliala-ongelmaa (hyvä)", "no mood problems (good)",
+  "ei täytä, mutta kalkki+D-vitamiinit käytössä", "does not meet recommendations, but uses calcium + vitamin D",
+  "täyttää ravitsemussuositukset", "meets nutrition recommendations",
+  "ei täytä ravitsemussuosituksia", "does not meet nutrition recommendations",
+  "kodin ulkopuolella asiointi", "errands outside the home",
+  "ei pysty asioimaan itsenäisesti", "unable to manage errands independently",
+  "oma arvio liikuntakyvystä", "self-rated mobility",
+  "liikkuminen vaikeutunut 12kk", "mobility worsened over 12 months",
+  "liikkuminen vaikeutunut 6kk", "mobility worsened over 6 months",
+  "tasapaino-vaikeudet", "balance difficulties",
+  "tasapaino- vaikeudet", "balance difficulties",
+  "2km vaikeus liikkua", "difficulty walking 2 km",
+  "500m vaikeus liikkua", "difficulty walking 500 m",
+  "pituuden lyhentymä", "height loss",
+  "koettu terveydentila", "self-rated health",
+  "silmälasit käytössä", "requires glasses",
+  "heikentynyt näkö", "impaired vision",
+  "heikentynyt muisti", "impaired memory",
+  "kohtalainen mieliala", "moderately low mood",
+  "nukkuu vaihtelevasti", "variable sleep",
+  "nukkuu huonosti", "sleeps poorly",
+  "nukkuu hyvin", "sleeps well",
+  "ei vaikeuksia", "no difficulty",
+  "vaikeuksia /apuväline", "difficulty / assistive device",
+  "vaikeuksia/ apuväline", "difficulty / assistive device",
+  "ei osaa arvioida", "unable to assess",
+  "hyvä kuulo", "good hearing",
+  "kuulolaite", "hearing aid",
+  "kuulo", "hearing",
+  "näkö", "vision",
+  "muisti", "memory",
+  "mieliala", "mood",
+  "nukkuminen", "sleep",
+  "ravitsemus", "nutrition",
+  "masentunut", "depressed",
+  "muistamaton", "forgetful",
+  "erinomainen", "excellent",
+  "melko huono", "fairly poor",
+  "kohtalainen", "moderate",
+  "heikentynyt", "impaired",
+  "heikko", "poor",
+  "hyvä", "good",
+  "huono", "poor",
+  "ei nuku", "does not sleep",
+  "unilääke", "sleeping medication",
+  "ei onnistu", "unable",
+  "vaikeuksia", "difficulty",
+  "apuväline", "assistive device",
+  "sokea", "blind",
+  "kuuro", "deaf",
+  "murtumia", "fractures",
+  "parkinson", "Parkinson disease",
+  "alzheimer", "Alzheimer disease",
+  "TK: VAS", "Pain intensity (VAS)",
+  "TK VAS", "Pain intensity (VAS)",
+  "AVH", "stroke",
+  "ei tietoa", "unknown"
+)
+
+translate_appendix_text <- function(x) {
+  if (length(x) == 0) return(x)
+  x_chr <- as.character(x)
+  nas <- is.na(x_chr)
+  out <- x_chr
+
+  for (i in seq_len(nrow(appendix_translation_lookup))) {
+    out <- gsub(
+      appendix_translation_lookup$from[[i]],
+      appendix_translation_lookup$to[[i]],
+      out,
+      fixed = TRUE
+    )
+  }
+
+  out <- gsub("(?<![[:alpha:]])kyllä(?![[:alpha:]])", "yes", out, perl = TRUE)
+  out <- gsub("(?<![[:alpha:]])ei(?![[:alpha:]])", "no", out, perl = TRUE)
+
+  out[nas] <- NA_character_
+  out
+}
+
+translate_appendix_table <- function(tbl) {
+  tbl %>%
+    mutate(
+      label = translate_appendix_text(label),
+      level_mapping_detail = translate_appendix_text(level_mapping_detail),
+      notes = translate_appendix_text(notes)
+    )
+}
+
+validate_english_appendix_translation <- function(source_tbl, translated_tbl) {
+  stopifnot(nrow(source_tbl) == nrow(translated_tbl))
+  stopifnot(identical(source_tbl$item_id, translated_tbl$item_id))
+  stopifnot(identical(source_tbl$domain, translated_tbl$domain))
+  stopifnot(identical(source_tbl$item_type, translated_tbl$item_type))
+  stopifnot(identical(source_tbl$direction, translated_tbl$direction))
+  stopifnot(identical(source_tbl$scoring_rule, translated_tbl$scoring_rule))
+  stopifnot(identical(source_tbl$missing_codes, translated_tbl$missing_codes))
+  stopifnot(identical(source_tbl$priority, translated_tbl$priority))
+
+  residual_pattern <- paste(
+    c(
+      "ei tietoa",
+      "kyllä",
+      "(^|[^A-Za-z])ei([^A-Za-z]|$)",
+      "hyvä kuulo",
+      "kuulo",
+      "näkö",
+      "muisti",
+      "mieliala",
+      "nukkuminen",
+      "ravitsemus",
+      "liikkuminen vaikeutunut",
+      "tasapaino- vaikeudet",
+      "tasapaino-vaikeudet",
+      "vaikeuksia",
+      "apuväline",
+      "heikentynyt",
+      "kuulolaite",
+      "kuuro",
+      "sokea",
+      "masentunut",
+      "nukkuu",
+      "murtumia",
+      "pituuden lyhentymä",
+      "koettu terveydentila",
+      "erinomainen",
+      "kohtalainen",
+      "huono",
+      "heikko"
+    ),
+    collapse = "|"
+  )
+  translated_text <- unlist(translated_tbl[c("label", "level_mapping_detail", "notes")], use.names = FALSE)
+  translated_text <- translated_text[!is.na(translated_text) & nzchar(translated_text)]
+  if (any(grepl(residual_pattern, translated_text, perl = TRUE, ignore.case = TRUE))) {
+    stop("English appendix translation still contains Finnish residual wording.", call. = FALSE)
+  }
 }
 
 escape_md_cell <- function(x) {
@@ -667,9 +905,22 @@ build_appendix_export <- function(deficit_map_df, selected_path, outputs_dir, ma
       domain = ifelse(is.na(domain) | !nzchar(domain), NA_character_, domain),
       item_type = ifelse(is.na(type) | !nzchar(type), NA_character_, type),
       direction = ifelse(is.na(direction) | !nzchar(direction), NA_character_, direction),
+      level_mapping_detail = vapply(
+        seq_len(n()),
+        function(i) parse_level_mapping_detail(label[[i]], missing_codes[[i]]),
+        character(1)
+      ),
       scoring_rule = vapply(
         seq_len(n()),
-        function(i) compose_scoring_rule(item_type[[i]], direction[[i]], cutoff[[i]], cutoff_low[[i]], cutoff_high[[i]]),
+        function(i) compose_scoring_rule(
+          item_type[[i]],
+          direction[[i]],
+          cutoff[[i]],
+          cutoff_low[[i]],
+          cutoff_high[[i]],
+          level_mapping_detail[[i]],
+          missing_codes[[i]]
+        ),
         character(1)
       ),
       missing_codes = ifelse(is.na(missing_codes) | !nzchar(missing_codes), NA_character_, missing_codes),
@@ -682,6 +933,7 @@ build_appendix_export <- function(deficit_map_df, selected_path, outputs_dir, ma
       domain,
       item_type,
       direction,
+      level_mapping_detail,
       scoring_rule,
       missing_codes,
       priority,
@@ -690,7 +942,13 @@ build_appendix_export <- function(deficit_map_df, selected_path, outputs_dir, ma
 
   csv_path <- file.path(outputs_dir, "k40_fi22_appendix_deficit_definitions.csv")
   md_path <- file.path(outputs_dir, "k40_fi22_appendix_deficit_definitions.md")
+  english_csv_path <- file.path(outputs_dir, "k40_fi22_appendix_deficit_definitions_english.csv")
+  english_md_path <- file.path(outputs_dir, "k40_fi22_appendix_deficit_definitions_english.md")
   readr::write_csv(appendix_df, csv_path)
+
+  appendix_en_df <- translate_appendix_table(appendix_df)
+  validate_english_appendix_translation(appendix_df, appendix_en_df)
+  readr::write_csv(appendix_en_df, english_csv_path)
 
   md_lines <- appendix_markdown_lines(
     appendix_df,
@@ -704,10 +962,28 @@ build_appendix_export <- function(deficit_map_df, selected_path, outputs_dir, ma
   )
   writeLines(md_lines, md_path)
 
+  md_lines_english <- appendix_markdown_lines(
+    appendix_en_df,
+    title = "Frailty Index deficit definitions and scoring rules (English manuscript version)",
+    sources = c(
+      paste0("mapping=", resolved_map$path),
+      paste0("selector=", if (!is.null(selected_path) && file.exists(selected_path)) basename(selected_path) else "keep==1 fallback"),
+      paste0("selection_mode=", selected_source),
+      "translation_scope=label + level_mapping_detail + notes only"
+    ),
+    caveat = "This English appendix is a reporting-layer translation only; scoring rules and numeric mappings remain identical to the Finnish source appendix."
+  )
+  writeLines(md_lines_english, english_md_path)
+
   list(
     table = appendix_df,
     csv_path = csv_path,
     md_path = md_path,
+    english_table = appendix_en_df,
+    english_csv_path = english_csv_path,
+    english_md_path = english_md_path,
+    manuscript_source_path = english_md_path,
+    internal_source_path = md_path,
     selection_source = selected_source,
     map_source_path = resolved_map$path,
     ordinal_caveat = "Some ordinal items may still need manuscript-facing verbal level descriptions if source labels do not encode them."
@@ -1226,6 +1502,20 @@ append_artifact(
   n = nrow(appendix_export$table),
   notes = "Markdown appendix FI22 deficit definitions reconstructed from deficit_map + selected-deficits"
 )
+append_artifact(
+  label = "k40_fi22_appendix_deficit_definitions_english",
+  kind = "table_csv",
+  path = appendix_export$english_csv_path,
+  n = nrow(appendix_export$english_table),
+  notes = "English manuscript appendix FI22 deficit definitions translated in reporting layer only"
+)
+append_artifact(
+  label = "k40_fi22_appendix_deficit_definitions_english",
+  kind = "text_md",
+  path = appendix_export$english_md_path,
+  n = nrow(appendix_export$english_table),
+  notes = "English markdown manuscript appendix FI22 deficit definitions translated in reporting layer only"
+)
 appendix_diag_path <- write_manifest_diag(
   run_id = run_id,
   label_suffix = "sessionInfo_k40_appendix_fi22_definitions",
@@ -1409,6 +1699,10 @@ receipt_lines <- c(
   sprintf("appendix_selection_source=%s", appendix_export$selection_source),
   sprintf("appendix_csv=%s", basename(appendix_export$csv_path)),
   sprintf("appendix_md=%s", basename(appendix_export$md_path)),
+  sprintf("appendix_english_csv=%s", basename(appendix_export$english_csv_path)),
+  sprintf("appendix_english_md=%s", basename(appendix_export$english_md_path)),
+  sprintf("appendix_manuscript_source=%s", basename(appendix_export$manuscript_source_path)),
+  sprintf("appendix_internal_source=%s", basename(appendix_export$internal_source_path)),
   sprintf("appendix_diag=%s", basename(appendix_diag_path)),
   sprintf("fi_variant=%s", fi_variant),
   sprintf("fi_variant_role=%s", fi_variant_role),
@@ -1454,6 +1748,10 @@ log_lines <- c(
   sprintf("appendix_selection_source=%s", appendix_export$selection_source),
   sprintf("appendix_csv=%s", basename(appendix_export$csv_path)),
   sprintf("appendix_md=%s", basename(appendix_export$md_path)),
+  sprintf("appendix_english_csv=%s", basename(appendix_export$english_csv_path)),
+  sprintf("appendix_english_md=%s", basename(appendix_export$english_md_path)),
+  sprintf("appendix_manuscript_source=%s", basename(appendix_export$manuscript_source_path)),
+  sprintf("appendix_internal_source=%s", basename(appendix_export$internal_source_path)),
   sprintf("appendix_diag=%s", basename(appendix_diag_path)),
   sprintf("primary_missingness_threshold=%.2f", pmiss_thr_primary),
   sprintf("sensitivity_missingness_threshold=%.2f", pmiss_thr_sensitivity),

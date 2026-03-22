@@ -702,6 +702,281 @@ fit_capacity_cfa <- function(df_baseline, df_followup) {
   )
 }
 
+run_capacity_longitudinal_invariance <- function(wide_export) {
+  stopifnot(all(c(
+    "indicator_gait_primary_0", "indicator_chair_capacity_0", "indicator_balance_capacity_0",
+    "indicator_gait_primary_12m", "indicator_chair_capacity_12m", "indicator_balance_capacity_12m"
+  ) %in% names(wide_export)))
+
+  dat <- wide_export %>%
+    transmute(
+      gait_0 = as.numeric(indicator_gait_primary_0),
+      chair_0 = as.numeric(indicator_chair_capacity_0),
+      balance_0 = as.numeric(indicator_balance_capacity_0),
+      gait_12m = as.numeric(indicator_gait_primary_12m),
+      chair_12m = as.numeric(indicator_chair_capacity_12m),
+      balance_12m = as.numeric(indicator_balance_capacity_12m)
+    ) %>%
+    mutate(across(everything(), ~ {
+      x <- .x
+      x[!is.finite(x)] <- NA_real_
+      x
+    }))
+
+  coverage <- tibble(
+    n_rows = nrow(dat),
+    n_complete_any_time = sum(
+      complete.cases(dat[, c("gait_0", "chair_0", "balance_0")]) |
+        complete.cases(dat[, c("gait_12m", "chair_12m", "balance_12m")])
+    ),
+    n_complete_baseline = sum(complete.cases(dat[, c("gait_0", "chair_0", "balance_0")])),
+    n_complete_12m = sum(complete.cases(dat[, c("gait_12m", "chair_12m", "balance_12m")])),
+    n_complete_both_times = sum(complete.cases(dat))
+  )
+
+  if (coverage$n_complete_any_time < 20) {
+    empty_tbl <- tibble(
+      model = c("configural", "metric", "scalar"),
+      converged = NA,
+      npar = NA_real_,
+      chisq_scaled = NA_real_,
+      df = NA_real_,
+      cfi_robust = NA_real_,
+      rmsea_robust = NA_real_,
+      srmr = NA_real_,
+      aic = NA_real_,
+      bic = NA_real_,
+      delta_cfi = NA_real_,
+      delta_rmsea = NA_real_,
+      delta_srmr = NA_real_,
+      decision = "insufficient_data"
+    )
+
+    return(list(
+      fits = list(configural = NULL, metric = NULL, scalar = NULL),
+      table = empty_tbl,
+      coverage = coverage,
+      verdict = "insufficient_data",
+      warnings = list(configural = character(0), metric = character(0), scalar = character(0)),
+      manuscript_text = paste(
+        "A restricted longitudinal CFA was planned to evaluate whether the same three-indicator",
+        "locomotor-capacity structure was applicable at baseline and 12 months, but the available",
+        "complete information across occasions was insufficient for a stable invariance check."
+      )
+    ))
+  }
+
+  model_configural <- '
+    LC_0   =~ gait_0 + chair_0 + balance_0
+    LC_12m =~ gait_12m + chair_12m + balance_12m
+
+    gait_0 ~~ gait_12m
+    chair_0 ~~ chair_12m
+    balance_0 ~~ balance_12m
+
+    LC_0 ~~ LC_12m
+  '
+
+  model_metric <- '
+    LC_0   =~ l1*gait_0 + l2*chair_0 + l3*balance_0
+    LC_12m =~ l1*gait_12m + l2*chair_12m + l3*balance_12m
+
+    gait_0 ~~ gait_12m
+    chair_0 ~~ chair_12m
+    balance_0 ~~ balance_12m
+
+    LC_0 ~~ LC_12m
+  '
+
+  model_scalar <- '
+    LC_0   =~ l1*gait_0 + l2*chair_0 + l3*balance_0
+    LC_12m =~ l1*gait_12m + l2*chair_12m + l3*balance_12m
+
+    gait_0 ~ i1*1
+    chair_0 ~ i2*1
+    balance_0 ~ i3*1
+    gait_12m ~ i1*1
+    chair_12m ~ i2*1
+    balance_12m ~ i3*1
+
+    gait_0 ~~ gait_12m
+    chair_0 ~~ chair_12m
+    balance_0 ~~ balance_12m
+
+    LC_0 ~~ LC_12m
+  '
+
+  fit_one <- function(model_string) {
+    fit_warnings <- character(0)
+    fit_obj <- withCallingHandlers(
+      tryCatch(
+        lavaan::cfa(
+          model = model_string,
+          data = dat,
+          estimator = "MLR",
+          missing = "listwise",
+          std.lv = TRUE
+        ),
+        error = function(e) e
+      ),
+      warning = function(w) {
+        fit_warnings <<- c(fit_warnings, conditionMessage(w))
+        invokeRestart("muffleWarning")
+      }
+    )
+
+    if (inherits(fit_obj, "error")) {
+      return(list(fit = NULL, warnings = unique(c(fit_warnings, conditionMessage(fit_obj)))))
+    }
+
+    list(fit = fit_obj, warnings = unique(fit_warnings))
+  }
+
+  res_configural <- fit_one(model_configural)
+  res_metric <- fit_one(model_metric)
+  res_scalar <- fit_one(model_scalar)
+
+  fits <- list(
+    configural = res_configural$fit,
+    metric = res_metric$fit,
+    scalar = res_scalar$fit
+  )
+
+  measure_num <- function(fit, measure) {
+    if (is.null(fit)) return(NA_real_)
+    out <- tryCatch(
+      suppressWarnings(lavaan::fitMeasures(fit, measure)),
+      error = function(e) NA_real_
+    )
+    as.numeric(out)[1]
+  }
+
+  extract_one <- function(fit, model_name) {
+    if (is.null(fit)) {
+      return(tibble(
+        model = model_name,
+        converged = FALSE,
+        npar = NA_real_,
+        chisq_scaled = NA_real_,
+        df = NA_real_,
+        cfi_robust = NA_real_,
+        rmsea_robust = NA_real_,
+        srmr = NA_real_,
+        aic = NA_real_,
+        bic = NA_real_
+      ))
+    }
+
+    tibble(
+      model = model_name,
+      converged = isTRUE(lavaan::lavInspect(fit, "converged")),
+      npar = measure_num(fit, "npar"),
+      chisq_scaled = measure_num(fit, "chisq.scaled"),
+      df = measure_num(fit, "df"),
+      cfi_robust = measure_num(fit, "cfi.robust"),
+      rmsea_robust = measure_num(fit, "rmsea.robust"),
+      srmr = measure_num(fit, "srmr"),
+      aic = measure_num(fit, "aic"),
+      bic = measure_num(fit, "bic")
+    )
+  }
+
+  fit_tbl <- bind_rows(
+    extract_one(fits$configural, "configural"),
+    extract_one(fits$metric, "metric"),
+    extract_one(fits$scalar, "scalar")
+  ) %>%
+    mutate(
+      delta_cfi = c(NA_real_, diff(cfi_robust)),
+      delta_rmsea = c(NA_real_, diff(rmsea_robust)),
+      delta_srmr = c(NA_real_, diff(srmr))
+    )
+
+  metric_row <- fit_tbl %>% filter(model == "metric")
+  scalar_row <- fit_tbl %>% filter(model == "scalar")
+
+  metric_supported <- nrow(metric_row) == 1 &&
+    isTRUE(metric_row$converged[[1]]) &&
+    !is.na(metric_row$delta_cfi[[1]]) && metric_row$delta_cfi[[1]] >= -0.010 &&
+    !is.na(metric_row$delta_rmsea[[1]]) && metric_row$delta_rmsea[[1]] <= 0.015 &&
+    !is.na(metric_row$delta_srmr[[1]]) && metric_row$delta_srmr[[1]] <= 0.030
+
+  scalar_supported <- nrow(scalar_row) == 1 &&
+    isTRUE(scalar_row$converged[[1]]) &&
+    !is.na(scalar_row$delta_cfi[[1]]) && scalar_row$delta_cfi[[1]] >= -0.010 &&
+    !is.na(scalar_row$delta_rmsea[[1]]) && scalar_row$delta_rmsea[[1]] <= 0.015 &&
+    !is.na(scalar_row$delta_srmr[[1]]) && scalar_row$delta_srmr[[1]] <= 0.010
+
+  verdict <- case_when(
+    isTRUE(metric_supported) && isTRUE(scalar_supported) ~ "scalar_supported",
+    isTRUE(metric_supported) && !isTRUE(scalar_supported) ~ "metric_supported_only",
+    TRUE ~ "metric_not_supported"
+  )
+
+  fit_tbl <- fit_tbl %>%
+    mutate(
+      decision = case_when(
+        model == "configural" ~ "baseline_structure_check",
+        model == "metric" & metric_supported ~ "supported",
+        model == "metric" & !metric_supported ~ "not_supported",
+        model == "scalar" & scalar_supported ~ "supported",
+        model == "scalar" & !scalar_supported ~ "not_supported",
+        TRUE ~ "unclear"
+      )
+    )
+
+  fmt3 <- function(x) ifelse(is.na(x), "NA", sprintf("%.3f", x))
+
+  manuscript_text <- case_when(
+    verdict == "scalar_supported" ~ paste0(
+      "To evaluate whether the baseline-derived latent locomotor-capacity structure was ",
+      "applicable at follow-up, we conducted a restricted longitudinal CFA using the same ",
+      "three indicators at baseline and 12 months and allowing indicator-specific residual ",
+      "correlations across time. Equality constraints on factor loadings and intercepts were ",
+      "compatible with the data at a practical level (robust CFI/RMSEA/SRMR changes were small: ",
+      "metric ΔCFI=", fmt3(metric_row$delta_cfi[[1]]),
+      ", scalar ΔCFI=", fmt3(scalar_row$delta_cfi[[1]]),
+      "), supporting approximate stability of the measurement structure and scale over time."
+    ),
+    verdict == "metric_supported_only" ~ paste0(
+      "To evaluate whether the baseline-derived latent locomotor-capacity structure was ",
+      "applicable at follow-up, we conducted a restricted longitudinal CFA using the same ",
+      "three indicators at baseline and 12 months and allowing indicator-specific residual ",
+      "correlations across time. Equality constraints on factor loadings were compatible ",
+      "with the data at a practical level (metric ΔCFI=",
+      fmt3(metric_row$delta_cfi[[1]]),
+      "), supporting a broadly stable relation between the indicators and the latent factor ",
+      "across time. Intercept invariance was less clearly supported, so latent mean comparability ",
+      "over time should be interpreted with some caution."
+    ),
+    TRUE ~ paste0(
+      "A restricted longitudinal CFA was used to evaluate whether the same three-indicator ",
+      "locomotor-capacity structure was applicable at baseline and 12 months. The equality-",
+      "constrained metric model was not clearly supported by practical fit-change criteria ",
+      "(metric ΔCFI=", fmt3(metric_row$delta_cfi[[1]]),
+      ", ΔRMSEA=", fmt3(metric_row$delta_rmsea[[1]]),
+      ", ΔSRMR=", fmt3(metric_row$delta_srmr[[1]]),
+      "), indicating limited evidence for stable measurement relations across occasions. ",
+      "Accordingly, the latent score can still be presented as a structured summary score, ",
+      "but claims of stronger longitudinal measurement support relative to the z3 fallback ",
+      "should be made cautiously."
+    )
+  )
+
+  list(
+    fits = fits,
+    table = fit_tbl,
+    coverage = coverage,
+    verdict = verdict,
+    warnings = list(
+      configural = res_configural$warnings,
+      metric = res_metric$warnings,
+      scalar = res_scalar$warnings
+    ),
+    manuscript_text = manuscript_text
+  )
+}
+
 save_lavaan_outputs <- function(fit, prefix) {
   sum_path <- file.path(outputs_dir, paste0(prefix, "_summary.txt"))
   load_path <- file.path(outputs_dir, paste0(prefix, "_loadings.csv"))
@@ -981,15 +1256,54 @@ decision_lines <- c(
   paste0("ex_person_conflict_ambiguous=", k32_ex_person_conflict_ambiguous),
   paste0("Rows retained in primary core model: ", sum(primary_complete))
 )
-dec_path <- file.path(outputs_dir, "k32_decision_log.txt")
-write_lines_safely(decision_lines, dec_path)
-append_manifest_safe(label = "k32_decision_log", kind = "text", path = dec_path, n = nrow(wide_export))
 
 # --- 4) CFA -------------------------------------------------------------------
 cfa_primary <- fit_capacity_cfa(
   wide_export %>% transmute(gait = indicator_gait_primary_0, chair = indicator_chair_capacity_0, balance = indicator_balance_capacity_0),
   wide_export %>% transmute(gait = indicator_gait_primary_12m, chair = indicator_chair_capacity_12m, balance = indicator_balance_capacity_12m)
 )
+
+# --- 4b) Longitudinal invariance check ----------------------------------------
+lc_invariance <- run_capacity_longitudinal_invariance(wide_export)
+
+lc_invariance_path <- file.path(outputs_dir, "k32_longitudinal_invariance.csv")
+write_csv_safely(lc_invariance$table, lc_invariance_path)
+append_manifest_safe(
+  label = "k32_longitudinal_invariance",
+  kind = "table_csv",
+  path = lc_invariance_path,
+  n = nrow(lc_invariance$table)
+)
+
+lc_invariance_cov_path <- file.path(outputs_dir, "k32_longitudinal_invariance_coverage.csv")
+write_csv_safely(lc_invariance$coverage, lc_invariance_cov_path)
+append_manifest_safe(
+  label = "k32_longitudinal_invariance_coverage",
+  kind = "table_csv",
+  path = lc_invariance_cov_path,
+  n = nrow(lc_invariance$coverage)
+)
+
+lc_invariance_text_path <- file.path(outputs_dir, "k32_longitudinal_invariance_manuscript.txt")
+write_lines_safely(lc_invariance$manuscript_text, lc_invariance_text_path)
+append_manifest_safe(
+  label = "k32_longitudinal_invariance_manuscript",
+  kind = "text",
+  path = lc_invariance_text_path,
+  n = 1
+)
+
+decision_lines <- c(
+  decision_lines,
+  paste0("Longitudinal invariance verdict: ", lc_invariance$verdict),
+  paste0(
+    "Longitudinal invariance practical summary: ",
+    gsub("[\r\n]+", " ", lc_invariance$manuscript_text)
+  )
+)
+dec_path <- file.path(outputs_dir, "k32_decision_log.txt")
+write_lines_safely(decision_lines, dec_path)
+append_manifest_safe(label = "k32_decision_log", kind = "text", path = dec_path, n = nrow(wide_export))
 
 wide_export <- wide_export %>% mutate(
   locomotor_capacity_0 = cfa_primary$baseline_score,

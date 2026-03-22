@@ -536,6 +536,30 @@ primary_fit <- fit_branch_model(model_df, shape, outcome, fi22_enabled = FALSE)
 primary_tbl <- primary_fit$table %>%
   mutate(branch = tolower(shape), outcome = outcome, model_role = "primary", formula = primary_fit$formula, n = nrow(model_df))
 
+primary_model_path <- NA_character_
+primary_frame_path <- NA_character_
+if (shape == "LONG") {
+  primary_model_path <- file.path(outputs_dir, paste0(prefix, "_model_primary.rds"))
+  saveRDS(primary_fit$model, primary_model_path)
+  append_manifest_safe(
+    label = paste0(prefix, "_model_primary"),
+    kind = "model_rds",
+    path = primary_model_path,
+    n = nrow(model_df),
+    notes = "Exact primary fitted model object for downstream K50 predictions"
+  )
+
+  primary_frame_path <- file.path(outputs_dir, paste0(prefix, "_model_frame_primary.rds"))
+  saveRDS(stats::model.frame(primary_fit$model), primary_frame_path)
+  append_manifest_safe(
+    label = paste0(prefix, "_model_frame_primary"),
+    kind = "data_rds",
+    path = primary_frame_path,
+    n = nrow(stats::model.frame(primary_fit$model)),
+    notes = "Exact analysis frame used for the primary K50 mixed model"
+  )
+}
+
 fallback_tbl <- NULL
 if (identical(outcome, "locomotor_capacity")) {
   fallback_df <- if (shape == "LONG") {
@@ -611,6 +635,8 @@ append_manifest_safe(
 decision_lines <- c(
   decision_lines,
   paste0("primary_terms_path=", primary_path),
+  paste0("primary_model_path=", ifelse(is.na(primary_model_path), "NA", primary_model_path)),
+  paste0("primary_model_frame_path=", ifelse(is.na(primary_frame_path), "NA", primary_frame_path)),
   paste0("fallback_terms_path=", ifelse(is.na(fallback_path), "NA", fallback_path)),
   paste0("fi22_terms_path=", ifelse(is.na(fi22_path), "NA", fi22_path)),
   paste0("qc_gates_path=", gates_path),
