@@ -81,12 +81,53 @@ write_text <- function(lines, label, notes) {
   append_manifest_safe(label, "text", file.path("R-scripts", "K50", "outputs", paste0(label, ".txt")), n = length(lines), notes = notes)
 }
 
-write_figure <- function(label, notes, expr) {
-  out_path <- file.path(outputs_dir, paste0(label, ".pdf"))
-  grDevices::pdf(out_path, width = 12, height = 6, onefile = TRUE)
-  on.exit(grDevices::dev.off(), add = TRUE)
-  force(expr)
-  append_manifest_safe(label, "figure_pdf", file.path("R-scripts", "K50", "outputs", paste0(label, ".pdf")), notes = notes)
+write_figure <- function(label, notes, draw_fun) {
+  render_device <- function(path, kind, open_device, tag) {
+    ok <- FALSE
+
+    withCallingHandlers(
+      tryCatch({
+        open_device(path)
+        draw_fun()
+        grDevices::dev.off()
+        ok <- file.exists(path)
+      }, error = function(e) {
+        message("Figure export failed for ", tag, ": ", conditionMessage(e))
+      }),
+      warning = function(w) {
+        invokeRestart("muffleWarning")
+      }
+    )
+
+    if (ok) {
+      append_manifest_safe(label, kind, file.path("R-scripts", "K50", "outputs", basename(path)), notes = notes)
+    } else {
+      message("Figure export missing on disk, skipping manifest entry: ", path)
+    }
+
+    invisible(ok)
+  }
+
+  render_device(
+    file.path(outputs_dir, paste0(label, ".pdf")),
+    "figure_pdf",
+    function(path) grDevices::pdf(path, width = 12, height = 6, onefile = TRUE),
+    paste0(label, ":pdf")
+  )
+
+  render_device(
+    file.path(outputs_dir, paste0(label, ".png")),
+    "figure_png",
+    function(path) grDevices::png(path, width = 2400, height = 1200, res = 200, type = "cairo"),
+    paste0(label, ":png")
+  )
+
+  render_device(
+    file.path(outputs_dir, paste0(label, ".svg")),
+    "figure_svg",
+    function(path) grDevices::svg(path, width = 12, height = 6),
+    paste0(label, ":svg")
+  )
 }
 
 data_root <- resolve_data_root()
@@ -129,7 +170,7 @@ model_df$sex <- factor(model_df$sex)
 
 raw_facets <- split(raw_df, raw_df$FOF_status)
 
-write_figure("k50_visual_fi22_fof_delta_raw_facet", "Faceted raw-data figure for FI22, FOF, and delta_locomotor_capacity", {
+draw_raw_facet <- function() {
   old_par <- par(no.readonly = TRUE)
   on.exit(par(old_par), add = TRUE)
   par(mfrow = c(1, length(raw_facets)), mar = c(5, 5, 4, 1) + 0.1, oma = c(0, 0, 1, 0))
@@ -161,7 +202,7 @@ write_figure("k50_visual_fi22_fof_delta_raw_facet", "Faceted raw-data figure for
     }
   }
   mtext("Figure A. Raw delta_locomotor_capacity by FI22 and FOF_status", outer = TRUE, cex = 1.1)
-})
+}
 
 vis_model <- stats::lm(
   delta_locomotor_capacity ~ FOF_status * FI22_nonperformance_KAAOS + age + sex + BMI,
@@ -190,7 +231,7 @@ newdata$fit <- pred[, "fit"]
 newdata$lwr <- pred[, "lwr"]
 newdata$upr <- pred[, "upr"]
 
-write_figure("k50_visual_fi22_fof_delta_model_based", "Model-based predicted figure for FI22, FOF, and delta_locomotor_capacity", {
+draw_model_based <- function() {
   old_par <- par(no.readonly = TRUE)
   on.exit(par(old_par), add = TRUE)
   par(mar = c(5, 5, 4, 1) + 0.1)
@@ -222,7 +263,19 @@ write_figure("k50_visual_fi22_fof_delta_model_based", "Model-based predicted fig
     lines(group_df$FI22_nonperformance_KAAOS, group_df$fit, lwd = 3, col = cols[i])
   }
   legend("topright", legend = levels(newdata$FOF_status), col = cols, lwd = 3, bty = "n")
-})
+}
+
+write_figure(
+  "k50_visual_fi22_fof_delta_raw_facet",
+  "Faceted raw-data figure for FI22, FOF, and delta_locomotor_capacity",
+  draw_raw_facet
+)
+
+write_figure(
+  "k50_visual_fi22_fof_delta_model_based",
+  "Model-based predicted figure for FI22, FOF, and delta_locomotor_capacity",
+  draw_model_based
+)
 
 note_lines <- c(
   "K50 FI22-FOF-delta visualization note",
