@@ -61,13 +61,18 @@ panel_order_main <- c("WIDE primary", "LONG primary", "WIDE z3", "LONG z3", "WID
 panel_order_interaction <- c("LONG primary", "LONG z3", "LONG FI_22-adjusted")
 plot_df$row_label <- trimws(plot_df$row_label)
 plot_df$branch_color <- ifelse(plot_df$branch_label == "WIDE", "#2C7FB8", "#D95F0E")
+caption_text <- paste(
+  "Supplementary Figure S2. FOF-related estimates across primary, fallback, and FI_22-adjusted models.",
+  "Estimates represent unstandardized regression coefficients corresponding to adjusted differences in locomotor capacity on the model (latent) scale, with 95% confidence intervals.",
+  sep = "
+"
+)
 
 plot_data_path <- file.path(outputs_dir, "k50_sfig2_sensitivity_forest_plot_data.csv")
 utils::write.csv(plot_df, plot_data_path, row.names = FALSE)
 
 fig_path <- file.path(outputs_dir, "k50_sfig2_sensitivity_forest.png")
-png(fig_path, width = 2400, height = 1600, res = 200)
-par(mfrow = c(1, 2), mar = c(5, 11, 4, 2), oma = c(0, 0, 3, 0))
+pdf_path <- file.path(outputs_dir, "k50_sfig2_sensitivity_forest.pdf")
 
 xlim <- range(c(plot_df$conf.low, plot_df$conf.high, 0), na.rm = TRUE)
 
@@ -85,17 +90,26 @@ draw_panel <- function(panel_name, row_order) {
   points(sub$estimate, y, pch = 19, cex = 1.2, col = sub$branch_color)
 }
 
-draw_panel("FOF main effect", panel_order_main)
-draw_panel("Time x FOF_status interaction", panel_order_interaction)
-legend("bottomright", legend = c("WIDE estimand", "LONG estimand"),
-       col = c("#2C7FB8", "#D95F0E"), pch = 19, lwd = 2.5, bty = "n")
-mtext("Supplementary Figure S2. FOF-related estimates across primary, fallback, and FI_22-adjusted models.", outer = TRUE, cex = 1.1)
+draw_forest <- function() {
+  par(mfrow = c(1, 2), mar = c(5, 11, 4, 2), oma = c(0, 0, 0, 0))
+  draw_panel("FOF main effect", panel_order_main)
+  draw_panel("Time x FOF_status interaction", panel_order_interaction)
+  legend("bottomright", legend = c("WIDE estimand", "LONG estimand"),
+         col = c("#2C7FB8", "#D95F0E"), pch = 19, lwd = 2.5, bty = "n")
+}
+
+png(fig_path, width = 2400, height = 1600, res = 200)
+draw_forest()
+dev.off()
+
+pdf(pdf_path, width = 12, height = 8)
+draw_forest()
 dev.off()
 
 note_path <- file.path(outputs_dir, "provenance_note.txt")
 note_lines <- c(
   "Supplementary Figure S2 provenance",
-  "Caption: Supplementary Figure S2. FOF-related estimates across primary, fallback, and FI_22-adjusted models.",
+  paste0("Caption: ", caption_text),
   "Locked inputs:",
   paste0("- ", basename(vapply(specs, `[[`, character(1), "path"))),
   "Rules:",
@@ -111,6 +125,7 @@ session_path <- file.path(outputs_dir, "sessionInfo.txt")
 writeLines(capture.output(sessionInfo()), session_path)
 
 append_manifest("k50_sfig2_sensitivity_forest", "figure_png", file.path("R-scripts", "K50", "outputs", "SFIG2_sensitivity_forest", "k50_sfig2_sensitivity_forest.png"), "NA", "Supplementary forest plot from locked K50 term exports")
+append_manifest("k50_sfig2_sensitivity_forest_pdf", "figure_pdf", file.path("R-scripts", "K50", "outputs", "SFIG2_sensitivity_forest", "k50_sfig2_sensitivity_forest.pdf"), "NA", "Supplementary forest plot PDF from locked K50 term exports")
 append_manifest("k50_sfig2_sensitivity_forest_plot_data", "table_csv", file.path("R-scripts", "K50", "outputs", "SFIG2_sensitivity_forest", "k50_sfig2_sensitivity_forest_plot_data.csv"), nrow(plot_df), "Plot data for supplementary forest plot")
 append_manifest("provenance_note", "text", file.path("R-scripts", "K50", "outputs", "SFIG2_sensitivity_forest", "provenance_note.txt"), length(note_lines), "Locked input provenance for supplementary forest plot")
 append_manifest("sessionInfo", "sessioninfo", file.path("R-scripts", "K50", "outputs", "SFIG2_sensitivity_forest", "sessionInfo.txt"), "NA", "Session info for supplementary forest plot")
