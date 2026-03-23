@@ -23,7 +23,7 @@ analysis repository.
 - [x] Internal plot caption is removed from PNG and PDF.
 - [x] Provenance caption text remains available in `provenance_note.txt`.
 - [x] Plot content and analysis logic remain unchanged.
-- [x] Task is moved to `tasks/03-review/` after validation.
+- [x] After validation, task was moved from `tasks/03-review/` to `tasks/04-done/`.
 
 ## Log
 

@@ -61,12 +61,6 @@ panel_order_main <- c("WIDE primary", "LONG primary", "WIDE z3", "LONG z3", "WID
 panel_order_interaction <- c("LONG primary", "LONG z3", "LONG FI_22-adjusted")
 plot_df$row_label <- trimws(plot_df$row_label)
 plot_df$branch_color <- ifelse(plot_df$branch_label == "WIDE", "#2C7FB8", "#D95F0E")
-caption_text <- paste(
-  "Supplementary Figure S2. FOF-related estimates across primary, fallback, and FI_22-adjusted models.",
-  "Estimates represent unstandardized regression coefficients corresponding to adjusted differences in locomotor capacity on the model (latent) scale, with 95% confidence intervals.",
-  sep = "
-"
-)
 
 plot_data_path <- file.path(outputs_dir, "k50_sfig2_sensitivity_forest_plot_data.csv")
 utils::write.csv(plot_df, plot_data_path, row.names = FALSE)
@@ -107,9 +101,13 @@ draw_forest()
 dev.off()
 
 note_path <- file.path(outputs_dir, "provenance_note.txt")
+provenance_caption_lines <- c(
+  "Caption: Supplementary Figure S2. FOF-related estimates across primary, fallback, and FI_22-adjusted models.",
+  "Estimates represent unstandardized regression coefficients corresponding to adjusted differences in locomotor capacity on the model (latent) scale, with 95% confidence intervals."
+)
 note_lines <- c(
   "Supplementary Figure S2 provenance",
-  paste0("Caption: ", caption_text),
+  provenance_caption_lines,
   "Locked inputs:",
   paste0("- ", basename(vapply(specs, `[[`, character(1), "path"))),
   "Rules:",
