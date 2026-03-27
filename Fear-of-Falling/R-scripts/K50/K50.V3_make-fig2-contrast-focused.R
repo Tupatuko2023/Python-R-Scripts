@@ -69,8 +69,30 @@ dir.create(artifact_dir, recursive = TRUE, showWarnings = FALSE)
 
 req_cols <- c("id", "time", "FOF_status", "age", "sex", "BMI", "locomotor_capacity")
 
+contrast_label_baseline <- "FOF - No FOF at baseline (model-estimated)"
+contrast_label_12m <- "FOF - No FOF at 12 months"
+contrast_label_change <- "Difference in change over time"
+contrast_display_levels <- c(contrast_label_baseline, contrast_label_12m, contrast_label_change)
+contrast_group_level <- "Between-group level difference"
+contrast_group_interaction <- "Interaction contrast"
+
+upsert_manifest_row <- function(row, manifest_path) {
+  stopifnot(is.data.frame(row), nrow(row) == 1)
+  row <- normalize_manifest_df(row)
+
+  if (!file.exists(manifest_path)) {
+    write_manifest_csv(row, manifest_path)
+    return(invisible(manifest_path))
+  }
+
+  existing <- normalize_manifest_df(read_manifest_csv(manifest_path))
+  existing <- existing[existing$path != row$path[[1]], , drop = FALSE]
+  write_manifest_csv(dplyr::bind_rows(existing, row), manifest_path)
+  invisible(manifest_path)
+}
+
 append_manifest_safe <- function(label, kind, path, n = NA_integer_, notes = NA_character_) {
-  append_manifest(
+  upsert_manifest_row(
     manifest_row(
       script = script_label,
       label = label,
@@ -210,63 +232,64 @@ if (nrow(panel_a) != 4) {
   stop("Panel A emmeans table must contain exactly four rows.", call. = FALSE)
 }
 
-emm_by_time <- emmeans::emmeans(
-  fit,
-  specs = ~ FOF_status | time,
-  at = list(
-    time = c(0, 12),
-    age = age_mean,
-    BMI = bmi_mean
-  ),
-  weights = "proportional"
-)
-
-baseline_followup_contrasts <- as.data.frame(
-  summary(
-    contrast(
-      emm_by_time,
-      method = list("FOF - No FOF" = c(-1, 1))
-    ),
-    infer = c(TRUE, TRUE)
-  )
-) %>%
-  mutate(
-    time = as.numeric(as.character(time)),
-    term = if_else(time == 0, "FOF - No FOF at baseline (model-estimated)", "FOF - No FOF at 12 months"),
-    contrast_group = "Between-group level difference"
+emm_grid <- as.data.frame(summary(emm)) %>%
+  transmute(
+    FOF_status = as.character(FOF_status),
+    time = as.numeric(as.character(time))
   )
 
-did_tbl <- as.data.frame(
+weight_for_cell <- function(grid_df, fof_value, time_value, coeff) {
+  as.numeric(grid_df$FOF_status == fof_value & grid_df$time == time_value) * coeff
+}
+
+baseline_weights <-
+  weight_for_cell(emm_grid, "1", 0, 1) +
+  weight_for_cell(emm_grid, "0", 0, -1)
+
+month12_weights <-
+  weight_for_cell(emm_grid, "1", 12, 1) +
+  weight_for_cell(emm_grid, "0", 12, -1)
+
+did_weights <-
+  weight_for_cell(emm_grid, "1", 12, 1) +
+  weight_for_cell(emm_grid, "1", 0, -1) +
+  weight_for_cell(emm_grid, "0", 12, -1) +
+  weight_for_cell(emm_grid, "0", 0, 1)
+
+if (!identical(sum(abs(baseline_weights)), 2)) {
+  stop("Baseline contrast weights could not be aligned to the emmeans grid.", call. = FALSE)
+}
+if (!identical(sum(abs(month12_weights)), 2)) {
+  stop("12-month contrast weights could not be aligned to the emmeans grid.", call. = FALSE)
+}
+if (!identical(sum(abs(did_weights)), 4)) {
+  stop("Difference-in-change contrast weights could not be aligned to the emmeans grid.", call. = FALSE)
+}
+
+panel_b <- as.data.frame(
   summary(
     contrast(
       emm,
-      method = list("FOF change - No FOF change" = c(1, -1, -1, 1))
+      method = stats::setNames(
+        list(baseline_weights, month12_weights, did_weights),
+        c(contrast_label_baseline, contrast_label_12m, contrast_label_change)
+      )
     ),
     infer = c(TRUE, TRUE)
   )
 ) %>%
   mutate(
-    time = NA_real_,
-    term = "Difference in change over time",
-    contrast_group = "Interaction contrast"
-  )
-
-panel_b <- bind_rows(baseline_followup_contrasts, did_tbl) %>%
-  mutate(
-    contrast = term,
+    term = contrast,
+    contrast_group = case_when(
+      term == contrast_label_change ~ contrast_group_interaction,
+      TRUE ~ contrast_group_level
+    ),
     time_label = case_when(
-      term == "FOF - No FOF at baseline (model-estimated)" ~ "Baseline",
-      term == "FOF - No FOF at 12 months" ~ "12 months",
+      term == contrast_label_baseline ~ "Baseline",
+      term == contrast_label_12m ~ "12 months",
       TRUE ~ "Change difference"
     ),
-    display_label = factor(
-      contrast,
-      levels = c(
-        "FOF - No FOF at baseline (model-estimated)",
-        "FOF - No FOF at 12 months",
-        "Difference in change over time"
-      )
-    ),
+    display_label = factor(term, levels = contrast_display_levels),
     estimate_ci = sprintf("%.3f (%.3f, %.3f)", estimate, lower.CL, upper.CL),
     p_label = ifelse(is.na(p.value), "NA", format.pval(p.value, digits = 3, eps = 0.001))
   ) %>%
@@ -284,9 +307,9 @@ if (nrow(panel_b) != 3) {
   stop("Panel B contrast table must contain exactly three rows.", call. = FALSE)
 }
 
-table_to_text_crosscheck(panel_b, "FOF - No FOF at baseline (model-estimated)")
-table_to_text_crosscheck(panel_b, "FOF - No FOF at 12 months")
-table_to_text_crosscheck(panel_b, "Difference in change over time")
+table_to_text_crosscheck(panel_b, contrast_label_baseline)
+table_to_text_crosscheck(panel_b, contrast_label_12m)
+table_to_text_crosscheck(panel_b, contrast_label_change)
 
 panel_a_path <- file.path(artifact_dir, "k50_fig2_emmeans_panelA.csv")
 panel_b_path <- file.path(artifact_dir, "k50_fig2_contrasts_panelB.csv")
@@ -418,24 +441,24 @@ results_lines <- c(
       "(estimate %.3f, 95%% CI %.3f to %.3f, p = %s), and the adjusted 12-month contrast remained in the same direction ",
       "(estimate %.3f, 95%% CI %.3f to %.3f, p = %s)."
     ),
-    panel_b$estimate[panel_b$term == "FOF - No FOF at baseline (model-estimated)"],
-    panel_b$conf.low[panel_b$term == "FOF - No FOF at baseline (model-estimated)"],
-    panel_b$conf.high[panel_b$term == "FOF - No FOF at baseline (model-estimated)"],
-    panel_b$p_label[panel_b$term == "FOF - No FOF at baseline (model-estimated)"],
-    panel_b$estimate[panel_b$term == "FOF - No FOF at 12 months"],
-    panel_b$conf.low[panel_b$term == "FOF - No FOF at 12 months"],
-    panel_b$conf.high[panel_b$term == "FOF - No FOF at 12 months"],
-    panel_b$p_label[panel_b$term == "FOF - No FOF at 12 months"]
+    panel_b$estimate[panel_b$term == contrast_label_baseline],
+    panel_b$conf.low[panel_b$term == contrast_label_baseline],
+    panel_b$conf.high[panel_b$term == contrast_label_baseline],
+    panel_b$p_label[panel_b$term == contrast_label_baseline],
+    panel_b$estimate[panel_b$term == contrast_label_12m],
+    panel_b$conf.low[panel_b$term == contrast_label_12m],
+    panel_b$conf.high[panel_b$term == contrast_label_12m],
+    panel_b$p_label[panel_b$term == contrast_label_12m]
   ),
   sprintf(
     paste0(
       "The difference-in-change contrast was %.3f (95%% CI %.3f to %.3f, p = %s), ",
       "supporting a clear separation between the overall level difference and the weaker evidence for a between-group difference in change over time."
     ),
-    panel_b$estimate[panel_b$term == "Difference in change over time"],
-    panel_b$conf.low[panel_b$term == "Difference in change over time"],
-    panel_b$conf.high[panel_b$term == "Difference in change over time"],
-    panel_b$p_label[panel_b$term == "Difference in change over time"]
+    panel_b$estimate[panel_b$term == contrast_label_change],
+    panel_b$conf.low[panel_b$term == contrast_label_change],
+    panel_b$conf.high[panel_b$term == contrast_label_change],
+    panel_b$p_label[panel_b$term == contrast_label_change]
   )
 )
 
