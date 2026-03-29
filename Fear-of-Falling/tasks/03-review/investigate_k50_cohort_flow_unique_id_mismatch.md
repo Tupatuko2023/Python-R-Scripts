@@ -147,6 +147,13 @@ Jos tästä tehdään dokumentaatiotäsmennys, turvallisin muotoilu on:
 - 2026-03-28: Debian PRoot custom helper query vahvisti workbookin `lookup_unique_ssn_total=527` sekä authoritative K50 WIDE -inputin jakauman `525 verified + 10 unverified = 535 raw-id continuity`.
 - 2026-03-29: K50 WIDE rerun kirjoitti automaattisesti placeholderit `N_PERSON_VERIFIED=525` ja `N_PERSON_FALLBACK=10`, ja renderöity resolved DOT näytti nämä eksplisiittisesti raw-id continuity -solmussa samalla kun ketju `535 -> 472 -> 240 -> 230` pysyi ennallaan.
 
+## Review Response
+
+- 2026-03-29: Addressed Sourcery follow-up in `K50.1_COHORT_FLOW.V1_derive-cohort-flow.R` with minimal, behavior-preserving changes. Fixed the explicit correctness bug in `parse_integer_meta()` so missing keys, empty values, non-scalar values, and `NA` now fail loudly instead of risking silent `integer(0)` propagation.
+- 2026-03-29: Centralized current authoritative WIDE constants and artifact paths into one local helper/config block and replaced repeated `identical(...)/stop(...)` checks with small assertion helpers. This reduced brittleness without changing the locked authoritative snapshot, receipt names, or default WIDE alignment behavior.
+- 2026-03-29: Did not broaden WIDE debug override behavior beyond the script's current explicit `--data` handling. Keeping authoritative-lock as the default WIDE path was treated as the safer review response at this stage to avoid accidental non-authoritative runs.
+- 2026-03-29: Post-fix validation preserved current semantics: workbook identity `527`, raw-id continuity `535`, linkage breakdown `525 verified + 10 fallback`, and downstream continuity `535 -> 472 -> 240 -> 230`.
+
 ## Additional Log
 
 - 2026-03-28T22:58:00+02:00 Confirmed workbook exists at `/data/data/com.termux/files/home/FOF_LOCAL_DATA/paper_02/KAAOS_data_sotullinen.xlsx` and that `resolve_ssn_lookup_path()` targets this exact file.
