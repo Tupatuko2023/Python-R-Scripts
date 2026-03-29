@@ -46,8 +46,15 @@ digraph PAPER01_Cohort_Flow {
     fontcolor="#374151"
   ];
 
+  wb1 [
+    label="Workbook unique persons\n(normalized_ssn) = __N_WORKBOOK_UNIQUE_SSN__",
+    fillcolor="#fffbeb",
+    color="#d97706",
+    fontcolor="#78350f"
+  ];
+
   n1 [
-    label="Input dataset\nRows = __N_RAW_ROWS__\nUnique id = __N_RAW_ID__",
+    label="K50 input dataset\nRows = __N_RAW_ROWS__\nUnique raw id = __N_RAW_ID__",
     fillcolor="#eef2ff"
   ];
 
@@ -59,7 +66,7 @@ digraph PAPER01_Cohort_Flow {
   ];
 
   n2 [
-    label="N = __N_VALID_ID__ participants with non-missing id\n(__N_VALID_ID_PCT__% of raw rows)",
+    label="N = __N_VALID_ID__ participants with non-missing raw id\n(__N_PERSON_VERIFIED__ verified person-linked + __N_PERSON_FALLBACK__ fallback)\n(__N_VALID_ID_PCT__% of raw rows)",
     fillcolor="#eef2ff"
   ];
 
@@ -125,6 +132,7 @@ digraph PAPER01_Cohort_Flow {
     fontcolor="#064e3b"
   ];
 
+  wb1 -> n1 [style=dashed, color="#d97706", constraint=false];
   n1 -> n2 [constraint=true];
   n2 -> n3 [constraint=true];
   n3 -> n4 [constraint=true];
@@ -139,7 +147,7 @@ digraph PAPER01_Cohort_Flow {
   n4 -> e3 [dir=none, constraint=false];
   n5 -> e4 [dir=none, constraint=false];
 
-  { rank=same; n1; e_id; }
+  { rank=same; wb1; n1; e_id; }
   { rank=same; n2; e1; }
   { rank=same; n3; e2; }
   { rank=same; n4; e3; }
@@ -152,5 +160,5 @@ digraph PAPER01_Cohort_Flow {
   n4 -> e3 [style=invis, weight=10];
   n5 -> e4 [style=invis, weight=10];
   g1 -> g2 [style=invis, weight=1];
-  note_missing -> n1 [style=invis, weight=1];
+  note_missing -> wb1 [style=invis, weight=1];
 }
