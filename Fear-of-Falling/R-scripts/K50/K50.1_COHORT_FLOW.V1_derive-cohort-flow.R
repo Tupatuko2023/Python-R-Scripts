@@ -107,6 +107,54 @@ get_arg <- function(flag, default = NULL) {
   args[[idx + 1]]
 }
 
+read_key_value_file <- function(path) {
+  if (!file.exists(path)) return(list())
+  lines <- readLines(path, warn = FALSE)
+  out <- list()
+  for (line in lines) {
+    if (!grepl("=", line, fixed = TRUE)) next
+    kv <- strsplit(line, "=", fixed = TRUE)[[1]]
+    out[[kv[[1]]]] <- paste(kv[-1], collapse = "=")
+  }
+  out
+}
+
+parse_integer_meta <- function(meta, key, path) {
+  value <- suppressWarnings(as.integer(meta[[key]]))
+  if (is.na(value)) {
+    stop("K50 cohort flow could not parse integer field `", key, "` from ", path, call. = FALSE)
+  }
+  value
+}
+
+resolve_authoritative_wide_receipts <- function() {
+  k50_receipt_path <- here::here("R-scripts", "K50", "outputs", "k50_wide_locomotor_capacity_input_receipt.txt")
+  k50_provenance_path <- here::here("R-scripts", "K50", "outputs", "k50_wide_locomotor_capacity_modeled_cohort_provenance.txt")
+  k51_receipt_path <- here::here("R-scripts", "K51", "outputs", "k51_wide_input_receipt_analytic_wide_modeled_k14_extended.txt")
+  if (!file.exists(k50_receipt_path) || !file.exists(k50_provenance_path) || !file.exists(k51_receipt_path)) {
+    stop(
+      paste0(
+        "K50 cohort flow WIDE authoritative alignment requires receipt/provenance artifacts. Missing one of:
+",
+        "- ", k50_receipt_path, "
+",
+        "- ", k50_provenance_path, "
+",
+        "- ", k51_receipt_path
+      ),
+      call. = FALSE
+    )
+  }
+  list(
+    k50_receipt_path = k50_receipt_path,
+    k50_provenance_path = k50_provenance_path,
+    k51_receipt_path = k51_receipt_path,
+    k50_receipt = read_key_value_file(k50_receipt_path),
+    k50_provenance = read_key_value_file(k50_provenance_path),
+    k51_receipt = read_key_value_file(k51_receipt_path)
+  )
+}
+
 parse_toggle <- function(x, flag) {
   val <- tolower(trimws(ifelse(is.null(x), "", as.character(x))))
   if (!nzchar(val)) return(FALSE)
@@ -145,6 +193,15 @@ resolve_input_path <- function(shape, cli_data) {
     return(normalizePath(cli_data, winslash = "/", mustWork = TRUE))
   }
 
+  if (identical(shape, "WIDE")) {
+    refs <- resolve_authoritative_wide_receipts()
+    authoritative_path <- refs$k50_receipt[["input_path"]]
+    if (is.null(authoritative_path) || !nzchar(authoritative_path) || !file.exists(authoritative_path)) {
+      stop("K50 cohort flow WIDE could not resolve authoritative input_path from the K50 WIDE receipt.", call. = FALSE)
+    }
+    return(normalizePath(authoritative_path, winslash = "/", mustWork = TRUE))
+  }
+
   shape_lower <- tolower(shape)
   data_root <- resolve_data_root()
   candidates <- c()
@@ -167,14 +224,18 @@ resolve_input_path <- function(shape, cli_data) {
   if (is.na(hit)) {
     stop(
       paste0(
-        "K50 cohort flow could not resolve an input dataset. Supply --data explicitly or create a verified upstream K50 dataset.\n",
-        "Tried:\n- ", paste(candidates, collapse = "\n- ")
+        "K50 cohort flow could not resolve an input dataset. Supply --data explicitly or create a verified upstream K50 dataset.
+",
+        "Tried:
+- ", paste(candidates, collapse = "
+- ")
       ),
       call. = FALSE
     )
   }
   hit
 }
+
 
 read_dataset <- function(path) {
   ext <- tolower(tools::file_ext(path))
@@ -296,6 +357,12 @@ input_df <- read_dataset(data_path)
 dedup_prep <- prepare_k50_person_dedup(input_df, shape, outcome)
 input_df <- dedup_prep$data
 ssn_lookup_info <- dedup_prep$lookup_info
+workbook_unique_ssn_total <- ssn_lookup_info$lookup_df %>%
+  summarise(n = dplyr::n_distinct(normalized_ssn)) %>%
+  pull(n)
+if (length(workbook_unique_ssn_total) == 0L || is.na(workbook_unique_ssn_total)) {
+  workbook_unique_ssn_total <- 0L
+}
 id_col <- first_present(names(input_df), c("id"))
 fof_col <- first_present(names(input_df), c("FOF_status"))
 age_col <- first_present(names(input_df), c("age"))
@@ -524,6 +591,48 @@ fof_yes_analytic <- sum(analytic_df$fof_value == "1", na.rm = TRUE)
 fof_no_analytic <- sum(analytic_df$fof_value == "0", na.rm = TRUE)
 ex_fi22_missing_sens <- if (fi22_enabled) sum(!outcome_df$fi22_complete) else sum(!outcome_df$fi22_complete)
 
+authoritative_refs <- if (shape == "WIDE" && identical(outcome, "locomotor_capacity")) resolve_authoritative_wide_receipts() else NULL
+if (!is.null(authoritative_refs)) {
+  long_counts_path <- here::here("R-scripts", "K50", "outputs", "k50_long_locomotor_capacity_cohort_flow_counts.csv")
+  long_placeholders_path <- here::here("R-scripts", "K50", "outputs", "k50_long_locomotor_capacity_cohort_flow_placeholders.csv")
+  if (!file.exists(long_counts_path) || !file.exists(long_placeholders_path)) {
+    stop("K50 cohort flow WIDE alignment requires the authoritative LONG cohort-flow counts/placeholders for raw-row continuity.", call. = FALSE)
+  }
+  long_counts_authority <- readr::read_csv(long_counts_path, show_col_types = FALSE)
+  long_placeholders_authority <- readr::read_csv(long_placeholders_path, show_col_types = FALSE)
+  k50_receipt <- authoritative_refs$k50_receipt
+  k50_provenance <- authoritative_refs$k50_provenance
+  k51_receipt <- authoritative_refs$k51_receipt
+  authoritative_path <- normalizePath(k50_receipt[["input_path"]], winslash = "/", mustWork = TRUE)
+  if (!identical(normalizePath(data_path, winslash = "/", mustWork = TRUE), authoritative_path)) {
+    stop("K50 cohort flow WIDE input path drifted from authoritative K50 receipt.", call. = FALSE)
+  }
+  if (!identical(k50_receipt[["input_resolution"]], "authoritative_lock")) {
+    stop("K50 cohort flow WIDE requires authoritative_lock input_resolution in K50 receipt.", call. = FALSE)
+  }
+  if (!identical(k50_receipt[["authoritative_snapshot_id"]], "paper_02_2026-03-21")) {
+    stop("K50 cohort flow WIDE requires authoritative snapshot paper_02_2026-03-21.", call. = FALSE)
+  }
+  if (!identical(k50_provenance[["authoritative_snapshot_id"]], "paper_02_2026-03-21")) {
+    stop("K50 cohort flow WIDE provenance snapshot mismatch.", call. = FALSE)
+  }
+  if (!identical(parse_integer_meta(k50_receipt, "rows_modeled", authoritative_refs$k50_receipt_path), n_analytic_primary)) {
+    stop("K50 cohort flow WIDE n_analytic_primary does not match K50 authoritative rows_modeled.", call. = FALSE)
+  }
+  if (!identical(parse_integer_meta(k50_provenance, "modeled_n", authoritative_refs$k50_provenance_path), n_analytic_primary)) {
+    stop("K50 cohort flow WIDE n_analytic_primary does not match K50 modeled provenance n.", call. = FALSE)
+  }
+  if (!identical(parse_integer_meta(k50_provenance, "modeled_fof1_n", authoritative_refs$k50_provenance_path), fof_yes_analytic)) {
+    stop("K50 cohort flow WIDE FOF yes split does not match K50 modeled provenance.", call. = FALSE)
+  }
+  if (!identical(parse_integer_meta(k50_provenance, "modeled_fof0_n", authoritative_refs$k50_provenance_path), fof_no_analytic)) {
+    stop("K50 cohort flow WIDE FOF no split does not match K50 modeled provenance.", call. = FALSE)
+  }
+  if (!identical(parse_integer_meta(k51_receipt, "analytic_wide_modeled_n", authoritative_refs$k51_receipt_path), n_analytic_primary)) {
+    stop("K50 cohort flow WIDE n_analytic_primary does not match K51 analytic Table 1 receipt.", call. = FALSE)
+  }
+}
+
 counts_tbl <- tibble(
   count = c(
     "N_RAW_ROWS",
@@ -629,17 +738,30 @@ counts_tbl <- tibble(
   )
 )
 
+if (!is.null(authoritative_refs)) {
+  long_final_n <- suppressWarnings(as.integer(long_counts_authority$value[long_counts_authority$count == "N_ANALYTIC_PRIMARY"]))
+  long_fof_yes <- suppressWarnings(as.integer(long_counts_authority$value[long_counts_authority$count == "FOF_YES_ANALYTIC"]))
+  long_fof_no <- suppressWarnings(as.integer(long_counts_authority$value[long_counts_authority$count == "FOF_NO_ANALYTIC"]))
+  if (!identical(long_final_n, n_analytic_primary) || !identical(long_fof_yes, fof_yes_analytic) || !identical(long_fof_no, fof_no_analytic)) {
+    stop("K50 cohort flow WIDE alignment failed because LONG raw-continuity artifacts disagree with authoritative WIDE final cohort.", call. = FALSE)
+  }
+  counts_tbl <- long_counts_authority
+}
+
 placeholder_tbl <- bind_rows(
   tibble(
     placeholder = c(
       "GRAPH_TITLE",
       "PRIMARY_BRANCH",
       "PRIMARY_OUTCOME",
+      "N_WORKBOOK_UNIQUE_SSN",
       "N_RAW_ROWS",
       "N_RAW_ID",
       "EX_ID_MISSING",
       "EX_ID_MISSING_PCT",
       "N_VALID_ID",
+      "N_PERSON_VERIFIED",
+      "N_PERSON_FALLBACK",
       "N_VALID_ID_PCT",
       "N_RAW_PERSON_LOOKUP",
       "N_RAW_PERSON_LOOKUP_PCT",
@@ -677,14 +799,17 @@ placeholder_tbl <- bind_rows(
       "FI22_NOTE"
     ),
     value = c(
-      "Fear-of-Falling paper_02 analytic cohort derivation",
+      "Fear-of-Falling paper_01 analytic cohort derivation",
       shape,
       outcome,
+      as.character(workbook_unique_ssn_total),
       as.character(raw_rows),
       as.character(raw_id_n),
       as.character(ex_id_missing),
       format_pct(ex_id_missing, raw_rows),
       as.character(n_valid_id),
+      as.character(raw_person_by_ssn),
+      as.character(ex_person_key_unverified),
       format_pct(n_valid_id, raw_rows),
       as.character(raw_person_by_ssn),
       format_pct(raw_person_by_ssn, n_valid_id),
@@ -729,6 +854,26 @@ placeholder_tbl <- bind_rows(
   build_missing_placeholders(missing_tbl)
 )
 
+if (!is.null(authoritative_refs)) {
+  placeholder_tbl <- long_placeholders_authority %>%
+    mutate(value = dplyr::case_when(
+      placeholder == "PRIMARY_BRANCH" ~ shape,
+      placeholder == "PRIMARY_OUTCOME" ~ outcome,
+      TRUE ~ value
+    ))
+  placeholder_overrides <- tibble(
+    placeholder = c("N_WORKBOOK_UNIQUE_SSN", "N_PERSON_VERIFIED", "N_PERSON_FALLBACK"),
+    value = c(
+      as.character(workbook_unique_ssn_total),
+      as.character(raw_person_by_ssn),
+      as.character(ex_person_key_unverified)
+    )
+  )
+  placeholder_tbl <- placeholder_tbl %>%
+    filter(!placeholder %in% placeholder_overrides$placeholder) %>%
+    bind_rows(placeholder_overrides, .)
+}
+
 counts_path <- write_table_with_manifest(counts_tbl, paste0(cohort_prefix, "_counts"), "Sequential cohort flow counts with verified person-lookup dedup and historical raw-id continuity")
 placeholders_path <- write_table_with_manifest(placeholder_tbl, paste0(cohort_prefix, "_placeholders"), "DOT placeholder values for paper_02 cohort flow with aggregate-only person-lookup dedup counts")
 missing_path <- write_table_with_manifest(missing_tbl, paste0(cohort_prefix, "_missingness_group_time"), "Group x time missingness summary on deduplicated person basis")
@@ -739,6 +884,14 @@ receipt_lines <- c(
   paste0("timestamp_utc=", format(Sys.time(), tz = "UTC", usetz = TRUE)),
   paste0("input_path=", data_path),
   paste0("input_md5=", unname(tools::md5sum(data_path))),
+  if (!is.null(authoritative_refs)) paste0("input_resolution=", authoritative_refs$k50_receipt[["input_resolution"]]) else "input_resolution=legacy_candidate_fallback",
+  if (!is.null(authoritative_refs)) paste0("authoritative_snapshot_id=", authoritative_refs$k50_receipt[["authoritative_snapshot_id"]]) else "authoritative_snapshot_id=NA",
+  if (!is.null(authoritative_refs)) paste0("k50_authoritative_rows_modeled=", authoritative_refs$k50_receipt[["rows_modeled"]]) else "k50_authoritative_rows_modeled=NA",
+  if (!is.null(authoritative_refs)) paste0("k50_authoritative_fof1_n=", authoritative_refs$k50_provenance[["modeled_fof1_n"]]) else "k50_authoritative_fof1_n=NA",
+  if (!is.null(authoritative_refs)) paste0("k50_authoritative_fof0_n=", authoritative_refs$k50_provenance[["modeled_fof0_n"]]) else "k50_authoritative_fof0_n=NA",
+  if (!is.null(authoritative_refs)) paste0("k51_authoritative_analytic_wide_modeled_n=", authoritative_refs$k51_receipt[["analytic_wide_modeled_n"]]) else "k51_authoritative_analytic_wide_modeled_n=NA",
+  if (!is.null(authoritative_refs)) paste0("raw_continuity_counts_source=", long_counts_path) else "raw_continuity_counts_source=NA",
+  if (!is.null(authoritative_refs)) paste0("raw_continuity_placeholders_source=", long_placeholders_path) else "raw_continuity_placeholders_source=NA",
   paste0("shape=", shape),
   paste0("outcome=", outcome),
   paste0("rows_loaded=", raw_rows),
