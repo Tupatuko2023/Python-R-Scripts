@@ -155,6 +155,9 @@ compute_sha256 <- function(path) {
     out <- suppressWarnings(system2(shasum_cmd, c("-a", "256", shQuote(path)), stdout = TRUE, stderr = FALSE))
     if (length(out) > 0L && nzchar(out[[1]])) return(strsplit(out[[1]], "[[:space:]]+")[[1]][1])
   }
+  if (requireNamespace("digest", quietly = TRUE)) {
+    return(digest::digest(file = path, algo = "sha256", serialize = FALSE))
+  }
   stop("K50 could not compute SHA-256 for input path: ", path, call. = FALSE)
 }
 
@@ -165,7 +168,10 @@ resolve_authoritative_wide_input <- function() {
   }
   lock <- read_key_value_file(lock_path)
   required <- c("snapshot_role", "snapshot_id", "path", "md5", "sha256")
-  missing <- required[!required %in% names(lock) | !nzchar(unlist(lock[required]))]
+  missing <- required[vapply(required, function(key) {
+    value <- lock[[key]]
+    is.null(value) || length(value) != 1L || is.na(value) || !nzchar(value)
+  }, logical(1))]
   if (length(missing) > 0L) {
     stop("K50 WIDE authoritative input lock is missing keys: ", paste(missing, collapse = ", "), call. = FALSE)
   }

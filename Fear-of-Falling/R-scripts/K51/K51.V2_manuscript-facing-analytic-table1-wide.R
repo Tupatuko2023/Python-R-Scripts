@@ -75,17 +75,13 @@ append_manifest_safe <- function(label, kind, path, n = NA_integer_, notes = NA_
   }
 }
 
-parse_key_value_file <- function(path) {
+read_key_value_file <- function(path) {
   lines <- readLines(path, warn = FALSE)
-  out <- list()
-  for (line in lines) {
-    if (!grepl('=', line, fixed = TRUE)) next
-    kv <- strsplit(line, '=', fixed = TRUE)[[1]]
-    key <- kv[[1]]
-    value <- paste(kv[-1], collapse = '=')
-    out[[key]] <- value
-  }
-  out
+  lines <- trimws(lines)
+  lines <- lines[nzchar(lines)]
+  keys <- sub("=.*$", "", lines)
+  vals <- sub("^[^=]*=", "", lines)
+  stats::setNames(as.list(vals), keys)
 }
 
 require_single_value <- function(x, key, path) {
@@ -121,6 +117,14 @@ extract_header_n <- function(header_value) {
   suppressWarnings(as.integer(sub('n=', '', match)))
 }
 
+authoritative_wide_config <- list(
+  input_resolution = 'authoritative_lock',
+  snapshot_id = 'paper_02_2026-03-21',
+  modeled_n = 230L,
+  modeled_fof0_n = 69L,
+  modeled_fof1_n = 161L
+)
+
 wide_receipt_path <- here::here('R-scripts', 'K50', 'outputs', 'k50_wide_locomotor_capacity_input_receipt.txt')
 wide_provenance_path <- here::here('R-scripts', 'K50', 'outputs', 'k50_wide_locomotor_capacity_modeled_cohort_provenance.txt')
 if (!file.exists(wide_receipt_path)) {
@@ -130,8 +134,8 @@ if (!file.exists(wide_provenance_path)) {
   stop('K51 V2 could not find K50 WIDE modeled-cohort provenance: ', wide_provenance_path, call. = FALSE)
 }
 
-wide_receipt <- parse_key_value_file(wide_receipt_path)
-wide_provenance <- parse_key_value_file(wide_provenance_path)
+wide_receipt <- read_key_value_file(wide_receipt_path)
+wide_provenance <- read_key_value_file(wide_provenance_path)
 wide_input_path <- require_single_value(wide_receipt[['input_path']], 'input_path', wide_receipt_path)
 receipt_md5 <- require_single_value(wide_receipt[['input_md5']], 'input_md5', wide_receipt_path)
 receipt_sha256 <- require_single_value(wide_receipt[['input_sha256']], 'input_sha256', wide_receipt_path)
@@ -151,14 +155,14 @@ if (!file.exists(wide_input_path)) {
   stop('K51 V2 could not resolve the authoritative K50 WIDE modeled-sample input path.', call. = FALSE)
 }
 
-assert_expected_value(receipt_resolution, 'authoritative_lock', 'K50 receipt input_resolution')
-assert_expected_value(provenance_resolution, 'authoritative_lock', 'K50 provenance input_resolution')
-assert_expected_value(receipt_snapshot_id, 'paper_02_2026-03-21', 'K50 authoritative snapshot id')
-assert_expected_value(provenance_snapshot_id, 'paper_02_2026-03-21', 'K50 provenance snapshot id')
-assert_expected_value(expected_n, 230L, 'K50 authoritative modeled n')
-assert_expected_value(provenance_n, 230L, 'K50 provenance modeled n')
-assert_expected_value(expected_fof0, 69L, 'K50 authoritative FOF0 n')
-assert_expected_value(expected_fof1, 161L, 'K50 authoritative FOF1 n')
+assert_expected_value(receipt_resolution, authoritative_wide_config$input_resolution, 'K50 receipt input_resolution')
+assert_expected_value(provenance_resolution, authoritative_wide_config$input_resolution, 'K50 provenance input_resolution')
+assert_expected_value(receipt_snapshot_id, authoritative_wide_config$snapshot_id, 'K50 authoritative snapshot id')
+assert_expected_value(provenance_snapshot_id, authoritative_wide_config$snapshot_id, 'K50 provenance snapshot id')
+assert_expected_value(expected_n, authoritative_wide_config$modeled_n, 'K50 authoritative modeled n')
+assert_expected_value(provenance_n, authoritative_wide_config$modeled_n, 'K50 provenance modeled n')
+assert_expected_value(expected_fof0, authoritative_wide_config$modeled_fof0_n, 'K50 authoritative FOF0 n')
+assert_expected_value(expected_fof1, authoritative_wide_config$modeled_fof1_n, 'K50 authoritative FOF1 n')
 assert_same_value(wide_input_path, provenance_path, 'K50 input path between receipt and provenance')
 assert_same_value(receipt_md5, provenance_md5, 'K50 input md5 between receipt and provenance')
 assert_same_value(receipt_sha256, provenance_sha256, 'K50 input sha256 between receipt and provenance')
@@ -198,7 +202,7 @@ for (artifact_path in c(receipt_path, decision_path, session_path, csv_path)) {
   }
 }
 
-receipt <- parse_key_value_file(receipt_path)
+receipt <- read_key_value_file(receipt_path)
 actual_n <- parse_integer_field(receipt, 'analytic_wide_modeled_n', receipt_path)
 actual_baseline_n <- parse_integer_field(receipt, 'baseline_eligible_n', receipt_path)
 actual_analytic_n <- parse_integer_field(receipt, 'analytic_n', receipt_path)
