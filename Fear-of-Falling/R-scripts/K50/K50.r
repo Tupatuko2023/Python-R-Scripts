@@ -134,12 +134,105 @@ resolve_data_root <- function() {
   normalizePath(dr, winslash = "/", mustWork = FALSE)
 }
 
+read_key_value_file <- function(path) {
+  lines <- readLines(path, warn = FALSE)
+  lines <- trimws(lines)
+  lines <- lines[nzchar(lines)]
+  keys <- sub("=.*$", "", lines)
+  vals <- sub("^[^=]*=", "", lines)
+  stats::setNames(as.list(vals), keys)
+}
+
+compute_sha256 <- function(path) {
+  path <- normalizePath(path, winslash = "/", mustWork = TRUE)
+  sha_cmd <- Sys.which("sha256sum")
+  if (nzchar(sha_cmd)) {
+    out <- suppressWarnings(system2(sha_cmd, shQuote(path), stdout = TRUE, stderr = FALSE))
+    if (length(out) > 0L && nzchar(out[[1]])) return(strsplit(out[[1]], "[[:space:]]+")[[1]][1])
+  }
+  shasum_cmd <- Sys.which("shasum")
+  if (nzchar(shasum_cmd)) {
+    out <- suppressWarnings(system2(shasum_cmd, c("-a", "256", shQuote(path)), stdout = TRUE, stderr = FALSE))
+    if (length(out) > 0L && nzchar(out[[1]])) return(strsplit(out[[1]], "[[:space:]]+")[[1]][1])
+  }
+  if (requireNamespace("digest", quietly = TRUE)) {
+    return(digest::digest(file = path, algo = "sha256", serialize = FALSE))
+  }
+  stop("K50 could not compute SHA-256 for input path: ", path, call. = FALSE)
+}
+
+resolve_authoritative_wide_input <- function() {
+  lock_path <- here::here("R-scripts", "K50", "k50_wide_authoritative_input.lock")
+  if (!file.exists(lock_path)) {
+    stop("K50 WIDE authoritative input lock is missing: ", lock_path, call. = FALSE)
+  }
+  lock <- read_key_value_file(lock_path)
+  required <- c("snapshot_role", "snapshot_id", "path", "md5", "sha256")
+  missing <- required[vapply(required, function(key) {
+    value <- lock[[key]]
+    is.null(value) || length(value) != 1L || is.na(value) || !nzchar(value)
+  }, logical(1))]
+  if (length(missing) > 0L) {
+    stop("K50 WIDE authoritative input lock is missing keys: ", paste(missing, collapse = ", "), call. = FALSE)
+  }
+  if (!file.exists(lock$path)) {
+    stop("K50 WIDE authoritative input path not found: ", lock$path, call. = FALSE)
+  }
+  resolved_path <- normalizePath(lock$path, winslash = "/", mustWork = TRUE)
+  actual_md5 <- unname(tools::md5sum(resolved_path))
+  actual_sha256 <- compute_sha256(resolved_path)
+  if (!identical(actual_md5, lock$md5)) {
+    stop(
+      "K50 WIDE authoritative input md5 mismatch.\n",
+      "Expected: ", lock$md5, "\n",
+      "Actual: ", actual_md5, "\n",
+      "Path: ", resolved_path,
+      call. = FALSE
+    )
+  }
+  if (!identical(actual_sha256, lock$sha256)) {
+    stop(
+      "K50 WIDE authoritative input sha256 mismatch.\n",
+      "Expected: ", lock$sha256, "\n",
+      "Actual: ", actual_sha256, "\n",
+      "Path: ", resolved_path,
+      call. = FALSE
+    )
+  }
+  list(
+    path = resolved_path,
+    resolution = "authoritative_lock",
+    lock_path = normalizePath(lock_path, winslash = "/", mustWork = TRUE),
+    snapshot_role = lock$snapshot_role,
+    snapshot_id = lock$snapshot_id,
+    expected_md5 = lock$md5,
+    expected_sha256 = lock$sha256,
+    rows_loaded_expected = if ("rows_loaded_expected" %in% names(lock)) lock$rows_loaded_expected else NA_character_,
+    selection_reason = if ("selection_reason" %in% names(lock)) lock$selection_reason else NA_character_
+  )
+}
+
 resolve_input_path <- function(shape, cli_data) {
   if (!is.null(cli_data) && nzchar(cli_data)) {
     if (!file.exists(cli_data)) {
       stop("K50 --data file not found: ", cli_data, call. = FALSE)
     }
-    return(normalizePath(cli_data, winslash = "/", mustWork = TRUE))
+    path <- normalizePath(cli_data, winslash = "/", mustWork = TRUE)
+    return(list(
+      path = path,
+      resolution = "cli_override",
+      lock_path = NA_character_,
+      snapshot_role = "cli_override",
+      snapshot_id = basename(path),
+      expected_md5 = unname(tools::md5sum(path)),
+      expected_sha256 = compute_sha256(path),
+      rows_loaded_expected = NA_character_,
+      selection_reason = "explicit_cli_override"
+    ))
+  }
+
+  if (identical(shape, "WIDE")) {
+    return(resolve_authoritative_wide_input())
   }
 
   shape_lower <- tolower(shape)
@@ -170,7 +263,17 @@ resolve_input_path <- function(shape, cli_data) {
       call. = FALSE
     )
   }
-  hit
+  list(
+    path = hit,
+    resolution = "legacy_candidate_fallback",
+    lock_path = NA_character_,
+    snapshot_role = "legacy_candidate_fallback",
+    snapshot_id = basename(hit),
+    expected_md5 = unname(tools::md5sum(hit)),
+    expected_sha256 = compute_sha256(hit),
+    rows_loaded_expected = NA_character_,
+    selection_reason = "legacy_candidate_search"
+  )
 }
 
 read_dataset <- function(path) {
@@ -307,7 +410,8 @@ shape <- parse_shape(get_arg("--shape"))
 outcome <- parse_outcome(get_arg("--outcome", "locomotor_capacity"))
 fi22_enabled <- parse_toggle(get_arg("--fi22", "off"), "--fi22")
 allow_composite_z <- identical(toupper(get_arg("--allow-composite-z", "off")), "VERIFIED")
-data_path <- resolve_input_path(shape, get_arg("--data"))
+data_ref <- resolve_input_path(shape, get_arg("--data"))
+data_path <- data_ref$path
 
 if (identical(outcome, "Composite_Z") && !allow_composite_z) {
   stop(
@@ -317,9 +421,13 @@ if (identical(outcome, "Composite_Z") && !allow_composite_z) {
 }
 
 # --- Load ---------------------------------------------------------------------
-input_df <- read_dataset(data_path)
-ddup <- prepare_k50_person_dedup(input_df, shape, outcome)
+raw_input_df <- read_dataset(data_path)
+raw_rows_loaded <- nrow(raw_input_df)
+input_md5 <- unname(tools::md5sum(data_path))
+input_sha256 <- compute_sha256(data_path)
+ddup <- prepare_k50_person_dedup(raw_input_df, shape, outcome)
 input_df <- ddup$data
+rows_after_person_dedup <- nrow(input_df)
 source_ext <- tolower(tools::file_ext(data_path))
 id_col <- first_present(names(input_df), c("id"))
 fof_col <- first_present(names(input_df), c("FOF_status"))
@@ -337,8 +445,16 @@ prefix <- paste("k50", tolower(shape), outcome, sep = "_")
 decision_lines <- c(
   "K50 confirmatory run",
   paste0("input_path=", data_path),
+  paste0("input_resolution=", data_ref$resolution),
+  paste0("authoritative_lock_path=", ifelse(is.na(data_ref$lock_path), "NA", data_ref$lock_path)),
+  paste0("authoritative_snapshot_role=", data_ref$snapshot_role),
+  paste0("authoritative_snapshot_id=", data_ref$snapshot_id),
+  paste0("input_md5=", input_md5),
+  paste0("input_sha256=", input_sha256),
   paste0("shape=", shape),
   paste0("outcome=", outcome),
+  paste0("rows_loaded_raw=", raw_rows_loaded),
+  paste0("rows_after_person_dedup=", rows_after_person_dedup),
   paste0("n_raw_person_lookup=", ddup$diagnostics$n_raw_person_lookup),
   paste0("ex_duplicate_person_lookup=", ddup$diagnostics$ex_duplicate_person_lookup),
   paste0("ex_duplicate_person_rows=", ddup$diagnostics$ex_duplicate_person_rows),
@@ -610,11 +726,17 @@ receipt_lines <- c(
   paste0("script=", script_label),
   paste0("timestamp_utc=", format(Sys.time(), tz = "UTC", usetz = TRUE)),
   paste0("input_path=", data_path),
-  paste0("input_md5=", unname(tools::md5sum(data_path))),
+  paste0("input_resolution=", data_ref$resolution),
+  paste0("authoritative_lock_path=", ifelse(is.na(data_ref$lock_path), "NA", data_ref$lock_path)),
+  paste0("authoritative_snapshot_role=", data_ref$snapshot_role),
+  paste0("authoritative_snapshot_id=", data_ref$snapshot_id),
+  paste0("input_md5=", input_md5),
+  paste0("input_sha256=", input_sha256),
   paste0("input_ext=", source_ext),
   paste0("shape=", shape),
   paste0("outcome=", outcome),
-  paste0("rows_loaded=", nrow(input_df)),
+  paste0("rows_loaded=", raw_rows_loaded),
+  paste0("rows_after_person_dedup=", rows_after_person_dedup),
   paste0("n_raw_person_lookup=", ddup$diagnostics$n_raw_person_lookup),
   paste0("ex_duplicate_person_lookup=", ddup$diagnostics$ex_duplicate_person_lookup),
   paste0("ex_duplicate_person_rows=", ddup$diagnostics$ex_duplicate_person_rows),
@@ -630,6 +752,71 @@ append_manifest_safe(
   path = receipt_path,
   n = nrow(model_df),
   notes = "K50 input provenance receipt"
+)
+
+modeled_counts <- table(as.character(stats::na.omit(model_df$FOF_status)))
+modeled_fof0_n <- if ("0" %in% names(modeled_counts)) unname(modeled_counts[["0"]]) else 0L
+modeled_fof1_n <- if ("1" %in% names(modeled_counts)) unname(modeled_counts[["1"]]) else 0L
+provenance_path <- file.path(outputs_dir, paste0(prefix, "_modeled_cohort_provenance.txt"))
+provenance_lines <- c(
+  paste0("script=", script_label),
+  paste0("timestamp_utc=", format(Sys.time(), tz = "UTC", usetz = TRUE)),
+  paste0("shape=", shape),
+  paste0("outcome=", outcome),
+  paste0("input_path=", data_path),
+  paste0("input_resolution=", data_ref$resolution),
+  paste0("authoritative_lock_path=", ifelse(is.na(data_ref$lock_path), "NA", data_ref$lock_path)),
+  paste0("authoritative_snapshot_role=", data_ref$snapshot_role),
+  paste0("authoritative_snapshot_id=", data_ref$snapshot_id),
+  paste0("input_md5=", input_md5),
+  paste0("input_sha256=", input_sha256),
+  paste0("rows_loaded_raw=", raw_rows_loaded),
+  paste0("rows_after_person_dedup=", rows_after_person_dedup),
+  paste0("modeled_n=", nrow(model_df)),
+  paste0("modeled_fof0_n=", modeled_fof0_n),
+  paste0("modeled_fof1_n=", modeled_fof1_n),
+  paste0(
+    "modeled_filter_contract=",
+    if (shape == "WIDE") {
+      paste(
+        c(
+          paste0(outcome, "_0"),
+          paste0(outcome, "_12m"),
+          "FOF_status",
+          "age",
+          "sex",
+          "BMI",
+          if (fi22_enabled) "FI22_nonperformance_KAAOS" else NULL
+        ),
+        collapse = " | "
+      )
+    } else {
+      paste(
+        c(
+          outcome,
+          "time",
+          "FOF_status",
+          "age",
+          "sex",
+          "BMI",
+          if (fi22_enabled) "FI22_nonperformance_KAAOS" else NULL
+        ),
+        collapse = " | "
+      )
+    }
+  ),
+  paste0("n_raw_person_lookup=", ddup$diagnostics$n_raw_person_lookup),
+  paste0("ex_duplicate_person_lookup=", ddup$diagnostics$ex_duplicate_person_lookup),
+  paste0("ex_duplicate_person_rows=", ddup$diagnostics$ex_duplicate_person_rows),
+  paste0("ex_person_conflict_ambiguous=", ddup$diagnostics$ex_person_conflict_ambiguous)
+)
+writeLines(provenance_lines, con = provenance_path)
+append_manifest_safe(
+  label = paste0(prefix, "_modeled_cohort_provenance"),
+  kind = "text",
+  path = provenance_path,
+  n = nrow(model_df),
+  notes = "K50 modeled cohort provenance export from the same canonical run"
 )
 
 decision_lines <- c(

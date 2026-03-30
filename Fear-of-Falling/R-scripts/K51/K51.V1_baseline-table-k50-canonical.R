@@ -152,8 +152,8 @@ parse_shape <- function(x) {
 
 parse_scope <- function(x) {
   val <- trimws(ifelse(is.null(x), "", as.character(x)))
-  if (!val %in% c("analytic", "baseline_eligible", "selection_compare")) {
-    stop("K51 requires --cohort-scope analytic|baseline_eligible|selection_compare.", call. = FALSE)
+  if (!val %in% c("analytic", "baseline_eligible", "selection_compare", "analytic_wide_modeled")) {
+    stop("K51 requires --cohort-scope analytic|baseline_eligible|selection_compare|analytic_wide_modeled.", call. = FALSE)
   }
   val
 }
@@ -573,11 +573,38 @@ derive_k50_cohorts <- function(input_df, shape, outcome = "locomotor_capacity") 
   branch_df <- id_gate_df %>% filter(fof_valid, branch_eligible)
   outcome_df <- branch_df %>% filter(outcome_complete)
   analytic_df <- outcome_df %>% filter(age_complete, sex_complete, bmi_complete)
+  modeled_wide_df <- if (shape == "WIDE") {
+    dedup_input %>%
+      transmute(
+        canonical_id = normalize_id(.data$id),
+        FOF_status = normalize_fof(.data$FOF_status),
+        age = safe_num(.data$age),
+        sex = normalize_sex_chr(.data$sex),
+        BMI = safe_num(.data$BMI),
+        locomotor_capacity_0 = safe_num(.data$locomotor_capacity_0),
+        locomotor_capacity_12m = safe_num(.data$locomotor_capacity_12m),
+        FI22_nonperformance_KAAOS = safe_num(.data$FI22_nonperformance_KAAOS)
+      ) %>%
+      filter(
+        !is.na(canonical_id),
+        !is.na(FOF_status),
+        !is.na(age),
+        !is.na(sex),
+        !is.na(BMI),
+        !is.na(locomotor_capacity_0),
+        !is.na(locomotor_capacity_12m),
+        !is.na(FI22_nonperformance_KAAOS)
+      ) %>%
+      distinct(canonical_id, .keep_all = TRUE)
+  } else {
+    analytic_df[0, , drop = FALSE]
+  }
 
   baseline_df <- baseline_df %>%
     mutate(
       analytic_flag = as.integer(id %in% analytic_df$canonical_id),
-      baseline_eligible_flag = as.integer(id %in% branch_df$canonical_id)
+      baseline_eligible_flag = as.integer(id %in% branch_df$canonical_id),
+      analytic_wide_modeled_flag = as.integer(id %in% modeled_wide_df$canonical_id)
     ) %>%
     filter(baseline_eligible_flag == 1L)
 
@@ -585,10 +612,12 @@ derive_k50_cohorts <- function(input_df, shape, outcome = "locomotor_capacity") 
     baseline_df = baseline_df,
     analytic_ids = analytic_df$canonical_id,
     baseline_eligible_ids = branch_df$canonical_id,
+    analytic_wide_modeled_ids = modeled_wide_df$canonical_id,
     counts = list(
       baseline_eligible_n = nrow(baseline_df),
       analytic_n = sum(baseline_df$analytic_flag == 1L, na.rm = TRUE),
-      not_analytic_n = sum(baseline_df$analytic_flag == 0L, na.rm = TRUE)
+      not_analytic_n = sum(baseline_df$analytic_flag == 0L, na.rm = TRUE),
+      analytic_wide_modeled_n = sum(baseline_df$analytic_wide_modeled_flag == 1L, na.rm = TRUE)
     )
   )
 }
@@ -1095,6 +1124,12 @@ if (cohort_scope == "analytic") {
     paste0("Without FOF (n=", sum(table_df$FOF_status == 0L, na.rm = TRUE), ")"),
     paste0("With FOF (n=", sum(table_df$FOF_status == 1L, na.rm = TRUE), ")")
   )
+} else if (cohort_scope == "analytic_wide_modeled") {
+  table_df <- baseline_df %>% filter(analytic_wide_modeled_flag == 1L)
+  labels <- c(
+    paste0("Without FOF (n=", sum(table_df$FOF_status == 0L, na.rm = TRUE), ")"),
+    paste0("With FOF (n=", sum(table_df$FOF_status == 1L, na.rm = TRUE), ")")
+  )
 } else if (cohort_scope == "baseline_eligible") {
   table_df <- baseline_df
   labels <- c(
@@ -1112,6 +1147,8 @@ if (cohort_scope == "analytic") {
 if (table_profile == "minimal") {
   out_label <- if (cohort_scope == "analytic") {
     paste0("k51_", tolower(shape), "_baseline_table_analytic")
+  } else if (cohort_scope == "analytic_wide_modeled") {
+    paste0("k51_", tolower(shape), "_baseline_table_analytic_wide_modeled")
   } else if (cohort_scope == "baseline_eligible") {
     paste0("k51_", tolower(shape), "_baseline_table_baseline_eligible")
   } else {
@@ -1125,6 +1162,8 @@ if (table_profile == "minimal") {
 } else {
   out_label <- if (cohort_scope == "analytic") {
     paste0("k51_", tolower(shape), "_baseline_table_analytic_k14_extended")
+  } else if (cohort_scope == "analytic_wide_modeled") {
+    paste0("k51_", tolower(shape), "_baseline_table_analytic_wide_modeled_k14_extended")
   } else if (cohort_scope == "baseline_eligible") {
     paste0("k51_", tolower(shape), "_baseline_table_baseline_eligible_k14_extended")
   } else {
@@ -1162,8 +1201,10 @@ decision_lines <- c(
   paste0("baseline_eligible_n=", cohorts$counts$baseline_eligible_n),
   paste0("analytic_n=", cohorts$counts$analytic_n),
   paste0("not_analytic_n=", cohorts$counts$not_analytic_n),
+  paste0("analytic_wide_modeled_n=", cohorts$counts$analytic_wide_modeled_n),
   if (exists("missing_debug_path") && !is.na(missing_debug_path)) paste0("missing_person_keys_debug_path=", missing_debug_path) else "missing_person_keys_debug_path=NA",
   "K51 main Table 1 now follows the baseline-eligible cohort; analytic and analytic-vs-not-analytic outputs are supplementary comparison tables.",
+  if (cohort_scope == "analytic_wide_modeled") "This run targets the manuscript-facing K50 WIDE modeled sample, not the baseline-eligible descriptive cohort." else NULL,
   "Baseline cohort is one row per id after shared person-level dedup and can differ from repeated-measures K50 model rows.",
   "K51 reuses shared person_dedup_lookup.R plus KAAOS baseline enrichment for K14-style rows instead of a parallel chooser.",
   paste0("canonical_direct_rows=", paste(included_from_registry$row_label[included_from_registry$source_type == 'canonical_direct'], collapse = " | ")),
@@ -1192,6 +1233,7 @@ receipt_lines <- c(
   paste0("baseline_eligible_n=", cohorts$counts$baseline_eligible_n),
   paste0("analytic_n=", cohorts$counts$analytic_n),
   paste0("not_analytic_n=", cohorts$counts$not_analytic_n),
+  paste0("analytic_wide_modeled_n=", cohorts$counts$analytic_wide_modeled_n),
   paste0("table_csv=", csv_path),
   paste0("table_html=", html_path)
 )
