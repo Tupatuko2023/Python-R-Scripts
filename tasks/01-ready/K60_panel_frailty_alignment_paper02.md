@@ -52,6 +52,9 @@
   line because the K40 contract already produces paper_02-compatible
   `frailty_index_fi` / `frailty_index_fi_z` outputs from `${DATA_ROOT}/paper_02`
   inputs, so Fried-proxy is retained only as fallback / sensitivity.
+- 2026-04-05 00:45:00 Added an evidence bundle documenting gating proof,
+  commit evidence, diff scope, and consistency basis; also clarified the FI QC
+  field role in the paper_02 analysis plan.
 
 ## Blockers
 
@@ -65,3 +68,4 @@
 - `Quantify-FOF-Utilization-Costs/docs/ANALYSIS_PLAN.md`
 - `Fear-of-Falling/docs/ANALYSIS_PLAN.md`
 - `Fear-of-Falling/R-scripts/K40/K40_FI_KAAOS.R`
+- `tasks/01-ready/K60_panel_frailty_alignment_paper02.evidence.md`

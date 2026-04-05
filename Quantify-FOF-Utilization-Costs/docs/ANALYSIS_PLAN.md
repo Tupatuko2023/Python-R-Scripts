@@ -59,6 +59,8 @@ frailty*\_(Fried-proxy -indikaattori tai -pistemäärä; vain fallback / sensiti
 morbidity\_\_ / comorbidity*\*(esim. Charlson tms. SAP:n mukaan)
 prior_falls*\* (aiemmat kaatumiset tms. SAP:n mukaan)
 
+FI QC -kenttiä (`fi_eligible`, `coverage`, `n_deficits_observed`) käytetään FI-pohjaisten mallien analyysikelpoisuuden ja datan kattavuuden arviointiin; ne eivät itsessään määritä frailtya, mutta niitä voidaan käyttää analyyttisen otoksen rajaamiseen tai sensitivity-analyyseihin.
+
 Count-outcomes: palveluluokkakohtaiset periodilaskurit (esim. päivystyskäynnit, osastoepisodit, avohoitokäynnit, kuntoutusepisodit, kotihoitokontaktit)
 Cost-outcomes: periodikohtaiset kustannukset (kokonaiskustannus ja/tai komponentit)
 
