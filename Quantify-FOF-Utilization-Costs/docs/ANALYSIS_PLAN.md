@@ -52,12 +52,12 @@ sex (esim. 1=M, 2=F standardoinnin mukaan)
 
 KB missing → required for panel analysis (must be mapped/derived and added to standardization):
 period (jakso; factor/numeric)
-person*time (riskiaika per periodi; PY)
+riskiaika per periodi (KB missing; needs standardization mapping before run)
 frailty_index_fi / frailty_index_fi_z (ensisijainen K40 FI_22 -frailtykenttä)
 n_deficits_observed / coverage / fi_eligible (K40 FI QC -kentät, jos FI-pohjainen malli ajetaan)
 frailty*\_(Fried-proxy -indikaattori tai -pistemäärä; vain fallback / sensitivity)
-morbidity\_\_ / comorbidity*\*(esim. Charlson tms. SAP:n mukaan)
-prior_falls*\* (aiemmat kaatumiset tms. SAP:n mukaan)
+lähtötilanteen komorbiditeettikenttä/-kentät (KB missing; needs standardization mapping before run)
+aiemmat kaatumiset tai vastaava lähtötilanteen riskihistoriakenttä (KB missing; needs standardization mapping before run)
 
 FI QC -kenttiä (`fi_eligible`, `coverage`, `n_deficits_observed`) käytetään FI-pohjaisten mallien analyysikelpoisuuden ja datan kattavuuden arviointiin; ne eivät itsessään määritä frailtya, mutta niitä voidaan käyttää analyyttisen otoksen rajaamiseen tai sensitivity-analyyseihin.
 
