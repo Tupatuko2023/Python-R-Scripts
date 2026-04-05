@@ -32,13 +32,13 @@ Evidence (log excerpt):
 3. Commit Evidence
 
 - Commit hash(es):
-  - <fill after commit>
+  - `3f4b81b`
 - Branch: main
 - Status: local only (pending push)
 
 Commit message(s):
 
-<fill after commit>
+- `K61: standardize required-fields placeholder wording`
 
 ---
 
@@ -53,7 +53,7 @@ Intent:
 Changed sections:
 
 - `3.2 Required fields`
-- related standardization / "Do not guess" wording if needed
+- K61 task log / blocker-state update
 - K61 task log / evidence bundle
 
 Non-changes (explicit):
