@@ -33,12 +33,14 @@ Evidence (log excerpt):
 
 - Commit hash(es):
   - `3f4b81b`
+  - `715211f`
 - Branch: main
-- Status: local only (pending push)
+- Status: pushed
 
 Commit message(s):
 
 - `K61: standardize required-fields placeholder wording`
+- `K61: finalize evidence bundle metadata`
 
 ---
 
@@ -143,8 +145,7 @@ Conclusion:
 
 - Ready for audit: `Y`
 - Known limitations:
-  - commit hash and push status are filled after the execution commit is
-    created
+  - none
 
 ---
 
