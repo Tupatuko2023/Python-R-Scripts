@@ -6,7 +6,7 @@ Governance: Option B (No raw data in repo)
 1. Research Objectives
    Quantify Utilization (panel): Onko lähtötilanteen Fear of Falling (FOF) yhteydessä suurempaan terveyspalvelujen käyttöön (käynnit/episodit) seurannassa henkilö–jakso -paneelissa?
    Quantify Costs (panel): Onko lähtötilanteen FOF yhteydessä suurempiin suoriin terveydenhuollon kustannuksiin henkilö–jakso -paneelissa?
-   Heterogeneity (secondary): Vaihteleeko FOF–käyttö-/kustannusyhteys haurauden (frailty; ensisijaisesti Fried-proxy) tai ajan (periodi) mukaan (efektimodifikaatio, ei kausaaliväitteitä)?
+   Heterogeneity (secondary): Vaihteleeko FOF–käyttö-/kustannusyhteys haurauden (frailty; ensisijaisesti K40-johdettu `frailty_index_fi` / `FI_22`) tai ajan (periodi) mukaan (efektimodifikaatio, ei kausaaliväitteitä)?
 2. Study Population & Design
    Cohort: MFFP-osallistujat (rekisterilinkitys kontrolloidussa ympäristössä).
    Linkage: Rekisteriaineistot DATA_ROOT-hakemistosta (esim. Avohilmo, Hilmo) + mahdolliset muut projektissa määritellyt lähteet.
@@ -37,7 +37,7 @@ Hintavuosi: KB missing → assumed: kustannukset ovat yhteismitallisia (yhden hi
 
 FOF ja frailty:
 FOF: lähtötilanteen binäärimuuttuja (0/1).
-Frailty: KB missing → assumed: Fried-proxy (ensisijainen kovariaatti) + toissijaisesti efektimodifikaatio (FOF×frailty).
+Frailty: ensisijainen kovariaatti on K40 `FI22_nonperformance_KAAOS` -contractista johdettu potilastason `frailty_index_fi` (tai skaalattu `frailty_index_fi_z`); Fried-proxy säilyy vain fallback / sensitivity -roolissa, jos FI-kenttiä ei ole integroituna paneliaineistoon. Toissijaisesti efektimodifikaatio arvioidaan muodossa FOF×frailty_index_fi.
 
 Nollakustannukset:
 Gamma-GLM vaatii positiiviset kustannukset; nollien osuus arvioidaan QC-gatessa.
@@ -53,7 +53,9 @@ sex (esim. 1=M, 2=F standardoinnin mukaan)
 KB missing → required for panel analysis (must be mapped/derived and added to standardization):
 period (jakso; factor/numeric)
 person*time (riskiaika per periodi; PY)
-frailty*\_(Fried-proxy -indikaattori tai -pistemäärä)
+frailty_index_fi / frailty_index_fi_z (ensisijainen K40 FI_22 -frailtykenttä)
+n_deficits_observed / coverage / fi_eligible (K40 FI QC -kentät, jos FI-pohjainen malli ajetaan)
+frailty*\_(Fried-proxy -indikaattori tai -pistemäärä; vain fallback / sensitivity)
 morbidity\_\_ / comorbidity*\*(esim. Charlson tms. SAP:n mukaan)
 prior_falls*\* (aiemmat kaatumiset tms. SAP:n mukaan)
 
@@ -77,8 +79,8 @@ Y*{it} \sim \text{NegBin}, \quad \log(E[Y*{it}]) =
 \log(\text{person_time}*{it})
 ]
 Spesifikaatio (template):
-count_it ~ FOF_status + period + age + sex + morbidity + prior_falls + frailty + offset(log(person_time))
-Toissijaisesti: FOF_status × frailty ja/tai FOF_status × period (vain jos raportointisuunnitelma/synopsis tätä edellyttää; muuten pidetään mallit parsimonisina).
+count_it ~ FOF_status + period + age + sex + morbidity + prior_falls + frailty_index_fi + offset(log(person_time))
+Toissijaisesti: FOF_status × frailty_index_fi ja/tai FOF_status × period (vain jos raportointisuunnitelma/synopsis tätä edellyttää; muuten pidetään mallit parsimonisina). Fried-proxy-termit kuuluvat vain fallback / sensitivity -malleihin.
 
 Raportointi (mallikertoimet):
 FOF-kerroin IRR-muodossa: IRR = exp(β1) + 95% LV (cluster-robust).
@@ -100,7 +102,7 @@ Päämalli (kullekin cost-outcomelle erikseen):
 \log(\text{person_time}*{it})
 ]
 Spesifikaatio (template):
-cost_it ~ FOF_status + period + age + sex + morbidity + prior_falls + frailty + offset(log(person_time)), family = Gamma(link="log")
+cost_it ~ FOF_status + period + age + sex + morbidity + prior_falls + frailty_index_fi + offset(log(person_time)), family = Gamma(link="log")
 
 Huom (positiivisuus):
 Gamma-GLM sovitetaan positiivisille kustannuksille (cost>0). Nollaosuuden suuruus raportoidaan QC-gatessa.
@@ -171,4 +173,4 @@ Assosiaatiokieli. Efektikoot.
 Varmista offset ja yksiköt.
 
 7.4 Internal consistency check
-Lukitse period, person_time, frailty ja hintavuosi.
+Lukitse period, person_time, aktiivinen frailty-kenttä (`frailty_index_fi` / `frailty_index_fi_z`), mahdollinen FI QC -kelpoisuus (`fi_eligible`, `coverage`, `n_deficits_observed`) ja hintavuosi.
