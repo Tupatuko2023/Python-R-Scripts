@@ -33,13 +33,13 @@ Evidence (log excerpt):
 3. Commit Evidence
 
 - Commit hash(es):
-  - <fill after commit>
+  - `888036a`
 - Branch: main
 - Status: local only (pending push)
 
 Commit message(s):
 
-<fill after commit>
+- `K62: audit variable standardization governance`
 
 ---
 
