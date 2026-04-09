@@ -10,7 +10,11 @@
 2. **No "Guessing" (Finnish Metadata Protocol):**
    - Do not translate variable names or values from Finnish to English based on intuition.
    - Use `data/VARIABLE_STANDARDIZATION.csv` as the source of truth.
-   - If a term is missing, follow `docs/DATA_DICTIONARY_WORKFLOW.md`: Mark as `INFERRED`, request confirmation, then freeze.
+   - If a term is missing, follow `docs/DATA_DICTIONARY_WORKFLOW.md`: mark it
+     as `inferred` or `tbd`, request human confirmation, document the source,
+     then freeze.
+   - Default pipeline rule: use only `frozen` mappings unless a documented
+     human-approved override explicitly says otherwise.
 
 3. **Reproducibility:**
    - **R:** Use `renv` (lockfile).
@@ -24,6 +28,11 @@
 5. **Script Standards:**
    - **R Scripts:** Must follow the "STANDARD R SCRIPT INTRO" below.
    - **Python Scripts:** Must use `path_resolver.py` for all I/O and follow the "STANDARD PYTHON HEADER".
+
+6. **Governance Scope Control:**
+   - Do not treat artifact, duplicate, or redacted-source rows as silently
+     usable mappings.
+   - Do not perform cleanup of those rows outside a dedicated cleanup task.
 
 ---
 

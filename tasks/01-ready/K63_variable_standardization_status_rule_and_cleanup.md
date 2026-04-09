@@ -35,6 +35,11 @@
 - A K63 evidence bundle for a Phase 1-only governance-rule task.
 - A narrow handoff specification for a later cleanup task that stays outside
   K63 scope.
+- A governance rule set that explicitly covers:
+  - status vocabulary
+  - promotion rule toward `frozen`
+  - default pipeline eligibility
+  - explicit cleanup deferral
 
 ## Proposed Scope
 
@@ -65,6 +70,9 @@
 - Any future CSV edits are blocked until the K63 governance rule is explicit
   and human-approved.
 - A K63 evidence bundle exists from the start for the Phase 1 execution.
+- The resulting governance rule is documented in
+  `docs/DATA_DICTIONARY_WORKFLOW.md` and referenced from `ANALYSIS_PLAN.md` and
+  `CLAUDE.md`.
 
 ## Log
 
@@ -72,6 +80,10 @@
   governance-rule definition from any later CSV cleanup.
 - 2026-04-09 00:10:00 Released to `tasks/01-ready/` as a Phase 1-only
   governance-rule task; cleanup remains deferred to a separate later task.
+- 2026-04-09 00:20:00 Phase 1 executed as a doc-only governance-definition
+  patch: explicit statuses, promotion rule, frozen-only default pipeline rule,
+  and cleanup deferral were added without changing
+  `VARIABLE_STANDARDIZATION.csv`.
 
 ## Blockers
 

@@ -16,7 +16,8 @@ Governance: Option B (No raw data in repo)
    Exposure groups: Lähtötilanteen FOF (FOF=1) vs ei-FOF (FOF=0). FOF on lähtötilanteen muuttuja, joka kantautuu kaikille henkilö–jakso -riveille.
 3. Data Variables & Standardization
    Adherence / “Do not guess”: Kaikki analyysissä käytettävät muuttujat on oltava standardoituna tiedostossa data/VARIABLE_STANDARDIZATION.csv (Option B: repo sisältää vain metadataa; data pysyy DATA_ROOT:issa). Englanninkielisiä muuttujanimiä ei saa keksiä tai käyttää, ellei niitä ole standardoinnissa.
-   KB note: Saatavilla oleva VARIABLE_STANDARDIZATION.csv-snapshot ei sisällä verified=True -kenttää → KB missing → assumed: tiedostossa olevat standardinimet ovat “frozen”; kaikki uudet/puuttuvat nimet on lisättävä standardointiin ennen ajamista.
+   Mapping governance: analyysissa saa käyttää vain `frozen`-status mappingeja DATA_DICTIONARY_WORKFLOW.md:n sääntöjen mukaan; `inferred`, `tbd` ja `artifact`-tilaiset rivit ovat oletuksena blokattuja.
+   Cleanup deferral: artifact-, duplicate- ja redacted-riskit käsitellään erillisessä Phase 2 -taskissa, eivät tämän analyysisuunnitelman oletuspolussa.
 
 3.1 Assumptions & definitions (locked)
 Analyysiyksikkö: henkilö–jakso (person–period).

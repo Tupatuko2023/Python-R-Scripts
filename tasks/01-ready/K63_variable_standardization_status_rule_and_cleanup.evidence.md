@@ -53,6 +53,8 @@ Changed sections:
 
 - K63 task scope tightened to Phase 1 only
 - K63 evidence bundle updated for ready-state execution
+- `DATA_DICTIONARY_WORKFLOW.md` now defines explicit statuses and pipeline rule
+- `ANALYSIS_PLAN.md` and `CLAUDE.md` now reference frozen-only governance
 - no CSV changes in this phase
 
 Non-changes (explicit):
@@ -66,11 +68,11 @@ Non-changes (explicit):
 
 5. Diff Snippet (Minimal, Concrete)
 
-- <K63 framed as status-rule plus cleanup follow-up>
-+ <K63 released as Phase 1-only status/governance-rule execution>
+- <governance status implied by "verified" or assumed frozen semantics>
++ <explicit status vocabulary = frozen / inferred / tbd / artifact>
 
-- <cleanup could be interpreted inside the same task>
-+ <duplicate/artifact cleanup is explicitly deferred to a separate later task>
+- <pipeline eligibility not stated explicitly>
++ <default pipeline rule = only frozen mappings allowed>
 
 (Keep to 3-5 lines; focus on the core policy change)
 
@@ -124,12 +126,17 @@ Conclusion:
   `standard_variable` values.
 - K63 now implements only the first half of recommendation `C`; cleanup stays
   out of scope until a separate later task is created.
+- Phase 1 result:
+  - explicit status vocabulary
+  - explicit promotion rule toward `frozen`
+  - explicit frozen-only default pipeline rule
+  - explicit cleanup deferral
 
 ---
 
 10. Definition of Done (DoD)
 
-- `N` Target CSV updated with minimal diff
+- `Y` Target documents updated with minimal diff
 - `Y` Change is reversible
 - `Y` Consistency verified against upstream decisions
 - `Y` Task log updated
