@@ -34,12 +34,14 @@ Evidence (log excerpt):
 
 - Commit hash(es):
   - `888036a`
+  - `d67687f`
 - Branch: main
-- Status: local only (pending push)
+- Status: pushed
 
 Commit message(s):
 
 - `K62: audit variable standardization governance`
+- `K62: finalize governance audit evidence`
 
 ---
 
@@ -152,8 +154,8 @@ Conclusion:
 
 - Ready for audit: `Y`
 - Known limitations:
-  - commit hash and push status are filled after the execution commit is
-    created
+  - none
+
 
 ---
 

@@ -131,6 +131,8 @@
 - 2026-04-06 00:25:00 Recommended K63 as a two-phase follow-up:
   governance-rule clarification first, then scoped CSV cleanup under explicit
   freeze / verification rules.
+- 2026-04-09 00:00:00 K62 closed after inventory-only audit was committed and
+  pushed; follow-up work moves to a separate K63 governance-and-cleanup task.
 
 ## Blockers
 
