@@ -32,13 +32,13 @@ Evidence (log excerpt):
 3. Commit Evidence
 
 - Commit hash(es):
-  - `<pending>`
+  - `c220579`
 - Branch: main
-- Status: local only
+- Status: pushed
 
 Commit message(s):
 
-- `<pending>`
+- `K63: define mapping status governance rules`
 
 ---
 
@@ -148,8 +148,7 @@ Conclusion:
 
 - Ready for audit: `Y`
 - Known limitations:
-  - commit metadata will be filled after the ready-state release commit is
-    created
+  - none
 
 ---
 
