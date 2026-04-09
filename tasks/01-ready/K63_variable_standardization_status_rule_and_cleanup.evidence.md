@@ -3,10 +3,10 @@ Evidence Bundle -- K63
 1. Task Metadata
 
 - Task ID: K63
-- Title: variable standardization status rule and controlled cleanup
-- Scope: phase-separated governance follow-up for
+- Title: variable standardization status governance rule (Phase 1)
+- Scope: Phase 1 governance-rule execution for
   `Quantify-FOF-Utilization-Costs/data/VARIABLE_STANDARDIZATION.csv`; no CSV
-  edits in backlog state
+  edits in this task
 - Related prior task(s): K62 (closed audit baseline)
 - Date: 2026-04-09
 - Agent: codex
@@ -16,14 +16,16 @@ Evidence Bundle -- K63
 2. Gating Proof (Workflow Compliance)
 
 - Task created in: "tasks/00-backlog/"
-- Moved to: "tasks/01-ready/" before any edits
-- Edits performed only after "01-ready" state: `N`
+- Moved to: "tasks/01-ready/" before any execution edits
+- Edits performed only after "01-ready" state: `Y`
 - No reopening of closed tasks (e.g., K50): `Y`
 
 Evidence (log excerpt):
 
 - 2026-04-09 00:00:00 Created as a backlog follow-up to K62 to separate
   governance-rule definition from any later CSV cleanup.
+- 2026-04-09 00:10:00 Released to `tasks/01-ready/` as a Phase 1-only
+  governance-rule task; cleanup remains deferred to a separate later task.
 
 ---
 
@@ -44,13 +46,13 @@ Commit message(s):
 
 Intent:
 
-- Create a separate K63 follow-up that first makes mapping status governance
-  explicit and only then authorizes controlled CSV cleanup.
+- Release K63 as a Phase 1-only governance-rule task that makes mapping status
+  explicit and defers all cleanup into a later task.
 
 Changed sections:
 
-- K63 task scaffold
-- K63 evidence bundle scaffold
+- K63 task scope tightened to Phase 1 only
+- K63 evidence bundle updated for ready-state execution
 - no CSV changes in this phase
 
 Non-changes (explicit):
@@ -64,11 +66,11 @@ Non-changes (explicit):
 
 5. Diff Snippet (Minimal, Concrete)
 
-- <no explicit follow-up task for status-model governance>
-+ <K63 created to separate Phase 1 status-rule definition from Phase 2 cleanup>
+- <K63 framed as status-rule plus cleanup follow-up>
++ <K63 released as Phase 1-only status/governance-rule execution>
 
-- <duplicate-risk is only an audit finding>
-+ <duplicate source/original keys and duplicate standard names are promoted to explicit K63 scope>
+- <cleanup could be interpreted inside the same task>
++ <duplicate/artifact cleanup is explicitly deferred to a separate later task>
 
 (Keep to 3-5 lines; focus on the core policy change)
 
@@ -78,8 +80,8 @@ Non-changes (explicit):
 
 Upstream alignment:
 
-- K62 concluded that the safe next step is a two-phase model rather than direct
-  CSV cleanup.
+- K62 concluded that the safe next step is governance-rule clarification before
+  any direct CSV cleanup.
 
 Implementation alignment:
 
@@ -89,16 +91,15 @@ Implementation alignment:
 
 Conclusion:
 
-- K63 should not begin as ad hoc cleanup; it should first define the rule that
-  determines which rows can be trusted and which rows remain provisional or
-  artifact-only.
+- K63 should execute only the rule-definition layer that determines which rows
+  can be trusted and which rows remain provisional or artifact-only.
 
 ---
 
 7. Scope Control
 
 - Changes limited to:
-  - K63 task / evidence scaffolding
+  - K63 task / evidence ready-state release
 - No changes to:
   - `VARIABLE_STANDARDIZATION.csv`
   - closed task artifacts
@@ -121,8 +122,8 @@ Conclusion:
 - K62 found `19` frozen-like rows out of `493` data rows.
 - K62 found duplicate signals across both source/original keys and
   `standard_variable` values.
-- Recommended model remains `C`: explicit governance rule first, then scoped
-  cleanup under human approval.
+- K63 now implements only the first half of recommendation `C`; cleanup stays
+  out of scope until a separate later task is created.
 
 ---
 
@@ -138,10 +139,10 @@ Conclusion:
 
 11. Audit Status
 
-- Ready for audit: `N`
+- Ready for audit: `Y`
 - Known limitations:
-  - execution has not started
-  - commit metadata will be filled after K63 is acted on
+  - commit metadata will be filled after the ready-state release commit is
+    created
 
 ---
 
