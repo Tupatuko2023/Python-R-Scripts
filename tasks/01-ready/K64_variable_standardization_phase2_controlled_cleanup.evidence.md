@@ -17,13 +17,15 @@ Evidence Bundle -- K64
 
 - Task created in: "tasks/00-backlog/"
 - Moved to: "tasks/01-ready/" before any edits
-- Edits performed only after "01-ready" state: `N`
+- Edits performed only after "01-ready" state: `Y`
 - No reopening of closed tasks (e.g., K50): `Y`
 
 Evidence (log excerpt):
 
 - 2026-04-09 00:40:00 Created as a backlog follow-up to K63 for Phase 2
   controlled cleanup under the explicit status-governance model.
+- 2026-04-09 01:00:00 Released to `tasks/01-ready/` and executed under the
+  explicit allowed/forbidden operation guardrails.
 
 ---
 
@@ -49,27 +51,27 @@ Intent:
 
 Changed sections:
 
-- K64 task scaffold
-- K64 evidence bundle scaffold
-- K64 allowed/forbidden operation guardrails
-- no CSV changes in this phase
+- K64 task released to `01-ready/` and executed
+- `VARIABLE_STANDARDIZATION.csv` cleaned only for governed artifact rows
+- duplicate-`standard_variable` rows flagged in `notes`
+- K64 evidence bundle updated with before/after counts
 
 Non-changes (explicit):
 
 - No changes to:
-  - `Quantify-FOF-Utilization-Costs/data/VARIABLE_STANDARDIZATION.csv`
   - analysis scripts
   - closed K62 / K63 artifacts
+  - governance-rule documents from K63
 
 ---
 
 5. Diff Snippet (Minimal, Concrete)
 
-- <cleanup deferred but no separate follow-up task>
-+ <K64 created as the dedicated Phase 2 cleanup task>
+- <KAAOS_data.xlsx,Unnamed: 0,unnamed_0,TBD,,,Inferred from name/role: Variable requiring domain confirmation.; Codex Scan>
++ <row removed as governed artifact>
 
-- <artifact/duplicate/redacted handling remains implicit>
-+ <cleanup scope is explicitly limited to governed non-frozen rows>
+- <paper_02_outpatient,Henkilotunnus,id,as_string,,,>
++ <paper_02_outpatient,Henkilotunnus,id,as_string,,,K64 FLAG: duplicate_standard_variable>
 
 (Keep to 3-5 lines; focus on the core policy change)
 
@@ -90,16 +92,17 @@ Implementation alignment:
 Conclusion:
 
 - K64 is the correct place for controlled CSV cleanup because the rule system
-  already exists and can now constrain the cleanup scope.
+  already exists and can now constrain the cleanup scope without semantic
+  promotion or duplicate resolution.
 
 ---
 
 7. Scope Control
 
 - Changes limited to:
-  - K64 task / evidence scaffolding
-- No changes to:
+  - K64 task / evidence
   - `VARIABLE_STANDARDIZATION.csv`
+- No changes to:
   - closed task artifacts
   - unrelated modules
 - No scope creep detected: `Y`
@@ -119,17 +122,25 @@ Conclusion:
 
 - K64 should remain blocked until a human explicitly approves the Phase 2
   cleanup scope.
-- Status-column adoption in the CSV is allowed only if handled explicitly and
-  approved inside K64 execution.
+- Status-column adoption in the CSV was not performed in this phase.
 - Allowed operations and forbidden operations are now explicit so cleanup cannot
   drift into silent freeze, undocumented duplicate resolution, or traceability
   loss.
+- Before/after counts:
+  - rows before: `493`
+  - rows removed as artifact: `275`
+  - rows flagged as duplicate-standard: `167`
+  - rows unchanged: `51`
+  - rows after: `218`
+  - duplicate-key rows after cleanup: `0`
+  - redacted rows after cleanup: `0`
+  - artifact rows after cleanup: `0`
 
 ---
 
 10. Definition of Done (DoD)
 
-- `N` Target CSV updated with minimal diff
+- `Y` Target CSV updated with minimal diff
 - `Y` Change is reversible
 - `Y` Consistency verified against upstream decisions
 - `Y` Task log updated
@@ -139,9 +150,8 @@ Conclusion:
 
 11. Audit Status
 
-- Ready for audit: `N`
+- Ready for audit: `Y`
 - Known limitations:
-  - execution has not started
   - commit metadata will be filled after K64 is acted on
 
 ---

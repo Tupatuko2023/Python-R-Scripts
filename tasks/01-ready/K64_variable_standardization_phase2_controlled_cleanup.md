@@ -78,11 +78,22 @@
   restriction.
 - A K64 evidence bundle exists from the start and is ready to capture the
   cleanup diff and approvals.
+- Execution reports before/after row counts and distinguishes removed,
+  flagged, and unchanged rows.
 
 ## Log
 
 - 2026-04-09 00:40:00 Created as a backlog follow-up to K63 for Phase 2
   controlled cleanup under the explicit status-governance model.
+- 2026-04-09 01:00:00 Released to `tasks/01-ready/` and executed under the
+  explicit allowed/forbidden operation guardrails.
+- 2026-04-09 01:10:00 Removed `275` mechanically identified artifact rows
+  (`Unnamed:*` and list-number rows from K62/K63-identified artifact
+  datasets), flagged `167` remaining duplicate-`standard_variable` rows in
+  `notes`, and left `51` rows unchanged.
+- 2026-04-09 01:15:00 Resulting CSV contains `218` rows; remaining
+  duplicate-key rows = `0`, remaining redacted rows = `0`, and no status-column
+  adoption was performed in this phase.
 
 ## Blockers
 
