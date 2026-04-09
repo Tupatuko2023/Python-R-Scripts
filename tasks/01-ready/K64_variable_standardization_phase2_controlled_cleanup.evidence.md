@@ -32,13 +32,13 @@ Evidence (log excerpt):
 3. Commit Evidence
 
 - Commit hash(es):
-  - `<pending>`
+  - `4a1620f`
 - Branch: main
-- Status: local only
+- Status: pushed
 
 Commit message(s):
 
-- `<pending>`
+- `K64: execute controlled variable standardization cleanup`
 
 ---
 
@@ -152,7 +152,7 @@ Conclusion:
 
 - Ready for audit: `Y`
 - Known limitations:
-  - commit metadata will be filled after K64 is acted on
+  - none
 
 ---
 
