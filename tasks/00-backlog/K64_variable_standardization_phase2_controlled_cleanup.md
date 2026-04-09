@@ -48,6 +48,26 @@
 - If a status column or equivalent explicit field is added to the CSV, that
   change must be deliberate, documented, and human-approved within K64 scope.
 
+## Allowed Operations (Phase 2)
+
+- Remove rows where the effective governed role is `artifact` and the row has
+  no analytic meaning.
+- Segregate artifact, duplicate-risk, and redacted/unclear-source rows from
+  the active mapping set when traceability is preserved.
+- Flag duplicate mappings for governed handling rather than silently choosing a
+  winner, unless a documented resolution rule already exists inside K64 scope.
+- Introduce an explicit status column or equivalent field only if the change
+  does not silently alter mapping semantics and is documented as part of the
+  cleanup design.
+
+## Forbidden Operations
+
+- Promote any row to `frozen` during cleanup.
+- Invent new `standard_variable` names.
+- Resolve duplicate mappings without a documented resolution rule.
+- Delete risky rows in a way that destroys audit traceability.
+- Expand K64 into general naming refactoring or governance-rule rewriting.
+
 ## Definition of Done (DoD)
 
 - K64 remains separate from K63 and does not reopen the completed governance

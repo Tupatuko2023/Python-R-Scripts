@@ -51,6 +51,7 @@ Changed sections:
 
 - K64 task scaffold
 - K64 evidence bundle scaffold
+- K64 allowed/forbidden operation guardrails
 - no CSV changes in this phase
 
 Non-changes (explicit):
@@ -120,6 +121,9 @@ Conclusion:
   cleanup scope.
 - Status-column adoption in the CSV is allowed only if handled explicitly and
   approved inside K64 execution.
+- Allowed operations and forbidden operations are now explicit so cleanup cannot
+  drift into silent freeze, undocumented duplicate resolution, or traceability
+  loss.
 
 ---
 
