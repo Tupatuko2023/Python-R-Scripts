@@ -33,12 +33,14 @@ Evidence (log excerpt):
 
 - Commit hash(es):
   - `4a1620f`
+  - `585bdb3`
 - Branch: main
 - Status: pushed
 
 Commit message(s):
 
 - `K64: execute controlled variable standardization cleanup`
+- `K64: finalize cleanup evidence metadata`
 
 ---
 
