@@ -33,12 +33,14 @@ Evidence (log excerpt):
 
 - Commit hash(es):
   - `c220579`
+  - `a410a86`
 - Branch: main
 - Status: pushed
 
 Commit message(s):
 
 - `K63: define mapping status governance rules`
+- `K63: finalize governance evidence metadata`
 
 ---
 
@@ -101,7 +103,7 @@ Conclusion:
 7. Scope Control
 
 - Changes limited to:
-  - K63 task / evidence ready-state release
+  - K63 task / evidence and Phase 1 governance docs
 - No changes to:
   - `VARIABLE_STANDARDIZATION.csv`
   - closed task artifacts
