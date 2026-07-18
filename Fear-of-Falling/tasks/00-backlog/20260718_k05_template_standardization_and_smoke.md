@@ -2,7 +2,15 @@
 
 ## Status
 
-01-ready
+00-backlog
+
+## Classification
+
+Legacy/deferred task. This task is outside the active K50 scope defined by
+`docs/ANALYSIS_PLAN.md`, where the current primary outcome is
+`locomotor_capacity`. Do not move this task to ready or execute it without a new
+explicit human decision and a documented compatibility review against the
+current `locomotor_capacity`, `z3`, `FI_22`, and K50 modeling architecture.
 
 ## Workflow
 
@@ -18,6 +26,9 @@ The agent moves the task to `tasks/02-in-progress/` before work and to
 - Existing legacy `R-scripts/K5/` context only as naming/provenance background.
 - K05 output discipline, manifest rows, `sessionInfo()` or `renv` diagnostics,
   and minimal QC/smoke validation.
+- Historical note only: K05 is not part of the active
+  `docs/ANALYSIS_PLAN.md` K50 analysis line unless a later human decision
+  updates the plan compatibility status.
 
 ## Objective
 
@@ -51,6 +62,10 @@ confirmed from the data dictionary or codebook context.
 - Do table-to-text crosschecks before writing or updating result text.
 - Do not commit generated outputs, raw data, manifest rows, or `renv.lock`
   unless separately approved.
+- Do not execute this task from backlog. A later K05 run requires a new explicit
+  human approval, a plan-compatibility review, and a documented re-evaluation of
+  purpose, expected outputs, and effects on the active K50 analysis
+  architecture.
 
 ## Acceptance Criteria
 
@@ -76,6 +91,9 @@ confirmed from the data dictionary or codebook context.
 - [ ] No raw data, K06-K16 files, unrelated analysis code, generated outputs,
   `manifest/manifest.csv`, or `renv.lock` are committed without separate
   approval.
+- [ ] Before any future ready move, a human confirms that K05 is compatible with
+  the active `docs/ANALYSIS_PLAN.md` K50 scope or explicitly changes the
+  analysis plan.
 
 ## Agent Report
 
@@ -87,6 +105,9 @@ Not started.
   existing K05 task in `tasks/` and no task was eligible to start in this run.
 - 2026-07-18T20:10:00+0300 Human review approved the K05 task and moved it to
   `tasks/01-ready/`.
+- 2026-07-18T20:24:00+0300 Human workflow correction reversed the ready move:
+  active `docs/ANALYSIS_PLAN.md` scope is K50 with `locomotor_capacity` as the
+  current primary outcome, so K05 was deferred to `tasks/00-backlog/`.
 
 ## Blockers
 
