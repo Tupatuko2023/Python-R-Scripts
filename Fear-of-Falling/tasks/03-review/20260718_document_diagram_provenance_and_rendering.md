@@ -2,7 +2,7 @@
 
 ## Status
 
-00-backlog
+03-review
 
 ## Workflow
 
@@ -296,13 +296,41 @@ Update `diagram/README.md` whenever any of these change:
 
 ## Agent Report
 
-Not started.
+Created `diagram/README.md` as the durable provenance, rendering, validation,
+Git LFS, naming, numerical provenance, output/manifest, status-label, and
+crosscheck reference for current diagram assets. No `diagram/AGENTS.md` was
+created, and no diagram assets, manifest files, analysis outputs, raw data, or
+analysis code were modified.
+
+## Evidence
+
+- `diagram/README.md` documents the directory purpose, file-role taxonomy,
+  current inventory, cohort-flow lineage, rendering commands, validation
+  commands, Git LFS pointer failure mode, naming convention, numerical
+  provenance rules, output/manifest policy, manuscript status labels,
+  crosschecks, and update rule.
+- The current LONG-labelled N = 230 cohort-flow PNG/SVG/resolved-DOT family is
+  recorded as Major Revision / `DO_NOT_USE` for final manuscript Figure 1.
+- The README links the scientific correction task:
+  `tasks/00-backlog/20260718_k50_figure1_dual_branch_cohort_flow.md`.
+
+## Validation
+
+- Confirmed `diagram/AGENTS.md` does not exist.
+- Confirmed tracked diagram assets, `manifest/manifest.csv`, analysis outputs,
+  raw data, and analysis code were not changed by this task.
+- `git diff --check` passed.
+- `git diff --cached --check` passed.
 
 ## Log
 
 - 2026-07-18T00:00:00+0300 Created in `00-backlog` after loss of
   diagram-generation context was identified.
+- 2026-07-19T00:00:00+0300 Human approval: moved from `00-backlog` to
+  `01-ready` for implementation.
+- 2026-07-19T00:00:00+0300 Implemented `diagram/README.md` and prepared task
+  for `03-review`.
 
 ## Blockers
 
-- Awaiting human approval to move this documentation task to `tasks/01-ready/`.
+None.
