@@ -2,7 +2,7 @@
 
 ## Status
 
-00-backlog
+03-review
 
 ## Workflow
 
@@ -11,8 +11,9 @@ The agent moves the task to `tasks/02-in-progress/` before work and to
 `tasks/03-review/` after reporting. Only a human may move the task to
 `tasks/04-done/`.
 
-Current state: `00-backlog`. A human must explicitly move this task to
-`tasks/01-ready/` before implementation. This task must not be moved directly to
+Current state: `03-review`. A human approved moving this task to
+`tasks/01-ready/`; the agent moved it through `tasks/02-in-progress/` and then
+to `tasks/03-review/` after validation. This task must not be moved directly to
 `tasks/04-done/`.
 
 ## Scope
@@ -25,11 +26,8 @@ or LONG mixed-effects analyses.
 The implementation must use only the authoritative counts validated by the K50
 Figure 1 count-provenance gate committed in `485808a`.
 
-Out of scope until this task is approved and moved to `01-ready`:
+Out of scope for this implementation:
 
-- editing or rendering Graphviz DOT, PDF, SVG, or PNG assets;
-- changing `diagram/README.md`;
-- changing `manifest/manifest.csv`;
 - changing provenance outputs, analysis models, raw data, manuscript text, or
   `docs/ANALYSIS_PLAN.md`;
 - marking historical assets `SUPERSEDED`.
@@ -321,48 +319,72 @@ Expected implementation deliverables:
 
 ## Acceptance Criteria
 
-- [ ] Status remains `00-backlog` until a human approves moving this task to
+- [x] Status remains `00-backlog` until a human approves moving this task to
       `tasks/01-ready/`.
-- [ ] Dual-branch design matches the expert decision record.
-- [ ] Every visible number matches the locked provenance artifacts from commit
+- [x] Dual-branch design matches the expert decision record.
+- [x] Every visible number matches the locked provenance artifacts from commit
       `485808a`.
-- [ ] Source cohort uses `N = 535`.
-- [ ] Valid baseline FOF uses `n = 472`, with participant-level FOF yes/no
+- [x] Source cohort uses `N = 535`.
+- [x] Valid baseline FOF uses `n = 472`, with participant-level FOF yes/no
       `328/144`.
-- [ ] WIDE ANCOVA branch uses `n = 230`, with participant-level FOF yes/no
+- [x] WIDE ANCOVA branch uses `n = 230`, with participant-level FOF yes/no
       `161/69`.
-- [ ] LONG mixed-effects branch uses `400` unique participants and `630`
+- [x] LONG mixed-effects branch uses `400` unique participants and `630`
       repeated observations.
-- [ ] LONG participant-level FOF yes/no is `276/124`.
-- [ ] Values `527`, `486`, and `340/146` do not appear as authoritative
+- [x] LONG participant-level FOF yes/no is `276/124`.
+- [x] Values `527`, `486`, and `340/146` do not appear as authoritative
       current Figure 1 counts.
-- [ ] WIDE and LONG branches are unambiguous.
-- [ ] Participants and observations are visibly distinct units.
-- [ ] Main Figure 1 contains no detailed missingness table.
-- [ ] Supplementary missingness is handled outside the main figure.
-- [ ] Title and legend are manuscript-ready.
-- [ ] Visible labels are reader-facing and omit internal pipeline labels.
-- [ ] Visual style uses neutral grey/blue, remains grayscale-readable, and is
+- [x] WIDE and LONG branches are unambiguous.
+- [x] Participants and observations are visibly distinct units.
+- [x] Main Figure 1 contains no detailed missingness table.
+- [x] Supplementary missingness is handled outside the main figure.
+- [x] Title and legend are manuscript-ready.
+- [x] Visible labels are reader-facing and omit internal pipeline labels.
+- [x] Visual style uses neutral grey/blue, remains grayscale-readable, and is
       legible at 170 mm width.
-- [ ] PDF is the primary vector publication asset.
-- [ ] SVG and PNG review versions pass technical validation.
-- [ ] New diagram family uses `wide_long.locomotor_capacity` naming.
-- [ ] Editable DOT, resolved DOT, PDF, SVG, and PNG follow documented lineage.
-- [ ] Figure-to-source-table-to-legend-to-manuscript crosscheck passes.
-- [ ] All producer outputs have exactly one manifest row per artifact.
-- [ ] Historical assets remain traceable and are not overwritten.
-- [ ] Task reaches `03-review`, not `04-done`, after successful implementation.
+- [x] PDF is the primary vector publication asset.
+- [x] SVG and PNG review versions pass technical validation.
+- [x] New diagram family uses `wide_long.locomotor_capacity` naming.
+- [x] Editable DOT, resolved DOT, PDF, SVG, and PNG follow documented lineage.
+- [x] Figure-to-source-table-to-legend-to-manuscript crosscheck passes.
+- [x] All producer outputs have exactly one manifest row per artifact.
+- [x] Historical assets remain traceable and are not overwritten.
+- [x] Task reaches `03-review`, not `04-done`, after successful implementation.
 
 ## Agent Report
 
-Not started. Created as the next backlog task after count-provenance gate
-`PASS` and commit `485808a`.
+Implemented and ready for human review. The producer script
+`R-scripts/K50/K50.FIG1_VISUAL_DUAL_BRANCH.V1_render.R` reads the locked
+Figure 1 count-provenance artifacts, resolves the new `wide_long` diagram
+family, renders PDF/SVG/PNG with Graphviz, writes producer/QC outputs under
+`R-scripts/K50/outputs/FIG1_visual_dual_branch/`, and appends scoped manifest
+rows.
+
+Validation completed:
+
+- `Rscript R-scripts/K50/K50.FIG1_VISUAL_DUAL_BRANCH.V1_render.R`
+- `file` / `stat` / PNG signature checks on PDF/SVG/PNG
+- figure-count and render-validation reports both `PASS`
+- visual PNG inspection: no clipping, readable dual-branch layout
+- `bash tools/run-gates.sh --project Fear-of-Falling`
+- `python ../.codex/skills/fof-preflight/scripts/preflight.py`
+- `git diff --check`
+- protected count-provenance, analysis-plan, `renv.lock`, and historical
+  LONG-only diagram assets unchanged
 
 ## Log
 
 - 2026-07-19T00:00:00+0300 Created after count-provenance gate `PASS` and
   commit `485808a`.
+- 2026-07-19T00:00:00+0300 Human approval: released to `01-ready` for visual
+  dual-branch implementation.
+- 2026-07-19T12:55:05+0300 Producer script render completed with
+  `K50 Figure 1 visual dual-branch rebuild: PASS`.
+- 2026-07-19T13:00:17+0300 `tools/run-gates.sh --project Fear-of-Falling`
+  completed successfully.
+- 2026-07-19T13:00:00+0300 `fof-preflight` completed with `PASS`; task moved to
+  `03-review`.
 
 ## Blockers
 
-Awaiting human approval to move this task to `tasks/01-ready/`.
+None.

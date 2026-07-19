@@ -1,0 +1,55 @@
+digraph k50_figure1_wide_long_locomotor_capacity {
+  graph [
+    rankdir = TB,
+    bgcolor = "white",
+    pad = "0.18",
+    nodesep = "0.45",
+    ranksep = "0.52",
+    margin = 0,
+    size = "6.7,5.2!"
+  ];
+  node [
+    shape = box,
+    style = "rounded,filled",
+    color = "#607080",
+    penwidth = 1.2,
+    fillcolor = "#F4F7F9",
+    fontname = "Helvetica",
+    fontsize = 11,
+    margin = "0.10,0.08"
+  ];
+  edge [
+    color = "#6C7885",
+    arrowsize = 0.75,
+    penwidth = 1.1,
+    fontname = "Helvetica",
+    fontsize = 9
+  ];
+
+  source [label = "Participants with locomotor-capacity source data\nN = {{SOURCE_N}}", fillcolor = "#EEF3F7"];
+  valid_fof [label = "Valid baseline fear-of-falling status\nn = {{VALID_FOF_N}}", fillcolor = "#E7EEF5"];
+  baseline_groups [label = "Fear of falling present, n = {{VALID_FOF_YES}}\nFear of falling absent, n = {{VALID_FOF_NO}}", fillcolor = "#F7F9FB"];
+
+  wide_branch [label = "Baseline-adjusted 12-month analysis\nParticipants in locked ANCOVA model frame\nn = {{WIDE_N}}", fillcolor = "#DCE9F3"];
+  wide_groups [label = "Fear of falling present, n = {{WIDE_YES}}\nFear of falling absent, n = {{WIDE_NO}}", fillcolor = "#EFF5FA"];
+  wide_excl [label = "Required for WIDE branch:\ncomplete baseline and 12-month locomotor-capacity scores\nand required model covariates", fillcolor = "#F7F7F7", color = "#8A8A8A"];
+
+  long_branch [label = "Repeated-measures analysis\nUnique participants in locked mixed-effects model frame\nn = {{LONG_PARTICIPANTS}}", fillcolor = "#DCE9F3"];
+  long_groups [label = "Fear of falling present, n = {{LONG_YES}}\nFear of falling absent, n = {{LONG_NO}}", fillcolor = "#EFF5FA"];
+  long_obs [label = "Repeated observations included\nn = {{LONG_OBSERVATIONS}}", fillcolor = "#F7F9FB", color = "#4F6C82", penwidth = 1.6];
+  long_excl [label = "Required for LONG branch:\neligible repeated locomotor-capacity observations\nand required model covariates", fillcolor = "#F7F7F7", color = "#8A8A8A"];
+
+  source -> valid_fof;
+  valid_fof -> baseline_groups;
+  baseline_groups -> wide_branch;
+  baseline_groups -> long_branch;
+  wide_branch -> wide_groups;
+  wide_branch -> wide_excl [style = dashed, arrowhead = none];
+  long_branch -> long_groups;
+  long_branch -> long_obs;
+  long_branch -> long_excl [style = dashed, arrowhead = none];
+
+  { rank = same; wide_branch; long_branch; }
+  { rank = same; wide_groups; long_groups; }
+  { rank = same; wide_excl; long_excl; }
+}

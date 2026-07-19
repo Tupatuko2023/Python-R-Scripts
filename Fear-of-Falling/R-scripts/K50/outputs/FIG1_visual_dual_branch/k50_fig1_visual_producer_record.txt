@@ -1,0 +1,19 @@
+script=K50.FIG1_VISUAL_DUAL_BRANCH.V1_render.R
+script_label=K50.FIG1_VISUAL_DUAL_BRANCH
+timestamp=2026-07-19 12:54:32.719338
+working_directory=/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling
+provenance_input=R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_count_provenance.csv
+discrepancy_input=R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_discrepancy_resolution.csv
+proposed_counts_input=R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_proposed_counts.csv
+missingness_input=R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_supplementary_missingness.csv
+source_crosscheck_input=R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_table_to_text_crosscheck.txt
+diagram_template=diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.dot
+diagram_resolved=diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.resolved.dot
+diagram_pdf=diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.pdf
+diagram_svg=diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.svg
+diagram_png=diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.png
+output_dir=R-scripts/K50/outputs/FIG1_visual_dual_branch
+render_command_pdf=dot -Tpdf <resolved.dot> -o <pdf>
+render_command_svg=dot -Tsvg <resolved.dot> -o <svg>
+render_command_png=dot -Tpng -Gdpi=300 <resolved.dot> -o <png>
+crosscheck_result=PASS

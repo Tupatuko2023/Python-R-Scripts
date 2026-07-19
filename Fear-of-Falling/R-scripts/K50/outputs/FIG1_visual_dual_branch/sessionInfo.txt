@@ -1,0 +1,18 @@
+R version 4.5.3 (2026-03-11)
+Platform: aarch64-unknown-linux-android
+
+Matrix products: default
+BLAS:   /data/data/com.termux/files/usr/lib/R/lib/libRblas.so
+LAPACK: /data/data/com.termux/files/usr/lib/R/lib/libRlapack.so;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8
+
+time zone: NA
+tzcode source: system
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base
+
+loaded via a namespace (and not attached):
+[1] compiler_4.5.3 tools_4.5.3    renv_1.1.5

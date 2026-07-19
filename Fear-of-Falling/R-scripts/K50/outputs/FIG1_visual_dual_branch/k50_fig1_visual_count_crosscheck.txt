@@ -1,0 +1,17 @@
+figure_count_crosscheck=PASS
+source_analytic_cohort_participants=535
+valid_baseline_fof_participants=472
+valid_baseline_fof_yes_no=328/144
+wide_ancova_participants=230
+wide_ancova_yes_no=161/69
+long_unique_participants=400
+long_participant_yes_no=276/124
+long_repeated_observations=630
+participants_observations_separated=PASS
+forbidden_historical_counts_absent_from_resolved_dot=PASS
+main_figure_missingness_table_absent=PASS
+embedded_title_absent=PASS
+provenance_csv=R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_count_provenance.csv
+proposed_counts_csv=R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_proposed_counts.csv
+discrepancy_resolution_csv=R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_discrepancy_resolution.csv
+supplementary_missingness_csv=R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_supplementary_missingness.csv

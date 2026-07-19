@@ -37,6 +37,11 @@ file is not manuscript-current solely because it exists.
 | `diagram/paper_01_cohort_flow.wide.locomotor_capacity.resolved.dot` | Resolved DOT | `wide` | `locomotor_capacity` | `diagram/render_paper_01_cohort_flow.sh` from `paper_01_cohort_flow.dot` | K50 WIDE placeholder CSV lineage; modeled WIDE analytic counts require source-table crosscheck | Renderable resolved source | Tracked text | `03_REVIEW` / `QC_ONLY` | Planned `wide_long` corrected Figure 1 | `tasks/03-review/investigate_k50_cohort_flow_unique_id_mismatch.md` |
 | `diagram/paper_01_cohort_flow.wide.locomotor_capacity.svg` | SVG render | `wide` | `locomotor_capacity` | Graphviz render from WIDE resolved DOT | Same as WIDE resolved DOT | Technical vector render | Ignored/untracked local file at inventory time | `QC_ONLY` | Planned `wide_long` corrected Figure 1 | `tasks/03-review/investigate_k50_cohort_flow_unique_id_mismatch.md` |
 | `diagram/paper_01_cohort_flow.wide.locomotor_capacity.png` | PNG render | `wide` | `locomotor_capacity` | Graphviz render from WIDE resolved DOT | Same as WIDE resolved DOT | Technical raster render | Ignored/untracked local file at inventory time; PNG pattern has Git LFS attributes | `QC_ONLY` | Planned `wide_long` corrected Figure 1 | `tasks/03-review/investigate_k50_cohort_flow_unique_id_mismatch.md` |
+| `diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.dot` | Editable DOT template | `wide_long` | `locomotor_capacity` | `R-scripts/K50/K50.FIG1_VISUAL_DUAL_BRANCH.V1_render.R` | Locked K50 Figure 1 provenance CSVs; source cohort 535, valid baseline FOF 472, WIDE 230 participants, LONG 400 participants / 630 observations | Source template with placeholders | Tracked text | `03_REVIEW` | None | `tasks/03-review/20260719_k50_figure1_visual_dual_branch_rebuild.md` |
+| `diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.resolved.dot` | Resolved DOT | `wide_long` | `locomotor_capacity` | `R-scripts/K50/K50.FIG1_VISUAL_DUAL_BRANCH.V1_render.R` from editable DOT and locked provenance CSVs | Same locked K50 Figure 1 provenance CSVs; all visible counts crosschecked by producer report | Renderable resolved source | Tracked text | `03_REVIEW` | None | `tasks/03-review/20260719_k50_figure1_visual_dual_branch_rebuild.md` |
+| `diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.pdf` | PDF render | `wide_long` | `locomotor_capacity` | Graphviz render from `paper_01_cohort_flow.wide_long.locomotor_capacity.resolved.dot` | Same as wide_long resolved DOT | Primary vector publication candidate | Tracked render | `03_REVIEW` | None | `tasks/03-review/20260719_k50_figure1_visual_dual_branch_rebuild.md` |
+| `diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.svg` | SVG render | `wide_long` | `locomotor_capacity` | Graphviz render from `paper_01_cohort_flow.wide_long.locomotor_capacity.resolved.dot` | Same as wide_long resolved DOT | Review/interchange vector render | Tracked render | `03_REVIEW` | None | `tasks/03-review/20260719_k50_figure1_visual_dual_branch_rebuild.md` |
+| `diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.png` | PNG render | `wide_long` | `locomotor_capacity` | Graphviz 300 dpi render from `paper_01_cohort_flow.wide_long.locomotor_capacity.resolved.dot` | Same as wide_long resolved DOT | Review raster render; bytes validate as PNG | Tracked render with Git LFS attributes where configured | `03_REVIEW` | None | `tasks/03-review/20260719_k50_figure1_visual_dual_branch_rebuild.md` |
 
 ## Cohort-Flow Lineage
 
@@ -58,10 +63,21 @@ paper_01_cohort_flow.dot
 -> paper_01_cohort_flow.wide.locomotor_capacity.png
 ```
 
+Current WIDE+LONG review family:
+
+```text
+paper_01_cohort_flow.wide_long.locomotor_capacity.dot
+-> paper_01_cohort_flow.wide_long.locomotor_capacity.resolved.dot
+-> paper_01_cohort_flow.wide_long.locomotor_capacity.pdf
+-> paper_01_cohort_flow.wide_long.locomotor_capacity.svg
+-> paper_01_cohort_flow.wide_long.locomotor_capacity.png
+```
+
 The current LONG-labelled N = 230 asset is technically renderable, but it is
 scientifically classified as Major Revision / `DO_NOT_USE` for final manuscript
-Figure 1. The scientific correction task is
-`tasks/00-backlog/20260718_k50_figure1_dual_branch_cohort_flow.md`.
+Figure 1. The new `wide_long` family is the corrected Figure 1 review candidate
+pending human acceptance; old assets are not marked `SUPERSEDED` until that
+acceptance is recorded.
 
 ## Rendering Commands
 
