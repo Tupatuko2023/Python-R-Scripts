@@ -1,0 +1,5 @@
+flow_stage,branch,participants_n,observations_n,fof_yes_n,fof_no_n,status
+Source analytic cohort after K50 person dedup,shared,535,,,,PASS
+Valid baseline fear-of-falling status,shared,472,,328,144,PASS
+WIDE ANCOVA model frame,wide,230,,161,69,PASS
+LONG mixed-effects model frame,long,400,630,276,124,PASS

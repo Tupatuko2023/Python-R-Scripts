@@ -1,0 +1,9 @@
+branch,baseline_fof,time_point,eligible_participants,outcome_missing_n,outcome_missing_pct,age_missing_n,sex_missing_n,bmi_missing_n,denominator_definition
+long,FOF,12_months,328,142,43.3,0,1,17,K50 person-deduplicated LONG source rows with valid FOF_status and canonical time
+long,FOF,baseline,328,53,16.2,0,1,17,K50 person-deduplicated LONG source rows with valid FOF_status and canonical time
+long,No FOF,12_months,144,73,50.7,0,0,5,K50 person-deduplicated LONG source rows with valid FOF_status and canonical time
+long,No FOF,baseline,144,16,11.1,0,0,5,K50 person-deduplicated LONG source rows with valid FOF_status and canonical time
+wide,FOF,12_months,328,142,43.3,0,1,17,K50 person-deduplicated WIDE source with valid baseline FOF_status
+wide,FOF,baseline,328,53,16.2,0,1,17,K50 person-deduplicated WIDE source with valid baseline FOF_status
+wide,No FOF,12_months,144,73,50.7,0,0,5,K50 person-deduplicated WIDE source with valid baseline FOF_status
+wide,No FOF,baseline,144,16,11.1,0,0,5,K50 person-deduplicated WIDE source with valid baseline FOF_status

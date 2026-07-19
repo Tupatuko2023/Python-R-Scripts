@@ -2,7 +2,7 @@
 
 ## Status
 
-00-backlog
+03-review
 
 ## Workflow
 
@@ -467,19 +467,95 @@ Create a true table, not an image-embedded table, with:
 
 ## Agent Report
 
-Not started.
+Count-provenance gate completed as `PASS` for the approved provenance-only
+scope. No diagram DOT, resolved DOT, SVG, PNG, PDF, `diagram/README.md`,
+`docs/ANALYSIS_PLAN.md`, `renv.lock`, raw data, manuscript text, or figure
+legend was modified or rendered.
+
+New K50 provenance/QC script:
+
+- `R-scripts/K50/K50.FIG1_COUNT_PROVENANCE.V1_count-provenance.R`
+
+Produced artifacts:
+
+- `R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_count_provenance.csv`
+- `R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_discrepancy_resolution.csv`
+- `R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_proposed_counts.csv`
+- `R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_supplementary_missingness.csv`
+- `R-scripts/K50/outputs/FIG1_count_provenance/k50_fig1_table_to_text_crosscheck.txt`
+- `R-scripts/K50/outputs/FIG1_count_provenance/sessionInfo.txt`
+- `R-scripts/K50/outputs/FIG1_count_provenance/renv_diagnostics.txt`
+
+## Evidence
+
+- Count provenance gate: `PASS`.
+- Source analytic cohort: `535` unique participants from the current locked K50
+  WIDE source after K50 person-dedup handling.
+- Valid baseline FOF: `472` unique participants; shared valid-FOF denominator
+  is FOF yes/no `328/144`.
+- Historical `527`, `486`, and `340/146` values are documented as
+  non-current/historical source-level candidates, not values reproduced from
+  the current locked K50 source.
+- WIDE ANCOVA model frame: `230` participants; FOF yes/no `161/69`.
+- LONG primary mixed-model model frame:
+  `400` unique participants and `630` observation rows.
+- LONG FOF yes/no:
+  `276/124` unique participants and `437/193` observation rows.
+- Follow-up absence mechanism is classified as unknown because the current
+  locked K50 sources identify missingness but do not distinguish attrition,
+  unavailable assessment, failed measurement, and derived-score missingness.
+
+## Validation
+
+- Superseded gate invocation: `tools/run-gates.sh` loaded repo policy and
+  steering, then stopped in analysis mode with `--project is required`; no
+  files were changed by that incorrect check.
+- Corrected repository gate invocation:
+  `bash tools/run-gates.sh --project Fear-of-Falling`; final exit code `0`,
+  result `PASS`. The gate loaded `SKILLS.md`, `config/agent_policy.md`, and
+  `config/steering.md`, passed guardrails and renv lock sanity, and wrote
+  project-local run metadata.
+- Native Termux `Rscript` failed because package `cli` was unavailable for
+  `dplyr`; final validation used Debian PRoot `/usr/bin/Rscript`.
+- Ran:
+  `proot-distro login debian --termux-home -- bash -lc 'export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; hash -r; cd ~/Python-R-Scripts/Fear-of-Falling && /usr/bin/Rscript R-scripts/K50/K50.FIG1_COUNT_PROVENANCE.V1_count-provenance.R'`
+- Validated required CSV schemas for provenance, discrepancy resolution,
+  proposed counts, and supplementary missingness.
+- Validated all discrepancy-resolution rows have `PASS`.
+- Validated `manifest/manifest.csv` has exactly seven
+  `K50.FIG1_COUNT_PROVENANCE` rows, one per new artifact path.
+- Validated unchanged protected files with:
+  `git diff --exit-code -- diagram/README.md diagram/paper_01_cohort_flow.dot diagram/paper_01_cohort_flow.long.locomotor_capacity.resolved.dot diagram/paper_01_cohort_flow.long.locomotor_capacity.svg diagram/paper_01_cohort_flow.long.locomotor_capacity.png docs/ANALYSIS_PLAN.md renv.lock`.
+- `git diff --check` passed.
+
+## Count Provenance Decision Record
+
+- Use `535` as the current source analytic cohort unique participant count for
+  this K50 Figure 1 provenance gate.
+- Use `472` as the current valid baseline FOF unique participant count.
+- Use `328/144` as the shared valid-FOF FOF yes/no denominator.
+- Use `230`, with FOF yes/no `161/69`, as the WIDE ANCOVA branch count from
+  the locked WIDE model-frame construction.
+- Use `400` unique participants and `630` observations for the LONG mixed model
+  branch from the saved primary LONG `model.frame`.
+- Do not infer attrition mechanism from current K50 missingness alone; classify
+  follow-up absence mechanism as unknown.
 
 ## Log
 
 - 2026-07-18T00:00:00+0300 Created in `00-backlog` from expert Major Revision
   review. Awaiting human review and ready approval.
+- 2026-07-19T00:00:00+0300 Human approval: released to `01-ready` for
+  count-provenance validation only; rendering and diagram asset changes remain
+  prohibited.
+- 2026-07-19T00:00:00+0300 Count-provenance gate completed as `PASS`; moved to
+  `03-review` for human review.
+- 2026-07-19T10:53:11+0300 Corrected repository gate invocation completed:
+  `bash tools/run-gates.sh --project Fear-of-Falling`, exit code `0`, result
+  `PASS`; task remains in `03-review`.
 
 ## Blockers
 
-- Source cohort N conflict: 527 versus 535.
-- Valid baseline FOF N conflict: 472 versus 486.
-- Group-by-time missingness conflict: 328/144 versus 340/146.
-- LONG participant N must be derived from the locked primary LONG `merMod`
-  model frame and must not be inferred from 630 observations.
-- WIDE N = 230 and FOF yes/no counts must be validated from a locked WIDE
-  ANCOVA model frame.
+None for the count-provenance gate. Rendering, visual redesign, manuscript text
+edits, and final Figure 1 asset production remain intentionally out of scope
+for this task.

@@ -1,0 +1,19 @@
+count_provenance_gate=PASS
+wide_source=/data/data/com.termux/files/home/FOF_LOCAL_DATA/paper_02/analysis/fof_analysis_k50_wide.rds
+wide_source_md5=f678e2c7e98cc223e088c320ce04f259
+wide_source_sha256=1a8994334c1a4fefe8fc801d977ad52cbe0e50cf8f014e16a47b9118abe954ac
+long_source=/data/data/com.termux/files/home/FOF_LOCAL_DATA/paper_02/analysis/fof_analysis_k50_long.rds
+long_model_frame=/data/data/com.termux/files/home/Python-R-Scripts/Fear-of-Falling/R-scripts/K50/outputs/k50_long_locomotor_capacity_model_frame_primary.rds
+
+Resolved Figure 1 count candidates:
+- Source analytic cohort: 535 unique participants.
+- Valid baseline FOF: 472 unique participants; FOF yes/no = 328/144.
+- WIDE ANCOVA model frame: 230 participants; FOF yes/no = 161/69.
+- LONG mixed model frame: 400 unique participants and 630 observations; FOF yes/no participants = 276/124; observations = 437/193.
+
+Figure-to-table-to-text crosscheck:
+- Table values are sourced from k50_fig1_count_provenance.csv.
+- Proposed figure counts are sourced from k50_fig1_proposed_counts.csv.
+- Discrepancy resolutions are sourced from k50_fig1_discrepancy_resolution.csv.
+- Current diagram assets remain DO_NOT_USE for final Figure 1 until a separate rendering task.
+- Follow-up absence mechanism is unknown unless a future source variable separates attrition, unavailable assessment, failed measurement, and derived-score missingness.
