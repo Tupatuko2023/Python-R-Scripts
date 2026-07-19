@@ -2,7 +2,7 @@
 
 ## Status
 
-00-backlog
+01-ready
 
 ## Workflow
 
@@ -11,8 +11,8 @@ The agent moves the task to `tasks/02-in-progress/` before work and to
 `tasks/03-review/` after reporting. Only a human may move the task to
 `tasks/04-done/`.
 
-Current state: `00-backlog`. Human approval is required before moving this task
-to `tasks/01-ready/`.
+Current state: `01-ready`. Human approval released this task for the combined
+Figure 1 minor patch and manuscript reconciliation.
 
 ## Scope
 
@@ -406,16 +406,26 @@ being created.
 
 ## Agent Report
 
-Not started. This task records the post-audit decision and required future work
-only.
+Blocked before combined implementation. The task was released to `01-ready`,
+but repository search did not identify a version-controlled QMD corresponding
+to `Results_Draft_version_2.qmd`.
+
+No figure, producer, generated output, manuscript, manifest, analysis, raw-data,
+or current `03-review` task changes were made.
 
 ## Log
 
 - 2026-07-19T00:00:00+0300 Created from the expert post-audit following visual
   rebuild commit `e79c26c`.
+- 2026-07-19T00:00:00+0300 Human approval: released to `01-ready` for the
+  combined Figure 1 minor patch and manuscript reconciliation.
+- 2026-07-19T00:00:00+0300 Blocked before implementation: no version-controlled
+  `.qmd` file and no `Results_Draft_version_2.qmd` were found under
+  `Fear-of-Falling/` or the repository parent search path used for this task.
 
 ## Blockers
 
-- Version-controlled `Results_Draft_version_2.qmd` was not found under
-  `Fear-of-Falling/` during backlog creation. Future implementation must locate
-  the real manuscript source or stop with this blocker.
+- BLOCKED: Version-controlled `Results_Draft_version_2.qmd` was not found under
+  `Fear-of-Falling/`, and no `.qmd` file was found in the subproject. The
+  combined figure/manuscript implementation must not proceed until the real
+  manuscript QMD source is added or positively identified.
