@@ -28,6 +28,8 @@ jobs:
 
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "4.4.2"
 
       - name: Set up Pandoc
         uses: r-lib/actions/setup-pandoc@v2
@@ -43,9 +45,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.rlib.outputs.RLIB }}
-          key: ${{ runner.os }}-r-${{ hashFiles('Fear-of-Falling/renv.lock') }}
+          key: ${{ runner.os }}-r-4.4.2-${{ hashFiles('Fear-of-Falling/renv.lock') }}
           restore-keys: |
-            ${{ runner.os }}-r-
+            ${{ runner.os }}-r-4.4.2-
 
       # Path A: Fear-of-Falling renv workflow (scripts repo)
       - name: Install renv (if missing)
