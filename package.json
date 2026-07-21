@@ -24,7 +24,7 @@
   "homepage": "https://github.com/Tupatuko2023/Python-R-Scripts#readme",
   "devDependencies": {
     "husky": "^9.1.7",
-    "markdownlint": "^0.40.0",
+    "markdownlint": "^0.41.1",
     "markdownlint-cli2": "^0.20.0",
     "prettier": "^3.8.2"
   }
