@@ -2,7 +2,7 @@
 
 ## Status
 
-00-backlog
+03-review
 
 ## Workflow
 
@@ -11,7 +11,7 @@ The agent moves the task to `tasks/02-in-progress/` before work and to
 `tasks/03-review/` after reporting. Only a human may move the task to
 `tasks/04-done/`.
 
-Current state: `00-backlog`. Human approval is required before implementation.
+Current state: `03-review`. Implementation completed and awaiting human review.
 
 ## Scope
 
@@ -416,13 +416,60 @@ Graphviz-rendering, repository gates, reference validation, or manifest checks.
 
 ## Agent Report
 
-Not started.
+Implemented.
+
+- Moved tracked generic, LONG-only, and WIDE-only resolved Figure 1 legacy
+  assets into `diagram/legacy/` with `git mv`.
+- Moved ignored/untracked local WIDE-only SVG/PNG renders out of `diagram/`
+  root into `diagram/legacy/` without adding them to Git.
+- Rewrote `diagram/README.md` as the current `wide_long` handoff contract for
+  `FOF-Dissertation-Project` and the AIM1 manuscript.
+- Added `diagram/legacy/README.md` with per-family original path, legacy path,
+  producer, limitation, replacement, task/commit, and usage status.
+- Updated the archived shell helper to read and write under `diagram/legacy/`
+  so it no longer targets current root Figure 1 paths.
+- Updated retained legacy diagram paths in `manifest/manifest.csv` and removed
+  duplicate retained LONG diagram artifact rows.
+
+Validation completed:
+
+- `Rscript R-scripts/K50/K50.FIG1_VISUAL_DUAL_BRANCH.V1_render.R` -> PASS.
+- Graphviz PDF/SVG/PNG render commands completed.
+- `file` validated PDF, SVG, and PNG; PNG signature was
+  `89 50 4e 47 0d 0a 1a 0a`.
+- PDF vector inspection found embedded font/vector stream content.
+- `diagram/` root allowlist contains only `README.md`, `legacy/`, and the
+  current `wide_long` family.
+- `diagram/legacy/` contains the retained generic, LONG-only, and WIDE-only
+  legacy families.
+- Manifest diagram duplicate check returned `diagram_duplicates 0`.
+- `bash scripts/fof-preflight.sh` -> PASS.
+- `bash tools/run-gates.sh --project Fear-of-Falling` -> PASS from repository
+  root.
+
+The K50 smoke run generated visible/render side effects because the current
+producer script and tracked renders are not byte-equivalent. Those generated
+side effects were reverted to preserve this task's constraint that Figure 1
+visible content does not change.
 
 ## Log
 
 - 2026-07-21T00:00:00+0300 Created backlog definition for diagram legacy
   archive and downstream usage contract.
+- 2026-07-21T00:00:00+0300 Human approval: released to `01-ready` for
+  implementation.
+- 2026-07-21T12:39:52+0300 K50 Figure 1 visual dual-branch smoke run returned
+  PASS; generated render side effects were reverted after validation to keep
+  this archive task content-neutral.
+- 2026-07-21T12:44:11+0300 Repository gate
+  `bash tools/run-gates.sh --project Fear-of-Falling` returned PASS.
+- 2026-07-21T12:45:00+0300 K18/QC Termux runner was attempted; local
+  `proot-distro` reports installed `debian`, but the runner's rootfs path gate
+  did not detect it and `proot-distro install debian` failed because the
+  container already exists.
 
 ## Blockers
 
-None.
+No repository blocker for this diagram archive task. Environment note: the
+K18/QC Termux runner needs proot container path reconciliation before it can be
+used in this Termux environment.

@@ -2,7 +2,7 @@
 set -eu
 
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
-  echo "Usage: bash diagram/render_paper_01_cohort_flow.sh <LONG|WIDE> <outcome> [placeholders_csv]" >&2
+  echo "Usage: bash diagram/legacy/render_paper_01_cohort_flow.sh <LONG|WIDE> <outcome> [placeholders_csv]" >&2
   exit 1
 fi
 
@@ -11,12 +11,12 @@ outcome=$2
 shape_lower=$(printf '%s' "$shape_upper" | tr '[:upper:]' '[:lower:]')
 
 script_dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
-project_root=$(CDPATH= cd -- "$script_dir/.." && pwd)
-template_path="$project_root/diagram/paper_01_cohort_flow.dot"
+project_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
+template_path="$project_root/diagram/legacy/paper_01_cohort_flow.dot"
 placeholders_path=${3:-"$project_root/R-scripts/K50/outputs/k50_${shape_lower}_${outcome}_cohort_flow_placeholders.csv"}
-resolved_path="$project_root/diagram/paper_01_cohort_flow.${shape_lower}.${outcome}.resolved.dot"
-svg_path="$project_root/diagram/paper_01_cohort_flow.${shape_lower}.${outcome}.svg"
-png_path="$project_root/diagram/paper_01_cohort_flow.${shape_lower}.${outcome}.png"
+resolved_path="$project_root/diagram/legacy/paper_01_cohort_flow.${shape_lower}.${outcome}.resolved.dot"
+svg_path="$project_root/diagram/legacy/paper_01_cohort_flow.${shape_lower}.${outcome}.svg"
+png_path="$project_root/diagram/legacy/paper_01_cohort_flow.${shape_lower}.${outcome}.png"
 
 if [ ! -f "$template_path" ]; then
   echo "Template not found: $template_path" >&2
@@ -91,7 +91,7 @@ with open(manifest_path, "a", encoding="utf-8", newline="") as fh:
     writer.writerows(rows)
 PY
 
-echo "Rendered cohort flow:"
+echo "Rendered legacy cohort flow:"
 echo "  $resolved_path"
 echo "  $svg_path"
 echo "  $png_path"
