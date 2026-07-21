@@ -87,6 +87,21 @@ Non-negotiables (tiivistelmä):
 - Seed vain satunnaisuudessa; tallenna sessionInfo/renv `CLAUDE.md`-ohjeen mukaan.
 - Tee aina table-to-text crosscheck; älä arvaa numeroita.
 
+## QC applicability gate (K18/QC)
+
+Arvioi K18/QC-soveltuvuus ennen komentojen valintaa. K18/QC tai README:n
+Termux-runner on pakollinen, jos muutos koskee dataa, muuttujakoodauksia,
+ID/time-rakennetta, FOF-derivointia, baseline/follow-up/delta-määrittelyä,
+puuttuvuutta, inclusion/exclusion-logiikkaa, model framea, K18/QC-koodia,
+QC-artefakteja tai taskin acceptance criteria vaatii sitä.
+
+Älä aja K18/QC-runneria unrelated docs-only-, diagram-only-, path-only-,
+legacy-arkistointi- tai ei-tieteellisissä manifest-polun ylläpitotehtävissä.
+Kirjaa silloin validointiin `K18/QC: NOT APPLICABLE — <specific reason>`.
+Kun K18/QC on pakollinen ja ajo onnistuu, kirjaa `K18/QC: PASS`; jos pakollinen
+ajo ei onnistu, task jää blocked-tilaan. Taskikohtainen acceptance criteria
+ohittaa oletukset.
+
 ## Environment setup
 
 ### R (suositus)

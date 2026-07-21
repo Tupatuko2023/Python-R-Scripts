@@ -2,7 +2,7 @@
 
 ## Status
 
-00-backlog
+03-review
 
 ## Objective
 
@@ -156,3 +156,29 @@ rerunning K18 when no scientific or QC input/output changes.
 - Unrelated documentation and diagram tasks do not invoke the runner.
 - Task-specific acceptance criteria remain authoritative.
 - No separate Codex skill is introduced.
+
+## Evidence
+
+- `AGENTS.md` defines the mandatory K18/QC applicability gate for agents.
+- `agent_workflow.md` includes the decision tree and exact reporting formats.
+- `README.md` explains the Termux runner, required triggers, non-applicable
+  cases, and separate environment repair handling.
+- `tasks/_template.md` requires every task to record QC applicability before
+  implementation.
+- `CLAUDE.md` was inspected and left unchanged because its existing analysis QC
+  rule does not make K18/QC universal for documentation or repository-hygiene
+  work.
+
+## Validation
+
+- K18/QC: NOT APPLICABLE — repository policy documentation only; no data,
+  variable coding, inclusion logic, model frame, K18 code, QC code, or QC
+  artifact changed.
+- `git diff --check`: PASS
+- `bash scripts/fof-preflight.sh`: PASS
+- `bash tools/run-gates.sh --project Fear-of-Falling`: PASS
+
+## Log
+
+- 2026-07-21 Human approval: released to `01-ready` for implementation.
+- 2026-07-21 QC runner applicability gate implemented and moved to `03-review`.

@@ -26,6 +26,34 @@ Termux runner: `bash scripts/termux/run_qc_summarizer_proot.sh`
 Note: runner is portable (no hardcoded paths); it derives the Fear-of-Falling repo root from the script location.
 Preflight helper: `bash scripts/fof-preflight.sh`
 
+### K18/QC Applicability
+
+The K18/QC Termux runner starts the PRoot-based QC summarizer for K18 QC
+artifacts. It is a conditional analysis-QC gate, not a universal repository
+gate.
+
+Run K18/QC when a change affects data or data structure, variable names/types/
+labels/coding, ID or ID-time structure, FOF derivation, baseline/follow-up/delta
+definitions, missingness, inclusion/exclusion logic, model frames, K18/QC code,
+QC checks or artifacts, or when the task acceptance criteria explicitly require
+it.
+
+Do not run K18/QC for changes limited to prose documentation, README
+restructuring, task-card documentation, diagram organization, legacy archiving,
+path-reference maintenance, non-scientific manifest path correction, formatting,
+or manuscript handoff documentation unless the task explicitly requires it.
+
+Validation summaries must record one of:
+
+```text
+K18/QC: PASS
+K18/QC: NOT APPLICABLE — <specific reason>
+```
+
+If K18/QC is required and cannot run, the task remains blocked. If K18/QC is not
+applicable, PRoot or runner repair belongs to a separate environment/bootstrap
+task and should not be mixed into the unrelated repository change.
+
 ### Preflight Guardrail
 
 Run preflight with `make fof-preflight` or `bash scripts/fof-preflight.sh`.

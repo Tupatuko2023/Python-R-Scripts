@@ -19,6 +19,13 @@ The agent moves the task to `tasks/02-in-progress/` before work and to
 
 <OBJECTIVE>
 
+## QC applicability
+
+- Classification: REQUIRED | NOT APPLICABLE
+- Trigger or reason:
+- Required command when applicable:
+- Expected evidence:
+
 ## Constraints
 
 - Do not modify raw data.
