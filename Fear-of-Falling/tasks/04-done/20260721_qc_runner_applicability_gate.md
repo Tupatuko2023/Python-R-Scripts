@@ -2,7 +2,7 @@
 
 ## Status
 
-03-review
+04-done
 
 ## Objective
 
@@ -182,3 +182,4 @@ rerunning K18 when no scientific or QC input/output changes.
 
 - 2026-07-21 Human approval: released to `01-ready` for implementation.
 - 2026-07-21 QC runner applicability gate implemented and moved to `03-review`.
+- 2026-07-21 Human review approved; task moved to `04-done`.
