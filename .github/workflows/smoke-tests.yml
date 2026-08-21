@@ -6,7 +6,7 @@ on:
     # KEEP IN SYNC with jobs.changes.steps[id=filter].with.filters.smoke_relevant
     paths:
       - "Fear-of-Falling/R-scripts/**"
-      - "Fear-of-Falling/R/functions/**"
+      - "Fear-of-Falling/R/**"
       - "Fear-of-Falling/renv.lock"
       - "Fear-of-Falling/Makefile"
       - "Fear-of-Falling/scripts/**"
@@ -15,16 +15,6 @@ on:
       - ".github/workflows/smoke-tests.yml"
   pull_request:
     branches: [main]
-    # KEEP IN SYNC with jobs.changes.steps[id=filter].with.filters.smoke_relevant
-    paths:
-      - "Fear-of-Falling/R-scripts/**"
-      - "Fear-of-Falling/R/functions/**"
-      - "Fear-of-Falling/renv.lock"
-      - "Fear-of-Falling/Makefile"
-      - "Fear-of-Falling/scripts/**"
-      - "Fear-of-Falling/tests/smoke_test_all_k_scripts.R"
-      - "Fear-of-Falling/Dockerfile"
-      - ".github/workflows/smoke-tests.yml"
   workflow_dispatch:
     inputs:
       run_smoke:
@@ -47,12 +37,14 @@ jobs:
         with:
           fetch-depth: 0
       - id: filter
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         with:
+          predicate-quantifier: some-with-excludes
           filters: |
             smoke_relevant:
               - "Fear-of-Falling/R-scripts/**"
-              - "Fear-of-Falling/R/functions/**"
+              - "!Fear-of-Falling/R-scripts/**/outputs/**"
+              - "Fear-of-Falling/R/**"
               - "Fear-of-Falling/renv.lock"
               - "Fear-of-Falling/Makefile"
               - "Fear-of-Falling/scripts/**"
