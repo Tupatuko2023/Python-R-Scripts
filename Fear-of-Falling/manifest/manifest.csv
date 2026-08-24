@@ -4658,3 +4658,100 @@ K17,table,K17/K17_baseline_by_FOF_with_frailty.csv,Baseline characteristics by F
 "2026-07-19 12:55:05.692056","K50.FIG1_VISUAL_DUAL_BRANCH","k50_fig1_visual_pdf_diagram","figure_pdf","diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.pdf","","Diagram vector PDF render"
 "2026-07-19 12:55:05.692235","K50.FIG1_VISUAL_DUAL_BRANCH","k50_fig1_visual_svg_diagram","figure_svg","diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.svg","","Diagram SVG render"
 "2026-07-19 12:55:05.692413","K50.FIG1_VISUAL_DUAL_BRANCH","k50_fig1_visual_png_diagram","figure_png","diagram/paper_01_cohort_flow.wide_long.locomotor_capacity.png","","Diagram 300 dpi PNG render"
+2025-12-30 11:55:10.560856,K1,K1_Z_Score_Change_2G,table_csv,R-scripts/K1/outputs/K1_Z_Score_Change_2G.csv,8,NA
+2025-12-30 11:55:10.884045,K1,sessioninfo,sessioninfo,R-scripts/K1/outputs/sessioninfo_K1.txt,NA,NA
+2025-12-30 11:55:27.959226,K3,sessioninfo,sessioninfo,R-scripts/K3/outputs/sessioninfo_K3.txt,NA,NA
+2025-12-30 11:56:45.060484,K11,missing_data_pattern,table_html,R-scripts/K11/outputs/missing_data_pattern.html,266,NA
+2025-12-30 11:56:49.204763,K11,mice_pooled_model_base,table_html,R-scripts/K11/outputs/mice_pooled_model_base.html,NA,NA
+2025-12-30 11:56:49.790913,K11,mice_pooled_model_extended,table_html,R-scripts/K11/outputs/mice_pooled_model_extended.html,NA,NA
+2025-12-30 11:56:54.581375,K11,Age_quartile_Age_counts,table_html,R-scripts/K11/outputs/age_quartile_age_counts.html,NA,NA
+2025-12-30 11:56:55.208838,K11,freq_FOF_status,table_html,R-scripts/K11/outputs/freq_FOF_status.html,NA,NA
+2025-12-30 11:56:55.937524,K11,freq_AgeClass,table_html,R-scripts/K11/outputs/freq_AgeClass.html,NA,NA
+2025-12-30 11:56:56.816495,K11,cross_FOF_AgeClass,table_html,R-scripts/K11/outputs/cross_FOF_AgeClass.html,NA,NA
+2025-12-30 11:56:57.603907,K11,Age_quartile_summary,table_html,R-scripts/K11/outputs/age_quartile_summary.html,NA,NA
+2025-12-30 11:56:58.359588,K11,lm_base_model_full,table_html,R-scripts/K11/outputs/lm_base_model_full.html,NA,NA
+2025-12-30 11:56:59.054568,K11,lm_extended_model_full,table_html,R-scripts/K11/outputs/lm_extended_model_full.html,NA,NA
+2025-12-30 11:56:59.744249,K11,FOF_effect_base_vs_extended,table_html,R-scripts/K11/outputs/FOF_effect_base_vs_extended.html,NA,NA
+2025-12-30 11:57:00.671524,K11,lm_extended_standardized,table_html,R-scripts/K11/outputs/lm_extended_standardized.html,NA,NA
+2025-12-30 11:57:01.26789,K11,FOF_effect_MICE_base_vs_extended,table_html,R-scripts/K11/outputs/FOF_effect_MICE_base_vs_extended.html,NA,NA
+2025-12-30 11:57:02.16968,K11,logit_responder_model,table_html,R-scripts/K11/outputs/logit_responder_model.html,NA,NA
+2025-12-30 11:57:03.032359,K11,ordinal_polr_coefficients,table_html,R-scripts/K11/outputs/ordinal_polr_coefficients.html,NA,NA
+2025-12-30 11:57:03.787558,K11,ordinal_polr_OR,table_html,R-scripts/K11/outputs/ordinal_polr_OR.html,NA,NA
+2025-12-30 11:57:04.613217,K11,responder_by_Age_and_FOF,table_html,R-scripts/K11/outputs/responder_by_age_and_FOF.html,NA,NA
+2025-12-30 11:57:05.417228,K11,responder_pvalues_by_Age_quartile,table_html,R-scripts/K11/outputs/responder_pvalues_by_age_quartile.html,NA,NA
+2025-12-30 11:57:06.172585,K11,emmeans_FOF_vs_nonFOF_by_agequartile,table_html,R-scripts/K11/outputs/emmeans_FOF_vs_nonFOF_by_agequartile.html,NA,NA
+2025-12-30 11:57:06.98679,K11,BP_test_FOF_status,table_html,R-scripts/K11/outputs/BP_test_FOF_status.html,NA,NA
+2025-12-30 11:57:07.756649,K11,gls_hom_vs_het_comparison,table_html,R-scripts/K11/outputs/gls_hom_vs_het_comparison.html,NA,NA
+2025-12-30 11:57:08.548314,K11,gls_residual_variance_by_FOF,table_html,R-scripts/K11/outputs/gls_residual_variance_by_FOF.html,NA,NA
+2025-12-30 11:57:09.334577,K11,quantile_reg_FOF_effect,table_html,R-scripts/K11/outputs/quantile_reg_FOF_effect.html,NA,NA
+2025-12-30 11:57:09.842375,K11,sessioninfo,sessioninfo,R-scripts/K11/outputs/sessionInfo_K11.txt,NA,NA
+2025-12-30 11:57:15.764393,K13,lm_MOI_int_extended_full,table_html,R-scripts/K13/outputs/lm_MOI_int_extended_full.html,NA,NA
+2025-12-30 11:57:15.996581,K13,lm_Pain_int_extended_full,table_html,R-scripts/K13/outputs/lm_Pain_int_extended_full.html,NA,NA
+2025-12-30 11:57:16.216084,K13,lm_SRH_int_extended_full,table_html,R-scripts/K13/outputs/lm_SRH_int_extended_full.html,NA,NA
+2025-12-30 11:57:16.450983,K13,lm_SRM_int_extended_full,table_html,R-scripts/K13/outputs/lm_SRM_int_extended_full.html,NA,NA
+2025-12-30 11:57:16.691626,K13,lm_age_int_extended_full,table_html,R-scripts/K13/outputs/lm_age_int_extended_full.html,NA,NA
+2025-12-30 11:57:16.946328,K13,lm_BMI_int_extended_full,table_html,R-scripts/K13/outputs/lm_BMI_int_extended_full.html,NA,NA
+2025-12-30 11:57:17.216994,K13,lm_sex_int_extended_full,table_html,R-scripts/K13/outputs/lm_sex_int_extended_full.html,NA,NA
+2025-12-30 11:57:17.764492,K13,lm_all_int_extended_full,table_html,R-scripts/K13/outputs/lm_all_int_extended_full.html,NA,NA
+2025-12-30 11:57:18.28105,K13,FOF_interaction_effects_overview,table_html,R-scripts/K13/outputs/FOF_interaction_effects_overview.html,NA,NA
+2025-12-30 11:57:18.76986,K13,FOF_interaction_effects_symptoms,table_html,R-scripts/K13/outputs/FOF_interaction_effects_symptoms.html,NA,NA
+2025-12-30 11:57:20.753578,K13,FOF_interaction_effects_standardized,table_html,R-scripts/K13/outputs/FOF_interaction_effects_standardized.html,NA,NA
+2025-12-30 11:57:21.463882,K13,simple_slopes_FOF_by_age,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_age.html,NA,NA
+2025-12-30 11:57:23.139559,K13,simple_slopes_FOF_by_BMI,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_BMI.html,NA,NA
+2025-12-30 11:57:24.357568,K13,simple_slopes_FOF_by_sex,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_sex.html,NA,NA
+2025-12-30 11:57:25.550913,K13,simple_slopes_FOF_by_MOI,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_MOI.html,NA,NA
+2025-12-30 11:57:27.025993,K13,simple_slopes_FOF_by_Pain,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_Pain.html,NA,NA
+2025-12-30 11:57:28.274658,K13,simple_slopes_FOF_by_SRH,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_SRH.html,NA,NA
+2025-12-30 11:57:29.542283,K13,simple_slopes_FOF_by_SRM,table_html,R-scripts/K13/outputs/simple_slopes_FOF_by_SRM.html,NA,NA
+2025-12-30 11:57:30.878199,K13,VIF_interaction_models,table_html,R-scripts/K13/outputs/VIF_interaction_models.html,NA,NA
+2025-12-30 11:57:31.689041,K13,FOF_interaction_effects_interpretation,table_html,R-scripts/K13/outputs/FOF_interaction_effects_interpretation.html,NA,NA
+2025-12-30 11:57:32.285774,K13,sessioninfo,sessioninfo,R-scripts/K13/outputs/sessioninfo_K13.txt,NA,NA
+2026-01-12 20:22:24.319525,K18_MAIN,PRIMARY frailty change contrasts tables (M1),table_docx,R-scripts/K18_MAIN/outputs/K18_PRIMARY_tables_M1.docx,276,NA
+2026-01-12 20:22:25.652057,K18_MAIN,EXPLORATORY frailty change contrasts tables (M2),table_docx,R-scripts/K18_MAIN/outputs/K18_EXPLORATORY_tables_M2.docx,276,NA
+2026-01-12 20:22:26.652344,K18_MAIN,PRIMARY change contrasts forest plot (M1),plot_png,R-scripts/K18_MAIN/outputs/K18_PRIMARY_contrasts_M1.png,276,NA
+2026-01-12 20:22:27.642937,K18_MAIN,EXPLORATORY change contrasts forest plot (M2),plot_png,R-scripts/K18_MAIN/outputs/K18_EXPLORATORY_contrasts_M2.png,276,NA
+2026-01-12 20:22:28.467168,K18_MAIN,Predicted trajectories by frailty and FOF (M1),plot_png,R-scripts/K18_MAIN/outputs/K18_predicted_trajectories_M1.png,276,NA
+2026-01-12 20:22:28.771716,K18_MAIN,Results text (English),text,R-scripts/K18_MAIN/outputs/K18_Results_EN.txt,276,NA
+2026-01-12 20:22:29.015053,K18_MAIN,Results text (Finnish),text,R-scripts/K18_MAIN/outputs/K18_Results_FI.txt,276,NA
+2026-01-12 20:22:29.518945,K18_MAIN,All frailty change models and emmeans results (PRIMARY+EXPLORATORY),rdata,R-scripts/K18_MAIN/outputs/K18_all_models.RData,276,NA
+2026-01-12 20:22:29.830423,K18_MAIN,sessioninfo,sessioninfo,R-scripts/K18_MAIN/outputs/sessioninfo_K18_MAIN.txt,NA,NA
+2026-02-24 13:42:10.869164,K24_VIS,K24_canonicalV2_forest_FOF_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF.png,NA,K24_VIS V1 forest plot artifact
+2026-02-24 13:42:11.346278,K24_VIS,K24_canonicalV2_forest_FrailtyScore_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore.png,NA,K24_VIS V1 forest plot artifact
+2026-02-24 13:42:11.53254,K24_VIS,K24_canonicalV2_forest_FrailtyScore_pdf,figure_pdf,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore.pdf,NA,K24_VIS V1 forest plot artifact
+2026-02-24 13:42:11.717324,K24_VIS,K24_canonicalV2_frailtyCat_overallP_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_frailtyCat_overallP.png,NA,K24_VIS V1 forest plot artifact
+2026-02-24 13:42:11.938467,K24_VIS,K24_canonicalV2_frailtyCat_overallP_pdf,figure_pdf,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_frailtyCat_overallP.pdf,NA,K24_VIS V1 forest plot artifact
+2026-02-24 13:42:12.195071,K24_VIS,qc_fof_cat_vs_score_diff_csv,qc_table_csv,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/qc_fof_cat_vs_score_diff.csv,6,K24_VIS QC mismatch rows when FOF cat-vs-score differs > 1e-6
+2026-02-24 13:42:12.371852,K24_VIS,plot_manifest_txt,qc_text,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/plot_manifest.txt,NA,"K24_VIS run parameters, delimiter detection, QC status, and written files"
+2026-02-24 13:42:12.553223,K24_VIS,sessionInfo,sessioninfo,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/sessionInfo.txt,NA,K24_VIS sessionInfo + renv diagnostics
+2026-02-24 14:33:18.288674,K24_VIS,K24_canonicalV2_forest_FrailtyCatContrasts_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts.png,NA,K24_VIS V1 forest plot artifact
+2026-02-24 14:33:18.525202,K24_VIS,K24_canonicalV2_forest_FrailtyCatContrasts_pdf,figure_pdf,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyCatContrasts.pdf,NA,K24_VIS V1 forest plot artifact
+2026-02-24 14:33:18.756793,K24_VIS,K24_canonicalV2_forest_FOF_standardized_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized.png,NA,K24_VIS V1 forest plot artifact
+2026-02-24 14:33:18.967168,K24_VIS,K24_canonicalV2_forest_FOF_standardized_pdf,figure_pdf,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FOF_standardized.pdf,NA,K24_VIS V1 forest plot artifact
+2026-02-24 14:33:19.202327,K24_VIS,K24_canonicalV2_forest_FrailtyScore_standardized_png,figure_png,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore_standardized.png,NA,K24_VIS V1 forest plot artifact
+2026-02-24 14:33:19.402958,K24_VIS,K24_canonicalV2_forest_FrailtyScore_standardized_pdf,figure_pdf,R-scripts/K24/outputs/K24_TABLE2A/figures/K24_VIS/K24_canonicalV2_forest_FrailtyScore_standardized.pdf,NA,K24_VIS V1 forest plot artifact
+2026-02-24 14:54:22.214842,K26_VIS,K26_VIS_predicted_delta_by_frailtycat_x_fof_png,figure_png,R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_predicted_delta_by_frailtycat_x_fof.png,NA,K26_VIS reviewer figure artifact
+2026-02-24 14:54:22.465336,K26_VIS,K26_VIS_predicted_delta_by_frailtycat_x_fof_pdf,figure_pdf,R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_predicted_delta_by_frailtycat_x_fof.pdf,NA,K26_VIS reviewer figure artifact
+2026-02-24 14:54:22.650312,K26_VIS,K26_VIS_moderation_delta_vs_baseline_by_frailtycat_png,figure_png,R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_moderation_delta_vs_baseline_by_frailtycat.png,NA,K26_VIS reviewer figure artifact
+2026-02-24 14:54:22.863003,K26_VIS,K26_VIS_moderation_delta_vs_baseline_by_frailtycat_pdf,figure_pdf,R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_moderation_delta_vs_baseline_by_frailtycat.pdf,NA,K26_VIS reviewer figure artifact
+2026-02-24 14:54:23.094429,K26_VIS,K26_VIS_predicted_delta_by_frailtyscore_x_fof_png,figure_png,R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_predicted_delta_by_frailtyscore_x_fof.png,NA,K26_VIS reviewer figure artifact
+2026-02-24 14:54:23.32622,K26_VIS,K26_VIS_predicted_delta_by_frailtyscore_x_fof_pdf,figure_pdf,R-scripts/K26/outputs/K26_VIS/figures/K26_VIS_predicted_delta_by_frailtyscore_x_fof.pdf,NA,K26_VIS reviewer figure artifact
+2026-02-24 14:54:23.765328,K26_VIS,K26_VIS_qc_summary_csv,qc_table_csv,R-scripts/K26/outputs/K26_VIS/qc_summary.csv,5,K26_VIS QC checks for grid/prediction completeness
+2026-02-24 14:54:24.023581,K26_VIS,K26_VIS_sessionInfo_txt,sessioninfo,R-scripts/K26/outputs/K26_VIS/sessionInfo.txt,NA,K26_VIS sessionInfo + renv diagnostics
+2026-02-26 16:45:17.793695,K29_INTERACTION,fixed_terms_score,table_csv,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_fixed_terms_score.csv,NA,NA
+2026-02-26 16:45:18.226884,K29_INTERACTION,fixed_terms_cat,table_csv,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_fixed_terms_cat.csv,NA,NA
+2026-02-26 16:45:18.715559,K29_INTERACTION,change_estimates_score,table_csv,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_change_score.csv,NA,NA
+2026-02-26 16:45:19.128868,K29_INTERACTION,interaction_plot_score,figure_png,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_plot_score.png,NA,NA
+2026-02-26 16:45:19.479382,K29_INTERACTION,interaction_report_md,text_md,R-scripts/K29/outputs/K29_INTERACTION/K29_interaction_report.md,NA,NA
+2026-03-03 07:08:34 +0200,K43,conceptual_model_k42_svg,figure_svg,docs/figures/conceptual_model_k42.svg,NA,K42 conceptual framework vector figure
+2026-03-03 07:08:34 +0200,K43,conceptual_model_k42_pdf,figure_pdf,docs/figures/conceptual_model_k42.pdf,NA,K42 conceptual framework vector figure
+2026-03-03 07:08:34 +0200,K43,conceptual_model_k42_caption,text,docs/figures/conceptual_model_k42_caption.txt,3,K42 conceptual figure caption
+2026-03-04 12:19:04.917688,K46,k46_table_head_to_head_primary_capacity_fi_both.csv,table_csv,R-scripts/K46/outputs/k46_table_head_to_head_primary_capacity_fi_both.csv,27,K42 head-to-head + K45 sensitivity pooled comparison rows
+2026-03-04 12:19:05.150782,K46,k46_results_snippet.txt,text,R-scripts/K46/outputs/k46_results_snippet.txt,5,Paste-ready results text (EN)
+2026-03-04 12:19:05.392984,K46,k46_methods_snippet.txt,text,R-scripts/K46/outputs/k46_methods_snippet.txt,4,Paste-ready methods/statistical analysis text (EN)
+2026-03-04 12:19:05.595245,K46,k46_sensitivity_snippet_mice.txt,text,R-scripts/K46/outputs/k46_sensitivity_snippet_mice.txt,2,Paste-ready MICE sensitivity snippet (EN)
+2026-03-04 12:19:05.82429,K46,k46_discussion_snippet.txt,text,R-scripts/K46/outputs/k46_discussion_snippet.txt,4,Paste-ready discussion integration text (EN)
+2026-03-04 12:19:06.025701,K46,k46_figure_callouts.txt,text,R-scripts/K46/outputs/k46_figure_callouts.txt,3,K44 figure citation guidance
+2026-03-04 12:19:06.241349,K46,k46_reviewer_defense_8bullets.txt,text,R-scripts/K46/outputs/k46_reviewer_defense_8bullets.txt,8,Reviewer defense micro-bullets
+2026-03-04 12:19:06.54738,K46,k46_input_inventory.csv,table_csv,R-scripts/K46/outputs/k46_input_inventory.csv,20,K46 input discovery inventory with hashes
+2026-03-04 12:19:06.712254,K46,k46_decision_log.txt,text,R-scripts/K46/outputs/k46_decision_log.txt,7,K46 processing decisions
+2026-03-04 12:19:06.95953,K46,k46_sessioninfo.txt,sessioninfo,R-scripts/K46/outputs/k46_sessioninfo.txt,NA,R sessionInfo()
