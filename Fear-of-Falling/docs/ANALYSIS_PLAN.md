@@ -1,10 +1,14 @@
 # Fear-of-Falling Analysis Plan (K50)
 
-**Version:** 1.1 (Draft)
-**Date:** 2026-03-12
+**Version:** 1.2 (Authority alignment)
+**Date:** 2026-08-24
 **Status:** Active
 
 This document defines the authoritative analysis plan for the "Fear of Falling" (FOF) sub-project. It serves as the bridge between the research protocol and the technical implementation (R code).
+
+### Authority alignment and provenance
+
+Version 1.1 is retained as historical evidence under SA-03A `HISTORICAL ADOPTION`; this does not make every v1.1 statement preregistered or protocol-defined. Effective 2026-08-23, the Scientific Authority Decision Session supplies the `PROSPECTIVE ANALYTICAL DECISION` rules and the final impact register supplies their implementation classes. SA-04B resolves the former FI22-primary wording as `FI22 role = SENSITIVITY_ONLY`. This v1.2 edit is documentation/authority alignment only. Sources: `tasks/03-review/WP-A1-scientific-authority-decision-session.md`, the final impact classification, and SCI-02/SCI-03 owner records.
 
 ## Analysis Phase Context
 
@@ -17,7 +21,7 @@ It does not define upstream variable construction or QC procedures in detail. Th
 
 ## 1. Study Design & Research Question
 
-**Study aim:** To estimate how baseline Fear of Falling (FOF) is associated with change in physical performance over 12 months, adjusting for key confounders and operationalizing frailty primarily with the K40-derived `frailty_index_fi` (`FI_22`) while retaining simpler frailty proxies only as fallback / sensitivity terms.
+**Study aim:** To estimate how baseline Fear of Falling (FOF) is associated with 12-month physical performance, adjusting the primary WIDE contrast for baseline outcome, age, sex, and BMI. Frailty/FI22 is sensitivity-only and is not a primary adjustment covariate.
 
 - **Design:** Longitudinal cohort study (Baseline -> 12-month follow-up).
 - **Current analysis line:** The current primary outcome line is `locomotor_capacity`, defined from the CFA 3-item locomotor capacity construct. The deterministic `z3` composite is retained as a fallback / sensitivity measure for the same construct.
@@ -38,8 +42,8 @@ All analysis must use these **canonical variable names**. Do not invent aliases 
 | **locomotor_capacity**                    | CFA 3-item latent score                                        | Numeric       | Current primary outcome                                                         |
 | **z3**                                    | Standardized gait + chair rise + balance composite             | Numeric       | Deterministic fallback / sensitivity measure                                    |
 | **Composite_Z**                           | Legacy `ToimintaKykySummary0` & `ToimintaKykySummary2` mapping | Numeric       | Legacy outcome only; bridge analysis if verified                                |
-| **frailty_index_fi**                      | K40 `FI22_nonperformance_KAAOS` patient-level output           | Numeric       | Primary frailty measure (continuous FI_22, 0-1)                                 |
-| **frailty_index_fi_z**                    | Standardized `frailty_index_fi`                                | Numeric       | Optional scaled primary frailty measure                                          |
+| **frailty_index_fi**                      | K40 `FI22_nonperformance_KAAOS` patient-level output           | Numeric       | Sensitivity-only frailty covariate (continuous FI_22, 0-1)                                 |
+| **frailty_index_fi_z**                    | Standardized `frailty_index_fi`                                | Numeric       | Optional scaled sensitivity covariate                                          |
 | **n_deficits_observed**                   | K40 patient-level QC output                                    | Integer       | Number of observed FI deficits used in score calculation                         |
 | **coverage**                              | K40 patient-level QC output                                    | Numeric       | Fraction of selected deficits observed for each participant                      |
 | **fi_eligible**                           | K40 patient-level QC output                                    | Logical       | `TRUE` only when FI QC thresholds are met                                        |
@@ -52,9 +56,9 @@ All analysis must use these **canonical variable names**. Do not invent aliases 
 - **Canonical naming discipline:** Baseline/follow-up mappings must stay explicit. Uncontrolled aliasing such as `Composite_Z2`, `Composite_Z3`, or ad hoc outcome renames is not allowed.
 - **Current primary outcome definition:** `locomotor_capacity` refers to the CFA 3-item locomotor capacity construct documented in the methods appendix and measurement model.
 - **Fallback definition:** `z3` is the deterministic fallback / sensitivity representation of the same locomotor construct and should not be presented as a separate new primary score.
-- **Primary frailty operationalization:** Frailty is operationalized primarily as continuous `frailty_index_fi` (or `frailty_index_fi_z`) from the locked K40 `FI22_nonperformance_KAAOS` pipeline.
+- **FI22 role:** Frailty/FI22 is sensitivity-only. The primary FOF model is not frailty-adjusted (SA-04B, `AUTHORITY_ALIGNMENT`, effective 2026-08-23).
 - **FI lineage note:** `FI22_nonperformance_KAAOS` / `FI_22` is the locked variant label and contract anchor, not a separate patient-level numeric analysis field.
-- **Dataset integration TODO:** If `frailty_index_fi`, `frailty_index_fi_z`, `n_deficits_observed`, `coverage`, and `fi_eligible` are not already present in the analysis dataset, join the K40 patient-level output to the analysis dataset by `id` before modeling.
+- **Dataset integration boundary:** FI22 fields are required only for a separately labelled sensitivity analysis, never for primary eligibility. Any join follows the separately authorized identity/dedup contract.
 - **Legacy continuity rule:** `Composite_Z` may be analyzed only in a legacy bridge role if the original `ToimintaKykySummary` definition is verified for continuity purposes.
 
 ### 2.1 Baseline-Follow-up Naming Rule
@@ -78,8 +82,7 @@ These delta values are not the default primary outcome in the ANCOVA branch but 
 
 ### 2.3 Outcome Provenance Rule
 
-`locomotor_capacity` and `z3` are derived variables produced upstream in the measurement and QC pipeline.
-This analysis plan assumes that these variables already passed their respective construction and validation steps in the locomotor capacity measurement documentation and QC appendices.
+`locomotor_capacity` and `z3` are derived by the authoritative executable upstream producer `R-scripts/K32/k32.r`; `R-scripts/K50/K50.r` is the canonical primary analysis entrypoint and consumes those outcomes. Chair-rise capacity is `-1 * clean_nonnegative(raw_seconds, allow_zero = FALSE)` (SCI-03A/B; authority alignment effective 2026-08-23).
 
 ### 2.4 Upstream Dependencies
 
@@ -101,7 +104,7 @@ auxiliary branches:
 - `locomotor_capacity` = current primary outcome
 - `z3` = deterministic fallback / sensitivity outcome
 - `Composite_Z` = legacy bridge only
-- `frailty_index_fi` / `frailty_index_fi_z` = primary frailty branch, kept
+- `frailty_index_fi` / `frailty_index_fi_z` = sensitivity-only frailty branch, kept
   separate from the locomotor outcome branch
 - `FI22_nonperformance_KAAOS` = locked variant label for the FI branch
 - `frailty_cat_3` = fallback / sensitivity-only frailty proxy, not an active
@@ -129,21 +132,21 @@ No new ad hoc composite outcome names are permitted in the current plan.
 
 - **Primary exposure of interest:** `FOF_status`
 - **Core covariates:** `age`, `sex`, `BMI`
-- **Primary frailty measure:** `frailty_index_fi` (or `frailty_index_fi_z` in scaled models), derived from the locked K40 `FI22_nonperformance_KAAOS` contract
+- **Sensitivity-only frailty covariate:** `frailty_index_fi` (or `frailty_index_fi_z` in scaled sensitivity models), derived from the locked K40 `FI22_nonperformance_KAAOS` contract
 - **Optional additional covariate:** `tasapainovaikeus`, only if treated explicitly as a separate covariate/predictor and not recycled from the locomotor outcome indicator set
 - **FI lineage / variant anchor:** `FI22_nonperformance_KAAOS`, documented to make the active FI contract explicit and to prevent drift to other frailty variants
 
 ### 3.3 Secondary / Sensitivity Indices
 
 - `frailty_cat_3` is retained only as a fallback / sensitivity frailty proxy
-  for comparison against the primary FI-based operationalization.
+  for sensitivity comparison only.
 - `frailty_score_3` may be used in the same fallback / sensitivity role when a
   score-form proxy is preferred over the categorical version.
 - `FI22_nonperformance_KAAOS` / `FI_22` names the locked K40 variant behind
   `frailty_index_fi`; use the patient-level FI outputs rather than the variant
-  label itself as the primary model term.
+  label itself in an authorized sensitivity model.
 - Categorical frailty structures such as `frailty_cat_3` must not displace
-  `frailty_index_fi` as the primary frailty term in the active analysis plan.
+  the continuous FI22 sensitivity branch.
 
 ## 4. Grip Handling
 
@@ -166,8 +169,7 @@ Model structure defined here corresponds to the K50 analysis stage; upstream der
 
 - **If the dataset is wide with two timepoints:** primary analysis is ANCOVA on follow-up outcome with baseline adjustment.
 - **If the dataset is long / repeated:** primary analysis is a mixed model with `time * FOF_status`.
-- Frailty effect-modification and frailty-adjusted models must use
-  `frailty_index_fi` (or `frailty_index_fi_z`) as the primary frailty term.
+- Frailty-adjusted or effect-modification models are sensitivity/extended analyses only and do not redefine the primary FOF estimand.
 - `frailty_cat_3` is reserved for fallback / sensitivity analyses only.
 
 ### 5.1.1 Primary Branch Selection Rule
@@ -186,14 +188,11 @@ Use the follow-up value of the current primary outcome with baseline adjustment.
 
 ```r
 # Formula (lm)
-locomotor_capacity_12m ~ locomotor_capacity_0 + FOF_status + frailty_index_fi + age + sex + BMI
+locomotor_capacity_12m ~ locomotor_capacity_0 + FOF_status + age + sex + BMI
 ```
 
 - This is the default primary branch when the working dataset is two-timepoint wide.
-- If scaling improves interpretability, `frailty_index_fi_z` may replace `frailty_index_fi` in an otherwise identical model specification.
-- If the intended balance-adjusted variant is used, keep the same FOF-centered
-  structure and add FI without dropping balance:
-  `locomotor_capacity_12m ~ locomotor_capacity_0 + FOF_status + frailty_index_fi + tasapainovaikeus + age + sex + BMI`.
+- An otherwise aligned model adding verified FI22 is sensitivity-only. Any balance-adjusted variant is also separately labelled and cannot replace the frozen primary contrast without a new Scientific Authority decision.
 - `frailty_cat_3` and `frailty_score_3` do not belong in the default primary ANCOVA.
 - A parallel ANCOVA using `z3` may be used as a deterministic fallback / sensitivity check.
 
@@ -203,15 +202,11 @@ Use the repeated-measures outcome formulation when the working dataset is long.
 
 ```r
 # Formula (lmer)
-locomotor_capacity ~ time * FOF_status + time * frailty_index_fi + age + sex + BMI + (1 | id)
+locomotor_capacity ~ time * FOF_status + age + sex + BMI + (1 | id)
 ```
 
 - This is the default primary branch when the working dataset is long / repeated.
-- If scaling improves interpretability, `time * frailty_index_fi_z` may replace
-  `time * frailty_index_fi` in an otherwise identical primary long model.
-- If the intended balance-adjusted long model is used, keep `time * FOF_status`
-  unchanged and add FI plus `tasapainovaikeus` in the same model rather than
-  substituting one for the other.
+- Long FI22-adjusted or effect-modification variants are supportive sensitivity analyses, not the primary estimand.
 - A parallel mixed model using `z3` may be used as a deterministic fallback / sensitivity check.
 
 ### 5.4 Secondary / Sensitivity Analyses
@@ -228,15 +223,15 @@ locomotor_capacity ~ time * FOF_status + time * frailty_cat_3 + age + sex + BMI 
 locomotor_capacity ~ time * FOF_status + time * frailty_score_3 + age + sex + BMI + (1 | id)
 ```
 
-- Report these as secondary or sensitivity analyses, not as replacements for the current primary FI-based line.
+- Report these as secondary or sensitivity analyses, not as replacements for the primary FOF line.
 - If balance is modeled separately, use canonical naming and explain whether it is a covariate, predictor, or sensitivity term.
 
-### 5.4.1 Frailty Index (FI_22) QC and Validity
+### 5.4.1 Frailty Index (FI_22) Sensitivity QC and Validity
 
-Before any FI-adjusted primary model is interpreted, confirm that the active
+Before any FI-adjusted sensitivity model is interpreted, confirm that the active
 frailty field follows the K40 `FI22_nonperformance_KAAOS` contract:
 
-- `fi_eligible == TRUE` for rows entering the primary FI-based model.
+- `fi_eligible == TRUE` for rows entering the FI22 sensitivity model.
 - `coverage >= coverage_min` where the locked K40 threshold is `0.60`.
 - `n_deficits_observed >= N_deficits_min` where the locked K40 minimum is `10`.
 - The FI source excludes direct physical performance tests and related
@@ -267,7 +262,7 @@ Before running the final models, the data must pass the strict QC gates defined 
 - **Gate 2 (Logic):** `time` has exactly 2 levels; `FOF_status` has exactly 2 levels.
 - **Gate 3 (Missingness):** Report missingness by Group x Time.
 - **Gate 4 (Outcome verification):** Confirm whether the run uses `locomotor_capacity`, `z3`, or legacy `Composite_Z`, and label outputs accordingly.
-- **Gate 5 (Frailty index verification):** If frailty is used in a primary model, confirm the locked K40 variant is `FI22_nonperformance_KAAOS`, the active patient-level fields are `frailty_index_fi` / `frailty_index_fi_z`, and `fi_eligible == TRUE`.
+- **Gate 5 (Frailty index verification):** If the FI22 sensitivity branch is used, confirm the locked K40 variant, active patient-level fields, and `fi_eligible == TRUE`.
 - **Gate 5b (FI QC thresholds):** Confirm `coverage >= 0.60`, `n_deficits_observed >= 10`, and preserve the K40 non-performance circularity exclusion (`perf_regex`) for the FI source.
 - **Gate 6 (Grip separation):** Do not merge grip branches into the whole-sample locomotor capacity score.
 - **Gate 7 (Table-to-text crosscheck):** Any textual interpretation of results must match the numerical values reported in model tables. If discrepancies appear between narrative text and model output tables, the tables take precedence and the text must be corrected.
@@ -312,7 +307,7 @@ Follow this sequence to reproduce the results.
    # (wide/long) and outcome (locomotor_capacity/z3/Composite_Z).
    ```
 
-   **Entrypoint Freeze Gap:** Primary model entrypoint scripts are not yet frozen in this document. The K50 contract currently freezes the branch-selection rule and model formulas; concrete script paths must match the eventual verified implementation entrypoints.
+   **Canonical entrypoint:** `R-scripts/K50/K50.r` is the current canonical primary analysis entrypoint (SCI-01 authority alignment).
 
 4. **Sensitivity / Bridge Analyses:**
 
@@ -340,9 +335,20 @@ The outcome variable used in each analysis must appear in the output filename an
 
 1. **Raw data:** Never manually edit CSV/Excel files.
 2. **Canonical variable names:** Use the map above and keep baseline/follow-up logic explicit.
-3. **Primary outcome / frailty line:** Do not present `frailty_cat_3` or `Composite_Z` as the undisputed current primary core; frailty is operationalized primarily via `frailty_index_fi` / `frailty_index_fi_z`.
+3. **Primary outcome / frailty line:** `locomotor_capacity` is primary; `z3`, FI22/frailty, and frailty proxies are sensitivity-only; `Composite_Z` is a legacy bridge.
 4. **Reproducibility:** `set.seed(20251124)` only for bootstrapping/MI.
 5. **Outputs:** All artifacts go to `R-scripts/Kxx/outputs/` and are logged in `manifest/manifest.csv`.
+
+## 9. Authority contradiction-resolution log
+
+| Previous v1.1 wording | Authority conflict | Owner decision and type | Effective from | Impact |
+|---|---|---|---|---|
+| FI22 was primary and appeared in primary formulas. | Conflicted with SCI-02 and canonical K50. | SA-04B: FI22 `SENSITIVITY_ONLY`; `PROSPECTIVE ANALYTICAL DECISION` conflict resolution. | Reaffirmed 2026-08-23. | `AUTHORITY_ALIGNMENT` |
+| Estimand was represented mainly by formulas. | Population and interpretation were incomplete. | SA-03B/C/D: adjusted 12-month WIDE contrast, explicit complete-case population, no unsupported missingness-mechanism claim. | 2026-08-23. | `AUTHORITY_ALIGNMENT` / `DOCUMENTATION_ONLY` |
+| Producer/entrypoint and chair direction were delegated to appendices. | Executable authority was not explicit here. | SCI-01 and SCI-03A/B: K50 entrypoint, K32 producer, frozen chair transform. | 2026-08-23 authority alignment. | `AUTHORITY_ALIGNMENT` |
+| Z3 coverage and 0.40 semantics followed executable evidence. | Implementation evidence is not scientific authority. | SA-05A/B: `MIN_2_OF_3` separately at both times and paired validity; SA-05C: 0.40 is export-QC only. | 2026-08-23. | Later `ANALYTICAL_CHANGE` / `DOCUMENTATION_ONLY` |
+
+SA-02A-E identity policies are authoritative documentation, but executable changes remain reserved for `WP-A1-identity-dedup-analytical-change`. SA-05A/B are recorded here without changing K32; implementation remains reserved for `WP-A1-z3-coverage-analytical-change`. Cohort and missingness claims must be tied to canonical receipts and model-frame evidence. Do not infer MCAR, MAR, MNAR, absence of selection bias, or unrestricted generalizability.
 
 ---
 

@@ -89,6 +89,12 @@ locomotor construction contract can be frozen, including:
 
 ## Agent Report
 
+### Authority-resolution addendum (effective 2026-08-23)
+
+The `OWNER_DECISION_REQUIRED` and `NEEDS_VERIFICATION` statements below are retained as historical verification state, not current authority. The later Scientific Authority Decision Session resolved them prospectively: SCI-03A approves K32 as the authoritative executable upstream producer (`AUTHORITY_ALIGNMENT`); SCI-03B freezes chair-rise capacity as `-1 * clean_nonnegative(raw_seconds, allow_zero = FALSE)` (`AUTHORITY_ALIGNMENT`); SA-05A/B require `MIN_2_OF_3` independently at baseline and 12 months plus valid scores at both times for the paired Z3 sensitivity branch (`ANALYTICAL_CHANGE`, implementation still in backlog); and SA-05C defines 0.40 as an export-QC safeguard, never row eligibility (`DOCUMENTATION_ONLY`).
+
+These resolutions are `PROSPECTIVE ANALYTICAL DECISION` records effective 2026-08-23 and do not claim historical preregistration. Source: `WP-A1-scientific-authority-decision-session.md` and the final impact classification. This addendum changes no K32 executable behavior.
+
 ### Scope Boundary
 
 This SCI-03 verification is evidence-only. No construction code, K50 code,
@@ -298,6 +304,8 @@ K32 construction, regenerates K32/K50-ready outputs, or changes z3 thresholds,
 K18/QC becomes stop-the-line required before modeling or migration acceptance.
 
 ## Log
+
+- 2026-08-24T06:00:00+0300 Added authority-resolution addendum linking the historical SCI-03 verification state to final SA-05A/B/C dispositions; no producer, data, output, or manifest change.
 
 - 2026-08-08T00:00:00+03:00 Created from `tasks/_template.md` per
   `prompts/6_scientific_packet_2_FARO1.txt`; placed in `tasks/01-ready/`.
