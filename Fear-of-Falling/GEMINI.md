@@ -14,6 +14,10 @@ Jos ohjeet ovat ristiriidassa, noudata tätä järjestystä:
 
 > Huom: `CLAUDE.md` sisältää käytännössä samat ydinkonventiot (standard header, output/manifest, QC), mutta GEMINI.md on tämän projektin ensisijainen ohje Gemini CLI -agentille.
 
+Tämä etusija koskee agentin operatiivista työnkulkua. Nykyiset tieteelliset
+outcome-roolit, estimandit ja mallien prioriteetti tulevat aina aktiivisesta
+`docs/ANALYSIS_PLAN.md`-tiedostosta; GEMINI.md ei ohita sitä.
+
 ---
 
 ## 1) CRITICAL RULES (NON-NEGOTIABLE)
@@ -285,15 +289,20 @@ Jos et pysty vahvistamaan: pysähdy ja pyydä data_dictionary tai sample.
 
 ## 10) Analysis strategy (ohjaava)
 
-### Wide primary (ANCOVA follow-up)
+Aktiivisen Analysis Plan v1.2:n mukaan `locomotor_capacity` on nykyinen primary
+outcome, `z3` fallback-/sensitiivisyyshaara ja `Composite_Z` vain varmennettava
+legacy-silta. Alla olevat Composite_Z-kaavat ovat legacy-silta-ajon
+toteutusesimerkkejä, eivät nykyisen primary-linjan määritelmä.
+
+### Legacy bridge: wide ANCOVA follow-up
 
 `composite_z12 ~ FOF_status + composite_z0 + age + sex + BMI (+ perustellut sekoittajat)`
 
-### Secondary (vain perustellusti)
+### Legacy bridge: delta (vain perustellusti)
 
 `delta_composite_z ~ FOF_status + composite_z0 + age + sex + BMI`
 
-### Long primary (mixed)
+### Legacy bridge: long mixed model
 
 `Composite_Z ~ time * FOF_status + age + sex + BMI + (1 | id)`
 

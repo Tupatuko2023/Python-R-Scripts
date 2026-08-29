@@ -1,12 +1,13 @@
-# QC_CHECKLIST.md — FOF_status × time (baseline → 12m) mixed-malliputken pakolliset QC-tarkistukset
+# QC_CHECKLIST.md — Fear-of-Falling-analyysihaarojen pakolliset QC-tarkistukset
 
 **Context:** This checklist supports the Official Analysis Plan:
 [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md).
 
 Tämä tarkistuslista määrittää pakolliset, auditointikelpoiset QC-askeleet ennen
-kuin ajetaan FOF_status × time -interaktiota arvioiva mixed model -workflow
-(lmer; random intercept (1 | id)) Composite_Z-muuttujalle long-muodossa
-(baseline ja 12m). Tarkistukset on tarkoitettu refaktoroinnin, debuggauksen ja
+FOF-mallinnusta. `docs/ANALYSIS_PLAN.md` v1.2 (Active, 2026-08-24) määrittää
+nykyiset tieteelliset roolit: `locomotor_capacity` on ensisijainen outcome,
+`z3` on fallback-/sensitiivisyysoutcome ja `Composite_Z` on vain varmennettava
+legacy-silta. Tarkistukset on tarkoitettu refaktoroinnin, debuggauksen ja
 pipeline-kovettamisen hyväksymiskriteereiksi FOF-alatutkimuksessa.
 
 ---
@@ -15,6 +16,21 @@ pipeline-kovettamisen hyväksymiskriteereiksi FOF-alatutkimuksessa.
 
 - This file is the canonical QC checklist for the Fear-of-Falling analysis codebase.
 - Downstream repos should link to this file via the analysis submodule.
+- Scientific outcome roles and model priority come from
+  [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md); this checklist does not
+  override them.
+
+### Outcome-haaran soveltaminen
+
+- Käytä nykyisessä primary-haarassa `locomotor_capacity`-kenttiä ja
+  Analysis Planin wide/long-rakennesääntöä.
+- Käytä `z3`-kenttiä vain nimetylle fallback-/sensitiivisyyshaaralle.
+- Seuraavissa geneerisissä QC-esimerkeissä säilyvät `Composite_Z`-nimet ovat
+  legacy-silta-ajon toteutus- ja yhteensopivuusesimerkkejä. Ne ovat voimassa
+  vain, jos alkuperäinen määritelmä on varmennettu, eivätkä ne tee
+  `Composite_Z`:sta nykyistä ensisijaista outcomea.
+- Samat tyyppi-, ID/aika-, puuttuvuus-, delta-, jakauma-, privacy- ja
+  artefaktigatet koskevat valittua outcome-haaraa sen kanonisilla kentillä.
 
 ---
 
@@ -946,15 +962,15 @@ Kun mikä tahansa pakollinen check failaa:
 
      (file, date, script, git hash if available)
 
-## PROJECT GOAL
+## LEGACY K11–K16 IMPLEMENTATION APPENDIX
 
 Refactor and stabilize R scripts K11.R–K16.R and run a reproducible analysis to identify which factors
 
 (FOF / age / FOF_status, etc.) are associated with 12-month change in physical performance.
 
-* Primary outcome: `Delta_Composite_Z` (12 months intervention change)
-
-* Alternative outcome (long format): `Composite_Z` with `time` factor/continuous
+* Tässä historiallisessa toteutusliitteessä `Delta_Composite_Z` ja
+  `Composite_Z` ovat legacy-silta-ajon kenttiä, eivät nykyisen projektin
+  ensisijaisia outcomeja.
 
 ## DATA ASSUMPTIONS (MUST VERIFY)
 

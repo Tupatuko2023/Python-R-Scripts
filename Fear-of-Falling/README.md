@@ -1,19 +1,28 @@
-# FOF × aika (baseline → 12 kk) — mixed model -ajamisohje (Composite_Z)
+# Fear-of-Falling — projektin navigaatio ja ajo-ohjeet
 
 [![K Scripts Smoke Tests](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml/badge.svg)](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml)
 [![Analysis Plan](https://img.shields.io/badge/Docs-Analysis_Plan-blue)](docs/ANALYSIS_PLAN.md)
 [![Scope & Guardrails](https://img.shields.io/badge/Docs-Thesis_Scope-orange)](docs/THESIS_SCOPE.md)
 
-**Official Analysis Plan:** [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md)
-**Scope & Guardrails:** [docs/THESIS_SCOPE.md](docs/THESIS_SCOPE.md)
+## Nykyiset auktoriteetit
 
-**Primary Analysis:** Longitudinal mixed model (`Composite_Z ~ time * FOF_status + ...`).
-**QC Gates:** All data must pass strict checks (n=2 timepoints, correct factors) defined in [QC_CHECKLIST.md](QC_CHECKLIST.md) before modeling.
+- **Tieteellinen analyysisuunnitelma:** [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md)
+  määrittää nykyiset outcome-roolit, estimandit ja mallinnuslinjan.
+- **Pakolliset QC-vaatimukset:** [QC_CHECKLIST.md](QC_CHECKLIST.md) määrittää
+  tarkistukset; outcome-haara valitaan Analysis Planin mukaisesti.
+- **Laajuus ja rajaukset:** [docs/THESIS_SCOPE.md](docs/THESIS_SCOPE.md).
+- **Upstream-rakennus:**
+  [docs/FOF_UPSTREAM_LOCOMOTOR_OUTCOME_SPEC.md](docs/FOF_UPSTREAM_LOCOMOTOR_OUTCOME_SPEC.md).
 
-Tämä README on ajamisohje ("runbook") FOF-alatutkimuksen päätarkastelulle:
-**FOF_status × time** -interaktio fyysisen toimintakyvyn muutoksessa
-(**Composite_Z**) käyttäen **lineaarista sekamallia** (lmer; satunnaisintersepti
-henkilölle: **(1 | id)**). Ajot tuottavat raportointivalmiit taulukot +
+Nykyinen ensisijainen outcome on `locomotor_capacity`, `z3` on deterministinen
+fallback-/sensitiivisyyshaara ja `Composite_Z` on vain varmennettava legacy-silta.
+README on navigaatio- ja ajamisohje, ei rinnakkainen tieteellinen auktoriteetti.
+
+## Legacy Composite_Z -runbook
+
+Alla oleva Composite_Z-ajopolku säilytetään legacy-silta-analyysin
+toteutusohjeena. Sitä saa käyttää vain Analysis Planin varmennusehdoilla eikä
+sitä pidä tulkita nykyiseksi ensisijaiseksi analyysiksi. Ajot tuottavat raportointivalmiit taulukot +
 (valinnaisen) interaktiokuvan, tallentavat artefaktit
 `R-scripts/<K_FOLDER>/outputs/<script_label>/`-hakemistoon (CLAUDE.md Output discipline)
 ja kirjaavat ne `manifest/manifest.csv`-tiedostoon (1 rivi per artefakti).
