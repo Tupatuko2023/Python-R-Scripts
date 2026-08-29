@@ -22,15 +22,44 @@ pipeline-kovettamisen hyväksymiskriteereiksi FOF-alatutkimuksessa.
 
 ### Outcome-haaran soveltaminen
 
-- Käytä nykyisessä primary-haarassa `locomotor_capacity`-kenttiä ja
-  Analysis Planin wide/long-rakennesääntöä.
-- Käytä `z3`-kenttiä vain nimetylle fallback-/sensitiivisyyshaaralle.
-- Seuraavissa geneerisissä QC-esimerkeissä säilyvät `Composite_Z`-nimet ovat
-  legacy-silta-ajon toteutus- ja yhteensopivuusesimerkkejä. Ne ovat voimassa
-  vain, jos alkuperäinen määritelmä on varmennettu, eivätkä ne tee
-  `Composite_Z`:sta nykyistä ensisijaista outcomea.
+- Valitse yksi haara eksplisiittisesti ennen gateja 1–10. Älä päättele haaraa
+  automaattisesti sarakkeiden perusteella.
+- Käytä `locomotor_capacity`-haaraa nykyiseen primary-ajoon ja `z3`-haaraa vain
+  nimettyyn fallback-/sensitiivisyysajoon.
+- `Composite_Z` on sallittu vain legacy-silta-ajossa, kun alkuperäinen
+  `ToimintaKykySummary`-määritelmä on varmennettu. Vanhoja nimiä
+  `Composite_Z0`, `Composite_Z2` ja `Delta_Composite_Z` ei saa käyttää
+  kanonisina aliaksina.
 - Samat tyyppi-, ID/aika-, puuttuvuus-, delta-, jakauma-, privacy- ja
-  artefaktigatet koskevat valittua outcome-haaraa sen kanonisilla kentillä.
+  artefaktigatet koskevat valittua outcome-haaraa.
+
+Kopioi tämä sitova pre-check samaan R-istuntoon ennen alla olevia
+outcome-riippuvaisia esimerkkejä. Se pysäyttää ajon, jos haara tai legacy-sillan
+varmennus puuttuu:
+
+```r
+qc_branch <- "locomotor_capacity" # yksi: locomotor_capacity, z3, Composite_Z
+legacy_definition_verified <- FALSE
+branch_map <- list(
+  locomotor_capacity = list(outcome = "locomotor_capacity", baseline = "locomotor_capacity_0", followup = "locomotor_capacity_12m", delta = "delta_locomotor_capacity"),
+  z3 = list(outcome = "z3", baseline = "z3_0", followup = "z3_12m", delta = "delta_z3"),
+  Composite_Z = list(outcome = "Composite_Z", baseline = "Composite_Z_0", followup = "Composite_Z_12m", delta = NA_character_)
+)
+if (!(qc_branch %in% names(branch_map))) stop("Unknown QC outcome branch; choose an explicit canonical branch")
+if (identical(qc_branch, "Composite_Z") && !isTRUE(legacy_definition_verified)) stop("Composite_Z is legacy-only and requires verified original definition")
+qc_vars <- branch_map[[qc_branch]]
+outcome_col <- qc_vars$outcome
+baseline_col <- qc_vars$baseline
+followup_col <- qc_vars$followup
+delta_col <- qc_vars$delta
+id_col <- "id"
+time_col <- "time"
+expected_time <- c(0, 12)
+```
+
+Legacy-sillalle ei ole nykyisessä auktoritatiivisessa sopimuksessa kanonista
+delta-kenttää. Siksi `delta_col` jää siinä tarkoituksella arvoksi `NA` ja
+delta-gate merkitään ei-sovellettavaksi; nimeä ei arvata.
 
 ---
 
@@ -85,16 +114,16 @@ Datan tulee olla **long**-muodossa siten, että jokainen rivi on yhden henkilön
 
 - `id` (integer/character; yksilötunniste)
 
-- `time` (factor tai numeerinen; **tasot baseline ja 12m** tai koodaus {0,1})
+- `time` (numeric; kanoninen koodaus **0 = baseline, 12 = 12m**)
 
 - `FOF_status` (0/1 tai 2-tasoinen factor; **ei hiljaista uudelleenkoodausta**)
 
-- `Composite_Z` (numeric; fyysisen toimintakyvyn yhdistelmä-z)
+- valitun haaran `outcome_col` (numeric)
 
 ### Jos data on wide
 
-Jos saatavilla on wide-muotoisia sarakkeita (esim. `Composite_Z0`,
-`Composite_Z2` tms.), QC:n pitää joko:
+Jos saatavilla on wide-muotoisia sarakkeita (`baseline_col` ja
+`followup_col`), QC:n pitää joko:
 
 - (A) varmistaa, että ne voidaan pivottaa longiksi ilman rivien häviämistä, tai
 
@@ -102,11 +131,10 @@ Jos saatavilla on wide-muotoisia sarakkeita (esim. `Composite_Z0`,
 
 ### Delta-muuttuja (jos käytössä)
 
-Jos datasetissä on delta-muuttuja (kanoninen nimi tässä checklistissä:
-`Delta_Composite_Z`), sen tulee vastata **follow-up − baseline** toleranssilla.
-
-**HUOM:** Jos delta on nimetty eri tavalla (esim. `delta_composite_z`), tee
-eksplisiittinen “mapping” ja dokumentoi se (TODO).
+Jos valitulle nykyhaaralle on määritelty `delta_col` ja sarake on datasetissä,
+sen tulee vastata **follow-up − baseline** toleranssilla. Puuttuva valinnaisen
+delta-kentän sarake tuottaa auditoitavan `applicable=FALSE`-tuloksen; mappingia
+ei arvata.
 
 ---
 
@@ -150,8 +178,8 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 - **Check name:** Saraketyypit
 
-- **What it verifies:** `id`, `time`, `FOF_status`, `Composite_Z` löytyvät ja
-  ovat odotettua tyyppiä (ei list/complex; Composite_Z numeric).
+- **What it verifies:** `id`, `time`, `FOF_status` ja `outcome_col` löytyvät ja
+  ovat odotettua tyyppiä (ei list/complex; valittu outcome numeric).
 
 - **How to run (base R):**
 
@@ -165,7 +193,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 
 
-  req <- c("id", "time", "FOF_status", "Composite_Z")
+  req <- c(id_col, time_col, "FOF_status", outcome_col)
 
   missing_cols <- setdiff(req, names(df))
 
@@ -208,7 +236,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   * `qc_types_status.csv: ok == TRUE`
 
-  * `Composite_Z` on numeric/integer (ei character)
+  * `df[[outcome_col]]` on numeric/integer (ei character)
 
   * `FOF_status` on integer/numeric tai 2-tasoinen factor (mapping dokumentoitu)
 
@@ -274,7 +302,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
     n_unique_id = length(unique(df$id)),
 
-    n_dup_(id_time) = n_dup_keys,
+    n_dup_id_time = n_dup_keys,
 
     stringsAsFactors = FALSE
 
@@ -290,7 +318,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 * **Pass criteria:**
 
-  * `n_dup_(id_time) == 0` (tai duplikaatit on korjattu deterministisesti ennen
+  * `n_dup_id_time == 0` (tai duplikaatit on korjattu deterministisesti ennen
 
     mallia)
 
@@ -316,7 +344,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 * **What it verifies:** Puuttuvuus raportoidaan (a) ydinmuuttujissa overall ja
 
-  (b) `Composite_Z` puuttuvuus `FOF_status × time` -tasolla, jotta
+  (b) valitun `outcome_col`-muuttujan puuttuvuus `FOF_status × time` -tasolla, jotta
 
   systemaattinen puuttuvuus näkyy.
 
@@ -330,7 +358,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 
 
-  req <- c("id", "time", "FOF_status", "Composite_Z")
+  req <- c(id_col, time_col, "FOF_status", outcome_col)
 
 
 
@@ -350,29 +378,29 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 
 
-  # Stratified: Composite_Z missingness by FOF_status and time (aggregate only)
+  # Stratified: selected outcome missingness by FOF_status and time (aggregate only)
 
   # Use xtabs to avoid packages
 
-  n_rows <- as.data.frame(with(df, table(FOF_status, time)), stringsAsFactors = FALSE)
+  n_rows <- as.data.frame(table(df$FOF_status, df[[time_col]]), stringsAsFactors = FALSE)
 
   names(n_rows) <- c("FOF_status","time","n_rows")
 
 
 
-  n_miss <- as.data.frame(with(df, table(FOF_status, time, is.na(Composite_Z))), stringsAsFactors = FALSE)
+  n_miss <- as.data.frame(table(df$FOF_status, df[[time_col]], is.na(df[[outcome_col]])), stringsAsFactors = FALSE)
 
-  names(n_miss) <- c("FOF_status","time","is_na_Composite_Z","n")
+  names(n_miss) <- c("FOF_status","time","is_na_outcome","n_missing_outcome")
 
-  n_miss <- n_miss[n_miss$is_na_Composite_Z == "TRUE", c("FOF_status","time","n_missing_Composite_Z")]
+  n_miss <- n_miss[n_miss$is_na_outcome == "TRUE", c("FOF_status","time","n_missing_outcome")]
 
 
 
   merged <- merge(n_rows, n_miss, by=c("FOF_status","time"), all.x=TRUE)
 
-  merged$n_missing_Composite_Z[is.na(merged$n_missing_Composite_Z)] <- 0
+  merged$n_missing_outcome[is.na(merged$n_missing_outcome)] <- 0
 
-  merged$pct_missing_Composite_Z <- round(100 * merged$n_missing_Composite_Z / merged$n_rows, 1)
+  merged$pct_missing_outcome <- round(100 * merged$n_missing_outcome / merged$n_rows, 1)
 
 
 
@@ -470,9 +498,8 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 * **Check name:** Aikatasot
 
-* **What it verifies:** `time` sisältää vain odotetut tasot (baseline ja 12m)
-
-  tai koodaus {0,1}; ylimääräiset tasot flagataan.
+* **What it verifies:** `time` sisältää vain kanoniset numeeriset tasot
+  `0 = baseline` ja `12 = 12m`; ylimääräiset tasot flagataan.
 
 * **How to run (base R):**
 
@@ -484,9 +511,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 
 
-  time_levels <- sort(unique(df$time))
-
-  expected_time <- c("baseline", "12m")  # TODO: jos käytössä 0/1, muuta tähän
+  time_levels <- sort(unique(df[[time_col]]))
 
 
 
@@ -512,9 +537,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   ```
 
-* **Pass criteria:** `qc_time_levels_status.csv: ok == TRUE` tai vaihtoehtoinen
-
-  mapping baseline/12m ↔ {0,1} on dokumentoitu ja validoitu.
+* **Pass criteria:** `qc_time_levels_status.csv: ok == TRUE`.
 
 * **Fail action:** Korjaa `time` koodaus/pivot; estä mallin ajo kunnes
 
@@ -532,16 +555,14 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 * **Check name:** Delta-tarkistus (follow-up − baseline)
 
-* **Applicability:** This check ONLY runs when the dataset contains wide-format
-  composite Z columns. Specifically:
-  - Requires columns: `composite_z0`, `composite_z12`, `delta_composite_z`
-  - Auto-skipped for long-format data (single `Composite_Z` column with `time` factor)
-  - Output artifact will show `applicable=FALSE` with reason when skipped.
+* **Applicability:** Tämä tarkistus ajetaan wide-datalle valitun haaran
+  `baseline_col`-, `followup_col`- ja `delta_col`-kentillä. Long-data tai
+  legacy-silta ilman varmennettua delta-kenttää tuottaa auditoitavan
+  `applicable=FALSE`-artefaktin.
 
 * **What it verifies (when applicable):**
-  If wide-format columns exist, verifies that `delta_composite_z` equals
-
-  `Composite_Z(12m) − Composite_Z(baseline)` toleranssilla; tallennetaan vain
+  Jos wide-kentät ovat olemassa, varmistaa että `delta_col` vastaa
+  `followup_col - baseline_col` toleranssilla; tallennetaan vain
 
   aggregaattitulokset.
 
@@ -555,17 +576,10 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 
 
-  delta_name <- "Delta_Composite_Z"
-
-  baseline_label <- "baseline"  # TODO: tarkista data_dictionary.csv
-
-  follow_label   <- "12m"       # TODO: tarkista data_dictionary.csv
-
   tol <- 1e-8
 
-
-
-  if (!(delta_name %in% names(df))) {
+  wide_req <- c(id_col, baseline_col, followup_col)
+  if (is.na(delta_col) || !all(c(wide_req, delta_col) %in% names(df))) {
 
     out <- data.frame(
 
@@ -573,7 +587,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
       applicable=FALSE,
 
-      reason="Delta_Composite_Z not found",
+      reason=if (is.na(delta_col)) "no canonical delta for selected branch" else "canonical wide/delta columns not found",
 
       stringsAsFactors = FALSE
 
@@ -582,34 +596,8 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
     write.csv(out, "R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_delta_check.csv", row.names = FALSE)
 
   } else {
-
-    base <- df[df$time == baseline_label, c("id","Composite_Z")]
-
-    foll <- df[df$time == follow_label,   c("id","Composite_Z")]
-
-    names(base)[2] <- "Composite_Z_baseline"
-
-    names(foll)[2] <- "Composite_Z_12m"
-
-
-
-    w <- merge(base, foll, by="id", all=FALSE)
-
-    delta_calc <- w$Composite_Z_12m - w$Composite_Z_baseline
-
-
-
-    # reported delta aggregated per id internally, but output remains aggregate
-
-    d <- aggregate(df[[delta_name]], by=list(id=df$id), FUN=function(x) x[which(!is.na(x))[1]])
-
-    names(d)[2] <- "delta_reported"
-
-    w2 <- merge(w, d, by="id", all.x=TRUE)
-
-
-
-    diff <- w2$delta_reported - delta_calc
+    delta_calc <- df[[followup_col]] - df[[baseline_col]]
+    diff <- df[[delta_col]] - delta_calc
 
     ok_vec <- is.na(diff) | abs(diff) <= tol
 
@@ -621,13 +609,13 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
       applicable=TRUE,
 
-      n_ids=nrow(w2),
+      n_ids=length(unique(df[[id_col]])),
 
-      n_missing_delta_reported=sum(is.na(w2$delta_reported)),
+      n_missing_delta_reported=sum(is.na(df[[delta_col]])),
 
       n_mismatch=sum(!ok_vec, na.rm=TRUE),
 
-      max_abs_diff=max(abs(diff), na.rm=TRUE),
+      max_abs_diff=if (all(is.na(diff))) NA_real_ else max(abs(diff), na.rm=TRUE),
 
       tolerance=tol,
 
@@ -655,11 +643,11 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 ---
 
-### 7) Composite_Z jakauma ja arvojen järkevyys (range sanity)
+### 7) Valitun outcomen jakauma ja arvojen järkevyys (range sanity)
 
-* **Check name:** Composite_Z jakauma
+* **Check name:** Outcome-jakauma
 
-* **What it verifies:** `Composite_Z` on finite; jakaumasta ja yhteenvedoista ei
+* **What it verifies:** `df[[outcome_col]]` on finite; jakaumasta ja yhteenvedoista ei
 
   näy selviä koodausvirheitä; tuotetaan histogrammi + summary CSV.
 
@@ -673,7 +661,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
 
 
-  x <- df$Composite_Z
+  x <- df[[outcome_col]]
 
 
 
@@ -711,7 +699,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
   png("R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_outcome_hist.png", width=1200, height=900)
 
-  hist(x, main="Composite_Z Distribution", xlab="Composite_Z")
+  hist(x, main=paste(outcome_col, "Distribution"), xlab=outcome_col)
 
   dev.off()
 
@@ -759,7 +747,7 @@ eksplisiittinen “mapping” ja dokumentoi se (TODO).
 
       n_unique_id = length(unique(df$id)),
 
-      n_missing_Composite_Z = sum(is.na(df$Composite_Z)),
+      n_missing_outcome = sum(is.na(df[[outcome_col]])),
 
       stringsAsFactors = FALSE
 
@@ -884,7 +872,7 @@ ensisijaisesti `outputs/<Kxx>/qc_*.csv` ja peilaa tarvittaessa `R-scripts/<K_FOL
 
 * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_outcome_hist.png`
 
-* `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_delta_check.csv` *(only when wide-format columns exist: composite_z0/composite_z12/delta_composite_z)*
+* `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_delta_check.csv` *(branch-mäppäys kirjaa aina sovellettavuuden)*
 
 * `R-scripts/<K_FOLDER>/outputs/<script_label>/qc/qc_row_id_watch.csv` *(jos pipeline tukee vaihelogia)*
 
