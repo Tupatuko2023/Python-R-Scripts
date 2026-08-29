@@ -14,6 +14,8 @@ Konfliktitilanteissa noudata sääntöjä tässä järjestyksessä:
 - `AGENTS.md`: Agentin tehtävä ja Termux/PRoot runner -reunaehdot.
 - `README.md`: Quickstart, runnerit ja QC-ajopolku (K18).
 - `PROJECT_FILE_MAP.md`: Oikeat hakemistopolut ja Kxx-kartta.
+- `docs/ANALYSIS_PLAN.md`: Nykyinen tieteellinen analyysiauktoriteetti;
+  outcome-roolit ja mallien prioriteetti tulevat tästä tiedostosta.
 
 ## 1. CRITICAL CONSTRAINTS (NON-NEGOTIABLE)
 
@@ -57,7 +59,12 @@ Oman sisäisen tietopankin (Knowledge Base, KB) käyttö on sallittua vain seura
 
 ## 5. DETERMINISTIC ANALYSIS STRATEGY
 
-Älä tarjoa vaihtoehtoja analyyseille. Sovella seuraavia malleja:
+Noudata aktiivista `docs/ANALYSIS_PLAN.md`-tiedostoa: `locomotor_capacity` on
+nykyinen primary outcome, `z3` fallback-/sensitiivisyyshaara ja `Composite_Z`
+vain varmennettava legacy-silta. Valitse wide/long-malli datastruktuurin ja
+Analysis Planin eksplisiittisen branch-säännön perusteella. Seuraavat
+`Composite_Z`-kaavat ovat legacy-silta-ajon toteutusesimerkkejä, eivät nykyisen
+primary-linjan määritelmä:
 
 - **Wide (2 aikapistettä, esim. baseline + 12kk):** Ensisijainen malli on ANCOVA follow-up-tulokselle.
   `composite_z12 ~ FOF_status + composite_z0 + age + sex + BMI`

@@ -184,8 +184,11 @@ performance.
 Current analysis focus (example): K11–K16. (Examples only; rules/conventions in
 this document apply to all Kxx scripts.)
 
-- Primary outcome: `delta_composite_z` (12 months intervention change)
-- Alternative outcome (long format): `Composite_Z` with `time` factor/continuous
+- Current primary outcome: `locomotor_capacity` (wide or long according to the
+  active Analysis Plan).
+- Fallback / sensitivity outcome: `z3`.
+- `delta_composite_z` and long `Composite_Z` are legacy-bridge fields only and
+  require verification of the original definition.
 
 ## DATA ASSUMPTIONS (MUST VERIFY)
 
@@ -249,6 +252,12 @@ Note: Legacy code may reference `Composite_Z2` or `Composite_Z3`; these should b
 interpreted as 12-month follow-up (Z12) per current naming convention.
 
 ## PRIMARY ANALYSIS STRATEGY (DEFAULT)
+
+Scientific outcome roles are controlled by `docs/ANALYSIS_PLAN.md` v1.2
+(`Active`, 2026-08-24): use `locomotor_capacity` for the current primary line,
+`z3` for the named fallback/sensitivity line, and `Composite_Z` only as a
+verified legacy bridge. The formulas below describe the retained
+`Composite_Z` implementation branch and do not override that authority.
 
 ### Decision: Wide vs Long
 
