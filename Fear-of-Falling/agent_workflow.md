@@ -5,10 +5,15 @@ Standard operating procedure for Gemini Agents gpa1qf-gpa4qf:
 1. **Discovery**: 'git pull' to stay in sync with other agents.
 2. **QC applicability**: decide whether K18/QC is REQUIRED or NOT APPLICABLE
    before selecting commands or writing the execution plan.
-3. **Work**: Move task to '02-in-progress', execute changes.
+3. **Work**: Move task from `tasks/01-ready/` to `tasks/02-in-progress/`,
+   then execute only the task scope.
 4. **Validation**: Run smoke tests and applicable QC.
-5. **Synchronization**: 'git push' changes to origin.
-6. **Completion**: Move task to '04-done' ONLY after step 5 is confirmed.
+5. **Review handoff**: Move the task to `tasks/03-review/` after validation
+   and reporting.
+6. **Completion**: Only a human may move a task from `tasks/03-review/` to
+   `tasks/04-done/`. The remote-sync rule in `WORKFLOW.md` remains a
+   prerequisite for done approval; it does not grant the agent authority to
+   close the task as done.
 
 ## K18/QC Applicability Decision Gate
 
