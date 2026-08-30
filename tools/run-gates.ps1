@@ -10,7 +10,7 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 $gateScript = Join-Path $PSScriptRoot 'run-gates.sh'
 
 if (-not (Test-Path -LiteralPath $gateScript -PathType Leaf)) {
-    Write-Error "Gate script not found: $gateScript"
+    Write-Error "Gate script not found: $gateScript" -ErrorAction Continue
     exit 2
 }
 
@@ -43,7 +43,7 @@ Git Bash was not found.
 
 Install Git for Windows or make a usable bash.exe available on PATH.
 The Windows System32 bash.exe / WSL launcher is not accepted for repository gates.
-'@
+'@ -ErrorAction Continue
     exit 2
 }
 
