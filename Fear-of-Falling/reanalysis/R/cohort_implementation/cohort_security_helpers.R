@@ -64,6 +64,77 @@ get_octal_mode_str <- function(path) {
   sprintf("%04o", bitwAnd(as.integer(st$mode), 511L))
 }
 
+is_exact_mode_0700 <- function(path) {
+  st <- suppressWarnings(file.info(path))
+  if (is.null(st$mode) || is.na(st$mode)) return(FALSE)
+  bitwAnd(as.integer(st$mode), 511L) == 448L # 448L is 0700 octal
+}
+
+# Acquire a repository-defined, per-destination directory lock. Directory
+# creation is the atomic acquisition primitive. Contenders wait for bounded
+# time, never remove or steal an existing lock, and then fail closed. A crash
+# intentionally leaves the lock in place for administrator-verified recovery.
+# The caller names the sibling lock `<ledger_path>.lock`; it is exact 0700 and
+# contains only an exact-0600 owner token. Neither artifact contains cohort data.
+# Automatic stale-lock deletion is deliberately unsupported.
+acquire_restricted_lock <- function(lock_path, timeout_seconds = 10, poll_seconds = 0.01) {
+  if (length(timeout_seconds) != 1L || is.na(timeout_seconds) || timeout_seconds < 0 ||
+      length(poll_seconds) != 1L || is.na(poll_seconds) || poll_seconds <= 0) {
+    fail("FAIL_CLOSED_LOCK_CONFIGURATION")
+  }
+  deadline <- Sys.time() + timeout_seconds
+  repeat {
+    acquired <- suppressWarnings(dir.create(lock_path, mode = "0700", showWarnings = FALSE))
+    if (isTRUE(acquired)) {
+      chmod_res <- suppressWarnings(Sys.chmod(lock_path, mode = "0700"))
+      if (!isTRUE(chmod_res) || !is_exact_mode_0700(lock_path)) {
+        unlink(lock_path, recursive = TRUE)
+        fail("FAIL_CLOSED_LOCK_PERMISSION: Lock directory must be exact 0700.")
+      }
+
+      token <- paste(Sys.getpid(), basename(tempfile(pattern = "owner_")), sep = "-")
+      token_path <- file.path(lock_path, "owner.token")
+      token_error <- tryCatch({
+        writeLines(token, token_path, useBytes = TRUE)
+        NULL
+      }, error = function(e) e)
+      token_chmod <- if (is.null(token_error)) {
+        suppressWarnings(Sys.chmod(token_path, mode = "0600"))
+      } else {
+        FALSE
+      }
+      if (!is.null(token_error) || !isTRUE(token_chmod) || !is_exact_mode_0600(token_path)) {
+        unlink(lock_path, recursive = TRUE)
+        fail("FAIL_CLOSED_LOCK_OWNER_TOKEN")
+      }
+      return(list(path = lock_path, token_path = token_path, token = token))
+    }
+
+    if (file.exists(lock_path) && !dir.exists(lock_path)) {
+      fail("FAIL_CLOSED_LOCK_PATH_INVALID: Lock path exists but is not a directory.")
+    }
+    if (Sys.time() >= deadline) {
+      fail("FAIL_CLOSED_LEDGER_LOCK_CONTENDED: Existing lock was not removed or stolen.")
+    }
+    Sys.sleep(poll_seconds)
+  }
+}
+
+release_restricted_lock <- function(lock) {
+  if (is.null(lock) || !dir.exists(lock$path) || !file.exists(lock$token_path)) {
+    fail("FAIL_CLOSED_LOCK_OWNERSHIP: Lock or owner token is missing.")
+  }
+  observed <- tryCatch(readLines(lock$token_path, warn = FALSE), error = function(e) character())
+  if (length(observed) != 1L || !identical(observed, lock$token)) {
+    fail("FAIL_CLOSED_LOCK_OWNERSHIP: Refusing to remove a lock not owned by this publisher.")
+  }
+  cleanup_res <- unlink(lock$path, recursive = TRUE)
+  if (cleanup_res != 0L || dir.exists(lock$path)) {
+    fail("FAIL_CLOSED_LOCK_CLEANUP")
+  }
+  invisible(TRUE)
+}
+
 # ======================================================================
 # resolve_data_root(env_path)
 # Resolves DATA_ROOT: process env first, then .env fallback, then fail.
@@ -185,7 +256,8 @@ assert_outside_worktree <- function(target_dir) {
 #       - Different: fail closed without overwriting destination
 #   - Fail-safe cleanup on error without leaving improperly permitted files
 # ======================================================================
-publish_restricted_ledger <- function(data_df, ledger_path, chmod_fn = Sys.chmod, pre_publish_hook = NULL) {
+publish_restricted_ledger <- function(data_df, ledger_path, chmod_fn = Sys.chmod, pre_publish_hook = NULL,
+                                      lock_timeout_seconds = 10) {
   target_dir <- dirname(ledger_path)
   assert_outside_worktree(target_dir)
 
@@ -231,15 +303,28 @@ publish_restricted_ledger <- function(data_df, ledger_path, chmod_fn = Sys.chmod
 
   candidate_sha <- sha256_file(ledger_tmp)
 
+  lock <- acquire_restricted_lock(paste0(ledger_path, ".lock"),
+                                  timeout_seconds = lock_timeout_seconds)
+  on.exit({
+    if (!is.null(lock)) release_restricted_lock(lock)
+  }, add = TRUE)
+
+  # All destination inspection and publication below occurs while holding the
+  # per-destination lock. State observed before acquisition is never trusted.
+
   # Collision / Idempotency Gate
   if (file.exists(ledger_path)) {
     existing_sha <- sha256_file(ledger_path)
     if (identical(existing_sha, candidate_sha)) {
       # Idempotent match: clean up temp file and return IDEMPOTENT status
       # Crucial: DO NOT call file.rename() over existing file!
-      unlink(ledger_tmp)
+      if (!is_exact_mode_0600(ledger_path)) {
+        fail("FAIL_CLOSED_EXISTING_LEDGER_MODE: Byte-identical destination is not exact 0600 (got ",
+             get_octal_mode_str(ledger_path), "). Refusing idempotent success.")
+      }
+      if (unlink(ledger_tmp) != 0L) fail("FAIL_CLOSED_TEMP_CLEANUP_FAILED")
       existing_mode <- get_octal_mode_str(ledger_path)
-      return(list(
+      result <- list(
         status = "IDEMPOTENT",
         sha256 = candidate_sha,
         path = ledger_path,
@@ -247,7 +332,10 @@ publish_restricted_ledger <- function(data_df, ledger_path, chmod_fn = Sys.chmod
         renamed = FALSE,
         temp_mode = temp_mode_octal,
         final_mode = existing_mode
-      ))
+      )
+      release_restricted_lock(lock)
+      lock <- NULL
+      return(result)
     } else {
       # Different content: fail closed before any mutation
       unlink(ledger_tmp)
@@ -281,7 +369,7 @@ publish_restricted_ledger <- function(data_df, ledger_path, chmod_fn = Sys.chmod
 
   final_mode_octal <- get_octal_mode_str(ledger_path)
 
-  return(list(
+  result <- list(
     status = "CREATED",
     sha256 = candidate_sha,
     path = ledger_path,
@@ -289,5 +377,8 @@ publish_restricted_ledger <- function(data_df, ledger_path, chmod_fn = Sys.chmod
     renamed = TRUE,
     temp_mode = temp_mode_octal,
     final_mode = final_mode_octal
-  ))
+  )
+  release_restricted_lock(lock)
+  lock <- NULL
+  result
 }

@@ -12,6 +12,9 @@ cat("=== cohort_implementation output-routing & security tests ===\n\n")
 test_pass <- 0L
 test_fail <- 0L
 test_skip <- 0L
+mandatory_skip <- 0L
+
+security_suite_succeeds <- function(fail_count, mandatory_skip_count) fail_count == 0L && mandatory_skip_count == 0L
 
 assert_test <- function(label, condition) {
   if (isTRUE(condition)) {
@@ -23,9 +26,10 @@ assert_test <- function(label, condition) {
   }
 }
 
-skip_test <- function(label, reason) {
+skip_test <- function(label, reason, mandatory = FALSE) {
   cat("  SKIP:", label, "(", reason, ")\n")
   test_skip <<- test_skip + 1L
+  if (isTRUE(mandatory)) mandatory_skip <<- mandatory_skip + 1L
 }
 
 # --- Locate production code ---
@@ -166,7 +170,7 @@ if (isTRUE(symlink_created) || dir.exists(symlink_dir)) {
   assert_test("Symlink pointing into Git worktree is rejected", isTRUE(symlink_rejected))
   unlink(symlink_dir)
 } else {
-  skip_test("Symlink pointing into Git worktree is rejected", "file.symlink not supported on this host environment")
+  skip_test("Symlink pointing into Git worktree is rejected", "file.symlink not supported on this host environment", mandatory = TRUE)
 }
 
 # ====================================================================
@@ -376,6 +380,152 @@ assert_test("Forced rename failure: file not published", !file.exists(new_ledger
 
 Sys.unsetenv("MOCK_RENAME_FAILURE")
 
+# 7d: Byte-identical destinations with unsafe or unreadable modes fail closed
+for (unsafe_mode in c("0400", "0644")) {
+  mode_path <- file.path(ext_pub_dir, paste0("identical_mode_", unsafe_mode, ".csv"))
+  utils::write.csv(synth_df, mode_path, row.names = FALSE, na = "")
+  fixture_chmod <- system2("chmod", c(unsafe_mode, shQuote(mode_path)),
+                           stdout = FALSE, stderr = FALSE)
+  if (!identical(fixture_chmod, 0L)) stop("Failed to prepare unsafe-mode fixture", call. = FALSE)
+  sha_before <- sha256_file(mode_path)
+  mode_before <- get_octal_mode_str(mode_path)
+  mode_error <- tryCatch({
+    publish_restricted_ledger(synth_df, mode_path)
+    FALSE
+  }, error = function(e) grepl("FAIL_CLOSED_EXISTING_LEDGER_MODE", conditionMessage(e)))
+  assert_test(paste0("Identical destination mode ", unsafe_mode, ": fails closed"), isTRUE(mode_error))
+  assert_test(paste0("Identical destination mode ", unsafe_mode, ": destination unchanged"),
+              identical(sha_before, sha256_file(mode_path)) && identical(mode_before, get_octal_mode_str(mode_path)))
+}
+
+inspection_path <- file.path(ext_pub_dir, "identical_mode_unknown.csv")
+utils::write.csv(synth_df, inspection_path, row.names = FALSE, na = "")
+Sys.chmod(inspection_path, mode = "0600")
+inspection_sha <- sha256_file(inspection_path)
+real_file_info <- file.info
+file.info <- function(...) {
+  info <- real_file_info(...)
+  requested <- as.character(list(...)[[1L]])
+  if (length(requested) == 1L && identical(requested, inspection_path)) info$mode <- NA
+  info
+}
+inspection_error <- tryCatch({
+  publish_restricted_ledger(synth_df, inspection_path)
+  FALSE
+}, error = function(e) grepl("FAIL_CLOSED_EXISTING_LEDGER_MODE", conditionMessage(e)))
+file.info <- real_file_info
+assert_test("Identical destination mode inspection failure: fails closed", isTRUE(inspection_error))
+assert_test("Identical destination mode inspection failure: content unchanged",
+            identical(inspection_sha, sha256_file(inspection_path)))
+
+# 7e: Mandatory security skips produce a non-success disposition
+assert_test("Mandatory SKIP makes security suite non-success",
+            !security_suite_succeeds(0L, 1L))
+assert_test("PASS/FAIL/SKIP dispositions remain independent",
+            security_suite_succeeds(0L, 0L) && !security_suite_succeeds(1L, 0L))
+
+# 7f: Atomic directory acquisition, contention, ownership, and cleanup
+lock_atomic_results <- vapply(seq_len(25L), function(i) {
+  atomic_path <- file.path(ext_pub_dir, paste0("atomic_", i, ".lock"))
+  jobs <- lapply(seq_len(6L), function(j) {
+    parallel::mcparallel(dir.create(atomic_path, mode = "0700", showWarnings = FALSE),
+                         mc.set.seed = FALSE)
+  })
+  acquired <- unlist(parallel::mccollect(jobs), use.names = FALSE)
+  valid <- sum(acquired) == 1L && is_exact_mode_0700(atomic_path)
+  unlink(atomic_path, recursive = TRUE)
+  valid
+}, logical(1L))
+assert_test("Atomic lock acquisition: exactly one winner in 25 contention rounds",
+            all(lock_atomic_results))
+
+contention_path <- file.path(ext_pub_dir, "lock_contention.csv")
+held_lock <- acquire_restricted_lock(paste0(contention_path, ".lock"))
+held_token <- readLines(held_lock$token_path, warn = FALSE)
+assert_test("Held lock: directory is 0700 and owner token is 0600",
+            is_exact_mode_0700(held_lock$path) && is_exact_mode_0600(held_lock$token_path) &&
+              length(list.files(held_lock$path, all.files = TRUE, no.. = TRUE)) == 1L)
+contention_error <- tryCatch({
+  publish_restricted_ledger(synth_df, contention_path, lock_timeout_seconds = 0.05)
+  FALSE
+}, error = function(e) grepl("FAIL_CLOSED_LEDGER_LOCK_CONTENDED", conditionMessage(e)))
+assert_test("Held lock: competing publisher fails closed after bounded wait", isTRUE(contention_error))
+assert_test("Held lock: contender neither removes nor changes owner state",
+            dir.exists(held_lock$path) && identical(readLines(held_lock$token_path, warn = FALSE), held_token))
+wrong_owner <- held_lock
+wrong_owner$token <- "not-the-owner"
+ownership_error <- tryCatch({
+  release_restricted_lock(wrong_owner)
+  FALSE
+}, error = function(e) grepl("FAIL_CLOSED_LOCK_OWNERSHIP", conditionMessage(e)))
+assert_test("Lock cleanup: wrong owner cannot remove lock", isTRUE(ownership_error) && dir.exists(held_lock$path))
+release_restricted_lock(held_lock)
+assert_test("Lock cleanup: verified owner removes lock and token", !dir.exists(held_lock$path))
+
+# 7g: Real concurrent publishers exercise the production critical section
+run_concurrent_publishers <- function(data_frames, ledger_path, label) {
+  barrier_dir <- file.path(ext_pub_dir, paste0("barrier_", label))
+  dir.create(barrier_dir, recursive = TRUE, showWarnings = FALSE)
+  barrier_hook <- function(path) {
+    marker <- file.path(barrier_dir, paste0("ready_", Sys.getpid()))
+    if (!isTRUE(file.create(marker))) stop("concurrency barrier marker failed", call. = FALSE)
+    deadline <- Sys.time() + 10
+    while (length(list.files(barrier_dir, pattern = "^ready_")) < length(data_frames)) {
+      if (Sys.time() > deadline) stop("concurrency barrier timed out", call. = FALSE)
+      Sys.sleep(0.01)
+    }
+  }
+  jobs <- lapply(data_frames, function(candidate) {
+    parallel::mcparallel(tryCatch(
+      publish_restricted_ledger(candidate, ledger_path, pre_publish_hook = barrier_hook),
+      error = function(e) list(status = "ERROR", message = conditionMessage(e))
+    ), mc.set.seed = FALSE)
+  })
+  unname(parallel::mccollect(jobs))
+}
+
+candidate_hash <- function(candidate) {
+  candidate_path <- tempfile(tmpdir = ext_pub_dir, fileext = ".csv")
+  on.exit(unlink(candidate_path), add = TRUE)
+  utils::write.csv(candidate, candidate_path, row.names = FALSE, na = "")
+  sha256_file(candidate_path)
+}
+expected_hashes <- vapply(list(synth_df, different_df), candidate_hash, character(1L))
+identical_rounds <- logical(10L)
+different_rounds <- logical(10L)
+artifact_rounds <- logical(10L)
+for (race_round in seq_len(10L)) {
+  identical_path <- file.path(ext_pub_dir, paste0("concurrent_identical_", race_round, ".csv"))
+  identical_results <- run_concurrent_publishers(
+    list(synth_df, synth_df), identical_path, paste0("identical_", race_round)
+  )
+  identical_statuses <- vapply(identical_results, function(x) x$status, character(1L))
+  identical_rounds[race_round] <-
+    identical(sort(identical_statuses), c("CREATED", "IDEMPOTENT")) &&
+    identical(sha256_file(identical_path), expected_hashes[[1L]]) &&
+    is_exact_mode_0600(identical_path)
+
+  different_path <- file.path(ext_pub_dir, paste0("concurrent_different_", race_round, ".csv"))
+  different_results <- run_concurrent_publishers(
+    list(synth_df, different_df), different_path, paste0("different_", race_round)
+  )
+  different_statuses <- vapply(different_results, function(x) x$status, character(1L))
+  different_messages <- vapply(different_results, function(x) {
+    if (is.null(x$message)) "" else x$message
+  }, character(1L))
+  different_rounds[race_round] <-
+    sum(different_statuses == "CREATED") == 1L &&
+    sum(grepl("FAIL_CLOSED_LEDGER_COLLISION", different_messages)) == 1L &&
+    sha256_file(different_path) %in% expected_hashes &&
+    is_exact_mode_0600(different_path)
+
+  artifact_rounds[race_round] <-
+    length(list.files(ext_pub_dir, pattern = "(\\.tmp$|\\.lock$)", full.names = TRUE)) == 0L
+}
+assert_test("Concurrent identical candidates: 10 rounds yield CREATED plus IDEMPOTENT", all(identical_rounds))
+assert_test("Concurrent different candidates: 10 rounds preserve winner and fail loser closed", all(different_rounds))
+assert_test("Concurrent publication: no temporary or lock artifacts remain", all(artifact_rounds))
+
 # ====================================================================
 # TEST GROUP 8: Producer source integrity (no scientific logic change)
 # ====================================================================
@@ -417,8 +567,9 @@ cat("PASS:", test_pass, "\n")
 cat("FAIL:", test_fail, "\n")
 cat("SKIP:", test_skip, "\n")
 
-if (test_fail > 0L) {
-  stop("Some tests FAILED", call. = FALSE)
+if (!security_suite_succeeds(test_fail, mandatory_skip)) {
+  stop("Security suite unsuccessful: failures=", test_fail,
+       ", mandatory_skips=", mandatory_skip, call. = FALSE)
 } else {
-  cat("All executable tests passed successfully.\n")
+  cat("All mandatory security tests passed successfully.\n")
 }
