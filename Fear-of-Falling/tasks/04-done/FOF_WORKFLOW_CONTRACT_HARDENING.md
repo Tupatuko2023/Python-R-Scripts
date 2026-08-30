@@ -2,7 +2,7 @@
 
 ## Status
 
-review
+04-done
 
 ## Workflow
 
@@ -58,14 +58,15 @@ does not transfer done authority to the agent.
 - [x] `git diff --check` passes.
 - [x] Grep validation shows no contradictory agent-can-move-to-done rule remains
   in `agent_workflow.md`.
-- [x] Task is left in `tasks/03-review/` for human approval, not moved to
-  `tasks/04-done/`.
+- [x] After agent handoff in `tasks/03-review/`, human final-state approval moved
+  the task to `tasks/04-done/`.
 
 ## Agent Report
 
-Completed and left in `tasks/03-review/` for human approval.
+Completed, handed off in `tasks/03-review/`, and subsequently human-approved
+into `tasks/04-done/`.
 
-- Changed `agent_workflow.md` only.
+- Original task implementation changed `agent_workflow.md` only.
 - K18/QC: NOT APPLICABLE — workflow documentation only; no data, analysis code,
   QC code, QC artifact, manifest, or output change.
 - Validation: `git diff --check` passed.
@@ -85,6 +86,9 @@ Completed and left in `tasks/03-review/` for human approval.
   to align with `tasks/_template.md` and `WORKFLOW.md`.
 - 2026-08-09T14:35:24+03:00 Ran `git diff --check` and grep validation; moved
   task `tasks/02-in-progress/` -> `tasks/03-review/`.
+- Human final-state approval recorded as
+  `FOF_WORKFLOW_FINAL_STATE_FROM_MAIN_APPROVED`; task retained at
+  `tasks/04-done/`.
 
 ## Blockers
 
