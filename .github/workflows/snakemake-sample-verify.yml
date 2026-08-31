@@ -61,7 +61,7 @@ jobs:
           ls -la outputs/dag.png
 
       - name: Upload DAG artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: snakemake-dag
           path: Quantify-FOF-Utilization-Costs/outputs/dag.png
