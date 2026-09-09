@@ -69,20 +69,20 @@ Jokaisessa testissä kirjataan reitti, auktoriteetti, groundedness,
 method/project separation, status handling, researcher control ja
 evidence/issue. PASS edellyttää kaikkien kriittisten dimensioiden täyttymistä.
 
-| Testi | Audit-skenaario | Odotettu reitti ja käyttäytyminen |
-| --- | --- | --- |
-| T01 | Epävarma deficit-kelpoisuus | Data Dictionary → Methods → Project role screen → Registry; puuttuva semantiikka tuottaa `NEEDS_VERIFICATION`, ei päätöstä. |
-| T02 | Ordinaalipisteytyspäätös | Dictionary → Methods ja underlying source → Project/Registry; consequential mapping vaatii tutkijapäätöksen. |
-| T03 | Tuntemattomat missing-koodit tai suunta | Data Dictionary/source schema; `UNKNOWN` tai `NEEDS_VERIFICATION`, ei arvausta. |
-| T04 | 12 päällekkäistä ADL/IADL-ehdokasta | Methods käsitteellinen arvio → Dictionary/domain → aggregate empirical diagnostics → Registry; ei automaattista hyväksyntää. |
-| T05 | Projektikattavuus poikkeaa yleisohjeesta | Methods erottaa yleisohjeen; Project Spec omistaa nimetyn `PROJECT_RULE`-rajan. |
-| T06 | FI ajetaan mutta provenance on epäselvä | R Workflow + run evidence; tila `NEEDS_VERIFICATION` tai `REPOSITORY_CONFLICT`, ei validiteettiväitettä. |
-| T07 | FI-jakauma on odottamaton | Validation + Methods + run diagnostics; signaali tulkitaan kontekstissa, ei automaattiseksi poissuluksi. |
-| T08 | Pitkittäiset itemit/koodaus/aallot eivät vastaa | Methods → Dictionary wave metadata → tämän tiedoston longitudinal gate; fail-closed ilman hyväksyttyä harmonisointia. |
-| T09 | Manuscript-ready Methods -teksti | Reporting → Methods + Project + Registry + QC + Source Status; variantti, epävarmuus ja validointikategoria näkyvät. |
-| T10 | Auktoritatiiviset lähteet ovat eri mieltä | Source Status → competing sources → Methods; väitteitä ei harmonisoida hiljaisesti, tarvittaessa `RESEARCHER_DECISION_REQUIRED`. |
-| T11 | Odotettu primaarilähde puuttuu | Source Status omistaa `NEEDS_SOURCE`; puuttuvaa sisältöä ei keksitä eikä projektisäännöllä korvata. |
-| T12 | Candidate Registry ja Project Spec ovat ristiriidassa | Registry omistaa candidate-current-state, Project Spec variant-rule/role; ristiriita eskaloidaan domain ownerille/tutkijalle, ei soviteta hiljaisesti. |
+| Testi | Audit-skenaario                                       | Odotettu reitti ja käyttäytyminen                                                                                                                      |
+| ----- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| T01   | Epävarma deficit-kelpoisuus                           | Data Dictionary → Methods → Project role screen → Registry; puuttuva semantiikka tuottaa `NEEDS_VERIFICATION`, ei päätöstä.                            |
+| T02   | Ordinaalipisteytyspäätös                              | Dictionary → Methods ja underlying source → Project/Registry; consequential mapping vaatii tutkijapäätöksen.                                           |
+| T03   | Tuntemattomat missing-koodit tai suunta               | Data Dictionary/source schema; `UNKNOWN` tai `NEEDS_VERIFICATION`, ei arvausta.                                                                        |
+| T04   | 12 päällekkäistä ADL/IADL-ehdokasta                   | Methods käsitteellinen arvio → Dictionary/domain → aggregate empirical diagnostics → Registry; ei automaattista hyväksyntää.                           |
+| T05   | Projektikattavuus poikkeaa yleisohjeesta              | Methods erottaa yleisohjeen; Project Spec omistaa nimetyn `PROJECT_RULE`-rajan.                                                                        |
+| T06   | FI ajetaan mutta provenance on epäselvä               | R Workflow + run evidence; tila `NEEDS_VERIFICATION` tai `REPOSITORY_CONFLICT`, ei validiteettiväitettä.                                               |
+| T07   | FI-jakauma on odottamaton                             | Validation + Methods + run diagnostics; signaali tulkitaan kontekstissa, ei automaattiseksi poissuluksi.                                               |
+| T08   | Pitkittäiset itemit/koodaus/aallot eivät vastaa       | Methods → Dictionary wave metadata → tämän tiedoston longitudinal gate; fail-closed ilman hyväksyttyä harmonisointia.                                  |
+| T09   | Manuscript-ready Methods -teksti                      | Reporting → Methods + Project + Registry + QC + Source Status; variantti, epävarmuus ja validointikategoria näkyvät.                                   |
+| T10   | Auktoritatiiviset lähteet ovat eri mieltä             | Source Status → competing sources → Methods; väitteitä ei harmonisoida hiljaisesti, tarvittaessa `RESEARCHER_DECISION_REQUIRED`.                       |
+| T11   | Odotettu primaarilähde puuttuu                        | Source Status omistaa `NEEDS_SOURCE`; puuttuvaa sisältöä ei keksitä eikä projektisäännöllä korvata.                                                    |
+| T12   | Candidate Registry ja Project Spec ovat ristiriidassa | Registry omistaa candidate-current-state, Project Spec variant-rule/role; ristiriita eskaloidaan domain ownerille/tutkijalle, ei soviteta hiljaisesti. |
 
 ## Tulosasteikko ja READY-portti
 

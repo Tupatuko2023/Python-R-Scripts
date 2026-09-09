@@ -66,11 +66,11 @@ Nämä ovat projektin toteutussääntöjä, eivät yleisiä kirjallisuussuosituk
 
 ## Study-role- ja circularity-governance
 
-| Kohde | Nykyinen projektitason rooli | Kontrolli |
-| --- | --- | --- |
-| K40.V2 | Paper 01:n tutkimus-FI | Ehdokas ei saa olla analyysin ensisijainen altiste, outcome-komponentti, ennalta määritelty confounder, hallinnollinen/prosessikenttä tai johdettu frailty-rakenne. |
-| `FI22_nonperformance_KAAOS` | Paper 02:n sensitivity-only-variantti | Ei primaarimittari eikä uusi rooli ilman tutkijapäätöstä. |
-| Uusi ehdokas | Ei hyväksyttyä roolia | Data Dictionary → Methods → study-role/leakage-screen → Registry; seuraamuksellinen valinta on `RESEARCHER_DECISION_REQUIRED`. |
+| Kohde                       | Nykyinen projektitason rooli          | Kontrolli                                                                                                                                                           |
+| --------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| K40.V2                      | Paper 01:n tutkimus-FI                | Ehdokas ei saa olla analyysin ensisijainen altiste, outcome-komponentti, ennalta määritelty confounder, hallinnollinen/prosessikenttä tai johdettu frailty-rakenne. |
+| `FI22_nonperformance_KAAOS` | Paper 02:n sensitivity-only-variantti | Ei primaarimittari eikä uusi rooli ilman tutkijapäätöstä.                                                                                                           |
+| Uusi ehdokas                | Ei hyväksyttyä roolia                 | Data Dictionary → Methods → study-role/leakage-screen → Registry; seuraamuksellinen valinta on `RESEARCHER_DECISION_REQUIRED`.                                      |
 
 Project Spec omistaa variantin tutkimusroolin ja circularity-/leakage-rajat.
 Data Dictionary omistaa vain varmennetun muuttujasemantiikan, ja Candidate

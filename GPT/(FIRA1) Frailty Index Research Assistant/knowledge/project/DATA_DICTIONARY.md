@@ -14,15 +14,15 @@ update_triggers: "Auktoritatiivinen data dictionary, deficit_map tai schema muut
 
 ## Varmennetut analyysikentät
 
-| Kenttä | Merkitys | Tila | Auktoriteetti |
-| --- | --- | --- | --- |
-| `id` | Osallistujan liitosavain K40 Paper 01 -haaran lähtötaulussa | VERIFIED_IMPLEMENTATION | `K40.V2_frailty-index.R` |
-| `frailty_index_fi` | Valittujen 0–1-vajeiden keskiarvo kelvollisilla riveillä | VERIFIED_IMPLEMENTATION | K40-skriptit |
-| `frailty_index_fi_z` | FI:n standardoitu johdannainen; ei erillinen konstruktio | VERIFIED_IMPLEMENTATION | K40-skriptit |
-| `n_deficits_observed` | Rivillä havaittujen valittujen vajeiden lukumäärä | VERIFIED_IMPLEMENTATION | K40-skriptit |
-| `coverage` | Havaittujen valittujen vajeiden osuus | VERIFIED_IMPLEMENTATION | K40-skriptit |
-| `fi_eligible` | Täyttääkö rivi projektin kattavuus- ja vähimmäismääräportit | VERIFIED_IMPLEMENTATION | K40-skriptit |
-| `FI22_nonperformance_KAAOS` | K50:n kanoninen FI22-sensitiivisyyskenttä | VERIFIED_PROJECT_ROLE | FI22 handoff- ja K50-tehtävät |
+| Kenttä                      | Merkitys                                                    | Tila                    | Auktoriteetti                 |
+| --------------------------- | ----------------------------------------------------------- | ----------------------- | ----------------------------- |
+| `id`                        | Osallistujan liitosavain K40 Paper 01 -haaran lähtötaulussa | VERIFIED_IMPLEMENTATION | `K40.V2_frailty-index.R`      |
+| `frailty_index_fi`          | Valittujen 0–1-vajeiden keskiarvo kelvollisilla riveillä    | VERIFIED_IMPLEMENTATION | K40-skriptit                  |
+| `frailty_index_fi_z`        | FI:n standardoitu johdannainen; ei erillinen konstruktio    | VERIFIED_IMPLEMENTATION | K40-skriptit                  |
+| `n_deficits_observed`       | Rivillä havaittujen valittujen vajeiden lukumäärä           | VERIFIED_IMPLEMENTATION | K40-skriptit                  |
+| `coverage`                  | Havaittujen valittujen vajeiden osuus                       | VERIFIED_IMPLEMENTATION | K40-skriptit                  |
+| `fi_eligible`               | Täyttääkö rivi projektin kattavuus- ja vähimmäismääräportit | VERIFIED_IMPLEMENTATION | K40-skriptit                  |
+| `FI22_nonperformance_KAAOS` | K50:n kanoninen FI22-sensitiivisyyskenttä                   | VERIFIED_PROJECT_ROLE   | FI22 handoff- ja K50-tehtävät |
 
 Kentän olemassaolo ei yksin vahvista sen kliinistä merkitystä tai
 validointitasoa.
@@ -51,12 +51,12 @@ Raaka- tai osallistujatason arvoja ei saa kopioida tietämyskantaan.
 
 ## Canonical person-ledgerin varmennetut source-roolit
 
-| Rooli | Varmennettu merkitys | Raja |
-| --- | --- | --- |
-| Configured canonical person key | Täsmällinen sama-henkilöavain; samalla henkilöllä saa olla useita lähderivejä | Ei todista samaa assessment contextia eikä yleistä row-level 1:1 -sääntöä |
-| TK/baseline-index visit date | Auktoritatiivisen intake-/baseline-käynnin päivämääräkenttä | Sama henkilö + sama validi TK-päivä määrittää assessment-kontekstin; eri päivät ovat erillisiä assessment-havaintoja |
-| Baseline/index age | Hyväksytyn age-säännön auktoritatiivinen lähdesyöte | Age eligibility johdetaan vain valitulta PRIMARY_FI_INDEX-arvioinnilta |
-| Source-record provenance | Lähderivin suojattu provenance-tunniste | Ei analyysikenttä, henkilöavain tai rivinvalintaheuristiikka |
+| Rooli                           | Varmennettu merkitys                                                          | Raja                                                                                                                 |
+| ------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Configured canonical person key | Täsmällinen sama-henkilöavain; samalla henkilöllä saa olla useita lähderivejä | Ei todista samaa assessment contextia eikä yleistä row-level 1:1 -sääntöä                                            |
+| TK/baseline-index visit date    | Auktoritatiivisen intake-/baseline-käynnin päivämääräkenttä                   | Sama henkilö + sama validi TK-päivä määrittää assessment-kontekstin; eri päivät ovat erillisiä assessment-havaintoja |
+| Baseline/index age              | Hyväksytyn age-säännön auktoritatiivinen lähdesyöte                           | Age eligibility johdetaan vain valitulta PRIMARY_FI_INDEX-arvioinnilta                                               |
+| Source-record provenance        | Lähderivin suojattu provenance-tunniste                                       | Ei analyysikenttä, henkilöavain tai rivinvalintaheuristiikka                                                         |
 
 Person identity ja assessment identity ovat eri tasoja. AUTH_SOURCE ei tarjoa
 erillistä assessment/episode-ID:tä, joten suojattu implementation identifier
@@ -146,13 +146,13 @@ dokumentin muuttujasemantiikan omistajuutta. Seuraamuksellinen lopullinen
 hyväksyntä kuuluu Owner/Data Stewardille. Näille päätösrajoille ei tarvita
 uusia protected-viitteitä.
 
-| Väite | Säilyvä päätösraja | Tila |
-| --- | --- | --- |
-| A5 | Lineage ei hyväksy lopullista FI-pisteytystä | NOT_APPROVED_BY_LINEAGE |
-| A6 | Luokkien spacing ja lopullinen pisteytystulkinta vaativat erillisen päätöksen | OPEN_RESEARCHER_DECISION |
-| A7 | Deficit-onset vaatii erillisen päätöksen | OPEN_RESEARCHER_DECISION |
-| A8 | Erityis-/rajatapauksen käsittely vaatii erillisen päätöksen; täsmärajauksen säilyttää P2:n claim-snapshot | OPEN_RESEARCHER_DECISION |
-| A9 | Yhden tai molempien puolien lopullinen käyttö/yhdistäminen vaatii erillisen päätöksen | OPEN_RESEARCHER_DECISION |
+| Väite | Säilyvä päätösraja                                                                                        | Tila                     |
+| ----- | --------------------------------------------------------------------------------------------------------- | ------------------------ |
+| A5    | Lineage ei hyväksy lopullista FI-pisteytystä                                                              | NOT_APPROVED_BY_LINEAGE  |
+| A6    | Luokkien spacing ja lopullinen pisteytystulkinta vaativat erillisen päätöksen                             | OPEN_RESEARCHER_DECISION |
+| A7    | Deficit-onset vaatii erillisen päätöksen                                                                  | OPEN_RESEARCHER_DECISION |
+| A8    | Erityis-/rajatapauksen käsittely vaatii erillisen päätöksen; täsmärajauksen säilyttää P2:n claim-snapshot | OPEN_RESEARCHER_DECISION |
+| A9    | Yhden tai molempien puolien lopullinen käyttö/yhdistäminen vaatii erillisen päätöksen                     | OPEN_RESEARCHER_DECISION |
 
 Ikä-/sukupuolireferointi säilyy myöhemmän age-association-diagnostiikan
 tulkintarajoitteena. Luokkataulukon alkuperäistä ulkoista lähdettä ei ole

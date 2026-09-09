@@ -32,36 +32,36 @@ tieteellistä validiteettia.
 
 ## Tehtäväreititys
 
-| Tehtävä | Ensisijainen reitti | Kontrolli/write-back |
-| --- | --- | --- |
-| Semantiikka, timing, coding | Data Dictionary → authoritative source schema | `NEEDS_VERIFICATION`/`UNKNOWN` jos puutteellinen |
-| Deficit-kelpoisuus | Dictionary → Methods → Project role screen | Registry recommendation; ei automaattista päätöstä |
-| Exclusion/circularity | Dictionary → Project Spec | Registry; Methods tarvittaessa |
-| Scoring | Dictionary → Methods → underlying source | Project/Registry; consequential choice vaatii hyväksynnän |
-| Missingness/prevalence/age | Methods | Diagnostics + Project Spec |
-| Conceptual/empirical redundancy | Methods → Dictionary / run diagnostics | Registry tutkijakontrollilla |
-| Domain breadth ja FI-laskenta | Methods → Project Spec → Workflow | QC evidence |
-| Pitkittäinen FI | Methods → Dictionary wave metadata → Validation gate | Fail-closed tai hyväksytty harmonisointi |
-| Validointi/sensitivity | Validation | Methods + Project + run evidence → Reporting |
-| R/provenance/repo conflict | R Workflow | Active code/schema; Changelog canonical muutoksille |
-| Source gap/conflict | Source Status | Competing sources; `NEEDS_SOURCE` |
-| Candidate current state | Candidate Registry | Changelog history |
-| Raportointi | Reporting Spec | Methods + Project + Registry + QC + Source Status |
+| Tehtävä                         | Ensisijainen reitti                                  | Kontrolli/write-back                                      |
+| ------------------------------- | ---------------------------------------------------- | --------------------------------------------------------- |
+| Semantiikka, timing, coding     | Data Dictionary → authoritative source schema        | `NEEDS_VERIFICATION`/`UNKNOWN` jos puutteellinen          |
+| Deficit-kelpoisuus              | Dictionary → Methods → Project role screen           | Registry recommendation; ei automaattista päätöstä        |
+| Exclusion/circularity           | Dictionary → Project Spec                            | Registry; Methods tarvittaessa                            |
+| Scoring                         | Dictionary → Methods → underlying source             | Project/Registry; consequential choice vaatii hyväksynnän |
+| Missingness/prevalence/age      | Methods                                              | Diagnostics + Project Spec                                |
+| Conceptual/empirical redundancy | Methods → Dictionary / run diagnostics               | Registry tutkijakontrollilla                              |
+| Domain breadth ja FI-laskenta   | Methods → Project Spec → Workflow                    | QC evidence                                               |
+| Pitkittäinen FI                 | Methods → Dictionary wave metadata → Validation gate | Fail-closed tai hyväksytty harmonisointi                  |
+| Validointi/sensitivity          | Validation                                           | Methods + Project + run evidence → Reporting              |
+| R/provenance/repo conflict      | R Workflow                                           | Active code/schema; Changelog canonical muutoksille       |
+| Source gap/conflict             | Source Status                                        | Competing sources; `NEEDS_SOURCE`                         |
+| Candidate current state         | Candidate Registry                                   | Changelog history                                         |
+| Raportointi                     | Reporting Spec                                       | Methods + Project + Registry + QC + Source Status         |
 
 ## Kanoninen omistajuus ja aktiivinen inventaario
 
-| Resurssi | Kanoninen omistajuus | Tila |
-| --- | --- | --- |
-| `sources/FI_SOURCE_STATUS.md` | Lähdeidentiteetti, saatavuus, source-conflicts, `NEEDS_SOURCE` | SOURCE_COMPLETE_WITH_WARNINGS |
-| `methods/FI_METHODS_CANONICAL.md` | Universal FI methodology synthesis | SOURCE_COMPLETE_WITH_WARNINGS |
-| `project/DATA_DICTIONARY.md` | Muuttujasemantiikka/timing/source-schema routing | PARTIAL_NEEDS_VERIFICATION |
-| `project/FI_PROJECT_SPEC.md` | Variant roles, PROJECT_RULEs, project decisions | VERIFIED_WITH_OPEN_ITEMS |
-| `computational/FI_R_WORKFLOW.md` | Toteutus, dataflow, outputs, run evidence, repo conflicts | VERIFIED_WITH_GATES |
-| `validation/FI_QC_VALIDATION.md` | QC taxonomy, T01–T12, longitudinal gate | IMPLEMENTED_TEST_SPEC |
-| `reporting/FI_REPORTING_SPEC.md` | Methods/results/appendix reporting | VERIFIED_SPEC |
-| `registry/FI_CANDIDATE_REGISTRY.csv` | Candidate/variant current state | ACTIVE_CONTROLLED |
-| `registry/FI_CHANGELOG.md` | Append-only history ja supersession | ACTIVE |
-| `archive/FIRA1_IMPLEMENTATION_EVIDENCE.md` | Historiallinen initial-build snapshot | ARCHIVED_NOT_ACTIVE |
+| Resurssi                                   | Kanoninen omistajuus                                           | Tila                          |
+| ------------------------------------------ | -------------------------------------------------------------- | ----------------------------- |
+| `sources/FI_SOURCE_STATUS.md`              | Lähdeidentiteetti, saatavuus, source-conflicts, `NEEDS_SOURCE` | SOURCE_COMPLETE_WITH_WARNINGS |
+| `methods/FI_METHODS_CANONICAL.md`          | Universal FI methodology synthesis                             | SOURCE_COMPLETE_WITH_WARNINGS |
+| `project/DATA_DICTIONARY.md`               | Muuttujasemantiikka/timing/source-schema routing               | PARTIAL_NEEDS_VERIFICATION    |
+| `project/FI_PROJECT_SPEC.md`               | Variant roles, PROJECT_RULEs, project decisions                | VERIFIED_WITH_OPEN_ITEMS      |
+| `computational/FI_R_WORKFLOW.md`           | Toteutus, dataflow, outputs, run evidence, repo conflicts      | VERIFIED_WITH_GATES           |
+| `validation/FI_QC_VALIDATION.md`           | QC taxonomy, T01–T12, longitudinal gate                        | IMPLEMENTED_TEST_SPEC         |
+| `reporting/FI_REPORTING_SPEC.md`           | Methods/results/appendix reporting                             | VERIFIED_SPEC                 |
+| `registry/FI_CANDIDATE_REGISTRY.csv`       | Candidate/variant current state                                | ACTIVE_CONTROLLED             |
+| `registry/FI_CHANGELOG.md`                 | Append-only history ja supersession                            | ACTIVE                        |
+| `archive/FIRA1_IMPLEMENTATION_EVIDENCE.md` | Historiallinen initial-build snapshot                          | ARCHIVED_NOT_ACTIVE           |
 
 Underlying verified sources ovat `../../Searle2008.pdf`,
 `../../Theou2023.pdf` ja `../../Frailty - A Multidisciplinary Approach to Assessment.pdf`

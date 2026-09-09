@@ -128,14 +128,14 @@ valtuutetusti ratkaista. Alla on käsitteellinen kenttäluettelo, ei uusi
 serialisointiskeema, tunnisteavaruus tai sallittujen evidenssiluokkien enum.
 Viite ilman hyväksyttyä yksilöivää mekanismia on keskeneräinen, ei resolvoitava.
 
-| Metatieto | Sallittu merkitys ja nykyinen perusta | Puuttuvan tiedon käsittely |
-| --- | --- | --- |
-| Evidenssin luokka/tyyppi | Vain luokittelupolitiikan jo määrittämä luokka ja auktorisoitu ei-arkaluontoinen evidenssirooli | Älä keksi uutta luokkaa; tuntematon luokittelu säilyy DENY_UNCLASSIFIED |
-| Auktoriteetti/lähderooli | KB_INDEXin domain owner tai nykyisen työnkulun symbolinen rooli; ei lähteen suojattua nimeä tai sisältöä | NEEDS_VERIFICATION, jos omistaja tai rooli puuttuu |
-| Ei-arkaluontoinen paikannin tai opaakki viite | Vain erikseen hyväksytyn olemassa olevan mekanismin turvallinen viite | Käyttökelpoista VC→PROTECTED-mekanismia ei ole varmennettu; kenttä jätetään täyttämättä ja merkitään NEEDS_VERIFICATION |
-| Tarkoitus | Tehtävän täsmällinen ei-arkaluontoinen hyväksymisväite ja evidenssin välttämättömyys sille | Epäselvää tarkoitusta ei käytetä datan avaamisen perusteena |
-| Vaadittu pääsyportti | Tehtäväkohtainen omistajan lupa, sallittu suojattu ympäristö, data-/tiede-/QC-porttien soveltuvuus | Puuttuva valtuus estää dereferoinnin |
-| Varmennustila | Nimetyn väitteen PASS, FAIL, NOT_APPLICABLE tai NEEDS_VERIFICATION ja ei-arkaluontoinen peruste | Älä muuta suorittamatonta tarkistusta PASSiksi |
+| Metatieto                                     | Sallittu merkitys ja nykyinen perusta                                                                    | Puuttuvan tiedon käsittely                                                                                              |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Evidenssin luokka/tyyppi                      | Vain luokittelupolitiikan jo määrittämä luokka ja auktorisoitu ei-arkaluontoinen evidenssirooli          | Älä keksi uutta luokkaa; tuntematon luokittelu säilyy DENY_UNCLASSIFIED                                                 |
+| Auktoriteetti/lähderooli                      | KB_INDEXin domain owner tai nykyisen työnkulun symbolinen rooli; ei lähteen suojattua nimeä tai sisältöä | NEEDS_VERIFICATION, jos omistaja tai rooli puuttuu                                                                      |
+| Ei-arkaluontoinen paikannin tai opaakki viite | Vain erikseen hyväksytyn olemassa olevan mekanismin turvallinen viite                                    | Käyttökelpoista VC→PROTECTED-mekanismia ei ole varmennettu; kenttä jätetään täyttämättä ja merkitään NEEDS_VERIFICATION |
+| Tarkoitus                                     | Tehtävän täsmällinen ei-arkaluontoinen hyväksymisväite ja evidenssin välttämättömyys sille               | Epäselvää tarkoitusta ei käytetä datan avaamisen perusteena                                                             |
+| Vaadittu pääsyportti                          | Tehtäväkohtainen omistajan lupa, sallittu suojattu ympäristö, data-/tiede-/QC-porttien soveltuvuus       | Puuttuva valtuus estää dereferoinnin                                                                                    |
+| Varmennustila                                 | Nimetyn väitteen PASS, FAIL, NOT_APPLICABLE tai NEEDS_VERIFICATION ja ei-arkaluontoinen peruste          | Älä muuta suorittamatonta tarkistusta PASSiksi                                                                          |
 
 Omistajan hyväksymä opaakin viitteen periaate edellyttää, ettei tunniste
 sisällä tai koodaa suojattua lähdeidentiteettiä, polkua, henkilötietoa,
@@ -279,15 +279,15 @@ ei automaattista normalisointia, aliasointia tai arvailua.
   Arvo ei koodaa lähderoolia, ajankohtaa tai henkilöä. Kapasiteetin loppuessa
   luonti pysähtyy; laskuria ei kierretä tai käytetä uudelleen.
 
-| Ominaisuus | A: satunnainen | B: keskitetty laskuri |
-| --- | --- | --- |
-| Luottamuksellisuus | Ei lähderiippuvuutta tai sisäistä järjestystä; sama token silti yhdistää sen esiintymät | Ei lähdesisältöä, mutta paljastaa jakojärjestyksen ja mahdollistaa määräarvioita |
-| Yksikäsitteisyys / törmäys | Satunnaistörmäys mahdollinen; pakollinen globaali uniikkiustarkistus | Atominen jakaja ehkäisee normaalin kaksoisjaon; palautus-/replikointivirhe voi rikkoa tämän |
-| Auditoitavuus | Suojattu kartoitus ja tapahtumaketju välttämättömiä | Sama vaatimus; järjestysnumero ei ole provenance-todiste |
-| Operatiivinen monimutkaisuus | Turvallinen satunnaislähde ja yhtenäinen rekisteröinti | Yksi koordinoitu jakaja ja palautusten laskuritilan hallinta |
-| Siirrettävyys | Token säilyy ympäristöstä toiseen; resolveri ja pääsyvaltuudet eivät siirry automaattisesti | Token siirtyy, mutta jakajien yhdistäminen vaatii yhteisen varausjärjestelmän |
-| Versiosidonta | Muuttumaton suojattu sidonta alla | Sama sidontasopimus |
-| Taaksepäin yhteensopivuus | Legacy-viitteet tarvitsevat valtuutetun kartoituksen | Sama; vanha numero ei saa automaattisesti olla uuden nimiavaruuden numero |
+| Ominaisuus                   | A: satunnainen                                                                              | B: keskitetty laskuri                                                                       |
+| ---------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Luottamuksellisuus           | Ei lähderiippuvuutta tai sisäistä järjestystä; sama token silti yhdistää sen esiintymät     | Ei lähdesisältöä, mutta paljastaa jakojärjestyksen ja mahdollistaa määräarvioita            |
+| Yksikäsitteisyys / törmäys   | Satunnaistörmäys mahdollinen; pakollinen globaali uniikkiustarkistus                        | Atominen jakaja ehkäisee normaalin kaksoisjaon; palautus-/replikointivirhe voi rikkoa tämän |
+| Auditoitavuus                | Suojattu kartoitus ja tapahtumaketju välttämättömiä                                         | Sama vaatimus; järjestysnumero ei ole provenance-todiste                                    |
+| Operatiivinen monimutkaisuus | Turvallinen satunnaislähde ja yhtenäinen rekisteröinti                                      | Yksi koordinoitu jakaja ja palautusten laskuritilan hallinta                                |
+| Siirrettävyys                | Token säilyy ympäristöstä toiseen; resolveri ja pääsyvaltuudet eivät siirry automaattisesti | Token siirtyy, mutta jakajien yhdistäminen vaatii yhteisen varausjärjestelmän               |
+| Versiosidonta                | Muuttumaton suojattu sidonta alla                                                           | Sama sidontasopimus                                                                         |
+| Taaksepäin yhteensopivuus    | Legacy-viitteet tarvitsevat valtuutetun kartoituksen                                        | Sama; vanha numero ei saa automaattisesti olla uuden nimiavaruuden numero                   |
 
 Tekninen suositus on A: se välttää B:n järjestys-/määrävuodon ja keskitetyn
 laskurijaon tarpeen. Se vaatii silti kanonisen rekisteröinnin, uniikkiuden ja
@@ -363,21 +363,21 @@ Alla jokainen epäonnistunut kriittinen riippuvuus ilman auktoritatiivista
 fallbackia tuottaa BLOCKED. Ei-kriittinen puute ei estä riippumatonta työtä.
 Luvaton tai tietorajan rikkova operaatio estetään aina, kriittisyydestä riippumatta.
 
-| Virhe | Varmennustulos / suoritus | Sallittu diagnoosi |
-| --- | --- | --- |
-| Tuntematon viite | NEEDS_VERIFICATION; kriittinen BLOCKED | Tuntematon viite |
-| Duplikaattiosuma | FAIL; riippuva käyttö BLOCKED | Yksikäsitteisyysvirhe |
-| Vanhentunut versio | FAIL; kriittinen BLOCKED | Versiovaatimus ei täyty |
-| Auktoriteetti-/rooliristiriita | FAIL; kriittinen BLOCKED | Auktoriteettisidonta ei täsmää |
-| Luvaton kutsuja | FAIL; operaatio BLOCKED ennen hakua | Valtuutus puuttuu; ei lähteen olemassaolotietoa |
-| Resolveri poissa käytöstä | NEEDS_VERIFICATION; kriittinen BLOCKED | Varmennuspalvelu ei käytettävissä |
-| Suojattu ympäristö ei käytettävissä | NEEDS_VERIFICATION; operaatio BLOCKED | Hyväksytty ympäristö puuttuu |
-| Peruutettu/invalidi viite | FAIL; operaatio BLOCKED | Viite ei käyttökelpoinen |
-| Superseded-viite | FAIL nykyistä evidenssiä vaadittaessa; kriittinen BLOCKED | Versiovaatimus ei täyty; ei automaattista uudelleenohjausta |
-| Vioittunut merkintä | FAIL; riippuva käyttö BLOCKED | Eheysvirhe |
-| Yhteensopivuusristiriita | FAIL; kriittinen BLOCKED | Legacy-sidonta ei täsmää |
-| Tietorajan ulkopuolinen kohde | FAIL; operaatio BLOCKED | Valtuutettu tietoraja ei täyty |
-| Diagnoosi edellyttäisi suojatun sisällön paljastamista | NEEDS_VERIFICATION; diagnoosi BLOCKED, kriittinen käyttö BLOCKED | Turvallista varmennusta ei saatavilla |
+| Virhe                                                  | Varmennustulos / suoritus                                        | Sallittu diagnoosi                                          |
+| ------------------------------------------------------ | ---------------------------------------------------------------- | ----------------------------------------------------------- |
+| Tuntematon viite                                       | NEEDS_VERIFICATION; kriittinen BLOCKED                           | Tuntematon viite                                            |
+| Duplikaattiosuma                                       | FAIL; riippuva käyttö BLOCKED                                    | Yksikäsitteisyysvirhe                                       |
+| Vanhentunut versio                                     | FAIL; kriittinen BLOCKED                                         | Versiovaatimus ei täyty                                     |
+| Auktoriteetti-/rooliristiriita                         | FAIL; kriittinen BLOCKED                                         | Auktoriteettisidonta ei täsmää                              |
+| Luvaton kutsuja                                        | FAIL; operaatio BLOCKED ennen hakua                              | Valtuutus puuttuu; ei lähteen olemassaolotietoa             |
+| Resolveri poissa käytöstä                              | NEEDS_VERIFICATION; kriittinen BLOCKED                           | Varmennuspalvelu ei käytettävissä                           |
+| Suojattu ympäristö ei käytettävissä                    | NEEDS_VERIFICATION; operaatio BLOCKED                            | Hyväksytty ympäristö puuttuu                                |
+| Peruutettu/invalidi viite                              | FAIL; operaatio BLOCKED                                          | Viite ei käyttökelpoinen                                    |
+| Superseded-viite                                       | FAIL nykyistä evidenssiä vaadittaessa; kriittinen BLOCKED        | Versiovaatimus ei täyty; ei automaattista uudelleenohjausta |
+| Vioittunut merkintä                                    | FAIL; riippuva käyttö BLOCKED                                    | Eheysvirhe                                                  |
+| Yhteensopivuusristiriita                               | FAIL; kriittinen BLOCKED                                         | Legacy-sidonta ei täsmää                                    |
+| Tietorajan ulkopuolinen kohde                          | FAIL; operaatio BLOCKED                                          | Valtuutettu tietoraja ei täyty                              |
+| Diagnoosi edellyttäisi suojatun sisällön paljastamista | NEEDS_VERIFICATION; diagnoosi BLOCKED, kriittinen käyttö BLOCKED | Turvallista varmennusta ei saatavilla                       |
 
 Superseded-viitteen historiallinen varmennus ei ohita peruutusta tai pääsyportteja.
 FAIL/NEEDS_VERIFICATION ei oikeuta automaattiseen tietueen korjaukseen.
@@ -387,15 +387,15 @@ FAIL/NEEDS_VERIFICATION ei oikeuta automaattiseen tietueen korjaukseen.
 Luokittelu perustuu vain nykyisten hyväksyttyjen dokumenttien pointer-muotoihin,
 ei suojatun aineiston tai DENY-Registry-sisällön avaamiseen.
 
-| Nykyinen muoto / rajaus | Yhteensopivuus | Myöhempi edellytys |
-| --- | --- | --- |
-| KB:n hyväksytty domain-dokumenttilinkki | DIRECTLY_COMPATIBLE reitityksenä | Ei itsessään uuden tokenin resoluutio |
-| Symbolinen lähderooli | REQUIRES_ADAPTER | Valtuutettu täsmäversio-/roolikartoitus; roolinimeä ei arvata tokeniksi |
-| Suora lähdenimi tai suhteellinen lähdepolku DATA_DICTIONARYssa | NEEDS_VERIFICATION | Jakelulupa ja korvaava sidonta ratkaistava erikseen |
-| Nykyinen lähdedigest-versionosoitus | REQUIRES_MIGRATION | Säilytä auditability suojatulla hyväksytyllä sidonnalla; digest ei muutu tokeniksi |
-| Absoluuttinen suojattu paikannin tai suojattu ote | UNSAFE_TO_EXPOSE | Ei kopiointia; nykyinen kielto, ei väite uudesta havainnosta |
-| Viite Registry-evidenssidokumenttiin | NEEDS_VERIFICATION | Kohde DENY; kattavuutta/korvaavuutta ei tarkistettu |
-| Repoartefaktin manifesti-/ajotunniste | REQUIRES_ADAPTER | Varmista tarkka evidenssi-/versiosuhde ja jakelulupa, ei automaattista muunnosta |
+| Nykyinen muoto / rajaus                                        | Yhteensopivuus                   | Myöhempi edellytys                                                                 |
+| -------------------------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------------------- |
+| KB:n hyväksytty domain-dokumenttilinkki                        | DIRECTLY_COMPATIBLE reitityksenä | Ei itsessään uuden tokenin resoluutio                                              |
+| Symbolinen lähderooli                                          | REQUIRES_ADAPTER                 | Valtuutettu täsmäversio-/roolikartoitus; roolinimeä ei arvata tokeniksi            |
+| Suora lähdenimi tai suhteellinen lähdepolku DATA_DICTIONARYssa | NEEDS_VERIFICATION               | Jakelulupa ja korvaava sidonta ratkaistava erikseen                                |
+| Nykyinen lähdedigest-versionosoitus                            | REQUIRES_MIGRATION               | Säilytä auditability suojatulla hyväksytyllä sidonnalla; digest ei muutu tokeniksi |
+| Absoluuttinen suojattu paikannin tai suojattu ote              | UNSAFE_TO_EXPOSE                 | Ei kopiointia; nykyinen kielto, ei väite uudesta havainnosta                       |
+| Viite Registry-evidenssidokumenttiin                           | NEEDS_VERIFICATION               | Kohde DENY; kattavuutta/korvaavuutta ei tarkistettu                                |
+| Repoartefaktin manifesti-/ajotunniste                          | REQUIRES_ADAPTER                 | Varmista tarkka evidenssi-/versiosuhde ja jakelulupa, ei automaattista muunnosta   |
 
 Adapter- ja migraatioluokat kuvaavat suunnittelutarvetta, eivät lupaa lukea
 kohdetta tai korjata vanhaa viitettä. Vanhoja viitteitä ei muuteta tässä.
@@ -406,15 +406,15 @@ Jokaiselle portille kirjataan erikseen määrityksen kattavuus ja myöhemmän
 mekanismin ajonäyttö. Nykyinen ajonäyttö on kaikille NEEDS_VERIFICATION:
 mekanismia ei ole toteutettu tai käytetty.
 
-| Portti | PASS | FAIL | NEEDS_VERIFICATION |
-| --- | --- | --- | --- |
-| DISTRIBUTION_SAFETY | Hyväksytty esitys ja diagnostiikka eivät paljasta suojattua sisältöä | Suojattua payloadia tai paljastava token | Esityksen jakelulupa/tarkistus puuttuu |
-| RESOLUTION_UNIQUENESS | Täsmälleen yksi ehjä kanoninen sidonta | Duplikaatti tai ristiriitainen sidonta | Haku tai eheysvarmennus ei saatavilla |
-| AUTHORITY_BINDING | Tehtävän rooli ja evidenssisuhde vastaavat suojattua versiota | Väärä rooli tai versio | Auktoriteetti-/versiotodiste puuttuu |
-| ACCESS_SEPARATION | Viite ei myönnä käyttöä; erillinen valtuus ja ympäristö tarkistettu | Token ohittaa portin tai antaa kirjoitus-/vientiluvan | Valtuutuksen/ympäristön varmennus puuttuu |
-| AUDITABILITY | Sidonta, valtuutus ja varmennus rekonstruoitavissa suojatusti | Sidonta häviää tai audit paljastaa sisältöä | Omistaja, tietue tai audit-evidenssi puuttuu |
-| BACKWARD_COMPATIBILITY | Nimetty legacy-sidonta säilyy hyväksytysti | Hiljainen uudelleentulkinta tai väärä kohde | Kartoitus/legacy-tarkistus tekemättä |
-| SCIENTIFIC_SEMANTIC_EQUIVALENCE | Vain osoitusmekaniikka muuttuu | Merkitys, evidenssirooli, scoring, inclusion/exclusion, kandidaattipäätös, QC tai hyväksymiskriteeri muuttuu | Domain ownerin vertailu puuttuu |
+| Portti                          | PASS                                                                 | FAIL                                                                                                         | NEEDS_VERIFICATION                           |
+| ------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| DISTRIBUTION_SAFETY             | Hyväksytty esitys ja diagnostiikka eivät paljasta suojattua sisältöä | Suojattua payloadia tai paljastava token                                                                     | Esityksen jakelulupa/tarkistus puuttuu       |
+| RESOLUTION_UNIQUENESS           | Täsmälleen yksi ehjä kanoninen sidonta                               | Duplikaatti tai ristiriitainen sidonta                                                                       | Haku tai eheysvarmennus ei saatavilla        |
+| AUTHORITY_BINDING               | Tehtävän rooli ja evidenssisuhde vastaavat suojattua versiota        | Väärä rooli tai versio                                                                                       | Auktoriteetti-/versiotodiste puuttuu         |
+| ACCESS_SEPARATION               | Viite ei myönnä käyttöä; erillinen valtuus ja ympäristö tarkistettu  | Token ohittaa portin tai antaa kirjoitus-/vientiluvan                                                        | Valtuutuksen/ympäristön varmennus puuttuu    |
+| AUDITABILITY                    | Sidonta, valtuutus ja varmennus rekonstruoitavissa suojatusti        | Sidonta häviää tai audit paljastaa sisältöä                                                                  | Omistaja, tietue tai audit-evidenssi puuttuu |
+| BACKWARD_COMPATIBILITY          | Nimetty legacy-sidonta säilyy hyväksytysti                           | Hiljainen uudelleentulkinta tai väärä kohde                                                                  | Kartoitus/legacy-tarkistus tekemättä         |
+| SCIENTIFIC_SEMANTIC_EQUIVALENCE | Vain osoitusmekaniikka muuttuu                                       | Merkitys, evidenssirooli, scoring, inclusion/exclusion, kandidaattipäätös, QC tai hyväksymiskriteeri muuttuu | Domain ownerin vertailu puuttuu              |
 
 Tieteellinen portti säilyttää lisäksi valid/missing-erot, ajoituksen,
 derivointiketjun ja avoimien tutkijapäätösten tilan. Tekstisamankaltaisuus,
@@ -508,14 +508,14 @@ ole suojattu säilytysratkaisu. Politiikan PROTECTED-etusija ja DENY-oletus säi
 Alla on hyväksyntävaatimus, ei myönnetty oikeus nimetylle käyttäjälle.
 Operatiivisten suorittajaroolien nimeäminen jää ihmisen päätökseksi.
 
-| Toimi | Hyväksyvä auktoriteetti / suorittaja | Ehto ja raja |
-| --- | --- | --- |
-| CREATE_REFERENCE | Owner/Data Stewardin hyväksymä tehtävä; ylläpitäjä NEEDS_VERIFICATION | Tieteellinen roolisidonta domain ownerilta, erillinen suojatun lähteen käyttövaltuus ja uniikkiustarkistus ennen julkaisua |
-| RESOLVE_REFERENCE | Tehtäväkohtainen ihmis-/data-access-valtuus; valtuutettu tarkastaja erikseen | Vain hyväksytty tarkoitus ja ympäristö; ei kirjoitus- tai vientilupaa |
-| UPDATE_METADATA | Owner/Data Stewardin hyväksymä rajattu ylläpitotoimi; ylläpitäjä NEEDS_VERIFICATION | Vain sidontaa muuttamaton metadata; revisio ja syy auditoitava |
-| REBIND_REFERENCE | DEFAULT_DENY | Turvallista uudelleensidontamenettelyä ei ole auktorisoitu; eri evidenssi/versio/rooli tarvitsee uuden viitteen |
-| RETIRE_REFERENCE | Owner/Data Stewardin eksplisiittinen päätös; ylläpitäjä NEEDS_VERIFICATION | Estää tulevan käytön, säilyttää auditoitavuuden eikä anna poistamislupaa |
-| AUDIT_REFERENCE | Erillinen suojatun auditoinnin valtuus; tarkastajarooli NEEDS_VERIFICATION | Vain hyväksytty auditointitarve; repositoryyn turvallinen yhteenveto |
+| Toimi             | Hyväksyvä auktoriteetti / suorittaja                                                | Ehto ja raja                                                                                                               |
+| ----------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| CREATE_REFERENCE  | Owner/Data Stewardin hyväksymä tehtävä; ylläpitäjä NEEDS_VERIFICATION               | Tieteellinen roolisidonta domain ownerilta, erillinen suojatun lähteen käyttövaltuus ja uniikkiustarkistus ennen julkaisua |
+| RESOLVE_REFERENCE | Tehtäväkohtainen ihmis-/data-access-valtuus; valtuutettu tarkastaja erikseen        | Vain hyväksytty tarkoitus ja ympäristö; ei kirjoitus- tai vientilupaa                                                      |
+| UPDATE_METADATA   | Owner/Data Stewardin hyväksymä rajattu ylläpitotoimi; ylläpitäjä NEEDS_VERIFICATION | Vain sidontaa muuttamaton metadata; revisio ja syy auditoitava                                                             |
+| REBIND_REFERENCE  | DEFAULT_DENY                                                                        | Turvallista uudelleensidontamenettelyä ei ole auktorisoitu; eri evidenssi/versio/rooli tarvitsee uuden viitteen            |
+| RETIRE_REFERENCE  | Owner/Data Stewardin eksplisiittinen päätös; ylläpitäjä NEEDS_VERIFICATION          | Estää tulevan käytön, säilyttää auditoitavuuden eikä anna poistamislupaa                                                   |
+| AUDIT_REFERENCE   | Erillinen suojatun auditoinnin valtuus; tarkastajarooli NEEDS_VERIFICATION          | Vain hyväksytty auditointitarve; repositoryyn turvallinen yhteenveto                                                       |
 
 Tekninen säilyttäjä ei saa pelkän säilytysroolin perusteella muuttaa
 lähdeauktoriteettia tai hyväksyä tieteellistä väitettä. Tutkijan hyväksyntä
@@ -527,16 +527,16 @@ Seuraavat ovat suojatun kartoituksen semanttiset vähimmäistiedot, eivät
 käyttöönotettu skeema tai kenttien jakelulupa. Tietojen tarkka rakenne ja
 varmennusmenettely ovat NEEDS_VERIFICATION ennen toteutusta.
 
-| Tieto | Tarkoitus ja rajaus |
-| --- | --- |
-| R1-tunniste ja sopimusversio | Yksikäsitteinen viite; ei lähdeidentiteettiä koodaava |
-| Lähdeidentiteetti ja evidenssisuhde | Oikean auktoritatiivisen kohteen yksilöinti suojatusti; ei participant-rivien kopiointia rekisteriin |
-| Evidenssiversio ja vaadittu versiotodiste | Muuttumaton sidonta; digest vain olemassa olevan governance-vaatimuksen mukaan, ei uusi hash-konventio |
-| Suojattu paikannin | Vain hyväksytyn rajan sisäinen ratkaiseminen; tarkka sijoitus avoin |
-| Auktoriteetti-/lähderooli ja luokitus | Rooli-/evidenssisuhteen sekä käyttörajan varmennus |
-| Elinkaaritila ja hallinnollinen revisio | Nykyinen käyttökelpoisuus, päivitys-/retirement-historia, mahdollinen supersession-suhde; ei hiljaista uudelleensidontaa |
+| Tieto                                        | Tarkoitus ja rajaus                                                                                                              |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| R1-tunniste ja sopimusversio                 | Yksikäsitteinen viite; ei lähdeidentiteettiä koodaava                                                                            |
+| Lähdeidentiteetti ja evidenssisuhde          | Oikean auktoritatiivisen kohteen yksilöinti suojatusti; ei participant-rivien kopiointia rekisteriin                             |
+| Evidenssiversio ja vaadittu versiotodiste    | Muuttumaton sidonta; digest vain olemassa olevan governance-vaatimuksen mukaan, ei uusi hash-konventio                           |
+| Suojattu paikannin                           | Vain hyväksytyn rajan sisäinen ratkaiseminen; tarkka sijoitus avoin                                                              |
+| Auktoriteetti-/lähderooli ja luokitus        | Rooli-/evidenssisuhteen sekä käyttörajan varmennus                                                                               |
+| Elinkaaritila ja hallinnollinen revisio      | Nykyinen käyttökelpoisuus, päivitys-/retirement-historia, mahdollinen supersession-suhde; ei hiljaista uudelleensidontaa         |
 | Luonti-/muutos-/retirement-valtuutus ja aika | Kuka oli valtuutettu, mitä hyväksyttiin ja milloin; tarkka henkilöllisyys-/valtuutustieto vain hyväksytyssä suojatussa auditissa |
-| Varmennusevidenssi ja tila | Väitekohtainen tarkistus, menetelmä, tulos ja turvallinen ulkoinen yhteenveto; ei tarpeettomia payload-kopioita |
+| Varmennusevidenssi ja tila                   | Väitekohtainen tarkistus, menetelmä, tulos ja turvallinen ulkoinen yhteenveto; ei tarpeettomia payload-kopioita                  |
 
 Ulkopuolelle saa vain hyväksytyn opaakin tunnisteen ja eksplisiittisesti
 hyväksytyn ei-arkaluontoisen rooli-, tarkoitus-, portti- ja tulosmetadatan.
@@ -556,14 +556,14 @@ SKILLSin aikaleimaloki, Contributingin turvallinen artefaktilokitus ja Securityn
 salassapitorajat edellyttävät seuraavia semanttisia audit-ominaisuuksia;
 niiden tekninen toteutus, säilytysaika ja auditoijan oikeudet ovat avoimia.
 
-| Tapahtuma | Suojatusti rekonstruoitava näyttö | Sallittu ulkoinen näyttö |
-| --- | --- | --- |
-| Luonti | Hyväksyntä, tekijän valtuus, uniikkius ja muuttumaton sidonta | Hyväksytty viite, kriteeri, aika ja tulos |
-| Resoluutio | Käyttölupa, rooli-/versiotarkistus ja operaation rajaus | Kriteerikohtainen PASS/FAIL/NEEDS_VERIFICATION; ei kohdetietoja |
-| Metadatapäivitys | Hyväksyntä, revisio, muutoksen syy ja sidonnan säilyminen | Turvallinen operaatioluokka ja tulos |
-| Estetty pääsy | Eston syy ja valtuutustarkistus ilman tarpeetonta kohdehakua | Pääsy estetty; ei lähteen olemassaoloa tai sisältöä paljastavaa diagnoosia |
-| Retirement | Päätös, tila-/aikamuutos ja historiallinen sidonta | Viite ei käyttökelpoinen; ei poistettua payloadia |
-| Uudelleensidonnan yritys | Estetty toimi ja eheyden tarkistus | Uudelleensidonta estetty; ei ehdotettua kohdetta |
+| Tapahtuma                | Suojatusti rekonstruoitava näyttö                             | Sallittu ulkoinen näyttö                                                   |
+| ------------------------ | ------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Luonti                   | Hyväksyntä, tekijän valtuus, uniikkius ja muuttumaton sidonta | Hyväksytty viite, kriteeri, aika ja tulos                                  |
+| Resoluutio               | Käyttölupa, rooli-/versiotarkistus ja operaation rajaus       | Kriteerikohtainen PASS/FAIL/NEEDS_VERIFICATION; ei kohdetietoja            |
+| Metadatapäivitys         | Hyväksyntä, revisio, muutoksen syy ja sidonnan säilyminen     | Turvallinen operaatioluokka ja tulos                                       |
+| Estetty pääsy            | Eston syy ja valtuutustarkistus ilman tarpeetonta kohdehakua  | Pääsy estetty; ei lähteen olemassaoloa tai sisältöä paljastavaa diagnoosia |
+| Retirement               | Päätös, tila-/aikamuutos ja historiallinen sidonta            | Viite ei käyttökelpoinen; ei poistettua payloadia                          |
+| Uudelleensidonnan yritys | Estetty toimi ja eheyden tarkistus                            | Uudelleensidonta estetty; ei ehdotettua kohdetta                           |
 
 Audit-merkintä ei saa vuotaa protected-mappingia virheen, historian tai diffien
 kautta. Auditin puuttuminen ei ole PASS. Retirement ei ratkaise datan tai
@@ -577,17 +577,17 @@ onnistuneelle tarkistukselle. Kaikki kriittiset epäonnistumiset ilman
 auktoritatiivista fallbackia estävät suorituksen; ei-kriittinen puute sallii
 vain siitä riippumattoman hyväksytyn työn.
 
-| Tilanne | Tarkistustulos | Toiminta ja turvallinen diagnoosi |
-| --- | --- | --- |
-| Virheellinen syntaksi | FAIL | Ei lookupia; tunnisteformaatti virheellinen |
-| Tuntematon tunniste | NEEDS_VERIFICATION | Kriittinen BLOCKED; ei laajaa kohdehakua |
-| Törmäys/duplikaatti | FAIL | Luonti/resoluutio BLOCKED; uniikkiusvirhe, ei uudelleensidontaa |
-| Luvaton dereferointi | FAIL | Operaatio aina BLOCKED ennen kohdehakua; valtuus puuttuu |
-| Suojattu rekisteri/ympäristö puuttuu | NEEDS_VERIFICATION | Ei dereferointia; kriittinen BLOCKED, ympäristö ei käytettävissä |
-| Retired/peruutettu viite | FAIL käyttökelpoisuudelle | Käyttö BLOCKED; erikseen hyväksytty historiatarkastus ei aktivoi viitettä |
-| Moniselitteinen kartoitus | FAIL | Resoluutio BLOCKED; sidonta ei yksikäsitteinen |
-| Eheysvirhe | FAIL | Resoluutio BLOCKED; eheyttä ei voi vahvistaa |
-| Tuntematon sopimusversio | NEEDS_VERIFICATION | Ei tulkintaa R1:nä; kriittinen BLOCKED |
+| Tilanne                              | Tarkistustulos            | Toiminta ja turvallinen diagnoosi                                         |
+| ------------------------------------ | ------------------------- | ------------------------------------------------------------------------- |
+| Virheellinen syntaksi                | FAIL                      | Ei lookupia; tunnisteformaatti virheellinen                               |
+| Tuntematon tunniste                  | NEEDS_VERIFICATION        | Kriittinen BLOCKED; ei laajaa kohdehakua                                  |
+| Törmäys/duplikaatti                  | FAIL                      | Luonti/resoluutio BLOCKED; uniikkiusvirhe, ei uudelleensidontaa           |
+| Luvaton dereferointi                 | FAIL                      | Operaatio aina BLOCKED ennen kohdehakua; valtuus puuttuu                  |
+| Suojattu rekisteri/ympäristö puuttuu | NEEDS_VERIFICATION        | Ei dereferointia; kriittinen BLOCKED, ympäristö ei käytettävissä          |
+| Retired/peruutettu viite             | FAIL käyttökelpoisuudelle | Käyttö BLOCKED; erikseen hyväksytty historiatarkastus ei aktivoi viitettä |
+| Moniselitteinen kartoitus            | FAIL                      | Resoluutio BLOCKED; sidonta ei yksikäsitteinen                            |
+| Eheysvirhe                           | FAIL                      | Resoluutio BLOCKED; eheyttä ei voi vahvistaa                              |
+| Tuntematon sopimusversio             | NEEDS_VERIFICATION        | Ei tulkintaa R1:nä; kriittinen BLOCKED                                    |
 
 Tuntematon tunniste ei anna lupaa etsiä lähdettä muista hakemistoista tai
 avata suojattuja tietueita diagnoosin vuoksi. Epäonnistuneen viitteen
@@ -684,16 +684,16 @@ domain owner varmentaa lähderoolin ja semanttisen suhteen. Nimetty operatiivine
 tietueomistaja, hyväksytty olemassa oleva tietue, sen säilytys ja tarkka
 sijoitus ovat NEEDS_VERIFICATION. Tässä ei luoda uutta rekisteriä tai backendia.
 
-| Suojattu vähimmäistieto | Tarve ja auktoriteetti |
-| --- | --- |
-| Viiteidentiteetti | Yksikäsitteinen yhteys Git-esitykseen ja nimettyyn provenance-väitteeseen |
-| Suojattu lähdeidentiteetti | Saman auktoritatiivisen evidenssin todentaminen; ei source-nimeä Git-esitykseen |
+| Suojattu vähimmäistieto                           | Tarve ja auktoriteetti                                                                    |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Viiteidentiteetti                                 | Yksikäsitteinen yhteys Git-esitykseen ja nimettyyn provenance-väitteeseen                 |
+| Suojattu lähdeidentiteetti                        | Saman auktoritatiivisen evidenssin todentaminen; ei source-nimeä Git-esitykseen           |
 | Täsmällinen evidenssiversio / muuttumaton revisio | Ei hiljaista latest-versiota; tarvittava versiotodiste nykyisen lähdeauktoriteetin mukaan |
-| Evidenssin rooli ja auktoriteetti-/lähderooli | KB_INDEXin domain ownership sekä DATA_DICTIONARYn source-routing |
-| Muuttuja-/semanttinen suhde | Merkitys, suunta, tieteellisesti tarvittavat valid/missing-erot ja timing säilyvät |
-| Derivointiketju ja evidenssisuhde | Sama lähde → derivointi → väite -suhde ilman uusia tieteellisiä tulkintoja |
-| Varmennustila ja historia | Tarkastus, valtuutus ja tulos rekonstruoitavissa suojatusti |
-| Tutkijapäätöksen tila tarvittaessa | Hyväksytty operationalisointi ja avoimet päätökset pysyvät erillään; GENERAL_FI ei muutu |
+| Evidenssin rooli ja auktoriteetti-/lähderooli     | KB_INDEXin domain ownership sekä DATA_DICTIONARYn source-routing                          |
+| Muuttuja-/semanttinen suhde                       | Merkitys, suunta, tieteellisesti tarvittavat valid/missing-erot ja timing säilyvät        |
+| Derivointiketju ja evidenssisuhde                 | Sama lähde → derivointi → väite -suhde ilman uusia tieteellisiä tulkintoja                |
+| Varmennustila ja historia                         | Tarkastus, valtuutus ja tulos rekonstruoitavissa suojatusti                               |
+| Tutkijapäätöksen tila tarvittaessa                | Hyväksytty operationalisointi ja avoimet päätökset pysyvät erillään; GENERAL_FI ei muutu  |
 
 Taulukko määrittää semanttiset vaatimukset, ei oikeita kenttäarvoja tai
 valmista tallennusskeemaa. Puuttuvan kentän toteutus, lähdekohtainen
@@ -726,13 +726,13 @@ operaation tiede-/QC-portit arvioidaan erikseen; raakadata säilyy read-only.
 
 #### SAFE_VERIFICATION_RESULT_CONTRACT
 
-| Ulkoinen metatieto | Sallittu rajaus / perusta |
-| --- | --- |
-| Viite-ID | Vain hyväksytty ei-paljastava esitys; syntaksipäätös vielä avoin |
-| Varmennuksen aikaleima | SKILLSin tehtäväloki; tarkastusaika, ei lähteen tai osallistujan tapahtumapäivä |
-| Verifier-rooli | Hyväksytty ei-arkaluontoinen domain-/tarkastajarooli; ei credentialia tai suojattua henkilöllisyystietoa |
-| Väite/kriteeri | Tehtävän ei-paljastava hyväksymiskriteeri, kuten provenance- tai semanttisen ekvivalenssin tarkistus |
-| Tila ja turvallinen syyluokka | PASS/VERIFIED, FAIL, NEEDS_VERIFICATION tai perusteltu NOT_APPLICABLE |
+| Ulkoinen metatieto            | Sallittu rajaus / perusta                                                                                |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Viite-ID                      | Vain hyväksytty ei-paljastava esitys; syntaksipäätös vielä avoin                                         |
+| Varmennuksen aikaleima        | SKILLSin tehtäväloki; tarkastusaika, ei lähteen tai osallistujan tapahtumapäivä                          |
+| Verifier-rooli                | Hyväksytty ei-arkaluontoinen domain-/tarkastajarooli; ei credentialia tai suojattua henkilöllisyystietoa |
+| Väite/kriteeri                | Tehtävän ei-paljastava hyväksymiskriteeri, kuten provenance- tai semanttisen ekvivalenssin tarkistus     |
+| Tila ja turvallinen syyluokka | PASS/VERIFIED, FAIL, NEEDS_VERIFICATION tai perusteltu NOT_APPLICABLE                                    |
 
 Aikaleima riittää tämän abstraktin tulosrakenteen ajalliseksi kentäksi;
 uutta julkista revisionumerojärjestelmää ei keksitä. Protected-revisiohistoria
@@ -770,17 +770,17 @@ Tämä määrittely ei muutu luokittelupolitiikan poikkeukseksi.
 
 #### FAILURE_SEMANTICS: staattinen silta
 
-| Tilanne | Varmennustila ja toimintaraja |
-| --- | --- |
-| Virheellinen viite | FAIL vain hyväksyttyä syntaksia vasten; syntaksisopimuksen puuttuessa NEEDS_VERIFICATION, ei arvausta |
-| Tuntematon viite | NEEDS_VERIFICATION; ei laajaa lähdehakua |
-| Kanoninen suojattu tietue puuttuu | NEEDS_VERIFICATION; ei korvaavan lähteen keksimistä |
-| Valtuutettu ympäristö ei käytettävissä | NEEDS_VERIFICATION; tarkastus estyy |
-| Luvaton tarkastusyritys | Pääsyportti FAIL ja tarkastus BLOCKED ennen suojattua lookupia |
-| Evidence/version/role ei täsmää | Vertailu FAIL, sidonta NEEDS_VERIFICATION korvausta varten |
-| Legacy-sidonta moniselitteinen | NEEDS_VERIFICATION, ei ensimmäisen osuman valintaa |
-| Semanttisen ekvivalenssin näyttö puuttuu | NEEDS_VERIFICATION, ei päätelmää hashista tai tekstisamankaltaisuudesta |
-| Jakeluluokitus/hyväksyntä avoin | NEEDS_VERIFICATION, ei julkaisu- tai tracking-lupaa |
+| Tilanne                                  | Varmennustila ja toimintaraja                                                                         |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Virheellinen viite                       | FAIL vain hyväksyttyä syntaksia vasten; syntaksisopimuksen puuttuessa NEEDS_VERIFICATION, ei arvausta |
+| Tuntematon viite                         | NEEDS_VERIFICATION; ei laajaa lähdehakua                                                              |
+| Kanoninen suojattu tietue puuttuu        | NEEDS_VERIFICATION; ei korvaavan lähteen keksimistä                                                   |
+| Valtuutettu ympäristö ei käytettävissä   | NEEDS_VERIFICATION; tarkastus estyy                                                                   |
+| Luvaton tarkastusyritys                  | Pääsyportti FAIL ja tarkastus BLOCKED ennen suojattua lookupia                                        |
+| Evidence/version/role ei täsmää          | Vertailu FAIL, sidonta NEEDS_VERIFICATION korvausta varten                                            |
+| Legacy-sidonta moniselitteinen           | NEEDS_VERIFICATION, ei ensimmäisen osuman valintaa                                                    |
+| Semanttisen ekvivalenssin näyttö puuttuu | NEEDS_VERIFICATION, ei päätelmää hashista tai tekstisamankaltaisuudesta                               |
+| Jakeluluokitus/hyväksyntä avoin          | NEEDS_VERIFICATION, ei julkaisu- tai tracking-lupaa                                                   |
 
 Jokainen ratkaisematon execution-critical väite ilman auktoritatiivista
 fallbackia tekee riippuvan korjauksen BLOCKED-tilaiseksi. Ei-kriittinen
