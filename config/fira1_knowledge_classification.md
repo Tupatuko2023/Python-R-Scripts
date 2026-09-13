@@ -212,7 +212,7 @@ schema/value-tietoja. Muuttunut hash edellyttää uutta jakeluclearancea.
 | Repo-relative täsmäpolku                                   | SHA-256                                                            | Luokka             |
 | ---------------------------------------------------------- | ------------------------------------------------------------------ | ------------------ |
 | `Fear-of-Falling/R/functions/general_fi_candidate_state.R` | `7ecfea636cdeb7ecc784c5741a225f652e4a6ded85c4c6a8bcaa507d405c3288` | VERSION_CONTROLLED |
-| `Fear-of-Falling/scripts/run_general_fi22.R`               | `bf34bb0441e71b35d76f926eb1fb9f0246a4f44acc15a2cb28fb956057278c76` | VERSION_CONTROLLED |
+| `Fear-of-Falling/scripts/run_general_fi22.R`               | `177534becf2195843d9ae0c61ba85398f2bd8224e0817ff7046d38ce4d85cce2` | VERSION_CONTROLLED |
 
 Registry/Changelog säilyvät DENY_UNCLASSIFIED-tilassa. Nämä kaksi tiedostoa
 eivät lue niiden sisältöä. Runner käyttää tuotannossa erikseen valtuutettuja

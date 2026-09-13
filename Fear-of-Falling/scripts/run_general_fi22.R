@@ -1,5 +1,20 @@
 # Protected entrypoint; run from Fear-of-Falling after approved adapter handoff.
 # No input discovery, source selection, state classification or fallback here.
+# Reserve a destination among cooperating runners. Its parent must be protected
+# from writers outside this protocol. Never remove another run's result/lock.
+fi22_publish_rds<-function(value,target) {
+ reservation<-paste0(target,".lock")
+ if(file.exists(target)||!dir.create(reservation,mode="0700",showWarnings=FALSE)) fi22_stop()
+ on.exit(unlink(reservation,recursive=TRUE),add=TRUE)
+ if(file.exists(target)) fi22_stop()
+ temporary<-tempfile(pattern=".fi22-pending-",tmpdir=dirname(target))
+ on.exit(unlink(temporary),add=TRUE)
+ saveRDS(value,temporary)
+ if(!Sys.chmod(temporary,"0600")) fi22_stop()
+ if(!identical(readRDS(temporary),value)) fi22_stop()
+ if(file.exists(target)||!file.rename(temporary,target)) fi22_stop()
+ invisible(TRUE)
+}
 main<-function() {
  source("R/functions/general_fi_candidate_state.R")
  source("R/functions/general_fi22.R")
@@ -43,9 +58,7 @@ main<-function() {
  audit<-list(continuity=continuity,session_info=capture.output(sessionInfo()),timestamp=format(Sys.time(),tz="UTC"),
  code_sha256=vapply(c("R/functions/general_fi22.R","R/functions/qc_general_fi22.R","R/functions/general_fi_candidate_state.R"),sha,""))
  target<-file.path(parent,basename(dest))
- saveRDS(list(result=result,qc=qc,audit=audit),target)
- Sys.chmod(target,"0600")
- if(!identical(readRDS(target)$result,result)) fi22_stop()
+ fi22_publish_rds(list(result=result,qc=qc,audit=audit),target)
  # Safe fixed receipt only. Aggregate release requires a separate privacy check.
  cat("GENERAL_FI_22_PARTICIPANT_K18_PASS\nPROTECTED_RESULT_ROUNDTRIP_PASS\n")
 }

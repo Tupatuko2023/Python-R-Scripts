@@ -102,7 +102,12 @@ fi22_bind_ledger<-function(ledger,index,cells,field_map,index_date_field,index_a
  ix<-which(cells$item==FI22_BALANCE)
  r<-field_map$source_field[match("RAW-037",field_map$item)]
  l<-field_map$source_field[match("RAW-038",field_map$item)]
- b<-derive_general_fi_canonical_balance(ledger[[r]][ci[ix]],ledger[[l]][ci[ix]],cells$assessment_ref[ix],cells$assessment_ref[ix])
+ # Both values are columns of one uniquely keyed ledger assessment.
+ bound<-ledger[ci[ix],c("person_ref","assessment_ref",r,l),drop=FALSE]
+ if(!identical(fi22_key(bound),ck[ix]) ||
+    !identical(as.character(bound$assessment_ref),as.character(cells$assessment_ref[ix]))) fi22_stop()
+ b<-derive_general_fi_canonical_balance(bound[[r]],bound[[l]],
+   bound$assessment_ref,cells$assessment_ref[ix])
  expected<-ifelse(b$canonical_state=="CANONICAL_NUMERIC","SCORED_VALID",b$canonical_state)
  if(any(expected=="OTHER_EXECUTION_CRITICAL")||!identical(cells$state[ix],expected)||
  !identical(cells$source_state[ix],as.character(b$canonical_seconds))) fi22_stop()

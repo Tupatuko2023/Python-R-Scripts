@@ -79,3 +79,36 @@ for(j in which(fr$participants$n_available>=18)) {
 x<-fr;x$participants$score[1]<-x$participants$score[1]+1e-12
 bad(qc_general_fi22(x,i,f,con))
 cat("GENERAL_FI_22 fractional sum/count QC and perturbation rejection PASS\n")
+
+# Reject cross-assessment binding before balance derivation.
+original_balance<-derive_general_fi_canonical_balance
+balance_called<-FALSE
+derive_general_fi_canonical_balance<-function(...) {balance_called<<-TRUE;original_balance(...)}
+x<-ld;x$assessment_ref[1]<-"different-assessment"
+bad(fi22_bind_ledger(x,i,a,fm,"index_date","synthetic_age"));stopifnot(!balance_called)
+derive_general_fi_canonical_balance<-original_balance
+stopifnot(fi22_bind_ledger(ld,i,a,fm,"index_date","synthetic_age"))
+b<-derive_general_fi_canonical_balance("10","20","right-assessment","left-assessment")
+stopifnot(identical(b$canonical_state,"OTHER_EXECUTION_CRITICAL"))
+cat("GENERAL_FI_22 assessment provenance before derivation PASS\n")
+
+# Load definitions without running the production entrypoint.
+e<-new.env(parent=globalenv());expressions<-parse("scripts/run_general_fi22.R")
+for(expr in expressions[-length(expressions)]) eval(expr,envir=e)
+publication_dir<-tempfile("fi22_publish_test_");dir.create(publication_dir,mode="0700")
+target<-file.path(publication_dir,"result.rds");value<-list(synthetic=TRUE,result=list(score=.5))
+empty<-function() stopifnot(length(list.files(publication_dir,all.files=TRUE,no..=TRUE))==0)
+for(mode in c("write","read","parity","chmod","rename")) {
+ e$saveRDS<-base::saveRDS;e$readRDS<-base::readRDS;e$Sys.chmod<-base::Sys.chmod;e$file.rename<-base::file.rename
+ if(mode=="write") e$saveRDS<-function(object,file) {writeLines("partial",file);stop("injected write failure")}
+ if(mode=="read") e$readRDS<-function(file) stop("injected read failure")
+ if(mode=="parity") e$readRDS<-function(file) list(invalid=TRUE)
+ if(mode=="chmod") e$Sys.chmod<-function(...) FALSE
+ if(mode=="rename") e$file.rename<-function(...) FALSE
+ bad(e$fi22_publish_rds(value,target));empty()
+}
+e$saveRDS<-base::saveRDS;e$readRDS<-base::readRDS;e$Sys.chmod<-base::Sys.chmod;e$file.rename<-base::file.rename
+e$fi22_publish_rds(value,target);stopifnot(identical(readRDS(target),value))
+stopifnot(identical(list.files(publication_dir,all.files=TRUE,no..=TRUE),"result.rds"))
+bad(e$fi22_publish_rds(list(changed=TRUE),target));stopifnot(identical(readRDS(target),value))
+cat("GENERAL_FI_22 output failures cleanup retry and no-overwrite PASS\n")
