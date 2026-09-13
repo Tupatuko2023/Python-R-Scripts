@@ -1,0 +1,21 @@
+# FOF-artefaktien siirtolupa: oletus on kielto (ei aktiivisia sääntöjä).
+# UTF-8; yksi sääntö per rivi. Tyhjät rivit ja #-alkuiset rivit ohitetaan.
+# file POLKU  = täsmällinen FOF-juureen suhteellinen tiedostopolku.
+# glob POLKU  = vain viimeisessä polkuosassa *, ? tai [abc]/[!abc].
+# Hakemistopolku on aina kirjaimellinen; ** ja rekursio eivät ole sallittuja.
+# Ei shell-laajennuksia, lainausmerkkejä tai rivin sisäisiä kommentteja.
+# Välilyönnit polun sisällä säilyvät. Alku-/loppuvälilyönnit hylätään.
+# Osumaton sääntö tai yksikin turvaton osuma keskeyttää koko valinnan.
+# Duplikaatit yhdistetään deterministisesti; tyhjä lista ei siirrä mitään.
+# Vain tavalliset tiedostot: ei symlinkkejä missään polun osassa.
+# Ei absoluuttisia polkuja, piste-/vanhempiosia tai Windowsissa vaarallisia nimiä.
+# Hard deny ohittaa luvan: data/dataset/raw_data/external_data kaikilla tasoilla,
+# salaisuudet sekä mm. .env, .Renviron, avaimet ja tietokanta-/raakadataformaatit.
+# CSV sallitaan vain file-säännöllä täsmällisestä outputs-hakemiston alaisesta
+# polusta. Tarkista itse, että sisältö on hyväksyttyä aggregaattitulosta.
+# Kooditiedostot pysyvät Git-kanavassa. .gitignore ei koskaan anna siirtolupaa.
+# Lisää aktiivisia sääntöjä vasta paikallisen inventaarion ja sisältöhyväksynnän
+# jälkeen. Alla ovat vain syntaksiesimerkit, eivät todennettuja käsikirjoituspolkuja.
+# file <hyvaksytty-hakemisto>/Figure 1 final.png
+# glob <hyvaksytty-hakemisto>/*.pdf
+# file R-scripts/<K_FOLDER>/outputs/<script_label>/<hyvaksytty-taulukko>.csv
