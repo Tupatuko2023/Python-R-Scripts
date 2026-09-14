@@ -42,7 +42,7 @@ jobs:
           cat(paste0("RLIB=", .libPaths()[1]), file = Sys.getenv("GITHUB_OUTPUT"))
 
       - name: Cache R packages (conditional)
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ steps.rlib.outputs.RLIB }}
           key: ${{ runner.os }}-r-4.4.2-${{ hashFiles('Fear-of-Falling/renv.lock') }}
