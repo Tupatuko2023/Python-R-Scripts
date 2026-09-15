@@ -187,11 +187,320 @@ def execute_transfer(root_fd, root, rows):
                      sort_keys=True, separators=(',', ':')))
 
 
+# Profile mode is local-only until the permanent v2 receiver is available.
+V2 = 'FOF_ARTIFACT_HANDOFF/2'
+V2_CONSTANTS = {
+    'protocol_version': V2, 'profile_id': 'a4-general-fi',
+    'profile_version': '1.0.0', 'source_repository_id': 'Python-R-Scripts',
+    'workstream': 'A4',
+    'classification_policy': 'EXPLICIT_APPROVAL_HARD_DENY_PRECEDENCE',
+}
+V2_ROW_KEYS = {'source_path', 'staging_path', 'classification',
+               'approval_reference', 'csv_approval_reference', 'expected_sha256'}
+V2_EXTRA_DENIED = {'datasets', 'raw', 'participant', 'participants',
+                   'participant-level', 'provenance',
+                   'fi_candidate_registry.csv', 'fi_changelog.md'}
+
+
+def v2_error(code):
+    raise TransferOutcomeError('FAILED', code)
+
+
+def v2_json(value):
+    return json.dumps(value, ensure_ascii=True, sort_keys=True,
+                      separators=(',', ':'), allow_nan=False).encode('ascii')
+
+
+def v2_digest(value):
+    return hashlib.sha256(v2_json(value)).hexdigest()
+
+
+def v2_path(value, staging=False):
+    if (type(value) is not str or not value.isascii()
+            or len(value) > (100 if staging else 1024)):
+        fail('invalid profile path')
+    parts = components(value)
+    if any(len(p) > 255 or p != p.strip() for p in parts):
+        fail('ambiguous component')
+    if staging:
+        if len(parts) != 1:
+            fail('staging must be a filename')
+    elif parts[0] != 'Fear-of-Falling' or len(parts) < 2:
+        fail('invalid source scope')
+    deny(parts)
+    if any(p.lower() in V2_EXTRA_DENIED for p in parts):
+        fail('hard-denied profile selection')
+    return parts
+
+
+def v2_load(root_fd, path, smoke_test=False):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                fail('duplicate JSON key')
+            result[key] = value
+        return result
+    with opened(root_fd, components(path)) as fd:
+        with os.fdopen(os.dup(fd), encoding='utf-8', errors='strict') as stream:
+            # Bound the profile itself; do not read an unbounded local file.
+            text = stream.read(16 * 1024 * 1024 + 1)
+    if len(text.encode('utf-8')) > 16 * 1024 * 1024:
+        fail('profile too large')
+    try:
+        p = json.loads(text, object_pairs_hook=unique,
+                       parse_constant=lambda _: fail('non-finite JSON'))
+    except RecursionError:
+        fail('profile nesting limit')
+    if type(p) is not dict or set(p) != set(V2_CONSTANTS) | {'state', 'files'}:
+        fail('profile schema mismatch')
+    # Smoke identity is a separate opt-in admission policy, never a profile field.
+    constants = dict(V2_CONSTANTS)
+    if smoke_test:
+        constants.update(profile_id='fof-synthetic-smoke', profile_version='0.0.0')
+    for key, expected in constants.items():
+        if type(p[key]) is not str or p[key] != expected:
+            v2_error('SOURCE_REPOSITORY_ID_MISMATCH' if key == 'source_repository_id'
+                     else 'PROFILE_SCHEMA_MISMATCH')
+    if (p['state'] not in ('EMPTY_NOT_EXECUTABLE', 'APPROVED')
+            or type(p['files']) is not list or len(p['files']) > 1000):
+        fail('invalid profile state/files')
+    if (p['state'] == 'APPROVED') != bool(p['files']):
+        fail('profile state/files mismatch')
+    sources, targets = set(), set()
+    ref = r'[A-Za-z0-9][A-Za-z0-9._-]{0,127}'
+    for row in p['files']:
+        if type(row) is not dict or set(row) != V2_ROW_KEYS:
+            fail('profile entry schema mismatch')
+        source = v2_path(row['source_path'])
+        target = v2_path(row['staging_path'], staging=True)
+        if (row['classification'] != 'DISTRIBUTABLE_AS_IS'
+                or type(row['approval_reference']) is not str
+                or not re.fullmatch(ref, row['approval_reference'])
+                or type(row['expected_sha256']) is not str
+                or not re.fullmatch(r'[0-9a-f]{64}', row['expected_sha256'])):
+            fail('unapproved content')
+        for name, seen in ((row['source_path'], sources), (row['staging_path'], targets)):
+            if name.lower() in seen:
+                fail('duplicate/case collision')
+            seen.add(name.lower())
+        csv = source[-1].lower().endswith('.csv') or target[-1].lower().endswith('.csv')
+        approval = row['csv_approval_reference']
+        if csv:
+            if ('outputs' not in source[:-1] or type(approval) is not str
+                    or not re.fullmatch(ref, approval)):
+                fail('CSV requires exact output approval')
+        elif approval is not None:
+            fail('unexpected CSV approval')
+    p['files'].sort(key=lambda r: (r['source_path'], r['staging_path']))
+    return p
+
+
+def v2_repository(root):
+    # Bind to the checkout containing this sender, never a profile-supplied root.
+    parent = os.path.dirname(root)
+    env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
+    env['GIT_OPTIONAL_LOCKS'] = '0'
+
+    def git(*args):
+        result = subprocess.run(['git', '-C', parent, *args], env=env,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                check=False)
+        if result.returncode:
+            v2_error('SOURCE_REPOSITORY_ID_MISMATCH')
+        return result.stdout.decode('utf-8', errors='strict').strip()
+
+    top = git('rev-parse', '--show-toplevel')
+    if not os.path.samefile(top, parent) or os.path.basename(root) != 'Fear-of-Falling':
+        v2_error('SOURCE_REPOSITORY_ID_MISMATCH')
+    origin = git('config', '--get', 'remote.origin.url')
+    if not re.search(r'(?:^|[/:])Python-R-Scripts(?:\.git)?/?$', origin):
+        v2_error('SOURCE_REPOSITORY_ID_MISMATCH')
+    head = git('rev-parse', 'HEAD')
+    if not re.fullmatch(r'(?:[0-9a-f]{40}|[0-9a-f]{64})', head):
+        fail('invalid source HEAD')
+    return head
+
+
+def v2_measure(root_fd, parts):
+    with opened(root_fd, parts) as fd:
+        before = os.fstat(fd)
+        if before.st_size > 1073741824:
+            fail('file size limit')
+        h, size = hashlib.sha256(), 0
+        while True:
+            chunk = os.read(fd, 1024 * 1024)
+            if not chunk:
+                break
+            size += len(chunk)
+            if size > 1073741824:
+                fail('file size limit')
+            h.update(chunk)
+        after = os.fstat(fd)
+        signature = lambda s: (s.st_dev, s.st_ino, s.st_size, s.st_mtime_ns, s.st_ctime_ns)
+        if size != before.st_size or signature(before) != signature(after):
+            fail('file changed during hashing')
+    return size, h.hexdigest()
+
+
+def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, approved_digest, smoke_test=False):
+    """Explicit trusted local process only; no profile-mode SSH configuration."""
+    if approved_digest != manifest['content_digest']:
+        v2_error('PREVIEW_APPROVAL_REQUIRED')
+    if (not os.path.isabs(receiver) or os.path.realpath(receiver) != receiver
+            or not os.path.isfile(receiver) or not os.access(receiver, os.X_OK)):
+        v2_error('LOCAL_RECEIVER_REQUIRED')
+    temp_root = os.path.realpath(tempfile.gettempdir())
+    if os.path.commonpath([os.path.realpath(root), temp_root]) == os.path.realpath(root):
+        v2_error('TEMP_OUTSIDE_SOURCE_REQUIRED')
+    # Preserve uniquely named local evidence; never retry, overwrite or delete a run.
+    bundle_dir = tempfile.mkdtemp(prefix='fof-v2-local-', dir=temp_root)
+    bundle_path = os.path.join(bundle_dir, 'bundle.tar')
+    with os.fdopen(os.open(bundle_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'wb') as out:
+        with tarfile.open(fileobj=out, mode='w', format=tarfile.USTAR_FORMAT) as archive:
+            data = v2_json(manifest)
+            info = tarfile.TarInfo('manifest.json')
+            info.size = len(data)
+            archive.addfile(info, io.BytesIO(data))
+            for row in manifest['files']:
+                parts = v2_path(row['source_path'])[1:]
+                with opened(root_fd, parts) as fd:
+                    before = os.fstat(fd)
+                    with os.fdopen(os.dup(fd), 'rb') as stream:
+                        data = stream.read(row['size_bytes'] + 1)
+                    after = os.fstat(fd)
+                signature = lambda s: (s.st_dev, s.st_ino, s.st_size, s.st_mtime_ns, s.st_ctime_ns)
+                if (signature(before) != signature(after) or len(data) != row['size_bytes']
+                        or hashlib.sha256(data).hexdigest() != row['sha256']):
+                    v2_error('SNAPSHOT_PARITY_FAILURE')
+                info = tarfile.TarInfo('files/' + row['staging_path'])
+                info.size = len(data)
+                archive.addfile(info, io.BytesIO(data))
+        if out.tell() > 1073741824:
+            v2_error('ARCHIVE_TOO_LARGE')
+    for row in manifest['files']:
+        if v2_measure(root_fd, v2_path(row['source_path'])[1:]) != (row['size_bytes'], row['sha256']):
+            v2_error('SNAPSHOT_PARITY_FAILURE')
+    if (v2_repository(root) != manifest['source_head']
+            or v2_digest(v2_load(root_fd, profile_path, smoke_test)) != v2_digest(profile)):
+        v2_error('SOURCE_STATE_CHANGED')
+    print('LOCAL V2 BUNDLE: ' + json.dumps(bundle_path), file=sys.stderr)
+    with open(bundle_path, 'rb') as wire, tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
+        try:
+            result = subprocess.run([receiver], stdin=wire, stdout=stdout, stderr=stderr, timeout=60)
+        except subprocess.TimeoutExpired:
+            raise TransferOutcomeError('UNKNOWN_REMOTE_STATE', 'local receiver acknowledgement timed out; do not retry')
+        except OSError:
+            v2_error('LOCAL_RECEIVER_START_FAILED')
+        if stdout.tell() > 1048576:
+            raise TransferOutcomeError('UNKNOWN_REMOTE_STATE', 'oversized receiver response')
+        stdout.seek(0)
+        def unique_pairs(pairs):
+            answer = {}
+            for key, value in pairs:
+                if key in answer:
+                    raise ValueError('duplicate response key')
+                answer[key] = value
+            return answer
+        try:
+            receipt = json.loads(stdout.read().decode('ascii'), object_pairs_hook=unique_pairs,
+                                 parse_constant=lambda _: fail('invalid JSON constant'))
+        except (ValueError, UnicodeError, RecursionError):
+            receipt = None
+    correlated = (type(receipt) is dict and all(receipt.get(k) == manifest[k] for k in
+                  ('protocol_version', 'run_id', 'content_digest', 'run_correlation_digest'))
+                  and type(receipt.get('file_count')) is int
+                  and receipt['file_count'] == len(manifest['files']))
+    if (correlated and result.returncode == 1 and receipt.get('status') == 'FAILED'
+            and type(receipt.get('error_code')) is str
+            and re.fullmatch(r'[A-Z][A-Z0-9_]{0,127}', receipt['error_code'])
+            and 'verified_at' not in receipt):
+        raise TransferOutcomeError('FAILED', 'correlated receiver rejection: ' + receipt['error_code'])
+    timestamp_ok = False
+    if correlated and type(receipt.get('verified_at')) is str:
+        try:
+            stamp = datetime.strptime(receipt['verified_at'], '%Y-%m-%dT%H:%M:%SZ')
+            timestamp_ok = stamp.strftime('%Y-%m-%dT%H:%M:%SZ') == receipt['verified_at']
+        except ValueError:
+            pass
+    if not (correlated and result.returncode == 0 and receipt.get('status') == 'VERIFIED' and timestamp_ok):
+        raise TransferOutcomeError('UNKNOWN_REMOTE_STATE', 'completion not confirmed; inspect unique run; do not retry')
+    print(v2_json({'outcome': 'SUCCESS', 'receipt': receipt}).decode('ascii'))
+
+
+def profile_main(root, path, execute, local_receiver=None, approved_digest=None, smoke_test=False):
+    root_fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        p = v2_load(root_fd, path, smoke_test)
+        head = v2_repository(root)
+        if p['state'] == 'EMPTY_NOT_EXECUTABLE':
+            if execute:
+                v2_error('EMPTY_NOT_EXECUTABLE')
+            print('PROFILE PREVIEW ONLY: EMPTY_NOT_EXECUTABLE; no transferable manifest',
+                  file=sys.stderr)
+            print(v2_json({'protocol_version': V2, 'profile_id': p['profile_id'],
+                           'state': p['state'], 'files': []}).decode('ascii'))
+            return
+        rows, total = [], 0
+        for entry in p['files']:
+            parts = v2_path(entry['source_path'])
+            # root_fd already denotes Fear-of-Falling, unlike repo-relative metadata.
+            size, sha = v2_measure(root_fd, parts[1:])
+            if sha != entry['expected_sha256']:
+                fail('approved content hash drift')
+            total += size
+            if total > 1073741824:
+                fail('total size limit')
+            rows.append({'source_path': entry['source_path'],
+                         'staging_path': entry['staging_path'],
+                         'size_bytes': size, 'sha256': sha})
+        # A second safe-open read catches replacement after an earlier member was hashed.
+        for row in rows:
+            if v2_measure(root_fd, v2_path(row['source_path'])[1:]) != (
+                    row['size_bytes'], row['sha256']):
+                fail('source changed after manifest preparation')
+        if v2_repository(root) != head:
+            fail('source HEAD changed')
+        if v2_digest(v2_load(root_fd, path, smoke_test)) != v2_digest(p):
+            fail('profile changed during preparation')
+        base = {k: p[k] for k in ('protocol_version', 'source_repository_id',
+                                  'profile_id', 'profile_version', 'workstream')}
+        base.update(source_head=head, profile_sha256=v2_digest(p), files=rows)
+        content = v2_digest(base)
+        run = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ-') + uuid.uuid4().hex
+        manifest = dict(base, run_id=run, content_digest=content,
+                        run_correlation_digest=v2_digest({
+                            'protocol_version': V2, 'run_id': run, 'content_digest': content}))
+        if len(v2_json(manifest)) > 16 * 1024 * 1024:
+            fail('manifest size limit')
+        if execute:
+            if local_receiver is not None:
+                v2_local_execute(root_fd, root, path, p, manifest, local_receiver, approved_digest, smoke_test)
+                return
+            # No snapshots, archive, subprocess SSH, or misleading success before v2 wiring.
+            v2_error('RECEIVER_NOT_AVAILABLE_FOR_PROTOCOL_V2')
+        print(('SMOKE PROFILE PREVIEW ONLY: ' if smoke_test else 'PROFILE PREVIEW ONLY: ') + V2, file=sys.stderr)
+        print(v2_json(manifest).decode('ascii'))
+    finally:
+        os.close(root_fd)
+
+
 def main():
     parser = argparse.ArgumentParser(description='Preview by default; --execute transfers via SSH with explicit completion outcomes.')
-    parser.add_argument('--allowlist', default='config/artifact-transfer.allowlist')
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument('--allowlist', default='config/artifact-transfer.allowlist')
+    modes.add_argument('--profile', help='FOF-relative v2 profile; local preview/preparation only')
     parser.add_argument('--execute', action='store_true')
+    parser.add_argument('--smoke-test', action='store_true', help='test-only fof-synthetic-smoke/0.0.0 admission; requires --profile')
+    parser.add_argument('--local-receiver', help='trusted local executable for v2; never inferred from a profile')
+    parser.add_argument('--approved-content-digest', help='v2 content digest explicitly approved from preview')
     args = parser.parse_args(sys.argv[2:])
+    if args.profile is not None:
+        profile_main(sys.argv[1], args.profile, args.execute, args.local_receiver,
+                     args.approved_content_digest, args.smoke_test)
+        return
+    if args.smoke_test or args.local_receiver is not None or args.approved_content_digest is not None:
+        v2_error('PROFILE_MODE_REQUIRED')
     root_fd = os.open(sys.argv[1], os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
         with opened(root_fd, components(args.allowlist)) as fd:

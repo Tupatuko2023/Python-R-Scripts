@@ -1,0 +1,10 @@
+{
+  "protocol_version": "FOF_ARTIFACT_HANDOFF/2",
+  "profile_id": "a4-general-fi",
+  "profile_version": "1.0.0",
+  "source_repository_id": "Python-R-Scripts",
+  "workstream": "A4",
+  "state": "EMPTY_NOT_EXECUTABLE",
+  "classification_policy": "EXPLICIT_APPROVAL_HARD_DENY_PRECEDENCE",
+  "files": []
+}

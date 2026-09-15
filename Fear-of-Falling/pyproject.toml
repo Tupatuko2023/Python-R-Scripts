@@ -16,6 +16,7 @@ dependencies = [
 dev = [
   "ruff",
   "pytest",
+  "jsonschema",
 ]
 
 [tool.ruff]

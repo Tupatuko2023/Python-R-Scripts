@@ -1,6 +1,13 @@
 # FOF-artefaktien siirto Termuxista Windowsiin
 
-Tämä ohje kuvaa vaiheessa 5 paikallisesti validoitua toteutusta. Analyysikoodi
+Tämä dokumentti omistaa normatiivisen FOF_ARTIFACT_HANDOFF/2-sopimuksen.
+Vaiheen 6 pysyvän toteutuksen Windows-SSH-smoke on PASS (2026-09-14).
+Tuotannon A4-siirto ei ole aktivoitu. Seuraava käyttöluku kuvaa LEGACY/1:tä;
+v2-profiilitilan nykykäyttö ja validointinäyttö ovat dokumentin lopussa.
+
+## LEGACY/1 — säilyvä allow-list-käyttö
+
+Tämä osuus kuvaa alkuperäistä versionumeroimatonta siirtototeutusta. Analyysikoodi
 kulkee nykyisessä Git-/submodule-kanavassa. Erikseen hyväksytyt käsikirjoitus-
 ja tulosartefaktit kulkevat allow-listan, paikallisten tarkistusten ja
 USTAR-over-SSH-siirron kautta Windowsin ajokohtaiseen staging-hakemistoon.
@@ -281,7 +288,7 @@ paikallisia paketteja, snapshotteja tai stagingia. Skriptit eivät suorita
 `git add`, `commit`, `reset`, `clean`, haaratoimia tai muita Git-kirjoituksia.
 Automaattista väitöskirjatuontia ei ole.
 
-## Validoinnin tila
+## LEGACY/1:n historiallinen validointinäyttö
 
 Vaiheen 5 paikallisessa validoinnissa läpäistiin 29 sender-testiä, 24
 PowerShell-vastaanotintestiä, 13 SSH-korvikkeella ajettua siirtotestiä sekä
@@ -289,7 +296,408 @@ ajotunnisteen törmäystesti. PowerShell 7.4.1 ajettiin Ubuntu-PRootissa.
 Myöhäinen paluukatkos ja sitä seuraava uusinta testattiin uuden
 SUCCESS/FAILED/UNKNOWN_REMOTE_STATE-sopimuksen mukaisesti.
 
-**Natiivi Windows/OpenSSH/NTFS: NOT RUN.** Paikalliset testit eivät todista
-natiivin Windows-ympäristön toimintaa. Vaiheen 6 dokumentaatiotarkistus ei
-sisällä oikeaa verkkosiirtoa eikä vaiheen 7 koko regressiomatriisin ajoa.
-K18/QC: NOT APPLICABLE — kyseessä on ei-tieteellisen siirtoinfrastruktuurin ohje.
+Yllä olevat luvut ovat alkuperäisen legacy-vaiheen historiallista näyttöä.
+Pysyvän v2-toteutuksen actual-Windows-näyttö kuvataan tämän dokumentin lopussa.
+K18/QC: NOT APPLICABLE — siirtoinfrastruktuurin dokumentaatio, ei tiedemuutosta.
+
+## FOF_ARTIFACT_HANDOFF/2 — normatiivinen sopimus
+
+Tämä osio on ainoa normatiivinen v2-sopimus. Edeltävä ohje on **LEGACY/1**:
+se nimeää versionumeroimattoman toteutuksen muuttamatta sen wireä,
+`--allowlist`/`--execute`-käyttöä tai vanhaa vastaanotinta. V2-profiilia ei
+anneta legacy-allowlist-parserille. Dissertation-repon dokumentaatio ja
+pysyvä vastaanotin viittaavat tähän versioon eivätkä määrittele omaa wireä.
+Alla oleva tuotantoprofiiliskeema säilyy ennallaan; eksplisiittisen smoketilan
+rajattu testi-identiteetti kuvataan erikseen nykykäytön yhteydessä.
+
+### Profiiliskeema ja tyhjä hyväksyntätila
+
+Seuraava JSON Schema (Draft 2020-12) on portable source -profiilin
+rakenteellinen skeema. Semanttiset polku-, hard-deny- ja digest-säännöt alla
+ovat lisäksi pakollisia. Tuntemattomat kentät hylätään kaikilla tasoilla;
+sama koskee JSONin duplikaattiavaimia, NaN/Infinity-arvoja ja BOMia.
+Kokonaisluvut eivät saa olla liukulukuja tai totuusarvoja.
+
+<!-- FOF_PROFILE_SCHEMA_BEGIN -->
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "profile_id",
+    "profile_version",
+    "source_repository_id",
+    "workstream",
+    "state",
+    "classification_policy",
+    "files"
+  ],
+  "properties": {
+    "protocol_version": { "const": "FOF_ARTIFACT_HANDOFF/2" },
+    "profile_id": { "const": "a4-general-fi" },
+    "profile_version": { "const": "1.0.0" },
+    "source_repository_id": { "const": "Python-R-Scripts" },
+    "workstream": { "const": "A4" },
+    "state": { "enum": ["EMPTY_NOT_EXECUTABLE", "APPROVED"] },
+    "classification_policy": {
+      "const": "EXPLICIT_APPROVAL_HARD_DENY_PRECEDENCE"
+    },
+    "files": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_path",
+          "staging_path",
+          "classification",
+          "approval_reference",
+          "csv_approval_reference",
+          "expected_sha256"
+        ],
+        "properties": {
+          "source_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "staging_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "classification": { "const": "DISTRIBUTABLE_AS_IS" },
+          "approval_reference": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+          },
+          "csv_approval_reference": { "type": ["string", "null"] },
+          "expected_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "state": { "const": "EMPTY_NOT_EXECUTABLE" } } },
+      "then": { "properties": { "files": { "maxItems": 0 } } },
+      "else": { "properties": { "files": { "minItems": 1 } } }
+    }
+  ]
+}
+```
+
+<!-- FOF_PROFILE_SCHEMA_END -->
+
+Nykyinen `config/artifact-transfer/a4-general-fi.json` on
+`EMPTY_NOT_EXECUTABLE`, files on tyhjä. Nykyinen legacy-allowlist sisältää
+vain kommentteja; tässä rajatussa inventaariossa ei todettu uutta hyväksyttyä
+live-source-valintaa. Historiallista 13-file-pakettia ei käytetä valinnan
+korvikkeena. Tyhjä profiili kelpaa paikalliseen skeema-/preview-tarkistukseen,
+mutta v2 execute MUST palauttaa paikallinen FAILED ennen verkkoa.
+
+Aktivointi vaatii nykyisen täsmäpolun, sisällön luokituksen ja jakeluluvan
+tarkistuksen. Jokaisen rivin approval_reference on tarkistettavan Owner-
+päätöksen ei-sensitiivinen tunniste, ei itsessään lupa. expected_sha256 sitoo
+rivin hyväksyttyihin tavuihin; muuttunut tiedosto pysäyttää ajon. Uusi hyväksytty
+profiilirevisio ja sen versio on päätettävä erikseen. Tämä skeema kuvaa vain
+nimettyä alkuperäistä profiilia, ei lupaa keksiä muita profiileja.
+
+Git-tracking tai .gitignore ei myönnä siirtolupaa. Hard deny ohittaa myös
+DISTRIBUTABLE_AS_IS-merkinnän; ohjelma ei voi todistaa sisällön ihmisluokitusta.
+Aktiivisissa riveissä ei hyväksytä PROTECTED-, DENY_UNCLASSIFIED- eikä
+selvittämättömiä luokkia. CSV-rivi vaatii kirjaimellisen outputs-hakemisto-osan
+lähdepolkuun ja erillisen täsmäpolkuun/hashiin sidotun
+csv_approval_reference-tunnisteen (sama tunnistesyntaksi kuin approval_reference).
+Muille tiedostoille csv_approval_reference on null. CSV:n tunnistukseen riittää
+.csv-pääte joko lähde- tai staging-nimessä; uudelleennimeäminen ei ohita sääntöä.
+
+### Lähdesidonta, polut ja kieltojen etusija
+
+source_repository_id on looginen identiteetti, ei URL eikä tiedostopolku.
+Source-root ratkaistaan runtime-konfiguraatiosta ja varmennetaan repositoryn
+identiteettiä vasten. Tässä profiilissa source_path alkaa täsmälleen
+Fear-of-Falling/ ja on Python-R-Scripts-repon juureen suhteellinen.
+staging_path on yksi tiedostonimi; hakemistoja tai papers/A4_placeholder-
+polkua ei hyväksytä. PC:n erikseen hyväksytty profiilirekisteri ratkaisee
+workstream=A4:n ignored staging/review -reitityksen. Se ei nimeä kanonista
+A4-manuskriptia eikä avaa importia. Host/user/port/credentials, source-root,
+Windows root, receiver-polku ja repository/staging-root pysyvät runtime-
+konfiguraatiossa. Niitä ei hyväksytä portable-profiilin lisäkentiksi.
+
+V2:n alkuperäinen profiili käyttää tarkoituksella vain tulostettavia
+ASCII-polkuja (U+0020–U+007E). Unicode/non-ASCII, myös NFC-muodossa, hylätään;
+mitään nimeä ei hiljaisesti translitteroida tai normalisoida. Näin Windowsin
+Unicode-versioiden case-vertailu ei aiheuta epäselvää aliasointia. Legacy
+säilyttää oman NFC-politiikkansa. ASCII-polkujen collision key on lowercase.
+Sekä source_path- että staging_path-joukon kaikki duplikaatit ja
+case-collisionit hylätään, ei yhdistetä kuten legacyssä.
+
+Polku ei saa olla tyhjä, absolute/UNC/drive-relative, sisältää tyhjiä,
+piste- tai vanhempiosia, kenoviivaa, kaksoispistettä, ohjausmerkkejä,
+wildcardeja (* ? [ ]), merkkejä < > " | tai whitespace-reunaisia osia.
+Pisteeseen loppuva osa ja Windowsin CON/PRN/AUX/NUL/COM0–9/LPT0–9-nimet
+(myös päätteelliset) hylätään. Source-polku enintään 1024 ASCII-tavua,
+yksittäinen osa enintään 255 tavua; staging-nimi enintään 100 tavua.
+Containment ja regular-file-only tarkistetaan lisäksi tiedostojärjestelmästä
+runtime-vaiheessa: ei symlinkkejä/reparse pointteja missään komponentissa,
+ei FIFOja tai laitteita. Profiilin hyväksyntä ei korvaa näitä tarkistuksia.
+
+Hard deny tarkistetaan source- ja staging-polun jokaiselle osalle case-
+insensitiivisesti. V2 sisältää kaikki legacy-kiellot ja seuraavat täsmäluokat:
+
+- Osat: data, dataset, datasets, raw, raw_data, external_data, participant,
+  participants, participant-level, provenance, .git, .ssh, .aws, .azure,
+  secrets, credentials.
+- Nimet: .env, .env.*, .Renviron, .netrc, .npmrc; id_rsa/id_ed25519/id_ecdsa/
+  id_dsa-alkuiset nimet; secret- tai credential-tekstin sisältävät nimet.
+- Päätteet: .rdata, .rda, .rds, .sqlite, .sqlite3, .db, .sav, .dta, .xlsx,
+  .xls, .pem, .key, .secret, .p12, .pfx, .kdbx sekä koodikanavan .r, .py,
+  .sh ja .ps1.
+- FI_CANDIDATE_REGISTRY.csv ja FI_CHANGELOG.md pysyvät DENY-tilassa.
+
+Lista ei salli muun nimistä osallistuja-/suojattua sisältöä. Auktoritatiivinen
+sisältöluokitus voi kieltää minkä tahansa polun; uusi epäselvyys = fail closed.
+V2-lisäkiellot eivät muuta legacy-ajokoodia.
+
+### Deterministinen metadata ja tiivisteet
+
+C(x) tarkoittaa tarkistetun JSON-arvon kanonisia tavuja: rekursiivisesti
+ASCII-avaimittain lajitellut objektit, ei whitespacea eikä loppurivinvaihtoa,
+UTF-8 ilman BOMia, JSON-string escaping, ensure_ascii=true, vain tavalliset
+JSON-tyypit ja täsmälliset kokonaisluvut. Hyväksytyt tekstiarvot ovat ASCIIa,
+joten Unicode-escape- ja sort-version eroja ei synny. Float/NaN/Infinity ja
+duplikaattiavaimet hylätään ennen kanonisointia. Array-järjestys säilyy,
+paitsi files lajitellaan ensin tuplella (source_path, staging_path) ASCII-
+järjestyksessä. SHA-256 esitetään 64 lowercase-hex-merkillä.
+
+profile_sha256 = SHA256(C(koko validoitu profiili, files lajiteltuna)).
+Tämä on semanttinen profiilidigest, ei JSON-tiedoston raakatavujen hash.
+Avainjärjestys, sisennys ja files-rivijärjestys eivät muuta digestia;
+yksikin lupa-/polku-/hash-kentän muutos muuttaa sitä.
+
+Manifestissa on täsmälleen nämä kentät:
+
+| Kenttä                      | Sopimus                                                                                                          |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| protocol_version            | FOF_ARTIFACT_HANDOFF/2                                                                                           |
+| run_id                      | kelvollinen UTC YYYYMMDDTHHMMSSZ + yhdysmerkki + 32 lowercase hex; uusi satunnainen tunniste joka execute-ajolle |
+| source_repository_id        | profiilin tarkistettu identiteetti                                                                               |
+| source_head                 | runtime Git HEAD, 40 tai 64 lowercase hex; ei todista untracked-sisältöä                                         |
+| profile_id, profile_version | validoidusta profiilista                                                                                         |
+| profile_sha256              | yllä määritelty semanttinen digest                                                                               |
+| workstream                  | A4                                                                                                               |
+| files                       | täsmälleen hyväksytyt rivit                                                                                      |
+| content_digest              | alla määritelty vakaa digest                                                                                     |
+| run_correlation_digest      | alla määritelty ajosidonta                                                                                       |
+
+Kukin manifestin files-rivi sisältää täsmälleen source_path, staging_path,
+size_bytes (int, ei bool, 0–1073741824) ja sha256. Polut vastaavat profiilia
+täsmälleen, sha256 = expected_sha256, ei puuttuvia/ylimääräisiä rivejä.
+Summa size_bytes enintään 1073741824. Runtime mittaa koot ja hashit
+turvallisista avoimista tiedostokahvoista, ja snapshot-pariteetti tarkistetaan
+uudelleen ennen verkkoa. Tiedostomuutos missä tahansa vaiheessa pysäyttää.
+
+Vakaa content_digest = SHA256(C(B)), missä B sisältää täsmälleen
+protocol_version, source_repository_id, source_head, profile_id,
+profile_version, profile_sha256, workstream ja lajitellut files.
+run_id ei kuulu B:hen. Myöskään content_digest, run_correlation_digest,
+kellonaika, endpoint tai staging-root eivät kuulu B:hen.
+Samat sisällöt samalla source_head/profiililla antavat saman digestin;
+HEAD-muutos tarkoituksellisesti muuttaa provenance-digestia.
+
+run_correlation_digest = SHA256(C({
+"protocol_version": "FOF_ARTIFACT_HANDOFF/2",
+"run_id": run_id, "content_digest": content_digest
+})). Molemmat osapuolet laskevat digestit itse. Pelkkä saadun hashin
+kopioiminen kuittiin ei riitä. Preview ei tee verkkotoimia tai pakettia;
+execute vaatii erillisen luvan ja tarkistaa esikatselussa hyväksytyn
+content_digestin uudelleen. Hash ei itsessään ole käyttäjän lupa.
+
+### Wire ja vastaanoton completion
+
+V2 kulkee yhden binäärisen POSIX USTAR -virran mukana. Ensimmäinen jäsen on
+manifest.json, jonka sisältö on koko kanoninen manifesti C(M); tämän jälkeen
+tulevat täsmälleen files/<staging_path>-jäsenet manifestin files-järjestyksessä.
+Metadata ei ole neljästoista sisältöartefakti. Ei hakemistojäseniä, executable
+receiver-koodia, PAX/GNU-laajennuksia, linkkejä tai pakkausta. Vain tavalliset
+typeflag 0 / V7 regular -jäsenet; tarkistetut otsakechecksumit, jäsenpituudet
+ja vähintään kaksi nollalopetuslohkoa, ei ei-nollallista jälkidataa.
+Manifesti enintään 16 MiB; tar kokonaisuudessaan enintään 1 GiB.
+Pysyvä toteutus tarkistaa nämä rajat ennen vastaanoton hyväksymistä.
+
+PC: incoming/<run_id>/files/ sisältää vain hyväksytyt artefaktit.
+manifest.json ja VERIFIED.json ovat files/-hakemiston ulkopuolella.
+Rekisteri hyväksyy profiilin/identiteetin/version/digestin ennen reititystä;
+muu tai muuttunut profiili tarvitsee uuden hyväksynnän. Vastaanotin varaa
+uuden ajon yksinoikeudella, ei ylikirjoita eikä poista aiempaa ajoa.
+Exact-set/size/SHA-256 tarkistetaan vastaanotetuista tavuista ja lopullisista
+tiedostoista. Kuitti julkaistaan vasta flush/close-varmennuksen jälkeen
+atomisesti pending-kuitista; ristiriita tai keskeytys ei saa tuottaa VERIFIEDiä.
+
+Durable VERIFIED-kuitti sekä yksi JSON-stdout-vastaus sisältävät
+protocol_version, status, run_id, content_digest, run_correlation_digest,
+file_count ja verified_at (UTC). verified_at on täsmälleen
+`yyyy-MM-ddTHH:mm:ssZ`: kirjaimelliset kaksoispisteet, sekuntitarkkuus ja UTC Z.
+Esimerkiksi `2026-09-14T18:25:53Z` on kelvollinen;
+`2026-09-14T18.00.39Z` ei ole. Serialisointi käyttää invarianttia kulttuuria,
+eikä Windowsin aikaerotin saa korvata kaksoispisteitä.
+Onnistumisessa status=VERIFIED,
+prosessi exit 0. Vahvistetussa hylkäyksessä status=FAILED, error_code ja
+samat korrelaatiokentät, verified_at puuttuu, exit 1; VERIFIED-kuittia ei ole.
+Jos ajokorrelaatiota ei pystytä luotettavasti lukemaan, vastaanotin ei keksi
+sitä. Diagnostiikka menee stderriin ilman suojattua payloadia.
+
+Sender SUCCESS/exit 0 vaatii yhden odotetun korreloidun VERIFIED-vastauksen,
+oikean file_countin ja SSH exit 0:n. FAILED/exit 1 tarkoittaa paikallista
+hylkäystä tai korreloitua receiver FAILED -vastausta ja exit 1:tä.
+SSH exit 255, puuttuva/multiple/malformed/mismatched vastaus tai ristiriitainen
+exit-status tarkoittaa UNKNOWN_REMOTE_STATE/exit 3, vaikka receiver VERIFIED
+olisi jo pysyvä. Tällöin yksilöity ajo tarkistetaan read-only ennen uutta
+päätöstä; ei automaattista retryä, cleanupia tai UNKNOWNin muuttamista SUCCESSiksi.
+
+VERIFIED → human review → erikseen hyväksytty A4 import/adaptation.
+Git/submodule kuljettaa koodin; tämä kanava hyväksytyt artefaktit ignored
+stagingiin; kanoninen julkaiseminen kuuluu erilliseen dissertation-workflowhun.
+Ei --deleteä, automaattista Gitiä, importia tai vanhan ajon overwritea.
+
+### Nykyinen v2-käyttö ja kolme erillistä kanavaa
+
+1. Versionoitu analyysikoodi kulkee Git-/submodule-kanavassa.
+2. Erikseen hyväksytyt generoidut artefaktit kulkevat exact-manifest
+   USTAR-over-SSH-kanavassa ignored dissertation stagingiin. Tekninen
+   vastaanottotarkistus päättyy VERIFIED-kuittiin.
+3. Julkaisumateriaali käy ihmisen tarkastuksen ja erikseen hyväksytyn
+   A4 import/adaptation -vaiheen; vasta sitten sovelletaan väitöskirjarepon
+   normaalia Git-workflowta. Kuljetus ei tee tätä päätöstä.
+
+Versionoitavaksi tarkoitettu toteutus ja ignored runtime-artefaktit ovat
+siis eri asioita. General FI / C22 kuuluu A4-työvirtaan, ei A1/A2:een.
+Kanonista A4-käsikirjoitusta tai supplementtia ei ole nimetty. Historiallinen
+varmennettu 13-tiedoston C22-paketti säilyy stagingissa muuttumattomana:
+ei testifixture, automaattinen profiilivalinta eikä kanoninen julkaisu.
+
+Lähettäjä ratkaisee FOF-juuren omasta `scripts/termux/`-sijainnistaan.
+Git top-levelin pitää olla FOF-juuren välitön parent ja originin
+repository-nimen Python-R-Scripts (.git-pääte sallitaan). Tämä on checkoutin
+identiteettitarkistus, ei kryptografinen jakelulupa. source_head luetaan Gitistä.
+Profiili ei voi vaihtaa lähdejuurta. Runtime ei lue tätä Markdown-skeemaa
+vaan käyttää Pythonin vakiokirjaston suljettua validointia.
+
+Aja FOF-juuresta paikallinen esikatselu:
+
+```bash
+pwd
+bash scripts/termux/export_artifacts_to_windows.sh --profile config/artifact-transfer/a4-general-fi.json
+```
+
+`--profile` ja eksplisiittinen `--allowlist` ovat toisensa poissulkevia.
+Profiilitiedoston polku on FOF-juureen suhteellinen. Oletus on preview;
+se ei käynnistä SSH:ta tai kutsusovitinta. Tyhjä tuotantoprofiili ilmoittaa
+`EMPTY_NOT_EXECUTABLE` ja tyhjän files-listan ilman siirtomanifestia tai
+digestia. Sen `--execute` palauttaa FAILED/exit 1 ennen verkkoa.
+Hyväksytyn aktiivisen testiprofiilin preview tuottaa kanonisen manifestin.
+Jokainen preview saa uuden run_id:n; profile_sha256 ja content_digest
+säilyvät samoilla profiili-, HEAD- ja sisältösyötteillä.
+
+Nykyinen v2 execute -rajapinta tarvitsee eksplisiittiset `--execute`,
+`--approved-content-digest` ja `--local-receiver` -valinnat. Viimeinen nimeää
+luotetun paikallisen suoritettavan kutsusovittimen absoluuttisen polun;
+se ei ole Windows-kohde, profiilikenttä eikä vastaanottimen toinen toteutus.
+Sender antaa sovittimelle vain binäärisen tar-stdin-virran ja tarkistaa
+sen yhden JSON-stdout-vastauksen sekä exit-koodin. Sovitin vastaa paikallisesti
+valtuutetusta SSH-kutsusta pysyvään receiveriin ja säilyttää protokollakanavat.
+Tämä käyttöohje ei nimeä tilapäistä smoke-sovitinta pysyväksi riippuvuudeksi
+eikä toimita yleiskäyttöistä tuotannon SSH-käynnistintä.
+
+Ilman `--local-receiver`-valintaa aktiivinenkin profiili pysähtyy edelleen
+`RECEIVER_NOT_AVAILABLE_FOR_PROTOCOL_V2`-tilaan ennen verkkoa. Legacy-
+ympäristömuuttujat eivät avaa v2-reittiä. Phase 6:n todellinen SSH-smoke
+käytti tätä eksplisiittistä sovitinrajapintaa; pelkkää
+`--profile --execute`-komentoa ei pidä kuvata valmiiksi tuotantoverkkopoluksi.
+Sovittimen käynnistys vaatii hyväksytyn preview-content_digestin. Sender
+varmistaa tiedostojen koon/hashit, snapshot-pariteetin ja lopuksi profiilin
+sekä HEADin muuttumattomuuden. Paikallinen yksilöllinen paketti säilytetään
+FOF-juuren ulkopuolisessa väliaikaistilassa; automaattista uusintaa ei tehdä.
+
+### Synteettinen smoke on erillinen testitila
+
+Senderin `--smoke-test` vaatii `--profile`-valinnan ja hyväksyy vain
+`fof-synthetic-smoke/0.0.0`-identiteetin. Source identity pysyy
+Python-R-Scripts ja workstream A4; ne eivät tarkoita tuotantoartefakteja.
+Ilman smokelippua testi-identiteetti hylätään. Smokelippu hylkää puolestaan
+`a4-general-fi/1.0.0`-identiteetin eikä tee tyhjästä tuotantoprofiilista ajettavaa.
+Muut skeema-, exact mapping-, hard-deny-, CSV-, polku-, containment-,
+regular-file-, symlink-, case-collision- ja digest-tarkistukset ovat samat.
+
+Vastaanottimen luotettu paikallinen kutsu käyttää `-SmokeTest -SmokeSession`:
+sessio on uusi 32-merkkinen lowercase hex -tunniste, ei polku. Vastaanotin
+ratkaisee itse session testirekisterin ja ignored smoke-stagingin.
+Smoke-identiteetti ei reitity tuotannon incomingiin eikä tuotantoidentiteetti
+smokeen. Manifesti/profiili ei saa valita registryä, staging-rootia,
+Windows-polkuja, SSH host/user/credentials-arvoja tai kanonista A4-kohdetta.
+Testitila ja sen tilapäiset synteettiset hyväksynnät eivät anna tuotantolupaa.
+
+### Palautuminen ja tuotannon aktivointiraja
+
+Korreloitu receiver-hylkäys ja exit 1 tarkoittavat FAILEDia. Puuttuva,
+virheellinen tai väärään ajoon kuuluva loppuvastaus tarkoittaa
+UNKNOWN_REMOTE_STATEa, ei automaattista FAILEDia. Esimerkiksi ennen
+luotettavaa manifestikorrelaatiota tapahtuva hylkäys voi jäädä UNKNOWNiksi.
+Kesken jäänyt ajo ei saa VERIFIED-kuittia. Myöhäinen kuittauskatkos voi
+jättää vastaanottimen VERIFIED-tilaan mutta senderin UNKNOWN_REMOTE_STATEen.
+
+Tarkista yksilöidyn ajon manifesti, kuitti ja sisältö read-only ennen
+jatkopäätöstä. Säilytä myös epäonnistuneet ja epävarmat ajot. Jokainen
+uudelleenyritys saa uuden run_id:n, smokessa myös uuden session; aiempaa
+ajoa ei käytetä uudelleen, poisteta, nimetä uudelleen tai siivota automaattisesti.
+VERIFIED todistaa teknisen eheyden, ei sisällön tieteellistä/julkaisullista
+hyväksyntää. Ihmisen tarkastus on pakollinen ennen erillistä A4-tuontipäätöstä.
+
+Tuotannon a4-general-fi on edelleen EMPTY_NOT_EXECUTABLE ja PC-rekisterin
+approved_content_digests on tyhjä. Aktivointi vaatii erillisen toteutus- ja
+review-päätöksen: auktoritatiivisesti valitut live-output-täsmäpolut,
+sisältöluokitukset, hyväksytyt tavut/profiilirevisio sekä vastaanottimen
+profiili- ja sisältödigestien hyväksyntä. Historiallinen C22-valinta ei
+korvaa tätä. `.gitignore` ei anna siirtolupaa eikä sitä muuteta kuljetuksen
+vuoksi. Lähdeprofiili on nykyisen config/-säännön vuoksi ignored; myöhempi
+Git-toimitus tarvitsee nimenomaisen path-scoped force-add-käsittelyn vain
+profiilipolulle, ei ignore-muutosta eikä artefaktien lisäämistä Git-kanavaan.
+
+### Validoitu näyttö ja seuraava tarkastus
+
+Phase 6g (2026-09-14): pysyvä sender ja pysyvä Windows-receiver läpäisivät
+23 synteettistä verkkotestitapausta. Windows Pester 47/47, lähdetestit 48/48
+ja legacy-regressiot 29/29 PASS. Sender ajettiin tavutarkkana kopiona
+synteettisessä checkoutissa; SSH suoritti asennetun pysyvän receiverin,
+ei väliaikaista vastaanotinkoodia. Happy path hyväksyi invariantin
+`2026-09-14T18:25:53Z`-kuitin SUCCESSiksi. Tunnetut hash/size/set-hylkäykset,
+vaaralliset jäsenet, reitityseristys, profiilisidonnat, osittainen payload,
+ajotörmäys, uusinta ja myöhäinen kuittauskatkos tarkistettiin.
+
+Tämä näyttö koskee vain synteettisiä tiedostoja, ei tuotannon A4-profiilin
+ajoa oikeilla artefakteilla. Tarkat session/run-tunnisteet, toteutushashit ja
+rajauksen tarkistukset ovat sender-tehtäväkortissa `FOF_DURABLE_ARTIFACT_HANDOFF_SENDER`
+(nykyinen sijainti määräytyy tehtäväworkflown mukaan)
+ja dissertation-repon receiver-vastinkortissa. Phase 8:n lopullinen
+regressio/turvallisuus/rajauksen katselmointi sekä Git-toimitus ovat erillisiä.
+
+Sopimuksen referenssivektorit ja runtime-regressiot ovat
+[Python-testeissä](../tests/test_artifact_transfer.py). Dokumentin tuotantoskeema
+luetaan referenssitesteissä; sender-runtime ei riipu testimoduulista.
+Referenssi-/testiharness on validointiväline, ei tuotanto-API. Tuettu
+toteutuksen käyttörajapinta on pysyvän senderin CLI, mukaan lukien edellä
+kuvattu profiilitila; testiharness ei korvaa sitä.
+FOF-juuren testikomento on:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s tests -p test_artifact_transfer.py -v
+```
+
+Integraatio-osuus tarvitsee testien määrittelemän vastaanotinsnapshotin ja
+paikallisen PowerShell-kutsun. Komennon listaaminen ei tarkoita, että Phase 7
+ajaisi Phase 8:n regressiota tai avaisi verkko-/tuotantosiirtolupaa.
