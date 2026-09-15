@@ -51,9 +51,9 @@ jobs:
         shell: bash -euo pipefail {0}
         run: |
           set -euxo pipefail
+          python -m pip install --upgrade pip
           if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
             # Ensure pip and pytest are available
-            python -m pip install --upgrade pip
             python -m pip install pytest || true
 
             # Install project deps if available
@@ -66,6 +66,7 @@ jobs:
             # Fallback minimal deps for ad-hoc scripts/tests
             pip install pandas pytest
           fi
+          python -m pip install --group ./Fear-of-Falling/pyproject.toml:dev
 
       - name: Install EFI package (editable)
         run: |
