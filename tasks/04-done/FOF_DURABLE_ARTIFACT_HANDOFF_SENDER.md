@@ -3,7 +3,7 @@
 ## Context
 
 Valmistele toistuvan artefaktisiirron lähdepuoli hyväksytyn Phase 0:n rajauksessa.
-Tila on 03-review; Phases 1–8 PASS. Ihmiskatselmointi ja Git-toimitus odottavat. Vastinpari dissertation-repossa:
+Tila on 04-done; Phases 1–8 ja toteutuksen Git-toimitus PASS. Ihmisen tehtäväkohtainen closeout-valtuutus on annettu; tämän korttisiirron Git-toimitus odottaa erillistä valtuutusta. Vastinpari dissertation-repossa:
 `FOF_DURABLE_ARTIFACT_HANDOFF_RECEIVER`.
 
 ## Inputs
@@ -646,3 +646,12 @@ pre-transition comparison matched; only these two task-card transitions are auth
 
 Sender SHA-256: `a8e9cdf0528e052e2e82a915903686e2d992a434a4fb75dfbbd30b226fa22261`.
 Receiver SHA-256: `0670147b40662a5cfbd84336da9beb4a830f1f63524f508cbc51a4a1424c9ec0`.
+
+## Lopullinen closeout — 2026-09-15T16:29:30+00:00
+
+- Owner-valtuutus: `fof-durable-handoff-three-card-done-closeout` nimeää tämän kortin ja sallii 03-review → 04-done-siirron. Aiemmat vaihelokit ovat historiallista näyttöä.
+- Toteutus toimitettu: Python-R-Scripts PR #155 (merge `2afe6e6bde58b4a5a790f425647bf5d2b1b7d711`) ja #156 (merge/main `9eff43a7569eadba0714c3fd1c22959fabb4bb66`); dissertation PR #215 ja #216, main `194fed805269b127f322b37656599a077e3a0b5e`.
+- `DURABLE_HANDOFF_POST_MERGE_VERIFICATION_PASS`: hyväksytyt main-blobit ja koko toimitusketju täsmäävät. Aiempi source 48/48, legacy 29/29, Windows Pester 47/47, classifier 129/129, adapters 17/17 ja Phase 6:n 23 synteettistä verkkotapausta PASS. Vaaditut toimitus-CI:t PASS; #216 reporting-smoke/analysis-policy tarkoituksella SKIPPED (GIT_ONLY). Ei uusia regressio- tai siirtoajoja tässä hallinnollisessa closeoutissa.
+- Tuotanto pysyy estettynä: a4-general-fi EMPTY_NOT_EXECUTABLE, files tyhjä; PC:n sisältöhyväksynnät tyhjät. C22:n 13 tiedostoa ja 69 historiallista todistetiivistettä varmennettu ennallaan; ei A4-importia tai kanonisointia.
+- Paikallinen lifecycle-tila: done, `tasks/04-done/FOF_DURABLE_ARTIFACT_HANDOFF_SENDER.md`. Loppusiirron polku-/viittaus-/whitespace- ja scope-vertailu tehdään ennen tämän ajon raportointia. HEAD/index ja toteutus säilytetään.
+- `CLOSEOUT_GIT_DELIVERY_REQUIRED`: korttimuutoksen erillinen polkutarkka Git-toimitus odottaa; ei commit/push/PR/mergeä tässä paketissa. Legacy FOF_ARTIFACT_TRANSFER jää review-tilaan. Make-viittaus ja historiallinen CodeQL cpp ovat SEPARATE_MAINTENANCE; oikeat A4-mappings/hyväksynnät ovat FUTURE_PRODUCTION_ACTIVATION.
