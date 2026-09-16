@@ -2,8 +2,102 @@
 
 Tämä dokumentti omistaa normatiivisen FOF_ARTIFACT_HANDOFF/2-sopimuksen.
 Vaiheen 6 pysyvän toteutuksen Windows-SSH-smoke on PASS (2026-09-14).
-Tuotannon A4-siirto ei ole aktivoitu. Seuraava käyttöluku kuvaa LEGACY/1:tä;
-v2-profiilitilan nykykäyttö ja validointinäyttö ovat dokumentin lopussa.
+Tuotannon A4-siirto ei ole aktivoitu. Alla on v2-operaattorin pikapolku;
+LEGACY/1 ja normatiivinen v2-sopimus ovat erillisinä lukuina sen jälkeen.
+
+## Operaattorin pikapolku — v2, Termux → Windows
+
+Yksisuuntainen, ihmisen käynnistämä **tar-over-SSH**, ei rsync tai taustasynkka.
+[SSH-sovitin](../scripts/termux/fof_v2_ssh_adapter.py) täydentää nykyisen
+senderin `--local-receiver`-rajapinnan; se ei ole toinen siirtomoottori.
+
+Kertaluonteiset edellytykset: Termux Bash, Python 3.9+, Git ja OpenSSH-asiakas;
+Windows päällä/hereillä, OpenSSH Server saavutettavissa, PowerShell 7.4+ ja
+Git-kanavasta asennettu dissertation-receiver sekä sen rekisteri. Receiverin
+staging-alueella tarvitaan kirjoitusoikeus ja riittävä levytila; pakettiraja
+on 1 GiB. Saman Wi-Fi/LAN-verkon käyttö on tavallisesti helpointa, mutta
+vaatimus on luotettu SSH-saavutettavuus, ei sama WLAN. Windows ei tarvitse
+rsynciä eikä erillistä tar-ohjelmaa.
+
+1. **Aseta luotettu runtime-konfiguraatio.** `FOF_V2_SSH_ALIAS` nimeää käyttäjän
+   ennakkoon määrittelemän SSH-aliasin. Host/user/port/key-valinta jää käyttäjän
+   SSH-konfiguraatioon, ei profiiliin tai Git-tiedostoihin.
+   `FOF_V2_RECEIVER_SCRIPT` on Windowsin absoluuttinen drive-polku käyttäen `/`
+   erottimia, loppuna `/scripts/receive_artifact_bundle.ps1`. Sallitut segmentit
+   sisältävät ASCII-kirjaimia, numeroita, välilyöntejä ja `_.-`; ei UNC-,
+   backslash-, traversal-, lainausmerkki-, shell- tai ympäristölaajennuksia.
+   Segmentin reunavälilyönnit, loppupiste ja Windowsin laitenimet hylätään.
+   SSH-tunnistautumisen tulee olla ei-interaktiivinen ja host key erikseen
+   varmennettu etukäteen. Sovitin ei asenna avaimia tai hyväksy uusia host keyitä.
+2. **Tarkista yhteys ilman artefakteja.** Aja FOF-juuressa:
+   `python3 scripts/termux/fof_v2_ssh_adapter.py --check`.
+   Tämä avaa SSH-yhteyden ja tarkistaa PowerShell-version, TarReaderin ja
+   receiver-tiedoston olemassaolon; stdin ohjataan tyhjäksi eikä receiveriä ajeta.
+   Tarkistus ei aktivoi rekisteriä eikä korvaa siirron hyväksyntää.
+3. **Valitse hyväksytty profiili ja preview.** Normaali ensimmäinen komento:
+
+   ```bash
+   bash scripts/termux/export_artifacts_to_windows.sh --profile config/artifact-transfer/a4-general-fi.json
+   ```
+
+   Nykyinen profiili on **EMPTY_NOT_EXECUTABLE**: files ja Windowsin
+   sisältöhyväksynnät ovat tyhjiä. Oikean profiilin aktivointi on erillinen
+   hyväksytty tehtävä. Aktiivisen profiilin previewsta tarkastetaan täsmäpolut,
+   staging-nimet, koot, SHA-256, lähde-HEAD ja content_digest. `.gitignore` ei
+   anna siirtolupaa; hard deny ohittaa hyväksyntälistan. Uusi/muuttunut tiedosto
+   tarvitsee hyväksytyn hashin ja approval_reference-viitteen; CSV lisäksi oman
+   täsmäpolku/hyväksyntäviitteensä. Rekisterin profiili- ja sisältödigestien
+   tulee vastata hyväksyntää. Preview ei käynnistä SSH:ta edes adapteri annettuna.
+
+4. **Execute vain erikseen hyväksytylle sisällölle.** Seuraava on käyttömalli,
+   ei lupa nykyisen tyhjän profiilin aktivointiin. `APPROVED_CONTENT_DIGEST`
+   tarkoittaa ihmisen tarkastaman previewn digestia:
+
+   ```bash
+   bash scripts/termux/export_artifacts_to_windows.sh \
+     --profile config/artifact-transfer/a4-general-fi.json \
+     --execute --approved-content-digest "$APPROVED_CONTENT_DIGEST" \
+     --local-receiver "$(pwd -P)/scripts/termux/fof_v2_ssh_adapter.py"
+   ```
+
+   Sovittimen executable-bit pitää säilyttää asennuksessa. V2 ei käytä
+   LEGACY/1:n `WINDOWS_*`-muuttujia. Älä käytä smokelippuja tuotannossa.
+
+5. **Tarkista kuitti.** SUCCESS/0 vaatii korreloidun VERIFIED-vastauksen ja
+   onnistuneen prosessin. FAILED/1 tarkoittaa paikallista hylkäystä tai
+   korreloitua vastaanottimen hylkäystä. UNKNOWN_REMOTE_STATE/3 vaatii käsin
+   read-only-tarkastuksen; yhteysvirhettä ei keksitä korreloiduksi FAILEDiksi.
+   Receiverin asennusrepon alla on
+   `artifacts/staging/fof-dissertation-local-handoff/incoming/<run_id>/`,
+   jossa ovat `files/`, `manifest.json` ja kokonaisonnistumisen `VERIFIED.json`.
+6. **Tarkasta ja tuo tarvittaessa käsin.** VERIFIED todistaa teknisen eheyden,
+   ei julkaisuhyväksyntää. Ei automaattista importia, Git-toimia, poistoja,
+   overwritea, retryä tai vanhojen ajojen siivousta.
+
+PC pois päältä / SSH saavuttamattomissa ennen yhteyttä: vastaanottoa ei tapahdu,
+lähteet eivät muutu. Tarkista virta, uni, verkon reititys, SSH-palvelu,
+tunnistautuminen ja host-key-luottamus muuttamatta turva-asetuksia automaattisesti.
+Myöhäinen katkos on eri asia: ajo voi olla osittainen tai jo VERIFIED. Säilytä
+paikallinen paketti ja etäajo; tarkista run_id, manifesti, exact-set, koot/hashit
+ja kuitti ennen uutta päätöstä. Uusi valtuutettu yritys saa uuden run_id:n.
+Väärä receiver-polku/versio korjataan konfiguraatiossa erillisellä luvalla;
+virheellinen profiili/hash korjataan hyväksyntäprosessissa, ei ohittamalla porttia.
+
+Sovitin on riittävä lisäkomento; toista convenience-wrapperia ei tarvita.
+Se validoi asetukset ennen stdin-lukua, korvaa prosessinsa `ssh`:lla ja säilyttää
+binäärisen stdin/stdout-virran sekä exit-koodin. SSH käyttää `-T`, BatchMode=yes,
+StrictHostKeyChecking=yes, ConnectionAttempts=1, ConnectTimeout=10,
+ClearAllForwardings=yes ja PermitLocalCommand=no. Diagnostiikka on stderrissä;
+JSONia, manifestia tai taria ei muokata. Sender omistaa 60 sekunnin kokonaisrajan
+ja vastauksen tulkinnan. Sovitinta ei tule kutsua suoraan payloadilla: execute-
+ja sisältöhyväksyntäportti on aina senderissä.
+
+Vain erikseen hyväksytyssä synteettisessä smokessa `FOF_V2_SMOKE_SESSION`
+asetetaan uudeksi 32-merkkiseksi lowercase hex -tunnisteeksi. Se lisää receiverin
+`-SmokeTest -SmokeSession`-argumentit; sender tarvitsee erikseen `--smoke-test`
+ja testi-identiteetin. Testirekisteri sidotaan sessioon ja synteettiseen digestiin;
+tuotantorekisteriä ei muuteta. Tuotantokutsussa poista `FOF_V2_SMOKE_SESSION` ympäristöstä; tyhjä muuttuja
+käyttää normaalia receiver-kutsua.
 
 ## LEGACY/1 — säilyvä allow-list-käyttö
 
@@ -611,8 +705,8 @@ se ei ole Windows-kohde, profiilikenttä eikä vastaanottimen toinen toteutus.
 Sender antaa sovittimelle vain binäärisen tar-stdin-virran ja tarkistaa
 sen yhden JSON-stdout-vastauksen sekä exit-koodin. Sovitin vastaa paikallisesti
 valtuutetusta SSH-kutsusta pysyvään receiveriin ja säilyttää protokollakanavat.
-Tämä käyttöohje ei nimeä tilapäistä smoke-sovitinta pysyväksi riippuvuudeksi
-eikä toimita yleiskäyttöistä tuotannon SSH-käynnistintä.
+Tämä käyttöohje ei nimeä tilapäistä smoke-sovitinta pysyväksi riippuvuudeksi.
+Toimitettu v2-sovitin ja runtime-asetukset kuvataan operaattorin pikapolussa.
 
 Ilman `--local-receiver`-valintaa aktiivinenkin profiili pysähtyy edelleen
 `RECEIVER_NOT_AVAILABLE_FOR_PROTOCOL_V2`-tilaan ennen verkkoa. Legacy-
