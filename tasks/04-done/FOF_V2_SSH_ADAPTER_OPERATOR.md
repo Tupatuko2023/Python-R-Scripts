@@ -4,7 +4,7 @@
 
 Owner packet `fof-durable-handoff-v2-ssh-adapter-and-operator-runbook`
 authorizes dedicated admission, local implementation and harmless Windows smoke.
-Status: review. No production activation, receiver change, Git delivery or A4 work.
+Status: done (human-approved; task-only Git delivery pending). No production activation, receiver change, Git delivery or A4 work.
 
 ## Scope
 
@@ -90,3 +90,23 @@ K18/QC: NOT APPLICABLE — transport invocation only, no scientific changes.
   Ulkoinen näyttö: `fof-test-ruff-repair/adapter.log`, `protocol.log`,
   `legacy.log` ja `result.json`. Ei Windows-uusinta-ajoa, Git-toimitusta,
   tuotantoaktivointia tai tehtävän tilasiirtoa.
+
+- 2026-09-16T16:52:25+03:00: Ihmisen mergaaman PR #158:n post-merge-varmennus PASS.
+  Käyttäjän post-merge-closeout-paketti hyväksyy done-siirron varmennuksen
+  jälkeen; ei agentin itsenäistä hyväksyntää. Merge ja nykyinen main:
+  `0c7764e59ead793fb2620a219a687fc3e47cbeda`. PR:n täsmälleen neljä polkua
+  sekä kaikki toimitetut blobit/moodit täsmäävät review-tilaan. Etähaara poistettu.
+  Adapteri SHA-256 `13e74c9114851ba8b651dd54d7edd4d9b6f88249e45e0e891edddc5fda6adf1b`,
+  mode `100755`; testiblob `e357da82d6f59e3e220ee97fd3e71750169a3892`;
+  dokumenttiblob `50c33e2e722ab9bb9094b85439fc0da75c48e594`.
+  Pre-merge 11/11 + 48/48 (ei skippejä) + 29/29 PASS; formatter/lint/hookit PASS.
+  Etä-CI: Python, Markdown, CodeQL, K-smoke ja Sourcery PASS; vaihtoehtoinen
+  smoke-skip-job SKIPPED. Sourcery-korrelaatiokysymys ratkaistu ilman muutoksia:
+  v2:n run_id kulkee manifestissa, staging on receiverin omistama.
+  Muuttumaton adapteri säilyttää aiemman Windows-smoke-evidenssin; ei uusinta-ajoa.
+  Tuotantoprofiili EMPTY_NOT_EXECUTABLE/files=[]; receiverin main
+  `450ed45557e4abf5997473829e63a831a969acce` sisältää tyhjät sisältöhyväksynnät.
+  Ei tuotantoaktivointia tai tuotantosiirtoa. Vain tehtäväkortti siirretty
+  erillisessä checkoutissa; tutkimuscheckoutit ennallaan.
+  Done-kortin Git-toimitus on vielä erillinen task-only-PR; mainin kortti
+  pysyy review-polussa siihen asti. Ei commitia/pushia tässä closeoutissa.
