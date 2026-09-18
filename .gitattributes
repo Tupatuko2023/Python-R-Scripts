@@ -2,6 +2,9 @@
 
 # Platform-specific overrides
 *.ps1 text eol=crlf
+# The FOF_ARTIFACT_HANDOFF/2 receiver is hash-bound at runtime. Keep its
+# canonical bytes identical across Git checkouts, including Windows.
+Fear-of-Falling/scripts/ps7/receive_artifact_bundle.ps1 text eol=lf
 
 # Text files (force LF)
 *.md  text eol=lf

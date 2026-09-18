@@ -624,6 +624,17 @@ varmistaa tiedostojen koon/hashit, snapshot-pariteetin ja lopuksi profiilin
 sekä HEADin muuttumattomuuden. Paikallinen yksilöllinen paketti säilytetään
 FOF-juuren ulkopuolisessa väliaikaistilassa; automaattista uusintaa ei tehdä.
 
+V2:n SSH-sovittimen runtime-asetukset ovat erillinen luotettu ympäristö:
+`FOF_V2_SSH_ALIAS` nimeää ennakkoon konfiguroidun SSH-aliasin ja
+`FOF_V2_RECEIVER_SCRIPT` on Windowsin absoluuttinen polku, jonka on päätyttävä
+`/scripts/ps7/receive_artifact_bundle.ps1`. Tämä canonical-polku vastaa Gitissä
+seurattua receiveriä; sovitin ei hyväksy vanhaa `/scripts/receive_artifact_bundle.ps1`
+-suffiksia eikä asenna receiveriä. Host-, käyttäjä- ja avaintiedot jäävät SSH:n
+luotettuun runtime-konfiguraatioon eivätkä kuulu profiiliin tai repositoryyn.
+`python3 scripts/termux/fof_v2_ssh_adapter.py --check` tarkistaa asetukset,
+SSH:n, PowerShell 7.4+:n, TarReaderin ja receiverin olemassaolon ilman
+artefaktin lähettämistä.
+
 ### Synteettinen smoke on erillinen testitila
 
 Senderin `--smoke-test` vaatii `--profile`-valinnan ja hyväksyy vain
