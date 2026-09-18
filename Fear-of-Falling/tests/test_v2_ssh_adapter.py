@@ -47,7 +47,7 @@ class AdapterTests(unittest.TestCase):
         protocol.SenderRuntimeTests.setUp(self)
         self.env = {k: v for k, v in self.env.items() if not k.startswith('FOF_V2_')}
         self.env.update(FOF_V2_SSH_ALIAS='synthetic-host',
-                        FOF_V2_RECEIVER_SCRIPT='C:/Synthetic Repo/scripts/receive_artifact_bundle.ps1')
+                        FOF_V2_RECEIVER_SCRIPT='C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1')
         (self.bin / 'ssh').write_text(FAKE_SSH)
         (self.bin / 'ssh').chmod(0o700)
 
@@ -65,7 +65,7 @@ class AdapterTests(unittest.TestCase):
         for required in ['-T','BatchMode=yes','StrictHostKeyChecking=yes','ConnectionAttempts=1']:
             self.assertIn(required,args)
         script=base64.b64decode(args[-1].split()[-1]).decode('utf-16le')
-        self.assertEqual(script, "& 'C:/Synthetic Repo/scripts/receive_artifact_bundle.ps1'; exit $LASTEXITCODE")
+        self.assertEqual(script, "& 'C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1'; exit $LASTEXITCODE")
         self.assertEqual((self.base/'ssh-calls').read_text(), '1\n')
 
     def test_configuration_missing_rejected_before_ssh(self):
@@ -106,10 +106,10 @@ class AdapterTests(unittest.TestCase):
 
     def test_unsafe_configuration(self):
         cases={'FOF_V2_SSH_ALIAS':['-oProxyCommand=bad','user@host','host;evil','host\n'],
-               'FOF_V2_RECEIVER_SCRIPT':['relative.ps1','C:/x/../scripts/receive_artifact_bundle.ps1',
-                "C:/x';evil/scripts/receive_artifact_bundle.ps1",'C:/x$/scripts/receive_artifact_bundle.ps1',
-                'C:/NUL/scripts/receive_artifact_bundle.ps1','C:/x./scripts/receive_artifact_bundle.ps1',
-                'C:/x//scripts/receive_artifact_bundle.ps1','C:/x/scripts/other.ps1',
+               'FOF_V2_RECEIVER_SCRIPT':['relative.ps1','C:/x/scripts/receive_artifact_bundle.ps1','C:/x/../scripts/ps7/receive_artifact_bundle.ps1',
+                "C:/x';evil/scripts/ps7/receive_artifact_bundle.ps1",'C:/x$/scripts/ps7/receive_artifact_bundle.ps1',
+                'C:/NUL/scripts/ps7/receive_artifact_bundle.ps1','C:/x./scripts/ps7/receive_artifact_bundle.ps1',
+                'C:/x//scripts/ps7/receive_artifact_bundle.ps1','C:/x/scripts/ps7/other.ps1',
                 'C:\\x\\scripts\\receive_artifact_bundle.ps1','//host/share/receiver.ps1'],
                'FOF_V2_SMOKE_SESSION':['../x','a'*31,'A'*32,'a'*32+';exit 0']}
         for key,values in cases.items():

@@ -2,6 +2,8 @@
 
 # Platform-specific overrides
 *.ps1 text eol=crlf
+# Keep the hash-bound v2 receiver byte-stable across Windows checkouts.
+Fear-of-Falling/scripts/ps7/receive_artifact_bundle.ps1 text eol=lf
 
 # Text files (force LF)
 *.md  text eol=lf
