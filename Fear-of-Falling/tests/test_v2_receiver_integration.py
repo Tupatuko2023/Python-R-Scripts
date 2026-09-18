@@ -62,6 +62,7 @@ class RealReceiverContractTest(unittest.TestCase):
             staging.mkdir()
             wrapper = base / "receiver-wrapper.py"
             wrapper.write_text(
+                "#!/usr/bin/env python3\n"
                 "import os, subprocess, sys\n"
                 "cmd=[os.environ['PWSH'], '-NoLogo', '-NoProfile', '-NonInteractive', '-File', "
                 "os.environ['RECEIVER'], '-StagingDir', os.environ['STAGING'], '-TransferId', "
