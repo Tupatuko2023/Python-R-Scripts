@@ -80,7 +80,11 @@ class RealReceiverContractTest(unittest.TestCase):
             execute = subprocess.run(
                 ["bash", str(fof / "scripts/termux/export_artifacts_to_windows.sh"), "--profile", "config/test-profile.json",
                  "--execute", "--approved-content-digest", preview["content_digest"], "--local-receiver", str(wrapper)],
-                cwd=fof, env=env, text=True, capture_output=True, check=True,
+                cwd=fof, env=env, text=True, capture_output=True, check=False,
+            )
+            self.assertEqual(
+                execute.returncode, 0,
+                msg=f"receiver contract failed\nstdout={execute.stdout}\nstderr={execute.stderr}",
             )
             outcome = json.loads(execute.stdout)
             receipt = outcome["receipt"]
