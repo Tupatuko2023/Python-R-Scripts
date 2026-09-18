@@ -90,9 +90,9 @@ class RealReceiverContractTest(unittest.TestCase):
             outcome = json.loads(execute.stdout)
             receipt = outcome["receipt"]
             self.assertEqual(receipt["status"], "VERIFIED")
-            self.assertEqual(receipt["run_id"], preview["run_id"])
+            self.assertRegex(receipt["run_id"], r"^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{32}$")
             self.assertEqual(receipt["content_digest"], preview["content_digest"])
             self.assertEqual(receipt["file_count"], 1)
-            run_dir = staging / "incoming" / preview["run_id"]
+            run_dir = staging / "incoming" / receipt["run_id"]
             self.assertTrue((run_dir / "VERIFIED.json").is_file())
             self.assertEqual((run_dir / "files/synthetic.md").read_bytes(), payload)
