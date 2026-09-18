@@ -30,9 +30,19 @@ function Assert-SafePath([string]$Path) {
             throw 'Hard-denied path'
         }
     }
-    if ($Path -match '\.csv$' -and 'outputs' -cnotin $Path.Split('/')[0..($Path.Split('/').Count - 2)]) {
+}
+
+function Assert-SafeSourcePath([string]$Path) {
+    Assert-SafePath $Path
+    $parts = $Path.Split('/')
+    if ($Path -match '\.csv$' -and 'outputs' -cnotin $parts[0..($parts.Count - 2)]) {
         throw 'CSV outside outputs'
     }
+}
+
+function Assert-SafeStagingName([string]$Path) {
+    Assert-SafePath $Path
+    if ($Path.Contains('/')) { throw 'Staging path must be a filename' }
 }
 
 function Assert-NoReparse([string]$Path) {
@@ -216,8 +226,7 @@ try {
         $keys = @($row.PSObject.Properties.Name)
         $rowKeys = @($keys | Sort-Object) -join ','
         if ($rowKeys -cne 'sha256,size_bytes,source_path,staging_path') { throw 'Manifest row schema mismatch' }
-        Assert-SafePath ([string]$row.source_path); Assert-SafePath ([string]$row.staging_path)
-        if ([string]$row.staging_path -match '/') { throw 'Staging path must be a filename' }
+        Assert-SafeSourcePath ([string]$row.source_path); Assert-SafeStagingName ([string]$row.staging_path)
         if ([string]$row.sha256 -cnotmatch '^[0-9a-f]{64}$' -or [int64]$row.size_bytes -lt 0) { throw 'Manifest row invalid' }
         if ($metadata.ContainsKey([string]$row.staging_path)) { throw 'Duplicate manifest path' }
         $member = 'files/' + [string]$row.staging_path

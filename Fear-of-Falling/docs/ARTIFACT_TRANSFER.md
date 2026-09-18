@@ -596,7 +596,9 @@ Manifestissa on täsmälleen nämä kentät:
 | run_correlation_digest      | alla määritelty ajosidonta                                                                                       |
 
 Kukin manifestin files-rivi sisältää täsmälleen source_path, staging_path,
-size_bytes (int, ei bool, 0–1073741824) ja sha256. Polut vastaavat profiilia
+size_bytes (int, ei bool, 0–1073741824) ja sha256. CSV:n outputs-sääntö koskee
+source_pathia; staging_path on edelleen filename-only ja voi olla esimerkiksi
+report.csv ilman outputs-komponenttia. Polut vastaavat profiilia
 täsmälleen, sha256 = expected_sha256, ei puuttuvia/ylimääräisiä rivejä.
 Summa size_bytes enintään 1073741824. Runtime mittaa koot ja hashit
 turvallisista avoimista tiedostokahvoista, ja snapshot-pariteetti tarkistetaan

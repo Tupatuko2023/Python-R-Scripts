@@ -1,13 +1,12 @@
-"""Real sender-to-PowerShell-receiver contract test.
+"""Real sender-to-PowerShell-receiver contract tests.
 
-The test is skipped on hosts without PowerShell 7; Windows CI/runtime must run it.
+The tests are skipped on hosts without PowerShell 7; Windows CI/runtime runs them.
 """
 import hashlib
 import json
 import os
 import shutil
 import subprocess
-import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -20,7 +19,10 @@ PWSH = shutil.which("pwsh")
 
 @unittest.skipUnless(PWSH, "PowerShell 7 is required for the real receiver contract test")
 class RealReceiverContractTest(unittest.TestCase):
-    def test_sender_bundle_is_verified_by_real_receiver(self):
+    def _run_contract(self, suffix):
+        is_csv = suffix == ".csv"
+        filename = "synthetic" + suffix
+        payload = b"column\nvalue\n" if is_csv else b"synthetic contract payload\n"
         with tempfile.TemporaryDirectory(prefix="fof-v2-e2e-") as td:
             base = Path(td)
             repo = base / "repo"
@@ -31,8 +33,7 @@ class RealReceiverContractTest(unittest.TestCase):
             (fof / "outputs").mkdir()
             shutil.copyfile(SENDER, fof / "scripts/termux/export_artifacts_to_windows.sh")
             shutil.copyfile(RECEIVER, fof / "scripts/ps7/receive_artifact_bundle.ps1")
-            payload = b"synthetic contract payload\n"
-            source = fof / "outputs/synthetic.md"
+            source = fof / ("outputs/" + filename)
             source.write_bytes(payload)
             profile = {
                 "protocol_version": "FOF_ARTIFACT_HANDOFF/2",
@@ -43,11 +44,11 @@ class RealReceiverContractTest(unittest.TestCase):
                 "state": "APPROVED",
                 "classification_policy": "EXPLICIT_APPROVAL_HARD_DENY_PRECEDENCE",
                 "files": [{
-                    "source_path": "Fear-of-Falling/outputs/synthetic.md",
-                    "staging_path": "synthetic.md",
+                    "source_path": "Fear-of-Falling/outputs/" + filename,
+                    "staging_path": filename,
                     "classification": "DISTRIBUTABLE_AS_IS",
                     "approval_reference": "SYNTHETIC-ONLY",
-                    "csv_approval_reference": None,
+                    "csv_approval_reference": "SYNTHETIC-CSV" if is_csv else None,
                     "expected_sha256": hashlib.sha256(payload).hexdigest(),
                 }],
             }
@@ -87,12 +88,17 @@ class RealReceiverContractTest(unittest.TestCase):
                 execute.returncode, 0,
                 msg=f"receiver contract failed\nstdout={execute.stdout}\nstderr={execute.stderr}",
             )
-            outcome = json.loads(execute.stdout)
-            receipt = outcome["receipt"]
+            receipt = json.loads(execute.stdout)["receipt"]
             self.assertEqual(receipt["status"], "VERIFIED")
             self.assertRegex(receipt["run_id"], r"^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{32}$")
             self.assertEqual(receipt["content_digest"], preview["content_digest"])
             self.assertEqual(receipt["file_count"], 1)
             run_dir = staging / "incoming" / receipt["run_id"]
             self.assertTrue((run_dir / "VERIFIED.json").is_file())
-            self.assertEqual((run_dir / "files/synthetic.md").read_bytes(), payload)
+            self.assertEqual((run_dir / ("files/" + filename)).read_bytes(), payload)
+
+    def test_sender_bundle_is_verified_by_real_receiver(self):
+        self._run_contract(".md")
+
+    def test_csv_source_with_filename_only_staging_is_verified(self):
+        self._run_contract(".csv")
