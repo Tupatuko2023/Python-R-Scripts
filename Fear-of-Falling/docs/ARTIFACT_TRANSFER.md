@@ -252,7 +252,13 @@ Samoista muuttumattomista syötteistä syntyy sama JSONL-sisältö. Nimiä ei pa
 välilyönneillä. Esikatselun yhteenveto ja virheilmoitukset tulevat stderr-virtaan.
 Kesken tarkistuksen havaittu tiedostomuutos keskeyttää ajon.
 
-## 4. Suorita erikseen valtuutettu siirto
+## 4. Legacy-siirtopolku (ei FOF_ARTIFACT_HANDOFF/2)
+
+Seuraava kuvaus koskee vanhaa ennen v2:ta käytettyä siirtomuotoa. Sitä ei
+saa käyttää `FOF_ARTIFACT_HANDOFF/2`-tuotantosiirtoon; v2:n ainoa wire-muoto
+on tämän dokumentin myöhemmin kuvattu `manifest.json` + `files/` -paketti.
+
+## 5. Suorita erikseen valtuutettu legacy-siirto
 
 Kun valinta on tarkastettu ja neljä ympäristöasetusta annettu, execute-komento on:
 
@@ -277,7 +283,7 @@ paketin binäärisenä SSH:n stdin-virtana; vastaanottimen toteutus on erillises
 PowerShell-tiedostossa. Yhteysasetukset ja ajotunniste välitetään koodattuina,
 eivät etäkomennon shell-syntaksiksi tulkittavina polkukatkelmina.
 
-## 5. Windowsin staging ja vastaanottotarkistus
+## 6. Windowsin staging ja vastaanottotarkistus (legacy)
 
 Onnistuneen ajon rakenne on seuraava. `<run_id>` on lähettäjän luoma
 UTC-aikaleiman ja satunnaisen UUID-osan yhdistelmä:
@@ -590,7 +596,9 @@ Manifestissa on täsmälleen nämä kentät:
 | run_correlation_digest      | alla määritelty ajosidonta                                                                                       |
 
 Kukin manifestin files-rivi sisältää täsmälleen source_path, staging_path,
-size_bytes (int, ei bool, 0–1073741824) ja sha256. Polut vastaavat profiilia
+size_bytes (int, ei bool, 0–1073741824) ja sha256. CSV:n outputs-sääntö koskee
+source_pathia; staging_path on edelleen filename-only ja voi olla esimerkiksi
+report.csv ilman outputs-komponenttia. Polut vastaavat profiilia
 täsmälleen, sha256 = expected_sha256, ei puuttuvia/ylimääräisiä rivejä.
 Summa size_bytes enintään 1073741824. Runtime mittaa koot ja hashit
 turvallisista avoimista tiedostokahvoista, ja snapshot-pariteetti tarkistetaan
@@ -617,6 +625,9 @@ content_digestin uudelleen. Hash ei itsessään ole käyttäjän lupa.
 V2 kulkee yhden binäärisen POSIX USTAR -virran mukana. Ensimmäinen jäsen on
 manifest.json, jonka sisältö on koko kanoninen manifesti C(M); tämän jälkeen
 tulevat täsmälleen files/<staging_path>-jäsenet manifestin files-järjestyksessä.
+Sender luo run_id:n ja sovitin välittää saman tunnisteen receiverin TransferId-
+argumentiksi. Receiver vaatii TransferId:n, tarkistaa sen yhtäläisyyden manifestin
+run_id-kenttään ja käyttää sitä muuttamattomana ajohakemiston nimenä.
 Metadata ei ole neljästoista sisältöartefakti. Ei hakemistojäseniä, executable
 receiver-koodia, PAX/GNU-laajennuksia, linkkejä tai pakkausta. Vain tavalliset
 typeflag 0 / V7 regular -jäsenet; tarkistetut otsakechecksumit, jäsenpituudet
@@ -635,7 +646,9 @@ atomisesti pending-kuitista; ristiriita tai keskeytys ei saa tuottaa VERIFIEDiä
 
 Durable VERIFIED-kuitti sekä yksi JSON-stdout-vastaus sisältävät
 protocol_version, status, run_id, content_digest, run_correlation_digest,
-file_count ja verified_at (UTC). verified_at on täsmälleen
+file_count ja verified_at (UTC). Receiver laskee ja tarkistaa content_digest-
+ja run_correlation_digest-arvot manifestin kanonisoiduista kentistä; se ei
+kopioi niitä kuittiin ilman omaa validointia. verified_at on täsmälleen
 `yyyy-MM-ddTHH:mm:ssZ`: kirjaimelliset kaksoispisteet, sekuntitarkkuus ja UTC Z.
 Esimerkiksi `2026-09-14T18:25:53Z` on kelvollinen;
 `2026-09-14T18.00.39Z` ei ole. Serialisointi käyttää invarianttia kulttuuria,

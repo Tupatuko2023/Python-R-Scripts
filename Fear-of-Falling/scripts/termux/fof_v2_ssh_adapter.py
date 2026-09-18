@@ -10,6 +10,7 @@ import sys
 def command(environ, check=False):
     alias = environ.get("FOF_V2_SSH_ALIAS", "")
     receiver = environ.get("FOF_V2_RECEIVER_SCRIPT", "")
+    transfer_id = environ.get("FOF_V2_TRANSFER_ID", "")
     session = environ.get("FOF_V2_SMOKE_SESSION", "")
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", alias):
         raise ValueError("FOF_V2_SSH_ALIAS_REQUIRED_OR_INVALID")
@@ -25,6 +26,8 @@ def command(environ, check=False):
             raise ValueError("FOF_V2_RECEIVER_PATH_AMBIGUOUS")
     if session and not re.fullmatch(r"[0-9a-f]{32}", session):
         raise ValueError("FOF_V2_SMOKE_SESSION_INVALID")
+    if not check and not re.fullmatch(r"[0-9]{8}T[0-9]{6}Z-[0-9a-f]{32}", transfer_id):
+        raise ValueError("FOF_V2_TRANSFER_ID_REQUIRED_OR_INVALID")
     # The encoded command contains only a validated literal path/session. No payload.
     if check:
         script = ("$ErrorActionPreference='Stop'; "
@@ -33,7 +36,7 @@ def command(environ, check=False):
                   "if (-not (Test-Path -LiteralPath '" + receiver + "' -PathType Leaf)) { exit 2 }; "
                   "[Console]::Error.WriteLine('FOF_V2_SSH_PREFLIGHT_OK'); exit 0")
     else:
-        script = "& '" + receiver + "'"
+        script = "& '" + receiver + "' -TransferId '" + transfer_id + "'"
         if session:
             script += " -SmokeTest -SmokeSession '" + session + "'"
         script += "; exit $LASTEXITCODE"

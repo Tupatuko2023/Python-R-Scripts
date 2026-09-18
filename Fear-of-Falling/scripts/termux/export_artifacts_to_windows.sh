@@ -385,9 +385,11 @@ def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, a
             or v2_digest(v2_load(root_fd, profile_path, smoke_test)) != v2_digest(profile)):
         v2_error('SOURCE_STATE_CHANGED')
     print('LOCAL V2 BUNDLE: ' + json.dumps(bundle_path), file=sys.stderr)
+    child_env = dict(os.environ, FOF_V2_TRANSFER_ID=manifest['run_id'])
     with open(bundle_path, 'rb') as wire, tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
         try:
-            result = subprocess.run([receiver], stdin=wire, stdout=stdout, stderr=stderr, timeout=60)
+            result = subprocess.run([receiver], stdin=wire, stdout=stdout, stderr=stderr,
+                                    timeout=60, env=child_env)
         except subprocess.TimeoutExpired:
             raise TransferOutcomeError('UNKNOWN_REMOTE_STATE', 'local receiver acknowledgement timed out; do not retry')
         except OSError:
