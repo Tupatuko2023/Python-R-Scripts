@@ -252,7 +252,13 @@ Samoista muuttumattomista syötteistä syntyy sama JSONL-sisältö. Nimiä ei pa
 välilyönneillä. Esikatselun yhteenveto ja virheilmoitukset tulevat stderr-virtaan.
 Kesken tarkistuksen havaittu tiedostomuutos keskeyttää ajon.
 
-## 4. Suorita erikseen valtuutettu siirto
+## 4. Legacy-siirtopolku (ei FOF_ARTIFACT_HANDOFF/2)
+
+Seuraava kuvaus koskee vanhaa ennen v2:ta käytettyä siirtomuotoa. Sitä ei
+saa käyttää `FOF_ARTIFACT_HANDOFF/2`-tuotantosiirtoon; v2:n ainoa wire-muoto
+on tämän dokumentin myöhemmin kuvattu `manifest.json` + `files/` -paketti.
+
+## 5. Suorita erikseen valtuutettu legacy-siirto
 
 Kun valinta on tarkastettu ja neljä ympäristöasetusta annettu, execute-komento on:
 
@@ -277,7 +283,7 @@ paketin binäärisenä SSH:n stdin-virtana; vastaanottimen toteutus on erillises
 PowerShell-tiedostossa. Yhteysasetukset ja ajotunniste välitetään koodattuina,
 eivät etäkomennon shell-syntaksiksi tulkittavina polkukatkelmina.
 
-## 5. Windowsin staging ja vastaanottotarkistus
+## 6. Windowsin staging ja vastaanottotarkistus (legacy)
 
 Onnistuneen ajon rakenne on seuraava. `<run_id>` on lähettäjän luoma
 UTC-aikaleiman ja satunnaisen UUID-osan yhdistelmä:
