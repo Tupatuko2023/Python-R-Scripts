@@ -23,7 +23,7 @@ rsynciä eikä erillistä tar-ohjelmaa.
    ennakkoon määrittelemän SSH-aliasin. Host/user/port/key-valinta jää käyttäjän
    SSH-konfiguraatioon, ei profiiliin tai Git-tiedostoihin.
    `FOF_V2_RECEIVER_SCRIPT` on Windowsin absoluuttinen drive-polku käyttäen `/`
-   erottimia, loppuna `/scripts/receive_artifact_bundle.ps1`. Sallitut segmentit
+   erottimia, loppuna `/scripts/ps7/receive_artifact_bundle.ps1`. Sallitut segmentit
    sisältävät ASCII-kirjaimia, numeroita, välilyöntejä ja `_.-`; ei UNC-,
    backslash-, traversal-, lainausmerkki-, shell- tai ympäristölaajennuksia.
    Segmentin reunavälilyönnit, loppupiste ja Windowsin laitenimet hylätään.
@@ -707,6 +707,14 @@ sen yhden JSON-stdout-vastauksen sekä exit-koodin. Sovitin vastaa paikallisesti
 valtuutetusta SSH-kutsusta pysyvään receiveriin ja säilyttää protokollakanavat.
 Tämä käyttöohje ei nimeä tilapäistä smoke-sovitinta pysyväksi riippuvuudeksi.
 Toimitettu v2-sovitin ja runtime-asetukset kuvataan operaattorin pikapolussa.
+
+V2:n `FOF_V2_SSH_ALIAS` ja `FOF_V2_RECEIVER_SCRIPT` ovat erillinen
+luotettu runtime-binding. Receiver-polun on oltava absoluuttinen
+Windows-polku, jonka canonical-suffiksi on
+`/scripts/ps7/receive_artifact_bundle.ps1`; vanhaa
+`/scripts/receive_artifact_bundle.ps1`-suffiksia ei hyväksytä.
+Host-, käyttäjä- ja avaintiedot jäävät SSH-konfiguraatioon eivätkä
+kuulu profiiliin tai repositoryyn.
 
 Ilman `--local-receiver`-valintaa aktiivinenkin profiili pysähtyy edelleen
 `RECEIVER_NOT_AVAILABLE_FOR_PROTOCOL_V2`-tilaan ennen verkkoa. Legacy-

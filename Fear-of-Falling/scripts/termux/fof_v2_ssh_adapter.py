@@ -17,7 +17,7 @@ def command(environ, check=False):
     if not re.fullmatch(r"[A-Za-z]:/(?:[A-Za-z0-9_. -]+/)+receive_artifact_bundle\.ps1", receiver):
         raise ValueError("FOF_V2_RECEIVER_SCRIPT_INVALID")
     parts = receiver[3:].split("/")
-    if len(parts) < 3 or parts[-2] != "scripts":
+    if len(parts) < 4 or parts[-3:] != ["scripts", "ps7", "receive_artifact_bundle.ps1"]:
         raise ValueError("FOF_V2_RECEIVER_INSTALLATION_REQUIRED")
     for part in parts:
         if (part in (".", "..") or part != part.strip() or part.endswith(".")
