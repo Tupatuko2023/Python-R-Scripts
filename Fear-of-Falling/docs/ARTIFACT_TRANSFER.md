@@ -617,6 +617,9 @@ content_digestin uudelleen. Hash ei itsessään ole käyttäjän lupa.
 V2 kulkee yhden binäärisen POSIX USTAR -virran mukana. Ensimmäinen jäsen on
 manifest.json, jonka sisältö on koko kanoninen manifesti C(M); tämän jälkeen
 tulevat täsmälleen files/<staging_path>-jäsenet manifestin files-järjestyksessä.
+Sender luo run_id:n ja sovitin välittää saman tunnisteen receiverin TransferId-
+argumentiksi. Receiver vaatii TransferId:n, tarkistaa sen yhtäläisyyden manifestin
+run_id-kenttään ja käyttää sitä muuttamattomana ajohakemiston nimenä.
 Metadata ei ole neljästoista sisältöartefakti. Ei hakemistojäseniä, executable
 receiver-koodia, PAX/GNU-laajennuksia, linkkejä tai pakkausta. Vain tavalliset
 typeflag 0 / V7 regular -jäsenet; tarkistetut otsakechecksumit, jäsenpituudet
@@ -635,7 +638,9 @@ atomisesti pending-kuitista; ristiriita tai keskeytys ei saa tuottaa VERIFIEDiä
 
 Durable VERIFIED-kuitti sekä yksi JSON-stdout-vastaus sisältävät
 protocol_version, status, run_id, content_digest, run_correlation_digest,
-file_count ja verified_at (UTC). verified_at on täsmälleen
+file_count ja verified_at (UTC). Receiver laskee ja tarkistaa content_digest-
+ja run_correlation_digest-arvot manifestin kanonisoiduista kentistä; se ei
+kopioi niitä kuittiin ilman omaa validointia. verified_at on täsmälleen
 `yyyy-MM-ddTHH:mm:ssZ`: kirjaimelliset kaksoispisteet, sekuntitarkkuus ja UTC Z.
 Esimerkiksi `2026-09-14T18:25:53Z` on kelvollinen;
 `2026-09-14T18.00.39Z` ei ole. Serialisointi käyttää invarianttia kulttuuria,

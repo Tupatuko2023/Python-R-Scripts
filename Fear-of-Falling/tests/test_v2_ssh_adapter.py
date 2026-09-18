@@ -47,7 +47,8 @@ class AdapterTests(unittest.TestCase):
         protocol.SenderRuntimeTests.setUp(self)
         self.env = {k: v for k, v in self.env.items() if not k.startswith('FOF_V2_')}
         self.env.update(FOF_V2_SSH_ALIAS='synthetic-host',
-                        FOF_V2_RECEIVER_SCRIPT='C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1')
+                        FOF_V2_RECEIVER_SCRIPT='C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1',
+                        FOF_V2_TRANSFER_ID='20260916T000000Z-' + 'a'*32)
         (self.bin / 'ssh').write_text(FAKE_SSH)
         (self.bin / 'ssh').chmod(0o700)
 
@@ -65,11 +66,11 @@ class AdapterTests(unittest.TestCase):
         for required in ['-T','BatchMode=yes','StrictHostKeyChecking=yes','ConnectionAttempts=1']:
             self.assertIn(required,args)
         script=base64.b64decode(args[-1].split()[-1]).decode('utf-16le')
-        self.assertEqual(script, "& 'C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1'; exit $LASTEXITCODE")
+        self.assertEqual(script, "& 'C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1' -TransferId '20260916T000000Z-" + 'a'*32 + "'; exit $LASTEXITCODE")
         self.assertEqual((self.base/'ssh-calls').read_text(), '1\n')
 
     def test_configuration_missing_rejected_before_ssh(self):
-        for key in ['FOF_V2_SSH_ALIAS','FOF_V2_RECEIVER_SCRIPT']:
+        for key in ['FOF_V2_SSH_ALIAS','FOF_V2_RECEIVER_SCRIPT','FOF_V2_TRANSFER_ID']:
             env=dict(self.env)
             env.pop(key)
             p=subprocess.run([str(ADAPTER)],input=b'payload',env=env,capture_output=True)
