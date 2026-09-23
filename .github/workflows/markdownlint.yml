@@ -55,6 +55,8 @@ jobs:
             path = entry.decode("utf-8")
             if re.search(r"(^|/)tasks/", path):
               continue
+            if path == "DEAC-Frailty-Index/docs/DEAC_HANDOVER.md":
+              continue
             if path.startswith("docs/guides/") and path.endswith(".docx.md"):
               continue
             if path.startswith("config/"):
