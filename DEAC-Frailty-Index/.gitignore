@@ -1,0 +1,22 @@
+# Local configuration and participant-level data
+config/.env
+config/.env.*
+!config/.env.example
+data/
+derived/
+
+# Generated analysis artifacts
+outputs/
+logs/
+**/outputs/
+**/logs/
+
+# Local data files and caches (root .gitignore protections also apply)
+*.parquet
+*.rds
+*.RData
+*.xlsx
+*.sav
+*.dta
+__pycache__/
+*.pyc
