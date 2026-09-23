@@ -2,7 +2,7 @@
 
 ## Tila
 
-- State: `02-in-progress`
+- State: `03-review`
 - Scope: vain DEAC-aliprojektin rakenne ja hyväksytyn handoverin kopio
 - Owner authorization: 2026-09-23
 
@@ -43,7 +43,7 @@ handover review + implementation feasibility audit.
 - [x] Ei DEAC-koodia, testejä, manifesteja, outputteja, derived-dataa tai lokitiedostoja.
 - [x] Ennestään likaiset työpuun polut ovat muuttumattomat; tarkastuksen omat muutokset rajautuvat tähän taskiin ja viiteen projektitiedostoon.
 - [x] Vain read-only-validointi; gate-ympäristön virhe raportoidaan erikseen eikä gate-skriptejä korjata tässä tehtävässä.
-- [x] Ei commitia, pushia eikä mergeä.
+- [x] Bootstrapin tiedostojen luontivaiheissa ei tehty commitia, pushia eikä mergeä; review-julkaisulle saatiin erillinen Owner-valtuutus.
 
 ## Rajoitteet
 
@@ -60,8 +60,9 @@ handover review + implementation feasibility audit.
 - 2026-09-23T13:51:41+03:00 Luotu README.md, AGENTS.md ja .gitignore sekä kopioitu hyväksytty handover byte-for-byte kohteeseen docs/DEAC_HANDOVER.md. Lähde- ja kohdehash täsmäävät. Gitignore-suoja tarkistettu; neljä projektitiedostoa ja task-siirto täyttävät tämän ajon viiden tiedoston rajan. `config/.env.example` ja review-siirto jäävät seuraavaan vaiheeseen.
 - 2026-09-23T14:24:59+03:00 Phase 2: luotu `config/.env.example`, jonka ainoa sisältö on `DATA_ROOT=`. Viiden tiedoston rakennetarkistus ja aliprojektin juuresta ajettu Python `-B` -smoke läpäisivät. Handoverin lähde- ja kohdehash ovat samat; gitignore-suoja ja ennestään muokattujen analyysisuunnitelmien hashit tarkistettu. `run-gates.ps1 --help` pysähtyi ennen Bash-skriptin suoritusta Win32 error 5 -virheeseen. Repojuuren `AGENTS.md` vaatii varmistamaan gate-skriptin ajon; siksi task jää `02-in-progress`-tilaan eikä sitä siirretä review'hun.
 - 2026-09-23T18:57:11+03:00 DEAC-bootstrapin viisi projektitiedostoa siirretty puhtaaseen `origin/main`-pohjaiseen feature-worktreehen rajattua Termux-handoffia varten. Tämä task säilyy `02-in-progress`-tilassa; pakollinen gate-validointi Termux/Linux-ympäristössä on vielä tekemättä.
+- 2026-09-23T19:57:27+03:00 Termux-vastaanotto: `origin/chore/deac-fira1-bootstrap` (`73d98b5c11edb9a95ad30b650bd2fa61dd50f74d`) ja `origin/main` (`06808627b218d8ca1eced17d9408d5c642389652`) täsmäsivät odotettuihin; baseline-diffissä oli täsmälleen viisi DEAC-projektitiedostoa ja tämä task. Handoverin SHA-256 täsmäsi. Natiivi `bash tools/run-gates.sh --mode pre-push --smoke` läpäisi (exit 0), samoin DEAC-juuresta ajettu Python `-B` -rakennesmoke ja `.gitignore`-tarkistus. Gate ei luonut repositorioartefakteja. Windows Git Bash -este on historiallinen; bootstrapin DoD täyttyi ja sama task siirrettiin `03-review`-tilaan Owner-arviointia varten.
+- 2026-09-23T20:44:59+03:00 Owner hyväksyi paikallisen review-diffin ja valtuutti sen rajatun commitin, pushin `chore/deac-fira1-bootstrap`-haaraan sekä PR:n avaamisen. Mergeä tai `04-done`-siirtoa ei valtuutettu. Etähaara ja `origin/main` tarkistettiin uudelleen ennen julkaisua; niiden hashit pysyivät odotettuina.
 
-## Blockers
+## Ratkaistut esteet
 
-- `GATE_ENVIRONMENT_BLOCKER`: repojuuren `AGENTS.md` TODO-järjestelmän MUST-sääntö vaatii varmistamaan, että `tools/run-gates.sh` on ajettu. `tools/run-gates.ps1 --help` epäonnistui Windowsissa ennen shell-skriptin suoritusta Git Bash -virheeseen `couldn't create signal pipe, Win32 error 5`. Onnistunutta gate-ajoa ei voi vielä todentaa. Aja gate Termux/Linux-ympäristössä ennen `03-review`-siirtoa; jos sekin epäonnistuu, kirjaa todellinen virhe ja tee erillinen tooling-selvitys. Gatea ei korjata tässä taskissa.
-- Termux/Linux-gate-validointi on pending. Jatka tätä samaa taskia feature-haarassa; älä aloita uutta bootstrapia tai siirrä taskia `03-review`-tilaan ennen onnistunutta validointia.
+- `GATE_ENVIRONMENT_BLOCKER`: Windowsissa `tools/run-gates.ps1 --help` pysähtyi Git Bash -virheeseen `couldn't create signal pipe, Win32 error 5` ennen varsinaista gatea. Termuxissa natiivi gate läpäisi 2026-09-23T19:57:27+03:00 (exit 0); Windows-este jää historialliseksi ympäristötiedoksi.
