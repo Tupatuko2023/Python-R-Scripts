@@ -26,6 +26,12 @@ Pakollinen työjono ja toimintalogiikka:
 - Safe mode: `true` → tiedostojen poistot vaativat hyväksynnän
 - Approvals required: `docs/` tai `src/` poistot, uudet Python-riippuvuudet, `data/`-rakenteen muutokset
 - Language policy: dokumentaatio suomeksi, koodi/muuttujat englanniksi
+- Poikkeus: `DEAC-Frailty-Index/docs/DEAC_HANDOVER.md` saa säilyä englanniksi
+  vain Ownerin hyväksymän tieteellisen lähdehandoverin muuttumattomana
+  tavukopiona (SHA-256
+  `6A7F99ECC63D7D77CB45B082FB6B8AFD87B7BD71B49A4AF2973A6A9C2DA37222`).
+  Poikkeus ei koske muuta dokumentaatiota; sisältömuutos edellyttää
+  tieteellistä hyväksyntää ja uutta hashia.
 
 ---
 

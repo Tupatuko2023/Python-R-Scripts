@@ -11,7 +11,9 @@ Tämä on analyysirepo (R + Python), jossa on useita aliprojekteja. Tavoitteena 
 - **Ohjelmointikielet:** Python ja R data-analyysiin.
 - **Toistettavuus:** R-puolella käytetään aliprojektikohtaista `renv/`-ympäristöä (esim. `Fear-of-Falling/renv/`). Pythonissa käytetään `requirements.txt`-riippuvuuksia repojuuressa.
 - **Kieli ja Termistö:**
-  - Käytä suomea dokumentaatiossa ja commit-viesteissä.
+  - Käytä suomea dokumentaatiossa ja commit-viesteissä; ainoa dokumentaation
+    kielipoikkeus on `SKILLS.md`:ssä ja `config/steering.md`:ssä yksilöity
+    muuttumaton DEAC-lähdehandover.
   - Pidä tekniset termit (esim. "dataframe", "pipeline", "artifact") englanniksi tai vakiintuneessa muodossa.
 - **Versionhallinta:** Git.
 
