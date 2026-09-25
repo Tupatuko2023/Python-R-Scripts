@@ -5,15 +5,20 @@ Tämä tiedosto täydentää SKILLS.md:tä. Jos ristiriitaa: SKILLS.md voittaa.
 ## Ennen työn aloitusta (MUST)
 
 - Lue `SKILLS.md` ja `config/steering.md`.
-- Varmista, että `tasks/01-ready/` sisältää tehtävän. Muuten STOP.
+- Uutta toteutustehtävää valittaessa varmista, että `tasks/01-ready/` sisältää
+  tehtävän. Muuten STOP. Jo hyväksytyn `03-review`-tehtävän tekninen sulkeminen
+  ei vaadi ready-tehtävää; tarkista ensin `SKILLS.md`:n riippumaton
+  ihmishyväksynnän näyttö.
 - Noudata `config/steering.md`: max 5 file change/run, safe mode, approvals required, kielipolitiikka.
 
 ## Tehtäväjono (Agent-First)
 
-- Valitse vain `tasks/01-ready/`.
-- Siirrä `tasks/02-in-progress/` ennen työn aloittamista.
+- Valitse uusi toteutustehtävä vain `tasks/01-ready/`-kansiosta. Hyväksytyn
+  `03-review`-tehtävän tekninen `04-done`-sulku on tästä valinnasta erillinen.
+- Siirrä uusi toteutustehtävä `tasks/02-in-progress/`-kansioon ennen työn
+  aloittamista; hyväksyttyä `03-review`-tehtävää ei palauteta sinne sulkua varten.
 - Lokita aikaleimalla jokainen merkittävä toimi.
-- Siirrä `tasks/03-review/` vasta kun DoD on täytetty.
+- Siirrä uusi toteutustehtävä `tasks/03-review/`-kansioon vasta kun DoD on täytetty.
 
 ## DoD (analyysirepo)
 

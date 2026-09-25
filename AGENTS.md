@@ -106,9 +106,12 @@ run `fof-qc-summarizer` -> then proceed to modeling.
 - MUST: valitse uusi toteutustyö vain `tasks/01-ready/`-kansiosta; siirrä
   `02-in-progress` ennen työtä, lokita ja siirrä `03-review` kun DoD täyttyy.
 - MUST: Owner tai muu tehtävälle määrätty ihminen hyväksyy `03-review`-työn.
-  Kirjatun hyväksynnän jälkeen agentti saa tehdä saman tehtävän teknisen
-  `04-done`-siirron, validoinnin ja lifecycle-PR:n ilman uutta ready-tehtävää.
-  Agentti ei hyväksy omaa työtään; ihminen arvioi ja mergeää PR:n.
+  Tarkista ennen siirtoa `SKILLS.md`:n mukainen agentin task-lokista riippumaton,
+  pysyvä näyttö hyväksyjästä, ajasta, kohdetehtävästä ja PR-/commit-rajauksesta.
+  Agentin oma merkintä ei yksin riitä. Vasta tämän jälkeen agentti saa tehdä
+  saman tehtävän teknisen `04-done`-siirron, validoinnin ja lifecycle-PR:n ilman
+  uutta ready-tehtävää. Agentti ei hyväksy omaa työtään; ihminen arvioi ja
+  mergeää PR:n.
 - MUST: noudata `config/steering.md` (max 5 files/run, safe mode, approvals required).
 - SHOULD: yksityiskohdat ja DoD: katso `SKILLS.md` (single source of truth).
 
