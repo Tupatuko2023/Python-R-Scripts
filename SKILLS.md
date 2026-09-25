@@ -14,8 +14,27 @@
 
 Pakollinen työjono ja toimintalogiikka:
 
-- **Selection rule:** valitse tehtävä vain `tasks/01-ready/`-kansiosta. Jos se on tyhjä: STOP ja pyydä ihmiseltä tehtävää.
-- **Transitions:** siirrä tehtävä `01-ready → 02-in-progress → 03-review`. Ihminen siirtää `04-done`.
+- **Selection rule:** valitse uusi toteutustehtävä vain `tasks/01-ready/`-kansiosta.
+  Jos jono on tyhjä: STOP ja pyydä ihmiseltä tehtävää. Ihmisen erikseen
+  hyväksymän, jo `03-review`-tilassa olevan tehtävän tekninen sulkeminen ei ole
+  uuden tehtävän valinta.
+- **Transitions:** agentti siirtää tehtävän `01-ready → 02-in-progress → 03-review`.
+  Owner tai muu tehtävälle määrätty ihminen tekee hyväksymispäätöksen; agentti
+  ei saa hyväksyä omaa työtään. Vasta kirjatun hyväksynnän jälkeen agentti saa
+  siirtää saman tehtävän teknisesti `03-review → 04-done`, kirjata hyväksynnän
+  provenance-tiedot, validoida muutoksen ja avata lifecycle-PR:n. Ihminen arvioi
+  ja mergeää PR:n erikseen.
+- **Approval evidence (MUST):** ennen teknistä sulkua tarkista agentin omasta
+  task-lokista riippumaton ja pysyvä ihmishyväksyntä. Näytöksi kelpaa tehtävälle
+  määrätyn hyväksyjän GitHub PR-/issue-kommentti tai hänen tekemänsä hyväksytyn
+  työn PR:n merge, kun PR:n diff sisältää saman review-tehtävän. Todennettavia
+  tietoja ovat hyväksyjän tunnus, päätöksen aika, kohdetehtävä, hyväksytyn työn
+  PR- tai commit-rajaus sekä pysyvä URL ja tarvittaessa merge-commit. Agentti saa
+  kirjata nämä viitteet taskiin mutta ei saa itse tehdä näyttönä käytettyä
+  mergeä tai hyväksyntäkommenttia. Agentin kirjoittama task-merkintä, PR-kuvaus
+  tai kommentti ei kelpaa ainoaksi näytöksi.
+  Jos hyväksyjä, kohde tai rajaus ei ole todennettavissa, STOP ja pyydä ihmistä
+  täydentämään hyväksyntänäyttöä ennen siirtoa.
 - **Log:** lisää tehtävätiedostoon aikaleimallinen lokimerkintä (ISO-8601; local time ok) jokaisesta merkittävästä toimesta.
 - **DoD gate (analyysirepo):** tee vähintään yksi smoke-run (Rscript/python) aliprojektin ohjeiden mukaan. Aja QC-runner, jos repo tarjoaa sen. Jos `renv/` on käytössä, varmista että `renv::restore()` on mahdollinen ja kirjaa tarvittaessa `sessionInfo()`/`renv::diagnostics()`.
 - **Blocker:** jos olet epävarma, luo blocker-merkintä tehtävään tai pyydä ihmiseltä täsmennys ennen jatkoa.

@@ -2,7 +2,7 @@
 
 ## Tila
 
-- State: `03-review`
+- State: `04-done`
 - Scope: vain DEAC-aliprojektin rakenne ja hyväksytyn handoverin kopio
 - Owner authorization: 2026-09-23
 
@@ -63,6 +63,8 @@ handover review + implementation feasibility audit.
 - 2026-09-23T19:57:27+03:00 Termux-vastaanotto: `origin/chore/deac-fira1-bootstrap` (`73d98b5c11edb9a95ad30b650bd2fa61dd50f74d`) ja `origin/main` (`06808627b218d8ca1eced17d9408d5c642389652`) täsmäsivät odotettuihin; baseline-diffissä oli täsmälleen viisi DEAC-projektitiedostoa ja tämä task. Handoverin SHA-256 täsmäsi. Natiivi `bash tools/run-gates.sh --mode pre-push --smoke` läpäisi (exit 0), samoin DEAC-juuresta ajettu Python `-B` -rakennesmoke ja `.gitignore`-tarkistus. Gate ei luonut repositorioartefakteja. Windows Git Bash -este on historiallinen; bootstrapin DoD täyttyi ja sama task siirrettiin `03-review`-tilaan Owner-arviointia varten.
 - 2026-09-23T20:44:59+03:00 Owner hyväksyi paikallisen review-diffin ja valtuutti sen rajatun commitin, pushin `chore/deac-fira1-bootstrap`-haaraan sekä PR:n avaamisen. Mergeä tai `04-done`-siirtoa ei valtuutettu. Etähaara ja `origin/main` tarkistettiin uudelleen ennen julkaisua; niiden hashit pysyivät odotettuina.
 - 2026-09-24T22:16:42+03:00 Owner hyväksyi PR #165:n kielisääntöhuomion ratkaisuksi vain `DEAC-Frailty-Index/docs/DEAC_HANDOVER.md`-tiedostoa koskevan provenance-poikkeuksen ja valtuutti sen paikallisen kirjaamisen `SKILLS.md`-, `config/steering.md`- ja `REPO_CONTEXT.md`-tiedostoihin sekä tähän taskiin. Handover säilyy englanninkielisenä muuttumattomana tavukopiona; sen SHA-256 on `6A7F99ECC63D7D77CB45B082FB6B8AFD87B7BD71B49A4AF2973A6A9C2DA37222`. Muu dokumentaatio pysyy suomenkielisenä. Erillistä commit-, push-, merge- tai `04-done`-valtuutusta ei tässä päätöksessä annettu; task säilyy `03-review`-tilassa.
+- 2026-09-25T13:55:31+03:00 Riippumaton hyväksyntäviite: PR #165 (<https://github.com/Tupatuko2023/Python-R-Scripts/pull/165>). GitHubin merge-tietueessa merge-tekijä on Ownerin tunnus `Tupatuko2023`, merge-aika `2026-09-25T10:26:12Z`, hyväksytyn työn head `c1dc26aa0d363a5d29b8c2a560cfc5c67fb96938` ja merge-commit `eefe8b5f6d30b298d0dd58dc3a2b6ff1c8f634ef`. PR:n diff sisältää tämän saman `tasks/03-review/DEAC_frailty_index_bootstrap.md`-tehtävän. Owner vahvisti bootstrapin hyväksynnän ja delegoi vain teknisen sulun; agentin task-merkintä kirjaa GitHub-viitteen eikä muodosta hyväksyntää. Agentti valmisti `03-review → 04-done`-siirron erilliseen lifecycle-PR:ään; Owner arvioi ja mergeää sen. FIRA1-vaihe ei kuulu sulkuun.
+- 2026-09-25T13:57:41+03:00 Lifecycle-ehdokkaan rajaus tarkistettu: neljä governance-ohjetta ja tämän saman taskin siirto, vanha polku poistuu. `git diff --cached --check` ja `bash tools/run-gates.sh --mode pre-push --smoke` läpäisivät (exit 0); handoverin SHA-256 täsmää hyväksyttyyn arvoon. CI tarkistetaan PR:n julkaistun headin jälkeen uudelleen.
 
 ## Ratkaistut esteet
 
