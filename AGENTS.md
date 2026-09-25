@@ -103,7 +103,12 @@ run `fof-qc-summarizer` -> then proceed to modeling.
 ## TODO-järjestelmä (Agent-First Task Queue)
 
 - MUST: varmista, että `tools/run-gates.sh` on ajettu (tai aja se nyt), jotta `SKILLS.md`, `config/agent_policy.md` ja `config/steering.md` ovat ladattu ja rajoitteet voimassa.
-- MUST: valitse työ vain `tasks/01-ready/`-kansiosta; siirrä `02-in-progress` ennen työtä, lokita, siirrä `03-review` kun DoD täyttyy; ihminen siirtää `04-done`.
+- MUST: valitse uusi toteutustyö vain `tasks/01-ready/`-kansiosta; siirrä
+  `02-in-progress` ennen työtä, lokita ja siirrä `03-review` kun DoD täyttyy.
+- MUST: Owner tai muu tehtävälle määrätty ihminen hyväksyy `03-review`-työn.
+  Kirjatun hyväksynnän jälkeen agentti saa tehdä saman tehtävän teknisen
+  `04-done`-siirron, validoinnin ja lifecycle-PR:n ilman uutta ready-tehtävää.
+  Agentti ei hyväksy omaa työtään; ihminen arvioi ja mergeää PR:n.
 - MUST: noudata `config/steering.md` (max 5 files/run, safe mode, approvals required).
 - SHOULD: yksityiskohdat ja DoD: katso `SKILLS.md` (single source of truth).
 

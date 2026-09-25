@@ -8,12 +8,16 @@ Tämä repositorio noudattaa Agent-First -metodologiaa analyysityössä (R + Pyt
   - Luo tehtäviä `tasks/00-backlog/`.
   - Määrittelee tehtävän vaatimukset (`definition_of_done`) ja siirtää `tasks/01-ready/`.
   - Tarkistaa `tasks/03-review/` kansion tuotokset.
+  - Tekee tehtävän hyväksymis- tai hylkäyspäätöksen ja arvioi sekä mergeää
+    mahdollisen lifecycle-PR:n.
   - Hallinnoi `config/steering.md` fokusta.
 
 - **AI Researcher (Agentti):**
   - Lukee `config/agent_policy.md` ja `REPO_CONTEXT.md`.
   - Poimii tehtäviä `tasks/01-ready/`.
   - Suorittaa työn ja siirtää tehtävän `tasks/03-review/`.
+  - Saa kirjatun ihmishyväksynnän jälkeen tehdä saman tehtävän teknisen
+    `04-done`-siirron, validoinnin ja lifecycle-PR:n; ei hyväksy omaa työtään.
 
 ## Prosessi (Workflow)
 
@@ -37,7 +41,12 @@ Tämä repositorio noudattaa Agent-First -metodologiaa analyysityössä (R + Pyt
      - Jos aliprojektissa on `renv/`, varmista että ympäristö on palautettavissa (`renv::restore()` tarpeen mukaan) ja kirjaa tarvittaessa `sessionInfo()` tai `renv::diagnostics()` lokiin.
      - Jos aliprojektissa on QC-runner (esim. `K18`-tyyppinen QC tai termux-runner), aja se ennen review-siirtoa.
      - Aja testit/lintit vain jos repo jo tarjoaa ne eikä se laajenna toolchainia (esim. `python -m pytest` tai projektin oma komento).
-   - **Hyväksytty:** Ihminen siirtää tiedoston `tasks/04-done/`.
+   - **Hyväksytty:** Owner tai muu tehtävälle määrätty ihminen kirjaa
+     hyväksymispäätöksen. Sen jälkeen agentti saa siirtää saman tehtävän
+     teknisesti `tasks/03-review/`-kansiosta `tasks/04-done/`-kansioon, kirjata
+     hyväksynnän provenance-tiedot, validoida rajatun muutoksen ja avata
+     lifecycle-PR:n. Ihminen arvioi ja mergeää PR:n; agentti ei tee
+     hyväksymispäätöstä.
    - **Hylätty:** Ihminen palauttaa tiedoston `tasks/01-ready/` ja lisää palautteen tehtävänanto-osioon.
 
 ## Hakemistorakenne
