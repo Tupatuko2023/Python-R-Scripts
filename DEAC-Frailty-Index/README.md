@@ -2,7 +2,10 @@
 
 Tämä aliprojekti on hyväksytyn 20 komponentin DEAC-haurausindeksin
 toistettavaa toteutusta ja validointia varten. DEAC-toteutusta ei ole vielä
-olemassa.
+olemassa kokonaisena 20 komponentin indeksinä. `src/deac_components.py`
+sisältää 14 komponentin erilliset, synteettisesti testatut pisteytysfunktiot;
+se ei sido suojattuja lähdekenttiä, lue osallistuja-aineistoa eikä laske
+DEAC-indeksiä.
 
 ## Tieteellinen auktoriteetti
 
