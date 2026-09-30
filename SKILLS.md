@@ -48,7 +48,7 @@ Pakollinen työjono ja toimintalogiikka:
 - Poikkeus: `DEAC-Frailty-Index/docs/DEAC_HANDOVER.md` saa säilyä englanniksi
   vain Ownerin hyväksymän tieteellisen lähdehandoverin muuttumattomana
   tavukopiona (SHA-256
-  `6A7F99ECC63D7D77CB45B082FB6B8AFD87B7BD71B49A4AF2973A6A9C2DA37222`).
+  `7E83E4FE34BEF5A4ADC548F6E67663EA343C94E68844739C37E046A4226A2539`).
   Poikkeus ei koske muuta dokumentaatiota; sisältömuutos edellyttää
   tieteellistä hyväksyntää ja uutta hashia.
 

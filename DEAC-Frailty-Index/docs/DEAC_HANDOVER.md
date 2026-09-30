@@ -1,10 +1,14 @@
 # DEAC → FIRA1 ANALYSIS HANDOVER
 
 - STATUS: APPROVED_FOR_FIRA1_HANDOVER
-- HANDOVER_VERSION: 1.0.0
+- HANDOVER_VERSION: 1.1.0
 - CREATED_DATE: 2026-09-23
-- SOURCE_METHODS_VERSION: 0.4.1-draft
-- SOURCE_METHODS_HASH: 192E59C6CE3D4F86CC1816E71ECBE68CB33205ACD23508147C9A521E5411ADAD
+- UPDATED_DATE: 2026-09-28
+- SOURCE_METHODS_VERSION: 0.5.0-draft
+- SOURCE_METHODS_STATE: CANONICAL_OWNER_FILE_STATUS_DRAFT; §3.1 DMA1-D-010 SCIENTIFIC_OWNER_APPROVED
+- SOURCE_METHODS_HASH: EA87E982BF98823D9A515FEF62E24455EF63B87A3799E626832B521132A41C33
+- SOURCE_DECISION: DMA1-D-010; Owner decision 2026-09-26; DECISION_LOG.md v1.3.0
+- SOURCE_DECISION_LOG_HASH: 5FF8FDBA6F5874B63F320D19CC50F1F0D5B65A6980C09FC14D1C822A9C086884
 - AUTHORITY SOURCE: `METHODS_AND_SCORING.md` §3.1. If this handover and the
   canonical owner conflict, STOP; METHODS §3.1 wins; do not reconcile
   automatically.
@@ -14,6 +18,9 @@
 Hand the current approved DEAC operational specification to FIRA1 for
 read-only implementation-feasibility planning in `Python-R-Scripts`. This
 handover packages canonical state; it does not create or replace it.
+This handover derives the limited DMA1-D-010 completion from the
+canonical METHODS owner v0.5.0-draft identified above. That source file
+remains DRAFT at file level; the §3.1 completion is Owner-approved.
 
 ## 2. Authority hierarchy
 
@@ -58,8 +65,10 @@ Components and approved scoring (snapshot of `METHODS_AND_SCORING.md` §3.1):
 4. MOI — remove age points first; then quintiles →
    `0 / 0,25 / 0,50 / 0,75 / 1`.
 5. Alcohol — `category * 0.5` (0→0, 1→0,5, 2→1).
-6. Hearing — 0→0, 1→1, 2→0.
-7. Vision — 0→0, 1→1, 2→0.
+6. Hearing — 0→0, 1→1, 2→0, 3 (kuuro)→1; 4 (ei tietoa) is
+   ordinary missing without a deficit score (DMA1-D-010; DMA1-D-005).
+7. Vision — 0→0, 1→1, 2→0, 3 (sokea)→1; 4 (ei tietoa) is
+   ordinary missing without a deficit score (DMA1-D-010; DMA1-D-005).
 8. Memory — 0→0; source categories 1/2 → 1.
 9. Mood — 0→0; source categories 1/2 → 1.
 10. Sleep — 0→0, 1→0,5, 2→1, 3→1, 4→1.
