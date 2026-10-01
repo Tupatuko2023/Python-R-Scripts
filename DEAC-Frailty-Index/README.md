@@ -4,8 +4,10 @@ Tämä aliprojekti toteuttaa hyväksytyn 20 komponentin
 DEAC-raihnaisuusindeksin laskennan rakennusosia. `src/deac_components.py`
 sisältää 19 erillistä pisteytysfunktiota, ja `src/deac_index.py` kokoaa 20
 nimettyä, valmiiksi pisteytettyä komponenttia synteettisillä syötteillä.
-MOI:n muodostus, suojattujen lähdekenttien sidonta ja tuotantoaineistolla
-varmennettu DEAC-laskenta ovat vielä kesken.
+MOI:n ikäpisteiden poisto ja kohorttikohtainen kvintiilipisteytys ovat
+synteettisesti toteutettuja rakennusosia. Lähdesidonta, yli 75-vuotiaiden
+ikäpisteytyksen lähdevarmennus ja tuotantoaineistolla varmennettu DEAC-laskenta
+ovat vielä kesken.
 Uudet funktiot eivät valitse mittauspuolta tai testiyritystä, ratkaise
 suoriutumattomuuden syytä, muunna lähdeyksikköä tai sido suojattuja
 lähdekenttiä. Kokoaja käyttää hyväksyttyä havaittujen pisteiden nimittäjää
