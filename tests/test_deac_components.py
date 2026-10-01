@@ -1,4 +1,4 @@
-"""Synthetic tests for the 14 rule-ready DEAC components."""
+"""Synthetic tests for DEAC component rules without source-field binding."""
 
 import importlib.util
 from pathlib import Path
@@ -117,3 +117,121 @@ def test_neurological_partial_missing_is_unresolved(
 def test_neurological_unsupported_input_fails_closed(values: tuple[object, ...]) -> None:
     with pytest.raises(ValueError):
         deac.score_neurological(*values)
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [(0, 0.0), (3.99, 0.0), (4, 0.5), (6, 0.5), (6.01, 1.0), (10, 1.0)],
+)
+def test_pain_vas_normalized_boundaries(value: float, expected: float) -> None:
+    assert deac.score_pain_vas(value) == expected
+
+
+@pytest.mark.parametrize(
+    ("seconds", "expected"),
+    [(0, 1.0), (4.99, 1.0), (5, 0.5), (9.99, 0.5), (10, 0.0)],
+)
+def test_single_leg_stance_selected_measurement(
+    seconds: float, expected: float
+) -> None:
+    assert deac.score_single_leg_stance(seconds) == expected
+
+
+@pytest.mark.parametrize(
+    ("seconds", "expected"),
+    [
+        (11.19, 0.0),
+        (11.20, 0.25),
+        (13.69, 0.25),
+        (13.70, 0.5),
+        (16.69, 0.5),
+        (16.70, 0.75),
+        (60.00, 0.75),
+        (60.01, 1.0),
+    ],
+)
+def test_five_chair_rises_completed_time(seconds: float, expected: float) -> None:
+    assert deac.score_five_chair_rises(seconds) == expected
+
+
+@pytest.mark.parametrize(
+    ("source_class", "expected"),
+    [(0, 1.0), (1, 0.8), (2, 0.6), (3, 0.4), (4, 0.2), (5, 0.0)],
+)
+def test_grip_already_selected_source_class(source_class: int, expected: float) -> None:
+    assert deac.score_grip_source_class(source_class) == expected
+
+
+@pytest.mark.parametrize(
+    ("speed", "expected"),
+    [(0.59, 1.0), (0.60, 0.5), (1.00, 0.5), (1.01, 0.0)],
+)
+def test_maximal_gait_measured_speed(speed: float, expected: float) -> None:
+    assert deac.score_maximal_10m_gait_speed(speed) == expected
+
+
+@pytest.mark.parametrize(
+    "scorer_name",
+    [
+        "score_pain_vas",
+        "score_single_leg_stance",
+        "score_five_chair_rises",
+        "score_grip_source_class",
+        "score_maximal_10m_gait_speed",
+    ],
+)
+def test_new_scorers_leave_ordinary_missing_unscored(scorer_name: str) -> None:
+    assert getattr(deac, scorer_name)(None) is None
+
+
+@pytest.mark.parametrize(
+    "scorer_name",
+    [
+        "score_pain_vas",
+        "score_single_leg_stance",
+        "score_five_chair_rises",
+        "score_maximal_10m_gait_speed",
+    ],
+)
+@pytest.mark.parametrize(
+    "unsupported", [-1, True, "unknown", float("nan"), float("inf")]
+)
+def test_measurement_scorers_reject_unnormalized_input(
+    scorer_name: str, unsupported: object
+) -> None:
+    with pytest.raises(ValueError):
+        getattr(deac, scorer_name)(unsupported)
+
+
+@pytest.mark.parametrize(
+    "scorer_name",
+    [
+        "score_pain_vas",
+        "score_single_leg_stance",
+        "score_five_chair_rises",
+        "score_maximal_10m_gait_speed",
+    ],
+)
+def test_measurement_scorers_reject_unconvertible_large_integer(scorer_name: str) -> None:
+    with pytest.raises(ValueError, match="Expected a finite measured result") as exc_info:
+        getattr(deac, scorer_name)(10**400)
+    assert isinstance(exc_info.value.__cause__, OverflowError)
+
+
+@pytest.mark.parametrize("unsupported", [-1, 6, True, 1.0, "unknown"])
+def test_grip_rejects_unsupported_class(unsupported: object) -> None:
+    with pytest.raises(ValueError):
+        deac.score_grip_source_class(unsupported)
+
+
+@pytest.mark.parametrize(
+    ("scorer_name", "value"),
+    [
+        ("score_pain_vas", 10.01),
+        ("score_five_chair_rises", 0),
+        ("score_maximal_10m_gait_speed", 0),
+    ],
+)
+def test_measurement_specific_invalid_inputs(scorer_name: str, value: float) -> None:
+    with pytest.raises(ValueError):
+        getattr(deac, scorer_name)(value)
