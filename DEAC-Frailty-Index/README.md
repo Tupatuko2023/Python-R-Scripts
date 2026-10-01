@@ -1,14 +1,15 @@
 # DEAC Frailty Index
 
-Tämä aliprojekti on hyväksytyn 20 komponentin DEAC-haurausindeksin
-toistettavaa toteutusta ja validointia varten. DEAC-toteutusta ei ole vielä
-olemassa kokonaisena 20 komponentin indeksinä. `src/deac_components.py`
-sisältää 19 erillistä pisteytysfunktiota normalisoiduille syötteille.
+Tämä aliprojekti toteuttaa hyväksytyn 20 komponentin
+DEAC-raihnaisuusindeksin laskennan rakennusosia. `src/deac_components.py`
+sisältää 19 erillistä pisteytysfunktiota, ja `src/deac_index.py` kokoaa 20
+nimettyä, valmiiksi pisteytettyä komponenttia synteettisillä syötteillä.
+MOI:n muodostus, suojattujen lähdekenttien sidonta ja tuotantoaineistolla
+varmennettu DEAC-laskenta ovat vielä kesken.
 Uudet funktiot eivät valitse mittauspuolta tai testiyritystä, ratkaise
 suoriutumattomuuden syytä, muunna lähdeyksikköä tai sido suojattuja
-lähdekenttiä. `src/deac_index.py` kokoaa vain synteettisesti annetut 20
-nimettyä komponenttipistettä hyväksytyllä havaittujen pisteiden nimittäjällä
-ja vähintään 80 prosentin kattavuusrajalla. Puuttuva `moi`-paikka on annettava
+lähdekenttiä. Kokoaja käyttää hyväksyttyä havaittujen pisteiden nimittäjää
+ja vähintään 80 prosentin kattavuusrajaa. Puuttuva `moi`-paikka on annettava
 arvolla `None`, ei poistamalla komponenttia. Vain aidosti ei-sovellettava
 komponentti merkitään `ComponentStatus.NOT_APPLICABLE`-arvolla. Kokoaja ei
 muodosta 19 komponentin vaihtoehtoindeksiä eikä varmista lähdesidontaa tai
