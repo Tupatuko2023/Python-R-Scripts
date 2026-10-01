@@ -70,3 +70,8 @@
 - 2026-10-01T19:27:00+03:00: Paikallinen Definition of Done täyttyi; sama tehtävä
   siirrettiin `03-review`-tilaan ja rajattu neljän tiedoston diff valmistellaan
   Ownerin PR-katselmointiin.
+- 2026-10-01T19:30:03+03:00: PR #174 avattiin commitista
+  `420a3ea4b611978d44ef6c3fa71f3b63bbee2f53`. GitHubin Python-testit,
+  Markdown-lint, CodeQL/Sourcery-analyysit ja smoke-muutostunnistus läpäisivät;
+  K-skriptien smoke-ajo ohitettiin, koska muutos ei koske niitä. PR odottaa
+  Ownerin katselmointia; agentti ei mergeä.
