@@ -35,7 +35,10 @@ def _measurement(value: int | float | None, *, positive: bool = False) -> float 
         return None
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError("Expected a normalized numeric measurement or None")
-    measured = float(value)
+    try:
+        measured = float(value)
+    except OverflowError as exc:
+        raise ValueError("Expected a finite measured result") from exc
     if not isfinite(measured) or measured < 0 or (positive and measured == 0):
         raise ValueError("Expected a finite measured result")
     return measured

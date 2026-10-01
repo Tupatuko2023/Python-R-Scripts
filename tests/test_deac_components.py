@@ -203,6 +203,21 @@ def test_measurement_scorers_reject_unnormalized_input(
         getattr(deac, scorer_name)(unsupported)
 
 
+@pytest.mark.parametrize(
+    "scorer_name",
+    [
+        "score_pain_vas",
+        "score_single_leg_stance",
+        "score_five_chair_rises",
+        "score_maximal_10m_gait_speed",
+    ],
+)
+def test_measurement_scorers_reject_unconvertible_large_integer(scorer_name: str) -> None:
+    with pytest.raises(ValueError, match="Expected a finite measured result") as exc_info:
+        getattr(deac, scorer_name)(10**400)
+    assert isinstance(exc_info.value.__cause__, OverflowError)
+
+
 @pytest.mark.parametrize("unsupported", [-1, 6, True, 1.0, "unknown"])
 def test_grip_rejects_unsupported_class(unsupported: object) -> None:
     with pytest.raises(ValueError):
