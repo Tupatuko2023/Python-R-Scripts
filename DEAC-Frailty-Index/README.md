@@ -3,11 +3,16 @@
 Tämä aliprojekti on hyväksytyn 20 komponentin DEAC-haurausindeksin
 toistettavaa toteutusta ja validointia varten. DEAC-toteutusta ei ole vielä
 olemassa kokonaisena 20 komponentin indeksinä. `src/deac_components.py`
-sisältää 14 aiemmin validoitua komponenttifunktiota sekä viiden muun
-komponentin puhtaat pisteytysfunktiot normalisoiduille syötteille.
+sisältää 19 erillistä pisteytysfunktiota normalisoiduille syötteille.
 Uudet funktiot eivät valitse mittauspuolta tai testiyritystä, ratkaise
 suoriutumattomuuden syytä, muunna lähdeyksikköä tai sido suojattuja
-lähdekenttiä. Moduuli ei lue osallistuja-aineistoa eikä laske DEAC-indeksiä.
+lähdekenttiä. `src/deac_index.py` kokoaa vain synteettisesti annetut 20
+nimettyä komponenttipistettä hyväksytyllä havaittujen pisteiden nimittäjällä
+ja vähintään 80 prosentin kattavuusrajalla. Puuttuva `moi`-paikka on annettava
+arvolla `None`, ei poistamalla komponenttia. Vain aidosti ei-sovellettava
+komponentti merkitään `ComponentStatus.NOT_APPLICABLE`-arvolla. Kokoaja ei
+muodosta 19 komponentin vaihtoehtoindeksiä eikä varmista lähdesidontaa tai
+tuotantoaineiston tulosta. Moduulit eivät lue osallistuja-aineistoa.
 
 ## Tieteellinen auktoriteetti
 
