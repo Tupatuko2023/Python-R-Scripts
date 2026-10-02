@@ -2,14 +2,14 @@
 
 ## Tila
 
-- State: `03-review`
+- State: `04-done`
 - Ownerin toimeksianto: 2026-10-01, erillinen synteettinen MOI-toteutus.
 - Lähtöcommit: `5ae1c8ec830715d0b5976314273fa2b91fea9b7a` (PR #173).
 
 ## Auktoriteetti ja vahvistetut säännöt
 
-- `DEAC-Frailty-Index/docs/DEAC_HANDOVER.md` v1.1.0, §5 komponentti 4,
-  SHA-256 `7E83E4FE34BEF5A4ADC548F6E67663EA343C94E68844739C37E046A4226A2539`.
+- `DEAC-Frailty-Index/docs/DEAC_HANDOVER.md` v1.2.0, §5 komponentti 4,
+  SHA-256 `B8527242BF9718ECBADDDEE6514837B2AD4F1B77C99B55BD18DAF26ABE3A00890`.
 - Ownerin 2026-10-01 vahvistama soveltamistulkinta on sittemmin kirjattu
   yksityiseen `DECISION_LOG.md`-tiedostoon tunnuksella `DMA1-D-012` sekä
   kanonisen `METHODS_AND_SCORING.md` §3.1:een. Näiden Ownerin toimittamat
@@ -20,6 +20,8 @@
   käytetään lähtötilanteen ikää; ikäpisteet vähennetään täsmälleen kerran;
   kvintiilit muodostetaan ikäpisteettömästä MOI:sta DEAC-analyysin
   lähtötilanteen kohortissa.
+- Handover 1.2.0 kirjaa ikäpisteiden kertavähennyksen ennen kvintiilejä ja
+  Ownerin DMA1-D-012-soveltamistulkinnan `ikä >=75 → 6`.
 - Saman ikäpisteettömän MOI-arvon tulee saada aina sama DEAC-piste.
 - Waris ym. 2011 §4.1:n viimeinen ikämerkintä on `75 years`; Ownerin
   soveltamistulkinta on lähtötilanteen ikä `>=75` → 6 ikäpistettä. Tämä
@@ -39,7 +41,8 @@
   2011:n eksplisiittisenä ylärajana.
 - Älä lisää lähdeheadereita, lähdeadapteria, osallistuja-aineiston lukua,
   tuotantoajoa tai muiden DEAC-komponenttien muutoksia.
-- Älä muuta hyväksyttyä handoveria tai muita tieteellisiä sääntöjä.
+- Tässä toteutuserässä ei muutettu hyväksyttyä handoveria tai muita
+  tieteellisiä sääntöjä; handover päivitettiin erikseen PR:ssä #175.
 
 ## Definition of Done
 
@@ -80,9 +83,18 @@
 - 2026-10-01T19:30:03+03:00: PR #174 avattiin commitista
   `420a3ea4b611978d44ef6c3fa71f3b63bbee2f53`. GitHubin Python-testit,
   Markdown-lint, CodeQL/Sourcery-analyysit ja smoke-muutostunnistus läpäisivät;
-  K-skriptien smoke-ajo ohitettiin, koska muutos ei koske niitä. PR odottaa
-  Ownerin katselmointia; agentti ei mergeä.
+  K-skriptien smoke-ajo ohitettiin, koska muutos ei koske niitä.
+- 2026-10-01T16:40:53Z: Owner `Tupatuko2023` yhdisti PR #174:n
+  (`https://github.com/Tupatuko2023/Python-R-Scripts/pull/174`), merge-commit
+  `ab9ba04853875229d1f17f5540ade2f3b673c1e8`.
 - 2026-10-02: Edellä mainitut 2026-10-01 kohdat, joissa ikäluokan
   soveltaminen kuvattiin avoimeksi, ovat historiallista tilaa ja ne on
   korvattu nykyisellä DMA1-D-012-provenienssilla. Nykyinen sääntö on
   lähtötilanteen ikä `>=75` → 6; päätöstä ei avata uudelleen.
+- 2026-10-02T09:45:10Z: Owner `Tupatuko2023` yhdisti PR #176:n
+  (`https://github.com/Tupatuko2023/Python-R-Scripts/pull/176`), joka sisälsi
+  tämän päivitetyn review-tehtävän; merge-commit
+  `552a283848c56d384186a1fb5ce4f7df50db9d0e`. Tämä on tehtävän sisällön
+  riippumaton ihmishyväksyntänäyttö.
+- 2026-10-02: Tehtävä siirrettiin teknisesti `04-done`-tilaan. Lifecycle-PR
+  toimitetaan Ownerin erilliseen arvioon.
