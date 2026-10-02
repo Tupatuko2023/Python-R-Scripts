@@ -2,7 +2,7 @@
 
 ## Tila
 
-- State: `03-review`
+- State: `04-done`
 - Type: synteettinen lähdenormalisointi
 
 ## Tavoite
@@ -72,6 +72,16 @@ perusteella. Tavoite ei ole tuotantolähteen sidonta tai osallistuja-ajo.
   Aiemmin epäonnistunut
   gate-yritys johtui vain väliaikaisen bytecode-polun oikeuksista; onnistunut
   ajo käytti repon oletuspolkua.
+- 2026-10-02T21:24:55+03:00: Riippumaton Owner-hyväksyntänäyttö: PR #179
+  (<https://github.com/Tupatuko2023/Python-R-Scripts/pull/179>) yhdistettiin
+  Owner-tunnuksella `Tupatuko2023` 2026-10-02T18:20:23Z. Hyväksytyn työn
+  head `b1d334d0deb741998e206d7701bd3ce8b6f4d656`; merge-commit
+  `30fca2d52b10bba2a2388e196d6b9a0887097ec7`. PR:n diff sisälsi tämän saman
+  tehtävän `03-review`-tilassa. Tämä GitHub-merkintä on riippumaton näyttö;
+  taskin oma merkintä ei muodosta hyväksyntää.
+- 2026-10-02T21:24:55+03:00: Sama hyväksytty tehtävä teknisesti siirretty
+  `04-done`-tilaan. Erillinen lifecycle-PR toimitetaan Ownerin arvioitavaksi;
+  agentti ei hyväksy tai mergeä sitä.
 
 ## Ownerin tarkistettavat avoimet sidonnat
 
