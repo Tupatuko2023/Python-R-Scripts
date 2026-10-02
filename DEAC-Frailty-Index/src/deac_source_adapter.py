@@ -142,6 +142,19 @@ def _matches_code(value: object, codes: Sequence[object]) -> bool:
     return any(value == code for code in codes)
 
 
+def normalize_pain_vas_cm(
+    value: object, ordinary_missing_codes: Sequence[object] = ()
+) -> object | None:
+    """Pass an already-centimeter VAS through, mapping configured missing codes.
+
+    The protected runtime binding supplies source-specific missing codes. This
+    function performs no unit conversion and does not reinterpret test status.
+    """
+    if value is None or _matches_code(value, ordinary_missing_codes):
+        return None
+    return value
+
+
 def _read_value(
     row: Mapping[str, object], bindings: SourceBindings, logical_field: str
 ) -> object:
@@ -151,6 +164,10 @@ def _read_value(
     if header not in row:
         raise ValueError(f"Bound source column is missing for {logical_field}")
     value = row[header]
+    if logical_field == "pain_vas_cm":
+        return normalize_pain_vas_cm(
+            value, bindings.ordinary_missing_codes.get(logical_field, ())
+        )
     if value is None or _matches_code(
         value, bindings.ordinary_missing_codes.get(logical_field, ())
     ):
@@ -158,13 +175,18 @@ def _read_value(
     return value
 
 
-def _test_value(
-    row: Mapping[str, object], bindings: SourceBindings, logical_field: str
+def normalize_preselected_test_value(
+    value: object,
+    codebook: Mapping[object, PerformanceDisposition],
+    logical_field: str,
 ) -> object:
-    value = _read_value(row, bindings, logical_field)
+    """Normalize one already-selected test result without choosing a trial/side.
+
+    Numeric measured values are returned unchanged. Configured test-specific
+    dispositions remain distinct; unknown textual codes fail closed.
+    """
     if value is None:
         return None
-    codebook = bindings.performance_codes.get(logical_field, {})
     try:
         disposition = codebook.get(value)
     except TypeError:
@@ -180,6 +202,16 @@ def _test_value(
             f"Unmapped test-specific source code for {logical_field}"
         )
     return value
+
+
+def _test_value(
+    row: Mapping[str, object], bindings: SourceBindings, logical_field: str
+) -> object:
+    return normalize_preselected_test_value(
+        _read_value(row, bindings, logical_field),
+        bindings.performance_codes.get(logical_field, {}),
+        logical_field,
+    )
 
 
 def _score_moi(

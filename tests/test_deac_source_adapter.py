@@ -96,6 +96,68 @@ def test_source_missing_codes_are_field_specific() -> None:
     assert adapter.score_source_row(row, bindings, (1, 2, 3, 4))["pain_vas"] is None
 
 
+@pytest.mark.parametrize(
+    "missing_alias",
+    ["synthetic_vas_unknown_a", "synthetic_vas_unknown_b"],
+)
+def test_vas_non_numeric_missing_aliases_are_unscored(missing_alias: str) -> None:
+    row, bindings = synthetic_fixture()
+    row[bindings.columns["pain_vas_cm"]] = missing_alias
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        ordinary_missing_codes={
+            "pain_vas_cm": (
+                "synthetic_vas_unknown_a",
+                "synthetic_vas_unknown_b",
+            )
+        },
+    )
+
+    assert adapter.score_source_row(row, bindings, (1, 2, 3, 4))["pain_vas"] is None
+
+
+def test_vas_centimeter_value_is_passed_without_unit_conversion() -> None:
+    row, bindings = synthetic_fixture()
+    centimetres = 4.25
+    row[bindings.columns["pain_vas_cm"]] = centimetres
+
+    assert adapter.normalize_pain_vas_cm(centimetres) is centimetres
+    assert adapter.score_source_row(row, bindings, (1, 2, 3, 4))["pain_vas"] == 0.5
+
+
+@pytest.mark.parametrize(
+    ("selected_field", "side_fields"),
+    [
+        ("better_leg_stance_seconds", ("synthetic_right_stance", "synthetic_left_stance")),
+        ("better_hand_grip_class", ("synthetic_right_grip", "synthetic_left_grip")),
+    ],
+)
+def test_unselected_sided_measurements_fail_closed(
+    selected_field: str, side_fields: tuple[str, str]
+) -> None:
+    row, bindings = synthetic_fixture()
+    columns = dict(bindings.columns)
+    del columns[selected_field]
+    for side_field in side_fields:
+        columns[side_field] = side_field
+        row[side_field] = 2
+
+    with pytest.raises(ValueError, match="semantic fields"):
+        adapter.score_source_row(
+            row, adapter.SourceBindings(columns=columns), (1, 2, 3, 4)
+        )
+
+
+def test_selected_test_measurement_passes_through_without_selection() -> None:
+    seconds = 7.25
+    assert (
+        adapter.normalize_preselected_test_value(
+            seconds, {}, "five_chair_rises_seconds"
+        )
+        is seconds
+    )
+
+
 def test_performance_codes_are_test_specific_and_keep_three_states_distinct() -> None:
     row, bindings = synthetic_fixture()
     synthetic_code = "synthetic_code_a"
