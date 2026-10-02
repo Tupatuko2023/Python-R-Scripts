@@ -20,7 +20,7 @@ Tämä tiedosto ohjaa agentin yleistä toimintaa ja fokusta. Ihmistutkija päivi
 - **Poikkeus:** `DEAC-Frailty-Index/docs/DEAC_HANDOVER.md` saa säilyä
   englanniksi vain Ownerin hyväksymän tieteellisen lähdehandoverin
   muuttumattomana tavukopiona (SHA-256
-  `7E83E4FE34BEF5A4ADC548F6E67663EA343C94E68844739C37E046A4226A2539`).
+  `B8527242BF9718ECBADDEE6514837B2AD4F1B77C99B55BD18DAF26ABE3A00890`).
   Poikkeus ei koske muuta dokumentaatiota; sisältömuutos edellyttää
   tieteellistä hyväksyntää ja uutta hashia.
 

@@ -1,14 +1,14 @@
 # DEAC → FIRA1 ANALYSIS HANDOVER
 
 - STATUS: APPROVED_FOR_FIRA1_HANDOVER
-- HANDOVER_VERSION: 1.1.0
+- HANDOVER_VERSION: 1.2.0
 - CREATED_DATE: 2026-09-23
-- UPDATED_DATE: 2026-09-28
-- SOURCE_METHODS_VERSION: 0.5.0-draft
-- SOURCE_METHODS_STATE: CANONICAL_OWNER_FILE_STATUS_DRAFT; §3.1 DMA1-D-010 SCIENTIFIC_OWNER_APPROVED
-- SOURCE_METHODS_HASH: EA87E982BF98823D9A515FEF62E24455EF63B87A3799E626832B521132A41C33
-- SOURCE_DECISION: DMA1-D-010; Owner decision 2026-09-26; DECISION_LOG.md v1.3.0
-- SOURCE_DECISION_LOG_HASH: 5FF8FDBA6F5874B63F320D19CC50F1F0D5B65A6980C09FC14D1C822A9C086884
+- UPDATED_DATE: 2026-10-02
+- SOURCE_METHODS_VERSION: version not independently verified; canonical source identified by SHA-256
+- SOURCE_METHODS_STATE: CANONICAL_OWNER_FILE_STATUS_DRAFT; §3.1 DMA1-D-010 and DMA1-D-012 SCIENTIFIC_OWNER_APPROVED
+- SOURCE_METHODS_HASH: 4FD2DDF3D19268FEF09B90AA0D7AD8095DADB417B2601238FCFBEBF1EC7AAAEF
+- SOURCE_DECISION: DMA1-D-010 (Owner decision 2026-09-26); DMA1-D-012 (Owner interpretation 2026-10-01); canonical DECISION_LOG.md identified by SHA-256
+- SOURCE_DECISION_LOG_HASH: 131DAB0920ED047422B5F228980489BAB29973E382B8A29BB6909FE6DB82C480
 - AUTHORITY SOURCE: `METHODS_AND_SCORING.md` §3.1. If this handover and the
   canonical owner conflict, STOP; METHODS §3.1 wins; do not reconcile
   automatically.
@@ -18,9 +18,10 @@
 Hand the current approved DEAC operational specification to FIRA1 for
 read-only implementation-feasibility planning in `Python-R-Scripts`. This
 handover packages canonical state; it does not create or replace it.
-This handover derives the limited DMA1-D-010 completion from the
-canonical METHODS owner v0.5.0-draft identified above. That source file
-remains DRAFT at file level; the §3.1 completion is Owner-approved.
+This handover derives the limited DMA1-D-010 and DMA1-D-012 completions
+from the canonical METHODS owner identified above by its exact SHA-256.
+The source file remains DRAFT at file level; the cited §3.1 rules are
+Owner-approved.
 
 ## 2. Authority hierarchy
 
@@ -62,8 +63,13 @@ Components and approved scoring (snapshot of `METHODS_AND_SCORING.md` §3.1):
 2. Alzheimer / Parkinson / stroke-AVH — combined into one 0/1 neurological
    deficit.
 3. Self-rated health — `source_value * 0.25` (0–1 in 0,25 steps).
-4. MOI — remove age points first; then quintiles →
-   `0 / 0,25 / 0,50 / 0,75 / 1`.
+4. MOI — `MOI_without_age = MOI_total - MOI_age_points`. The baseline
+   MOI total includes age points; derive age points from baseline age and
+   subtract them exactly once before forming quintiles in the DEAC
+   analysis baseline cohort. Waris et al. (2011) labels the final age
+   band “75 years”; the Owner's application interpretation is baseline
+   age ≥75 years → 6 MOI age points (DMA1-D-012). Map the resulting
+   quintiles to `0 / 0,25 / 0,50 / 0,75 / 1`.
 5. Alcohol — `category * 0.5` (0→0, 1→0,5, 2→1).
 6. Hearing — 0→0, 1→1, 2→0, 3 (kuuro)→1; 4 (ei tietoa) is
    ordinary missing without a deficit score (DMA1-D-010; DMA1-D-005).
