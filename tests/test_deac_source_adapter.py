@@ -148,9 +148,9 @@ def test_gait_time_must_be_positive_and_selection_is_upstream() -> None:
 
     columns = dict(bindings.columns)
     columns["maximal_10m_speed_m_per_second"] = "synthetic_speed"
+    invalid_bindings = adapter.SourceBindings(columns=columns)
     with pytest.raises(ValueError, match="exactly one"):
-        adapter.SourceBindings(columns=columns)
-        adapter.score_source_row(row, adapter.SourceBindings(columns=columns), (1, 2, 3, 4))
+        adapter.score_source_row(row, invalid_bindings, (1, 2, 3, 4))
 
 
 def test_bound_column_and_all_required_fields_are_mandatory() -> None:

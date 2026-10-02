@@ -81,3 +81,7 @@ mahdolliset yritys-/apuvälinevalinnat; sekä E/E1:n testikohtainen merkitys.
   lukien staged Python-syntaksitarkistus. Työ toimitetaan Ownerin review'hun;
   tuotantokenttäsidonta ja protokollavarmennus eivät sisälly tähän synteettiseen
   PR-ehdotukseen.
+- 2026-10-02T15:12:43+03:00: PR #178:n Sourcery-katselmointi osoitti, että
+  virheellisen gait-sidonnan testin raises-lohko oli epäselvä. Siirrettiin
+  konfiguraation rakentaminen lohkon ulkopuolelle, jotta testi kohdistuu
+  adapterin validointiin; ajetaan kohdennetut testit ja portit uudelleen.
