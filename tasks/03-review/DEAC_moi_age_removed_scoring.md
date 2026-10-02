@@ -10,13 +10,20 @@
 
 - `DEAC-Frailty-Index/docs/DEAC_HANDOVER.md` v1.1.0, §5 komponentti 4,
   SHA-256 `7E83E4FE34BEF5A4ADC548F6E67663EA343C94E68844739C37E046A4226A2539`.
+- Ownerin 2026-10-01 vahvistama soveltamistulkinta on sittemmin kirjattu
+  yksityiseen `DECISION_LOG.md`-tiedostoon tunnuksella `DMA1-D-012` sekä
+  kanonisen `METHODS_AND_SCORING.md` §3.1:een. Näiden Ownerin toimittamat
+  SHA-256-viitteet ovat `131DAB0920ED047422B5F228980489BAB29973E382B8A29BB6909FE6DB82C480`
+  ja `4FD2DDF3D19268FEF09B90AA0D7AD8095DADB417B2601238FCFBEBF1EC7AAAEF`.
+  Yksityisiä tiedostoja ei kopioida julkiseen repoon.
 - Owner vahvisti 2026-10-01: lähtötilanteen MOI-indeksi sisältää ikäpisteet;
   käytetään lähtötilanteen ikää; ikäpisteet vähennetään täsmälleen kerran;
   kvintiilit muodostetaan ikäpisteettömästä MOI:sta DEAC-analyysin
   lähtötilanteen kohortissa.
 - Saman ikäpisteettömän MOI-arvon tulee saada aina sama DEAC-piste.
-- Waris ym. 2011 §4.1:n viimeinen ikämerkintä on `75 years`; yli 75-vuotiaiden
-  käsittelyä ei laajenneta ilman käytetyn KAAOS/MOI-ohjeen lähdetukea.
+- Waris ym. 2011 §4.1:n viimeinen ikämerkintä on `75 years`; Ownerin
+  soveltamistulkinta on lähtötilanteen ikä `>=75` → 6 ikäpistettä. Tämä
+  tulkinta ei ole artikkelin eksplisiittinen ikäraja (DMA1-D-012).
 - Lähdekenttien tarkat nimet ja sovitin kuuluvat suojattuun ympäristöön, eivät
   tähän julkiseen toteutukseen.
 
@@ -28,8 +35,8 @@
   sovitus ja pisteytys.
 - Dokumentoi kvantiilien laskentamenetelmä ja tasatulosten käsittely niin,
   että identtiset ikäpisteettömät MOI-arvot saavat saman pisteen.
-- Hylkää ratkaisematon yli 75-vuotiaiden ikäpisteytys näkyvästi; älä päättele
-  `75 years` -merkinnästä ylärajaa.
+- Käytä Ownerin hyväksymää `>=75 → 6` -tulkintaa; älä esitä sitä Waris
+  2011:n eksplisiittisenä ylärajana.
 - Älä lisää lähdeheadereita, lähdeadapteria, osallistuja-aineiston lukua,
   tuotantoajoa tai muiden DEAC-komponenttien muutoksia.
 - Älä muuta hyväksyttyä handoveria tai muita tieteellisiä sääntöjä.
@@ -40,9 +47,9 @@
   lähdeaineistoa.
 - [x] Testit kattavat tunnetut ikäpisteet, yhden vähennyksen, kvintiilirajat,
   puuttuvuuden ja tasatulokset; sama arvo saa saman pisteen.
-- [x] Yli 75-vuotiaiden säännön lähde tarkistettiin saatavilla olevasta
-  lähdejäljestä;
-  jos sitä ei löydy, ikä hylätään näkyvästi eikä lähdeaukkoa täytetä oletuksella.
+- [x] Yli 75-vuotiaiden käsittely perustuu Ownerin soveltamistulkintaan
+  DMA1-D-012; lähteen `75 years` -sanamuoto ja Ownerin `>=75 → 6` -sääntö
+  erotetaan toisistaan.
 - [x] Dokumentoitu toteutus ei paljasta suojattuja kenttänimiä tai
   osallistujatietoja.
 - [x] Soveltuva repository-gate ja kohdennetut Python-testit läpäisevät.
@@ -75,3 +82,7 @@
   Markdown-lint, CodeQL/Sourcery-analyysit ja smoke-muutostunnistus läpäisivät;
   K-skriptien smoke-ajo ohitettiin, koska muutos ei koske niitä. PR odottaa
   Ownerin katselmointia; agentti ei mergeä.
+- 2026-10-02: Edellä mainitut 2026-10-01 kohdat, joissa ikäluokan
+  soveltaminen kuvattiin avoimeksi, ovat historiallista tilaa ja ne on
+  korvattu nykyisellä DMA1-D-012-provenienssilla. Nykyinen sääntö on
+  lähtötilanteen ikä `>=75` → 6; päätöstä ei avata uudelleen.

@@ -37,7 +37,7 @@
 
 - [x] Ikäluokat 55–59, 60–64, 65–69 ja 70–74 säilyvät ennallaan; ikä `>=75`
   palauttaa 6.
-- [x] Synteettiset testit kattavat iät 75, 76 ja 80 sekä kertaluonteisen
+- [x] Synteettiset testit kattavat ikävuodet 75, 76 ja 80 sekä kertaluonteisen
   vähennyksen.
 - [x] README ja tehtävä kuvaavat Ownerin hyväksymän rajan; kvintiilit ja muut
   DEAC-säännöt eivät muutu.
@@ -60,3 +60,11 @@
   läpäisivät (`253 passed`); `bash tools/run-gates.sh --mode pre-push --smoke`
   ja `git diff --cached --check` läpäisivät. Tehtävä siirrettiin
   `03-review`-tilaan. Osallistuja-aineistoa ei luettu.
+- 2026-10-02: Vahvistettu sääntö kirjattiin Ownerin toimittaman tiedon mukaan
+  yksityiseen `DECISION_LOG.md`-tiedostoon tunnuksella `DMA1-D-012` ja
+  kanonisen `METHODS_AND_SCORING.md` §3.1:een. Julkiset, muuttumattomat
+  lähdeviitteet: päätöslokin SHA-256
+  `131DAB0920ED047422B5F228980489BAB29973E382B8A29BB6909FE6DB82C480` ja
+  METHODS-tiedoston SHA-256
+  `4FD2DDF3D19268FEF09B90AA0D7AD8095DADB417B2601238FCFBEBF1EC7AAAEF`.
+  Yksityisiä tiedostoja tai niiden sisältöä ei lisätty julkiseen repoon.
