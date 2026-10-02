@@ -11,9 +11,17 @@ vähennetään kerran. Waris 2011 §4.1:n viimeisen ikämerkinnän sanamuoto on
 on Ownerin 2026-10-01 vahvistama tulkinta, ei artikkelin eksplisiittisesti
 määrittelemä ikäraja. Lähdesidonta ja tuotantoaineistolla varmennettu
 DEAC-laskenta ovat vielä kesken.
-Uudet funktiot eivät valitse mittauspuolta tai testiyritystä, ratkaise
-suoriutumattomuuden syytä, muunna lähdeyksikköä tai sido suojattuja
-lähdekenttiä. Kokoaja käyttää hyväksyttyä havaittujen pisteiden nimittäjää
+`src/deac_source_adapter.py` tarjoaa konfiguroitavan, synteettisesti
+testattavan rajapinnan semanttisten lähdekenttien normalisointiin, nykyisiin
+pisteytysfunktioihin ja 20-paikkaiseen kokoajaan. Todellisia lähdeheadereita,
+erityiskoodeja tai osallistujarivejä ei sisällytetä repoon. Suojattu
+kenttäkartta, mittausvalinnat ja testikohtaiset koodit on annettava erikseen;
+niiden puuttuessa adapteri pysähtyy fail-closed. Adapteri ei valitse
+mittauspuolta tai testiyritystä eikä tulkitse tuntematonta E/E1-merkintää.
+Se muuntaa kipuarvon vain jo cm-yksikköön normalisoituna ja kävelyajan vain
+jo valitusta 10 m ajasta; se ei päätä lähteen yksikköä, paremman jalan/käden
+valintaa tai testikohtaista koodimerkitystä. Kokoaja käyttää hyväksyttyä
+havaittujen pisteiden nimittäjää
 ja vähintään 80 prosentin kattavuusrajaa. Puuttuva `moi`-paikka on annettava
 arvolla `None`, ei poistamalla komponenttia. Vain aidosti ei-sovellettava
 komponentti merkitään `ComponentStatus.NOT_APPLICABLE`-arvolla. Kokoaja ei
@@ -31,12 +39,14 @@ omistajan tieteellistä ratkaisua varten.
 
 ## Seuraava työvaihe
 
-FIRA1:n ensimmäinen varsinainen ajo on **HANDOVER REVIEW + IMPLEMENTATION
-FEASIBILITY AUDIT**. Se arvioi lähdeskeeman ja toteutettavuuden; tässä
-bootstrapissa ei ratkaista B1/B2-rajausta eikä kirjoiteta pisteytyskoodia.
-Vanha FI22/KAAOS/EFI-koodi voi olla teknistä vertailuaineistoa, mutta se ei
-määrää DEAC:n sääntöjä.
+Synteettinen adapterirajapinta on toteutettu, mutta tuotantokenttien
+sidonta odottaa suojatun skeeman ja käytetyn KAAOS-/TOIMIVA-protokollan
+varmennusta. Seuraava vaihe on vahvistaa MOI:n lähdekentät, VAS-yksikkö,
+paremman jalan ja käden muodostus, valittu 10 m mittaus sekä testikohtaisten
+erityiskoodien merkitykset. Legacy-koodi auttaa paikantamaan ehdokkaita mutta
+ei yksin määrää DEAC:n sääntöjä. B1/B2 pysyvät avoimina, eikä niitä ratkaista
+adapterissa.
 
-Osallistujatason `DATA_ROOT` on repositorion ulkopuolella. Tätä bootstrapia
-varten sitä ei aseteta, lueta eikä kopioida. Paikallisia polkuja ja salaisuuksia
+Osallistujatason `DATA_ROOT` on repositorion ulkopuolella. Synteettinen
+adapterivaihe ei aseta, lue eikä kopioi sitä. Paikallisia polkuja ja salaisuuksia
 ei tallenneta versionhallintaan.
