@@ -30,13 +30,15 @@ MODULE_SPEC.loader.exec_module(moi)
         (70, 4),
         (74, 4),
         (75, 6),
+        (76, 6),
+        (80, 6),
     ],
 )
-def test_waris_2011_documented_age_points(age: int, expected: int) -> None:
+def test_owner_confirmed_waris_age_points(age: int, expected: int) -> None:
     assert moi.waris_2011_age_points(age) == expected
 
 
-@pytest.mark.parametrize("age", [54, 76, 80])
+@pytest.mark.parametrize("age", [54])
 def test_unsupported_age_bands_fail_closed(age: int) -> None:
     with pytest.raises(ValueError, match="does not define"):
         moi.waris_2011_age_points(age)
@@ -50,7 +52,14 @@ def test_age_requires_completed_integer_years(age: object) -> None:
 
 @pytest.mark.parametrize(
     ("moi_index", "age", "expected"),
-    [(8, 60, 6.0), (4, 70, 0.0), (10.5, 55, 9.5)],
+    [
+        (8, 60, 6.0),
+        (4, 70, 0.0),
+        (10.5, 55, 9.5),
+        (10, 75, 4.0),
+        (10, 76, 4.0),
+        (10, 80, 4.0),
+    ],
 )
 def test_age_points_are_removed_once(
     moi_index: int | float, age: int, expected: float
