@@ -51,22 +51,103 @@ class UnresolvedSourceCodeError(ValueError):
     """A source code lacks an explicit field- or test-specific interpretation."""
 
 
+class SourceSchemaError(ValueError):
+    """Protected source metadata does not match the validated binding map."""
+
+
+def _compact_schema_text(value: str) -> str:
+    """Normalize wrapping whitespace without changing schema-token content."""
+    return "".join(value.split()).casefold()
+
+
 @dataclass(frozen=True)
 class SourceBindings:
     """Protected runtime mapping from semantic inputs to actual source columns.
 
     ``columns`` maps the logical names documented below to source headers.
     ``ordinary_missing_codes`` is field-specific and applies only to ordinary
-    non-performance values. ``performance_codes`` maps source codes separately
-    for each physical test to a ``PerformanceDisposition``. Do not place raw
-    source headers or code lists in committed configuration or tests.
+    non-performance values. ``invalid_codes_as_missing`` is restricted to
+    grip-class fields. ``performance_codes`` maps test-specific statuses.
+    Do not place raw source headers or code lists in committed configuration
+    or tests.
     """
 
     columns: Mapping[str, str]
     ordinary_missing_codes: Mapping[str, Sequence[object]] = field(default_factory=dict)
+    invalid_codes_as_missing: Mapping[str, Sequence[object]] = field(default_factory=dict)
     performance_codes: Mapping[str, Mapping[object, PerformanceDisposition]] = field(
         default_factory=dict
     )
+    reason_columns: Mapping[str, str] = field(default_factory=dict)
+    verified_functional_inability_codes: Mapping[str, Sequence[object]] = field(
+        default_factory=dict
+    )
+
+
+def validate_source_schema_bindings(
+    actual_sha256: str,
+    expected_sha256: str,
+    physical_headers: Sequence[str],
+    label_row: Sequence[str],
+    positions_by_field: Mapping[str, int],
+    semantic_prefixes: Mapping[str, str] | None = None,
+) -> int:
+    """Validate header/label aliases before any participant row is read.
+
+    The caller must load metadata rows only. This function checks the exact
+    workbook fingerprint, complete/unique positional header-label pairs, and
+    unique required source positions. Optional semantic prefixes are matched
+    against cell text after whitespace compaction, so one Excel cell wrapped
+    across display lines is still checked as one heading. It never opens a
+    workbook or returns header text.
+    """
+    if (
+        not isinstance(actual_sha256, str)
+        or not isinstance(expected_sha256, str)
+        or len(actual_sha256) != 64
+        or actual_sha256.lower() != expected_sha256.lower()
+    ):
+        raise SourceSchemaError("Source workbook fingerprint does not match")
+    if not physical_headers or len(physical_headers) != len(label_row):
+        raise SourceSchemaError("Header and label metadata must have equal width")
+    if any(not isinstance(value, str) for value in physical_headers):
+        raise SourceSchemaError("Physical header metadata must contain strings")
+    if any(not isinstance(value, str) for value in label_row):
+        raise SourceSchemaError("Label metadata must contain strings")
+    pairs = list(zip(physical_headers, label_row, strict=True))
+    if len(set(pairs)) != len(pairs):
+        raise SourceSchemaError("Physical header/label pairs are not unique")
+    if not isinstance(positions_by_field, Mapping) or not positions_by_field:
+        raise SourceSchemaError("Required source bindings are empty")
+    positions = list(positions_by_field.values())
+    if any(
+        isinstance(position, bool)
+        or not isinstance(position, int)
+        or position < 0
+        or position >= len(pairs)
+        for position in positions
+    ):
+        raise SourceSchemaError("A required source binding is outside the schema")
+    if len(set(positions)) != len(positions):
+        raise SourceSchemaError("Required semantic fields bind to duplicate columns")
+    for field_name, expected_prefix in (semantic_prefixes or {}).items():
+        if (
+            not isinstance(field_name, str)
+            or field_name not in positions_by_field
+            or not isinstance(expected_prefix, str)
+            or not expected_prefix.strip()
+        ):
+            raise SourceSchemaError("Invalid semantic source-heading check")
+        position = positions_by_field[field_name]
+        expected = _compact_schema_text(expected_prefix)
+        if not any(
+            _compact_schema_text(cell).startswith(expected)
+            for cell in pairs[position]
+        ):
+            raise SourceSchemaError(
+                "A semantic source heading does not match its bound position"
+            )
+    return len(positions)
 
 
 _GAIT_SPEED_FIELD = "maximal_10m_speed_m_per_second"
@@ -93,15 +174,23 @@ _BASE_FIELDS = frozenset(
         "fear_of_falling",
         "pain_vas_cm",
         "better_leg_stance_seconds",
+        "right_leg_stance_seconds",
+        "left_leg_stance_seconds",
         "five_chair_rises_seconds",
         "better_hand_grip_class",
+        "right_hand_grip_class",
+        "left_hand_grip_class",
     }
 )
 _PERFORMANCE_FIELDS = frozenset(
     {
         "better_leg_stance_seconds",
+        "right_leg_stance_seconds",
+        "left_leg_stance_seconds",
         "five_chair_rises_seconds",
         "better_hand_grip_class",
+        "right_hand_grip_class",
+        "left_hand_grip_class",
         _GAIT_TIME_FIELD,
         _GAIT_SPEED_FIELD,
     }
@@ -116,20 +205,81 @@ def _validate_bindings(bindings: SourceBindings) -> None:
     if not isinstance(columns, Mapping):
         raise ValueError("Source columns must be a mapping")
     gait_fields = {_GAIT_SPEED_FIELD, _GAIT_TIME_FIELD} & set(columns)
-    expected = _BASE_FIELDS | gait_fields
     if gait_fields not in ({_GAIT_SPEED_FIELD}, {_GAIT_TIME_FIELD}):
         raise ValueError("Bind exactly one normalized gait speed or selected 10 m time")
+    expected = set(_BASE_FIELDS)
+    for selected, side_pair in (
+        (
+            "better_leg_stance_seconds",
+            {"right_leg_stance_seconds", "left_leg_stance_seconds"},
+        ),
+        (
+            "better_hand_grip_class",
+            {"right_hand_grip_class", "left_hand_grip_class"},
+        ),
+    ):
+        expected.discard(selected)
+        expected.difference_update(side_pair)
+        supplied = set(columns) & ({selected} | side_pair)
+        if supplied not in ({selected}, side_pair):
+            raise ValueError(
+                f"Source bindings do not match the required semantic fields: "
+                f"bind either {selected} or both source sides"
+            )
+        expected.update(supplied)
+    expected |= gait_fields
     if set(columns) != expected:
         raise ValueError("Source bindings do not match the required semantic fields")
-    headers = list(columns.values())
+    headers = list(columns.values()) + list(bindings.reason_columns.values())
     if any(not isinstance(header, str) or not header for header in headers):
         raise ValueError("Every semantic field must bind to one nonempty source column")
     if len(set(headers)) != len(headers):
         raise ValueError("Each semantic field must bind to a distinct source column")
     if set(bindings.ordinary_missing_codes) - (_BASE_FIELDS - _PERFORMANCE_FIELDS):
         raise ValueError("Ordinary missing codes are only allowed for non-test fields")
-    if set(bindings.performance_codes) - (_PERFORMANCE_FIELDS & set(columns)):
+    bound_performance = _PERFORMANCE_FIELDS & set(columns)
+    grip_fields = {
+        "better_hand_grip_class",
+        "right_hand_grip_class",
+        "left_hand_grip_class",
+    }
+    if set(bindings.invalid_codes_as_missing) - (grip_fields & set(columns)):
+        raise ValueError("Configured invalid-as-missing codes are grip-class only")
+    for logical_field, invalid_codes in bindings.invalid_codes_as_missing.items():
+        if isinstance(invalid_codes, (str, bytes)) or not isinstance(
+            invalid_codes, Sequence
+        ):
+            raise ValueError("Invalid grip-class codes must be a sequence")
+        if any(
+            isinstance(code, bool)
+            or code in (0, 1, 2, 3, 4, 5)
+            or (
+                isinstance(code, str)
+                and code.strip() in {
+                    str(valid_class)
+                    for valid_class in range(6)
+                }
+            )
+            for code in invalid_codes
+        ):
+            raise ValueError("A valid grip class cannot be configured as missing")
+    if set(bindings.performance_codes) - bound_performance:
         raise ValueError("Performance codebooks must be scoped to a bound test field")
+    if set(bindings.reason_columns) - bound_performance:
+        raise ValueError("Reason columns must be scoped to a bound physical test")
+    if set(bindings.verified_functional_inability_codes) - set(bindings.reason_columns):
+        raise ValueError("Inability reason codes require a bound reason column")
+    for test_field, codebook in bindings.performance_codes.items():
+        if any(
+            disposition is PerformanceDisposition.FUNCTIONAL_INABILITY
+            for disposition in codebook.values()
+        ) and (
+            test_field not in bindings.reason_columns
+            or not bindings.verified_functional_inability_codes.get(test_field)
+        ):
+            raise ValueError(
+                "Functional inability requires a bound, verified reason field"
+            )
     for test_field, codebook in bindings.performance_codes.items():
         if not isinstance(codebook, Mapping) or any(
             not isinstance(disposition, PerformanceDisposition)
@@ -192,7 +342,8 @@ def normalize_preselected_test_value(
     except TypeError:
         disposition = None
     if disposition is PerformanceDisposition.FUNCTIONAL_INABILITY:
-        return _FUNCTIONAL_INABILITY
+        # This helper receives no reason field, so it cannot verify inability.
+        return None
     if disposition is PerformanceDisposition.OTHER_NONPERFORMANCE:
         return None
     if disposition is PerformanceDisposition.NOT_APPLICABLE:
@@ -207,11 +358,79 @@ def normalize_preselected_test_value(
 def _test_value(
     row: Mapping[str, object], bindings: SourceBindings, logical_field: str
 ) -> object:
-    return normalize_preselected_test_value(
-        _read_value(row, bindings, logical_field),
-        bindings.performance_codes.get(logical_field, {}),
-        logical_field,
+    raw = _read_value(row, bindings, logical_field)
+    if raw is None:
+        return raw
+
+    if _matches_code(raw, bindings.invalid_codes_as_missing.get(logical_field, ())):
+        return None
+
+    if not isinstance(raw, str):
+        return raw
+
+    codebook = bindings.performance_codes.get(logical_field, {})
+    try:
+        disposition = codebook.get(raw)
+    except TypeError:
+        disposition = None
+
+    if disposition is PerformanceDisposition.FUNCTIONAL_INABILITY:
+        return _FUNCTIONAL_INABILITY
+    if disposition is PerformanceDisposition.NOT_APPLICABLE:
+        return ComponentStatus.NOT_APPLICABLE
+    if disposition is PerformanceDisposition.OTHER_NONPERFORMANCE:
+        reason_column = bindings.reason_columns.get(logical_field)
+        verified_codes = bindings.verified_functional_inability_codes.get(
+            logical_field, ()
+        )
+        if reason_column is not None and reason_column not in row:
+            raise ValueError(f"Bound test reason is missing for {logical_field}")
+        reason = row.get(reason_column) if reason_column is not None else None
+        if reason is not None and _matches_code(reason, verified_codes):
+            return _FUNCTIONAL_INABILITY
+        return None
+    raise UnresolvedSourceCodeError(
+        f"Unmapped test-specific source code for {logical_field}"
     )
+
+
+def _score_sided_test(
+    row: Mapping[str, object],
+    bindings: SourceBindings,
+    *,
+    selected_field: str,
+    side_fields: tuple[str, str],
+    scorer: Any,
+    prefer: str,
+) -> ComponentInput:
+    if selected_field in bindings.columns:
+        return _score_test_field(row, bindings, selected_field, scorer)
+
+    selected: list[object] = []
+    functional_inability = False
+    statuses: list[ComponentStatus] = []
+    for field_name in side_fields:
+        value = _test_value(row, bindings, field_name)
+        if value is _FUNCTIONAL_INABILITY:
+            functional_inability = True
+        elif value is ComponentStatus.NOT_APPLICABLE:
+            statuses.append(value)
+        elif value is not None:
+            selected.append(value)
+
+    if selected:
+        if prefer == "higher":
+            value = max(selected)
+        elif prefer == "lower_score":
+            value = min(selected, key=scorer)
+        else:
+            raise AssertionError("Unsupported side-selection direction")
+        return scorer(value)
+    if functional_inability:
+        return 1.0
+    if len(statuses) == len(side_fields):
+        return ComponentStatus.NOT_APPLICABLE
+    return None
 
 
 def _score_moi(
@@ -330,11 +549,13 @@ def score_source_row(
         "pain_vas": score_pain_vas(
             _read_value(row, bindings, "pain_vas_cm")  # type: ignore[arg-type]
         ),
-        "single_leg_stance": _score_test_field(
+        "single_leg_stance": _score_sided_test(
             row,
             bindings,
-            "better_leg_stance_seconds",
-            score_single_leg_stance,
+            selected_field="better_leg_stance_seconds",
+            side_fields=("right_leg_stance_seconds", "left_leg_stance_seconds"),
+            scorer=score_single_leg_stance,
+            prefer="higher",
         ),
         "five_chair_rises": _score_test_field(
             row,
@@ -342,11 +563,13 @@ def score_source_row(
             "five_chair_rises_seconds",
             score_five_chair_rises,
         ),
-        "grip_strength": _score_test_field(
+        "grip_strength": _score_sided_test(
             row,
             bindings,
-            "better_hand_grip_class",
-            score_grip_source_class,
+            selected_field="better_hand_grip_class",
+            side_fields=("right_hand_grip_class", "left_hand_grip_class"),
+            scorer=score_grip_source_class,
+            prefer="lower_score",
         ),
         "maximal_10m_gait_speed": gait_score,
     }
