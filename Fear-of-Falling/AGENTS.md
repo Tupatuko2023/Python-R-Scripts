@@ -9,6 +9,40 @@ niin, että analyysi pysyy toistettavana ja tulokset eivät muutu vahingossa. Ä
 muuta "virallisia" tuloksia, taulukoita tai kuvioita ilman eksplisiittistä
 pyyntöä. Älä koske raakadataan tai salaisuuksiin.
 
+## Nykyinen tuotantosopimus
+
+Nykyisen väitöskirjatuotannon entrypoint on
+`Fear-of-Falling/reanalysis/R/cohort_implementation/cohort_implementation.R`.
+Auktoritatiivinen syöte on `AUTH_SOURCE`, jonka entrypoint lukee paikallisesta
+`Fear-of-Falling/config/.env`-tiedostosta. `.env` on local-only, ignored ja
+untracked: älä koskaan commitoi sitä tai tulosta sen sisältöä tai oikeaa
+`AUTH_SOURCE`-arvoa. Puuttuva, tyhjä tai moniselitteinen määritys pysäyttää ajon.
+Nykyinen tuotanto ei käytä `KaatumisenPelko.csv`-tiedostoa eikä legacy-fallbackia.
+
+- `K1=LEGACY`
+- `K05_MAIN=LEGACY`
+- `Fear-of-Falling/data/external/KaatumisenPelko.csv=LEGACY_NOT_CURRENT_INPUT`
+- `git-crypt=LEGACY_NOT_CURRENT_RUNTIME`
+
+Legacy-luokitus ei oikeuta poistamaan artefakteja, muuttamaan salausta tai
+julkaisemaan historiallista salattua sisältöä. Kxx- ja CLAUDE.md-konventiot
+koskevat kyseisiä historiallisia skriptejä; ne eivät vaihda nykyistä entrypointia.
+Tuotannon osallistujatason ledger ohjataan worktreen ulkopuolelle
+`DATA_ROOT/derived/`-hakemistoon tuotannon turva-apufunktioiden kautta.
+`DATA_ROOT` on tulosteiden reititys, ei `AUTH_SOURCE`-syötteen korvike.
+
+Dokumentaatiosopimuksen regressio ajetaan aliprojektin juuresta:
+
+```bash
+Rscript --vanilla reanalysis/R/cohort_implementation/tests/test_output_routing.R --contract-only
+```
+
+Se tarkistaa tuotantokoodin rakenteen ja käyttää vain synteettistä
+konfiguraatiota muistissa. Oikeaa `.env`:iä tai analyysidataa ei tarvita.
+Ilman `--contract-only`-valintaa sama tiedosto ajaa myös olemassa olevat
+output-routing- ja turvatestit Unix-oikeuksia ja fork-prosesseja tukevassa
+ympäristössä. Kohdistettu sopimustesti ei korvaa tätä täyttä turvatestistöä.
+
 ## Working directory (pakollinen)
 
 Aja tämän aliprojektin komennot aina kansiosta:
@@ -36,7 +70,8 @@ merkitse TODO ja etsi oikea paikka):
 - `renv.lock`, `renv/`, `.Rprofile` (R-ympäristön toistettavuus)
 - `outputs/` (tuotetut taulukot, kuviot, tekstit, docx/html yms.)
 - `data/` tai vastaava (syötedata; usein gitignored ja/tai salattu)
-- `R-scripts/` (Kxx-skriptit ja niiden `outputs/`; TODO: vahvista rakenne)
+- `reanalysis/R/cohort_implementation/` (nykyinen tuotantoentrypoint ja turvatestit)
+- `R-scripts/` (historialliset Kxx-skriptit ja niiden `outputs/`)
 - `manifest/` (manifest.csv + sessionInfo/diagnostiikka; TODO: vahvista polku)
 - `*.R` / `scripts/*.R` (analyysiskriptit, usein Kxx-tyyppinen sarja)
 - `*.Rmd` / `*.qmd` (raportit, jos käytössä)
@@ -57,7 +92,7 @@ merkitse TODO ja etsi oikea paikka):
   data_dictionary tai `names(df)` + `glimpse(df)` + pieni otos.
 - Kxx-skriptit: standardi intro/header on pakollinen ja Required Vars -lista +
   `req_cols`-tarkistus pitää täsmätä.
-- Outputit ja manifesti: kaikki artefaktit `R-scripts/<script_label>/outputs/`
+- Kxx-outputit ja manifesti: artefaktit `R-scripts/<script_label>/outputs/`
   ja yksi manifest-rivi per artefakti.
 - Kerro aina mitä validoit ja millä komennoilla.
 
@@ -67,7 +102,7 @@ merkitse TODO ja etsi oikea paikka):
   raportointisäännöille.
 - Määrittelee pakollisen Kxx-otsikkoblokin/templaten (Standard Script Intro) ja
   Kxx-skriptien rakenteen.
-- Output-polut ja artefaktien kirjoitus: projektin standardi on
+- Kxx-output-polut ja artefaktien kirjoitus: historiallinen standardi on
   `R-scripts/<script_label>/outputs/` (käytä täsmällistä polkua kuten
   `CLAUDE.md` määrää); manifestiloki `manifest/manifest.csv` jos määritelty.
 - Tiukka muuttujakäytäntö: älä keksi muuttujia; Required Vars -lista ja

@@ -49,8 +49,9 @@ Repositorio on jaettu useisiin itsenäisiin aliprojekteihin, joilla on oma
 dokumentaationsa ja ympäristönsä:
 
 1. **[Fear-of-Falling (FOF)](Fear-of-Falling/README.md):** R-analyysiputki kaatumisen
-   pelon ja toimintakyvyn välisen yhteyden tutkimiseen. Sisältää Kxx-analyysiskriptit,
-   `renv`-ympäristön ja manifesti-pohjaisen tuloshallinnan.
+   pelon ja toimintakyvyn välisen yhteyden tutkimiseen. Nykyinen tuotanto käyttää
+   `cohort_implementation.R`-entrypointia ja `AUTH_SOURCE`-syötesopimusta.
+   Sisältää myös historialliset Kxx-analyysiskriptit ja `renv`-ympäristön.
 2. **[Electronic-Frailty-Index (EFI)](Electronic-Frailty-Index/README.md):** Python- ja
    R-työkaluja haurausindeksin (EFI) laskemiseen ja validointiin. Sisältää kliinisen
    datan prosessointiin ja logistiseen regressioon tarkoitettuja skriptejä.
@@ -88,11 +89,31 @@ Katso tarkemmat ajo-ohjeet kunkin aliprojektin omasta README-tiedostosta.
 
 ### Fear of Falling (R)
 
+Nykyisen väitöskirjatuotannon entrypoint on
+`Fear-of-Falling/reanalysis/R/cohort_implementation/cohort_implementation.R`.
+Auktoritatiivinen syöte valitaan `AUTH_SOURCE`-avaimella paikallisesta
+`Fear-of-Falling/config/.env`-tiedostosta. `.env` on local-only, ignored ja
+untracked: sitä ei koskaan commitoida eikä sen sisältöä tai oikeaa
+`AUTH_SOURCE`-arvoa tulosteta. Puuttuva tai tyhjä syötemääritys pysäyttää ajon;
+nykyinen tuotanto ei käytä `KaatumisenPelko.csv`-tiedostoa fallback-syötteenä.
+
+Historiallisten pintojen luokitus:
+
+- `K1=LEGACY`
+- `K05_MAIN=LEGACY`
+- `Fear-of-Falling/data/external/KaatumisenPelko.csv=LEGACY_NOT_CURRENT_INPUT`
+- `git-crypt=LEGACY_NOT_CURRENT_RUNTIME`
+
+Luokitus ei poista historiallisia artefakteja eikä tee salatusta sisällöstä
+julkaisukelpoista. Kxx-ajoesimerkit eivät ole nykyisen tuotannon käynnistysohje.
+Tuotantoajo edellyttää erikseen hyväksyttyä runtimea ja lähdeaineistoa; tarkempi
+sopimus on [aliprojektin ohjeessa](Fear-of-Falling/README.md).
+
+Pelkkä staattinen/synteettinen sopimustesti (ei oikeaa `.env`:iä tai dataa):
+
 ```bash
 cd Fear-of-Falling
-Rscript -e 'renv::restore()'
-# Aja skripti (esim. K11)
-Rscript "R-scripts/K11/K11_MAIN.V1_primary-ancova.R"
+Rscript --vanilla reanalysis/R/cohort_implementation/tests/test_output_routing.R --contract-only
 ```
 
 ### Electronic Frailty Index (Python)

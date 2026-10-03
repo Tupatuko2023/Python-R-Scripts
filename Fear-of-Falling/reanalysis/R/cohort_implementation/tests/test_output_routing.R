@@ -6,6 +6,8 @@
 # IMPORTANT: These tests source the LIVE production helper module
 # (cohort_security_helpers.R) and test the actual publication function
 # (publish_restricted_ledger). They use only synthetic/non-sensitive data.
+# --contract-only runs the portable production-contract checks below without
+# sourcing helpers or running the Unix-specific publication/security suite.
 
 cat("=== cohort_implementation output-routing & security tests ===\n\n")
 
@@ -42,6 +44,129 @@ impl_path <- file.path(impl_dir, "cohort_implementation.R")
 helpers_path <- file.path(impl_dir, "cohort_security_helpers.R")
 if (!file.exists(impl_path)) stop("Cannot find cohort_implementation.R at: ", impl_path, call. = FALSE)
 if (!file.exists(helpers_path)) stop("Cannot find cohort_security_helpers.R at: ", helpers_path, call. = FALSE)
+
+test_args <- commandArgs(trailingOnly = TRUE)
+if (length(test_args) > 1L || any(!test_args %in% "--contract-only")) {
+  stop("Only --contract-only is supported", call. = FALSE)
+}
+
+# ====================================================================
+# TEST GROUP 0: Production input contract (static AST + in-memory fixtures)
+# Never source the producer: it would open the authentic input workbook.
+# ====================================================================
+cat("Test group 0: Production entrypoint contract\n")
+run_contract_tests <- function() {
+  project_dir <- normalizePath(file.path(impl_dir, "..", "..", ".."), mustWork = TRUE)
+  repo_root <- dirname(project_dir)
+  expected_entrypoint <- paste0(
+    "Fear-of-Falling/reanalysis/R/cohort_implementation/", "cohort_implementation.R"
+  )
+  assert_test("PRODUCTION_ENTRYPOINT_CONTRACT",
+              identical(normalizePath(impl_path, winslash = "/", mustWork = TRUE),
+                        normalizePath(file.path(repo_root, expected_entrypoint),
+                                      winslash = "/", mustWork = TRUE)))
+
+  producer <- parse(file = impl_path, keep.source = FALSE)
+  helpers <- parse(file = helpers_path, keep.source = FALSE)
+  nodes <- function(x) {
+    if (!is.call(x) && !is.expression(x) && !is.pairlist(x)) return(list(x))
+    c(list(x), unlist(lapply(as.list(x), nodes), recursive = FALSE))
+  }
+  producer_nodes <- nodes(producer)
+  assignment <- function(name) {
+    matches <- Filter(function(x) {
+      is.call(x) && identical(x[[1L]], as.name("<-")) &&
+        identical(x[[2L]], as.name(name))
+    }, producer_nodes)
+    if (length(matches) != 1L) stop("Ambiguous contract assignment: ", name, call. = FALSE)
+    matches[[1L]][[3L]]
+  }
+  assert_test("Production project root derives from script location",
+              identical(assignment("script_dir"), quote(dirname(script_path))) &&
+              identical(assignment("project_root"),
+                        quote(normalizePath(file.path(script_dir, "..", "..", ".."), mustWork = TRUE))))
+  assert_test("EXPECTED_ENV_LOCATION_CONTRACT",
+              identical(assignment("env_path"), quote(file.path(project_root, "config", ".env"))))
+  paths_expr <- assignment("paths")
+  assert_test("Production paths bind env to expected local config",
+              identical(paths_expr[[1L]], as.name("list")) &&
+              identical(paths_expr$env, as.name("env_path")))
+  assert_test("AUTH_SOURCE_CONTRACT",
+              identical(assignment("source_path"), quote(read_env_value(paths$env, "AUTH_SOURCE"))))
+  assert_test("Workbook reader uses only the authoritative source",
+              identical(assignment("raw"),
+                        quote(readxl::read_excel(source_path, sheet = "Taul1", skip = 1L,
+                                                .name_repair = "minimal"))))
+  assert_test("Missing authoritative source fails closed",
+              any(vapply(as.list(producer), identical, logical(1L),
+                         quote(if (!file.exists(source_path)) fail("FAIL_CLOSED_AUTH_SOURCE_MISSING")))))
+  assert_test("Authoritative source hash is checked before workbook read",
+              identical(assignment("source_hash"),
+                        quote(assert_hash(source_path, approved$source, "AUTH_SOURCE"))) &&
+              which(vapply(as.list(producer), function(x) identical(x, quote(
+                source_hash <- assert_hash(source_path, approved$source, "AUTH_SOURCE")
+              )), logical(1L))) <
+              which(vapply(as.list(producer), function(x) is.call(x) &&
+                identical(x[[1L]], as.name("<-")) && identical(x[[2L]], as.name("raw")), logical(1L))))
+  source_text <- paste(c(deparse(producer), deparse(helpers)), collapse = "\n")
+  assert_test("LEGACY_CSV_FALLBACK_ABSENT",
+              !grepl("KaatumisenPelko[.]csv|K05_MAIN|R-scripts/K1/", source_text, ignore.case = TRUE))
+
+  # Exercise the actual producer parser with IO doubles. Only these two
+  # function definitions are evaluated; no producer startup or data IO runs.
+  fixture_env <- new.env(parent = baseenv())
+  fixture_env$file.exists <- function(path) {
+    if (!identical(path, "synthetic-config")) stop("Unexpected config access", call. = FALSE)
+    fixture_env$present
+  }
+  fixture_env$readLines <- function(path, warn = FALSE) {
+    if (!identical(path, "synthetic-config")) stop("Unexpected config read", call. = FALSE)
+    fixture_env$lines
+  }
+  fixture_env$fail <- eval(assignment("fail"), envir = fixture_env)
+  fixture_env$read_env_value <- eval(assignment("read_env_value"), envir = fixture_env)
+  fixture_env$present <- TRUE
+  fixture_env$lines <- 'export AUTH_SOURCE="synthetic-source"'
+  assert_test("Production parser selects synthetic AUTH_SOURCE",
+              identical(fixture_env$read_env_value("synthetic-config", "AUTH_SOURCE"), "synthetic-source"))
+  expect_closed <- function(lines, expected, present = TRUE) {
+    fixture_env$lines <- lines
+    fixture_env$present <- present
+    tryCatch({
+      fixture_env$read_env_value("synthetic-config", "AUTH_SOURCE")
+      FALSE
+    }, error = function(e) identical(conditionMessage(e), expected))
+  }
+  assert_test("Missing config fails closed without reading local env",
+              expect_closed(character(), "FAIL_CLOSED_ENV_MISSING", present = FALSE))
+  assert_test("Missing AUTH_SOURCE fails closed",
+              expect_closed("UNRELATED=synthetic", "FAIL_CLOSED_AUTH_SOURCE_ROUTING_COUNT: 0"))
+  assert_test("Empty AUTH_SOURCE fails closed",
+              expect_closed('AUTH_SOURCE=""', "FAIL_CLOSED_AUTH_SOURCE_EMPTY"))
+  assert_test("Duplicate AUTH_SOURCE fails closed without exposing values",
+              expect_closed(rep('AUTH_SOURCE="synthetic-source"', 2L),
+                            "FAIL_CLOSED_AUTH_SOURCE_ROUTING_COUNT: 2"))
+
+  doc_paths <- file.path(repo_root, c("README.md", "Fear-of-Falling/README.md", "Fear-of-Falling/AGENTS.md"))
+  docs <- lapply(doc_paths, readLines, warn = FALSE, encoding = "UTF-8")
+  all_docs_contain <- function(text) all(vapply(docs, function(lines) any(grepl(text, lines, fixed = TRUE)), logical(1L)))
+  assert_test("Current production entrypoint documented in all three docs", all_docs_contain(expected_entrypoint))
+  assert_test("Authoritative input and local config documented in all three docs",
+              all_docs_contain("AUTH_SOURCE") && all_docs_contain("Fear-of-Falling/config/.env") &&
+              all_docs_contain("ignored") && all_docs_contain("untracked"))
+  assert_test("K1_LEGACY_CONTRACT", all_docs_contain("K1=LEGACY"))
+  assert_test("K05_MAIN_LEGACY_CONTRACT", all_docs_contain("K05_MAIN=LEGACY"))
+  assert_test("Legacy CSV classification documented in all three docs", all_docs_contain("LEGACY_NOT_CURRENT_INPUT"))
+  assert_test("Legacy git-crypt classification documented in all three docs", all_docs_contain("LEGACY_NOT_CURRENT_RUNTIME"))
+}
+run_contract_tests()
+cat("TARGETED_CONTRACT_TEST_COUNT=", test_pass + test_fail, "\n", sep = "")
+if (test_fail > 0L) stop("Production contract regression failed", call. = FALSE)
+cat("TARGETED_CONTRACT_TEST=PASS\n")
+if (identical(test_args, "--contract-only")) {
+  cat("Scope: static/synthetic contract only; full security suite not run.\n")
+  quit(save = "no", status = 0L)
+}
 
 # --- Source the LIVE production security helpers ---
 fail <- function(...) stop(paste0(...), call. = FALSE)
