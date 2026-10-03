@@ -1,4 +1,56 @@
-# FOF × aika (baseline → 12 kk) — mixed model -ajamisohje (Composite_Z)
+# Fear-of-Falling — nykyinen tuotantosopimus ja historialliset ajamisohjeet
+
+## Nykyinen väitöskirjatuotanto
+
+Tuotannon entrypoint on
+`Fear-of-Falling/reanalysis/R/cohort_implementation/cohort_implementation.R`.
+Se valitsee auktoritatiivisen syötteen `AUTH_SOURCE`-avaimella paikallisesta
+`Fear-of-Falling/config/.env`-tiedostosta. `.env` on local-only, ignored ja
+untracked: sitä ei koskaan commitoida. Sen sisältöä eikä oikeaa
+`AUTH_SOURCE`-arvoa saa tulostaa, lokittaa tai kopioida dokumentaatioon.
+
+Entrypoint johtaa konfiguraation sijainnin omasta skriptipolustaan.
+Puuttuva `.env`, puuttuva, tyhjä tai moninkertainen `AUTH_SOURCE`-määritys,
+puuttuva lähdetiedosto tai hyväksytystä poikkeava lähdehash pysäyttää ajon.
+Nykyinen tuotanto ei käytä `KaatumisenPelko.csv`-tiedostoa eikä legacy-CSV-fallbackia.
+Tuotantoajo edellyttää erikseen hyväksyttyä runtimea, lähdeaineistoa ja
+entrypointin tarkistamia governance-artefakteja; tämä sopimus ei anna ajolupaa.
+
+| Pinta                                               | Nykyisen tuotannon luokitus  |
+| --------------------------------------------------- | ---------------------------- |
+| `K1`                                                | `K1=LEGACY`                  |
+| `K05_MAIN`                                          | `K05_MAIN=LEGACY`            |
+| `Fear-of-Falling/data/external/KaatumisenPelko.csv` | `LEGACY_NOT_CURRENT_INPUT`   |
+| `git-crypt`                                         | `LEGACY_NOT_CURRENT_RUNTIME` |
+
+Luokitus säilyttää historialliset artefaktit. Se ei oikeuta poistamaan
+legacy-CSV:tä tai salausta eikä tee salatusta sisällöstä julkaisukelpoista.
+Alempana olevat Kxx-, CSV- ja mixed model -ohjeet ovat historiallisten
+työnkulkujen dokumentaatiota, eivät nykyisen tuotannon käynnistysohjeita.
+
+Tuotannon osallistujatason ledger kirjoitetaan turva-apufunktioiden kautta
+worktreen ulkopuolelle `DATA_ROOT/derived/`-hakemistoon. `DATA_ROOT` ohjaa
+tulosteiden sijaintia, ei auktoritatiivisen syötteen valintaa. Tuotannon
+skriptikohtaiset QC- ja receipt-tulosteet käyttävät entrypointin `outputs/`-polkua;
+historiallinen Kxx-output-konventio ei muuta tätä reititystä.
+
+### Sopimuksen testaus ilman analyysidataa
+
+Aja aliprojektin juuresta:
+
+```bash
+Rscript --vanilla reanalysis/R/cohort_implementation/tests/test_output_routing.R --contract-only
+```
+
+Testi lukee vain tuotantokoodia ja näitä sopimusohjeita. Syötteen valinta ja
+virhetilanteet testataan muistissa olevalla synteettisellä konfiguraatiolla:
+oikeaa `.env`:iä, `AUTH_SOURCE`-arvoa tai työkirjaa ei lueta. `--vanilla`
+estää paikallisten R-käynnistystiedostojen latauksen. Ilman `--contract-only`
+valintaa testitiedosto ajaa lisäksi nykyiset output-routing- ja turvatestit,
+jotka edellyttävät Unix-oikeuksia ja fork-prosesseja tukevaa runtimea.
+Kohdistetun ajon PASS ei ole täyden turvatestistön PASS.
+
+## Historiallinen FOF × aika -työnkulku (Composite_Z)
 
 [![K Scripts Smoke Tests](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml/badge.svg)](https://github.com/Tupatuko2023/Python-R-Scripts/actions/workflows/smoke-tests.yml)
 [![Analysis Plan](https://img.shields.io/badge/Docs-Analysis_Plan-blue)](docs/ANALYSIS_PLAN.md)
@@ -7,10 +59,10 @@
 **Official Analysis Plan:** [docs/ANALYSIS_PLAN.md](docs/ANALYSIS_PLAN.md)
 **Scope & Guardrails:** [docs/THESIS_SCOPE.md](docs/THESIS_SCOPE.md)
 
-**Primary Analysis:** Longitudinal mixed model (`Composite_Z ~ time * FOF_status + ...`).
+**Historiallinen analyysikuvaus:** Longitudinal mixed model (`Composite_Z ~ time * FOF_status + ...`).
 **QC Gates:** All data must pass strict checks (n=2 timepoints, correct factors) defined in [QC_CHECKLIST.md](QC_CHECKLIST.md) before modeling.
 
-Tämä README on ajamisohje ("runbook") FOF-alatutkimuksen päätarkastelulle:
+Seuraava historiallinen ajamisohje ("runbook") kuvaa FOF-alatutkimuksen tarkastelua:
 **FOF_status × time** -interaktio fyysisen toimintakyvyn muutoksessa
 (**Composite_Z**) käyttäen **lineaarista sekamallia** (lmer; satunnaisintersepti
 henkilölle: **(1 | id)**). Ajot tuottavat raportointivalmiit taulukot +
@@ -88,9 +140,9 @@ The log prints `requirements source: req_cols|doc_block|warn_only; parsed_n=...`
 
 ---
 
-## Quickstart
+## Historiallinen Kxx-pikastartti
 
-### Ajo repojuuresta (suositus: Kxx-skriptit)
+### Historiallinen ajo aliprojektin juuresta (Kxx-skriptit)
 
 > Korvaa placeholderit: `<K_FOLDER>`, `<FILE_TAG>`
 
@@ -120,7 +172,7 @@ ls -la "R-scripts/<K_FOLDER>/outputs/<script_label>/"
 cat manifest/manifest.csv | tail -10
 ```
 
-## Paper_01 / Table 2 (K23_TABLE2)
+## Historiallinen Paper_01 / Table 2 (K23_TABLE2)
 
 `K23_TABLE2` tuottaa paper_01 Table 2 -taulukon outcome-kohtaisesti:
 
@@ -128,7 +180,7 @@ cat manifest/manifest.csv | tail -10
 - ANCOVA p-arvot malleista A/B/C
 - HGS raportoidaan myös sukupuolistratifioituna (female/male)
 
-### Oletusinput
+### Historiallinen oletusinput (ei nykyinen tuotantosyöte)
 
 - `data/external/KaatumisenPelko.csv`
 
@@ -197,7 +249,7 @@ Huom: jos `jsonlite` ei ole asennettuna nykyiseen `renv`-ympäristöön, varmap-
   - With FOF = 199
 - Outcome-kohtainen complete-case-suodatus voi muuttaa analyysikohtaista N:ää.
 
-## Table 2A / K24_TABLE2A (FOF + Frailty)
+## Historiallinen Table 2A / K24_TABLE2A (FOF + Frailty)
 
 `K24_TABLE2A` tuottaa testikohtaiset delta-regressiot, joissa `FOF_status` ja
 frailty (`frailty_cat_3` tai `frailty_score_3`) ovat samassa mallissa yhdessä
@@ -450,7 +502,7 @@ If you have legacy outputs elsewhere, remove them (untracked) to avoid confusion
 
 ---
 
-## K1-K4 Analysis Pipelines (Refactored 2025-12-24)
+## Historialliset K1-K4-putket (refaktoroitu 2025-12-24)
 
 ### Overview
 
@@ -622,7 +674,8 @@ K2 outputs                           K4 outputs
 
 ## What gets run
 
-**Kanoninen sisääntulopiste:** `analysis_mixed_workflow()`.
+**Historiallisen mixed model -ajurin sisääntulopiste:** `analysis_mixed_workflow()`.
+Nykyisen tuotannon entrypoint on tämän README:n alussa kuvattu `cohort_implementation.R`.
 
 **Malli (kiinteät + satunnaiset):**
 
@@ -934,7 +987,7 @@ dat <- dat %>%
   )
 
 # =============================================================================
-# Canonical entrypoint: analysis_mixed_workflow()
+# Historical mixed-model entrypoint: analysis_mixed_workflow()
 # =============================================================================
 
 # If your repo already provides analysis_mixed_workflow(), source/load it here.
