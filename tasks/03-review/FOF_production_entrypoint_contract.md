@@ -89,6 +89,12 @@ Erillistä Owner receipt -tiedostoa ei luoda valmisteluvaiheessa.
   säilyivät muuttumattomina. UPSTREAM_PRODUCTION_CONTRACT_ACCEPTANCE=PASS
   tarkoittaa taskin teknistä hyväksyntää; Owner-review on edelleen erillinen.
 
+- 2026-10-03T10:11:42+03:00: Implementation-commit `5aab43cfebb871a381f25c4acd58774faa326f52` luotu normaalisti
+  ilman hook-ohituksia, amendia tai pushia. Staged exact-scope ja whitespace PASS;
+  canonical smoke-gate PASS myös staged-R-testin syntaksitarkistuksella.
+  IN-PROGRESS → REVIEW. Kaikki taskin DoD-kohdat täyttyvät rajatussa sopimustyössä;
+  odottaa Ownerin reviewta ja erillistä upstream-landingia. Ei DONE-siirtoa.
+
 ## Blockers
 
 - Ei valmistelun yhteydessä havaittua production-kutsuketjun legacy-CSV-viitettä.
