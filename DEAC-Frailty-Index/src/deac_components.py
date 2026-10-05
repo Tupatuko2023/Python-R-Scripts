@@ -15,10 +15,6 @@ from math import isfinite
 Score = float | None
 
 
-class UnresolvedNeurologicalInput(ValueError):
-    """Partial inputs without a known positive have no approved score."""
-
-
 def _score_category(value: int | None, scores: Mapping[int, Score]) -> Score:
     if value is None:
         return None
@@ -61,9 +57,7 @@ def score_neurological(
     if any(value == 1 for value in values):
         return 1.0
     if any(value is None for value in values):
-        raise UnresolvedNeurologicalInput(
-            "Partial neurological inputs require reviewed missingness handling"
-        )
+        return None
     return 0.0
 
 
