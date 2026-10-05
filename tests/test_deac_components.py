@@ -106,11 +106,10 @@ def test_neurological_known_positive_with_missing_is_positive(
         (None, None, 0),
     ],
 )
-def test_neurological_partial_missing_is_unresolved(
+def test_neurological_partial_missing_is_missing_not_zero(
     values: tuple[int | None, int | None, int | None],
 ) -> None:
-    with pytest.raises(deac.UnresolvedNeurologicalInput):
-        deac.score_neurological(*values)
+    assert deac.score_neurological(*values) is None
 
 
 @pytest.mark.parametrize("values", [(2, 0, 0), (True, 0, 0), (0, "unknown", 0)])

@@ -280,3 +280,213 @@ pysyvät ennallaan. Tieteelliset kysymykset B1/B2 eivät kuulu tehtävään.
   läpäisivät (exit 0). Gate tarkisti guardrails- ja renv-tilan sekä staged-
   Python-syntaksin; se ei käynnistänyt aineistoajoa. Kohorttiajo pysyy
   estettynä vain täsmällisen poikkeuskoodiluettelon puuttuessa.
+- 2026-10-04: Liikuntakyvyn koodisto (0 hyvä, 1 kohtalainen, 2 heikko, 3
+  puuttuva) kirjattiin Ownerin vahvistamaksi. Kahden aiemmin saman selitteen
+  ehdokkaan fyysiset otsakkeet erotettiin vain Taul1:n metadatasta: ne kuvaavat
+  eri takautuvia muutosjaksoja, eivät lähtötilanteen itsearvioitua
+  liikuntakykyä. Kumpaakaan ei sidottu komponenttiin. Täsmälliset otsakkeet ja
+  sarakeviitteet jäivät suojattuun karttaan; lähtötilanteen
+  liikuntakykykentälle tarvitaan vielä yksilöivä lähdeviite tai oikea
+  sarakevalinta. Osallistujarivejä ei avattu.
+- 2026-10-04: Lisättiin synteettisesti testattava kohorttiajurin ydin, joka
+  sovittaa MOI-kvintiilit valmiiksi rajatun lähtötilannekohortin
+  ikäpisteettömistä MOI-arvoista, pisteyttää saman kohortin 20 komponenttia
+  kahdessa läpikäynnissä ja palauttaa vain koontilaskurit. Se ei lue
+  työkirjoja, valitse käyntejä tai tuota rivi-/henkilötason tuloksia.
+  SourceBindings-konfiguraatiota ja kohorttiajoa ei tehty, koska
+  lähtötilanteen liikuntakykykentän sidonta on yhä avoin. Uudet ja aiemmat
+  kohdennetut DEAC-testit läpäisivät 294/294; `tools/run-gates.sh --mode
+  pre-push --smoke` läpäisi (exit 0). Gate ei käynnistänyt aineistoajoa.
+- 2026-10-04: Ownerin antama liikuntakyvyn täysi selite löytyi yksikäsitteisesti
+  AUTH_SOURCE Taul1:n otsakemetadatasta. Se sitoo lähtötilanteen
+  itsearviointikentän ja vahvistaa luokat 0–2 sekä luokan 3 puuttuvaksi.
+  Aiemmat takautuvan muutosjakson ehdokkaat hylättiin tähän komponenttiin
+  kuulumattomina. Suojattu valintatallenne ja 25 fyysisen kentän
+  SourceBindings-konfiguraatio luotiin; lähdehash, sarakepaikkojen
+  yksikäsitteisyys, otsake/seliteparit sekä grip-poikkeuskonfiguraation
+  identiteetti validoitiin ilman osallistujarivejä. Konfiguraatiolla tehty
+  synteettinen liikuntakyvyn 0–3-tarkistus läpäisi. Kohorttiajoa ei tehty.
+- 2026-10-04: Ajurin SourceBindings-konfiguraation fail-closed-lataus ja
+  lähtötilannekohortin kaksivaiheinen synteettinen käsittely lisättiin.
+  Testit läpäisivät 296/296; `python -m compileall`, `git diff --check` ja
+  `tools/run-gates.sh --mode pre-push --smoke` läpäisivät. Ajurin
+  varsinaista työkirjalukijaa eikä kohortin valintasääntöä ole vielä kytketty;
+  osallistujarivejä ei luettu.
+- 2026-10-04: XLSX-lukija lisättiin. Se tarkistaa snapshotin hashin, välilehden
+  sekä sidotut metadata-rivit ennen valittujen sarakkeiden lukua; lukija käyttää
+  SourceBindingsin vahvistettuja fyysisiä sarakepaikkoja eikä etsi kenttiä
+  osallistujadatan tekstistä. Synteettisen XLSX:n lukutestit läpäisivät.
+  AUTH_SOURCE-esilento vahvisti hashin ja 25 kentän metadatasidonnat, mutta
+  kohortin henkilötunniste ei ole yksikäsitteinen kaikilla aktiivisilla
+  lähderiveillä. Siksi pisteytystä, kohorttivalintaa tai tulostiedostoa ei
+  muodostettu. Suojattu lukumääräkooste jäi ajonaikaiseen tarkistusraporttiin;
+  tunnisteita tai rivejä ei tulostettu.
+- 2026-10-04: Senioribiostatistikon vahvistama kohorttisääntö toteutettiin:
+  AUTH_SOURCE-rivit yhdistetään varmennetulla henkilöavaimella ja
+  klinikkapäivällä, ja kustakin 527 henkilöstä valitaan aikaisin käynti
+  riippumatta työkirjan rivijärjestyksestä. Kooste: 540 komponenttiriviä,
+  527 yksilöllistä henkilöä, 13 myöhempää käyntiriviä sivuutettiin; avain- tai
+  päivämääräpuutteita eikä ensimmäisen päivän ristiriitoja ei ollut. Tämä
+  täsmäytys ei käyttänyt lukua 527 valinnan pakottamiseen.
+- 2026-10-04: Ensimmäinen suojattu pisteytysesilento pysähtyi ennen
+  MOI-kvintiilejä: valitussa lähtötilannekohortissa 25 MOI-arvoa oli
+  tekstimuotoisia kahdessa raakamuodossa (myöhempi tarkistus osoitti ne
+  saman koodin kirjoitusasuiksi), eikä koodia ollut määritelty
+  MOI-kentän suojatussa puuttuvuuskoodistossa. Koodien raakatekstejä ei
+  tulostettu. Niitä ei muutettu automaattisesti puuttuviksi, koska hyväksytty
+  E/E1-puuttuvuussääntö koskee fyysisten testien tulkintaa eikä ratkaise
+  MOI-kentän koodimerkitystä. Siksi kvintiilejä, komponenttipisteitä tai
+  DEAC-tuloksia ei muodostettu eikä osallistujatulosta tallennettu. Tarvitaan
+  MOI-kentän lähteeseen perustuva koodiselite tai Ownerin rajattu
+  vahvistus käsittelysäännöstä; kohorttipäätöstä ei avata uudelleen.
+- 2026-10-04: MOI-merkintöjen rajattu lähdetarkistus täsmensi edellistä
+  havaintoa. Kaikki 25 tekstimuotoista havaintoa normalisoituvat samaan
+  lähdemerkintään, joka esiintyy kahdessa kirjainkokomuodossa; ne eivät ole
+  tekstimuotoisia numeroita. Koodikohtaiset frekvenssit pysyvät vain
+  suojatussa QC-raportissa. AUTH_SOURCE:n MOI-selite ei yksin luettele
+  erikoismerkintää. Varmennetun KAAOS-ohjeen MOI-kohdat (diat 17 ja 21) sekä
+  aiemmat suojatut semantiikka-/puuttuvuuskartat tukevat tämän merkinnän
+  puuttuvuustulkintaa. Molemmat kirjoitusasut lisättiin vain suojatun
+  runtime-konfiguraation MOI-kentän puuttuvuuskäsittelyyn; tarkat kooditekstit
+  ja konfiguraatio pysyvät repo-ulkopuolella. Uusi suojattu ajo sivuutti nämä
+  MOI-arvot kvintiiliviitteestä, mutta pysähtyi ennen pisteytystä, koska
+  osa lähtötilanteen i'istä alitti Waris 2011:n määrittelemän ikäpistealueen.
+  Näille arvoille ei ekstrapoloitu ikäpisteitä eikä pisteytetty nollaa;
+  osallistujatuloksia ei muodostettu tai tallennettu. Kohortti on edelleen
+  527 henkilön ensimmäinen
+  käynti, eikä kohorttipäätöstä muutettu.
+- 2026-10-04: Owner vahvisti alle 55 vuoden soveltamistulkinnan: ikäpisteet
+  ovat 0, koska Waris 2011:n ensimmäinen positiivinen luokka alkaa 55 vuodesta.
+  Artikkelin kohortissa esiintyy 45–54-vuotiaita (Methods §2.1), mutta lähde
+  ei kirjoita nollariviä erikseen; 0 pistettä alle 55-vuotiaille on Ownerin
+  sovellus, ei artikkelin suora sanamuoto. Tulkinta kirjattiin paikalliseen
+  päätöslisään ja `waris_2011_age_points`-funktioon; synteettiset rajatestit
+  i’ille 54 ja 55 lisättiin. Yksityisen päätösrekisterin ja METHODS-omistajan
+  synkronointi jää myöhemmäksi.
+- 2026-10-04: Päivitetyn sääntöketjun suojattu uudelleenajo vahvisti yhä
+  527/527 ensimmäisen käynnin valinnan ja ohitti MOI-puuttuvuuskoodit
+  hyväksytyn konfiguraation mukaan. Pisteytys pysähtyi fail-closed, koska
+  yhden havaitun MOI-kokonaispisteen arvo on pienempi kuin saman henkilön
+  lähtöiästä johdetut MOI-ikäpisteet. Yksittäistä riviä tai arvoja ei avattu
+  raporttiin; poikkeaman määrä ja tunnisteet säilyvät suojatussa QC:ssä.
+  Kvintiilejä, DEAC-pisteitä tai osallistujatulostetta ei muodostettu.
+- 2026-10-04: Owner vahvisti yhden tapauksen senioribiostatistikolta saadun
+  tapauskohtaisen korjauspäätöksen: lähdearvo säilytetään, mutta tämän tapauksen
+  ikäpisteetön MOI asetetaan nollaksi ennen kvintiilejä. Yleistä
+  `max(0, total - age_points)` -sääntöä ei lisätä. Ajuriin lisättiin
+  suojattuun korjausmerkintään sidottu tarkka kohdistus, joka vaatii samaa
+  henkilöavainta, alkuperäistä MOI-totalia ja lähtöikää sekä todentaa, että
+  tavallinen vähennys olisi negatiivinen; muuten ajo pysähtyy. Synteettinen
+  regressio varmistaa, että vain kohdistettu tapaus korjautuu, lähderivi ei
+  muutu ja uusi/eri ristiriita pysäyttää. Testit: 308 läpäissyt; compileall,
+  diff-tarkistus ja pre-push-smoke-gate läpäisivät. Suojattu tapausloki ja
+  AUTH_SOURCE-kohortin jatkoajo ovat vielä tekemättä, koska tapauskohtaista
+  korjausmerkintää ei ole voitu sitoa uudelleen todennettuun lähdearvoon ja
+  lähtöikään tässä työpuussa. Osallistujatulosta ei muodostettu.
+- 2026-10-04: Owner täsmensi, että aiemman 527 henkilön ensimmäisen
+  käyntikohortin avain- ja käyntipäiväsidonnat on palautettava aiemman
+  esilennon omista syötteistä. Rajatussa etsinnässä nykyinen SourceBindings-
+  konfiguraatio sisälsi komponenttikentät mutta ei näitä kahta kohorttisidontaa;
+  nykyisestä prosessiympäristöstä eikä tarkastetusta paikallisesta asetuksesta
+  löytynyt henkilöavaimen sarakevalintaa. Repo-/väliaikaistyötilojen koodista
+  tai rajatuista suojatuista ajolokeista ei löytynyt aiemman valinnan
+  täsmällistä ajokutsua. Otsakemetadatan päivämääräehdokasta ei käytetty
+  kohorttivalintaan, koska henkilöavaimen sidontaa ei voitu todentaa.
+  Esilentoa ei toistettu, tapauslokia ei luotu eikä osallistujatuloksia
+  muodostettu. Toteutuksen poikkeus vaatii nyt lisäksi saman
+  snapshot-hashin, henkilöavaimen ja lähtökäyntipäivän täsmäytyksen sekä
+  alkuperäisen MOI-totalin ja lähtöiän; korjaus ei voi osua toiseen riviin.
+  Synteettiset testit pysyivät 308/308 läpäisseinä.
+- 2026-10-04: Aiemman kohorttiesilennon sidonnat palautettiin nykyisestä
+  Termux-asetuksesta ja AUTH_SOURCE-metadataa vasten. Henkilöavain löytyi
+  paikallisesta KAAOS_ID_COL-asetuksesta ja käyntipäivä yksikäsitteisestä
+  päivämäärämetadatasarakkeesta. Kohortti täsmäsi uudelleen: 540 lähderiviä,
+  527 henkilöä, 13 myöhempää käyntiä ohitettu, ei avain-/päivämääräpuutteita
+  eikä ensimmäisen päivän ristiriitoja. MOI-tarkistus löysi täsmälleen yhden
+  negatiivisen ikäpisteettömän tuloksen. Sen tapauskohtainen korjausmerkintä
+  luotiin suojattuun 0600-lokiin: lähdearvo, avain ja lähtökäynti ovat siellä,
+  eivät tässä tiedostossa. Provenienssi kirjaa Ownerin tässä keskustelussa
+  välittämän senioribiostatistikon hyväksynnän; erillistä allekirjoitettua
+  asiakirjaa ei väitetä tarkistetuksi.
+  Kohorttilaskenta pysähtyi tämän jälkeen FOF-komponentin hyväksytyn 0/1-
+  syötealueen ulkopuoliseen lähdekategoriaan. Sidottu kenttäselite ei määritä
+  kyseisen kategorian puuttuvuusmerkitystä. Tästä syystä indeksitulostetta tai
+  koonti-QC:tä ei tallennettu. Kysymys on nyt FOF-lähdekoodin rajatusta
+  semanttisesta sidonnasta; MOI-korjausta, kohorttia tai muuta komponenttia
+  ei avata uudelleen.
+
+- 2026-10-05: Paikallisen päächeckoutin skill-blob on vanhempi kuin
+  DEAC-työpuun skill-blob; työpuun versio vastaa käytettävissä olevaa
+  origin/main-refiä, kieltää yksityisen tiedon paljastamisen ja sallii
+  tarkastetut repository-testit. Suojattu käsittely jatkui tässä erillisessä
+  työpuussa; päächeckoutia ei muutettu. Edellisen 19 koodiryhmän koonti
+  verrattiin tallennettuihin kenttämuistiinpanoihin, puuttuvuusmäärityksiin,
+  hyväksyttyyn pisteytykseen ja rajattuihin esityksen määritelmäkohtiin.
+  Kuusi lähteessä puuttuvuudeksi vahvistettua kenttäarvoa lisättiin uuteen
+  repo-ulkopuoliseen 0600-runtime-konfiguraatioversioon; alkuperäistä
+  konfiguraatiota ei ylikirjoitettu. Synteettiset testit käyttävät vain
+  keinotekoisia merkkijonotunnisteita, eivät suojattuja lähdekoodeja.
+  Viisi ryhmää jää lähdeselvitykseen/Owner-ratkaisuun: kaksi itsearvioidun
+  terveyden kentässä, yksi mielialakentässä ja kaksi aiemman kaatumisen
+  kentässä. Tarkat koodit, frekvenssit ja määritelmäkatkelmat ovat vain
+  suojatussa `deac_v2_code_semantics_review_20261005.md`-raportissa.
+  Näitä tapauksia ei pisteytetty eikä kohorttiajoa tehty. Pytest: 302/302
+  PASS; suojatun runtime-konfiguraation synteettinen tarkistus: 6/6 PASS;
+  pre-push-smoke-gate ja `git diff --check`: PASS.
+- 2026-10-05: Rajattu jatkotarkistus varmisti, että mielialakentän lisämerkintä
+  tarkoittaa lähteen mukaan “ei tietoa”. Se lisättiin vain uuteen suojattuun
+  runtime-konfiguraatioversioon tavallisena puuttuvuutena; hyväksytty
+  mielialan pisteytys ei muuttunut. Testiin lisättiin geneerinen synteettinen
+  puuttuvuuskoe; adapteritestit 45/45 PASS ja suojatun koodin synteettinen
+  tarkistus PASS. Lähdeselvitys ei määrittänyt kahden itsearvioidun terveyden
+  eikä kahden aiemman kaatumisen lisäryhmän merkitystä. Niitä ei normalisoitu
+  eikä pisteytetty. Päätöspaketti ja täsmälliset koodikohtaiset koosteet ovat
+  vain repo-ulkopuolisessa suojatussa raportissa; 20 komponentin indeksiä tai
+  osallistuja-ajoa ei muodostettu.
+- 2026-10-05: Owner päätti, että tämän AUTH_SOURCE-snapshotin kaksi
+  lähdeselitteen ulkopuolista aiemman kaatumisen merkintää käsitellään tässä
+  DEAC-ajossa tulkintakelvottomina puuttuvina; niiden alkuperäistä merkitystä
+  ei päätellä. Itsearvioidun terveyden lähteen “ei tietoa” -luokka ja Ownerin
+  vahvistama lisämerkintä ovat puuttuvia. Täsmälliset koodit ja määrät on
+  kirjattu vain repo-ulkopuoliseen suojattuun päätös- ja runtime-karttaan.
+- 2026-10-05: Suojatun esilennon jälkeen jo konfiguroitujen puuttuvuusmerkkien
+  numeerisen/tekstimuotoisen esityksen ero yhdenmukaistettiin työkirjan
+  lukijan tuottamaan tyyppiin; merkityksiä tai pisteytyksiä ei muutettu.
+  Testikohtaisten statusmerkkien reuna-alkutilan välilyönnit ja kirjainkoko
+  normalisoidaan koodikirjan hakuun, ja normalisoitujen avainten törmäykset
+  hylätään. Tunnettu positiivinen neurologinen osakenttä antaa edelleen
+  yhdistelmävajeen 1; jos positiivista ei ole ja vähintään yksi osakenttä
+  puuttuu, yhdistelmäkomponentti on tavallisen puuttuvuussäännön mukaisesti
+  puuttuva, ei nolla.
+- 2026-10-05: Rajatut DEAC-testit 320/320 PASS; tarkastettu
+  pre-push-smoke-gate ja `git diff --check` PASS. Suojattu kohorttiajo:
+  540 lähderiviä, 527 yksilöllistä ensimmäistä käyntiä, 13 myöhempää käyntiä
+  ohitettu, ei kohorttiristiriitoja; MOI-referenssijoukossa 502 havaintoa.
+  Kattavuusrajan täytti 470 henkilöä ja 57 jäi sen alle; 470 DEAC-indeksiä
+  laskettiin. Indeksin henkilötason tulokset ovat vain oikeuksin rajatussa
+  repo-ulkopuolisessa suojatussa sijainnissa. Keskusteluun ei tulostettu
+  osallistujarivejä, tunnisteita tai lähdekoodeja.
+- 2026-10-05: Vaihtoehtoinen `run_baseline_cohort`-polku ohjattiin samaan
+  `score_first_visit_cohort`-toteutukseen. Se vaatii nyt varmennetun
+  `FirstVisitCohort`-olion ja välittää tapauskohtaisen MOI-korjauksen; irrallinen
+  rivitehdas ei voi ohittaa kohdistusvarmistusta. Synteettinen parity-testi
+  vertaa kvintiilirajoja ja koontituloksia molempien julkisten kutsujen välillä.
+  Puristusvoimakohtaa päivitettiin erottamaan historiallinen koodilistan
+  etsintä nykyisestä suojatusta runtime-normalisoinnista; luokat 0–5 säilyvät
+  valideina. DEAC-testit 321/321 PASS, `git diff --check` PASS ja tarkastettu
+  `tools/run-gates.sh --mode pre-push --smoke` PASS (exit 0; Python-gate
+  ilmoitti, ettei staged Python-tiedostoja ollut). Ensimmäinen manifestiyritys
+  jätettiin tarkoituksella pending-tilaan, koska alkuperäisen ajon tarkkaa
+  versio- ja valitsintietoa ei voitu rekonstruoida.
+- 2026-10-05: Uusi suojattu ajo tehtiin lukitusta nykytilasta. `config/.env`
+  -asetuksen avainvalitsin täsmäsi työkirjan metadataan; käyntipäivävalitsin
+  varmennettiin aiemman tehtävämerkinnän yksikäsitteisestä päivämääräkentästä
+  ja nykyisestä Taul1-metadatasta. Esilento täsmäsi: 540 lähderiviä, 527
+  henkilöä, 13 myöhempää käyntiä, ei puuttuvia avaimia/päiviä eikä saman
+  päivän ristiriitoja. Uudelleenlaskenta tuotti 502 MOI-referenssihavainnolla
+  rajat 4/6/7/9. Uusi ajo tuotti 470 indeksiä ja 57 kattavuuden alle jäänyttä;
+  vanhan suojatun tuloksen kanssa tehdyssä paikallisessa avainkohtaisessa
+  vertailussa kohortti-, komponentti- ja indeksierot olivat 0. Uusi tulos ja
+  varmennettu manifesti ovat repo-ulkopuolisessa suojatussa hakemistossa;
+  osallistujarivejä, tunnisteita tai suojattuja lähdearvoja ei kirjata tähän.
+  Tehtävä pysyy `02-in-progress`-tilassa staged-erien tarkastukseen asti.
