@@ -2,7 +2,7 @@
 
 ## Status
 
-- State: 03-review
+- State: 04-done
 - Priority: High
 - Assignee: Termux DEAC agent
 
@@ -77,5 +77,19 @@ komponentteja, MOI-rajoja tai kattavuussääntöä ei muuteta.
 - 2026-10-05T15:30:00+03:00: Pyydetty viimeistely: lisätty käyntivuoden,
   kattavuusryhmän ja komponentin mukainen puuttuvuustaulukko sekä synteettiset
   kohdennetut testit. Arviointimanifesti yksilöi erikseen lähtöajon Git-HEADin,
-  arvioinnin Git-HEADin ja ajetun arviointitiedoston SHA-256:n. Tehtävä pysyy
-  03-review-tilassa, kunnes riippumaton ihmishyväksyntänäyttö on kirjattu.
+-  arvioinnin Git-HEADin ja ajetun arviointitiedoston SHA-256:n.
+- 2026-10-05T15:42:52+03:00: Ihmishyväksyntä ja merge todennettu PR:ssä
+  [#186](https://github.com/Tupatuko2023/Python-R-Scripts/pull/186):
+  hyväksyjä `Tupatuko2023`, aika 2026-10-05T12:42:52Z, hyväksytty head
+  `b986c7cb38483eb1946d25f7109e176d9c99ddac`, squash-merge
+  `606cda42713b4c05748b4f31796436bf46cdb71c`. PR:n diff sisälsi tämän
+  tehtävän ja arvioinnin koodin, testin sekä dokumentaation. Headin checkit
+  läpäisivät; vain soveltumattomat checkit ohitettiin.
+- 2026-10-05T15:45:24+03:00: Käyntivuosittainen aggregaattitaulukko tuotettiin
+  uudelleen varmennettua lähtöajoa vasten ilman pisteytyksen uusimista.
+  Arviointitunnus `20261005T124524Z`; suojatut tulokset säilyvät
+  repo-ulkopuolella.
+- 2026-10-05T15:46:39+03:00: Tehtävä teknisesti suljettu ja siirretty
+  `04-done`-tilaan ihmishyväksynnän, pysyvän PR-näytön ja paikallisen
+  validoinnin jälkeen. Ihminen vastaa PR:n mergepäätöksestä; agentti ei
+  yhdistänyt PR:ää.
