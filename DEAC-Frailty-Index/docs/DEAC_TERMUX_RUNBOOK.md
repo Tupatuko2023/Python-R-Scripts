@@ -97,6 +97,44 @@ cd "$HOME/worktrees/deac-v2-source-binding"
 uv run --offline --no-project --with pytest pytest -q tests/test_deac_*.py
 ```
 
+## Kuvaileva arviointierä
+
+Kuvaileva arviointiajuri lukee varmennetun ajon manifestin ja tulos-CSV:n,
+tarkistaa niiden hashit ja suojatut asetukset sekä kirjoittaa vain
+koontitaulukot ja histogrammin uuteen `deac_v2_descriptive_<UTC-aikaleima>`-
+hakemistoon. Ajuri ei laske DEAC-pisteitä uudelleen. Lähtöikä luetaan
+varmennetusta `baseline_age_years`-sidonnasta ja käyntivuosi ensimmäisen
+käynnin päivämäärästä. Sukupuolta verrataan vain, jos sille on varmennettu
+lähdesidonta ja semanttinen lähde; sidonnan puuttuessa kenttä merkitään
+varmentamattomaksi eikä puuttuvaksi.
+
+Suorita aliprojektin juuresta. Päivitä `DEAC_RUN_ID` ja manifestin nimi sen
+suojatun ajon mukaan, jonka tuloksia arvioidaan:
+
+```bash
+cd "$HOME/worktrees/deac-v2-source-binding/DEAC-Frailty-Index"
+DEAC_RUN_ID=20261005T105241Z
+python src/deac_descriptive_eval.py \
+  --manifest "$HOME/.local/share/deac-schema-inventory/deac_v2_run_${DEAC_RUN_ID}/deac_v2_run_manifest_${DEAC_RUN_ID}.json" \
+  --env "$HOME/Python-R-Scripts/config/.env" \
+  --bindings "$HOME/.local/share/deac-schema-inventory/deac_v2_SourceBindings_AUTH_SOURCE_20261005_owner-missing-decisions-v3.json" \
+  --selector "$HOME/.local/share/deac-schema-inventory/deac_v2_cohort_selector_AUTH_SOURCE_20261005.json" \
+  --output-parent "$HOME/.local/share/deac-schema-inventory"
+```
+
+Tulokset sisältävät indeksin histogrammin ja jakaumataulukon, havaitun
+komponenttimäärän jakauman, komponenttien pistejakaumat ja puuttuvuusluvut
+koko kohortille sekä kattavuusryhmittäin, komponenttijoukkojen
+puuttuvuuskasautuman, käyntivuosittaisen komponenttipuuttuvuustaulukon ja
+varmennettujen lähtömuuttujien aggregaattivertailun. Arviointiraportin
+lähtöajon Git-HEAD kuvaa pisteytysajon koodiversiota; arviointikoodin
+käytetty tiedosto yksilöidään erikseen SHA-256-tiivisteellä ja arviointihetken
+Git-HEADilla.
+Kuvaileva arviointi ei muuta pisteytystä eikä osoita mittarin validiteettia.
+Lähdeajon tulos ei sisällä puuttuvan arvon henkilökohtaista syytä; tätä ei
+päätellä komponenttiryhmistä. Kaikki arviointitiedostot ovat suojatussa
+paikallisessa hakemistossa, eivätkä sisällä tunnisteita tai osallistujarivejä.
+
 ## Tutkimuksellisen arvioinnin rajaus
 
 Seuraava vaihe kuvaa jakauman, komponenttien puuttuvuuden ja kattavuuden sekä
