@@ -6,9 +6,9 @@ import argparse
 import hashlib
 import json
 import os
+import stat
 import subprocess
 import sys
-import stat
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -69,6 +69,8 @@ def _sha256_file(path: Path) -> str:
 
 
 def _require_private_file(path: Path) -> None:
+    if path.is_symlink():
+        raise ValueError("Protected runtime files must not be symbolic links")
     file_stat = path.stat(follow_symlinks=False)
     if not stat.S_ISREG(file_stat.st_mode) or stat.S_IMODE(file_stat.st_mode) & 0o077:
         raise ValueError("Protected runtime files must be regular files with private permissions")
@@ -115,12 +117,15 @@ def _atomic_json(path: Path, value: dict[str, Any]) -> None:
 
 
 def run(args: argparse.Namespace) -> Path:
+    input_paths = tuple(
+        Path(value) for value in (args.env, args.bindings, args.selector, args.correction)
+    )
+    for protected_file in input_paths:
+        _require_private_file(protected_file)
     env_path = Path(args.env).resolve(strict=True)
     bindings_path = Path(args.bindings).resolve(strict=True)
     selector_path = Path(args.selector).resolve(strict=True)
     correction_path = Path(args.correction).resolve(strict=True)
-    for protected_file in (env_path, bindings_path, selector_path, correction_path):
-        _require_private_file(protected_file)
     env = _read_env(env_path)
     bindings_config = _load_json(bindings_path)
     selector = _load_json(selector_path)
