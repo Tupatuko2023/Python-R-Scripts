@@ -43,13 +43,13 @@ Tuntematon koodi pysäyttää ajon; sitä ei päätellä osallistujajakaumasta.
 `$HOME` tarkoittaa Termuxin käyttäjän kotihakemistoa. Alla lueteltuja
 paikallisia tiedostoja ei lisätä versionhallintaan.
 
-| Sisältö | Sijainti |
-|---|---|
-| Lähdepolku ja `KAAOS_ID_COL` | `$HOME/Python-R-Scripts/config/.env` |
-| Snapshot-kohtainen SourceBindings, puuttuvuus- ja testikoodit | `$HOME/.local/share/deac-schema-inventory/deac_v2_SourceBindings_AUTH_SOURCE_20261005_owner-missing-decisions-v3.json` |
-| Ensimmäisen käynnin valitsin, päivämääräsarake ja QC-odotukset | `$HOME/.local/share/deac-schema-inventory/deac_v2_cohort_selector_AUTH_SOURCE_20261005.json` |
-| Tapauskohtainen MOI-korjausloki | `$HOME/.local/share/deac-schema-inventory/deac_v2_moi_case_correction_20261004.json` |
-| Ajon CSV ja manifesti | `$HOME/.local/share/deac-schema-inventory/deac_v2_run_<UTC-aikaleima>/` |
+| Sisältö                                                        | Sijainti                                                                                                               |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Lähdepolku ja `KAAOS_ID_COL`                                   | `$HOME/Python-R-Scripts/config/.env`                                                                                   |
+| Snapshot-kohtainen SourceBindings, puuttuvuus- ja testikoodit  | `$HOME/.local/share/deac-schema-inventory/deac_v2_SourceBindings_AUTH_SOURCE_20261005_owner-missing-decisions-v3.json` |
+| Ensimmäisen käynnin valitsin, päivämääräsarake ja QC-odotukset | `$HOME/.local/share/deac-schema-inventory/deac_v2_cohort_selector_AUTH_SOURCE_20261005.json`                           |
+| Tapauskohtainen MOI-korjausloki                                | `$HOME/.local/share/deac-schema-inventory/deac_v2_moi_case_correction_20261004.json`                                   |
+| Ajon CSV ja manifesti                                          | `$HOME/.local/share/deac-schema-inventory/deac_v2_run_<UTC-aikaleima>/`                                                |
 
 Konfiguraatiot, korjausloki, osallistujatulokset ja manifestit on suojattu
 tiedostotilalla `0600`; ajohakemistot luodaan tilalla `0700`. Manifesti
