@@ -659,6 +659,8 @@ def _validate_first_visit_cohort(
 ) -> None:
     if type(cohort) is not FirstVisitCohort or cohort._origin is not _SELECTOR_COHORT_ORIGIN:
         raise ValueError("First-visit cohort must originate from the verified selector")
+    if type(cohort.preflight) is not WorkbookCohortPreflight:
+        raise ValueError("First-visit cohort has invalid preflight metadata")
     if not re.fullmatch(r"[0-9a-f]{64}", cohort.source_sha256):
         raise ValueError("First-visit cohort has an invalid source snapshot hash")
 
@@ -706,6 +708,11 @@ def _validate_first_visit_cohort(
             raise ValueError("First-visit cohort key, date, and row alignment failed")
         if type(row) is not MappingProxyType or set(row) != expected_columns:
             raise ValueError("First-visit cohort rows are not immutable selector records")
+        if any(
+            value is not None and type(value) not in {str, int, float, bool}
+            for value in row.values()
+        ):
+            raise ValueError("First-visit cohort row contains a mutable cell value")
 
 
 def score_first_visit_cohort(
