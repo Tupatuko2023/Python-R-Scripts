@@ -1,52 +1,42 @@
 # DEAC Frailty Index
 
-Tämä aliprojekti toteuttaa hyväksytyn 20 komponentin
-DEAC-raihnaisuusindeksin laskennan rakennusosia. `src/deac_components.py`
-sisältää 19 erillistä pisteytysfunktiota, ja `src/deac_index.py` kokoaa 20
-nimettyä, valmiiksi pisteytettyä komponenttia synteettisillä syötteillä.
-MOI:n ikäpisteiden poisto ja kohorttikohtainen kvintiilipisteytys ovat
-synteettisesti toteutettuja rakennusosia. MOI:n lähtötilanteen ikäpisteet
-vähennetään kerran. Waris 2011 §4.1:n viimeisen ikämerkinnän sanamuoto on
-"75 years"; sen soveltaminen kaikkiin vähintään 75-vuotiaisiin (6 ikäpistettä)
-on Ownerin 2026-10-01 vahvistama tulkinta, ei artikkelin eksplisiittisesti
-määrittelemä ikäraja. Lähdesidonta ja tuotantoaineistolla varmennettu
-DEAC-laskenta ovat vielä kesken.
-`src/deac_source_adapter.py` tarjoaa konfiguroitavan, synteettisesti
-testattavan rajapinnan semanttisten lähdekenttien normalisointiin, nykyisiin
-pisteytysfunktioihin ja 20-paikkaiseen kokoajaan. Todellisia lähdeheadereita,
-erityiskoodeja tai osallistujarivejä ei sisällytetä repoon. Suojattu
-kenttäkartta, mittausvalinnat ja testikohtaiset koodit on annettava erikseen;
-niiden puuttuessa adapteri pysähtyy fail-closed. Adapteri ei valitse
-mittauspuolta tai testiyritystä eikä tulkitse tuntematonta E/E1-merkintää.
-Se muuntaa kipuarvon vain jo cm-yksikköön normalisoituna ja kävelyajan vain
-jo valitusta 10 m ajasta; se ei päätä lähteen yksikköä, paremman jalan/käden
-valintaa tai testikohtaista koodimerkitystä. Kokoaja käyttää hyväksyttyä
-havaittujen pisteiden nimittäjää
-ja vähintään 80 prosentin kattavuusrajaa. Puuttuva `moi`-paikka on annettava
-arvolla `None`, ei poistamalla komponenttia. Vain aidosti ei-sovellettava
-komponentti merkitään `ComponentStatus.NOT_APPLICABLE`-arvolla. Kokoaja ei
-muodosta 19 komponentin vaihtoehtoindeksiä eikä varmista lähdesidontaa tai
-tuotantoaineiston tulosta. Moduulit eivät lue osallistuja-aineistoa.
+Tämä aliprojekti sisältää hyväksytyn 20-komponenttisen DEAC-indeksin
+lähdesovittimen, komponenttipisteyttäjät, kohorttivalitsimen ja suojatun
+ajurin. PR #184:n toteutus yhdistettiin `main`-haaraan 2026-10-05.
+Varmennettu Termux-ajo tuotti 527 ensimmäisen käynnin kohortin jäsenelle
+470 indeksiä; 57 jäi 80 prosentin kattavuusrajan alle. Suojattu ajomanifesti
+lukitsee lähdesnapshotin, asetukset ja kooditiedostojen tiivisteet.
+
+Ajokomento, riippuvuudet, suojattujen asetusten sijainnit ja rekisteriviitteet
+on kuvattu [Termux-ajo-ohjeessa](docs/DEAC_TERMUX_RUNBOOK.md). Todelliset
+otsakkeet, lähdekoodit ja osallistujatulokset pysyvät repo-ulkopuolella.
+Mittarin ominaisuuksien ja tutkimusyhteyksien arviointi jatkuu Termuxissa
+paikallisen handoverin, päätöslisän, suojatun konfiguraation ja varmennetun
+ajomanifestin perusteella. PC-repon synkronointi tehdään myöhemmin; sen
+tavoittamattomuus ei estä hyväksytyn version käyttöä tai arviointia. Todellinen
+ristiriita hyväksytyissä pisteytyssäännöissä käsitellään erikseen.
 
 ## Tieteellinen auktoriteetti
 
 Tieteelliset päätökset hyväksyy väitöskirjan ihmisomistaja. Kanoninen
 tieteellinen tila on yksityisen `FOF-Dissertation-Project`-repon
 `METHODS_AND_SCORING.md` §3.1. [DEAC-handover](docs/DEAC_HANDOVER.md) on siitä
-johdettu, ei-kanoninen tilannekuva. Tämä analyysirepo sisältää myöhemmin vain
-toteutuksen ja validoinnin. Jos lähteet ovat ristiriidassa, työ pysähtyy
-omistajan tieteellistä ratkaisua varten.
+johdettu, ei-kanoninen tilannekuva. Tämä analyysirepo sisältää hyväksytyn
+toteutuksen, sen varmennetun käytön sekä erikseen rajatun mittarin
+ominaisuuksien ja tutkimusyhteyksien arvioinnin. PC-repon puuttuminen ei estä
+hyväksytyn version käyttöä paikallisten varmennettujen aineistojen perusteella.
+Jos hyväksytyissä säännöissä ilmenee todellinen ristiriita, se pysäytetään ja
+viedään omistajan tieteelliseen ratkaisuun.
 
 ## Seuraava työvaihe
 
-Synteettinen adapterirajapinta on toteutettu, mutta tuotantokenttien
-sidonta odottaa suojatun skeeman ja käytetyn KAAOS-/TOIMIVA-protokollan
-varmennusta. Seuraava vaihe on vahvistaa MOI:n lähdekentät, VAS-yksikkö,
-paremman jalan ja käden muodostus, valittu 10 m mittaus sekä testikohtaisten
-erityiskoodien merkitykset. Legacy-koodi auttaa paikantamaan ehdokkaita mutta
-ei yksin määrää DEAC:n sääntöjä. B1/B2 pysyvät avoimina, eikä niitä ratkaista
-adapterissa.
-
-Osallistujatason `DATA_ROOT` on repositorion ulkopuolella. Synteettinen
-adapterivaihe ei aseta, lue eikä kopioi sitä. Paikallisia polkuja ja salaisuuksia
-ei tallenneta versionhallintaan.
+Arvioi DEAC-mittarin jakaumaa, komponenttien puuttuvuutta ja kattavuutta sekä
+470 indeksin saaneen ja 57 kattavuusrajan alittaneen vertailua. Arviointi
+jatkuu Termuxissa paikallisen handoverin, päätöslisän, suojatun konfiguraation
+ja varmennetun manifestin perusteella; PC-repon synkronointi tehdään
+myöhemmin. PC-yhteyden puuttuminen ei estä tätä työtä, mutta todellinen
+sääntöristiriita käsitellään erikseen. Arviointi ei muuta hyväksyttyjä
+pisteytyssääntöjä eikä ratkaise avoimia tutkimuskysymyksiä B1/B2 ilman
+erillistä Ownerin päätöstä. Kanoninen tieteellinen tila on yksityisen
+`FOF-Dissertation-Project`-repon `METHODS_AND_SCORING.md` §3.1;
+[DEAC-handover](docs/DEAC_HANDOVER.md) on johdettu tilannekuva.
