@@ -204,6 +204,68 @@ def test_preselected_test_inability_without_reason_is_missing() -> None:
     assert result is None
 
 
+@pytest.mark.parametrize(
+    ("reason", "expected"),
+    [
+        (None, None),
+        ("synthetic_unverified_reason", None),
+        ("synthetic_verified_reason", 1.0),
+    ],
+)
+def test_functional_inability_status_requires_verified_reason_in_row_scoring(
+    reason: object, expected: float | None
+) -> None:
+    row, bindings = synthetic_fixture()
+    field = "selected_max_10m_seconds"
+    reason_header = "synthetic_10m_reason"
+    row[bindings.columns[field]] = "synthetic_E"
+    row[reason_header] = reason
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        performance_codes={
+            field: {"synthetic_E": adapter.PerformanceDisposition.FUNCTIONAL_INABILITY}
+        },
+        reason_columns={field: reason_header},
+        verified_functional_inability_codes={
+            field: ("synthetic_verified_reason",)
+        },
+    )
+
+    result = adapter.score_source_row(row, bindings, (1, 2, 3, 4))
+    assert result["maximal_10m_gait_speed"] == expected
+
+
+def test_numeric_performance_status_codes_match_exactly() -> None:
+    status = 99
+    codebook = {status: adapter.PerformanceDisposition.OTHER_NONPERFORMANCE}
+    assert (
+        adapter.normalize_preselected_test_value(
+            status, codebook, "selected_max_10m_seconds"
+        )
+        is None
+    )
+    assert (
+        adapter.normalize_preselected_test_value(
+            99.5, codebook, "selected_max_10m_seconds"
+        )
+        == 99.5
+    )
+
+    row, bindings = synthetic_fixture()
+    field = "selected_max_10m_seconds"
+    row[bindings.columns[field]] = status
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        performance_codes={field: codebook},
+    )
+    assert (
+        adapter.score_source_row(row, bindings, (1, 2, 3, 4))[
+            "maximal_10m_gait_speed"
+        ]
+        is None
+    )
+
+
 def test_performance_codes_are_test_specific_and_keep_three_states_distinct() -> None:
     row, bindings = synthetic_fixture()
     synthetic_code = "synthetic_code_a"

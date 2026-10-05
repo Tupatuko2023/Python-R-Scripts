@@ -302,12 +302,13 @@ def _matches_code(value: object, codes: Sequence[object]) -> bool:
 def _performance_disposition(
     value: object, codebook: Mapping[object, PerformanceDisposition]
 ) -> PerformanceDisposition | None:
-    """Match textual status codes independent of case and edge whitespace."""
-    if not isinstance(value, str):
-        return None
-    normalized = value.strip().casefold()
+    """Normalize text status codes and exactly match non-text codes."""
+    normalized = value.strip().casefold() if isinstance(value, str) else None
     for code, disposition in codebook.items():
-        if isinstance(code, str) and code.strip().casefold() == normalized:
+        if isinstance(code, str):
+            if isinstance(value, str) and code.strip().casefold() == normalized:
+                return disposition
+        elif value == code:
             return disposition
     return None
 
@@ -350,10 +351,13 @@ def normalize_preselected_test_value(
     codebook: Mapping[object, PerformanceDisposition],
     logical_field: str,
 ) -> object:
-    """Normalize one already-selected test result without choosing a trial/side.
+    """Normalize a selected test value without claiming unverified inability.
 
-    Numeric measured values are returned unchanged. Configured test-specific
-    dispositions remain distinct; unknown textual codes fail closed.
+    Configured status codes are matched first (text case/edge whitespace is
+    normalized; non-text codes are matched exactly). Since this helper has no
+    reason row, functional inability becomes missing here. The row-scoring
+    path may assign a deficit only after its bound reason code is verified.
+    Unknown textual codes fail closed; unmatched numeric measurements pass on.
     """
     if value is None:
         return None
@@ -382,27 +386,29 @@ def _test_value(
     if _matches_code(raw, bindings.invalid_codes_as_missing.get(logical_field, ())):
         return None
 
-    if not isinstance(raw, str):
-        return raw
-
     codebook = bindings.performance_codes.get(logical_field, {})
     disposition = _performance_disposition(raw, codebook)
 
-    if disposition is PerformanceDisposition.FUNCTIONAL_INABILITY:
-        return _FUNCTIONAL_INABILITY
     if disposition is PerformanceDisposition.NOT_APPLICABLE:
         return ComponentStatus.NOT_APPLICABLE
-    if disposition is PerformanceDisposition.OTHER_NONPERFORMANCE:
+    if disposition in {
+        PerformanceDisposition.FUNCTIONAL_INABILITY,
+        PerformanceDisposition.OTHER_NONPERFORMANCE,
+    }:
         reason_column = bindings.reason_columns.get(logical_field)
         verified_codes = bindings.verified_functional_inability_codes.get(
             logical_field, ()
         )
-        if reason_column is not None and reason_column not in row:
+        if reason_column is None or not verified_codes:
+            return None
+        if reason_column not in row:
             raise ValueError(f"Bound test reason is missing for {logical_field}")
         reason = row.get(reason_column) if reason_column is not None else None
         if reason is not None and _matches_code(reason, verified_codes):
             return _FUNCTIONAL_INABILITY
         return None
+    if not isinstance(raw, str):
+        return raw
     raise UnresolvedSourceCodeError(
         f"Unmapped test-specific source code for {logical_field}"
     )
@@ -417,6 +423,12 @@ def _score_sided_test(
     scorer: Any,
     prefer: str,
 ) -> ComponentInput:
+    """Choose the best measured side; only verified reasons mean inability.
+
+    Missing or unverified status values stay missing and cannot trigger a
+    deficit. A verified inability on either side is used only when no numeric
+    side was measured.
+    """
     if selected_field in bindings.columns:
         return _score_test_field(row, bindings, selected_field, scorer)
 
