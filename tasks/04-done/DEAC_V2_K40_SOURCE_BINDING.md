@@ -2,7 +2,7 @@
 
 ## Tila
 
-03-review — aloitettu 2026-10-03; katselmointiin siirretty 2026-10-05
+04-done — aloitettu 2026-10-03; katselmoitu ja hyväksytty 2026-10-05
 
 ## Tavoite
 
@@ -514,6 +514,37 @@ pysyvät ennallaan. Tieteelliset kysymykset B1/B2 eivät kuulu tehtävään.
   yksityiseen väliaikaistiedostoon ja julkaistaan atomisesti ilman ylikirjoitusta;
   keskeytys siivoaa väliaikaistiedoston. Koko DEAC-testijoukko 332/332 ja
   pre-push-smoke-gate läpäisivät.
+- 2026-10-05T10:24:33Z: Ihmisomistaja `Tupatuko2023` yhdisti PR #184:n, jonka
+  diff sisältää tämän tehtävän katselmointiin siirron, kohorttiajurin ja sen
+  testit. Pysyvä hyväksyntänäyttö: [PR #184](https://github.com/Tupatuko2023/Python-R-Scripts/pull/184),
+  merge-commit `6b64c322b3b6043562e9fba181124e348330038f`.
+- 2026-10-05T10:48:54Z: PR:n alkuperäinen ajo-manifesti tarkistettiin suoraan.
+  Se viittasi `047149b`-versioon; `deac_cohort_runner.py` ja
+  `deac_source_adapter.py` eivät täsmänneet mainiin. Mainin laskentamoduuleilla
+  tehtiin siksi uusi suojattu ajo. Kohorttiesilento: 540 lähderiviä, 527
+  yksilöllistä ensimmäistä käyntiä, 13 myöhempää käyntiä, ei puuttuvia avaimia
+  tai päiviä eikä tasatilanteita. MOI: 502 havaintoa, rajat 4/6/7/9; 470
+  indeksiä ja 57 kattavuusrajan alitusta. Aiemman suojatun tuloksen vertailu:
+  avainerot 0, komponenttipiste-erot 0, indeksin saatavuuserot 0 ja
+  indeksiarvoerot 0. Viimeisin ajo-manifesti on
+  `$HOME/.local/share/deac-schema-inventory/deac_v2_run_20261005T104813Z/`-hakemistossa;
+  manifesti ja osallistujatulos ovat käyttöoikeuksin 0600.
+- 2026-10-05: Termux-ajuri ja pysyvä ajo-ohje lisättiin. Suojattu kohortin
+  valitsin säilyttää myös päivämääräsarakkeen ja valintasäännön. SourceBindings
+  sisältää 25 semanttista lähdesyötekenttää, joista toteutus tuottaa 20
+  hyväksyttyä komponenttia. DEAC-testit 334/334 ja pre-push-smoke-gate
+  läpäisivät. Ajuri suoritettiin mainin laskentamoduuleilla; uusi manifesti
+  kirjasi myös ajurin hashin. README ja runbook rajaavat seuraavan vaiheen
+  mittarin ominaisuuksien ja tutkimusyhteyksien erilliseen arviointiin.
+- 2026-10-05T10:52:41Z: Pysyvä komentoriviajuri ajettiin commitissa `c15ed24`.
+  Kaikkien viiden laskentamoduulin tiivisteet täsmäsivät PR #184:n merge-commitiin;
+  ajurin tiiviste kirjattiin uuteen suojattuun manifestiin. QC pysyi samana:
+  540/527/13, MOI 502 ja rajat 4/6/7/9, indeksejä 470 ja kattavuusrajan alla
+  57. Vertailu aiempaan suojattuun tulokseen: avain-, komponentti-, saatavuus-
+  ja indeksiarvoerot 0. Manifesti on
+  `$HOME/.local/share/deac-schema-inventory/deac_v2_run_20261005T105241Z/`
+  -hakemistossa, SHA-256
+  `fbe39c012c41aa99cc5736ba2207573616c1c255a3b6b628e8677494eebb4876`.
 - 2026-10-05: Uusi suojattu ajo commitin `ad51250` koodilla. Uusinta-ajo
   täsmäsi: 540 lähderiviä, 527 henkilöä, 13 myöhempää käyntiä, ei puuttuvia
   avaimia/päiviä eikä ensimmäisen päivän ristiriitoja; 502 MOI-havaintoa,
