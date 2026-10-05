@@ -10,22 +10,33 @@ lukitsee lähdesnapshotin, asetukset ja kooditiedostojen tiivisteet.
 Ajokomento, riippuvuudet, suojattujen asetusten sijainnit ja rekisteriviitteet
 on kuvattu [Termux-ajo-ohjeessa](docs/DEAC_TERMUX_RUNBOOK.md). Todelliset
 otsakkeet, lähdekoodit ja osallistujatulokset pysyvät repo-ulkopuolella.
-Tutkimuksellinen mittarin validointi on erillinen, vielä aloittamaton vaihe.
+Mittarin ominaisuuksien ja tutkimusyhteyksien arviointi jatkuu Termuxissa
+paikallisen handoverin, päätöslisän, suojatun konfiguraation ja varmennetun
+ajomanifestin perusteella. PC-repon synkronointi tehdään myöhemmin; sen
+tavoittamattomuus ei estä hyväksytyn version käyttöä tai arviointia. Todellinen
+ristiriita hyväksytyissä pisteytyssäännöissä käsitellään erikseen.
 
 ## Tieteellinen auktoriteetti
 
 Tieteelliset päätökset hyväksyy väitöskirjan ihmisomistaja. Kanoninen
 tieteellinen tila on yksityisen `FOF-Dissertation-Project`-repon
 `METHODS_AND_SCORING.md` §3.1. [DEAC-handover](docs/DEAC_HANDOVER.md) on siitä
-johdettu, ei-kanoninen tilannekuva. Tämä analyysirepo sisältää myöhemmin vain
-toteutuksen ja validoinnin. Jos lähteet ovat ristiriidassa, työ pysähtyy
-omistajan tieteellistä ratkaisua varten.
+johdettu, ei-kanoninen tilannekuva. Tämä analyysirepo sisältää hyväksytyn
+toteutuksen, sen varmennetun käytön sekä erikseen rajatun mittarin
+ominaisuuksien ja tutkimusyhteyksien arvioinnin. PC-repon puuttuminen ei estä
+hyväksytyn version käyttöä paikallisten varmennettujen aineistojen perusteella.
+Jos hyväksytyissä säännöissä ilmenee todellinen ristiriita, se pysäytetään ja
+viedään omistajan tieteelliseen ratkaisuun.
 
 ## Seuraava työvaihe
 
-Arvioi erikseen DEAC-mittarin jakaumaa, kattavuutta ja herkkyyttä sekä ennalta
-määriteltyjä yhteyksiä ulkoisiin tai kliinisiin mittareihin. Tämä arviointi ei
-muuta pisteytyssääntöjä eikä ratkaise avoimia tutkimuskysymyksiä B1/B2 ilman
+Arvioi DEAC-mittarin jakaumaa, komponenttien puuttuvuutta ja kattavuutta sekä
+470 indeksin saaneen ja 57 kattavuusrajan alittaneen vertailua. Arviointi
+jatkuu Termuxissa paikallisen handoverin, päätöslisän, suojatun konfiguraation
+ja varmennetun manifestin perusteella; PC-repon synkronointi tehdään
+myöhemmin. PC-yhteyden puuttuminen ei estä tätä työtä, mutta todellinen
+sääntöristiriita käsitellään erikseen. Arviointi ei muuta hyväksyttyjä
+pisteytyssääntöjä eikä ratkaise avoimia tutkimuskysymyksiä B1/B2 ilman
 erillistä Ownerin päätöstä. Kanoninen tieteellinen tila on yksityisen
 `FOF-Dissertation-Project`-repon `METHODS_AND_SCORING.md` §3.1;
 [DEAC-handover](docs/DEAC_HANDOVER.md) on johdettu tilannekuva.

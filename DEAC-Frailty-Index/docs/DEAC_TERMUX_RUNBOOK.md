@@ -13,7 +13,11 @@ Indeksi muodostui 470 henkilölle; 57 jäi kattavuusrajan alle. Aiemman
 suojatun tuloksen kanssa tehty vertailu ei löytänyt eroja kohorttiavaimissa,
 komponenttipisteissä, indeksien saatavuudessa tai indeksiarvoissa.
 
-Tutkimuksellinen validointi ei sisälly tähän laskennan toimitukseen.
+Mittarin ominaisuuksien ja tutkimusyhteyksien arviointi jatkuu Termuxissa
+paikallisen handoverin, päätöslisän, suojatun konfiguraation ja varmennetun
+ajomanifestin perusteella. PC-repon synkronointi tehdään myöhemmin. Yhteyden
+puuttuminen ei estä hyväksytyn version käyttöä tai arviointia; todellinen
+ristiriita hyväksytyissä pisteytyssäännöissä käsitellään erikseen.
 
 ## Komponenttien lähde-, puuttuvuus- ja pisteytysrekisteri
 
@@ -95,10 +99,12 @@ uv run --offline --no-project --with pytest pytest -q tests/test_deac_*.py
 
 ## Tutkimuksellisen arvioinnin rajaus
 
-Seuraava vaihe arvioi mittarin ominaisuuksia ja tutkimusyhteyksiä omalla
-ennalta määritellyllä suunnitelmallaan: esimerkiksi jakaumaa ja kattavuutta,
-mittarin herkkyyttä hyväksytyille komponenttien puuttuvuuksille sekä yhteyksiä
-ennalta perusteltuihin kliinisiin mittareihin. Se ei muuta laskentatoteutusta
-tai hyväksyttyjä pisteytyssääntöjä. DEAC:n kategoriset raja-arvot ja
-FI22/C22-suhde pysyvät avoimina, kunnes Owner tekee niistä erilliset
-tutkimukselliset päätökset.
+Seuraava vaihe kuvaa jakauman, komponenttien puuttuvuuden ja kattavuuden sekä
+vertailee 470 indeksin saanutta ja 57 kattavuusrajan alittanutta. Työ jatkuu
+Termuxissa paikallisen handoverin, päätöslisän, suojatun konfiguraation ja
+varmennetun manifestin perusteella; PC-repon synkronointi tehdään myöhemmin.
+PC-yhteyden puuttuminen ei estä hyväksytyn version käyttöä tai arviointia.
+Todellinen hyväksyttyjen sääntöjen ristiriita käsitellään erikseen. Arviointi
+ei muuta laskentatoteutusta tai hyväksyttyjä pisteytyssääntöjä. DEAC:n
+kategoriset raja-arvot ja FI22/C22-suhde pysyvät avoimina, kunnes Owner tekee
+niistä erilliset tutkimukselliset päätökset.
