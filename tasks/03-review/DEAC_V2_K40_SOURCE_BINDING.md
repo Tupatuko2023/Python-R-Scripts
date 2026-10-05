@@ -500,3 +500,25 @@ pysyvät ennallaan. Tieteelliset kysymykset B1/B2 eivät kuulu tehtävään.
   hyväksytyn koodin. Työpuun tarkistus on puhdas ja `git diff --check` PASS.
   Aiemmin ajetut 321 DEAC-testiä ja pre-push-smoke-gate läpäisivät; PR:ien
   CI-tulokset tarkistetaan lopullisen pushin jälkeen.
+- 2026-10-05: Sourceryn kolme PR #182 -huomiota korjattiin commitissa
+  `93c557f`: kyvyttömyysstatus vaatii nyt hyväksytyn syykoodin kaikissa
+  kutsupoluissa, tekstistatus normalisoidaan ja numeerinen status täsmäytetään
+  täsmällisesti. Puuttuvan, tuntemattoman ja varmennetun syyn sekä numeerisen
+  statuksen kohdennetut regressiotestit läpäisivät (92/92); PR #182:n headin
+  testit, lint, CodeQL ja Python-/JavaScript-analyysit läpäisivät.
+- 2026-10-05: Sourceryn neljä PR #183 -huomiota korjattiin commitissa
+  `570c569` ja invarianttien lisätarkistuksella commitissa `ad51250`.
+  Kohorttivalitsimen alkuperä ja henkilöavain–päivä–rivi-kytkös tarkistetaan
+  uudelleen pisteytyksessä; valitut rivit jäädytetään. Työkirjan hash ja
+  metadata luetaan samasta vakaasta snapshotista. Suojattu CSV kirjoitetaan
+  yksityiseen väliaikaistiedostoon ja julkaistaan atomisesti ilman ylikirjoitusta;
+  keskeytys siivoaa väliaikaistiedoston. Koko DEAC-testijoukko 332/332 ja
+  pre-push-smoke-gate läpäisivät.
+- 2026-10-05: Uusi suojattu ajo commitin `ad51250` koodilla. Uusinta-ajo
+  täsmäsi: 540 lähderiviä, 527 henkilöä, 13 myöhempää käyntiä, ei puuttuvia
+  avaimia/päiviä eikä ensimmäisen päivän ristiriitoja; 502 MOI-havaintoa,
+  kvintiilirajat 4/6/7/9, 470 indeksiä ja 57 kattavuusrajan alitusta.
+  Aiemman suojatun tuloksen kanssa erot olivat avaimissa 0, komponenttipisteissä
+  0, indeksien saatavuudessa 0 ja indeksiarvoissa 0. Uusi manifesti ja tulos
+  sekä kaikkien viitattujen artefaktien tiivisteet varmennettiin; tiedostot
+  jäivät paikallisesti suojatuiksi.
