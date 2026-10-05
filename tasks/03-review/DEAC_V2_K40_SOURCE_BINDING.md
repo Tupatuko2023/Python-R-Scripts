@@ -2,7 +2,7 @@
 
 ## Tila
 
-02-in-progress — aloitettu 2026-10-03
+03-review — aloitettu 2026-10-03; katselmointiin siirretty 2026-10-05
 
 ## Tavoite
 
@@ -489,4 +489,14 @@ pysyvät ennallaan. Tieteelliset kysymykset B1/B2 eivät kuulu tehtävään.
   vertailussa kohortti-, komponentti- ja indeksierot olivat 0. Uusi tulos ja
   varmennettu manifesti ovat repo-ulkopuolisessa suojatussa hakemistossa;
   osallistujarivejä, tunnisteita tai suojattuja lähdearvoja ei kirjata tähän.
-  Tehtävä pysyy `02-in-progress`-tilassa staged-erien tarkastukseen asti.
+  Manifestin lähde-, koodi- ja konfiguraatiosidonnat sekä tulosartefaktin hash
+  tarkistettiin suoraan. Uusinta-ajo täsmäsi: 540 lähderiviä, 527 henkilöä,
+  502 MOI-havaintoa, rajat 4/6/7/9, 470 indeksiä ja 57 kattavuusrajan alle
+  jäänyttä; osallistujatuloksen erot aiempaan suojattuun tulokseen 0.
+  Toteutuscommitit 73b7ef1, 601cf48 ja 047149b yksilöitiin; perustava erä
+  julkaistaan PR #182:ssa ja kohorttiajurin erä PR #183:ssa. PR #183:n haaraan
+  yhdistettiin perustavan erän kaksi myöhempää neurokomponentin korjaus- ja
+  dokumentointicommittia (00742cb, 7fc95ee), jotta pino sisältää nykyisen
+  hyväksytyn koodin. Työpuun tarkistus on puhdas ja `git diff --check` PASS.
+  Aiemmin ajetut 321 DEAC-testiä ja pre-push-smoke-gate läpäisivät; PR:ien
+  CI-tulokset tarkistetaan lopullisen pushin jälkeen.
