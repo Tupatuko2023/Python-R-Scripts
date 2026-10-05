@@ -8,8 +8,12 @@ metadata before supplying a re-iterable baseline-row factory.
 from __future__ import annotations
 
 import csv
+import ctypes
+from io import BytesIO
 import os
 import stat
+from types import MappingProxyType
+import secrets
 from collections import Counter
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
@@ -43,6 +47,69 @@ Row = Mapping[str, object]
 _MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 _DOC_REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 _PKG_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
+_SELECTOR_COHORT_ORIGIN = object()
+
+
+def _rename_noreplace(
+    directory_descriptor: int, source_name: str, target_name: str
+) -> None:
+    """Atomically publish a same-directory file without replacing a target."""
+    renameat2 = ctypes.CDLL(None, use_errno=True).renameat2
+    renameat2.argtypes = (
+        ctypes.c_int,
+        ctypes.c_char_p,
+        ctypes.c_int,
+        ctypes.c_char_p,
+        ctypes.c_uint,
+    )
+    renameat2.restype = ctypes.c_int
+    result = renameat2(
+        directory_descriptor,
+        os.fsencode(source_name),
+        directory_descriptor,
+        os.fsencode(target_name),
+        1,  # RENAME_NOREPLACE
+    )
+    if result != 0:
+        error_number = ctypes.get_errno()
+        raise OSError(error_number, os.strerror(error_number), target_name)
+
+
+def _stat_identity(file_stat: os.stat_result) -> tuple[int, int, int, int, int]:
+    return (
+        file_stat.st_dev,
+        file_stat.st_ino,
+        file_stat.st_size,
+        file_stat.st_mtime_ns,
+        file_stat.st_ctime_ns,
+    )
+
+
+def _stable_workbook_snapshot(
+    path: str | Path,
+) -> tuple[bytes, tuple[int, int, int, int, int]]:
+    """Read one regular file snapshot and reject replacement or concurrent writes."""
+    workbook_path = Path(path)
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0)
+    descriptor = os.open(workbook_path, flags)
+    try:
+        before = os.fstat(descriptor)
+        if not stat.S_ISREG(before.st_mode):
+            raise ValueError("Source workbook must be a regular file")
+        with os.fdopen(descriptor, "rb", closefd=False) as stream:
+            content = stream.read()
+        after = os.fstat(descriptor)
+        path_after = os.stat(workbook_path, follow_symlinks=False)
+        identity = _stat_identity(before)
+        if (
+            _stat_identity(after) != identity
+            or _stat_identity(path_after) != identity
+            or not stat.S_ISREG(path_after.st_mode)
+        ):
+            raise ValueError("Source workbook changed while its snapshot was read")
+        return content, identity
+    finally:
+        os.close(descriptor)
 
 
 @dataclass(frozen=True)
@@ -51,11 +118,13 @@ class WorkbookMetadata:
 
     sha256: str
     sheet_path: str
-    physical_headers: tuple[str, ...]
-    label_row: tuple[str, ...]
+    physical_headers: tuple[str, ...] = field(repr=False)
+    label_row: tuple[str, ...] = field(repr=False)
     positions_by_field: Mapping[str, int]
     date_style_ids: frozenset[int]
     date_1904: bool
+    snapshot: bytes = field(repr=False)
+    snapshot_identity: tuple[int, int, int, int, int] = field(repr=False)
 
 
 @dataclass(frozen=True)
@@ -79,6 +148,44 @@ class FirstVisitCohort:
     visit_dates: tuple[date, ...] = field(repr=False)
     source_sha256: str
     preflight: WorkbookCohortPreflight
+    _origin: object = field(default=None, init=False, repr=False, compare=False)
+    _selection_records: tuple[tuple[str, date, Row], ...] = field(
+        default=(), init=False, repr=False, compare=False
+    )
+
+    def __post_init__(self) -> None:
+        frozen_rows = tuple(MappingProxyType(dict(row)) for row in self.rows)
+        object.__setattr__(self, "rows", frozen_rows)
+        object.__setattr__(self, "identifiers", tuple(self.identifiers))
+        object.__setattr__(self, "visit_dates", tuple(self.visit_dates))
+
+    @classmethod
+    def _from_selector(
+        cls,
+        *,
+        selected_records: tuple[tuple[str, date, Row], ...],
+        source_sha256: str,
+        preflight: WorkbookCohortPreflight,
+    ) -> FirstVisitCohort:
+        cohort = cls(
+            rows=tuple(record[2] for record in selected_records),
+            identifiers=tuple(record[0] for record in selected_records),
+            visit_dates=tuple(record[1] for record in selected_records),
+            source_sha256=source_sha256,
+            preflight=preflight,
+        )
+        object.__setattr__(cohort, "_origin", _SELECTOR_COHORT_ORIGIN)
+        object.__setattr__(
+            cohort,
+            "_selection_records",
+            tuple(
+                (key, visit_date, row)
+                for (key, visit_date, _), row in zip(
+                    selected_records, cohort.rows, strict=True
+                )
+            ),
+        )
+        return cohort
 
 
 @dataclass(frozen=True)
@@ -148,14 +255,6 @@ class DEACRunSummary:
     index_median: float | None
     index_min: float | None
     index_max: float | None
-
-
-def _sha256_file(path: Path) -> str:
-    digest = sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
 
 
 def _sheet_member(archive: ZipFile, sheet_name: str) -> str:
@@ -302,9 +401,10 @@ def validate_xlsx_source_metadata(
 ) -> tuple[SourceBindings, WorkbookMetadata]:
     """Validate source hash and metadata before any participant rows are read."""
     workbook_path = Path(path)
-    actual_sha256 = _sha256_file(workbook_path)
+    snapshot, snapshot_identity = _stable_workbook_snapshot(workbook_path)
+    actual_sha256 = sha256(snapshot).hexdigest()
     try:
-        with ZipFile(workbook_path) as archive:
+        with ZipFile(BytesIO(snapshot)) as archive:
             sheet_path = _sheet_member(archive, sheet_name)
             header_row = config.get("header_row")
             label_row_number = config.get("label_row")
@@ -353,6 +453,8 @@ def validate_xlsx_source_metadata(
         },
         date_style_ids=date_style_ids,
         date_1904=date_1904,
+        snapshot=snapshot,
+        snapshot_identity=snapshot_identity,
     )
     return bindings, metadata
 
@@ -421,7 +523,11 @@ def iter_xlsx_source_rows(
 ) -> Iterable[tuple[str | None, date | None, Row]]:
     """Yield selected source cells only; never log identifiers or row values."""
     workbook_path = Path(path)
-    if _sha256_file(workbook_path) != metadata.sha256:
+    current_snapshot, current_identity = _stable_workbook_snapshot(workbook_path)
+    if (
+        sha256(current_snapshot).hexdigest() != metadata.sha256
+        or current_identity != metadata.snapshot_identity
+    ):
         raise ValueError("Source workbook changed after metadata validation")
     if set(metadata.positions_by_field) != set(bindings.columns):
         raise ValueError("Protected field positions do not match SourceBindings")
@@ -434,7 +540,11 @@ def iter_xlsx_source_rows(
     if visit_date_index in selected_positions or visit_date_index == identifier_index:
         raise ValueError("Clinic date, identifier, and component fields must be distinct")
     selected_positions.update((identifier_index, visit_date_index))
-    with ZipFile(workbook_path) as archive:
+    # Parse only the exact bytes validated above. Later path replacement or
+    # in-place modification cannot redirect the workbook being processed.
+    if sha256(metadata.snapshot).hexdigest() != metadata.sha256:
+        raise ValueError("Validated workbook snapshot failed its integrity check")
+    with ZipFile(BytesIO(metadata.snapshot)) as archive:
         shared_strings = _shared_strings(archive)
         with archive.open(metadata.sheet_path) as stream:
             for _, element in ET.iterparse(stream, events=("end",)):
@@ -537,13 +647,65 @@ def select_first_visit_cohort(
         first_visit_conflict_people=conflict_people,
     )
     selected.sort(key=lambda item: item[0])
-    return FirstVisitCohort(
-        rows=tuple(row for _, _, row in selected),
-        identifiers=tuple(identifier for identifier, _, _ in selected),
-        visit_dates=tuple(visit_date for _, visit_date, _ in selected),
+    return FirstVisitCohort._from_selector(
+        selected_records=tuple(selected),
         source_sha256=metadata.sha256,
         preflight=preflight,
     )
+
+
+def _validate_first_visit_cohort(
+    cohort: FirstVisitCohort, bindings: SourceBindings
+) -> None:
+    if type(cohort) is not FirstVisitCohort or cohort._origin is not _SELECTOR_COHORT_ORIGIN:
+        raise ValueError("First-visit cohort must originate from the verified selector")
+    if not re.fullmatch(r"[0-9a-f]{64}", cohort.source_sha256):
+        raise ValueError("First-visit cohort has an invalid source snapshot hash")
+
+    preflight = cohort.preflight
+    counts = (
+        preflight.source_rows,
+        preflight.unique_people,
+        preflight.later_visit_rows,
+        preflight.missing_identifiers,
+        preflight.missing_visit_dates,
+        preflight.first_visit_conflict_people,
+    )
+    if any(isinstance(value, bool) or not isinstance(value, int) or value < 0 for value in counts):
+        raise ValueError("First-visit cohort has invalid preflight counts")
+    size = len(cohort.rows)
+    if (
+        size == 0
+        or preflight.unique_people != size
+        or preflight.source_rows != size + preflight.later_visit_rows
+        or preflight.missing_identifiers != 0
+        or preflight.missing_visit_dates != 0
+        or preflight.first_visit_conflict_people != 0
+        or len(cohort.identifiers) != size
+        or len(cohort.visit_dates) != size
+        or len(cohort._selection_records) != size
+    ):
+        raise ValueError("First-visit cohort preflight is not fully resolved")
+
+    if any(not isinstance(key, str) or not key.strip() for key in cohort.identifiers):
+        raise ValueError("First-visit cohort contains an invalid person key")
+    if len(set(cohort.identifiers)) != size:
+        raise ValueError("First-visit cohort contains duplicate person keys")
+    if any(type(visit_date) is not date for visit_date in cohort.visit_dates):
+        raise ValueError("First-visit cohort contains an invalid visit date")
+
+    expected_columns = set(bindings.columns.values())
+    for (proof_key, proof_date, proof_row), key, visit_date, row in zip(
+        cohort._selection_records,
+        cohort.identifiers,
+        cohort.visit_dates,
+        cohort.rows,
+        strict=True,
+    ):
+        if proof_key != key or proof_date != visit_date or proof_row is not row:
+            raise ValueError("First-visit cohort key, date, and row alignment failed")
+        if type(row) is not MappingProxyType or set(row) != expected_columns:
+            raise ValueError("First-visit cohort rows are not immutable selector records")
 
 
 def score_first_visit_cohort(
@@ -553,16 +715,9 @@ def score_first_visit_cohort(
     moi_correction: MOIAgeRemovalCorrection | None = None,
 ) -> tuple[tuple[DEACParticipantResult, ...], DEACRunSummary]:
     """Score a verified, conflict-free first-visit cohort in memory."""
+    _validate_bindings(bindings)
+    _validate_first_visit_cohort(cohort, bindings)
     preflight = cohort.preflight
-    if (
-        preflight.missing_identifiers
-        or preflight.missing_visit_dates
-        or preflight.first_visit_conflict_people
-        or len(cohort.rows) != preflight.unique_people
-        or len(cohort.identifiers) != preflight.unique_people
-        or len(cohort.visit_dates) != preflight.unique_people
-    ):
-        raise ValueError("First-visit cohort preflight is not fully resolved")
     correction_matches = 0
     if moi_correction is not None:
         if cohort.source_sha256 != moi_correction.source_sha256:
@@ -683,48 +838,115 @@ def write_participant_results_csv(
     *,
     protected_root: str | Path,
 ) -> None:
-    """Create a new mode-0600 participant output below a mode-0700 protected dir."""
+    """Atomically publish a mode-0600 CSV below verified private directories."""
     root = Path(protected_root).resolve(strict=True)
-    target = Path(output_path)
-    parent = target.parent.resolve(strict=True)
-    if parent != root and root not in parent.parents:
+    root_text = os.fspath(root)
+    target_text = os.path.abspath(os.fspath(output_path))
+    if os.path.commonpath((root_text, target_text)) != root_text:
         raise ValueError("Participant output must be below the approved protected root")
-    if stat.S_IMODE(parent.stat().st_mode) & 0o077:
-        raise ValueError("Protected output directory permissions must exclude group/other")
-    if target.exists() or target.is_symlink():
-        raise FileExistsError("Refusing to overwrite an existing participant output")
+    relative_target = Path(os.path.relpath(target_text, root_text))
+    if not relative_target.parts or relative_target.name in {"", ".", ".."}:
+        raise ValueError("Participant output path is invalid")
 
-    columns = [
-        "participant_key",
-        *COMPONENT_NAMES,
-        "deac_index",
-        "observed_components",
-        "relevant_components",
-        "coverage",
-        "eligible",
-    ]
-    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
-    file_descriptor = os.open(target, flags, 0o600)
-    os.fchmod(file_descriptor, 0o600)
-    with os.fdopen(file_descriptor, "w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=columns, extrasaction="raise")
-        writer.writeheader()
-        for result in results:
-            row: dict[str, object] = {
-                "participant_key": result.identifier,
-                "deac_index": result.deac_index,
-                "observed_components": result.observed_components,
-                "relevant_components": result.relevant_components,
-                "coverage": result.coverage,
-                "eligible": result.eligible,
-            }
-            for name in COMPONENT_NAMES:
-                value = result.component_scores[name]
-                if value is ComponentStatus.NOT_APPLICABLE:
-                    row[name] = "NOT_APPLICABLE"
-                else:
-                    row[name] = value
-            writer.writerow(row)
+    directory_flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(
+        os, "O_NOFOLLOW", 0
+    ) | getattr(os, "O_CLOEXEC", 0)
+    directory_descriptors: list[int] = []
+    try:
+        root_descriptor = os.open(root, directory_flags)
+        directory_descriptors.append(root_descriptor)
+        if not stat.S_ISDIR(os.fstat(root_descriptor).st_mode):
+            raise ValueError("Protected output root must be a directory")
+        for component in relative_target.parts[:-1]:
+            if component in {"", ".", ".."}:
+                raise ValueError("Participant output path contains an invalid directory")
+            next_descriptor = os.open(
+                component, directory_flags, dir_fd=directory_descriptors[-1]
+            )
+            directory_descriptors.append(next_descriptor)
+            directory_stat = os.fstat(next_descriptor)
+            if (
+                not stat.S_ISDIR(directory_stat.st_mode)
+                or stat.S_IMODE(directory_stat.st_mode) & 0o077
+            ):
+                raise ValueError(
+                    "Every protected output directory must exclude group/other access"
+                )
+        root_stat = os.fstat(root_descriptor)
+        if stat.S_IMODE(root_stat.st_mode) & 0o077:
+            raise ValueError("Protected output root must exclude group/other access")
+        parent_descriptor = directory_descriptors[-1]
+        final_name = relative_target.name
+        temporary_name = f".{final_name}.{secrets.token_hex(12)}.tmp"
+
+        columns = [
+            "participant_key",
+            *COMPONENT_NAMES,
+            "deac_index",
+            "observed_components",
+            "relevant_components",
+            "coverage",
+            "eligible",
+        ]
+        create_flags = (
+            os.O_WRONLY
+            | os.O_CREAT
+            | os.O_EXCL
+            | getattr(os, "O_NOFOLLOW", 0)
+            | getattr(os, "O_CLOEXEC", 0)
+        )
+        temporary_created = False
+        file_descriptor = -1
+        try:
+            file_descriptor = os.open(
+                temporary_name, create_flags, 0o600, dir_fd=parent_descriptor
+            )
+            temporary_created = True
+            os.fchmod(file_descriptor, 0o600)
+            with os.fdopen(
+                file_descriptor, "w", encoding="utf-8", newline=""
+            ) as stream:
+                file_descriptor = -1
+                writer = csv.DictWriter(stream, fieldnames=columns, extrasaction="raise")
+                writer.writeheader()
+                for result in results:
+                    row: dict[str, object] = {
+                        "participant_key": result.identifier,
+                        "deac_index": result.deac_index,
+                        "observed_components": result.observed_components,
+                        "relevant_components": result.relevant_components,
+                        "coverage": result.coverage,
+                        "eligible": result.eligible,
+                    }
+                    for name in COMPONENT_NAMES:
+                        value = result.component_scores[name]
+                        row[name] = (
+                            "NOT_APPLICABLE"
+                            if value is ComponentStatus.NOT_APPLICABLE
+                            else value
+                        )
+                    writer.writerow(row)
+                stream.flush()
+                os.fsync(stream.fileno())
+            # RENAME_NOREPLACE publishes the complete file atomically and fails
+            # if the destination already exists, including a symlink.
+            _rename_noreplace(parent_descriptor, temporary_name, final_name)
+            temporary_created = False
+            os.fsync(parent_descriptor)
+        except BaseException:
+            if file_descriptor >= 0:
+                os.close(file_descriptor)
+            if temporary_created:
+                try:
+                    os.unlink(temporary_name, dir_fd=parent_descriptor)
+                except FileNotFoundError:
+                    pass
+            raise
+        else:
+            os.fsync(parent_descriptor)
+    finally:
+        for descriptor in reversed(directory_descriptors):
+            os.close(descriptor)
 
 
 def source_bindings_from_config(

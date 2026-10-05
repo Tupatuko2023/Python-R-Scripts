@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from datetime import date
 from hashlib import sha256
@@ -17,6 +18,7 @@ sys.path.insert(0, str(SRC_DIR))
 
 from deac_cohort_runner import (  # noqa: E402
     FirstVisitCohort,
+    DEACParticipantResult,
     MOIAgeRemovalCorrection,
     WorkbookCohortPreflight,
     iter_xlsx_source_rows,
@@ -25,6 +27,7 @@ from deac_cohort_runner import (  # noqa: E402
     select_first_visit_cohort,
     source_bindings_from_config,
     validate_xlsx_source_metadata,
+    write_participant_results_csv,
 )
 from deac_source_adapter import PerformanceDisposition, SourceBindings  # noqa: E402
 
@@ -78,10 +81,9 @@ def _first_visit_cohort(
     rows: list[dict[str, object]], *, source_sha256: str = "a" * 64
 ) -> FirstVisitCohort:
     identifiers = tuple(f"synthetic-person-{index}" for index in range(len(rows)))
-    return FirstVisitCohort(
-        rows=tuple(rows),
-        identifiers=identifiers,
-        visit_dates=tuple(date(2026, 1, 1) for _ in rows),
+    dates = tuple(date(2026, 1, 1) for _ in rows)
+    return FirstVisitCohort._from_selector(
+        selected_records=tuple(zip(identifiers, dates, rows, strict=True)),
         source_sha256=source_sha256,
         preflight=WorkbookCohortPreflight(
             source_rows=len(rows),
@@ -124,19 +126,11 @@ def test_runner_rejects_unverified_row_factory() -> None:
         run_baseline_cohort(lambda: iter(rows), bindings)  # type: ignore[arg-type]
 
 
-def test_runner_rejects_empty_cohort() -> None:
-    _, bindings = _synthetic_cohort()
-    with pytest.raises(ValueError, match="At least one observed baseline MOI"):
-        run_baseline_cohort(_first_visit_cohort([]), bindings)
-
-
-def _first_visit_fixture_with_one_negative_moi() -> tuple[FirstVisitCohort, SourceBindings]:
+def test_runner_rejects_directly_constructed_cohort_without_selector_origin() -> None:
     rows, bindings = _synthetic_cohort()
-    rows[0][bindings.columns["moi_total"]] = 1
-    identifiers = tuple(f"synthetic-person-{index}" for index in range(len(rows)))
-    cohort = FirstVisitCohort(
+    forged = FirstVisitCohort(
         rows=tuple(rows),
-        identifiers=identifiers,
+        identifiers=tuple(f"synthetic-person-{i}" for i in range(len(rows))),
         visit_dates=tuple(date(2026, 1, 1) for _ in rows),
         source_sha256="a" * 64,
         preflight=WorkbookCohortPreflight(
@@ -148,7 +142,70 @@ def _first_visit_fixture_with_one_negative_moi() -> tuple[FirstVisitCohort, Sour
             first_visit_conflict_people=0,
         ),
     )
-    return cohort, bindings
+
+    with pytest.raises(ValueError, match="originate from the verified selector"):
+        score_first_visit_cohort(forged, bindings)
+
+
+def test_runner_rechecks_unique_keys_valid_dates_and_record_alignment() -> None:
+    rows, bindings = _synthetic_cohort()
+    one = rows[0]
+    preflight = WorkbookCohortPreflight(
+        source_rows=2,
+        unique_people=2,
+        later_visit_rows=0,
+        missing_identifiers=0,
+        missing_visit_dates=0,
+        first_visit_conflict_people=0,
+    )
+    duplicate_keys = FirstVisitCohort._from_selector(
+        selected_records=(
+            ("synthetic-duplicate", date(2026, 1, 1), one),
+            ("synthetic-duplicate", date(2026, 1, 2), rows[1]),
+        ),
+        source_sha256="a" * 64,
+        preflight=preflight,
+    )
+    with pytest.raises(ValueError, match="duplicate person keys"):
+        score_first_visit_cohort(duplicate_keys, bindings)
+
+    invalid_date = FirstVisitCohort._from_selector(
+        selected_records=(("synthetic-person", "2026-01-01", one),),  # type: ignore[arg-type]
+        source_sha256="a" * 64,
+        preflight=WorkbookCohortPreflight(1, 1, 0, 0, 0, 0),
+    )
+    with pytest.raises(ValueError, match="invalid visit date"):
+        score_first_visit_cohort(invalid_date, bindings)
+
+    valid = _first_visit_cohort(rows)
+    object.__setattr__(
+        valid,
+        "_selection_records",
+        (("synthetic-mismatched", valid.visit_dates[0], valid.rows[0]),
+         *valid._selection_records[1:]),
+    )
+    with pytest.raises(ValueError, match="key, date, and row alignment"):
+        score_first_visit_cohort(valid, bindings)
+
+
+def test_selected_cohort_rows_cannot_be_mutated_after_validation() -> None:
+    rows, bindings = _synthetic_cohort()
+    cohort = _first_visit_cohort(rows)
+    with pytest.raises(TypeError):
+        cohort.rows[0][bindings.columns["moi_total"]] = 99  # type: ignore[index]
+    assert run_baseline_cohort(cohort, bindings).baseline_rows == len(rows)
+
+
+def test_runner_rejects_empty_cohort() -> None:
+    _, bindings = _synthetic_cohort()
+    with pytest.raises(ValueError, match="preflight is not fully resolved"):
+        run_baseline_cohort(_first_visit_cohort([]), bindings)
+
+
+def _first_visit_fixture_with_one_negative_moi() -> tuple[FirstVisitCohort, SourceBindings]:
+    rows, bindings = _synthetic_cohort()
+    rows[0][bindings.columns["moi_total"]] = 1
+    return _first_visit_cohort(rows), bindings
 
 
 def test_case_specific_moi_correction_sets_only_age_removed_value_to_zero() -> None:
@@ -502,3 +559,95 @@ def test_xlsx_reader_rejects_source_change_after_metadata_validation(tmp_path: P
                 visit_date_position_1based=fixture["visit_date_position"],  # type: ignore[arg-type]
             )
         )
+
+
+def test_xlsx_reader_rejects_replaced_snapshot_after_metadata_validation(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "replace.xlsx"
+    fixture = _write_synthetic_xlsx(source)
+    bindings, metadata = validate_xlsx_source_metadata(
+        source,
+        fixture["config"],  # type: ignore[arg-type]
+        sheet_name="Taul1",
+        identifier_position_1based=fixture["identifier_position"],  # type: ignore[arg-type]
+    )
+    replacement = tmp_path / "replacement.xlsx"
+    replacement.write_bytes(source.read_bytes())
+    os.replace(replacement, source)
+
+    with pytest.raises(ValueError, match="changed after metadata validation"):
+        list(
+            iter_xlsx_source_rows(
+                source,
+                metadata,
+                bindings,
+                data_start_row=4,
+                identifier_position_1based=fixture["identifier_position"],  # type: ignore[arg-type]
+                visit_date_position_1based=fixture["visit_date_position"],  # type: ignore[arg-type]
+            )
+        )
+
+
+def _protected_test_results() -> tuple[DEACParticipantResult, ...]:
+    rows, bindings = _synthetic_cohort()
+    results, _ = score_first_visit_cohort(_first_visit_cohort(rows), bindings)
+    return results
+
+
+def test_participant_csv_publishes_atomically_without_overwrite(tmp_path: Path) -> None:
+    protected_root = tmp_path / "protected"
+    protected_root.mkdir(mode=0o700)
+    os.chmod(protected_root, 0o700)
+    target = protected_root / "participants.csv"
+    results = _protected_test_results()
+
+    write_participant_results_csv(results, target, protected_root=protected_root)
+    assert target.is_file()
+    assert target.stat().st_mode & 0o777 == 0o600
+    original = target.read_bytes()
+
+    with pytest.raises(FileExistsError):
+        write_participant_results_csv(results, target, protected_root=protected_root)
+    assert target.read_bytes() == original
+
+
+def test_participant_csv_rejects_symlinked_intermediate_directory(
+    tmp_path: Path,
+) -> None:
+    protected_root = tmp_path / "protected"
+    protected_root.mkdir(mode=0o700)
+    os.chmod(protected_root, 0o700)
+    outside = tmp_path / "outside"
+    outside.mkdir(mode=0o700)
+    os.chmod(outside, 0o700)
+    (protected_root / "redirect").symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(OSError):
+        write_participant_results_csv(
+            _protected_test_results(),
+            protected_root / "redirect" / "participants.csv",
+            protected_root=protected_root,
+        )
+    assert not (outside / "participants.csv").exists()
+
+
+def test_participant_csv_failure_mid_write_cleans_temporary_file(
+    tmp_path: Path,
+) -> None:
+    protected_root = tmp_path / "protected"
+    protected_root.mkdir(mode=0o700)
+    os.chmod(protected_root, 0o700)
+    target = protected_root / "participants.csv"
+    results = _protected_test_results()
+
+    def fail_after_one_row():
+        yield results[0]
+        raise RuntimeError("synthetic interrupted result stream")
+
+    with pytest.raises(RuntimeError, match="interrupted result stream"):
+        write_participant_results_csv(
+            fail_after_one_row(), target, protected_root=protected_root
+        )
+    assert not target.exists()
+    assert list(protected_root.iterdir()) == []
