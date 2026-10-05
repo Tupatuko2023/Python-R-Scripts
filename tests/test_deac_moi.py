@@ -21,6 +21,9 @@ MODULE_SPEC.loader.exec_module(moi)
 @pytest.mark.parametrize(
     ("age", "expected"),
     [
+        (0, 0),
+        (45, 0),
+        (54, 0),
         (55, 1),
         (59, 1),
         (60, 2),
@@ -38,9 +41,9 @@ def test_owner_confirmed_waris_age_points(age: int, expected: int) -> None:
     assert moi.waris_2011_age_points(age) == expected
 
 
-@pytest.mark.parametrize("age", [54])
-def test_unsupported_age_bands_fail_closed(age: int) -> None:
-    with pytest.raises(ValueError, match="does not define"):
+@pytest.mark.parametrize("age", [-1])
+def test_negative_age_fails_closed(age: int) -> None:
+    with pytest.raises(ValueError, match="nonnegative"):
         moi.waris_2011_age_points(age)
 
 
@@ -53,6 +56,8 @@ def test_age_requires_completed_integer_years(age: object) -> None:
 @pytest.mark.parametrize(
     ("moi_index", "age", "expected"),
     [
+        (4, 54, 4.0),
+        (4, 55, 3.0),
         (8, 60, 6.0),
         (4, 70, 0.0),
         (10.5, 55, 9.5),
