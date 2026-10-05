@@ -47,7 +47,12 @@ def score_diabetes(value: int | None) -> Score:
 def score_neurological(
     alzheimer: int | None, parkinson: int | None, stroke_avh: int | None
 ) -> Score:
-    """Score a known positive; leave an all-zero/unknown combination unresolved."""
+    """Score a known positive, else treat an incomplete combination as missing.
+
+    A known positive is sufficient for the combined deficit. The combined
+    component is observed as zero only when all three source inputs are
+    observed zero; partial missingness must not be converted to zero.
+    """
     values = (alzheimer, parkinson, stroke_avh)
     for value in values:
         if value is not None:
