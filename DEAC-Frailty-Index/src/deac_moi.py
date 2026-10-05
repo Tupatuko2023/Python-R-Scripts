@@ -31,13 +31,20 @@ def _finite_nonnegative(value: Numeric, *, label: str) -> float:
 
 
 def waris_2011_age_points(baseline_age_years: int) -> int:
-    """Return Waris 2011 points using the Owner-confirmed 75+ final band.
+    """Return age points using the Owner-confirmed boundary interpretations.
 
     Waris 2011 labels the final entry "75 years"; applying it to ages 75+
     is the Owner's 2026-10-01 interpretation, not an explicit article range.
+    The article lists positive age points starting at 55; zero points below
+    55 is the Owner's 2026-10-04 application interpretation, not an explicit
+    row in the article's age-point list.
     """
     if isinstance(baseline_age_years, bool) or not isinstance(baseline_age_years, int):
         raise ValueError("Baseline age must be an integer number of completed years")
+    if baseline_age_years < 0:
+        raise ValueError("Baseline age must be a nonnegative integer")
+    if baseline_age_years < 55:
+        return 0
     if 55 <= baseline_age_years <= 59:
         return 1
     if 60 <= baseline_age_years <= 64:

@@ -49,14 +49,31 @@ HGS-mittauksen käsittelyä ei sovelleta näihin syötteisiin.
 Validi lähdeluokka 0 säilyy kelvollisena havaintona ja saa hyväksytyn DEAC-
 vajepisteen 1. Ownerin ja senioribiostatistikon aiemmin tunnistamat
 tulkintakelvottomat lähdekoodit ovat puuttuvia (`NA`); niille ei päätellä
-mittayksikköä, kuntoluokkaa eikä vajepistettä. Niiden tarkkaa koodiluetteloa
-ei löytynyt tarkastetuista suojatuista skeemakartoista. Siksi ajoa ei saa
-konfiguroida arvaamalla: vain vahvistettujen koodien kenttäkohtainen
-normalisointi saa muuttaa arvon puuttuvaksi.
+mittayksikköä, kuntoluokkaa eikä vajepistettä. Tarkat koodit ja niiden
+käyttöön hyväksytty runtime-konfiguraatio säilyvät repo-ulkopuolella.
 
-Toteutuskohtainen rajaus: lähdeluku ei vielä normalisoi näitä numeerisia
-poikkeuskoodeja. Ne tulee muuntaa puuttuviksi tasan yhdessä, suojatussa
-adapterivaiheessa ennen paremman käden valintaa. Jo `None`-arvoksi
-normalisoitua syötettä ei käsitellä uudelleen. Täsmällinen koodiluettelo ja
-DMA1-muistion pysyvä viite täydennetään suojattuun lähdesidontaan myöhemmin;
-raakoja koodeja ei tallenneta tähän tiedostoon.
+Nykyinen käsittely: varmennetun AUTH_SOURCE-snapshotin suojattu
+runtime-konfiguraatio muuntaa ainoastaan eksplisiittisesti hyväksytyt
+puristusluokan poikkeuskoodit puuttuviksi adapterissa ennen paremman käden
+valintaa. Validit lähdeluokat 0–5 eivät kuulu poikkeuslistaan; luokka 0
+säilyy havaittuna ja saa vajeen 1. Tämä kuvaa nykyisen suojatun
+ajokonfiguraation tilaa, ei julkaise koodeja tai vahvista erillisen
+yksityisen DMA1-muistion synkronointia.
+
+## Ownerin MOI-ikäpisteiden soveltamistulkinta — 2026-10-04
+
+Waris ym. (2011) käsittelevät kehityskohorttia, jonka ikäalue ulottuu 45
+vuoteen, ja §4.1:n MOI-ikäpisteiden ensimmäinen lueteltu positiivinen luokka
+on 55–59 vuotta. Artikkeli ei kirjoita alle 55-vuotiaille erillistä
+nollariviä. Owner vahvisti 2026-10-04 soveltamistulkinnaksi, että
+lähtötilanteen ikä alle 55 vuotta saa 0 MOI-ikäpistettä. Ikäluokkien
+55–74-vuotiaiden ja vähintään 75-vuotiaiden aiemmin hyväksytyt pisteet eivät
+muutu. MOI-totalista vähennetään näin määritellyt ikäpisteet kerran ennen
+kvintiilien muodostamista; alle 55-vuotiaalle ei ekstrapoloida muuta
+ikäpistemäärää.
+
+Lähde: [Waris ym. 2011, §2.1 ja §4.1](https://pmc.ncbi.nlm.nih.gov/articles/PMC3135263/).
+Lähteen ikäalue ja ensimmäinen pisteytetty ikäluokka ovat lähdetietoa;
+alle 55-vuotiaiden 0 pistettä on Ownerin soveltamistulkinta. Päätösrekisterin
+ja kanonisen METHODS-omistajan synkronointi jää myöhemmäksi erilliseksi
+tehtäväksi.

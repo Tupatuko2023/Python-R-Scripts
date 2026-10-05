@@ -12,7 +12,6 @@ SRC_DIR = Path(__file__).resolve().parents[1] / "DEAC-Frailty-Index" / "src"
 sys.path.insert(0, str(SRC_DIR))
 
 import deac_source_adapter as adapter  # noqa: E402
-from deac_components import UnresolvedNeurologicalInput  # noqa: E402
 from deac_index import COMPONENT_NAMES, ComponentStatus  # noqa: E402
 
 
@@ -94,6 +93,44 @@ def test_source_missing_codes_are_field_specific() -> None:
         ordinary_missing_codes={"pain_vas_cm": ("synthetic_missing",)},
     )
     assert adapter.score_source_row(row, bindings, (1, 2, 3, 4))["pain_vas"] is None
+
+
+def test_fof_source_code_two_is_normalized_as_ordinary_missing() -> None:
+    row, bindings = synthetic_fixture()
+    row[bindings.columns["fear_of_falling"]] = 2
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        ordinary_missing_codes={"fear_of_falling": (2,)},
+    )
+
+    assert adapter.score_source_row(row, bindings, (1, 2, 3, 4))["fear_of_falling"] is None
+
+
+@pytest.mark.parametrize(
+    ("source_field", "component"),
+    [
+        ("self_rated_health", "self_rated_health"),
+        ("alcohol", "alcohol"),
+        ("memory", "memory"),
+        ("sleep", "sleep"),
+        ("walking_500m", "walking_500m"),
+        ("balance_difficulty", "balance_difficulty"),
+        ("mood", "mood"),
+        ("previous_fall", "previous_fall"),
+    ],
+)
+def test_documented_field_missing_codes_are_not_scored(
+    source_field: str, component: str
+) -> None:
+    row, bindings = synthetic_fixture()
+    synthetic_marker = "synthetic_documented_missing"
+    row[bindings.columns[source_field]] = synthetic_marker
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        ordinary_missing_codes={source_field: (synthetic_marker,)},
+    )
+
+    assert adapter.score_source_row(row, bindings, (1, 2, 3, 4))[component] is None
 
 
 @pytest.mark.parametrize(
@@ -200,6 +237,44 @@ def test_performance_codes_are_test_specific_and_keep_three_states_distinct() ->
     assert scores["grip_strength"] is ComponentStatus.NOT_APPLICABLE
 
 
+@pytest.mark.parametrize("source_status", ["e", " e1 "])
+def test_performance_status_normalizes_case_and_edge_whitespace(
+    source_status: str,
+) -> None:
+    row, bindings = synthetic_fixture()
+    row[bindings.columns["selected_max_10m_seconds"]] = source_status
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        performance_codes={
+            "selected_max_10m_seconds": {
+                "E": adapter.PerformanceDisposition.OTHER_NONPERFORMANCE,
+                "E1": adapter.PerformanceDisposition.OTHER_NONPERFORMANCE,
+            }
+        },
+    )
+
+    assert (
+        adapter.score_source_row(row, bindings, (1, 2, 3, 4))["maximal_10m_gait_speed"]
+        is None
+    )
+
+
+def test_performance_codebook_rejects_normalized_key_collisions() -> None:
+    row, bindings = synthetic_fixture()
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        performance_codes={
+            "selected_max_10m_seconds": {
+                "E": adapter.PerformanceDisposition.OTHER_NONPERFORMANCE,
+                " e ": adapter.PerformanceDisposition.OTHER_NONPERFORMANCE,
+            }
+        },
+    )
+
+    with pytest.raises(ValueError, match="duplicate normalized codes"):
+        adapter.score_source_row(row, bindings, (1, 2, 3, 4))
+
+
 @pytest.mark.parametrize(
     "logical_field",
     [
@@ -242,11 +317,11 @@ def test_bound_column_and_all_required_fields_are_mandatory() -> None:
         adapter.score_source_row(row, bindings, (1, 2, 3, 4))
 
 
-def test_partial_neurological_input_remains_unresolved() -> None:
+def test_partial_neurological_input_uses_ordinary_missing_denominator() -> None:
     row, bindings = synthetic_fixture()
     row[bindings.columns["parkinson"]] = None
-    with pytest.raises(UnresolvedNeurologicalInput):
-        adapter.score_source_row(row, bindings, (1, 2, 3, 4))
+    scores = adapter.score_source_row(row, bindings, (1, 2, 3, 4))
+    assert scores["neurological"] is None
 
 
 def test_protected_schema_guard_accepts_unique_verified_header_label_pairs() -> None:

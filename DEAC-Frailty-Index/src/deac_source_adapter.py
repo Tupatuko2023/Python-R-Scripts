@@ -286,10 +286,30 @@ def _validate_bindings(bindings: SourceBindings) -> None:
             for disposition in codebook.values()
         ):
             raise ValueError(f"Invalid test-specific codebook for {test_field}")
+        normalized_codes = [
+            code.strip().casefold() for code in codebook if isinstance(code, str)
+        ]
+        if len(normalized_codes) != len(set(normalized_codes)):
+            raise ValueError(
+                f"Performance codebook has duplicate normalized codes for {test_field}"
+            )
 
 
 def _matches_code(value: object, codes: Sequence[object]) -> bool:
     return any(value == code for code in codes)
+
+
+def _performance_disposition(
+    value: object, codebook: Mapping[object, PerformanceDisposition]
+) -> PerformanceDisposition | None:
+    """Match textual status codes independent of case and edge whitespace."""
+    if not isinstance(value, str):
+        return None
+    normalized = value.strip().casefold()
+    for code, disposition in codebook.items():
+        if isinstance(code, str) and code.strip().casefold() == normalized:
+            return disposition
+    return None
 
 
 def normalize_pain_vas_cm(
@@ -337,10 +357,7 @@ def normalize_preselected_test_value(
     """
     if value is None:
         return None
-    try:
-        disposition = codebook.get(value)
-    except TypeError:
-        disposition = None
+    disposition = _performance_disposition(value, codebook)
     if disposition is PerformanceDisposition.FUNCTIONAL_INABILITY:
         # This helper receives no reason field, so it cannot verify inability.
         return None
@@ -369,10 +386,7 @@ def _test_value(
         return raw
 
     codebook = bindings.performance_codes.get(logical_field, {})
-    try:
-        disposition = codebook.get(raw)
-    except TypeError:
-        disposition = None
+    disposition = _performance_disposition(raw, codebook)
 
     if disposition is PerformanceDisposition.FUNCTIONAL_INABILITY:
         return _FUNCTIONAL_INABILITY
@@ -437,6 +451,8 @@ def _score_moi(
     row: Mapping[str, object],
     bindings: SourceBindings,
     moi_cutpoints: Sequence[int | float],
+    *,
+    age_removed_override: int | float | None = None,
 ) -> float | None:
     total = _read_value(row, bindings, "moi_total")
     age = _read_value(row, bindings, "baseline_age_years")
@@ -450,7 +466,12 @@ def _score_moi(
         raise ValueError("Baseline age must be numeric completed years") from exc
     if not isfinite(age_number) or not age_number.is_integer():
         raise ValueError("Baseline age must be numeric completed years")
-    without_age = remove_moi_age_points(total, int(age_number))  # type: ignore[arg-type]
+    if age_removed_override is None:
+        without_age = remove_moi_age_points(total, int(age_number))  # type: ignore[arg-type]
+    else:
+        # Used only by the cohort runner after matching the protected,
+        # case-specific correction record against its key and source values.
+        without_age = age_removed_override
     return score_moi_quintile(without_age, moi_cutpoints)
 
 
@@ -484,6 +505,8 @@ def score_source_row(
     row: Mapping[str, object],
     bindings: SourceBindings,
     moi_cutpoints: Sequence[int | float],
+    *,
+    _moi_age_removed_override: int | float | None = None,
 ) -> dict[str, ComponentInput]:
     """Normalize one supplied row, score it, and return all 20 named slots.
 
@@ -524,7 +547,12 @@ def score_source_row(
         "self_rated_health": score_self_rated_health(
             _read_value(row, bindings, "self_rated_health")  # type: ignore[arg-type]
         ),
-        "moi": _score_moi(row, bindings, moi_cutpoints),
+        "moi": _score_moi(
+            row,
+            bindings,
+            moi_cutpoints,
+            age_removed_override=_moi_age_removed_override,
+        ),
         "alcohol": score_alcohol(_read_value(row, bindings, "alcohol")),  # type: ignore[arg-type]
         "hearing": score_hearing(_read_value(row, bindings, "hearing")),  # type: ignore[arg-type]
         "vision": score_vision(_read_value(row, bindings, "vision")),  # type: ignore[arg-type]
