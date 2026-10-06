@@ -131,3 +131,38 @@ pwsh 7, sshd Running):
 Tila: edelleen PARTIAL, kunnes Termux-regressiot ja todellinen SSH-smoke on
 osoitettu. Tämä paikallinen validointi ei väitä päästä päähän varmennettua
 kanavaa.
+
+
+## Android-polkuluvun jatkokorjaus
+
+- 2026-10-06T17:20:56.225785+00:00 Jatketaan samaa 02-in-progress-tehtävää
+  eristetyssä chore/termux-private-root-read-20261006-haarassa; base exact commit
+  8721c5dd001d7ef8e0c245a625394eda1727392c. Base-taskin SHA-256 on
+  dfb68cb69b08f37685ae0fc8806178aecce1ea5b42b605ea934b19987ec2b453.
+- Säilytettyjen lokien tarkka syscall: os.open('/', O_RDONLY|O_DIRECTORY|O_NOFOLLOW),
+  PermissionError errno 13 EACCES. Alkuperäinen 34-testin ajo: 9 PASS, 25 ERROR.
+- Toteutettiin turvallinen järjestelmäesi-isien alle ankkuroitu descriptor-kävely
+  käyttäjän hallittavien esi-isien läpi HOMEen ja rajattuun kohteeseen. Ei /-openia,
+  plain-open-fallbackia tai turvatarkastusten poistoa. Windows-haara säilyy.
+- Riippumaton koodikatselmointi havaitsi HOME-esi-isän TOCTOU-riskin; se korjattiin
+  ennen valmistumista ja lisättiin esi-isän linkkivaihdon regressio. Katselmoinnin
+  lopputulos: ei avoimia löydöksiä (koskee kahta korjauksen kooditiedostoa).
+- Natiivi Termux inbound v4: 40 PASS, 0 FAIL, 0 SKIP, ResourceWarning=error.
+  Aiemmat fixture-failure ja effective_ids-API:n failure-ajot säilytetty.
+- Preflight PASS. Repository run-gates --mode pre-push --smoke exit 0;
+  staged-syntax gates eivät yksin testaa unstaged-korjausta.
+- Outbound BLOCKED: jsonschema puuttuu dokumentoidusta natiivista Pythonista;
+  valmista checkout-venviä ei ole; dokumentoitu Ubuntu-käynnistin ei käynnisty
+  tässä komentoympäristössä. Ei asennuksia tai PRoot-korjauksia.
+- Valmisteltiin manuaalinen synteettinen SSH-testiohjain: odotetut nonzero-exitit,
+  RunId_POS, törmäyksen kaikki tiedostohashit ennen/jälkeen ja kesken vastaanoton
+  havaittu barrier + tuore SSH-live-poll juuri ennen worker-self-SIGINTiä,
+  wire-tavumääränäyttö, atomiset markerit ja finally-cleanup. PASS vaatii
+  säilyneen UNVERIFIED/partial wire -näytön sekä SSH-prosessin pysäytysnäytön.
+  CLI help PASS myös python -O:lla; verkkotestit NOT_RUN. Ohjaimen riippumaton
+  read-only-koodikatselmointi PASS, ei avoimia löydöksiä; ei verkkoajon näyttöä.
+- SSH-smoke BLOCKED ennen hyväksyttyä Git-toimitusta ja saman version varmentamista
+  molemmissa päissä. Uutta previewta ei pyydetty. LOCAL VERIFIED NOT_RUN,
+  paluukuitti NOT_DELIVERED. Tuotantoprofiili enabled=false/files=[] ennallaan.
+- Ei commitia, pushia, mergeä, SSH-koodipayloadia, CSV-laajennusta tai importia.
+  Task jää PARTIAL/02-in-progress, DoD ei täyty ennen regressioita/verkkonäyttöä.

@@ -291,3 +291,70 @@ Koko QFOT2:n KB-kokonaisuutta ei näin varmennettu. Tarkastetut main-snapshotit
 eivät todista paikallisen Windows-worktreen tai lisäosapaketin nykyistä sisältöä.
 Täsmäpolkujen/sisältöluokitusten erillinen inventointi tarvitaan ennen koko KB:n
 siirron valtuutusta. `.csv`-kielto säilyy.
+
+
+## Androidin yksityisjuuren korjaus (2026-10-06)
+
+POSIX-luku rajataan runtime-HOMEn alle: myös profiilin, lähdetiedostojen,
+batchien ja vastaanoton kuitin on oltava siellä. HOME on todellinen käyttäjän
+omistama mode 0700 -hakemisto. Linkkiankkuria, traversal-polkuja tai ulkopuolisia
+lähteitä ei hyväksytä. Windowsin lukitushaara säilyy ennallaan.
+
+Descriptor-kävely alkaa ensimmäisestä käyttäjän hallittavasta esi-isästä,
+jonka sitä edeltävät järjestelmäesi-isät eivät ole käyttäjän kirjoitettavissa
+eivätkä linkkejä. Natiivissa Termuxissa ankkuri on sovelluksen yksityinen
+hakemisto; /, /data tai /data/data -hakemistoja ei avata. Ankkurin identiteetti
+verrataan lstat/fstatilla. Kaikki sen alapuoliset esi-isät ja kohde avataan
+suhteessa pidettyyn descriptoriin O_NOFOLLOW-valinnalla. HOME tarkistetaan
+avatusta descriptorista. Set-id-suoritus hylätään. Tavallisen tiedoston,
+muuttumattomuuden, kokojen ja SHA-256:n tarkastukset säilyvät.
+
+Natiivi Termux: 40 inbound-testiä PASS, 0 FAIL, 0 SKIP. Näyttö on erillisessä
+yksityisessä evidence-hakemistossa; aiemmat epäonnistuneet ajot säilyvät.
+Outbound-regressiot BLOCKED: dokumentoitu natiivi Python ei sisällä jsonschemaa,
+checkoutissa ei ole olemassa olevaa .venv-tulkkia, dokumentoitu Ubuntu-käynnistin
+ei käynnisty tässä komentoympäristössä. Ei asennuksia tai PRoot-korjauksia.
+K18/QC: NOT APPLICABLE — tiedostonluvun turvakorjaus ei muuta analyysiputkea.
+
+### Seuraavien verkkotestien järjestely
+
+`scripts/termux/test_kb_pull_ssh_smoke.py` on manuaalinen synteettinen testiohjain.
+Sitä ei ajeta ennen riippumatonta katselmointia, hyväksyttyä Git-toimitusta ja
+saman exact-version varmentamista molemmissa päissä. Uusi Windows-preview ja
+sen tarkastettu hyväksyntädigest tarvitaan vasta tämän jälkeen.
+
+Ohjain kerää kaikki odotetut nonzero-exitit `subprocess.run(check=False)`-kutsuilla,
+tallentaa positiivisen tunnisteen muuttujaan `RunId_POS` ja säilyttää lokit sekä
+ajohakemistot. Törmäyskokeessa kaikki aiemman positiivisen ajon tiedostohashit
+verrataan ennen/jälkeen ja tallennetaan erillisiin JSON-tiedostoihin.
+
+Katkokseen käytetään instrumentoitua asiakasprosessia: ensimmäinen oikea
+SSH-chunk palautetaan muuttamattomana noutajalle; ennen seuraavaa lukua asetetaan
+havaittava barrier. Katkos kelpaa vain, jos barrierin worker tarkistaa SSH-prosessin tuoreella
+poll-kutsulla juuri ennen itselleen lähettämäänsä SIGINTiä. Vastaanotetut
+tavut sekä levyllä oleva wire.tar ovat
+positiivisen ajon todellista wire-kokoa pienemmät ja nollaa suuremmat. Vasta tämän
+näytön jälkeen worker lähettää itselleen SIGINTin. Marker-tiedostot julkaistaan
+atomisesti, ja parentin finally-käsittely pysäyttää workerin myös järjestelyvirheessä.
+Noutajan oma virhepolku pysäyttää SSH-prosessin ja säilyttää epäonnistuneen ajon.
+PASS vaatii lisäksi SSH-cleanup-näytön sekä säilyneen osittaisen wiren ja
+UNVERIFIED-kuitin (automatic_retry=false, ei VERIFIED-kuittia). Pelkkä timeout ei tuota PASSia;
+liian pieni tai liian nopeasti valmis batch tuottaa katkostestille NOT_RUNin.
+Jos kesken-siirron näyttö saatiin mutta cleanup tai säilyttäminen epäonnistui,
+katkostestin tulos on FAIL. Worker-timeout kirjataan ja cleanup/tuloskeruu jatkuu.
+Tällöin tarvitaan myöhemmin riittävän suuri hyväksytty synteettinen batch,
+ei automaattista retryä. Koodia ei toimiteta SSH-artefaktikanavassa.
+
+Valmis myöhempi komento Fear-of-Falling-juuresta (ei vielä ajettu):
+
+```sh
+python scripts/termux/test_kb_pull_ssh_smoke.py \
+  --profile "$HOME/fof-kb-verified-20261006/synthetic-profile.json" \
+  --batch-id "$BatchId" --digest "$Digest" \
+  --staging-root "$HOME/fof-kb-verified-20261006/staging" \
+  --evidence-root "$HOME/fof-kb-verified-20261006/evidence/ssh-smoke-NEW" \
+  --reviewed-delivered-both-ends
+```
+
+Paikallinen VERIFIED ja `return_receipt_status` raportoidaan erikseen.
+Tuotantoprofiili pysyy suljettuna. Ei CSV-siirtoa, importia tai mergeä.

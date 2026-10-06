@@ -103,8 +103,9 @@ def hard_deny(value):
 
 @contextmanager
 def locked_read(path):
-    """Hold every ancestor against replacement; refuse links/reparse points."""
+    """Walk from private HOME on POSIX; refuse links/reparse points."""
     path = Path(path).absolute()
+    require('..' not in path.parts, 'UNSAFE_PATH')
     handles = []
     if os.name == 'nt':
         import ctypes
@@ -141,12 +142,50 @@ def locked_read(path):
             for handle in reversed(handles):
                 kernel.CloseHandle(handle)
     else:
-        fd = os.open(path.anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        # HOME is runtime configuration, never a profile/payload field. Find
+        # the first ancestor the current user can replace children in or chmod.
+        # Its preceding system-owned, non-writable chain cannot be swapped by
+        # this user. Open that anchor, then walk ALL user-controlled ancestors
+        # with dir_fd/no-follow (Android forbids opening '/', /data, /data/data).
+        root = Path.home().absolute()
+        require(root != Path(root.anchor) and '..' not in root.parts, 'UNSAFE_ROOT')
+        # Android lacks effective_ids for access(); disallow set-id execution
+        # so its real-id access check still represents the caller's authority.
+        require(os.getuid() == os.geteuid() and os.getgid() == os.getegid(),
+                'SET_ID_RUNTIME_DENIED')
+        chain = [*reversed(root.parents), root]
+        anchor = None
+        for ancestor in chain:
+            info = ancestor.lstat()
+            require(stat.S_ISDIR(info.st_mode), 'ROOT_SYMLINK_OR_NONDIR')
+            if info.st_uid == os.geteuid() or os.access(ancestor, os.W_OK):
+                anchor = ancestor
+                anchor_info = info
+                break
+        require(anchor is not None and anchor != Path(root.anchor), 'UNSAFE_ROOT')
+        try:
+            relative = path.relative_to(root)
+        except ValueError as exc:
+            raise Reject('OUTSIDE_PRIVATE_ROOT') from exc
+        require(relative.parts and all(part not in ('.', '..') for part in relative.parts),
+                'UNSAFE_PATH')
+        fd = os.open(anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
         handles.append(fd)
         try:
-            for index, part in enumerate(path.parts[1:]):
+            opened_anchor = os.fstat(fd)
+            require((opened_anchor.st_dev, opened_anchor.st_ino)
+                    == (anchor_info.st_dev, anchor_info.st_ino), 'ROOT_CHANGED')
+            for part in root.relative_to(anchor).parts:
+                fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
+                             dir_fd=fd)
+                handles.append(fd)
+            opened = os.fstat(fd)
+            require(stat.S_ISDIR(opened.st_mode) and opened.st_uid == os.getuid()
+                    and stat.S_IMODE(opened.st_mode) == 0o700,
+                    'PRIVATE_ROOT_REQUIRED')
+            for index, part in enumerate(relative.parts):
                 flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
-                if index < len(path.parts[1:]) - 1:
+                if index < len(relative.parts) - 1:
                     flags |= os.O_DIRECTORY
                 fd = os.open(part, flags, dir_fd=fd)
                 handles.append(fd)

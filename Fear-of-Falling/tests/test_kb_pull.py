@@ -43,6 +43,70 @@ class PullTests(unittest.TestCase):
         self.patch.start(); self.addCleanup(self.patch.stop)
         self.run_id = '20261005T150000Z-' + 'b' * 32
 
+    def test_private_home_walk_with_slash_open_denied(self):
+        original = os.open
+        calls = []
+        def guarded(path, flags, *args, **kwargs):
+            calls.append(str(path))
+            if str(path) == '/':
+                raise PermissionError(13, 'Permission denied', '/')
+            return original(path, flags, *args, **kwargs)
+        with patch.object(k.os, 'open', side_effect=guarded):
+            self.assertEqual(k.read(self.source / 'docs/a.md'), self.text)
+            self.assertEqual(k.read(self.source / 'docs/b.bin'), self.binary)
+        self.assertNotIn('/', calls)
+
+    def test_private_home_rejects_file_and_directory_links(self):
+        file_link = self.base / 'file-link'
+        file_link.symlink_to(self.source / 'docs/a.md')
+        directory_link = self.base / 'directory-link'
+        directory_link.symlink_to(self.source / 'docs', target_is_directory=True)
+        for path in (file_link, directory_link / 'a.md'):
+            with self.subTest(path=path), self.assertRaises((k.Reject, OSError)):
+                k.read(path)
+
+    def test_private_home_rejects_outside_traversal_and_root(self):
+        for path in (Path('/etc/passwd'), self.base / '..' / self.base.name / 'profile.json', Path.home()):
+            with self.subTest(path=path), self.assertRaises(k.Reject):
+                k.read(path)
+
+    def test_private_home_requires_private_owned_directory(self):
+        self.source.chmod(0o755)
+        with patch.object(k.Path, 'home', return_value=self.source):
+            with self.assertRaisesRegex(k.Reject, 'PRIVATE_ROOT_REQUIRED'):
+                k.read(self.source / 'docs/a.md')
+
+    def test_private_home_ancestor_swap_rejected(self):
+        # Swap an owned ancestor immediately before the anchor open. Even when
+        # alternate HOME is owned/private, fd-relative walking rejects its link.
+        controlled = self.base / 'controlled'; controlled.mkdir(mode=0o700)
+        original_home = controlled / 'home'; original_home.mkdir(mode=0o700)
+        (original_home / 'text.md').write_bytes(self.text)
+        alternate = self.base / 'alternate'; alternate.mkdir(mode=0o700)
+        (alternate / 'home').mkdir(mode=0o700)
+        (alternate / 'home/text.md').write_bytes(b'wrong')
+        original_open = os.open
+        swapped = False
+        def racing_open(path, flags, *args, **kwargs):
+            nonlocal swapped
+            if not swapped:
+                controlled.rename(self.base / 'saved')
+                controlled.symlink_to(alternate, target_is_directory=True)
+                swapped = True
+            return original_open(path, flags, *args, **kwargs)
+        with patch.object(k.Path, 'home', return_value=original_home), \
+                patch.object(k.os, 'open', side_effect=racing_open):
+            with self.assertRaises((k.Reject, OSError)):
+                k.read(original_home / 'text.md')
+        self.assertTrue(swapped)
+
+    def test_private_home_source_change_still_rejected(self):
+        path = self.source / 'docs/a.md'
+        with self.assertRaisesRegex(k.Reject, 'SOURCE_CHANGED'):
+            with k.locked_read(path) as stream:
+                self.assertEqual(stream.read(), self.text)
+                path.write_bytes(self.text + b'changed')
+
     def prepare(self):
         self.m = k.preview(self.source, self.profile_path, self.batches, True)
         self.batch = self.batches / self.m['batch_id']; self.approved = self.m['content_digest']
