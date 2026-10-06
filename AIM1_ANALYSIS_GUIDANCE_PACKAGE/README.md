@@ -11,12 +11,12 @@ the Dissertation repository.
 
 ## Files
 
-| File | Function |
-|---|---|
-| `README.md` | this file — scope + usage + artifact index |
-| `ANALYSIS_DECISIONS.md` | the single AIM1 decision table + the gate router |
-| `EXECUTION_PLAN.md` | current phase, next operational task, gate sequence |
-| `SOURCE_HANDOFF.md` | source index, traceability, refresh triggers |
+| File                       | Function                                             |
+| -------------------------- | ---------------------------------------------------- |
+| `README.md`                | this file — scope + usage + artifact index           |
+| `ANALYSIS_DECISIONS.md`    | the single AIM1 decision table + the gate router     |
+| `EXECUTION_PLAN.md`        | current phase, next operational task, gate sequence  |
+| `SOURCE_HANDOFF.md`        | source index, traceability, refresh triggers         |
 | `TERMUX_USAGE_AND_TEST.md` | Termux portability rules + the simulated Termux test |
 
 ## AIM1_SCOPE
