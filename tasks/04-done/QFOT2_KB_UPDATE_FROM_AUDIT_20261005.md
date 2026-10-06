@@ -2,10 +2,21 @@
 
 ## State
 
-- State: `03-review`
+- State: `04-done`
 - Type: metadata-only documentation task
 - Scope: create the three requested review documents under `GPT/orchestrator/knowledge/profiles/QF-agents-termux-android/knowledge/`; do not change the audit, CSVs, historical reports/code, canonical sources, installed add-on, or any `SKILL.md`.
 - Data: no research data; documentation/source inspection plus one separately authorized synthetic sample QC smoke. Generated QC summaries remain in an ignored output directory and are not staged.
+
+## Hyväksyntänäyttö
+
+- Hyväksyjä: `Tupatuko2023`, repositoryn omistaja ja ylläpitäjä; GitHub vahvisti mergerin ihmistiliksi.
+- Päätösaika: `2026-10-06T04:55:26Z`.
+- Kohdetehtävä: `QFOT2_KB_UPDATE_FROM_AUDIT_20261005`.
+- Pysyvä hyväksyntänäyttö: [mergattu PR #189](https://github.com/Tupatuko2023/Python-R-Scripts/pull/189), jonka diff sisältää kolme sovittua KB-dokumenttia ja tämän tehtävämerkinnän.
+- Hyväksytyt PR-commitit: `8b024f5ce526216bb529b70638a9606945e5e2ae` ja `010f2caf61da9a7fa286fb8c45b1d292806c0fd3` (PR-head).
+- Squash-merge: [c73a542bed9277b4de60c172dd70d3f13051a1b5](https://github.com/Tupatuko2023/Python-R-Scripts/commit/c73a542bed9277b4de60c172dd70d3f13051a1b5). PR:n neljän tiedoston sisältö vastaa merge-version sisältöä.
+- Hyväksyntä koskee dokumentaatioerää. Avoimet päätökset säilyvät `NEEDS_VERIFICATION`-tilassa; lisäosan käyttäytymistestit ja teknisten kontrollien toteutustestit säilyvät `NOT_RUN`-tilassa.
+- Agentti ei tehnyt hyväksyntämergeä. Tämä tekninen lifecycle-siirto toimitetaan erillisessä PR:ssä ihmisen katselmoitavaksi ja mergattavaksi.
 
 ## Purpose
 
@@ -34,3 +45,4 @@ Reconcile the QFOT2 repository profile knowledge base against the available audi
 - 2026-10-05T17:26:08+03:00: Moved the task to `03-review` after the authorized synthetic QC smoke and required review checks passed; updated this state field to match its queue path.
 - 2026-10-05T20:50:20+03:00: Resumed after interruption, verified and preserved the existing staged documents and independent unstaged files, created `docs/qfot2-kb-update-from-audit-20261005` per the QF branch-isolation rule, and force-added only the three authorized KB files because `.git/info/exclude` matches `/GPT/*`. Re-ran `bash tools/run-gates.sh --mode pre-push --smoke`; policy, renv, and available changed-file smoke gates passed. No commit, push, or merge was made.
 - 2026-10-06T02:46:57+03:00: Käyttäjä ilmoitti hyväksyvänsä rajatun dokumentaatioerän. `SKILLS.md` edellyttää silti tehtävän tekniseen sulkuun riippumatonta pysyvää GitHub PR-/issue-hyväksyntää tai saman tehtävän sisältävän PR:n mergeä sekä hyväksyjän, ajan, kohteen ja diff-rajauksen todentamista. Tällaista näyttöä ei löytynyt paikallisesta työpuusta; verkkohakua ei tehty ilman lupaa. Tehtävä säilyy `03-review`-tilassa, kunnes hyväksyntänäyttö lisätään. Ei smoke-ajoa tai muuta uudelleentestausta.
+- 2026-10-06T09:06:40+03:00: Varmennettiin GitHubista PR #189:n ihmisen tekemä merge, hyväksyjä ja ylläpitäjärooli, päätösaika, commit- ja tiedostorajaus sekä pysyvät URLit. PR:n neljän tiedoston sisältö vastaa main-haaraa; työhaarassa ei ollut muita committeja. Etähaara oli jo poistettu, paikallinen työhaara poistettiin ilman force-poistoa ja käyttäjän työpuumuutokset säilytettiin. Kirjattiin riippumaton hyväksyntänäyttö ja siirrettiin tehtävä teknisesti `04-done`-tilaan erillisellä lifecycle-haaralla. Testejä tai QC-smokea ei toistettu.
