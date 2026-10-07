@@ -166,3 +166,32 @@ kanavaa.
   paluukuitti NOT_DELIVERED. Tuotantoprofiili enabled=false/files=[] ennallaan.
 - Ei commitia, pushia, mergeä, SSH-koodipayloadia, CSV-laajennusta tai importia.
   Task jää PARTIAL/02-in-progress, DoD ei täyty ennen regressioita/verkkonäyttöä.
+
+
+## Rajattu katkostestin buffering-korjaus
+
+- 2026-10-07T16:21:23.771842+00:00 Owner valtuutti harness-only-korjauksen,
+  synteettisen regression ja riippumattoman katselmoinnin. Ei uusia commit/push-
+  tai verkkotestivaltuuksia. Uusi eristetty branch
+  chore/kb-interrupt-buffering-20261007, base830040ad42d9c733ab3ffe8cb0a9a3ccb1128efd.
+- Tuotannon fof_kb_pull.py muuttumaton (SHA2567354b6e099da3bc0d5e04b8f1b64204ab1d4fc633b6dd75574a2c34062c30bdc).
+- Testiharness flushaa todellisen vastaanottajan wire-streamin ennen havaintoa;
+  wirecounter==tiedostokoko ja approved manifestista johdettu osittainen payload
+  vaaditaan. flush_performed=true, durability=NOT_PROVEN. Ei arkiston purkua.
+- Kohdennetut natiivin Termuxin synteettiset testit4 PASS,0 FAIL,0 SKIP.
+  Bufferoinnin todellinen mismatch ja localprocess-worker-integraatio mukana;
+  flush-failure ja väärän manifestin digest hylätään. ResourceWarning=error.
+- Muuttumaton inbound40 PASS,0 FAIL,0 SKIP. Aiemmat paikallisten producer-
+  fixtuurien failure-logit säilytetty. Gates exit0; staged syntax gate ei yksin
+  testaa unstaged-korjausta. K18/QC NOT APPLICABLE (testiharness-only).
+- Riippumaton read-only-katselmointi PASS, ei avoimia löydöksiä.
+  Verkkotesti NOT_RUN tämän korjauksen aikana.
+  Outbound BLOCKED ennallaan; ei asennuksia tai ympäristökorjauksia.
+- Vanha katkosnäyttö pysyy NOT_DEMONSTRATED. Aiemman positiivisen ajon viisi
+  hashia tarkastetaan ennen/jälkeen; ei aiempien ajojen muutoksia tai retryä.
+- Tulevan testin erikseen hyväksytty Windows-erä ja source provenance830040ad
+  säilyvät. Ajokohtainen BatchId ja tarkastettu Digest annetaan paikallisessa
+  handoffissa, eikä niitä tallenneta repositoryyn. Uusi harness commit ilmoitetaan
+  erikseen vasta hyväksytyn Git-toimituksen jälkeen.
+- Kokonaisuus PARTIAL/02-in-progress. Ei commit/push/merge/import/delete
+  tai tuotannon avaamista tämän työn perusteella.

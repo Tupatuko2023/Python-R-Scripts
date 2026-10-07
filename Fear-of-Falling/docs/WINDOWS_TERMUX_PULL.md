@@ -358,3 +358,47 @@ python scripts/termux/test_kb_pull_ssh_smoke.py \
 
 Paikallinen VERIFIED ja `return_receipt_status` raportoidaan erikseen.
 Tuotantoprofiili pysyy suljettuna. Ei CSV-siirtoa, importia tai mergeä.
+
+
+## Katkostestin bufferihavaintopisteen rajattu korjaus (2026-10-07)
+
+Toimitetulla 830040ad-versiolla 16 MiB erän katkos jäi NOT_DEMONSTRATED:
+barrierissa vastaanotin oli lukenut 32768 tavua ja SSH oli elossa, mutta
+Python-bufferiin kirjoitetun wire-streamin tiedostokoko oli vielä nolla.
+Katkon jälkeen close/flush säilytti 32768 wire-tavua ja 29207 payload-tavua.
+Vanhaa evidenssiä tai sen tilaluokitusta ei muuteta.
+
+Korjaus koskee vain manuaalista testiharnessia. Se tallentaa täsmälleen noutajan
+omistaman, uuden runin wire.tar-streamin viitteen ja kutsuu stream.flush()
+ensimmäisen transport-chunkin kirjoittamisen jälkeen, ennen barrierin koko-
+tarkastusta. Vastaanotettujen tavujen sisältö, tuotantonoutaja ja turvarajat
+säilyvät. Evidenssi merkitsee flush_performed=true ja durability=NOT_PROVEN:
+flush todistaa käyttäjätilan bufferin näkyvyyden, ei fsyncia tai crash-kestävyyttä.
+
+Havaintopiste pitää erillään vastaanotetut wire-tavut, tiedostokoon ja varsinaiset
+payload-tavut. Turvallinen bounded USTAR-headerien tarkastus ei pura arkistoa.
+Upotettu manifest tarkastetaan samaa synteettistä profiilia, BatchId:tä ja
+hyväksyttyä digestia vasten. Payload- ja wire-kokonaismäärät johdetaan tästä
+hyväksytystä manifestista; profiili ei sisällä kiinteää testitiedostokokoa.
+
+Kelvollinen näyttö vaatii counter==flushed wire size, 0<payload_received<approved
+payload_total, osittaisen wiren sekä tuoreen SSH-liveness-tarkastuksen juuri
+ennen worker-self-SIGINTiä. Atomiset markerit, cleanup, UNVERIFIED/no-retry ja
+VERIFIED-kielto säilyvät. Flush-virhe pysäyttää testin ennen SIGINTiä; noutajan
+virhepolku säilyttää ajon ja pysäyttää SSH-prosessin. Puuttuva näyttö ei ole PASS.
+
+Kohdennettu natiivi synteettinen regressio käyttää oikeaa buffered tiedostoa
+(32768 kirjoitettua tavua, tiedostokoko 0), ja worker-integraatio käyttää oikeaa
+noutajaa sekä paikallista synteettistä prosessia SSH:n sijaan. 4 PASS, 0 FAIL,
+0 SKIP; muuttumattoman inbound-testistön 40 PASS, 0 FAIL, 0 SKIP.
+Ei verkkotestiä tämän korjaustyön aikana.
+
+Korjaus toimitetaan vasta riippumattoman katselmoinnin ja erikseen hyväksytyn
+Git-toimituksen jälkeen. Tuleva katkostesti käyttää vain interruption-workeria,
+uutta RunId:tä/evidence-rootia ja nykyistä erikseen hyväksyttyä Windows-erää.
+Ajokohtainen BatchId ja tarkastettu Digest annetaan paikallisessa handoffissa,
+eikä niitä tallenneta repositoryyn.
+Windows-batchin provenance pysyy 830040ad42d9c733ab3ffe8cb0a9a3ccb1128efd;
+uuden Termux-harnessin tuleva commit ja hash raportoidaan erikseen.
+Ei automaattista retryä, uutta Windows-erää, vanhojen testien toistoa, importia
+tai tuotantoprofiilin avaamista.

@@ -9,6 +9,7 @@ import signal
 import subprocess
 import sys
 import time
+import tarfile
 import uuid
 from datetime import datetime, timezone
 
@@ -36,6 +37,50 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
+def observe_wire(stream, wire_path, received, k, profile, approved, batch_id):
+    """Controlled test flush; inspect approved USTAR prefix, never extract."""
+    stream.flush()  # Visibility only: neither fsync nor crash durability proof.
+    stored = wire_path.stat().st_size
+    require(stored == received, 'wire counter differs from flushed file size')
+    raw = k.read(wire_path, k.MAX_WIRE)
+    require(len(raw) == stored, 'wire changed during observation')
+    state = {'received_bytes': received, 'wire_bytes': stored,
+             'flush_performed': True, 'durability': 'NOT_PROVEN',
+             'payload_received_bytes': 0, 'payload_expected_bytes': None,
+             'approved_wire_expected_bytes': None}
+    if len(raw) < 512:
+        return state
+    first = tarfile.TarInfo.frombuf(raw[:512], 'ascii', 'strict')
+    require(first.name == 'manifest.json' and first.type == tarfile.REGTYPE
+            and raw[257:265] == b'ustar\x0000' and 0 <= first.size <= k.MAX_JSON,
+            'invalid manifest header')
+    if len(raw) < 512 + first.size:
+        return state
+    manifest = k.decode(raw[512:512 + first.size])
+    k.manifest_check(manifest, profile, approved, batch_id)
+    entries = [('manifest.json', first.size)] + [
+        ('payload/' + row['staging_path'], row['size']) for row in manifest['files']]
+    state['payload_expected_bytes'] = sum(row['size'] for row in manifest['files'])
+    used = sum(512 + ((size + 511) // 512) * 512 for _, size in entries) + 1024
+    state['approved_wire_expected_bytes'] = (
+        (used + tarfile.RECORDSIZE - 1) // tarfile.RECORDSIZE * tarfile.RECORDSIZE)
+    offset = 0
+    for name, size in entries:
+        if len(raw) < offset + 512:
+            break
+        header = raw[offset:offset + 512]
+        item = tarfile.TarInfo.frombuf(header, 'ascii', 'strict')
+        require(item.name == name and item.size == size and item.type == tarfile.REGTYPE
+                and header[257:265] == b'ustar\x0000', 'invalid payload header')
+        available = min(size, max(0, len(raw) - offset - 512))
+        if name.startswith('payload/'):
+            state['payload_received_bytes'] += available
+        if available < size:
+            break
+        offset += 512 + ((size + 511) // 512) * 512
+    return state
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--profile', required=True)
@@ -55,6 +100,15 @@ def main():
         original_popen = subprocess.Popen
         transport = []
         total = 0
+        wire_path = (Path(args.staging_root).absolute() / os.environ['FOF_SMOKE_RUN_ID'] / 'wire.tar')
+        original_open = Path.open
+        wire_stream = []
+        profile = k.profile(args.profile, True)
+        def observed_open(path, *items, **options):
+            stream = original_open(path, *items, **options)
+            if path == wire_path and (items[0] if items else options.get('mode')) == 'xb':
+                wire_stream.append(stream)  # The real receiver-owned buffered stream.
+            return stream
         def observed_popen(*items, **options):
             child = original_popen(*items, **options)
             transport.append(child)
@@ -64,20 +118,27 @@ def main():
             if total and transport and fd == transport[-1].stdout.fileno():
                 # Barrier after at least one chunk was returned to receiver,
                 # before its next transport read. Never substitute wire bytes.
-                record(evidence / 'interrupt-barrier.json', {'received_bytes': total})
+                require(len(wire_stream) == 1, 'receiver wire stream not observed')
+                state = observe_wire(wire_stream[0], wire_path, total, k, profile,
+                                     args.digest, args.batch_id)
+                record(evidence / 'interrupt-barrier.json', state)
                 request = evidence / 'interrupt-request.json'
                 while not request.exists():
                     time.sleep(0.05)
                 expected = json.loads(request.read_text())['expected_wire_bytes']
-                wire = Path(args.staging_root) / os.environ['FOF_SMOKE_RUN_ID'] / 'wire.tar'
-                partial = wire.exists() and 0 < wire.stat().st_size < expected
+                require(state['approved_wire_expected_bytes'] in (None, expected),
+                        'supervisor wire size differs from approved manifest')
+                payload_expected = state['payload_expected_bytes']
+                partial = (0 < state['wire_bytes'] == total < expected
+                           and payload_expected is not None
+                           and 0 < state['payload_received_bytes'] < payload_expected)
                 # Fresh liveness check immediately before self-interruption.
                 live = transport[-1].poll() is None
-                record(evidence / 'interrupt-decision.json', {
-                    'received_bytes': total, 'wire_bytes': wire.stat().st_size,
-                    'ssh_pid': transport[-1].pid, 'ssh_live_at_interrupt_request': live,
-                    'proven_in_progress': live and partial and 0 < total < expected,
+                state.update({'ssh_pid': transport[-1].pid,
+                    'ssh_live_at_interrupt_request': live,
+                    'proven_in_progress': live and partial,
                     'interrupt_requested_at_utc': datetime.now(timezone.utc).isoformat()})
+                record(evidence / 'interrupt-decision.json', state)
                 # Recheck after publishing evidence, adjacent to signal delivery.
                 if transport[-1].poll() is not None:
                     record(evidence / 'interrupt-decision.json', {
@@ -89,10 +150,14 @@ def main():
             return data
         k.subprocess.Popen = observed_popen
         k.os.read = observed_read
+        k.Path.open = observed_open
         try:
             k.pull(args.profile, args.batch_id, args.digest, args.staging_root,
                    os.environ['FOF_SMOKE_RUN_ID'], True)
         finally:
+            k.Path.open = original_open
+            k.os.read = original_read
+            k.subprocess.Popen = original_popen
             record(evidence / 'interrupt-cleanup.json', {
                 'ssh_exit': transport[-1].poll() if transport else None,
                 'ssh_stopped': bool(transport) and transport[-1].poll() is not None})
