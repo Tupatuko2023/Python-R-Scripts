@@ -5,7 +5,7 @@ plan.
 
 ## Current state
 
-```
+```text
 CURRENT_PHASE       = PRE_ANALYSIS
 CURRENT_NEXT_TASK   = G6 — final AIM1 estimand set
 PARTICIPANT_LEVEL_ANALYSIS_AUTHORIZED = NO
@@ -13,7 +13,7 @@ PARTICIPANT_LEVEL_ANALYSIS_AUTHORIZED = NO
 
 ## Gate sequence (from the current gate dependencies)
 
-```
+```text
 G6  final estimand set
  → G4  costing specification + AIM1 applicability
  → G3  hospital unit lock (days vs episodes)
