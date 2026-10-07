@@ -195,3 +195,87 @@ kanavaa.
   erikseen vasta hyväksytyn Git-toimituksen jälkeen.
 - Kokonaisuus PARTIAL/02-in-progress. Ei commit/push/merge/import/delete
   tai tuotannon avaamista tämän työn perusteella.
+
+## Katselmointi 2026-10-07 (Windows-agentti)
+
+Harness-versio vs. runtime-versio:
+- PR-haaran head 0a8e5990c3bf57bb9a9d399a33e56b1b09737060 ("test: flush KB
+  interruption wire before observation") = harness-commit. Se lisää testimoduulin
+  (CI-korjauksessa nimetty uudelleen tests/test_kb_pull_ssh_smoke_harness.py:ksi) ja
+  muuttaa scripts/termux/test_kb_pull_ssh_smoke.py, WINDOWS_TERMUX_PULL.md ja
+  tämän kortin; se ei muuta tuotannon fof_kb_pull.py:tä.
+- Testattu Windows-runtime ja batch-provenance = 830040ad42d9c733ab3ffe8cb0a9a3ccb1128efd
+  (harness-commitin parent), fof_kb_pull.py SHA256
+  7354b6e099da3bc0d5e04b8f1b64204ab1d4fc633b6dd75574a2c34062c30bdc.
+- Windows-validointi ajettiin runtime-commitilla 830040ad; harness-commit 0a8e5990 ei
+  muuta Windows-lukitushaaraa eikä validoitua runtime-tavua.
+
+Windows-näyttö (10 testiä): tiedostonluku tavutarkasti, kahvan vapautus,
+write/delete/replace-esto luvun aikana, reparse/junction-hylkäys,
+PowerShell-binäärisilta 0-255 byte-exact (102400 B), preview->approve->serve,
+väärän digestin hylkäys (approve+serve), CLI smoke. Harness-ajo 10/10 PASS;
+evidenssi docs/guides/windows-termux/windows-validation-830040ad/.
+
+Termux (A:n koneellinen tulosmanifesti saatu ja tarkastettu):
+- manifest_kind WINDOWS_TERMUX_VERIFIED_PULL_TEST_RESULTS; harness_commit 0a8e5990,
+  harness_sha256 2ab7a47acd04ce4c4117e5e5ec43b48c779f6279df7b8cad4c39cca71ca4e97f
+  (tarkistettu repo-tiedostoa vasten).
+- paikalliset testit: inbound 40 PASS / 0 FAIL / 0 SKIP; harness 4 PASS / 0 FAIL / 0 SKIP.
+- 4 SSH-testiä PASS: positiivinen; väärä digest (exit 1, ei VERIFIED); run_id-törmäys
+  (exit 1, aiemmat viisi hashia muuttumattomat); katkos (client_exit -2, ssh_exit -9,
+  proven_in_progress=true, flush_performed=true, durability=NOT_PROVEN, ei VERIFIED,
+  UNVERIFIED säilytetty, automatic_retry=false, aiemmat hashit muuttumattomat).
+- local_VERIFIED=PASS; return_receipt_status=NOT_DELIVERED; outbound_regressions=BLOCKED;
+  foreground_visibility=NOT_OBSERVABLE; new_tests_run=false.
+- A:n manifestin VERIFIED-kuitti-tavut (343 B, sha256 8abf2f0b...) tarkistettu.
+- Ajokohtaiset runtime-arvot (run_id, BatchId, content_digest, aikaleimat) ja paikalliset
+  polut säilytetään Gitin ulkopuolella (paikallinen evidenssi).
+
+Avoimet regressiot ja validoinnin rajat:
+- CI python-ci (tests) FAIL PR-headilla 0a8e5990: pytest "import file mismatch"
+  kahdesta samannimisestä moduulista
+  (scripts/termux/test_kb_pull_ssh_smoke.py ja tests/test_kb_pull_ssh_smoke.py).
+  Korjaus valmisteltu CI-korjauksessa: tests-tiedosto nimetty uudelleen
+  tests/test_kb_pull_ssh_smoke_harness.py:ksi. CI varmistaa vasta pushin jälkeen.
+- CI lint (Prettier) FAIL: Fear-of-Falling/docs/WINDOWS_TERMUX_PULL.md.
+  Korjaus valmisteltu CI-korjauksessa (Prettier-muotoilu). CI varmistaa pushin jälkeen.
+- Outbound-regressiot (test_artifact_transfer.py, test_v2_ssh_adapter.py) eivät ole
+  ajettavissa Windowsilla: sulautettu Python vaatii POSIXin (os.O_DIRECTORY,
+  symlinkit). Windows Miniconda 3.12.4 ei tue; WSL-relay ei toimi; Git bash tarjoaa
+  kuoren mutta ei POSIX-Pythonia. Sopiva ympäristö = CI ubuntu+Python 3.11
+  (pip install --group ./Fear-of-Falling/pyproject.toml:dev), joka estyy yllä
+  olevasta keräilyvirheestä. Paikallinen Windows-ajo: 24/48 ok (POSIX-riippuvat
+  eivät). Ei valheellista PASSia. Outbound BLOCKED ennallaan.
+
+VERIFIED vs. paluukuitti:
+- Paikallinen VERIFIED = varmennettu onnistuneessa vastaanotossa (mahdollinen vain
+  POSIX-vastaanottimella). Paluukuitti Windowsille = NOT_DELIVERED (kanava ei
+  toimita paluukuittia). Raportin kopiointi ei ole protokollan paluukuitti.
+
+Tila: PARTIAL / 02-in-progress. Avoimet hyväksymiskriteerit:
+(1) CI:n keräilyvirhe -> korjaus valmisteltu (rename); odottaa CI-varmennusta;
+(2) Prettier-muotoilu -> korjaus valmisteltu; odottaa CI-varmennusta;
+(3) aja outbound-regressiot vihreällä CI:llä tai POSIX-ympäristössä;
+(4) A:n verkkotestien manifesti + hashit -> saatu ja tarkastettu; paluukuitti yhä
+    NOT_DELIVERED (protokollan mukaan).
+Ei uusia payload-siirtoja, runtime-päivityksiä, mergeä, pushia tai siivousta.
+Tuotantoprofiili enabled=false. PR #194 pysyy draftina.
+
+## CI-korjaus 2026-10-07 (Windows-agentti, paikallinen valmistelu)
+
+- Testimoduulin törmäys poistettu nimeämällä tests/test_kb_pull_ssh_smoke.py
+  uudelleen tests/test_kb_pull_ssh_smoke_harness.py:ksi (R100, sisältö muuttumaton,
+  4 testiä säilytetty). Harnessin nimi scripts/termux/test_kb_pull_ssh_smoke.py
+  säilytetty; ainoa viittaus siihen (moduulin lataus) säilyy ennallaan. Ei
+  pytest-excludeja eikä testien ohitusta.
+- WINDOWS_TERMUX_PULL.md muotoiltu repositoryn olemassa olevalla Prettierillä
+  (npx-cache 3.8.1; lukko 3.9.6). Ei asennuksia. Muutokset: upotetun JSON-lohkon
+  jäsennys, taulukon sarakekohdistus, ylimääräiset tyhjät rivit.
+- Keräys varmennettu paikallisesti (112 testiä, 0 virhettä); 4 harness-testistä 2
+  ajettavissa Windowsilla, 2 vaatii POSIXin. CI varmistaa 4/4 vasta pushin jälkeen.
+- Runtime fof_kb_pull.py, tuotantoprofiili kb-pull-documents-1.json ja harness
+  test_kb_pull_ssh_smoke.py eivät muutu.
+- Paikalliset absoluuttiset polut ja ajokohtaiset runtime-arvot (BatchId/Digest,
+  Windows-juuri) pidetään Gitin ulkopuolella.
+- Tämä CI-korjaus toimitetaan yhdellä commitilla haaraan
+  chore/windows-termux-verified-pull-20261006-main; PR #194 pysyy draftina, ei mergeä.

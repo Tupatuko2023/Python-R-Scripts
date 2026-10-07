@@ -128,8 +128,18 @@ synteettinen testiprofiili, ei tuotantolupa.
   "enabled": true,
   "source_repository_id": "FOF-Dissertation-Project",
   "files": [
-    {"source_path": "docs/KB_PULL_SYNTHETIC/a.md", "staging_path": "kb/a.md", "classification": "DISTRIBUTABLE_AS_IS", "approval_reference": "OWNER-synthetic-test-only"},
-    {"source_path": "docs/KB_PULL_SYNTHETIC/b.bin", "staging_path": "kb/b.bin", "classification": "DISTRIBUTABLE_AS_IS", "approval_reference": "OWNER-synthetic-test-only"}
+    {
+      "source_path": "docs/KB_PULL_SYNTHETIC/a.md",
+      "staging_path": "kb/a.md",
+      "classification": "DISTRIBUTABLE_AS_IS",
+      "approval_reference": "OWNER-synthetic-test-only"
+    },
+    {
+      "source_path": "docs/KB_PULL_SYNTHETIC/b.bin",
+      "staging_path": "kb/b.bin",
+      "classification": "DISTRIBUTABLE_AS_IS",
+      "approval_reference": "OWNER-synthetic-test-only"
+    }
   ]
 }
 ```
@@ -244,13 +254,13 @@ Seuraava verkkotesti kuuluu käyttäjän olemassaolevaan Termux-ympäristöön.
 Toimituksen base HEAD on `a62957e9e77d3eedc33c1d18395be0bc26c017dc`.
 Toimituksen täsmäpolut ovat:
 
-| Liitteen polku | Kohde Python-R-Scripts-repositoryssa |
-| --- | --- |
-| Fear-of-Falling/scripts/termux/fof_kb_pull.py | sama suhteellinen polku |
-| Fear-of-Falling/tests/test_kb_pull.py | sama suhteellinen polku |
-| Fear-of-Falling/docs/transfer-profiles/kb-pull-documents-1.json | sama suhteellinen polku |
-| Fear-of-Falling/docs/WINDOWS_TERMUX_PULL.md | sama suhteellinen polku |
-| tasks/02-in-progress/WINDOWS_TERMUX_VERIFIED_PULL.md | sama suhteellinen polku |
+| Liitteen polku                                                  | Kohde Python-R-Scripts-repositoryssa |
+| --------------------------------------------------------------- | ------------------------------------ |
+| Fear-of-Falling/scripts/termux/fof_kb_pull.py                   | sama suhteellinen polku              |
+| Fear-of-Falling/tests/test_kb_pull.py                           | sama suhteellinen polku              |
+| Fear-of-Falling/docs/transfer-profiles/kb-pull-documents-1.json | sama suhteellinen polku              |
+| Fear-of-Falling/docs/WINDOWS_TERMUX_PULL.md                     | sama suhteellinen polku              |
+| tasks/02-in-progress/WINDOWS_TERMUX_VERIFIED_PULL.md            | sama suhteellinen polku              |
 
 Windowsin paikallinen agentti lukee liitteet ensin erilliseen tarkastushakemistoon
 ja vertaa SHA-256:t toimituksen manifestiin. Se tarkastaa nykyisen checkoutin
@@ -291,7 +301,6 @@ Koko QFOT2:n KB-kokonaisuutta ei näin varmennettu. Tarkastetut main-snapshotit
 eivät todista paikallisen Windows-worktreen tai lisäosapaketin nykyistä sisältöä.
 Täsmäpolkujen/sisältöluokitusten erillinen inventointi tarvitaan ennen koko KB:n
 siirron valtuutusta. `.csv`-kielto säilyy.
-
 
 ## Androidin yksityisjuuren korjaus (2026-10-06)
 
@@ -358,7 +367,6 @@ python scripts/termux/test_kb_pull_ssh_smoke.py \
 
 Paikallinen VERIFIED ja `return_receipt_status` raportoidaan erikseen.
 Tuotantoprofiili pysyy suljettuna. Ei CSV-siirtoa, importia tai mergeä.
-
 
 ## Katkostestin bufferihavaintopisteen rajattu korjaus (2026-10-07)
 
