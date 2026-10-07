@@ -43,7 +43,8 @@ must be closed before the affected time/cost estimands.
 optional supplementary), on top of the adopted exposure (G1/G2) and resolved time
 framework (G5 core).
 
-**Inputs (available in this package):** candidate SAP §5 (estimand candidates);
+**Inputs (available in this package):** the embedded candidate estimand inventory
+in `ANALYSIS_DECISIONS.md` §4 (portable projection of the candidate SAP);
 `ANALYSIS_DECISIONS.md`; the reconciled death/time handling.
 
 **Output:** an estimand decision (Owner) recorded back into the Dissertation
