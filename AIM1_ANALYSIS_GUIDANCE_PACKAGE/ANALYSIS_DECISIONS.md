@@ -76,7 +76,7 @@ candidate SAP and DMA1/Owner.
 | E-MORT      | OPTIONAL_SUPPLEMENTARY (candidate)          | Eligible cohort      | Continuous FI                  | All-cause death                            | index → death or 31 Dec 2019 | per 0.10 / per 1 SD    | hazard ratio                        | event = death                               | CANDIDATE — not required for core AIM1      | G5                           |
 | E-COMP      | COMPLEMENTARY / candidate (currently DEFER) | Eligible cohort      | Continuous FI                  | Cumulative event / hospital-day count      | fixed horizon (e.g. 3–5 y)   | per 0.10 / per 1 SD    | mean cumulative count               | competing terminal event                    | CANDIDATE — conditional                     | estimand/horizon decision    |
 
-#### Notes
+### Notes
 
 - No new estimands are created here; the IDs, classes and definitions mirror the
   current candidate SAP. Estimating is distinct from model selection (no NB / Gamma
