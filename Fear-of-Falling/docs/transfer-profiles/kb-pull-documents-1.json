@@ -1,0 +1,7 @@
+{
+  "protocol": "FOF_KB_PULL/1",
+  "profile_id": "kb-pull-documents-1",
+  "enabled": false,
+  "source_repository_id": "FOF-Dissertation-Project",
+  "files": []
+}
