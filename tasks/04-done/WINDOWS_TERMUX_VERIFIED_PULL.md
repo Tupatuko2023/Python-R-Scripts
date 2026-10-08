@@ -318,4 +318,19 @@ Tuotantoprofiili enabled=false. PR #194 pysyy draftina.
     kopiointi ei ole paluukuitti).
   - Termuxin foreground-näkyvyys: NOT_OBSERVABLE.
   - CSV-tuki ja oikeiden KB-/tuotantoaineistojen siirto: erillisiä tehtäviä.
-- Tila: 03-review. PR #194 pysyy draftina; ei mergeä.
+- Tila: 03-review (siirretty 04-done-tilaan 2026-10-08; ks. alla).
+
+## DONE-sulkeminen (2026-10-08)
+
+- Hyväksymiskatselmointi: ACCEPT, ei estäviä löydöksiä (riippumaton, vain luku -katselmointi).
+- PR #194 mergetty mainiin; merge-commit ac265f075a1d1f5fdb4be5fb9cd2c9204ab42fb0
+  (base main; hyväksytty head 8f676ac9f3336523ddf8cfa1f7ffcab390cacd63).
+- Verkkotestattu runtime = 830040ad (fof_kb_pull.py 7354b6e0...); myöhemmät
+  harness-/testi-/dokumentaatiocommitit eivät muuta sitä.
+- Validoinnin rajat säilyvät näkyvinä:
+  - Tuotantoprofiili kb-pull-documents-1: enabled=false, files=[].
+  - Paikallinen VERIFIED varmennettu; paluukuitti Windowsille NOT_DELIVERED;
+    Termuxin foreground-näkyvyys NOT_OBSERVABLE.
+  - Outbound: 39 PASS / 9 SKIP ja 11 PASS (SKIP ei ole PASS).
+  - CSV-tuki ja oikeiden KB-/tuotantoaineistojen siirto: erillisiä tehtäviä.
+- Tila: 04-done.
