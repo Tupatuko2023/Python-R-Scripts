@@ -279,3 +279,43 @@ Tuotantoprofiili enabled=false. PR #194 pysyy draftina.
   Windows-juuri) pidetään Gitin ulkopuolella.
 - Tämä CI-korjaus toimitetaan yhdellä commitilla haaraan
   chore/windows-termux-verified-pull-20261006-main; PR #194 pysyy draftina, ei mergeä.
+
+## Viimeistely REVIEW-tilaan (2026-10-08)
+
+- Toimitettu commit: 22933265e89ec0b9d00295f6a6f7b6da2b5d73fb
+  (test: isolate KB smoke tests under a private 0700 HOME; parent c8da1e9).
+  Muutos lisää vain Fear-of-Falling/tests/conftest.py: per-testti-hook rajaa
+  käyttäjän omistaman 0700-HOMEn kahdelle KB-testimoduulille ja palauttaa
+  alkuperäiset arvot myös setup- ja testivirheissä. Runtime-, harness-,
+  turvarajat- ja tuotantoprofiilitiedostot eivät muutu.
+- Vihreät CI-ajot (commit 2293326):
+  - python-ci (pull_request): actions/runs/37789612933
+  - python-ci (push): actions/runs/37789605683
+  - Lint Markdown: actions/runs/37789612945
+  - CodeQL: actions/runs/37789612888
+  - K Scripts Smoke Tests: actions/runs/37789612845
+- Testitulokset (CI, JUnit):
+  - inbound test_kb_pull.py: 40 PASS, 0 FAIL, 0 SKIP.
+  - harness test_kb_pull_ssh_smoke_harness.py: 4 PASS, 0 FAIL, 0 SKIP.
+  - outbound #1 test_artifact_transfer.py: 39 PASS, 0 FAIL, 9 SKIP (48 total).
+    Skip-syy (aiempi, tahallinen): "provenance-bound snapshot and local PowerShell
+    launcher required" (CrossEndReceiverTests).
+  - outbound #2 test_v2_ssh_adapter.py: 11 PASS, 0 FAIL, 0 SKIP.
+  - Yhteensä 0 FAIL, 9 SKIP.
+- Aiempi näyttö (säilyy voimassa):
+  - Windows-runtime 830040ad: erillinen aito Windows-harness 10/10 PASS.
+  - Oikea SSH-smoke (A, natiivi Termux): positiivinen + väärä digest + run_id-
+    törmäys + katkos = 4 PASS; local_VERIFIED=PASS. A:n koneellinen tulosmanifesti
+    säilytetty Gitin ulkopuolella.
+- Versioero: testattu Windows-runtime ja batch-provenance = 830040ad; myöhemmät
+  testikorjaukset = harness-commit 0a8e5990 (flush), c8da1e9 (rename + Prettier)
+  ja 2293326 (yksityinen testi-HOME). Yksikään ei muuta tuotannon fof_kb_pull.py:tä
+  (7354b6e0...) eikä tuotantoprofiilia.
+- Validoinnin rajat (säilyvät näkyvinä):
+  - Tuotantoprofiili kb-pull-documents-1: enabled=false, files=[].
+  - Paikallinen VERIFIED varmennettu (A:n positiivinen ajo).
+  - Paluukuitti Windowsille: NOT_DELIVERED (protokollan mukaan; raportin
+    kopiointi ei ole paluukuitti).
+  - Termuxin foreground-näkyvyys: NOT_OBSERVABLE.
+  - CSV-tuki ja oikeiden KB-/tuotantoaineistojen siirto: erillisiä tehtäviä.
+- Tila: 03-review. PR #194 pysyy draftina; ei mergeä.
