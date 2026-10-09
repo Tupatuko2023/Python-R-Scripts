@@ -174,7 +174,9 @@ python3 scripts/termux/place_verified_bundle.py execute \
   (kohde on **sijoituskartasta**, ei siirto-previewstä).
 - `--receipt` on pakollinen ja **kohderepositorion ulkopuolinen**; kuittipolun on
   oltava repositorion ulkopuolella (muuten `RECEIPT_INSIDE_TARGET`) eikä sen
-  esi-isissä saa olla linkkejä (`LINK_REJECTED`/`REPARSE_REJECTED`).
+  esi-isissä saa olla linkkejä (`LINK_REJECTED`/`REPARSE_REJECTED`). POSIXilla
+  parentin on oltava suoraan vakaa yksityinen ankkuri (§6.6); tavallinen
+  siirrettävä HOME-alihakemisto hylätään ennen payload-kirjoituksia.
 - Exit: `0` = tuloste; `1` = `PLACE_REJECTED: <CODE>` (tai `LOCAL_FAILURE`).
 
 ### 6.4 `placement_digest` (toteutettu; hyväksyntä sidotaan)
@@ -204,11 +206,12 @@ virheelliseen hyväksyntään.
 - Kohde on olemassa → lue se lukitusti (no-follow) ja vertaa koko + SHA-256:
   identtinen → **`ALREADY_PRESENT`** (ei kirjoitusta); eri sisältö → **`CONFLICT`**,
   pysähdy (ei overwritea).
-- **Tarkastuksen ja kirjoituksen välinen polku-/linkkimuutos estetään** samalla
-  tekniikalla kuin nykyinen lukija: pidä jokainen esi-isä auki ja tarkasta
-  uudelleen (descriptor-walk `dir_fd`+`O_NOFOLLOW` POSIXilla; ancestor-handlet
-  ja reparse-tarkastus Windowsilla); avaa kohde `O_EXCL`illä; vertaa avatun
-  kohteen `dev/ino` ja esi-isien identiteetti ennen ja jälkeen.
+- **Polku-/linkkimuutoksia tarkastetaan** descriptor-kävelyllä ja
+  `O_NOFOLLOW`-valinnalla POSIXilla sekä ancestor-handleilla ja reparse-
+  tarkastuksilla Windowsilla. Kohde avataan `O_EXCL`illä ja esi-isien identiteetti
+  tarkastetaan ennen/jälkeen. POSIXin avoin descriptor pinnaa inode-identiteetin,
+  mutta ei estä käyttäjän kirjoitettavan esi-isän nimeämistä uudelleen. Kuitille
+  tarvitaan siksi erillinen vakaan ankkurin capability-rajaus (§6.6).
 - **Android-yhteensopiva ankkuri:** lukija ja kirjoitushakemiston kävely eivät
   avaa juurta (`/`, `/data`, `/data/data`) vaan ensimmäisen käyttäjän
   hallitseman esi-isän (sama katselmoitu ankkuriratkaisu kuin `fof_kb_pull.py`);
@@ -232,19 +235,46 @@ Kuitti julkaistaan vain, kun kaikki kohteet on varmennettu. `CONFLICT`,
 `RECEIPT_INSIDE_TARGET`, `RECEIPT_EXISTS` tai `UNSUPPORTED_RECEPTION_FORM`
 keskeyttää eikä tuota kuittia; keskeytynyt ajo ei tuota onnistumiskuittia eikä
 automaattista uusintaa. **Siirron `VERIFIED.json`ia ei muuteta.**
-Kuitti julkaistaan **atomisesti ilman korvaamista**: täysin kirjoitettu ja
-`fsync`-varmennettu väliaikaistiedosto **linkitetään** lopulliseen polkuun
-(`os.link`); linkkaus on atominen ja epäonnistuu `EEXIST`illä, jos kohde on jo
-olemassa, joten kuitti ei koskaan näy osittaisena eikä sitä koskaan korvata.
-Jos tiedostojärjestelmä ei tue kovalinkkiä, julkaisu **keskeytyy turvallisesti**
-(`RECEIPT_PUBLISH_UNSUPPORTED`) eikä osittaista kuittia synny. Pelkkä
-exists-tarkastus ennen `os.rename`-kutsua ei riitä. Ei automaattista importia;
-jokainen sijoitus on eksplisiittinen ihmisen valtuutus.
+Kuitti julkaistaan **atomisesti ilman korvaamista** vasta kokonaan kirjoitetun,
+`fsync`-varmennetun väliaikaistiedoston sulkemisen jälkeen. POSIXilla käytetään
+natiivia `renameat2(..., RENAME_NOREPLACE)`-operaatiota samalla pidetyllä
+hakemisto-descriptorilla, jolla väliaikaistiedosto luotiin. Windowsilla säilyy
+`os.link`-julkaisu pidettyjen share-read-esi-isähandlejen suojaamana. Kilpaileva
+lopullinen kuitti tuottaa `RECEIPT_EXISTS`; olemassa olevia tavuja ei korvata.
+Tavallista renamea, lopulliseen tiedostoon kirjoittamista tai heikompaa fallbackia
+ei käytetä. Primitive testataan pienillä synteettisillä tiedostoilla juuri
+kuittihakemistossa **ennen payload-kirjoituksia**; puute tuottaa
+`RECEIPT_PUBLISH_UNSUPPORTED`. Probe- ja epäonnistuneet väliaikaistiedostot säilyvät.
+
+POSIX hyväksyy kuitin parentiksi vain suoraan ensimmäisen käyttäjän hallitseman
+ankkurin, jonka koko edeltävä järjestelmäesi-isäketju ei ole käyttäjän omistama
+eikä kirjoitettavissa. Parent on käyttäjän omistama yksityinen hakemisto
+(group/other-oikeudet 0); uid, mode ja inode-identiteetti varmennetaan pidetystä
+fd:stä uudelleen jokaisessa havaintopisteessä. Tämä on **capability-rajaus**:
+siirrettävät HOME-alihakemistot tuottavat `RECEIPT_PARENT_MOVABLE` ennen kohteiden
+kirjoituksia. Pelkkä descriptor + viimeinen exists/identity-tarkastus ei poistaisi
+rename/check-välin kilpailua. Luottamusraja olettaa käyttöjärjestelmän sekä root/
+system-hallinnan luotetuiksi; näiden tahojen muutoksille ei luvata suojaa.
+
+Natiivissa Termux-kokeessa app-root oli vakaa/private ja sen edeltävä ketju
+system-owned/non-writable käyttäjälle. Positiiviset kuittipolut olivat suoraan
+siinä; paikalliset täsmäpolut ovat vain yksityisessä evidenssissä. Kokeen yritys
+siirtää ankkuri oman jälkeläisensä sisään saattoi epäonnistua EINVALillä:
+tämä osoittaa containment-kiellon, **ei yksin ACL-rajauksen todistusta**.
+Luottamusraja varmennetaan erillisillä ketjun ownership/write-tarkastuksilla.
+Windowsin handle-lukitus ja sen erillinen native-validointi säilyvät vaatimuksina.
+
+Ennen julkaisua epäonnistuva kirjoitus/publish ei luo lopullista onnistumiskuittia.
+Jos atominen julkaisu onnistuu mutta jälkeinen directory-fsync epäonnistuu,
+`RECEIPT_VISIBLE_DURABILITY_UNCONFIRMED` päättää ajon nonzero-tilaan: täydellinen
+PLACED-kuitti on jo näkyvissä, eikä sitä poisteta tai korvata. Näkyvyys ei silloin
+todista crash-kestävyyttä. Tarkasta kuitti ja kohteet read-only; ei automaattista
+retryä, rollbackia, poistoa tai importia.
 
 ### 6.7 Koodi-/testipolut ja synteettiset testit
 
 - Koodi: `Fear-of-Falling/scripts/termux/place_verified_bundle.py` (toteutettu; portable, pelkkä stdlib, molemmilla päillä).
-- Testit: `Fear-of-Falling/tests/test_place_verified_bundle.py` — **33 PASS + 3 SKIP (POSIX-only, Windowsilla)**, molemmat vastaanottomuodot:
+- Testit: `Fear-of-Falling/tests/test_place_verified_bundle.py` — nykykorjauksen natiivi Termux **43 PASS, 0 FAIL, 0 SKIP**, molemmat vastaanottomuodot:
   onnistuminen (`CREATED`, FOF_KB_PULL/1 ja FOF_ARTIFACT_HANDOFF/2), identtinen
   kohde (`ALREADY_PRESENT`), konflikti (`CONFLICT`, ei overwritea), muuttunut
   lähde (`PAYLOAD_MISMATCH`), lähde muuttui previewn jälkeen, väärä digest
@@ -263,10 +293,12 @@ jokainen sijoitus on eksplisiittinen ihmisen valtuutus.
   ei avaa juurta (POSIX-only; ajetaan Termuxilla)**. **Siirron `VERIFIED`-kuitti
   pysyy muuttumattomana.**
 
-**Tila:** työkalu on **toteutettu** (`scripts/termux/place_verified_bundle.py`, molemmat
-vastaanottomuodot); Windows-synteettiset testit 33 PASS + 3 POSIX-only SKIP;
-**Termux-validointi on NOT_RUN** (POSIX-ankkurihaara ja natiivi ajo varmennetaan
-Termuxilla). Oikean aineiston sijoitus ja Git-toimitus hyväksytään erikseen.
+**Tila:** natiivin Termuxin suite ja molempien vastaanottomuotojen synteettiset
+CLI preview/execute onnistuvat uusilla kohteilla vakaan ankkurin capability-
+rajauksessa. Aiemmat Windows-testit koskivat aiempaa versiota; tämän korjauksen
+**Windows-validointi: NOT_RUN**. Riippumaton katselmointi ja Windows-agentin
+nykyversion native-validointi tarvitaan ennen hyväksyttyä Git-toimitusta.
+Oikean aineiston sijoitusta ei ole valtuutettu.
 
 ## 7. Palautumisohje
 
@@ -303,8 +335,8 @@ Työjuuri: komennot ajetaan `Fear-of-Falling`-juuresta, ellei toisin mainita.
 
 - Tämä runbook on **katselmoitavissa**; se ei aktivoi tuotantoa eikä siirrä oikeaa aineistoa.
 - Sijoitus (osio 6) on **toteutettu** (`scripts/termux/place_verified_bundle.py`,
-  molemmat vastaanottomuodot); Windows-testit 33 PASS + 3 POSIX-only SKIP.
-  **Termux-validointi: NOT_RUN** (edellinen Android-ajo löysi `/`-ankkurin EACCESin;
-  korjattu käyttäjän hallitsemaan ankkuriin; POSIX-haara varmennetaan uudella ajolla).
+  molemmat vastaanottomuodot); nykyinen natiivi Termux43 PASS, 0 FAIL, 0 SKIP.
+  Molemmat synteettiset CLI-muodot preview0/execute0.
+  **Windows-validointi: NOT_RUN** nykykorjaukselle; ei Git-toimitusta tai oikeaa aineistoa.
 - Synteettinen validointi ja Termux-tarkistus: ks. tehtäväkortti
   `tasks/03-review/BIDIRECTIONAL_LOCAL_FILE_TRANSFER_RUNBOOK.md`.

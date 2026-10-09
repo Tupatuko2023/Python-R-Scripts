@@ -7,6 +7,8 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+import uuid
+import errno
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'scripts/termux/place_verified_bundle.py'
 spec = importlib.util.spec_from_file_location('place', SCRIPT)
@@ -26,6 +28,7 @@ class PlaceTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(dir=Path.home(), prefix='place-synthetic-')
         self.addCleanup(self.temp.cleanup)
         self.base = Path(self.temp.name)
+        self.receipts = {}
 
         # synthetic verified reception (FOF_KB_PULL/1)
         self.run = self.base / 'staging' / RUN_ID
@@ -64,6 +67,14 @@ class PlaceTests(unittest.TestCase):
             {'staging_path': 'kb/d/a.md', 'target_path': 'docs/a.md'},
             {'staging_path': 'kb/d/b.bin', 'target_path': 'docs/b.bin'}]}))
 
+    def receipt(self, name='receipt.json'):
+        if name not in self.receipts:
+            # POSIX publication is allowed only directly in a non-relocatable
+            # private anchor. These new synthetic receipt artifacts are retained.
+            directory = self.base if os.name == 'nt' else p._posix_anchor(self.base)[0]
+            self.receipts[name] = directory / ('place-synthetic-' + uuid.uuid4().hex + '-' + name)
+        return self.receipts[name]
+
     def plan(self):
         return p.build_plan(self.run, self.target, self.map)
 
@@ -71,7 +82,7 @@ class PlaceTests(unittest.TestCase):
         plan = self.plan()
         self.assertTrue(all(r['state'] == 'ABSENT' for r in plan['files']))
         receipt = p.execute(self.run, self.target, self.map, plan['placement_digest'],
-                            self.base / 'receipt.json')
+                            self.receipt('receipt.json'))
         self.assertEqual(receipt['status'], 'PLACED')
         self.assertEqual((self.target / 'docs/a.md').read_bytes(), self.doc)
         self.assertEqual((self.target / 'docs/b.bin').read_bytes(), self.bin)
@@ -85,7 +96,7 @@ class PlaceTests(unittest.TestCase):
         state = {r['target_path']: r['state'] for r in plan['files']}
         self.assertEqual(state['docs/a.md'], 'ALREADY_PRESENT')
         receipt = p.execute(self.run, self.target, self.map, plan['placement_digest'],
-                            self.base / 'receipt.json')
+                            self.receipt('receipt.json'))
         self.assertEqual(receipt['status'], 'PLACED')
 
     def test_conflict_no_overwrite(self):
@@ -93,13 +104,13 @@ class PlaceTests(unittest.TestCase):
         (self.target / 'docs/a.md').write_bytes(b'different')
         with self.assertRaises(p.Reject) as ctx:
             p.execute(self.run, self.target, self.map, self.plan()['placement_digest'],
-                      self.base / 'receipt.json')
+                      self.receipt('receipt.json'))
         self.assertEqual(str(ctx.exception), 'CONFLICT')
         self.assertEqual((self.target / 'docs/a.md').read_bytes(), b'different')
 
     def test_wrong_digest(self):
         with self.assertRaises(p.Reject) as ctx:
-            p.execute(self.run, self.target, self.map, 'f' * 64, self.base / 'receipt.json')
+            p.execute(self.run, self.target, self.map, 'f' * 64, self.receipt('receipt.json'))
         self.assertEqual(str(ctx.exception), 'APPROVAL_MISMATCH')
 
     def test_dangerous_target_path(self):
@@ -182,7 +193,7 @@ class PlaceTests(unittest.TestCase):
         self.assertEqual(str(ctx.exception), 'MAP_INCOMPLETE')
 
     def test_receipt_exists_rejected(self):
-        receipt = self.base / 'receipt.json'
+        receipt = self.receipt('receipt.json')
         receipt.write_bytes(b'{}')
         with self.assertRaises(p.Reject) as ctx:
             p.execute(self.run, self.target, self.map, self.plan()['placement_digest'], receipt)
@@ -248,7 +259,7 @@ class PlaceTests(unittest.TestCase):
         plan = p.build_plan(run, self.target, self.map)
         self.assertTrue(all(r['state'] == 'ABSENT' for r in plan['files']))
         receipt = p.execute(run, self.target, self.map, plan['placement_digest'],
-                            self.base / 'v2receipt.json')
+                            self.receipt('v2receipt.json'))
         self.assertEqual(receipt['status'], 'PLACED')
         self.assertEqual((self.target / 'docs/a.md').read_bytes(), self.doc)
         self.assertEqual((self.target / 'docs/b.bin').read_bytes(), self.bin)
@@ -267,18 +278,25 @@ class PlaceTests(unittest.TestCase):
         (self.run / 'payload' / 'kb' / 'd' / 'b.bin').write_bytes(b'changed')
         with self.assertRaises(p.Reject) as ctx:
             p.execute(self.run, self.target, self.map, plan['placement_digest'],
-                      self.base / 'r.json')
+                      self.receipt('r.json'))
         self.assertEqual(str(ctx.exception), 'PAYLOAD_MISMATCH')
 
     def test_parent_changed_detected_no_receipt(self):
         from unittest.mock import patch
         plan = self.plan()
-        with patch.object(p, '_parent_identity', side_effect=[[('a',)], [('b',)]]):
+        real_identity = p._parent_identity
+        calls = []
+        def changed(directory):
+            if Path(directory) == self.target / 'docs':
+                calls.append(directory)
+                return [('a',)] if len(calls) == 1 else [('b',)]
+            return real_identity(directory)
+        with patch.object(p, '_parent_identity', side_effect=changed):
             with self.assertRaises(p.Reject) as ctx:
                 p.execute(self.run, self.target, self.map, plan['placement_digest'],
-                          self.base / 'r.json')
+                          self.receipt('r.json'))
         self.assertEqual(str(ctx.exception), 'PARENT_CHANGED')
-        self.assertFalse((self.base / 'r.json').exists())
+        self.assertFalse((self.receipt('r.json')).exists())
 
     def test_interruption_preserves_partial_no_receipt(self):
         from unittest.mock import patch
@@ -295,8 +313,8 @@ class PlaceTests(unittest.TestCase):
         with patch.object(p, 'create_new', side_effect=flaky):
             with self.assertRaises(OSError):
                 p.execute(self.run, self.target, self.map, plan['placement_digest'],
-                          self.base / 'r.json')
-        self.assertFalse((self.base / 'r.json').exists())
+                          self.receipt('r.json'))
+        self.assertFalse((self.receipt('r.json')).exists())
 
     def test_receipt_publish_error_no_success_receipt(self):
         from unittest.mock import patch
@@ -304,8 +322,8 @@ class PlaceTests(unittest.TestCase):
         with patch.object(p, '_write_receipt', side_effect=OSError('fs error')):
             with self.assertRaises(OSError):
                 p.execute(self.run, self.target, self.map, plan['placement_digest'],
-                          self.base / 'r.json')
-        self.assertFalse((self.base / 'r.json').exists())
+                          self.receipt('r.json'))
+        self.assertFalse((self.receipt('r.json')).exists())
 
     def test_payload_exact_set_enforced(self):
         (self.run / 'payload' / 'kb' / 'd' / 'extra.md').write_bytes(b'extra')
@@ -368,7 +386,7 @@ class PlaceTests(unittest.TestCase):
     def test_receipt_created_after_check_not_overwritten(self):
         from unittest.mock import patch
         plan = self.plan()
-        receipt = self.base / 'race-receipt.json'
+        receipt = self.receipt('race-receipt.json')
         existing = b'{"pre":"existing"}\n'
         real = p.build_plan
 
@@ -430,28 +448,169 @@ class PlaceTests(unittest.TestCase):
     def test_receipt_publish_unsupported_fails_closed(self):
         from unittest.mock import patch
         plan = self.plan()
-        target = self.base / 'unsupported-receipt.json'
-        with patch.object(p, '_link_no_replace', side_effect=OSError('hardlink unsupported')):
+        target = self.receipt('unsupported-receipt.json')
+        with patch.object(p, '_receipt_publisher', side_effect=p.Reject('RECEIPT_PUBLISH_UNSUPPORTED')):
             with self.assertRaises(p.Reject) as ctx:
                 p.execute(self.run, self.target, self.map, plan['placement_digest'], target)
         self.assertEqual(str(ctx.exception), 'RECEIPT_PUBLISH_UNSUPPORTED')
         self.assertFalse(target.exists())
+        self.assertFalse((self.target / 'docs/a.md').exists())
+        self.assertFalse((self.target / 'docs/b.bin').exists())
 
-    def test_receipt_link_eexist_branch_preserves_existing(self):
+    def test_receipt_atomic_eexist_branch_preserves_existing(self):
         from unittest.mock import patch
-        target = self.base / 'eexist-receipt.json'
+        target = self.receipt('eexist-receipt.json')
         value = {'protocol': 'PLACE_RECEIPT/1', 'status': 'PLACED'}
         existing = b'{"racer":"keep"}\n'
-
-        def racer(source, destination):
-            Path(destination).write_bytes(existing)
-            raise FileExistsError('exists')
-
-        with patch.object(p, '_link_no_replace', side_effect=racer):
-            with self.assertRaises(p.Reject) as ctx:
-                p._write_receipt(target, value)
+        real = p._receipt_publisher()
+        def racer(fd, directory, source, destination):
+            if destination == target.name:
+                (directory / destination).write_bytes(existing)
+            return real(fd, directory, source, destination)
+        with patch.object(p, '_receipt_publisher', return_value=racer):
+            with p._receipt_context(target, self.target) as context:
+                with self.assertRaises(p.Reject) as ctx:
+                    p._write_receipt(target, value, context)
         self.assertEqual(str(ctx.exception), 'RECEIPT_EXISTS')
         self.assertEqual(target.read_bytes(), existing)
+
+    @unittest.skipIf(os.name == 'nt', 'POSIX receipt capability restriction')
+    def test_movable_receipt_parent_rejected_before_payload(self):
+        from unittest.mock import patch
+        target = self.base / 'movable-receipt.json'
+        with patch.object(p, '_receipt_publisher') as publisher:
+            with self.assertRaisesRegex(p.Reject, 'RECEIPT_PARENT_MOVABLE'):
+                p.execute(self.run, self.target, self.map, self.plan()['placement_digest'], target)
+        publisher.assert_not_called()
+        self.assertFalse((self.target / 'docs/a.md').exists())
+        self.assertFalse(target.exists())
+
+    @unittest.skipIf(os.name == 'nt', 'POSIX ancestor relocation race')
+    def test_actual_receipt_ancestor_relocated_inside_target_rejected(self):
+        from unittest.mock import patch
+        outer = self.base / 'movable'; (outer / 'receipts').mkdir(parents=True)
+        target = outer / 'receipts/r.json'
+        moved = self.target / 'moved-ancestor'
+        real = p._posix_anchor
+        def racer(directory):
+            if Path(directory) == target.parent and outer.exists():
+                outer.rename(moved)  # Real relocation, not a symlink-only mock.
+            return real(directory)
+        plan = self.plan()
+        with patch.object(p, '_posix_anchor', side_effect=racer):
+            with self.assertRaisesRegex(p.Reject, 'RECEIPT_PARENT_MOVABLE'):
+                p.execute(self.run, self.target, self.map, plan['placement_digest'], target)
+        self.assertTrue(moved.exists())
+        self.assertFalse((moved / 'receipts/r.json').exists())
+        self.assertFalse((self.target / 'docs/a.md').exists())
+
+    @unittest.skipIf(os.name == 'nt', 'native POSIX syscall boundary proof')
+    def test_boundary_move_into_descendant_denied_with_separate_trust_checks(self):
+        from unittest.mock import patch
+        target = self.receipt('boundary.json')
+        anchor, _ = p._posix_anchor(target.parent)
+        self.assertEqual(anchor, target.parent)
+        # The trust guarantee comes from these preceding-chain checks; the
+        # following rename-into-descendant attempt may independently fail EINVAL.
+        for ancestor in anchor.parents:
+            self.assertNotEqual(ancestor.stat().st_uid, os.geteuid())
+            self.assertFalse(os.access(ancestor, os.W_OK))
+        real = p._receipt_publisher()
+        attempts = []
+        def racer(fd, directory, source, destination):
+            if destination == target.name:
+                try:
+                    directory.rename(self.target / 'moved-receipt-anchor')
+                except OSError as exc:
+                    attempts.append(exc.errno)
+                else:
+                    self.fail('anchor unexpectedly moved into its own descendant')
+            return real(fd, directory, source, destination)
+        with patch.object(p, '_receipt_publisher', return_value=racer):
+            receipt = p.execute(self.run, self.target, self.map,
+                                self.plan()['placement_digest'], target)
+        self.assertEqual(receipt['status'], 'PLACED')
+        self.assertEqual(len(attempts), 1)
+        self.assertIn(attempts[0], (errno.EACCES, errno.EPERM, errno.EINVAL))
+        self.assertFalse((self.target / 'moved-receipt-anchor').exists())
+        self.assertEqual(p.read_json(target), receipt)
+
+    def test_receipt_native_publish_error_preserves_temp_no_final(self):
+        from unittest.mock import patch
+        target = self.receipt('publish-error.json')
+        real = p._receipt_publisher()
+        temporary = []
+        def failing(fd, directory, source, destination):
+            if destination == target.name:
+                temporary.append(directory / source)
+                raise OSError(errno.EIO, 'synthetic publish failure')
+            return real(fd, directory, source, destination)
+        with patch.object(p, '_receipt_publisher', return_value=failing):
+            with self.assertRaisesRegex(p.Reject, 'RECEIPT_PUBLISH_FAILED'):
+                p.execute(self.run, self.target, self.map,
+                          self.plan()['placement_digest'], target)
+        self.assertFalse(target.exists())
+        self.assertEqual(len(temporary), 1)
+        self.assertEqual(p.read_json(temporary[0])['status'], 'PLACED')
+        self.assertEqual((self.run / 'VERIFIED.json').read_bytes(), self.verified_before)
+
+    def test_complete_receipt_stream_closed_before_native_publication(self):
+        from unittest.mock import patch
+        target = self.receipt('closed-before-publish.json')
+        real_fdopen = os.fdopen
+        real_publish = p._receipt_publisher()
+        writes = []
+        observed = []
+        def fdopen(fd, mode, *args, **kwargs):
+            stream = real_fdopen(fd, mode, *args, **kwargs)
+            if mode == 'wb':
+                writes.append(stream)
+            return stream
+        def publish(fd, directory, source, destination):
+            if destination == target.name:
+                self.assertTrue(writes[-1].closed)
+                receipt = p.read_json(directory / source)
+                self.assertEqual(receipt['status'], 'PLACED')
+                self.assertEqual(len(receipt['files']), 2)
+                observed.append(True)
+            return real_publish(fd, directory, source, destination)
+        with patch.object(os, 'fdopen', side_effect=fdopen), \
+                patch.object(p, '_receipt_publisher', return_value=publish):
+            p.execute(self.run, self.target, self.map, self.plan()['placement_digest'], target)
+        self.assertEqual(observed, [True])
+
+    @unittest.skipIf(os.name == 'nt', 'POSIX held parent permissions')
+    def test_actual_chmod_parent_rejected_before_receipt_write(self):
+        directory = self.base / 'chmod-parent'; directory.mkdir(mode=0o700)
+        target = directory / 'receipt.json'
+        with p._hold_dir(directory) as fd:
+            context = {'fd': fd, 'directory': directory, 'name': target.name,
+                       'identities': p._parent_identity(directory), 'target_root': self.target,
+                       'publish': p._receipt_publisher()}
+            directory.chmod(0o755)  # Real filesystem mode change, identity unchanged.
+            with self.assertRaisesRegex(p.Reject, 'RECEIPT_PARENT_NOT_PRIVATE'):
+                p._write_receipt(target, {'status': 'PLACED'}, context)
+        self.assertFalse(target.exists())
+        self.assertEqual(list(directory.iterdir()), [])
+
+    @unittest.skipIf(os.name == 'nt', 'POSIX directory-fsync injection')
+    def test_postpublish_fsync_uncertainty_preserves_complete_receipt(self):
+        from unittest.mock import patch
+        target = self.receipt('uncertain.json')
+        real_fsync = os.fsync
+        def fsync(fd):
+            if target.exists() and os.fstat(fd).st_ino == target.parent.stat().st_ino:
+                raise OSError(errno.EIO, 'synthetic directory fsync failure')
+            return real_fsync(fd)
+        with patch.object(os, 'fsync', side_effect=fsync):
+            with self.assertRaisesRegex(p.ReceiptPublicationUncertain,
+                                        'RECEIPT_VISIBLE_DURABILITY_UNCONFIRMED'):
+                p.execute(self.run, self.target, self.map, self.plan()['placement_digest'], target)
+        self.assertTrue(target.exists())
+        receipt = p.read_json(target)
+        self.assertEqual(receipt['status'], 'PLACED')
+        self.assertEqual((self.target / 'docs/a.md').read_bytes(), self.doc)
+        self.assertEqual((self.run / 'VERIFIED.json').read_bytes(), self.verified_before)
 
 
 if __name__ == '__main__':

@@ -42,6 +42,11 @@ class Reject(Exception):
     pass
 
 
+class ReceiptPublicationUncertain(Reject):
+    """Complete receipt is visible, but its directory durability is unconfirmed."""
+    pass
+
+
 def require(condition, code):
     if not condition:
         raise Reject(code)
@@ -212,7 +217,8 @@ def _hold_dir(directory):
     """Open a directory and every ancestor without following links; hold them open.
 
     Yields the directory's descriptor (POSIX) or None (Windows). Holding the
-    handles blocks concurrent replacement of the chain while the caller writes."""
+    Windows handles block replacement. POSIX descriptors pin object identity
+    only; they do not prevent a writable ancestor from being renamed."""
     directory = Path(directory).absolute()
     handles = []
     if os.name == 'nt':
@@ -491,58 +497,127 @@ def _assert_receipt_external(receipt_path, target_root):
     return receipt
 
 
-def _link_no_replace(source, target):
-    """Atomically give `target` the content of `source`; EEXIST if taken."""
-    os.link(str(source), str(target))
-
-
-def _fsync_dir(directory):
-    """Best-effort directory fsync so a freshly linked entry is crash-durable."""
+def _receipt_publisher():
+    """Get a native atomic no-replace primitive, without a final-write fallback."""
     if os.name == 'nt':
-        return
-    try:
-        fd = os.open(str(directory), os.O_RDONLY | getattr(os, 'O_DIRECTORY', 0))
-    except OSError:
-        return
-    try:
-        os.fsync(fd)
-    except OSError:
-        pass
-    finally:
-        os.close(fd)
+        require(hasattr(os, 'link'), 'RECEIPT_PUBLISH_UNSUPPORTED')
+        # Windows ancestor handles remain locked throughout execute/publication.
+        def publish(parent_fd, directory, source, target):
+            os.link(str(directory / source), str(directory / target))
+        return publish
+    import ctypes
+    libc = ctypes.CDLL(None, use_errno=True)
+    rename = getattr(libc, 'renameat2', None)
+    require(rename is not None, 'RECEIPT_PUBLISH_UNSUPPORTED')
+    rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int,
+                       ctypes.c_char_p, ctypes.c_uint]
+    rename.restype = ctypes.c_int
+    def publish(parent_fd, directory, source, target):
+        if rename(parent_fd, os.fsencode(source), parent_fd, os.fsencode(target), 1):
+            error = ctypes.get_errno()
+            raise OSError(error, os.strerror(error))
+    return publish
 
 
-def _write_receipt(path, value):
-    """Publish the receipt atomically without ever overwriting an existing file.
+def _receipt_new(context, name, data):
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, 'O_BINARY', 0)
+    if context['fd'] is None:
+        fd = os.open(str(context['directory'] / name), flags, 0o600)
+    else:
+        fd = os.open(name, flags | os.O_NOFOLLOW, 0o600, dir_fd=context['fd'])
+    # Close the complete temporary file BEFORE any publication operation.
+    with os.fdopen(fd, 'wb') as stream:
+        stream.write(data)
+        stream.flush()
+        os.fsync(stream.fileno())
 
-    A fully written and fsynced temporary file is hard-linked to the final path:
-    link() is atomic and fails with FileExistsError if the target already exists,
-    so the receipt never appears partially and is never replaced. If the
-    filesystem cannot hard-link, publication fails safely (no partial receipt)."""
-    path = Path(path)
-    _verify_chain(path.parent)
-    require(not path.exists() and not path.is_symlink(), 'RECEIPT_EXISTS')
-    if not path.parent.exists():
-        path.parent.mkdir(parents=True, exist_ok=True)
-        _verify_chain(path.parent)
-    data = canonical(value) + b'\n'
-    temp = path.with_name('.' + path.name + '.' + uuid.uuid4().hex)
+
+def _receipt_revalidate(context):
+    directory = context['directory']
+    _verify_chain(directory)
+    require(_parent_identity(directory) == context['identities'], 'RECEIPT_PARENT_CHANGED')
+    if context['fd'] is not None:
+        info = os.fstat(context['fd'])
+        require(info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) & 0o077 == 0,
+                'RECEIPT_PARENT_NOT_PRIVATE')
+        require((info.st_dev, info.st_ino, stat.S_IFMT(info.st_mode))
+                == _identity_of(directory), 'RECEIPT_PARENT_CHANGED')
+        # This capability excludes same-UID ancestor relocation at the syscall
+        # boundary. A descriptor plus a pre-publication check alone cannot do so.
+        anchor, _ = _posix_anchor(directory)
+        require(directory == anchor, 'RECEIPT_PARENT_MOVABLE')
+    _assert_receipt_external(directory / context['name'], context['target_root'])
+
+
+def _probe_receipt_publisher(context):
+    """Prove the primitive on this filesystem BEFORE any target payload writes."""
+    prefix = '.place-publish-probe-' + uuid.uuid4().hex
+    source, existing, fresh = prefix + '.tmp', prefix + '.existing', prefix + '.published'
+    _receipt_revalidate(context)
+    _receipt_new(context, source, b'complete publisher probe\n')
+    _receipt_new(context, existing, b'existing publisher probe\n')
     try:
-        with temp.open('xb') as stream:
-            stream.write(data)
-            stream.flush()
-            os.fsync(stream.fileno())
         try:
-            _link_no_replace(temp, path)
-        except FileExistsError as exc:
-            raise Reject('RECEIPT_EXISTS') from exc
+            context['publish'](context['fd'], context['directory'], source, existing)
+        except FileExistsError:
+            pass
+        else:
+            raise Reject('RECEIPT_PUBLISH_UNSUPPORTED')
+        _receipt_revalidate(context)
+        context['publish'](context['fd'], context['directory'], source, fresh)
+        require(read_bytes(context['directory'] / existing) == b'existing publisher probe\n'
+                and read_bytes(context['directory'] / fresh) == b'complete publisher probe\n',
+                'RECEIPT_PUBLISH_UNSUPPORTED')
+    except OSError as exc:
+        raise Reject('RECEIPT_PUBLISH_UNSUPPORTED') from exc
+    # Keep these tiny synthetic capability artifacts; never reuse their names.
+
+
+@contextmanager
+def _receipt_context(path, target_root):
+    directory = path.parent
+    _verify_chain(directory)
+    if os.name != 'nt':
+        anchor, _ = _posix_anchor(directory)
+        require(directory == anchor, 'RECEIPT_PARENT_MOVABLE')
+        info = directory.lstat()
+        require(info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) & 0o077 == 0,
+                'RECEIPT_PARENT_NOT_PRIVATE')
+    elif not directory.exists():
+        directory.mkdir(parents=True, exist_ok=True)
+        _verify_chain(directory)
+    identities = _parent_identity(directory)
+    with _hold_dir(directory) as fd:
+        context = {'fd': fd, 'directory': directory, 'name': path.name,
+                   'identities': identities, 'target_root': target_root,
+                   'publish': _receipt_publisher()}
+        _receipt_revalidate(context)
+        _probe_receipt_publisher(context)
+        yield context
+
+
+def _write_receipt(path, value, context):
+    """Fully write/close, then publish using the same verified parent handle."""
+    _receipt_revalidate(context)
+    require(not path.exists() and not path.is_symlink(), 'RECEIPT_EXISTS')
+    data = canonical(value) + b'\n'
+    temp = '.place-receipt-' + uuid.uuid4().hex + '.tmp'
+    _receipt_new(context, temp, data)
+    _receipt_revalidate(context)
+    try:
+        context['publish'](context['fd'], context['directory'], temp, path.name)
+    except FileExistsError as exc:
+        raise Reject('RECEIPT_EXISTS') from exc
+    except OSError as exc:
+        raise Reject('RECEIPT_PUBLISH_FAILED') from exc
+    if context['fd'] is not None:
+        try:
+            os.fsync(context['fd'])
         except OSError as exc:
-            raise Reject('RECEIPT_PUBLISH_UNSUPPORTED') from exc
-        _fsync_dir(path.parent)
-    finally:
-        if temp.exists():
-            os.unlink(temp)
+            raise ReceiptPublicationUncertain('RECEIPT_VISIBLE_DURABILITY_UNCONFIRMED') from exc
+    _receipt_revalidate(context)
     require(read_bytes(path) == data, 'RECEIPT_MISMATCH')
+    # Failed temporaries, and Windows hard-link sources, are retained as evidence.
 
 
 def execute(staging_run, target_root, map_path, approved, receipt_path):
@@ -552,31 +627,32 @@ def execute(staging_run, target_root, map_path, approved, receipt_path):
     require(not receipt.exists() and not receipt.is_symlink(), 'RECEIPT_EXISTS')
     require(plan['placement_digest'] == approved, 'APPROVAL_MISMATCH')
     require(all(row['state'] != 'CONFLICT' for row in plan['files']), 'CONFLICT')
-    payload_dir = FORMS[detect_form(staging_run)[0]]['payload_dir']
-    results = []
-    for row in plan['files']:
-        if row['state'] == 'ALREADY_PRESENT':
-            results.append(dict(row, result='ALREADY_PRESENT'))
-            continue
-        require(row['state'] == 'ABSENT', 'UNEXPECTED_STATE')
-        data = read_bytes(Path(staging_run) / payload_dir / row['staging_path'])
-        create_new(Path(target_root).absolute() / row['target_path'], data)
-        final = read_bytes(Path(target_root).absolute() / row['target_path'])
-        require(len(final) == row['size'] and sha(final) == row['sha256'], 'POST_WRITE_MISMATCH')
-        results.append(dict(row, result='CREATED'))
-    payload = {'protocol': RECEIPT_PROTOCOL, 'run_id': plan['run_id'],
-               'reception_protocol': plan['reception_protocol'],
-               'reception_correlation': plan['reception_correlation'],
-               'transfer_content_digest': plan['transfer_content_digest'],
-               'target_repository': plan['target_repository'],
-               'placement_digest': plan['placement_digest'],
-               'files': [{'source_path': row['staging_path'], 'target_path': row['target_path'],
-                          'size': row['size'], 'sha256': row['sha256'], 'state': row['result']}
-                         for row in results],
-               'status': 'PLACED',
-               'placed_at_utc': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')}
-    _write_receipt(receipt, payload)
-    return payload
+    with _receipt_context(receipt, Path(target_root).absolute()) as context:
+        payload_dir = FORMS[detect_form(staging_run)[0]]['payload_dir']
+        results = []
+        for row in plan['files']:
+            if row['state'] == 'ALREADY_PRESENT':
+                results.append(dict(row, result='ALREADY_PRESENT'))
+                continue
+            require(row['state'] == 'ABSENT', 'UNEXPECTED_STATE')
+            data = read_bytes(Path(staging_run) / payload_dir / row['staging_path'])
+            create_new(Path(target_root).absolute() / row['target_path'], data)
+            final = read_bytes(Path(target_root).absolute() / row['target_path'])
+            require(len(final) == row['size'] and sha(final) == row['sha256'], 'POST_WRITE_MISMATCH')
+            results.append(dict(row, result='CREATED'))
+        payload = {'protocol': RECEIPT_PROTOCOL, 'run_id': plan['run_id'],
+                   'reception_protocol': plan['reception_protocol'],
+                   'reception_correlation': plan['reception_correlation'],
+                   'transfer_content_digest': plan['transfer_content_digest'],
+                   'target_repository': plan['target_repository'],
+                   'placement_digest': plan['placement_digest'],
+                   'files': [{'source_path': row['staging_path'], 'target_path': row['target_path'],
+                              'size': row['size'], 'sha256': row['sha256'], 'state': row['result']}
+                             for row in results],
+                   'status': 'PLACED',
+                   'placed_at_utc': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')}
+        _write_receipt(receipt, payload, context)
+        return payload
 
 
 def main():

@@ -169,3 +169,43 @@ Korjattu tässä eristetyssä worktreessä (ei commit/push):
 - `Fear-of-Falling/docs/ARTIFACT_TRANSFER.md` (outbound sopimus)
 - `Fear-of-Falling/docs/WINDOWS_TERMUX_PULL.md` (pull sopimus)
 - `PLACEMENT_TOOL_IMPLEMENTATION_PACKAGE.md` (repository-external evidence)
+
+
+## Rajattu natiivi receipt-publication-korjaus
+
+- 2026-10-09T18:12:15.317736+00:00 Owner valtuutti local-only-korjauksen
+  exact base e0a57d7ad5b3b0bbd8c911da7a6ae170858fcc71 pohjalta; uusi eristetty
+  fix/placement-receipt-atomic-20261009. Scope vain placement-scripti, sen testit,
+  runbook ja tämä kortti. Ei siirtoskriptien muutoksia, commit/push/mergeä tai verkkoa.
+- Natiivin miniature-proben tulos PASS: os.link puuttuu; libc.renameat2 +
+  RENAME_NOREPLACE toimii. Kilpailija EEXIST/errno17 säilyi tavuntarkasti;
+  uusi kuitti julkaistui atomisesti. Ei link-fallbackia tai final-write-fallbackia.
+- POSIX receipt-parent hyväksytään vain suoraan vakaana yksityisenä ensimmäisenä
+  user-controlled ankkurina, jonka koko edeltävä system-ketju on käyttäjälle
+  non-owned/non-writable. Tavalliset siirrettävät HOME-alihakemistot hylätään
+  RECEIPT_PARENT_MOVABLE ennen payload-kirjoituksia. Tämä on turvallisuus-
+  capability-rajaus, ei väite että pidetty fd estäisi POSIX-renamen.
+- Sama pidetty directory-fd kattaa primitive-proben, payloadvaiheen, receipt-
+  tempin luonnin, täydellisen write/fsync/close:n ja native no-replace -julkaisun.
+  Private uid/mode/inode/chain ja ulkopuolisuus varmennetaan uudelleen.
+  Primitive unavailable tuottaa RECEIPT_PUBLISH_UNSUPPORTED ennen payloadia.
+- Kohdennetut regressiot: kilpailijan säilyminen, movable-parent ennen payloadia,
+  oikea ancestor-relocation kohderepoon -> ei kuittia/kohdekirjoituksia, complete
+  stream closed-beforepublish, native publisherror -> ei finalsuccessreceipt,
+  actual synthetic chmod -> private-reject, postpublish directory-fsync failure
+  -> RECEIPT_VISIBLE_DURABILITY_UNCONFIRMED ja näkyvä täydellinen kuitti säilyy.
+- Syscall-boundary rename-into-descendant -koe ei yksin todista ACL-rajaa
+  (EINVAL voi tulla containment-kiellosta). Vakaan ankkurin luottamus perustuu
+  erillisiin koko edeltävän ketjun uid/W_OK-tarkastuksiin; root/system luotetaan.
+- Koko natiivi suite43 PASS,0 FAIL,0 SKIP, ResourceWarning=error. Molemmat
+  vastaanottomuodot uusilla retained synthetic CLI-kohteilla: preview0,execute0,
+  PLACED ja tavut/hashit oikein. Molemmat vanhat siirtoVERIFIED-tavut ennallaan.
+- Aiemmat failure-logit, osittaiset placementit ja CLI-fixtuurit säilytetty;
+  uusia successful receipt/probe/temp-artefakteja ei poisteta tai uudelleenkäytetä.
+- Windows-haaran ancestor share-read/reparse + os.link -takeet säilyvät, mutta
+  nykykorjauksen native Windows-validointi NOT_RUN ja tarvitaan erikseen ennen
+  hyväksyttyä toimitusta. Windows-agentille valmistellaan tarkka validointihandoff.
+- Riippumaton nykykorjauksen read-only-review PASS, ei avoimia löydöksiä.
+  Task pysyy03-review/PARTIAL;
+  tämä ei ole ihmisen valmistumishyväksyntä. Ei install/realdata/Gitdeliveryä.
+- K18/QC NOT APPLICABLE — sijoituksen kuittijulkaisu ei muuta analyysiputkea.
