@@ -84,6 +84,25 @@ def _no_reparse(path):
     return info
 
 
+def _posix_anchor(directory):
+    """Resolve the first ancestor the current user controls, never the fs root.
+
+    Android forbids opening '/', /data and /data/data; a system-owned ancestor
+    above this anchor cannot be opened but also cannot be swapped by this user.
+    Walks user-controlled ancestors only, mirroring the reviewed
+    fof_kb_pull.py anchor resolution."""
+    require(os.getuid() == os.geteuid() and os.getgid() == os.getegid(),
+            'SET_ID_RUNTIME_DENIED')
+    directory = Path(directory).absolute()
+    for ancestor in [*reversed(directory.parents), directory]:
+        info = ancestor.lstat()
+        require(stat.S_ISDIR(info.st_mode), 'ROOT_SYMLINK_OR_NONDIR')
+        if info.st_uid == os.geteuid() or os.access(ancestor, os.W_OK):
+            require(ancestor != Path(ancestor.anchor), 'UNSAFE_ROOT')
+            return ancestor, info
+    raise Reject('UNSAFE_ROOT')
+
+
 @contextmanager
 def locked_read(path):
     """Read a regular file holding every ancestor against replacement."""
@@ -123,15 +142,21 @@ def locked_read(path):
             for handle in reversed(handles):
                 kernel.CloseHandle(handle)
     else:
-        fd = os.open(path.anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        parent = path.parent
+        anchor, anchor_info = _posix_anchor(parent)
+        fd = os.open(anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
         handles.append(fd)
         try:
-            for index, part in enumerate(path.parts[1:]):
-                flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
-                if index < len(path.parts[1:]) - 1:
-                    flags |= os.O_DIRECTORY
-                fd = os.open(part, flags, dir_fd=fd)
+            opened = os.fstat(fd)
+            require((opened.st_dev, opened.st_ino)
+                    == (anchor_info.st_dev, anchor_info.st_ino), 'ROOT_CHANGED')
+            for part in parent.relative_to(anchor).parts:
+                fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
+                             dir_fd=fd)
                 handles.append(fd)
+            fd = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK,
+                         dir_fd=fd)
+            handles.append(fd)
             require(stat.S_ISREG(os.fstat(fd).st_mode), 'NONREGULAR_FILE')
             with os.fdopen(os.dup(fd), 'rb') as stream:
                 yield stream
@@ -214,11 +239,16 @@ def _hold_dir(directory):
             for handle in reversed(handles):
                 kernel.CloseHandle(handle)
     else:
-        fd = os.open(directory.anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        anchor, anchor_info = _posix_anchor(directory)
+        fd = os.open(anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
         handles.append(fd)
         try:
-            for part in directory.parts[1:]:
-                fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
+            opened = os.fstat(fd)
+            require((opened.st_dev, opened.st_ino)
+                    == (anchor_info.st_dev, anchor_info.st_ino), 'ROOT_CHANGED')
+            for part in directory.relative_to(anchor).parts:
+                fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
+                             dir_fd=fd)
                 handles.append(fd)
             require(stat.S_ISDIR(os.fstat(fd).st_mode), 'NONREGULAR_ANCESTOR')
             yield fd
@@ -279,6 +309,52 @@ def detect_form(staging_run):
     raise Reject('UNSUPPORTED_RECEPTION_FORM')
 
 
+def _bind_reception(protocol, manifest, receipt, run_id):
+    """Recompute the reception digest with the protocol's own canonical rules.
+
+    Binds the recomputed digest to the manifest, the VERIFIED receipt and (for
+    v2) the run correlation. Rejects any tamper or correlation mismatch. Each
+    form is bound exactly as its sender computes it; no shared manifest shape is
+    invented."""
+    if protocol == 'FOF_KB_PULL/1':
+        content = {key: value for key, value in manifest.items()
+                   if key not in ('batch_id', 'content_digest')}
+        recomputed = sha(canonical(content))
+        require(manifest.get('content_digest') == recomputed, 'MANIFEST_DIGEST')
+        batch_id = manifest.get('batch_id')
+        require(isinstance(batch_id, str)
+                and re.fullmatch(r'[0-9a-f]{32}', batch_id) is not None
+                and batch_id == receipt.get('batch_id'), 'BATCH_ID_CORRELATION')
+        return recomputed, batch_id
+    rows = manifest.get('files')
+    require(isinstance(rows, list) and rows, 'MANIFEST_FILES')
+    for row in rows:
+        require(isinstance(row, dict)
+                and {'sha256', 'size_bytes', 'source_path', 'staging_path'} <= set(row),
+                'MANIFEST_ROW')
+    base = {'files': [{'sha256': row['sha256'], 'size_bytes': row['size_bytes'],
+                       'source_path': row['source_path'], 'staging_path': row['staging_path']}
+                      for row in sorted(rows, key=lambda item: (item['source_path'],
+                                                                item['staging_path']))],
+            'profile_id': manifest['profile_id'],
+            'profile_sha256': manifest['profile_sha256'],
+            'profile_version': manifest['profile_version'],
+            'protocol_version': manifest['protocol_version'],
+            'source_head': manifest['source_head'],
+            'source_repository_id': manifest['source_repository_id'],
+            'workstream': manifest['workstream']}
+    recomputed = sha(canonical(base))
+    require(manifest.get('content_digest') == recomputed, 'MANIFEST_DIGEST')
+    require(manifest.get('run_id') == run_id, 'RUN_ID')
+    correlation = sha(canonical({'content_digest': recomputed,
+                                 'protocol_version': manifest['protocol_version'],
+                                 'run_id': run_id}))
+    require(manifest.get('run_correlation_digest') == correlation
+            and receipt.get('run_correlation_digest') == correlation,
+            'RUN_CORRELATION')
+    return recomputed, correlation
+
+
 def exact_set(root, expected):
     root = Path(root)
     require(root.is_dir(), 'PAYLOAD_DIR_MISSING')
@@ -304,7 +380,9 @@ def verify_staging(staging_run):
     require(run_id == staging_run.name
             and re.fullmatch(r'[0-9]{8}T[0-9]{6}Z-[0-9a-f]{32}', run_id or '') is not None,
             'RUN_ID')
-    require(receipt.get('content_digest') == manifest.get('content_digest'), 'RECEIPT_DIGEST')
+    content_digest, correlation = _bind_reception(protocol, manifest, receipt, run_id)
+    require(receipt.get('content_digest') == manifest.get('content_digest')
+            == content_digest, 'RECEIPT_DIGEST')
     rows = manifest.get('files')
     require(isinstance(rows, list) and rows, 'MANIFEST_FILES')
     require(receipt.get('file_count') == len(rows), 'FILE_COUNT')
@@ -330,7 +408,7 @@ def verify_staging(staging_run):
         files.append({'staging_path': staging_path, 'size': len(data), 'sha256': sha(data)})
     expected = {row['staging_path'] for row in files}
     require(exact_set(staging_run / spec['payload_dir'], expected) == expected, 'PAYLOAD_EXACT_SET')
-    return run_id, manifest['content_digest'], files
+    return run_id, content_digest, files, protocol, correlation
 
 
 def load_map(path, files):
@@ -359,8 +437,9 @@ def load_map(path, files):
     return mapping
 
 
-def placement_digest(run_id, content_digest, repo, mapping, files):
+def placement_digest(run_id, content_digest, protocol, correlation, repo, mapping, files):
     content = {'protocol': PROTOCOL, 'run_id': run_id,
+               'reception_protocol': protocol, 'reception_correlation': correlation,
                'transfer_content_digest': content_digest, 'target_repository': repo,
                'map': {row['staging_path']: {'target_path': mapping[row['staging_path']],
                         'size': row['size'], 'sha256': row['sha256']} for row in files}}
@@ -386,7 +465,7 @@ def target_state(target_root, target_rel, expected_size, expected_sha):
 
 
 def build_plan(staging_run, target_root, map_path):
-    run_id, content_digest, files = verify_staging(staging_run)
+    run_id, content_digest, files, protocol, correlation = verify_staging(staging_run)
     repo = git_identity(target_root)
     mapping = load_map(map_path, files)
     rows = []
@@ -395,26 +474,82 @@ def build_plan(staging_run, target_root, map_path):
         state = target_state(target_root, target_rel, row['size'], row['sha256'])
         rows.append({'staging_path': row['staging_path'], 'target_path': target_rel,
                      'size': row['size'], 'sha256': row['sha256'], 'state': state})
-    digest = placement_digest(run_id, content_digest, repo, mapping, files)
-    return {'run_id': run_id, 'transfer_content_digest': content_digest,
+    digest = placement_digest(run_id, content_digest, protocol, correlation,
+                              repo, mapping, files)
+    return {'run_id': run_id, 'reception_protocol': protocol,
+            'reception_correlation': correlation,
+            'transfer_content_digest': content_digest,
             'target_repository': repo, 'placement_digest': digest, 'files': rows}
 
 
+def _assert_receipt_external(receipt_path, target_root):
+    """Reject a receipt inside the target repository or reached through a link."""
+    receipt = Path(os.path.realpath(receipt_path))
+    root = Path(os.path.realpath(target_root))
+    _verify_chain(Path(receipt_path).absolute().parent)
+    require(receipt != root and root not in receipt.parents, 'RECEIPT_INSIDE_TARGET')
+    return receipt
+
+
+def _link_no_replace(source, target):
+    """Atomically give `target` the content of `source`; EEXIST if taken."""
+    os.link(str(source), str(target))
+
+
+def _fsync_dir(directory):
+    """Best-effort directory fsync so a freshly linked entry is crash-durable."""
+    if os.name == 'nt':
+        return
+    try:
+        fd = os.open(str(directory), os.O_RDONLY | getattr(os, 'O_DIRECTORY', 0))
+    except OSError:
+        return
+    try:
+        os.fsync(fd)
+    except OSError:
+        pass
+    finally:
+        os.close(fd)
+
+
 def _write_receipt(path, value):
+    """Publish the receipt atomically without ever overwriting an existing file.
+
+    A fully written and fsynced temporary file is hard-linked to the final path:
+    link() is atomic and fails with FileExistsError if the target already exists,
+    so the receipt never appears partially and is never replaced. If the
+    filesystem cannot hard-link, publication fails safely (no partial receipt)."""
     path = Path(path)
+    _verify_chain(path.parent)
     require(not path.exists() and not path.is_symlink(), 'RECEIPT_EXISTS')
-    path.parent.mkdir(parents=True, exist_ok=True)
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        _verify_chain(path.parent)
+    data = canonical(value) + b'\n'
     temp = path.with_name('.' + path.name + '.' + uuid.uuid4().hex)
-    with temp.open('xb') as stream:
-        stream.write(canonical(value) + b'\n')
-        stream.flush()
-        os.fsync(stream.fileno())
-    os.rename(temp, path)
+    try:
+        with temp.open('xb') as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        try:
+            _link_no_replace(temp, path)
+        except FileExistsError as exc:
+            raise Reject('RECEIPT_EXISTS') from exc
+        except OSError as exc:
+            raise Reject('RECEIPT_PUBLISH_UNSUPPORTED') from exc
+        _fsync_dir(path.parent)
+    finally:
+        if temp.exists():
+            os.unlink(temp)
+    require(read_bytes(path) == data, 'RECEIPT_MISMATCH')
 
 
 def execute(staging_run, target_root, map_path, approved, receipt_path):
-    require(not Path(receipt_path).exists() and not Path(receipt_path).is_symlink(), 'RECEIPT_EXISTS')
+    receipt = _assert_receipt_external(receipt_path, target_root)
+    require(not receipt.exists() and not receipt.is_symlink(), 'RECEIPT_EXISTS')
     plan = build_plan(staging_run, target_root, map_path)
+    require(not receipt.exists() and not receipt.is_symlink(), 'RECEIPT_EXISTS')
     require(plan['placement_digest'] == approved, 'APPROVAL_MISMATCH')
     require(all(row['state'] != 'CONFLICT' for row in plan['files']), 'CONFLICT')
     payload_dir = FORMS[detect_form(staging_run)[0]]['payload_dir']
@@ -429,18 +564,19 @@ def execute(staging_run, target_root, map_path, approved, receipt_path):
         final = read_bytes(Path(target_root).absolute() / row['target_path'])
         require(len(final) == row['size'] and sha(final) == row['sha256'], 'POST_WRITE_MISMATCH')
         results.append(dict(row, result='CREATED'))
-    placed = all(row['result'] in ('CREATED', 'ALREADY_PRESENT') for row in results)
-    receipt = {'protocol': RECEIPT_PROTOCOL, 'run_id': plan['run_id'],
+    payload = {'protocol': RECEIPT_PROTOCOL, 'run_id': plan['run_id'],
+               'reception_protocol': plan['reception_protocol'],
+               'reception_correlation': plan['reception_correlation'],
                'transfer_content_digest': plan['transfer_content_digest'],
                'target_repository': plan['target_repository'],
                'placement_digest': plan['placement_digest'],
                'files': [{'source_path': row['staging_path'], 'target_path': row['target_path'],
                           'size': row['size'], 'sha256': row['sha256'], 'state': row['result']}
                          for row in results],
-               'status': 'PLACED' if placed else 'PARTIAL',
+               'status': 'PLACED',
                'placed_at_utc': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')}
-    _write_receipt(receipt_path, receipt)
-    return receipt
+    _write_receipt(receipt, payload)
+    return payload
 
 
 def main():

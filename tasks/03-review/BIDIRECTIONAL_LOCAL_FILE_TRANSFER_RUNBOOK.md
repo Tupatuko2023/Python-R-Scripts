@@ -102,7 +102,7 @@ WINDOWS_TERMUX_VERIFIED_PULL (DONE); sen toteutusta ei avata uudelleen.
   Julkaisee `PLACE_RECEIPT/1`-kuittin repositoryjen ulkopuolelle; siirron
   `VERIFIED.json` pysyy muuttumattomana; ei automaattista retryä.
 - **Testit:** `Fear-of-Falling/tests/test_place_verified_bundle.py` —
-  **23/23 PASS (Windows)**, molemmat vastaanottomuodot: onnistuminen (v1+v2),
+  **33 PASS + 3 SKIP (POSIX-only, Windowsilla)**, molemmat vastaanottomuodot: onnistuminen (v1+v2),
   identtinen kohde, konflikti, väärä digest, muuttunut lähde, lähde muuttui
   previewn jälkeen, vaarallinen polku, hard-deny-kohde, linkki/junction, puuttuva
   kuitti, ei-tuettu muoto, duplikaatti map/manifest, kohdetörmäys, keskeneräinen
@@ -111,6 +111,55 @@ WINDOWS_TERMUX_VERIFIED_PULL (DONE); sen toteutusta ei avata uudelleen.
   ei kuittia), kuitin julkaisuvirhe (ei kuittia), v2-sidonta karttaan.
 - **Termux-validointi: NOT_RUN** (natiivi ajo vaatii erillisen Git-toimitusluvan;
   valmis rajattu toimitus valmistellaan).
+
+## Korjaukset Termux-katselmoinnin jälkeen (2026-10-09)
+
+Termux-agentti A ajoi natiivin validoinnin commitille `c5f0f56e…`. Tulos:
+siirtokanava OK (inbound 40 PASS), mutta **sijoitusvaihe ei läpäissyt**: preview
+päättyi `PLACE_REJECTED: LOCAL_FAILURE` (exit 1) ennen digestiä; hyväksyntä ja
+`execute` jäivät BLOCKED/NOT_RUN. Katselmointi löysi lisäksi staattisia puutteita.
+Korjattu tässä eristetyssä worktreessä (ei commit/push):
+
+1. **Android-ankkuri (P1, todellinen este).** Lukija ja kirjoitushakemiston kävely
+   avasivat `/-ankkurin` (`place_verified_bundle.py`, POSIX-haara) → Android
+   `EACCES` (errno 13). Korjattu: POSIX-haara resolvoi **ensimmäisen käyttäjän
+   hallitseman esi-isän** (sama katselmoitu ankkuriratkaisu kuin `fof_kb_pull.py`,
+   jota ei muutettu) eikä avaa `/`, `/data` tai `/data/data`. Linkki-, traversal-,
+   tyyppi- ja polunvaihtosuojaukset sekä Windows-haara säilyvät (`ROOT_CHANGED`-
+   uudelleenvarmennus avatulle ankkurille).
+2. **Vastaanoton hyväksyntäsidonta.** `content_digest` lasketaan nyt **uudelleen
+   manifestista** kunkin protokollan omilla kanonisointisäännöillä ja verrataan
+   manifestiin, `VERIFIED.json`iin ja hyväksyntään. FOF_KB_PULL/1: `batch_id`-
+   korrelaatio manifestin ja kuitin välillä (`BATCH_ID_CORRELATION`); v2: todelliset
+   ajokorrelaatiokentät (`content_digest` + `run_correlation_digest`,
+   `RUN_CORRELATION`). Ei keksittyä yhteistä manifestimuotoa. `placement_digest`
+   sitoo nyt myös `reception_protocol` + `reception_correlation`.
+3. **Sijoituskuitti.** `--receipt`-polun **kohderepositorion ulkopuolisuus**
+   tarkastetaan (`RECEIPT_INSIDE_TARGET`) ja esi-isien linkit hylätään. Kuitti
+   julkaistaan **atomisesti ilman korvaamista**: täysin kirjoitettu ja `fsync`-
+   varmennettu väliaikaistiedosto linkitetään lopulliseen polkuun (`os.link`,
+   atominen, `EEXIST` → `RECEIPT_EXISTS`); kilpailutilanteessa syntyvä kuitti
+   säilyy ennallaan. Jos kovalinkki ei ole tuettu, julkaisu keskeytyy
+   turvallisesti (`RECEIPT_PUBLISH_UNSUPPORTED`) eikä osittaista kuittia synny.
+   Pelkkä exists-tarkastus ennen `os.rename`ia poistettu. Siirron `VERIFIED.json`ia
+   ei muuteta.
+4. **Runbook.** §5 erottaa **siirto-previewn** ja **sijoitus-previewn**; todetaan
+   ettei siirto-preview näytä lopullista kohdetta (kohde tulee sijoituskartasta ja
+   sijoitus-previewstä). §6.3:n pseudokomennot korvattu **toteutetun Python-skriptin
+   todellisilla kutsuilla** (`preview`/`execute`).
+
+- **Testit:** `Fear-of-Falling/tests/test_place_verified_bundle.py` —
+  **33 PASS + 3 SKIP (POSIX-only, Windowsilla)**. Uudet kohdennetut testit:
+  manipuloitu manifesti → uudelleenlaskettu digest (`MANIFEST_DIGEST`); väärä
+  BatchId (`BATCH_ID_CORRELATION`); väärä ajokorrelaatio (`RUN_CORRELATION`);
+  kuitti kohderepositorion sisällä (`RECEIPT_INSIDE_TARGET`); tarkastuksen jälkeen
+  syntyvä kuitti säilyy ennallaan (`RECEIPT_EXISTS`); kuitti linkin kautta;
+  POSIX-ankkuri ei ole `/` ja lukija ei avaa juurta (POSIX-only, ajetaan Termuxilla).
+- **Gates:** `tools/run-gates.ps1 --mode pre-push --smoke` → exit 0.
+- **Termux-uudelleenvalidointi: NOT_RUN** — vaatii korjatun Git-toimituksen; A
+  varmentaa uuden exact commitin ja ajaa sijoitustestit + synteettisen CLI-polun.
+- **Ei** commit/push/mergeä, ei riippuvuusasennuksia, ei tuotantoaineistoa, ei
+  ACL-muutoksia eikä muutoksia nykyisiin siirtoskripteihin.
 
 ## Links
 

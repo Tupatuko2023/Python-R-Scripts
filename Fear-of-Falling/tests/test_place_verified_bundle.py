@@ -14,6 +14,7 @@ p = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(p)
 
 RUN_ID = '20261009T120000Z-' + 'a' * 32
+BATCH_ID = 'b' * 32
 
 
 def canon(obj):
@@ -37,11 +38,12 @@ class PlaceTests(unittest.TestCase):
             {'staging_path': 'kb/d/a.md', 'size': len(self.doc), 'sha256': p.sha(self.doc)},
             {'staging_path': 'kb/d/b.bin', 'size': len(self.bin), 'sha256': p.sha(self.bin)},
         ]
-        manifest = {'protocol': 'FOF_KB_PULL/1', 'content_digest': 'c' * 64, 'files': files}
+        content = {'protocol': 'FOF_KB_PULL/1', 'files': files}
+        manifest = dict(content, batch_id=BATCH_ID, content_digest=p.sha(canon(content)))
         (self.run / 'manifest.json').write_bytes(canon(manifest))
         receipt = {'protocol': 'FOF_KB_PULL/1', 'status': 'VERIFIED', 'run_id': RUN_ID,
-                   'content_digest': 'c' * 64, 'file_count': 2,
-                   'return_receipt_status': 'NOT_DELIVERED'}
+                   'batch_id': BATCH_ID, 'content_digest': manifest['content_digest'],
+                   'file_count': 2, 'return_receipt_status': 'NOT_DELIVERED'}
         (self.run / 'VERIFIED.json').write_bytes(canon(receipt))
         self.verified_before = (self.run / 'VERIFIED.json').read_bytes()
 
@@ -200,8 +202,11 @@ class PlaceTests(unittest.TestCase):
         shutil.copytree(self.run, dup)
         manifest = json.loads((dup / 'manifest.json').read_text())
         manifest['files'].append(dict(manifest['files'][0]))
+        content = {k: v for k, v in manifest.items() if k not in ('batch_id', 'content_digest')}
+        manifest['content_digest'] = p.sha(canon(content))
         (dup / 'manifest.json').write_bytes(canon(manifest))
         receipt = json.loads((dup / 'VERIFIED.json').read_text())
+        receipt['content_digest'] = manifest['content_digest']
         receipt['file_count'] = 3
         (dup / 'VERIFIED.json').write_bytes(canon(receipt))
         with self.assertRaises(p.Reject) as ctx:
@@ -219,14 +224,21 @@ class PlaceTests(unittest.TestCase):
              'source_path': 'x/a.md', 'staging_path': 'kb/d/a.md'},
             {'sha256': p.sha(self.bin), 'size_bytes': len(self.bin),
              'source_path': 'x/b.bin', 'staging_path': 'kb/d/b.bin'}]
-        manifest = {'content_digest': 'd' * 64, 'files': files, 'profile_id': 'a4-general-fi',
-                    'profile_sha256': 'e' * 64, 'profile_version': '1.0.0',
-                    'protocol_version': 'FOF_ARTIFACT_HANDOFF/2', 'run_correlation_digest': 'f' * 64,
-                    'run_id': RUN_ID, 'source_head': 'a' * 40,
-                    'source_repository_id': 'Python-R-Scripts', 'workstream': 'A4'}
+        base = {'files': [{'sha256': r['sha256'], 'size_bytes': r['size_bytes'],
+                           'source_path': r['source_path'], 'staging_path': r['staging_path']}
+                          for r in sorted(files, key=lambda i: (i['source_path'], i['staging_path']))],
+                'profile_id': 'a4-general-fi', 'profile_sha256': 'e' * 64,
+                'profile_version': '1.0.0', 'protocol_version': 'FOF_ARTIFACT_HANDOFF/2',
+                'source_head': 'a' * 40, 'source_repository_id': 'Python-R-Scripts',
+                'workstream': 'A4'}
+        content_digest = p.sha(canon(base))
+        correlation = p.sha(canon({'content_digest': content_digest,
+                                   'protocol_version': 'FOF_ARTIFACT_HANDOFF/2', 'run_id': RUN_ID}))
+        manifest = dict(base, content_digest=content_digest,
+                        run_correlation_digest=correlation, run_id=RUN_ID)
         (run / 'manifest.json').write_bytes(canon(manifest))
-        receipt = {'content_digest': 'd' * 64, 'file_count': 2,
-                   'protocol_version': 'FOF_ARTIFACT_HANDOFF/2', 'run_correlation_digest': 'f' * 64,
+        receipt = {'content_digest': content_digest, 'file_count': 2,
+                   'protocol_version': 'FOF_ARTIFACT_HANDOFF/2', 'run_correlation_digest': correlation,
                    'run_id': RUN_ID, 'status': 'VERIFIED', 'verified_at': '2026-10-09T00:00:00Z'}
         (run / 'VERIFIED.json').write_bytes(canon(receipt))
         return run
@@ -300,6 +312,146 @@ class PlaceTests(unittest.TestCase):
         with self.assertRaises(p.Reject) as ctx:
             p.verify_staging(self.run)
         self.assertEqual(str(ctx.exception), 'PAYLOAD_EXACT_SET')
+
+    def test_manifest_digest_recomputed_rejects_tamper(self):
+        m = json.loads((self.run / 'manifest.json').read_text())
+        m['files'][0]['sha256'] = '0' * 64
+        (self.run / 'manifest.json').write_bytes(canon(m))
+        with self.assertRaises(p.Reject) as ctx:
+            p.verify_staging(self.run)
+        self.assertEqual(str(ctx.exception), 'MANIFEST_DIGEST')
+
+    def test_wrong_batch_id_rejected(self):
+        r = json.loads((self.run / 'VERIFIED.json').read_text())
+        r['batch_id'] = 'a' * 32
+        (self.run / 'VERIFIED.json').write_bytes(canon(r))
+        with self.assertRaises(p.Reject) as ctx:
+            p.verify_staging(self.run)
+        self.assertEqual(str(ctx.exception), 'BATCH_ID_CORRELATION')
+
+    def test_v2_wrong_run_correlation_rejected(self):
+        run = self._v2_run()
+        r = json.loads((run / 'VERIFIED.json').read_text())
+        r['run_correlation_digest'] = '0' * 64
+        (run / 'VERIFIED.json').write_bytes(canon(r))
+        with self.assertRaises(p.Reject) as ctx:
+            p.verify_staging(run)
+        self.assertEqual(str(ctx.exception), 'RUN_CORRELATION')
+
+    def test_v2_manifest_run_correlation_tamper_rejected(self):
+        run = self._v2_run()
+        m = json.loads((run / 'manifest.json').read_text())
+        m['run_correlation_digest'] = '1' * 64
+        (run / 'manifest.json').write_bytes(canon(m))
+        with self.assertRaises(p.Reject) as ctx:
+            p.verify_staging(run)
+        self.assertEqual(str(ctx.exception), 'RUN_CORRELATION')
+
+    def test_v2_manifest_content_digest_tamper_rejected(self):
+        run = self._v2_run()
+        m = json.loads((run / 'manifest.json').read_text())
+        m['source_head'] = 'b' * 40
+        (run / 'manifest.json').write_bytes(canon(m))
+        with self.assertRaises(p.Reject) as ctx:
+            p.verify_staging(run)
+        self.assertEqual(str(ctx.exception), 'MANIFEST_DIGEST')
+
+    def test_receipt_inside_target_rejected(self):
+        (self.target / 'docs').mkdir()
+        inside = self.target / 'docs' / 'receipt.json'
+        with self.assertRaises(p.Reject) as ctx:
+            p.execute(self.run, self.target, self.map, self.plan()['placement_digest'], inside)
+        self.assertEqual(str(ctx.exception), 'RECEIPT_INSIDE_TARGET')
+        self.assertFalse(inside.exists())
+        self.assertFalse((self.target / 'docs/a.md').exists())
+
+    def test_receipt_created_after_check_not_overwritten(self):
+        from unittest.mock import patch
+        plan = self.plan()
+        receipt = self.base / 'race-receipt.json'
+        existing = b'{"pre":"existing"}\n'
+        real = p.build_plan
+
+        def racer(*args, **kwargs):
+            receipt.write_bytes(existing)
+            return real(*args, **kwargs)
+
+        with patch.object(p, 'build_plan', side_effect=racer):
+            with self.assertRaises(p.Reject) as ctx:
+                p.execute(self.run, self.target, self.map, plan['placement_digest'], receipt)
+        self.assertEqual(str(ctx.exception), 'RECEIPT_EXISTS')
+        self.assertEqual(receipt.read_bytes(), existing)
+        self.assertFalse((self.target / 'docs/a.md').exists())
+
+    def test_receipt_through_link_rejected(self):
+        link = self.base / 'linkrecv'
+        try:
+            if os.name == 'nt':
+                result = subprocess.run(['cmd', '/c', 'mklink', '/J', str(link), str(self.target)],
+                                        capture_output=True)
+                if result.returncode != 0:
+                    self.skipTest('junction privilege unavailable')
+            else:
+                link.symlink_to(self.target, target_is_directory=True)
+        except OSError:
+            self.skipTest('link creation unsupported')
+        with self.assertRaises(p.Reject):
+            p.execute(self.run, self.target, self.map, self.plan()['placement_digest'],
+                      link / 'receipt.json')
+
+    @unittest.skipIf(os.name == 'nt', 'POSIX anchor resolution only')
+    def test_posix_anchor_is_user_owned_not_root(self):
+        anchor, info = p._posix_anchor(Path.home())
+        self.assertNotEqual(anchor, Path(anchor.anchor))
+        self.assertEqual(info.st_uid, os.geteuid())
+        fd = os.open(anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        os.close(fd)
+
+    @unittest.skipIf(os.name == 'nt', 'POSIX anchor resolution only')
+    def test_posix_anchor_never_returns_root(self):
+        for probe in (Path.home(), self.run, self.target):
+            anchor, _ = p._posix_anchor(probe)
+            self.assertNotEqual(anchor, Path(anchor.anchor), probe)
+
+    @unittest.skipIf(os.name == 'nt', 'POSIX open path only')
+    def test_reader_avoids_opening_filesystem_root(self):
+        from unittest.mock import patch
+        real_open = os.open
+
+        def guard(target, *args, **kwargs):
+            if str(target) in ('/', '/data', '/data/data'):
+                raise PermissionError(13, 'EACCES')
+            return real_open(target, *args, **kwargs)
+
+        with patch.object(os, 'open', side_effect=guard):
+            data = p.read_bytes(self.run / 'manifest.json')
+        self.assertEqual(data, (self.run / 'manifest.json').read_bytes())
+
+    def test_receipt_publish_unsupported_fails_closed(self):
+        from unittest.mock import patch
+        plan = self.plan()
+        target = self.base / 'unsupported-receipt.json'
+        with patch.object(p, '_link_no_replace', side_effect=OSError('hardlink unsupported')):
+            with self.assertRaises(p.Reject) as ctx:
+                p.execute(self.run, self.target, self.map, plan['placement_digest'], target)
+        self.assertEqual(str(ctx.exception), 'RECEIPT_PUBLISH_UNSUPPORTED')
+        self.assertFalse(target.exists())
+
+    def test_receipt_link_eexist_branch_preserves_existing(self):
+        from unittest.mock import patch
+        target = self.base / 'eexist-receipt.json'
+        value = {'protocol': 'PLACE_RECEIPT/1', 'status': 'PLACED'}
+        existing = b'{"racer":"keep"}\n'
+
+        def racer(source, destination):
+            Path(destination).write_bytes(existing)
+            raise FileExistsError('exists')
+
+        with patch.object(p, '_link_no_replace', side_effect=racer):
+            with self.assertRaises(p.Reject) as ctx:
+                p._write_receipt(target, value)
+        self.assertEqual(str(ctx.exception), 'RECEIPT_EXISTS')
+        self.assertEqual(target.read_bytes(), existing)
 
 
 if __name__ == '__main__':

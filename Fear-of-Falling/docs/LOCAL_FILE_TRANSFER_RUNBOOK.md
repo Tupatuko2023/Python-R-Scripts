@@ -93,14 +93,26 @@ python scripts/termux/fof_kb_pull.py pull --profile "$Profile" --batch-id "$Batc
 
 Synteettinen smoke (vain erikseen valtuutettuna): lisää `--synthetic-test` ja käytä `kb-pull-synthetic-1`-profiilia; tuotantoprofiili `kb-pull-documents-1` pysyy `enabled=false`.
 
-## 5. Previewn pakolliset kentät (molemmat suunnat)
+## 5. Previewt: siirto ja sijoitus erikseen
 
-Jokaiselle tiedostolle näytetään vähintään:
-- **lähde** (repo-juuri + lähde-polku),
-- **siirron suhteellinen polku** (staging_path),
-- **lopullinen kohde** (repo-juuri + suhteellinen kohdepolku, osio 6),
-- koko ja SHA-256, luokitus ja `approval_reference`.
+**Kaksi erillistä previewtä, ei sekoiteta:**
+
+1. **Siirto-preview** (osiot 3–4: `export_artifacts_to_windows.sh` /
+   `fof_kb_pull.py preview`) näyttää jokaiselle tiedostolle:
+   - **lähde** (repo-juuri + lähde-polku),
+   - **siirron suhteellinen polku** (`staging_path`),
+   - koko ja SHA-256, luokitus ja `approval_reference`.
+   Tämä preview **ei näytä lopullista kohdetta** — siirto päättyy stagingiin.
+
+2. **Sijoitus-preview** (osio 6: `place_verified_bundle.py preview`) näyttää
+   jokaiselle tiedostolle `staging_path -> target_path` ja tilan
+   (`ABSENT`/`ALREADY_PRESENT`/`CONFLICT`) **valitussa kohderepossa**. Vasta tämä
+   preview tuntee lopullisen kohteen, ja se riippuu erikseen annetusta
+   sijoituskartasta (`--map`).
+
 Valinta ei ole rekursiivinen; jokainen rivi on eksplisiittinen täsmävalinta.
+Lopullinen kohde **ei synny siirto-previewn tulosteesta** vaan sijoituskartasta ja
+sijoitus-previewstä.
 
 ## 6. Sijoitus stagingista lopulliseen repo-kansioon (erillinen valtuutettu vaihe)
 
@@ -113,7 +125,7 @@ Valinta ei ole rekursiivinen; jokainen rivi on eksplisiittinen täsmävalinta.
   tarkastetun `placement_digest`in. **Tuetut vastaanottomuodot: `FOF_KB_PULL/1`
   ja `FOF_ARTIFACT_HANDOFF/2`.** `LEGACY/1` on hylätty
   (`UNSUPPORTED_RECEPTION_FORM`) eikä kuulu varmennetun sijoituksen pikapolkuun.
-  Windows-validointi: 23/23 synteettistä testiä; **Termux-validointi: NOT_RUN.**
+  Windows-validointi: 33 PASS + 3 POSIX-only SKIP; **Termux-validointi: NOT_RUN.**
 
 ### 6.1 Sijoituksen syötteet (varmennetut vastaanottorakenteet)
 
@@ -133,25 +145,56 @@ Valinta ei ole rekursiivinen; jokainen rivi on eksplisiittinen täsmävalinta.
 hyväksyntä- ja varmennustakuita (digest-hyväksyntä + korreloitu `VERIFIED`)
 osoiteta. LEGACY/1:n allow-list-siirto ei tuota samaa kuittirakennetta.
 
-### 6.3 Ehdotettu CLI (portable, molemmat päät: Windows ja Termux)
+### 6.3 CLI (toteutettu; portable, molemmat päät: Windows ja Termux)
 
-```text
-place preview  --staging-run <dir> --target-root <git-repo> --map <map.json>
-place execute  --staging-run <dir> --target-root <git-repo> --map <map.json> \
-               --approved-placement-digest <digest> --receipt <repo-external-path.json>
+Työjuuri: `Fear-of-Falling`-juuri. Skripti: `scripts/termux/place_verified_bundle.py`.
+
+[TERMUX / WINDOWS:POWERSHELL]
+```bash
+# 1) sijoitus-preview: näyttää staging_path -> target_path ja tilan; ei kirjoita
+python3 scripts/termux/place_verified_bundle.py preview \
+  --staging-run "$StagingRoot/$RunId" \
+  --target-root "$TargetRoot" \
+  --map "$PlacementMap"
+
+# ihminen tarkastaa previewn ja hyväksyy tulosteen "placement_digest"-kentän
+# 2) sijoitus: vaatii juuri tarkastetun placement_digestin; kuitti repositorioiden ulkopuolelle
+python3 scripts/termux/place_verified_bundle.py execute \
+  --staging-run "$StagingRoot/$RunId" \
+  --target-root "$TargetRoot" \
+  --map "$PlacementMap" \
+  --approved-placement-digest "$APPROVED_PLACEMENT_DIGEST" \
+  --receipt "$PlacementReceipt"
 ```
-- `--map` on täsmävalintakartta: jokainen `<staging_path> -> <target-relative-path>`.
-- `preview` ei kirjoita; se tulostaa jokaiselle tiedostolle lähde-, kohde- ja tilan.
-- `execute` edellyttää juuri tarkastetun `approved-placement-digest`in.
-- `--receipt` on pakollinen ja **repositoryjen ulkopuolinen**; jos kuittipolku on jo
-  olemassa, `RECEIPT_EXISTS` keskeyttää **ennen** kirjoituksia.
+- `preview` ei kirjoita; se tulostaa jokaiselle tiedostolle `staging_path`,
+  `target_path`, koon, SHA-256:n ja tilan sekä `placement_digest`in.
+- `execute` edellyttää juuri tarkastetun `--approved-placement-digest`in
+  (muuten `APPROVAL_MISMATCH`).
+- `--map` on täsmävalintakartta: jokainen `<staging_path> -> <target-relative-path>`
+  (kohde on **sijoituskartasta**, ei siirto-previewstä).
+- `--receipt` on pakollinen ja **kohderepositorion ulkopuolinen**; kuittipolun on
+  oltava repositorion ulkopuolella (muuten `RECEIPT_INSIDE_TARGET`) eikä sen
+  esi-isissä saa olla linkkejä (`LINK_REJECTED`/`REPARSE_REJECTED`).
+- Exit: `0` = tuloste; `1` = `PLACE_REJECTED: <CODE>` (tai `LOCAL_FAILURE`).
 
-### 6.4 Ehdotettu `placement_digest` (hyväksyntä sidotaan)
+### 6.4 `placement_digest` (toteutettu; hyväksyntä sidotaan)
 
-`digest = SHA-256(canonical_json({siirron run_id, siirron content_digest,
-kohderepositoryn identiteetti {origin_url, head}, täsmä-kartta (source->target),
-kohdetiedostojen odotetut koot/SHA-256}))`. Hyväksyntä kattaa siis sekä
-**varmennetut tavut** että **lähde–kohde-kartan** ja **kohderepositoryn identiteetin**.
+`digest = SHA-256(canonical_json({PLACE/1-protokolla, siirron run_id,
+vastaanottoprotokolla (`reception_protocol`) ja sen korrelaatio
+(`reception_correlation`: `batch_id` FOF_KB_PULL/1:lle / `run_correlation_digest`
+FOF_ARTIFACT_HANDOFF/2:lle), siirron content_digest, kohderepositoryn identiteetti
+{origin_url, head}, täsmä-kartta (source->target), kohdetiedostojen odotetut
+koot/SHA-256}))`. Hyväksyntä kattaa siis **varmennetut tavut**, **vastaanoton
+korrelaation**, **lähde–kohde-kartan** ja **kohderepositoryn identiteetin**.
+`content_digest` **lasketaan uudelleen manifestista** kunkin protokollan omilla
+kanonisointisäännöillä ja verrataan manifestiin, `VERIFIED.json`iin ja
+hyväksyntään (`MANIFEST_DIGEST`, `BATCH_ID_CORRELATION`, `RUN_CORRELATION`).
+Työkalu laskee digestin lähettäjän kanssa identtisellä ASCII-kanonisella
+JSON-muodolla. Jos jokin ei-polku-kenttä (`profile_id`, `workstream`,
+`source_repository_id`) sisältäisi ei-ASCII-merkkejä, työkalun kanonisointi voi
+poiketa Windows-vastaanottimen `ConvertTo-Json`-muodosta; poikkeama johtaa aina
+**fail-closed**-hylkäykseen (`MANIFEST_DIGEST`/`RUN_CORRELATION`), ei koskaan
+virheelliseen hyväksyntään.
 
 ### 6.5 Tiedostokohtaiset tilat ja TOCTOU-suojaus
 
@@ -166,6 +209,11 @@ kohdetiedostojen odotetut koot/SHA-256}))`. Hyväksyntä kattaa siis sekä
   uudelleen (descriptor-walk `dir_fd`+`O_NOFOLLOW` POSIXilla; ancestor-handlet
   ja reparse-tarkastus Windowsilla); avaa kohde `O_EXCL`illä; vertaa avatun
   kohteen `dev/ino` ja esi-isien identiteetti ennen ja jälkeen.
+- **Android-yhteensopiva ankkuri:** lukija ja kirjoitushakemiston kävely eivät
+  avaa juurta (`/`, `/data`, `/data/data`) vaan ensimmäisen käyttäjän
+  hallitseman esi-isän (sama katselmoitu ankkuriratkaisu kuin `fof_kb_pull.py`);
+  linkki-, traversal-, tyyppi- ja polunvaihtosuojaukset sekä Windows-haara
+  säilyvät.
 - Epävarma tila (esim. kohde muuttui kesken) → raportoidaan **rehellisesti**
   eikä päätellä onnistuneeksi.
 - Osittainen sijoitus (usean tiedoston ajo keskeytyy kesken, esim. I/O-virhe tai
@@ -173,37 +221,52 @@ kohdetiedostojen odotetut koot/SHA-256}))`. Hyväksyntä kattaa siis sekä
   tulos **ei** näytä kokonaan onnistuneelta. `CONFLICT` keskeyttää **ennen**
   kirjoituksia (ei osittaista). Ei rollbackia, poistoa eikä automaattista uusintaa.
 
-### 6.6 Kuittiskeema (`PLACE_RECEIPT/1`)
+### 6.6 Kuittiskeema (`PLACE_RECEIPT/1`) ja kuitin julkaisu
 
-Repositoryjen **ulkopuolinen** sijoitushuitti (JSON): `protocol`,
-`run_id`, `transfer_content_digest`, `target_repository` (`origin_url`,`head`),
-`placement_digest`, `files[]` (`source_path`, `target_path`, `size`, `sha256`,
-`state` ∈ {`CREATED`,`ALREADY_PRESENT`}), `status` (`PLACED`), `placed_at_utc`.
+Kohderepositorion **ulkopuolinen** sijoitushuitti (JSON): `protocol`,
+`run_id`, `reception_protocol`, `reception_correlation`, `transfer_content_digest`,
+`target_repository` (`origin_url`,`head`), `placement_digest`, `files[]`
+(`source_path`, `target_path`, `size`, `sha256`, `state` ∈
+{`CREATED`,`ALREADY_PRESENT`}), `status` (`PLACED`), `placed_at_utc`.
 Kuitti julkaistaan vain, kun kaikki kohteet on varmennettu. `CONFLICT`,
-`RECEIPT_EXISTS` tai `UNSUPPORTED_RECEPTION_FORM` keskeyttää **ennen** kirjoituksia
-eikä tuota kuittia; keskeytynyt ajo ei tuota onnistumiskuittia eikä automaattista
-uusintaa. **Siirron `VERIFIED.json`ia ei muuteta.** Ei automaattista importia;
+`RECEIPT_INSIDE_TARGET`, `RECEIPT_EXISTS` tai `UNSUPPORTED_RECEPTION_FORM`
+keskeyttää eikä tuota kuittia; keskeytynyt ajo ei tuota onnistumiskuittia eikä
+automaattista uusintaa. **Siirron `VERIFIED.json`ia ei muuteta.**
+Kuitti julkaistaan **atomisesti ilman korvaamista**: täysin kirjoitettu ja
+`fsync`-varmennettu väliaikaistiedosto **linkitetään** lopulliseen polkuun
+(`os.link`); linkkaus on atominen ja epäonnistuu `EEXIST`illä, jos kohde on jo
+olemassa, joten kuitti ei koskaan näy osittaisena eikä sitä koskaan korvata.
+Jos tiedostojärjestelmä ei tue kovalinkkiä, julkaisu **keskeytyy turvallisesti**
+(`RECEIPT_PUBLISH_UNSUPPORTED`) eikä osittaista kuittia synny. Pelkkä
+exists-tarkastus ennen `os.rename`-kutsua ei riitä. Ei automaattista importia;
 jokainen sijoitus on eksplisiittinen ihmisen valtuutus.
 
 ### 6.7 Koodi-/testipolut ja synteettiset testit
 
 - Koodi: `Fear-of-Falling/scripts/termux/place_verified_bundle.py` (toteutettu; portable, pelkkä stdlib, molemmilla päillä).
-- Testit: `Fear-of-Falling/tests/test_place_verified_bundle.py` — **23/23 PASS (Windows)**, molemmat vastaanottomuodot:
+- Testit: `Fear-of-Falling/tests/test_place_verified_bundle.py` — **33 PASS + 3 SKIP (POSIX-only, Windowsilla)**, molemmat vastaanottomuodot:
   onnistuminen (`CREATED`, FOF_KB_PULL/1 ja FOF_ARTIFACT_HANDOFF/2), identtinen
   kohde (`ALREADY_PRESENT`), konflikti (`CONFLICT`, ei overwritea), muuttunut
   lähde (`PAYLOAD_MISMATCH`), lähde muuttui previewn jälkeen, väärä digest
-  (`APPROVAL_MISMATCH`), vaarallinen polku, hard-deny-kohde, linkki/junction,
-  puuttuva kuitti, ei-tuettu muoto (LEGACY), duplikaatti map-lähde, duplikaatti
-  manifest-rivi, kohdetörmäys, keskeneräinen map, olemassa oleva kuitti
-  (`RECEIPT_EXISTS`), ylisuuri olemassa oleva kohde (`CONFLICT`), payloadin
-  exact-set, esi-isän vaihtuminen (`PARENT_CHANGED`, ei kuittia), keskeytys
-  (osittainen tila, ei kuittia), kuitin julkaisuvirhe (ei kuittia), v2-digestin
-  sidonta karttaan. **Siirron `VERIFIED`-kuitti pysyy muuttumattomana.**
+  (`APPROVAL_MISMATCH`), **manipuloitu manifesti → uudelleenlaskettu digest
+  (`MANIFEST_DIGEST`)**, **väärä BatchId (`BATCH_ID_CORRELATION`)**, **väärä
+  ajokorrelaatio (`RUN_CORRELATION`)**, vaarallinen polku, hard-deny-kohde,
+  linkki/junction, puuttuva kuitti, ei-tuettu muoto (LEGACY), duplikaatti
+  map-lähde, duplikaatti manifest-rivi, kohdetörmäys, keskeneräinen map,
+  olemassa oleva kuitti (`RECEIPT_EXISTS`), **kuitti kohderepositorion sisällä
+  (`RECEIPT_INSIDE_TARGET`)**, **tarkastuksen jälkeen syntyvä kuitti säilyy
+  ennallaan (`RECEIPT_EXISTS`)**, **kuitti linkin kautta (`LINK_REJECTED`/
+  `REPARSE_REJECTED`/`RECEIPT_INSIDE_TARGET`)**, ylisuuri olemassa oleva kohde
+  (`CONFLICT`), payloadin exact-set, esi-isän vaihtuminen (`PARENT_CHANGED`, ei
+  kuittia), keskeytys (osittainen tila, ei kuittia), kuitin julkaisuvirhe (ei
+  kuittia), v2-digestin sidonta karttaan, **POSIX-ankkuri (ei `/`) ja lukija joka
+  ei avaa juurta (POSIX-only; ajetaan Termuxilla)**. **Siirron `VERIFIED`-kuitti
+  pysyy muuttumattomana.**
 
 **Tila:** työkalu on **toteutettu** (`scripts/termux/place_verified_bundle.py`, molemmat
-vastaanottomuodot) ja Windows-synteettiset testit (23/23) läpäisevät;
-**Termux-validointi on NOT_RUN**. Oikean aineiston sijoitus ja Git-toimitus
-hyväksytään erikseen.
+vastaanottomuodot); Windows-synteettiset testit 33 PASS + 3 POSIX-only SKIP;
+**Termux-validointi on NOT_RUN** (POSIX-ankkurihaara ja natiivi ajo varmennetaan
+Termuxilla). Oikean aineiston sijoitus ja Git-toimitus hyväksytään erikseen.
 
 ## 7. Palautumisohje
 
@@ -240,6 +303,8 @@ Työjuuri: komennot ajetaan `Fear-of-Falling`-juuresta, ellei toisin mainita.
 
 - Tämä runbook on **katselmoitavissa**; se ei aktivoi tuotantoa eikä siirrä oikeaa aineistoa.
 - Sijoitus (osio 6) on **toteutettu** (`scripts/termux/place_verified_bundle.py`,
-  molemmat vastaanottomuodot); Windows-testit 23/23. **Termux-validointi: NOT_RUN.**
+  molemmat vastaanottomuodot); Windows-testit 33 PASS + 3 POSIX-only SKIP.
+  **Termux-validointi: NOT_RUN** (edellinen Android-ajo löysi `/`-ankkurin EACCESin;
+  korjattu käyttäjän hallitsemaan ankkuriin; POSIX-haara varmennetaan uudella ajolla).
 - Synteettinen validointi ja Termux-tarkistus: ks. tehtäväkortti
   `tasks/03-review/BIDIRECTIONAL_LOCAL_FILE_TRANSFER_RUNBOOK.md`.
