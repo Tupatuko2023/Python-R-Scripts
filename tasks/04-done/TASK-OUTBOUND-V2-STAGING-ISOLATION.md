@@ -101,4 +101,31 @@ ennallaan.
 
 ## Blockers
 
-- v2:n paikallinen NTFS-stagingjuuri puuttuu; ehdotus valmisteltu, ei luotu.
+- v2:n paikallinen NTFS-stagingjuuri: **RATKAISTU 2026-10-10** (luotu; ks. Sulkeminen).
+
+## Sulkeminen (2026-10-10)
+
+- **Owner-hyväksyntä (näyttö):** PR #198 **MERGED** repositoryyn Tupatuko2023/Python-R-Scripts,
+  merge-commit `91f4037ce8e0584dc13770441608ee5b3a3679d0`, merged 2026-10-10T17:23:45Z,
+  `https://github.com/Tupatuko2023/Python-R-Scripts/pull/198`. Hyväksytty head
+  `1423af3588b8b916f2e8fcb5fa6b8c6645be9b10`; merged main -sisältö vastaa hyväksyttyä headia
+  (8/8 blob täsmää). Draft poistettu ja yhdistetty repositoryn sallimalla menetelmällä
+  (squash; ei branch-protection-ohitusta). Lähdehaara säilyi.
+- **Tulos:** v2:n staging-isolointi + turvallinen diagnostiikka + receiverin polkukorjaus ovat
+  mergettyssä mainissa.
+- **Näyttö:** synteettinen Termux → Windows v2 SSH -siirto PASS
+  (`20261010T161103Z-80e6d6b64acd42a797dd6fb318bae634`): pysyvä `VERIFIED` (`status=VERIFIED`,
+  `file_count=2`), `content_digest` `2fe4f1f933e947f5c499099698df1f4f42b8cb455b51533b9fd940f123535159`,
+  `run_correlation_digest` `ffefb3ac93bf85322ddf2ababe038e0af5976962d3a3f8d3df8adfa82e0c4bd3`, payload
+  exact-set `[binary.bin, text.txt]`, koot ja SHA-256 täsmäävät. Windowsin riippumaton read-only
+  -vastaanottovarmennus PASS; A:n normaalikäytön ajokohtainen `--check` exit 0.
+- **Käyttöönottoratkaisu:** korjattu receiver valitaan **eksplisiittisesti ajokohtaisella
+  `FOF_V2_RECEIVER_SCRIPT`-arvolla**. Vanhaa/deployed-receiveriä **ei korvattu** eikä pysyviä
+  shell-/ympäristöasetuksia muutettu.
+- **Julkiset evidenssiviitteet:** `receive_artifact_bundle.ps1` (blob `74e5dbb746c8`),
+  `fof_v2_ssh_adapter.py` (`53b835051d93`), sender (`db99e8286793`), testit (`f93422ae326f`,
+  `14ab3b4e2709`), dokumentit (`16d294fa1f32`, `5e15ef5bb24b`). Tarkat paikalliset käyttöpolut ovat
+  Gitin ulkopuolisessa käyttöönottokuittauksessa (ei julkisessa repositoryssa).
+- **Avoin tehtävä (erillinen):** FAILED-vastauksen `file_count`/korrelaatioristiriita →
+  `tasks/00-backlog/TASK-V2-FAILED-RECEIPT-CORRELATION.md`.
+- **Tila:** DONE (Owner-merge-näytön perusteella).
