@@ -4,10 +4,10 @@ Tämä runbook on yhteinen käyttöohje **kahdelle eri siirtosuunnalle**. Molemm
 suunnissa **Termux avaa SSH-yhteyden Windowsiin**. Sopimukset ovat erillisiä;
 niitä ei sekoiteta.
 
-| Suunta | Sopimus | Auktoriteetti |
-|---|---|---|
-| Termux → Windows (outbound) | `FOF_ARTIFACT_HANDOFF/2` (v2) ja `LEGACY/1` | `docs/ARTIFACT_TRANSFER.md` |
-| Windows → Termux (pull) | `FOF_KB_PULL/1` | `docs/WINDOWS_TERMUX_PULL.md` |
+| Suunta                      | Sopimus                                     | Auktoriteetti                 |
+| --------------------------- | ------------------------------------------- | ----------------------------- |
+| Termux → Windows (outbound) | `FOF_ARTIFACT_HANDOFF/2` (v2) ja `LEGACY/1` | `docs/ARTIFACT_TRANSFER.md`   |
+| Windows → Termux (pull)     | `FOF_KB_PULL/1`                             | `docs/WINDOWS_TERMUX_PULL.md` |
 
 Sijoitus stagingista **valittuun lopulliseen repo-kansioon** on erillinen,
 erikseen valtuutettava vaihe (osio 6). Siirron `VERIFIED` ei yksin tarkoita
@@ -46,6 +46,7 @@ Runtime-konfiguraatio (Termux, ei Git-tiedostoissa): `FOF_V2_SSH_ALIAS`,
 `/scripts/ps7/receive_artifact_bundle.ps1`). **v2 ei käytä LEGACY/1:n `WINDOWS_*`-muuttujia.**
 
 [TERMUX] (FOF-juuresta)
+
 ```bash
 python3 scripts/termux/fof_v2_ssh_adapter.py --check          # preflight: SSH + PowerShell + receiver; ei payloadia
 bash scripts/termux/export_artifacts_to_windows.sh --profile config/artifact-transfer/a4-general-fi.json   # preview (ei SSH:tä)
@@ -55,11 +56,13 @@ bash scripts/termux/export_artifacts_to_windows.sh \
   --execute --approved-content-digest "$APPROVED_CONTENT_DIGEST" \
   --local-receiver "$(pwd -P)/scripts/termux/fof_v2_ssh_adapter.py"
 ```
+
 - Tulkinta: `SUCCESS/0` = korreloitu `VERIFIED`; `FAILED/1` = paikallinen/korreloitu hylkäys; `UNKNOWN_REMOTE_STATE/3` = käsin read-only-tarkastus.
 - Vastaanotto Windowsissa: `<receiver-repo>/artifacts/staging/fof-dissertation-local-handoff/incoming/<run_id>/` (`files/`, `manifest.json`, `VERIFIED.json`).
 - `VERIFIED` todistaa teknisen eheyden, **ei** julkaisu- tai sijoitushyväksyntää.
 
 [TERMUX] (LEGACY/1, säilyvä allow-list-käyttö)
+
 ```bash
 bash scripts/termux/export_artifacts_to_windows.sh --allowlist config/artifact-transfer.allowlist            # preview
 bash scripts/termux/export_artifacts_to_windows.sh --allowlist config/artifact-transfer.allowlist --execute   # SSH sallittu vain --executella
@@ -74,6 +77,7 @@ Runtime-konfiguraatio (Termux): `FOF_KB_SSH_ALIAS`, `FOF_KB_REMOTE_SCRIPT`
 (Windows-forward-slash-polku), `FOF_KB_REMOTE_BATCH_ROOT`.
 
 [WINDOWS:POWERSHELL] (valmistelu; ei verkkoa)
+
 ```powershell
 python scripts/termux/fof_kb_pull.py preview --source-root $SourceRoot --profile $Profile --batch-root $BatchRoot
 # tarkasta manifesti (täsmäpolut, koot, SHA-256, lähde-HEAD, content_digest) -> $BatchId, $Digest
@@ -81,12 +85,14 @@ python scripts/termux/fof_kb_pull.py approve --batch "$BatchRoot/$BatchId" --app
 ```
 
 [TERMUX] (preflight + nouto)
+
 ```bash
 ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectionAttempts=1 -o ConnectTimeout=10 -o ClearAllForwardings=yes -o PermitLocalCommand=no "$FOF_KB_SSH_ALIAS" 'python --version'
 RunId="$(date -u +%Y%m%dT%H%M%SZ)-$(python -c 'import uuid; print(uuid.uuid4().hex)')"
 python scripts/termux/fof_kb_pull.py pull --profile "$Profile" --batch-id "$BatchId" \
   --approved-content-digest "$Digest" --staging-root "$StagingRoot" --run-id "$RunId"
 ```
+
 - `StagingRoot` = uusi/olemassa oleva yksityinen 0700-hakemisto `$HOME`:n alla, repositoryjen ulkopuolella.
 - Tarkasta `$StagingRoot/$RunId/VERIFIED.json` ja payloadin hashit read-only; vertaa `run_id`/`batch_id`/`content_digest`/`file_count`.
 - Vastaanotto ei tuo mitään repositoryyn. `VERIFIED` on **paikallinen** varmennus; paluukuitti Windowsille on `NOT_DELIVERED`.
@@ -102,7 +108,7 @@ Synteettinen smoke (vain erikseen valtuutettuna): lisää `--synthetic-test` ja 
    - **lähde** (repo-juuri + lähde-polku),
    - **siirron suhteellinen polku** (`staging_path`),
    - koko ja SHA-256, luokitus ja `approval_reference`.
-   Tämä preview **ei näytä lopullista kohdetta** — siirto päättyy stagingiin.
+     Tämä preview **ei näytä lopullista kohdetta** — siirto päättyy stagingiin.
 
 2. **Sijoitus-preview** (osio 6: `place_verified_bundle.py preview`) näyttää
    jokaiselle tiedostolle `staging_path -> target_path` ja tilan
@@ -117,6 +123,7 @@ sijoitus-previewstä.
 ## 6. Sijoitus stagingista lopulliseen repo-kansioon (erillinen valtuutettu vaihe)
 
 **Kaksi eri asiaa, ei sekoiteta:**
+
 - **Käytettävissä nyt:** itse siirto (osiot 3–4) päättyy **stagingiin**; molemmat
   kanavat ovat staging-only eivätkä tuo tiedostoja repositoryyn automaattisesti.
 - **Sijoitustyökalu (`PLACE/1`) — toteutettu:** `scripts/termux/place_verified_bundle.py`
@@ -125,7 +132,10 @@ sijoitus-previewstä.
   tarkastetun `placement_digest`in. **Tuetut vastaanottomuodot: `FOF_KB_PULL/1`
   ja `FOF_ARTIFACT_HANDOFF/2`.** `LEGACY/1` on hylätty
   (`UNSUPPORTED_RECEPTION_FORM`) eikä kuulu varmennetun sijoituksen pikapolkuun.
-  Windows-validointi: 33 PASS + 3 POSIX-only SKIP; **Termux-validointi: NOT_RUN.**
+  Validointi alustoittain: **Windows** 44 ajettu (36 PASS, 8 SKIP, ei
+  FAIL/ERROR); **aiempi Termux-versio** 43 PASS; **synteettinen Linux**
+  44 ajettu (43 PASS, 1 Windows-kohtainen SKIP). Uuden toimituscommitin
+  Termux-regressio ja GitHub-CI: **PENDING.**
 
 ### 6.1 Sijoituksen syötteet (varmennetut vastaanottorakenteet)
 
@@ -150,6 +160,7 @@ osoiteta. LEGACY/1:n allow-list-siirto ei tuota samaa kuittirakennetta.
 Työjuuri: `Fear-of-Falling`-juuri. Skripti: `scripts/termux/place_verified_bundle.py`.
 
 [TERMUX / WINDOWS:POWERSHELL]
+
 ```bash
 # 1) sijoitus-preview: näyttää staging_path -> target_path ja tilan; ei kirjoita
 python3 scripts/termux/place_verified_bundle.py preview \
@@ -166,6 +177,7 @@ python3 scripts/termux/place_verified_bundle.py execute \
   --approved-placement-digest "$APPROVED_PLACEMENT_DIGEST" \
   --receipt "$PlacementReceipt"
 ```
+
 - `preview` ei kirjoita; se tulostaa jokaiselle tiedostolle `staging_path`,
   `target_path`, koon, SHA-256:n ja tilan sekä `placement_digest`in.
 - `execute` edellyttää juuri tarkastetun `--approved-placement-digest`in
@@ -183,7 +195,7 @@ python3 scripts/termux/place_verified_bundle.py execute \
 
 `digest = SHA-256(canonical_json({PLACE/1-protokolla, siirron run_id,
 vastaanottoprotokolla (`reception_protocol`) ja sen korrelaatio
-(`reception_correlation`: `batch_id` FOF_KB_PULL/1:lle / `run_correlation_digest`
+(`reception_correlation` = batch_id FOF_KB_PULL/1:lle tai run_correlation_digest
 FOF_ARTIFACT_HANDOFF/2:lle), siirron content_digest, kohderepositoryn identiteetti
 {origin_url, head}, täsmä-kartta (source->target), kohdetiedostojen odotetut
 koot/SHA-256}))`. Hyväksyntä kattaa siis **varmennetut tavut**, **vastaanoton
@@ -274,7 +286,7 @@ retryä, rollbackia, poistoa tai importia.
 ### 6.7 Koodi-/testipolut ja synteettiset testit
 
 - Koodi: `Fear-of-Falling/scripts/termux/place_verified_bundle.py` (toteutettu; portable, pelkkä stdlib, molemmilla päillä).
-- Testit: `Fear-of-Falling/tests/test_place_verified_bundle.py` — nykykorjauksen natiivi Termux **43 PASS, 0 FAIL, 0 SKIP**, molemmat vastaanottomuodot:
+- Testit: `Fear-of-Falling/tests/test_place_verified_bundle.py` — aiemman version natiivi Termux **43 PASS, 0 FAIL, 0 SKIP**, molemmat vastaanottomuodot:
   onnistuminen (`CREATED`, FOF_KB_PULL/1 ja FOF_ARTIFACT_HANDOFF/2), identtinen
   kohde (`ALREADY_PRESENT`), konflikti (`CONFLICT`, ei overwritea), muuttunut
   lähde (`PAYLOAD_MISMATCH`), lähde muuttui previewn jälkeen, väärä digest
@@ -293,24 +305,27 @@ retryä, rollbackia, poistoa tai importia.
   ei avaa juurta (POSIX-only; ajetaan Termuxilla)**. **Siirron `VERIFIED`-kuitti
   pysyy muuttumattomana.**
 
-**Tila:** natiivin Termuxin suite ja molempien vastaanottomuotojen synteettiset
-CLI preview/execute onnistuvat uusilla kohteilla vakaan ankkurin capability-
-rajauksessa. Aiemmat Windows-testit koskivat aiempaa versiota; tämän korjauksen
-**Windows-validointi: NOT_RUN**. Riippumaton katselmointi ja Windows-agentin
-nykyversion native-validointi tarvitaan ennen hyväksyttyä Git-toimitusta.
-Oikean aineiston sijoitusta ei ole valtuutettu.
+**Tila (eritelty alustoittain ja versioittain):**
+
+- **Windows (korjattu versio):** 44 ajettu, **36 PASS, 8 SKIP, ei FAIL/ERROR**.
+- **Termux (aiempi versio):** 43 PASS, 0 FAIL, 0 SKIP.
+- **Synteettinen Linux:** 44 ajettu, **43 PASS, 1 Windows-kohtainen SKIP**.
+- **Uuden toimituscommitin Termux-regressio ja GitHub-CI: PENDING.**
+
+Riippumaton katselmointi (SOUND) on tehty nykykorjaukselle. Oikean aineiston
+sijoitusta ei ole valtuutettu.
 
 ## 7. Palautumisohje
 
-| Tilanne | Tunniste | Toimenpide |
-|---|---|---|
-| Preflight-esto | SSH/host-key/runtime ei täsmää | Älä käynnistä siirtoa. Tarkista virta, uni, verkko, SSH-palvelu, tunnistautuminen ja host-key **muuttamatta** turva-asetuksia automaattisesti. |
-| Katkos ennen yhteyttä | Yhteyttä ei muodostu | Vastaanottoa ei tapahdu; lähteet eivät muutu. Yritä uudelleen uudella `run_id`:llä valtuutuksen jälkeen. |
-| Katkos kesken siirtoa | Osittainen ajo / ei `VERIFIED` | Säilytä ajo, `wire.tar`/staging ja `UNVERIFIED.json`. Ei automaattista retryä tai poistoa. Uusi yritys = uusi `run_id`. |
-| Puuttuva `VERIFIED` | Kuittia ei synny | Hylätty/keskeytynyt ajo. Tarkasta ajo read-only ennen ihmisen päätöstä. |
-| Epävarma kestävyys | `LOCAL_VERIFIED_DURABILITY_UNCONFIRMED` | Sisältö on paikallisesti varmennettu mutta julkaisun crash-durability epävarma. Näkyvää `VERIFIED.json`ia ei poisteta; best-effort `PUBLICATION_UNCERTAIN.json`. Ei retryä. |
-| Kohdetörmäys (sijoitus) | `CONFLICT` | Pysähdy. Eri sisältöä ei ylikirjoiteta. |
-| Osittainen sijoitus | osa kohteista luotu | Raportoi osittaisena; ei rollbackia, poistoa eikä automaattista uusintaa. |
+| Tilanne                 | Tunniste                                | Toimenpide                                                                                                                                                                  |
+| ----------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Preflight-esto          | SSH/host-key/runtime ei täsmää          | Älä käynnistä siirtoa. Tarkista virta, uni, verkko, SSH-palvelu, tunnistautuminen ja host-key **muuttamatta** turva-asetuksia automaattisesti.                              |
+| Katkos ennen yhteyttä   | Yhteyttä ei muodostu                    | Vastaanottoa ei tapahdu; lähteet eivät muutu. Yritä uudelleen uudella `run_id`:llä valtuutuksen jälkeen.                                                                    |
+| Katkos kesken siirtoa   | Osittainen ajo / ei `VERIFIED`          | Säilytä ajo, `wire.tar`/staging ja `UNVERIFIED.json`. Ei automaattista retryä tai poistoa. Uusi yritys = uusi `run_id`.                                                     |
+| Puuttuva `VERIFIED`     | Kuittia ei synny                        | Hylätty/keskeytynyt ajo. Tarkasta ajo read-only ennen ihmisen päätöstä.                                                                                                     |
+| Epävarma kestävyys      | `LOCAL_VERIFIED_DURABILITY_UNCONFIRMED` | Sisältö on paikallisesti varmennettu mutta julkaisun crash-durability epävarma. Näkyvää `VERIFIED.json`ia ei poisteta; best-effort `PUBLICATION_UNCERTAIN.json`. Ei retryä. |
+| Kohdetörmäys (sijoitus) | `CONFLICT`                              | Pysähdy. Eri sisältöä ei ylikirjoiteta.                                                                                                                                     |
+| Osittainen sijoitus     | osa kohteista luotu                     | Raportoi osittaisena; ei rollbackia, poistoa eikä automaattista uusintaa.                                                                                                   |
 
 Säilytä kaikki epäonnistuneet ajot ja evidenssi.
 
@@ -319,15 +334,15 @@ Säilytä kaikki epäonnistuneet ajot ja evidenssi.
 Portable-ohje käyttää nimettyjä paikkamerkkejä. **Paikalliset absoluuttiset polut
 ja runtime-arvot pidetään Gitin ulkopuolisessa konfiguraatiossa.**
 
-| Paikkamerkki | Merkitys |
-|---|---|
-| `$SourceRoot` | Varmennettu lähdecheckout (git-toplevel, origin-identiteetti täsmää) |
-| `$BatchRoot` | Yksityinen batch-juuri (repositoryjen ulkopuolella) |
-| `$Profile` | Paikallinen profiili (täsmävalinnat) |
-| `$StagingRoot` | Yksityinen 0700 staging `$HOME`:n alla (pull) |
-| `$BatchId`, `$Digest`, `$RunId` | Ajokohtaiset tunnisteet |
-| `FOF_V2_SSH_ALIAS`, `FOF_V2_RECEIVER_SCRIPT` | outbound v2 runtime |
-| `FOF_KB_SSH_ALIAS`, `FOF_KB_REMOTE_SCRIPT`, `FOF_KB_REMOTE_BATCH_ROOT` | pull runtime |
+| Paikkamerkki                                                           | Merkitys                                                             |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `$SourceRoot`                                                          | Varmennettu lähdecheckout (git-toplevel, origin-identiteetti täsmää) |
+| `$BatchRoot`                                                           | Yksityinen batch-juuri (repositoryjen ulkopuolella)                  |
+| `$Profile`                                                             | Paikallinen profiili (täsmävalinnat)                                 |
+| `$StagingRoot`                                                         | Yksityinen 0700 staging `$HOME`:n alla (pull)                        |
+| `$BatchId`, `$Digest`, `$RunId`                                        | Ajokohtaiset tunnisteet                                              |
+| `FOF_V2_SSH_ALIAS`, `FOF_V2_RECEIVER_SCRIPT`                           | outbound v2 runtime                                                  |
+| `FOF_KB_SSH_ALIAS`, `FOF_KB_REMOTE_SCRIPT`, `FOF_KB_REMOTE_BATCH_ROOT` | pull runtime                                                         |
 
 Työjuuri: komennot ajetaan `Fear-of-Falling`-juuresta, ellei toisin mainita.
 
@@ -335,8 +350,10 @@ Työjuuri: komennot ajetaan `Fear-of-Falling`-juuresta, ellei toisin mainita.
 
 - Tämä runbook on **katselmoitavissa**; se ei aktivoi tuotantoa eikä siirrä oikeaa aineistoa.
 - Sijoitus (osio 6) on **toteutettu** (`scripts/termux/place_verified_bundle.py`,
-  molemmat vastaanottomuodot); nykyinen natiivi Termux43 PASS, 0 FAIL, 0 SKIP.
-  Molemmat synteettiset CLI-muodot preview0/execute0.
-  **Windows-validointi: NOT_RUN** nykykorjaukselle; ei Git-toimitusta tai oikeaa aineistoa.
+  molemmat vastaanottomuodot). Validointi alustoittain: Windows 44 ajettu
+  (36 PASS, 8 SKIP, ei FAIL/ERROR); aiempi Termux-versio 43 PASS; synteettinen
+  Linux 44 ajettu (43 PASS, 1 Windows-kohtainen SKIP). Uuden toimituscommitin
+  Termux-regressio ja GitHub-CI: **PENDING**; ei Git-toimitusta tai oikeaa
+  aineistoa ennen näitä.
 - Synteettinen validointi ja Termux-tarkistus: ks. tehtäväkortti
   `tasks/03-review/BIDIRECTIONAL_LOCAL_FILE_TRANSFER_RUNBOOK.md`.

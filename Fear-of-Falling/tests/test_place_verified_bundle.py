@@ -612,6 +612,22 @@ class PlaceTests(unittest.TestCase):
         self.assertEqual((self.target / 'docs/a.md').read_bytes(), self.doc)
         self.assertEqual((self.run / 'VERIFIED.json').read_bytes(), self.verified_before)
 
+    @unittest.skipIf(os.name != 'nt', 'Windows handle share semantics')
+    def test_held_dir_blocks_relocation_and_deletion(self):
+        import tempfile
+        held = Path(tempfile.mkdtemp(dir=self.base))
+        source = held / 'x.bin'
+        source.write_bytes(b'x')
+        empty = Path(tempfile.mkdtemp(dir=self.base))
+        with p._hold_dir(held):
+            with self.assertRaises(OSError):
+                os.rename(held, held.with_name(held.name + '-moved'))
+            os.link(source, held / 'y.bin')
+            self.assertTrue((held / 'y.bin').exists())
+        with p._hold_dir(empty):
+            with self.assertRaises(OSError):
+                os.rmdir(empty)
+
 
 if __name__ == '__main__':
     unittest.main()

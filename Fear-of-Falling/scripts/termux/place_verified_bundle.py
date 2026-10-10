@@ -234,7 +234,9 @@ def _hold_dir(directory):
         kernel.GetFileAttributesW.restype = wintypes.DWORD
         try:
             for item in list(reversed(directory.parents)) + [directory]:
-                handle = create(str(item), 0x80000000, 1, None, 3, 0x02200000, None)
+                # FILE_SHARE_READ|WRITE, never DELETE: blocks ancestor rename/delete
+                # while permitting entry creation (hard-link publication) inside.
+                handle = create(str(item), 0x80000000, 0x00000003, None, 3, 0x02200000, None)
                 require(handle != wintypes.HANDLE(-1).value, 'SAFE_OPEN_FAILED')
                 handles.append(handle)
                 attrs = kernel.GetFileAttributesW(str(item))

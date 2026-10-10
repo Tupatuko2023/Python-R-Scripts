@@ -209,3 +209,95 @@ Korjattu tässä eristetyssä worktreessä (ei commit/push):
   Task pysyy03-review/PARTIAL;
   tämä ei ole ihmisen valmistumishyväksyntä. Ei install/realdata/Gitdeliveryä.
 - K18/QC NOT APPLICABLE — sijoituksen kuittijulkaisu ei muuta analyysiputkea.
+
+## Windows-korjaus commitin 30286b0 pohjalta (2026-10-09)
+
+Windows-validointi commitille `30286b094fc23d2c24ae397288dc5b5d5ba1694f`:
+**FAIL** — `Ran 43: 26 ok, 2 FAIL, 7 ERROR, 8 SKIP, exit 1`. Jokainen `execute`
+kaatui `RECEIPT_PUBLISH_UNSUPPORTED`; CI: `lint` (Prettier) FAIL ja `tests`
+FAIL (`RECEIPT_PARENT_NOT_PRIVATE`, Linux-runnerilla).
+
+1. **Windowsin kuittijulkaisu.** Juurisyy: `_hold_dir` piti receipt-hakemistoa
+   auki `dwShareMode = FILE_SHARE_READ (1)`, jolloin `CreateHardLinkW` samassa
+   hakemistossa epäonnistui `WinError 32`illlä. Natiivi mini-probe: `os.link`
+   OK ilman pidettyä kahvaa; share=1 → link FAIL/rename+rmdir BLOCKED;
+   **share=3 (READ|WRITE) → link OK, rename/rmdir BLOCKED**; share=5/7 → rename
+   sallittu. Korjaus: `_hold_dir` Windows-kahva share `1 → 3` (ei DELETE).
+   Suojaus (esi-isien rename/delete/replacement-esto) säilyy — varmennettu
+   natiiveilla kokeilla (share=3: rename/rmdir BLOCKED) ja testistöllä.
+   Täysi write/fsync/close ennen julkaisua ja no-replace (EEXIST → RECEIPT_EXISTS)
+   säilyvät; ei epäatomista fallbackia.
+2. **CI-fixture (RECEIPT_PARENT_NOT_PRIVATE) — este raportoitu.** Testin
+   `receipt()` sijoittaa synteettisen kuitin `p._posix_anchor(self.base)[0]`:iin.
+   CI:ssä tuo ankkuri on ylin käyttäjän omistama hakemisto (HOME), jonka moodi on
+   0755, ja tuotantosääntö vaatii `directory == anchor` JA moodin `0700`.
+   `_posix_anchor` palauttaa aina ylimmän käyttäjän hallitseman esi-isän, joten
+   minkä tahansa alihakemiston ankkuri on edelleen HOME; 0700-ankkuria ei voi
+   järjestää ilman käyttäjän hakemistojen chmodia (kielletty) tai tuotantotarkastuksen
+   löysentämistä (kielletty). Tarkka este — ei korjattu tässä.
+3. **Runbookin Prettier.** Korjattu repositoryn olemassa olevalla työkalulla
+   (paikallinen välimuisti-Prettier 3.8.1; CI haluaa ^3.9.8). Taulukot/tyhjät
+   rivit normalisoitu; yksi inline-code-välilyöntejä rikkova lause kirjoitettu
+   uudelleen. `prettier --check` PASS.
+
+- **Uudelleenvalidointi (Windows):** `Ran 43, 35 ok + 8 SKIP, 0 FAIL/ERROR,
+  exit 0`. Molemmat synteettiset CLI-polut: preview exit 0 → execute exit 0 →
+  `PLACED`, receipt kirjoitettu, payload paikallaan, alkuperäinen `VERIFIED`
+  muuttumaton. Gates `run-gates.ps1 --mode pre-push --smoke` exit 0.
+- **Ei** commit/push/mergeä; PR #197 draft. Termux-haara säilyy. Ei
+  siirtoskripti-/profiili-/CSV-/ACL-muutoksia. Avoin: CI-fixture (kohta 2) ja
+  Windows-haaran esi-isän-vaihto varmistetaan pidetyin kahvoin (share=3, ei DELETE).
+
+## Testinäyttö eriteltynä (alkuperäiset lokit)
+
+Kolme erillistä Windows-ajoa — lukuja **ei** yhdistetä:
+
+- **FAIL (43 testiä; share=1; ilman uutta Windows-testiä):** `Ran 43: 26 ok,
+  2 FAIL, 7 ERROR, 8 SKIP, exit 1`. Jokainen `execute` → `RECEIPT_PUBLISH_UNSUPPORTED`.
+- **PASS A (43 testiä; share=3; ilman uutta Windows-testiä):** `Ran 43,
+  35 ok + 8 SKIP, 0 FAIL/ERROR, exit 0` (Windows-uudelleenvalidointi).
+- **PASS B (44 testiä; share=3; uuden Windows-testin kanssa):** `Ran 44,
+  36 ok + 8 SKIP, 0 FAIL/ERROR, exit 0` (lopullinen Windows-validointi).
+
+43 testin ajo tehtiin ennen `test_held_dir_blocks_relocation_and_deletion`-testin
+lisäämistä; 44 testin ajo sen jälkeen. **Toteutuskoodi ei muuttunut näiden välillä** —
+vain uusi testi lisättiin (ok-luku 35 → 36, SKIP pysyy 8). Näitä kahta ajoa ei
+saa raportoida yhtenä lukuna.
+
+## CI-fixturen korjaus (2026-10-10) — Owner-valtuutettu rajattu CI-testijärjestely
+
+- 2026-10-10 Owner valtuutti rajatun CI-testijärjestelyn muutoksen saman
+  korjauspaketin viimeistelyyn. ALLOWED_PATHS: nykyiset neljä tiedostoa +
+  `.github/workflows/python-ci.yml`. **Ei** muutoksia runnerin nykyisen HOMEn
+  oikeuksiin, **ei** tuotannon luottamusvaatimusten löysennystä, **ei** skippiä.
+- Juurisyy säilyi: `_posix_anchor` valitsee ylimmän käyttäjän hallitseman
+  esi-isän; `_receipt_context`/`_receipt_revalidate` vaativat `directory == anchor`
+  JA moodin `0700`. CI:n `HOME=/home/runner` on 0755 → `RECEIPT_PARENT_NOT_PRIVATE`.
+  Pelkkä `HOME`-muuttujan vaihto ei siirrä ankkuria (ankkuri lasketaan
+  tiedostojärjestelmän omistus-/kirjoitusoikeuksista, ei ympäristömuuttujasta).
+- **Korjaus:** uusi yksityinen synteettinen HOME `/home/foftest` (root-owned,
+  ei-kirjoitettavan `/home`-esi-isän alla; runner omistaa sen; mode 0700).
+  Sijoitustestit ajetaan omassa vaiheessa `HOME=/home/foftest`; **muut testit
+  ajetaan ennallaan** (sijoitustestit `--ignore`-parametrilla pääajosta, jolloin
+  runnerin olemassa olevaa HOMEa ei muuteta).
+- Preflight varmistaa omistajan, moodin 0700 ja toteutuksen valitseman ankkurin
+  (`_posix_anchor(HOME) == HOME`). Molemmat vaiheet tuottavat oman JUnit-XML:n
+  (`junit.xml`, `junit-placement.xml`) ja niiden exit-koodit käsitellään;
+  sijoitusvaihe on `if: always()` eikä jätä testistöä ajamatta.
+- **Synteettinen Linux-validointi (Docker `fof-r-analysis`, Python 3.12.3,
+  `--network none`, repo read-only):**
+  - preflight-ankkuritarkistus `HOME=/home/foftest` →
+    `private POSIX anchor OK: /home/foftest`, exit 0;
+  - negatiivinen kontrolli 0755-kodilla → `RECEIPT_PARENT_NOT_PRIVATE`, FAILED;
+  - sama testi 0700-kodilla → OK;
+  - **koko sijoitussuite `HOME=/home/foftest`: `Ran 44 tests`, OK (skipped=1),
+    exit 0** (Windows-only-testi skippaa Linuxilla).
+  - huom: validointi ajettiin `unittest`-ajurilla (paikallisessa kuvassa ei ole
+    pytestia); CI käyttää `pytest`iä ja JUnit-XML:ää — testitapaukset ovat samat.
+- **Ei** commit/push/mergeä; ei asennuksia; ei tuotantoaineistoa; ei nykyisten
+  paikallisten hakemistojen oikeusmuutoksia; ei siivousta.
+- **Avoin / rajoitus:** exact commitin CI-varmennus jää toimitusta **seuraavaksi**
+  vaiheeksi (paikallinen Prettier 3.8.1 ei korvaa lukitun CI-version 3.9.9
+  formatter-tulosta; `markdownlint-cli2` 0.23.3 ei ole paikallisesti). Windowsin
+  läpäistyjä testejä ei toistettu (toteutuskoodi ei muuttunut). Termux-regressio
+  pyydetään A:lta muuttuneelle versiolle ennen squash-merge-päätöstä.

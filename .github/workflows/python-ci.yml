@@ -76,9 +76,13 @@ jobs:
         shell: bash -euo pipefail {0}
         run: |
           mkdir -p test-results
-          # Allow pytest to fail but still create/upload a JUnit report
+          # Allow pytest to fail but still create/upload a JUnit report.
+          # The POSIX placement suite is excluded here: it runs in its own step
+          # under a private synthetic HOME (below) so the default runner HOME is
+          # never changed for the other tests.
           set +e
           python -m pytest -q --maxfail=1 --disable-warnings \
+            --ignore=Fear-of-Falling/tests/test_place_verified_bundle.py \
             --junitxml=test-results/junit.xml
           rc=$?
           set -e
@@ -88,12 +92,40 @@ jobs:
           fi
           exit "$rc"
 
+      - name: Run POSIX placement tests under private synthetic HOME
+        # Always run so the placement suite is never silently skipped even when
+        # the main suite fails; both steps' exit codes and reports are kept.
+        if: always()
+        shell: bash -euo pipefail {0}
+        run: |
+          set -euxo pipefail
+          # /home is root-owned and not writable by the runner, so a child we own
+          # and chmod 0700 is the topmost user-controlled ancestor that
+          # _posix_anchor() selects. The runner's existing HOME is NOT modified.
+          sudo mkdir -p /home/foftest
+          sudo chown "$(id -u):$(id -g)" /home/foftest
+          chmod 0700 /home/foftest
+          test "$(stat -c '%u' /home/foftest)" = "$(id -u)"
+          test "$(stat -c '%a' /home/foftest)" = "700"
+          HOME=/home/foftest python -c "import importlib.util,os,stat; s=importlib.util.spec_from_file_location('place','Fear-of-Falling/scripts/termux/place_verified_bundle.py'); p=importlib.util.module_from_spec(s); s.loader.exec_module(p); a,i=p._posix_anchor(os.environ['HOME']); assert str(a)==os.environ['HOME'] and i.st_uid==os.geteuid() and (stat.S_IMODE(i.st_mode)&0o077)==0, (str(a), os.environ['HOME']); print('private POSIX anchor OK:', a)"
+          mkdir -p test-results
+          set +e
+          HOME=/home/foftest python -m pytest -q --disable-warnings \
+            Fear-of-Falling/tests/test_place_verified_bundle.py \
+            --junitxml=test-results/junit-placement.xml
+          rc=$?
+          set -e
+          if [ ! -s test-results/junit-placement.xml ]; then
+            printf '<testsuite name="empty" tests="0" failures="0" errors="0" skipped="0"></testsuite>\n' > test-results/junit-placement.xml
+          fi
+          exit "$rc"
+
       - name: Upload JUnit report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: junit-report
-          path: test-results/junit.xml
+          path: test-results/*.xml
           if-no-files-found: warn
 
       - name: Run inline Python
