@@ -27,6 +27,11 @@ rsynciä eikä erillistä tar-ohjelmaa.
    sisältävät ASCII-kirjaimia, numeroita, välilyöntejä ja `_.-`; ei UNC-,
    backslash-, traversal-, lainausmerkki-, shell- tai ympäristölaajennuksia.
    Segmentin reunavälilyönnit, loppupiste ja Windowsin laitenimet hylätään.
+   `FOF_V2_STAGING_DIR` on v2:n **oma** eksplisiittinen absoluuttinen
+   staging-juuri (sama rajattu polkusopimus). Se välitetään receiverille
+   `-StagingDir`-argumentilla; puuttuva tai virheellinen arvo pysähtyy ennen
+   payloadia, eikä sovitin käytä `WINDOWS_STAGING_DIR`-oletusta (se kuuluu
+   LEGACY/1:lle).
    SSH-tunnistautumisen tulee olla ei-interaktiivinen ja host key erikseen
    varmennettu etukäteen. Sovitin ei asenna avaimia tai hyväksy uusia host keyitä.
 2. **Tarkista yhteys ilman artefakteja.** Aja FOF-juuressa:
@@ -539,7 +544,7 @@ case-collisionit hylätään, ei yhdistetä kuten legacyssä.
 
 Polku ei saa olla tyhjä, absolute/UNC/drive-relative, sisältää tyhjiä,
 piste- tai vanhempiosia, kenoviivaa, kaksoispistettä, ohjausmerkkejä,
-wildcardeja (* ? [ ]), merkkejä < > " | tai whitespace-reunaisia osia.
+wildcardeja (\* ? [ ]), merkkejä < > " | tai whitespace-reunaisia osia.
 Pisteeseen loppuva osa ja Windowsin CON/PRN/AUX/NUL/COM0–9/LPT0–9-nimet
 (myös päätteelliset) hylätään. Source-polku enintään 1024 ASCII-tavua,
 yksittäinen osa enintään 255 tavua; staging-nimi enintään 100 tavua.
@@ -553,7 +558,7 @@ insensitiivisesti. V2 sisältää kaikki legacy-kiellot ja seuraavat täsmäluok
 - Osat: data, dataset, datasets, raw, raw_data, external_data, participant,
   participants, participant-level, provenance, .git, .ssh, .aws, .azure,
   secrets, credentials.
-- Nimet: .env, .env.*, .Renviron, .netrc, .npmrc; id_rsa/id_ed25519/id_ecdsa/
+- Nimet: .env, .env.\*, .Renviron, .netrc, .npmrc; id_rsa/id_ed25519/id_ecdsa/
   id_dsa-alkuiset nimet; secret- tai credential-tekstin sisältävät nimet.
 - Päätteet: .rdata, .rda, .rds, .sqlite, .sqlite3, .db, .sav, .dta, .xlsx,
   .xls, .pem, .key, .secret, .p12, .pfx, .kdbx sekä koodikanavan .r, .py,
@@ -721,13 +726,16 @@ valtuutetusta SSH-kutsusta pysyvään receiveriin ja säilyttää protokollakana
 Tämä käyttöohje ei nimeä tilapäistä smoke-sovitinta pysyväksi riippuvuudeksi.
 Toimitettu v2-sovitin ja runtime-asetukset kuvataan operaattorin pikapolussa.
 
-V2:n `FOF_V2_SSH_ALIAS` ja `FOF_V2_RECEIVER_SCRIPT` ovat erillinen
-luotettu runtime-binding. Receiver-polun on oltava absoluuttinen
+V2:n `FOF_V2_SSH_ALIAS`, `FOF_V2_RECEIVER_SCRIPT` ja `FOF_V2_STAGING_DIR`
+ovat erillinen luotettu runtime-binding. Receiver-polun on oltava absoluuttinen
 Windows-polku, jonka canonical-suffiksi on
 `/scripts/ps7/receive_artifact_bundle.ps1`; vanhaa
 `/scripts/receive_artifact_bundle.ps1`-suffiksia ei hyväksytä.
-Host-, käyttäjä- ja avaintiedot jäävät SSH-konfiguraatioon eivätkä
-kuulu profiiliin tai repositoryyn.
+`FOF_V2_STAGING_DIR` on v2:n oma absoluuttinen staging-juuri, joka välitetään
+receiverille eksplisiittisellä `-StagingDir`-argumentilla; **ei fallbackia**
+`WINDOWS_STAGING_DIR`-muuttujaan (LEGACY/1). Puuttuva tai virheellinen arvo
+hylätään ennen payloadia. Host-, käyttäjä- ja avaintiedot jäävät
+SSH-konfiguraatioon eivätkä kuulu profiiliin tai repositoryyn.
 
 Ilman `--local-receiver`-valintaa aktiivinenkin profiili pysähtyy edelleen
 `RECEIVER_NOT_AVAILABLE_FOR_PROTOCOL_V2`-tilaan ennen verkkoa. Legacy-

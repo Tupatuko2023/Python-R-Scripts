@@ -48,6 +48,7 @@ class AdapterTests(unittest.TestCase):
         self.env = {k: v for k, v in self.env.items() if not k.startswith('FOF_V2_')}
         self.env.update(FOF_V2_SSH_ALIAS='synthetic-host',
                         FOF_V2_RECEIVER_SCRIPT='C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1',
+                        FOF_V2_STAGING_DIR='C:/Synthetic Staging',
                         FOF_V2_TRANSFER_ID='20260916T000000Z-' + 'a'*32)
         (self.bin / 'ssh').write_text(FAKE_SSH)
         (self.bin / 'ssh').chmod(0o700)
@@ -66,11 +67,11 @@ class AdapterTests(unittest.TestCase):
         for required in ['-T','BatchMode=yes','StrictHostKeyChecking=yes','ConnectionAttempts=1']:
             self.assertIn(required,args)
         script=base64.b64decode(args[-1].split()[-1]).decode('utf-16le')
-        self.assertEqual(script, "& 'C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1' -TransferId '20260916T000000Z-" + 'a'*32 + "'; exit $LASTEXITCODE")
+        self.assertEqual(script, "& 'C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1' -StagingDir 'C:/Synthetic Staging' -TransferId '20260916T000000Z-" + 'a'*32 + "'; exit $LASTEXITCODE")
         self.assertEqual((self.base/'ssh-calls').read_text(), '1\n')
 
     def test_configuration_missing_rejected_before_ssh(self):
-        for key in ['FOF_V2_SSH_ALIAS','FOF_V2_RECEIVER_SCRIPT','FOF_V2_TRANSFER_ID']:
+        for key in ['FOF_V2_SSH_ALIAS','FOF_V2_RECEIVER_SCRIPT','FOF_V2_STAGING_DIR','FOF_V2_TRANSFER_ID']:
             env=dict(self.env)
             env.pop(key)
             p=subprocess.run([str(ADAPTER)],input=b'payload',env=env,capture_output=True)
@@ -112,6 +113,7 @@ class AdapterTests(unittest.TestCase):
                 'C:/NUL/scripts/ps7/receive_artifact_bundle.ps1','C:/x./scripts/ps7/receive_artifact_bundle.ps1',
                 'C:/x//scripts/ps7/receive_artifact_bundle.ps1','C:/x/scripts/ps7/other.ps1',
                 'C:\\x\\scripts\\receive_artifact_bundle.ps1','//host/share/receiver.ps1'],
+               'FOF_V2_STAGING_DIR':['','relative','C:/x/../y',"C:/x';y",'C:/x$','C:/NUL','C:/x.','C:/x/','C:/','C:','C:\\x','//host/share','C:/x//y'],
                'FOF_V2_SMOKE_SESSION':['../x','a'*31,'A'*32,'a'*32+';exit 0']}
         for key,values in cases.items():
             for value in values:
@@ -123,6 +125,12 @@ class AdapterTests(unittest.TestCase):
         script=base64.b64decode(adapter.command(dict(self.env,FOF_V2_SMOKE_SESSION='a'*32))[-1].split()[-1]).decode('utf-16le')
         self.assertIn("-SmokeTest -SmokeSession '"+'a'*32+"'",script)
         self.assertNotIn('-SmokeTest',base64.b64decode(adapter.command(self.env)[-1].split()[-1]).decode('utf-16le'))
+
+    def test_v2_staging_bound_explicitly_and_no_legacy_fallback(self):
+        env=dict(self.env,FOF_V2_STAGING_DIR='C:/V2 Own Staging',WINDOWS_STAGING_DIR='C:/Legacy Shared')
+        script=base64.b64decode(adapter.command(env)[-1].split()[-1]).decode('utf-16le')
+        self.assertIn("-StagingDir 'C:/V2 Own Staging'",script)
+        self.assertNotIn('Legacy',script)
 
     def test_check_never_consumes_payload_or_calls_receiver(self):
         result=self.invoke(b'not sent', args=['--check'])

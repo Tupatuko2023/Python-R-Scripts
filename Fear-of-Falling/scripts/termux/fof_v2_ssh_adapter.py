@@ -10,6 +10,7 @@ import sys
 def command(environ, check=False):
     alias = environ.get("FOF_V2_SSH_ALIAS", "")
     receiver = environ.get("FOF_V2_RECEIVER_SCRIPT", "")
+    staging = environ.get("FOF_V2_STAGING_DIR", "")
     transfer_id = environ.get("FOF_V2_TRANSFER_ID", "")
     session = environ.get("FOF_V2_SMOKE_SESSION", "")
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", alias):
@@ -24,19 +25,28 @@ def command(environ, check=False):
         if (part in (".", "..") or part != part.strip() or part.endswith(".")
                 or re.fullmatch(r"(?i:con|prn|aux|nul|com[0-9]|lpt[0-9])(?:\..*)?", part)):
             raise ValueError("FOF_V2_RECEIVER_PATH_AMBIGUOUS")
+    # v2 binds its own staging explicitly. Missing/invalid stops before payload;
+    # there is no fallback to WINDOWS_STAGING_DIR (that belongs to LEGACY/1).
+    if not re.fullmatch(r"[A-Za-z]:/(?:[A-Za-z0-9_. -]+/)*[A-Za-z0-9_. -]+", staging):
+        raise ValueError("FOF_V2_STAGING_DIR_REQUIRED_OR_INVALID")
+    for part in staging[3:].split("/"):
+        if (part in (".", "..") or part != part.strip() or part.endswith(".")
+                or re.fullmatch(r"(?i:con|prn|aux|nul|com[0-9]|lpt[0-9])(?:\..*)?", part)):
+            raise ValueError("FOF_V2_STAGING_PATH_AMBIGUOUS")
     if session and not re.fullmatch(r"[0-9a-f]{32}", session):
         raise ValueError("FOF_V2_SMOKE_SESSION_INVALID")
     if not check and not re.fullmatch(r"[0-9]{8}T[0-9]{6}Z-[0-9a-f]{32}", transfer_id):
         raise ValueError("FOF_V2_TRANSFER_ID_REQUIRED_OR_INVALID")
-    # The encoded command contains only a validated literal path/session. No payload.
+    # The encoded command contains only validated literal paths/session. No payload.
     if check:
         script = ("$ErrorActionPreference='Stop'; "
                   "if ($PSVersionTable.PSVersion -lt [version]'7.4') { exit 2 }; "
                   "[void][System.Formats.Tar.TarReader]; "
                   "if (-not (Test-Path -LiteralPath '" + receiver + "' -PathType Leaf)) { exit 2 }; "
+                  "if (-not (Test-Path -LiteralPath '" + staging + "' -PathType Container)) { exit 2 }; "
                   "[Console]::Error.WriteLine('FOF_V2_SSH_PREFLIGHT_OK'); exit 0")
     else:
-        script = "& '" + receiver + "' -TransferId '" + transfer_id + "'"
+        script = "& '" + receiver + "' -StagingDir '" + staging + "' -TransferId '" + transfer_id + "'"
         if session:
             script += " -SmokeTest -SmokeSession '" + session + "'"
         script += "; exit $LASTEXITCODE"

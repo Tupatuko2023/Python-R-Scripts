@@ -43,7 +43,11 @@ Toteutus: `scripts/termux/export_artifacts_to_windows.sh` (sender),
 
 Runtime-konfiguraatio (Termux, ei Git-tiedostoissa): `FOF_V2_SSH_ALIAS`,
 `FOF_V2_RECEIVER_SCRIPT` (Windows-absoluuttipolku `/`-erottimilla, loppuu
-`/scripts/ps7/receive_artifact_bundle.ps1`). **v2 ei käytä LEGACY/1:n `WINDOWS_*`-muuttujia.**
+`/scripts/ps7/receive_artifact_bundle.ps1`) ja `FOF_V2_STAGING_DIR` (v2:n **oma**
+pakollinen absoluuttinen staging-juuri, sama rajattu polkusopimus). Sovitin välittää
+stagingin vastaanottimelle eksplisiittisellä `-StagingDir`-argumentilla; puuttuva
+tai virheellinen arvo pysähtyy ennen payloadia. **v2 ei käytä LEGACY/1:n
+`WINDOWS_*`-muuttujia eikä `WINDOWS_STAGING_DIR`-oletusta (ei fallbackia).**
 
 [TERMUX] (FOF-juuresta)
 
@@ -58,7 +62,13 @@ bash scripts/termux/export_artifacts_to_windows.sh \
 ```
 
 - Tulkinta: `SUCCESS/0` = korreloitu `VERIFIED`; `FAILED/1` = paikallinen/korreloitu hylkäys; `UNKNOWN_REMOTE_STATE/3` = käsin read-only-tarkastus.
-- Vastaanotto Windowsissa: `<receiver-repo>/artifacts/staging/fof-dissertation-local-handoff/incoming/<run_id>/` (`files/`, `manifest.json`, `VERIFIED.json`).
+- Vastaanotto Windowsissa: `<FOF_V2_STAGING_DIR>/incoming/<run_id>/` (`files/`,
+  `manifest.json`, `VERIFIED.json`). Staging-juuri on v2:n oma, `FOF_V2_STAGING_DIR`-
+  arvoon sidottu; se voi olla **repo-ulkoinen yksityinen** hakemisto (esim. paikallinen
+  NTFS-runtime-juuri). Aiempi repo-lokaali muoto
+  `<receiver-repo>/artifacts/staging/fof-dissertation-local-handoff` on yksi kelvollinen
+  valinta, ei pakollinen; ratkaisevat vaatimukset ovat eksplisiittinen `-StagingDir` ja
+  paikallinen, reparse-vapaa, ei-jaettu juuri.
 - `VERIFIED` todistaa teknisen eheyden, **ei** julkaisu- tai sijoitushyväksyntää.
 
 [TERMUX] (LEGACY/1, säilyvä allow-list-käyttö)
