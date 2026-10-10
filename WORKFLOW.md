@@ -41,6 +41,7 @@ Tämä repositorio noudattaa Agent-First -metodologiaa analyysityössä (R + Pyt
      - Jos aliprojektissa on `renv/`, varmista että ympäristö on palautettavissa (`renv::restore()` tarpeen mukaan) ja kirjaa tarvittaessa `sessionInfo()` tai `renv::diagnostics()` lokiin.
      - Jos aliprojektissa on QC-runner (esim. `K18`-tyyppinen QC tai termux-runner), aja se ennen review-siirtoa.
      - Aja testit/lintit vain jos repo jo tarjoaa ne eikä se laajenna toolchainia (esim. `python -m pytest` tai projektin oma komento).
+     - **Worktree-siivous (edellytys DONE:lle):** poista tehtävän kaikki worktreet kaikista käytetyistä ympäristöistä (`git worktree remove`, ei `--force`), mukaan lukien toimitus- ja varmennusworktreet. Säilytä tarvittava evidenssi worktreeiden ulkopuolella ja varmista kopiot ennen poistoa. Varmenna lopputila kussakin ympäristössä (`git worktree list --porcelain`). Viimeinen siivous ja DONE-kirjaus tehdään säilytettävästä checkoutista, jotta sulkemistyö ei jätä uutta worktreetä. Jos aktiivista käyttöä tai säilytettävää sisältöä löytyy, raportoi este äläkä poista worktreeä.
    - **Hyväksytty:** Owner tai muu tehtävälle määrätty ihminen kirjaa
      hyväksymispäätöksen agentin task-lokista riippumattomaan, pysyvään lähteeseen
      `SKILLS.md`:n näyttövaatimusten mukaisesti. Agentin oma task-merkintä ei

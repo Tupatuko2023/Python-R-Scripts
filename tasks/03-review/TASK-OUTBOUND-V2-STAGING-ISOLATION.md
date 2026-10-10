@@ -128,4 +128,21 @@ ennallaan.
   Gitin ulkopuolisessa käyttöönottokuittauksessa (ei julkisessa repositoryssa).
 - **Avoin tehtävä (erillinen):** FAILED-vastauksen `file_count`/korrelaatioristiriita →
   `tasks/00-backlog/TASK-V2-FAILED-RECEIPT-CORRELATION.md`.
-- **Tila:** DONE (Owner-merge-näytön perusteella).
+- **Tila (alkuperäinen sulkeminen):** DONE (Owner-merge-näytön perusteella).
+
+## Palautus review-tilaan (2026-10-10)
+
+- **Owner-käsky:** sulkeminen peruutetaan toistaiseksi ja tehtävä palautetaan
+  `tasks/03-review/`-tilaan odottamaan worktree-siivousta. Peruste: `WORKFLOW.md`:n
+  DONE-ehto edellyttää tehtävän kaikkien työtreiden poistoa kaikista käytetyistä
+  ympäristöistä (mukaan lukien toimitus- ja varmennusworktreet) ja lopputilan
+  varmennusta `git worktree list --porcelain`-komennolla.
+- **Säilyy:** itse toteutus, Owner-merge-näyttö (PR #198 merge `91f4037c…`), PR #199
+  (`9f1e7ae…`) sekä kaikki evidenssi. Vain lifecycle-tila palautetaan, kunnes
+  molempien ympäristöjen (Windows + Termux) siivous ja varmennus on kirjattu.
+- **Windows-inventaario (2026-10-10):** siivottavat worktreet
+  `fof-main-9f1e7ae` (varmennus), `fof-closure-91f4037c` (toimitus),
+  `fof-v2staging-43398dd` (testattu toimitushead). Säilytettävät: ensisijainen
+  checkout (`prs-197-win-30286b0`) ja muun tehtävän worktree (`fof-usage-43398dd`).
+- **Termux-inventaario:** odottaa (pyydetty Termux-agentilta).
+- **Tila:** REVIEW — DONE odottaa molempien ympäristöjen varmennettua siivousta.
