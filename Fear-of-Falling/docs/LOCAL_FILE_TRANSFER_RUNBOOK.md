@@ -194,8 +194,8 @@ python3 scripts/termux/place_verified_bundle.py execute \
 ### 6.4 `placement_digest` (toteutettu; hyväksyntä sidotaan)
 
 `digest = SHA-256(canonical_json({PLACE/1-protokolla, siirron run_id,
-vastaanottoprotokolla (`reception_protocol`) ja sen korrelaatio
-(`reception_correlation` = batch_id FOF_KB_PULL/1:lle tai run_correlation_digest
+vastaanottoprotokolla (reception_protocol) ja sen korrelaatio
+(reception_correlation = batch_id FOF_KB_PULL/1:lle tai run_correlation_digest
 FOF_ARTIFACT_HANDOFF/2:lle), siirron content_digest, kohderepositoryn identiteetti
 {origin_url, head}, täsmä-kartta (source->target), kohdetiedostojen odotetut
 koot/SHA-256}))`. Hyväksyntä kattaa siis **varmennetut tavut**, **vastaanoton
