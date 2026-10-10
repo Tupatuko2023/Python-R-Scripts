@@ -32,6 +32,21 @@ rsynciä eikä erillistä tar-ohjelmaa.
    `-StagingDir`-argumentilla; puuttuva tai virheellinen arvo pysähtyy ennen
    payloadia, eikä sovitin käytä `WINDOWS_STAGING_DIR`-oletusta (se kuuluu
    LEGACY/1:lle).
+   `FOF_V2_DIAG_ROOT` (valinnainen) on v2:n **paikallinen, repositoryjen
+   ulkopuolinen** diagnostiikkajuuri; se on eri asia kuin Windowsin
+   `FOF_V2_STAGING_DIR`. Juuri on valmisteltava **erikseen etukäteen**: sen on
+   oltava jo olemassa oleva käyttäjän omistama, yksityinen (0700), linkitön
+   hakemisto; kirjoittaja **ei luo** sitä (puuttuva/ei-yksityinen juuri →
+   `V2 DIAGNOSTIC: NOT_WRITTEN`). Kun se on asetettu, ajo **voi** kirjoittaa
+   `<juuri>/<run_id>.json`-tiedostoon rajatun, validoidun metadatan (tulos,
+   adapterin exit, timeout, vastauksen luokka, tunnetut virhekoodit ja sallitut
+   kentät); **diagnostiikka on best-effort eikä sitä taata joka ajolle** — senderi
+   raportoi tilan (`V2 DIAGNOSTIC: WRITTEN/NOT_WRITTEN`) erillään siirtotuloksesta.
+   Kirjoitus tapahtuu vain käyttäjän omistamaan, yksityiseen (0700), linkittömään,
+   repositoryjen ulkopuoliseen hakemistoon varmennettuun hakemistokahvaan; ei
+   koskaan raakaa stdout/stderr-tekstiä eikä payloadia. Tuntematon virhekoodi
+   kirjataan luokituksena ilman alkuperäistä arvoa. Olemassa olevaa tiedostoa ei
+   ylikirjoiteta, eikä kirjoitusvirhe muuta siirron tulosta.
    SSH-tunnistautumisen tulee olla ei-interaktiivinen ja host key erikseen
    varmennettu etukäteen. Sovitin ei asenna avaimia tai hyväksy uusia host keyitä.
 2. **Tarkista yhteys ilman artefakteja.** Aja FOF-juuressa:

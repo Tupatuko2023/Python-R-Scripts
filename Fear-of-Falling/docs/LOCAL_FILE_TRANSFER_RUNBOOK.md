@@ -48,6 +48,17 @@ pakollinen absoluuttinen staging-juuri, sama rajattu polkusopimus). Sovitin väl
 stagingin vastaanottimelle eksplisiittisellä `-StagingDir`-argumentilla; puuttuva
 tai virheellinen arvo pysähtyy ennen payloadia. **v2 ei käytä LEGACY/1:n
 `WINDOWS_*`-muuttujia eikä `WINDOWS_STAGING_DIR`-oletusta (ei fallbackia).**
+Valinnainen `FOF_V2_DIAG_ROOT` on v2:n **paikallinen, repositoryjen
+ulkopuolinen** diagnostiikkajuuri (eri asia kuin Windowsin
+`FOF_V2_STAGING_DIR`); se on valmisteltava **erikseen etukäteen** jo olemassa
+olevaksi käyttäjän omistamaksi yksityiseksi (0700), linkittömäksi hakemistoksi
+(kirjoittaja **ei luo** sitä): ajo **voi** kirjoittaa `<juuri>/<run_id>.json`-tiedostoon
+rajatun, validoidun metadatan (best-effort, ei taata joka ajolle); senderi
+raportoi `V2 DIAGNOSTIC: WRITTEN/NOT_WRITTEN` erillään siirtotuloksesta.
+Kirjoitus vain käyttäjän omistamaan yksityiseen (0700), linkittömään juureen
+varmennettuun kahvaan; ei raakaa stdout/stderr-tekstiä eikä payloadia; tuntematon
+virhekoodi luokituksena ilman arvoa. Olemassa olevaa tiedostoa ei ylikirjoiteta
+eikä kirjoitusvirhe muuta tulosta.
 
 [TERMUX] (FOF-juuresta)
 

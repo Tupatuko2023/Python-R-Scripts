@@ -215,6 +215,156 @@ def v2_digest(value):
     return hashlib.sha256(v2_json(value)).hexdigest()
 
 
+V2_DIAG_PROTOCOL = 'FOF_V2_DIAGNOSTIC/1'
+# Exact accepted set: sender + adapter codes (this repo) and the receiver's
+# sanitised throw messages. Anything else is reduced to a classification and its
+# original value is never stored.
+V2_DIAG_KNOWN_ERROR_CODES = frozenset({
+    'ARCHIVE_TOO_LARGE', 'EMPTY_NOT_EXECUTABLE', 'LOCAL_RECEIVER_REQUIRED',
+    'LOCAL_RECEIVER_START_FAILED', 'PREVIEW_APPROVAL_REQUIRED', 'PROFILE_MODE_REQUIRED',
+    'RECEIVER_NOT_AVAILABLE_FOR_PROTOCOL_V2', 'SNAPSHOT_PARITY_FAILURE',
+    'SOURCE_REPOSITORY_ID_MISMATCH', 'SOURCE_STATE_CHANGED', 'TEMP_OUTSIDE_SOURCE_REQUIRED',
+    'FOF_V2_RECEIVER_INSTALLATION_REQUIRED', 'FOF_V2_RECEIVER_PATH_AMBIGUOUS',
+    'FOF_V2_RECEIVER_SCRIPT_INVALID', 'FOF_V2_SMOKE_SESSION_INVALID',
+    'FOF_V2_SSH_ALIAS_REQUIRED_OR_INVALID', 'FOF_V2_STAGING_DIR_REQUIRED_OR_INVALID',
+    'FOF_V2_STAGING_PATH_AMBIGUOUS', 'FOF_V2_TRANSFER_ID_REQUIRED_OR_INVALID',
+    'SSH_EXEC_UNAVAILABLE',
+    'An_existing_absolute_staging_root_and_valid_size_limit_are_required',
+    'Bundle_size_limit_exceeded', 'CSV_outside_outputs', 'Duplicate_manifest_key',
+    'Duplicate_manifest_path', 'Duplicate_or_case_colliding_archive_member',
+    'Empty_or_inexact_archive_set', 'Hard_denied_path', 'Invalid_manifest',
+    'Invalid_tar_octal_field', 'Manifest_BOM_rejected', 'Manifest_archive_mismatch',
+    'Manifest_content_digest_mismatch', 'Manifest_digest_invalid',
+    'Manifest_member_casing_mismatch', 'Manifest_must_be_an_object', 'Manifest_row_invalid',
+    'Manifest_row_schema_mismatch', 'Manifest_run_correlation_mismatch',
+    'Manifest_run_protocol_mismatch', 'Manifest_schema_mismatch', 'Manifest_source_head_invalid',
+    'Missing_manifest', 'Missing_received_file', 'Missing_tar_terminator',
+    'Nonzero_bytes_after_tar_field_terminator',
+    'Only_regular_POSIX_USTAR_entries_are_accepted', 'Partial_file_body', 'Partial_tar',
+    'Partial_tar_block', 'Partial_tar_member', 'Path_escaped_run', 'Received_reparse_point',
+    'Received_size_or_SHA_256_mismatch', 'Reparse_point_rejected', 'Run_already_exists',
+    'Staging_path_must_be_a_filename', 'Trailing_archive_data', 'TransferId_is_required_for_v2',
+    'Unexpected_archive_member', 'Unexpected_received_file', 'Unsafe_path',
+})
+
+
+def v2_diag_record(run_id, outcome, adapter_exit, timed_out, response_class, response_bytes, response):
+    # Bounded, validated metadata only: whitelisted response fields; never raw
+    # stdout/stderr and never payload bytes.
+    record = {'protocol': V2_DIAG_PROTOCOL, 'run_id': run_id, 'outcome': outcome,
+              'adapter_exit': adapter_exit if type(adapter_exit) is int else None,
+              'timed_out': bool(timed_out), 'response_class': response_class,
+              'response_bytes': int(response_bytes), 'status': None, 'error_code': None,
+              'error_code_class': None, 'content_digest': None,
+              'run_correlation_digest': None, 'file_count': None}
+    if type(response) is dict:
+        value = response.get('status')
+        if value in ('VERIFIED', 'FAILED'):
+            record['status'] = value
+        value = response.get('error_code')
+        if type(value) is str and value in V2_DIAG_KNOWN_ERROR_CODES:
+            record['error_code'] = value
+            record['error_code_class'] = 'KNOWN'
+        elif type(value) is str and value != '':
+            record['error_code_class'] = 'UNKNOWN'
+        for key in ('content_digest', 'run_correlation_digest'):
+            value = response.get(key)
+            if type(value) is str and re.fullmatch(r'[0-9a-f]{64}', value):
+                record[key] = value
+        value = response.get('file_count')
+        if type(value) is int and 0 <= value <= 1000000:
+            record['file_count'] = value
+    return record
+
+
+def v2_diag_anchor(directory):
+    # Outermost ancestor the current user controls; never the filesystem root.
+    ancestors = []
+    current = os.path.abspath(directory)
+    while True:
+        ancestors.append(current)
+        parent = os.path.dirname(current)
+        if parent == current:
+            break
+        current = parent
+    for candidate in reversed(ancestors):
+        try:
+            info = os.lstat(candidate)
+        except OSError:
+            return None
+        if not stat.S_ISDIR(info.st_mode):
+            return None
+        if info.st_uid == os.geteuid() or os.access(candidate, os.W_OK):
+            if os.path.dirname(candidate) == candidate:
+                return None
+            return candidate
+    return None
+
+
+def v2_diag_write(diag_root, root, run_id, record):
+    # Best-effort, POSIX, handle-bound write into a verified private, user-owned,
+    # repository-external directory. Any failure returns False and never changes
+    # the transfer outcome.
+    if (not diag_root or not os.path.isabs(diag_root) or os.name != 'posix'
+            or not re.fullmatch(r'[0-9A-Za-z-]{1,64}', run_id)):
+        return False
+    fds = []
+    try:
+        target = os.path.abspath(diag_root)
+        boundaries = {os.path.realpath(root)}
+        try:
+            env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
+            env['GIT_OPTIONAL_LOCKS'] = '0'
+            proc = subprocess.run(['git', '-C', os.path.dirname(os.path.abspath(root)),
+                                   'rev-parse', '--show-toplevel'], env=env,
+                                  stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
+            if proc.returncode == 0:
+                boundaries.add(os.path.realpath(proc.stdout.decode('utf-8').strip()))
+        except (OSError, ValueError, UnicodeError):
+            pass
+        for boundary in boundaries:
+            if target == boundary or os.path.commonpath([boundary, target]) == boundary:
+                return False
+        anchor = v2_diag_anchor(target)
+        if anchor is None or not (target == anchor or target.startswith(anchor + os.sep)):
+            return False
+        if not os.path.isdir(target):
+            return False
+        data = v2_json(record) + b'\n'
+        if len(data) > 65536:
+            return False
+        fd = os.open(anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        fds.append(fd)
+        for part in os.path.relpath(target, anchor).split(os.sep):
+            if part in ('', '.'):
+                continue
+            fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
+            fds.append(fd)
+        info = os.fstat(fd)
+        if info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077 != 0:
+            return False
+        opened = os.lstat(target)
+        if (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino):
+            return False
+        if os.path.lexists(os.path.join(target, run_id + '.json')):
+            return False
+        out = os.open(run_id + '.json', os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                      0o600, dir_fd=fd)
+        with os.fdopen(out, 'wb') as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        return True
+    except (OSError, ValueError):
+        return False
+    finally:
+        for fd in reversed(fds):
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+
+
 def v2_path(value, staging=False):
     if (type(value) is not str or not value.isascii()
             or len(value) > (100 if staging else 1024)):
@@ -345,15 +495,30 @@ def v2_measure(root_fd, parts):
 
 def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, approved_digest, smoke_test=False):
     """Explicit trusted local process only; no profile-mode SSH configuration."""
+    # Local, repo-external, private diagnostics root -- a SEPARATE runtime choice
+    # (FOF_V2_STAGING_DIR is the Windows staging, not the local log path).
+    diag_root = os.environ.get('FOF_V2_DIAG_ROOT', '')
+    run_id = manifest['run_id']
+
+    def emit(outcome, adapter_exit=None, timed_out=False, response_class='NOT_RUN',
+             response_bytes=0, response=None):
+        written = v2_diag_write(diag_root, root, run_id, v2_diag_record(
+            run_id, outcome, adapter_exit, timed_out, response_class, response_bytes, response))
+        if diag_root:
+            # Report diagnostic production separately from the transfer outcome.
+            print('V2 DIAGNOSTIC: ' + ('WRITTEN' if written else 'NOT_WRITTEN'), file=sys.stderr)
+
     if approved_digest != manifest['content_digest']:
+        emit('FAILED')
         v2_error('PREVIEW_APPROVAL_REQUIRED')
     if (not os.path.isabs(receiver) or os.path.realpath(receiver) != receiver
             or not os.path.isfile(receiver) or not os.access(receiver, os.X_OK)):
+        emit('FAILED')
         v2_error('LOCAL_RECEIVER_REQUIRED')
     temp_root = os.path.realpath(tempfile.gettempdir())
     if os.path.commonpath([os.path.realpath(root), temp_root]) == os.path.realpath(root):
+        emit('FAILED')
         v2_error('TEMP_OUTSIDE_SOURCE_REQUIRED')
-    # Preserve uniquely named local evidence; never retry, overwrite or delete a run.
     bundle_dir = tempfile.mkdtemp(prefix='fof-v2-local-', dir=temp_root)
     bundle_path = os.path.join(bundle_dir, 'bundle.tar')
     with os.fdopen(os.open(bundle_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'wb') as out:
@@ -372,29 +537,37 @@ def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, a
                 signature = lambda s: (s.st_dev, s.st_ino, s.st_size, s.st_mtime_ns, s.st_ctime_ns)
                 if (signature(before) != signature(after) or len(data) != row['size_bytes']
                         or hashlib.sha256(data).hexdigest() != row['sha256']):
+                    emit('FAILED')
                     v2_error('SNAPSHOT_PARITY_FAILURE')
                 info = tarfile.TarInfo('files/' + row['staging_path'])
                 info.size = len(data)
                 archive.addfile(info, io.BytesIO(data))
         if out.tell() > 1073741824:
+            emit('FAILED')
             v2_error('ARCHIVE_TOO_LARGE')
     for row in manifest['files']:
         if v2_measure(root_fd, v2_path(row['source_path'])[1:]) != (row['size_bytes'], row['sha256']):
+            emit('FAILED')
             v2_error('SNAPSHOT_PARITY_FAILURE')
     if (v2_repository(root) != manifest['source_head']
             or v2_digest(v2_load(root_fd, profile_path, smoke_test)) != v2_digest(profile)):
+        emit('FAILED')
         v2_error('SOURCE_STATE_CHANGED')
     print('LOCAL V2 BUNDLE: ' + json.dumps(bundle_path), file=sys.stderr)
-    child_env = dict(os.environ, FOF_V2_TRANSFER_ID=manifest['run_id'])
+    child_env = dict(os.environ, FOF_V2_TRANSFER_ID=run_id)
     with open(bundle_path, 'rb') as wire, tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
         try:
             result = subprocess.run([receiver], stdin=wire, stdout=stdout, stderr=stderr,
                                     timeout=60, env=child_env)
         except subprocess.TimeoutExpired:
+            emit('UNKNOWN_REMOTE_STATE', None, True, 'TIMEOUT')
             raise TransferOutcomeError('UNKNOWN_REMOTE_STATE', 'local receiver acknowledgement timed out; do not retry')
         except OSError:
+            emit('FAILED', None, False, 'ADAPTER_START_FAILED')
             v2_error('LOCAL_RECEIVER_START_FAILED')
-        if stdout.tell() > 1048576:
+        response_bytes = stdout.tell()
+        if response_bytes > 1048576:
+            emit('UNKNOWN_REMOTE_STATE', result.returncode, False, 'OVERSIZED', response_bytes)
             raise TransferOutcomeError('UNKNOWN_REMOTE_STATE', 'oversized receiver response')
         stdout.seek(0)
         def unique_pairs(pairs):
@@ -409,14 +582,16 @@ def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, a
                                  parse_constant=lambda _: fail('invalid JSON constant'))
         except (ValueError, UnicodeError, RecursionError):
             receipt = None
+    returncode = result.returncode
     correlated = (type(receipt) is dict and all(receipt.get(k) == manifest[k] for k in
                   ('protocol_version', 'run_id', 'content_digest', 'run_correlation_digest'))
                   and type(receipt.get('file_count')) is int
                   and receipt['file_count'] == len(manifest['files']))
-    if (correlated and result.returncode == 1 and receipt.get('status') == 'FAILED'
+    if (correlated and returncode == 1 and receipt.get('status') == 'FAILED'
             and type(receipt.get('error_code')) is str
             and re.fullmatch(r'[A-Z][A-Z0-9_]{0,127}', receipt['error_code'])
             and 'verified_at' not in receipt):
+        emit('FAILED', returncode, False, 'CORRELATED_FAILED', response_bytes, receipt)
         raise TransferOutcomeError('FAILED', 'correlated receiver rejection: ' + receipt['error_code'])
     timestamp_ok = False
     if correlated and type(receipt.get('verified_at')) is str:
@@ -425,8 +600,11 @@ def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, a
             timestamp_ok = stamp.strftime('%Y-%m-%dT%H:%M:%SZ') == receipt['verified_at']
         except ValueError:
             pass
-    if not (correlated and result.returncode == 0 and receipt.get('status') == 'VERIFIED' and timestamp_ok):
+    if not (correlated and returncode == 0 and receipt.get('status') == 'VERIFIED' and timestamp_ok):
+        response_class = 'NON_CORRELATED' if type(receipt) is dict else 'INVALID_JSON'
+        emit('UNKNOWN_REMOTE_STATE', returncode, False, response_class, response_bytes, receipt)
         raise TransferOutcomeError('UNKNOWN_REMOTE_STATE', 'completion not confirmed; inspect unique run; do not retry')
+    emit('SUCCESS', returncode, False, 'CORRELATED_VERIFIED', response_bytes, receipt)
     print(v2_json({'outcome': 'SUCCESS', 'receipt': receipt}).decode('ascii'))
 
 

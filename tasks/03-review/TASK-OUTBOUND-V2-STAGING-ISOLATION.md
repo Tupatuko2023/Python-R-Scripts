@@ -57,6 +57,40 @@ ennallaan.
 - Runtime-käyttöönotto (`FOF_V2_STAGING_DIR` Termux-puolella) ja yksi synteettinen
   v2-verkkotesti: ehdotus Gitin ulkopuolisessa evidenssissä.
 
+## Diagnostiikka (2026-10-10) — oma rajattu korjaus
+
+- Sender (`export_artifacts_to_windows.sh`) kirjoittaa `FOF_V2_DIAG_ROOT`-juureen
+  rajatun `FOF_V2_DIAGNOSTIC/1`-tietueen per ajo (`<run_id>.json`, ei overwritea):
+  tulos, adapterin exit, timeout-tieto, vastauksen luokka (NOT_RUN/TIMEOUT/
+  ADAPTER_START_FAILED/OVERSIZED/INVALID_JSON/NON_CORRELATED/CORRELATED_FAILED/
+  CORRELATED_VERIFIED), tavumäärä ja sallitut kentät (status, error_code,
+  content_digest, run_correlation_digest, file_count).
+- `error_code` tallennetaan vain **täsmällisestä tunnetusta listasta**
+  (sender+adapter+receiver); tuntematon koodi → `error_code_class=UNKNOWN`
+  ilman alkuperäistä arvoa. Ei raakaa stdout/stderr-tekstiä eikä payloadia.
+- Juuri on **valmisteltava erikseen etukäteen** käyttäjän omistamaksi
+  yksityiseksi (0700), repository-ulkoiseksi, linkittömäksi hakemistoksi;
+  kirjoittaja **ei luo** sitä (`os.makedirs` poistettu; puuttuva/ei-yksityinen →
+  `NOT_WRITTEN`). Kirjoitus sidotaan varmennettuun hakemistokahvaan (ankkurista
+  alkava O_NOFOLLOW-kävely), joten esi-isän vaihto ei ohjaa kirjoitusta toiseen
+  kohteeseen; ankkuri ei ole `/`. Ei symlinkin seurausta.
+- Best-effort: kirjoitusvirhe ei muuta FAILED/UNKNOWN_REMOTE_STATE-tulkintaa;
+  senderi raportoi erikseen `V2 DIAGNOSTIC: WRITTEN/NOT_WRITTEN`. Timeout (60 s)
+  ja retry-kielto säilyvät.
+- Kohdennetut testit: korreloitu FAILED; tunnettu vs. tuntematon koodi
+  (salaisuustestimerkki error_code-kentässä); ei-korreloitu/virheellinen vastaus;
+  timeout; ylisuuri vastaus; sama run_id ei ylikirjoitu; linkki-; epäyksityinen
+  juuri-; esi-isän vaihto-; kilpailutilanne (esi-isän vaihto tarkastuksen ja
+  kirjoituksen välillä); repository-ulkoisuus (git-juuri); kirjoitusvirhe.
+
+## Erillinen löydös: SmokeTest/SmokeSession-ristiriita
+
+- Sovitin (`fof_v2_ssh_adapter.py`) lisää `-SmokeTest -SmokeSession '<sid>'`, kun
+  `FOF_V2_SMOKE_SESSION` on asetettu, mutta vastaanottimen `param(`-lohko **ei**
+  esittele näitä parametreja → PowerShell-parametrisidonta epäonnistuisi eikä
+  vastaanotin käynnistyisi. Kysymys: kumpi puoli on auktoritatiivinen? **Ei
+  korjata tässä**; kirjataan erillisenä löydöksenä.
+
 ## Log
 
 - 2026-10-10: Valmisteltu eristetyssä korjaustyötilassa (base
