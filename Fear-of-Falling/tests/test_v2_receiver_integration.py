@@ -17,6 +17,11 @@ RECEIVER = ROOT / "scripts/ps7/receive_artifact_bundle.ps1"
 PWSH = shutil.which("pwsh")
 
 
+def _canon_sha(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=True,
+                                     separators=(",", ":")).encode("ascii")).hexdigest()
+
+
 @unittest.skipUnless(PWSH, "PowerShell 7 is required for the real receiver contract test")
 class RealReceiverContractTest(unittest.TestCase):
     def _run_contract(self, suffix):
@@ -102,3 +107,76 @@ class RealReceiverContractTest(unittest.TestCase):
 
     def test_csv_source_with_filename_only_staging_is_verified(self):
         self._run_contract(".csv")
+
+    def test_forward_slash_staging_is_verified(self):
+        # Regression: the v2 adapter passes -StagingDir as a forward-slash path
+        # (FOF_V2_STAGING_DIR); the receiver must normalise before containment.
+        import io
+        import tarfile
+        files = [("a.txt", b"alpha\n"), ("b.bin", bytes(range(64)))]
+        with tempfile.TemporaryDirectory(prefix="fof-v2-fwd-") as td:
+            base = Path(td)
+            staging = base / "staging"
+            staging.mkdir(mode=0o700)
+            run_id = "20261010T150000Z-" + "a" * 32
+            rows = sorted(
+                [{"sha256": hashlib.sha256(data).hexdigest(), "size_bytes": len(data),
+                  "source_path": "Fear-of-Falling/outputs/" + name, "staging_path": name}
+                 for name, data in files],
+                key=lambda r: (r["source_path"], r["staging_path"]))
+            base_obj = {"files": rows, "profile_id": "a4-general-fi", "profile_sha256": "e" * 64,
+                        "profile_version": "1.0.0", "protocol_version": "FOF_ARTIFACT_HANDOFF/2",
+                        "source_head": "a" * 40, "source_repository_id": "Python-R-Scripts", "workstream": "A4"}
+            content = _canon_sha(base_obj)
+            correlation = _canon_sha({"content_digest": content,
+                                      "protocol_version": "FOF_ARTIFACT_HANDOFF/2", "run_id": run_id})
+            manifest = dict(base_obj, content_digest=content, run_correlation_digest=correlation, run_id=run_id)
+            bundle = base / "bundle.tar"
+            with tarfile.open(bundle, mode="w", format=tarfile.USTAR_FORMAT) as archive:
+                mb = json.dumps(manifest, sort_keys=True, ensure_ascii=True, separators=(",", ":")).encode("ascii")
+                info = tarfile.TarInfo("manifest.json"); info.size = len(mb)
+                archive.addfile(info, io.BytesIO(mb))
+                for name, data in files:
+                    info = tarfile.TarInfo("files/" + name); info.size = len(data)
+                    archive.addfile(info, io.BytesIO(data))
+            with bundle.open("rb") as stream:
+                result = subprocess.run(
+                    [PWSH, "-NoLogo", "-NoProfile", "-NonInteractive", "-File", str(RECEIVER),
+                     "-StagingDir", str(staging).replace(os.sep, "/"), "-TransferId", run_id],
+                    stdin=stream, capture_output=True)
+            self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+            receipt = json.loads(result.stdout)
+            self.assertEqual(receipt["status"], "VERIFIED")
+            self.assertEqual(receipt["file_count"], len(files))
+            run_dir = staging / "incoming" / run_id
+            self.assertTrue((run_dir / "VERIFIED.json").is_file())
+            for name, data in files:
+                self.assertEqual((run_dir / "files" / name).read_bytes(), data)
+
+    def test_traversal_member_rejected_by_receiver(self):
+        import io
+        import tarfile
+        with tempfile.TemporaryDirectory(prefix="fof-v2-escape-") as td:
+            base = Path(td)
+            staging = base / "staging"
+            staging.mkdir()
+            bundle = base / "bundle.tar"
+            with tarfile.open(bundle, mode="w", format=tarfile.USTAR_FORMAT) as archive:
+                body = json.dumps({"probe": True}).encode()
+                info = tarfile.TarInfo("manifest.json")
+                info.size = len(body)
+                archive.addfile(info, io.BytesIO(body))
+                payload = b"escape\n"
+                info = tarfile.TarInfo("files/../escape.txt")
+                info.size = len(payload)
+                archive.addfile(info, io.BytesIO(payload))
+            transfer = "20261010T000000Z-" + "a" * 32
+            with bundle.open("rb") as stream:
+                result = subprocess.run(
+                    [PWSH, "-NoLogo", "-NoProfile", "-NonInteractive", "-File", str(RECEIVER),
+                     "-StagingDir", str(staging), "-TransferId", transfer],
+                    stdin=stream, capture_output=True,
+                )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn(b"Unsafe", result.stdout + result.stderr)
+            self.assertFalse((staging / "incoming" / transfer / "files").exists())

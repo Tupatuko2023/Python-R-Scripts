@@ -148,7 +148,10 @@ try {
     Assert-NoReparse $StagingDir
     $incoming = [IO.Path]::Combine($StagingDir, 'incoming'); Assert-NoReparse $incoming
     [void][IO.Directory]::CreateDirectory($incoming)
-    $run = [IO.Path]::Combine($incoming, $TransferId)
+    # Canonicalise: the v2 adapter passes -StagingDir with forward slashes, so
+    # $run must be normalised before the later containment comparison (which uses
+    # GetFullPath, i.e. backslashes on Windows).
+    $run = [IO.Path]::GetFullPath([IO.Path]::Combine($incoming, $TransferId))
     $claim = [IO.File]::Open($run + '.claim', [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
     $claim.Dispose()
     if (Test-Path -LiteralPath $run) { throw 'Run already exists' }
