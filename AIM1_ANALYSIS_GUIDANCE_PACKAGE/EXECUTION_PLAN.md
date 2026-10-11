@@ -7,15 +7,15 @@ plan.
 
 ```text
 CURRENT_PHASE       = PRE_ANALYSIS
-CURRENT_NEXT_TASK   = G6 — final AIM1 estimand set
+CURRENT_NEXT_TASK   = G4 — costing specification + AIM1 applicability
 PARTICIPANT_LEVEL_ANALYSIS_AUTHORIZED = NO
 ```
 
 ## Gate sequence (from the current gate dependencies)
 
 ```text
-G6  final estimand set
- → G4  costing specification + AIM1 applicability
+G6  final estimand set          [RESOLVED / ADOPTED 2026-10-07]
+  → G4  costing specification + AIM1 applicability   [NEXT]
  → G3  hospital unit lock (days vs episodes)
  → G7  final covariate set
  → G11 + bounded aggregate QC   (exact N / eligibility boundaries = DATA_QC_DEPENDENT)
@@ -37,18 +37,27 @@ must be closed before the affected time/cost estimands.
   target; it becomes executable only after the gates close and a separate analysis
   authorization is issued.
 
-## First operational task — G6
+## Operational task status
 
-**Goal:** decide the final AIM1 **estimand set** (core / secondary / sensitivity /
-optional supplementary), on top of the adopted exposure (G1/G2) and resolved time
-framework (G5 core).
+- **G6 (final estimand set): `RESOLVED / ADOPTED`** (Owner scientific decision
+  2026-10-07). CORE = E1, E2, E4; SECONDARY = E3, E5, E6; SENSITIVITY = E8
+  (separate authorization required); OPTIONAL_SUPPLEMENTARY = E-MORT (G10 open);
+  DEFER = E-COMP.
+- **NEXT_OPERATIONAL_TASK = G4** — costing specification + AIM1 applicability.
 
-**Inputs (available in this package):** the embedded candidate estimand inventory
-in `ANALYSIS_DECISIONS.md` §4 (portable projection of the candidate SAP);
-`ANALYSIS_DECISIONS.md`; the reconciled death/time handling.
+### G4 task
 
-**Output:** an estimand decision (Owner) recorded back into the Dissertation
+**Goal:** resolve the costing specification and its AIM1 applicability for the
+adopted cost estimands — E4 (total direct specialised-care cost), E5 (outpatient),
+E6 (inpatient): costing source, valuation, price year, perspective, zero-cost
+handling, follow-up/person-time handling, and AIM1 applicability. Do not fabricate
+costing details.
+
+**Inputs (available in this package):** `ANALYSIS_DECISIONS.md` (G4 row + §4
+inventory); `SOURCE_HANDOFF.md`.
+
+**Output:** a costing decision (Owner) recorded back into the Dissertation
 repository, then mirrored here.
 
-**Done when:** a new agent in Termux can discover G6 and its prerequisites from
-this package alone, without a Windows lookup or Owner explanation.
+**Done when:** a new agent in Termux can discover G4 and its prerequisites from
+this package alone.

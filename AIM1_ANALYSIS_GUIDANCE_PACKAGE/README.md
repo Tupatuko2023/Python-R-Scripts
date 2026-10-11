@@ -53,7 +53,7 @@ package never edits authority; it cites it by hash and refreshes on trigger.
 1. Read `ANALYSIS_DECISIONS.md` for what is decided/open.
 2. Read `EXECUTION_PLAN.md` for the current phase and next permitted task.
 3. Use `SOURCE_HANDOFF.md` to know which authority to refresh and when.
-4. Resolve the **next operational task** (G6) only through the governance of the
+4. Resolve the **next operational task** (G4) only through the governance of the
    analysis repository; do not edit the Dissertation repository from here.
 
 ## Non-authority statement
