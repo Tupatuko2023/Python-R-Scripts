@@ -9,6 +9,7 @@ param(
     [string]$StagingDir = $env:WINDOWS_STAGING_DIR,
     [string]$BundlePath,
     [string]$TransferId,
+    [ValidateSet('fof','fira1')][string]$SourceScope = 'fof',
     [long]$MaxBundleBytes = 1073741824
 )
 Set-StrictMode -Version Latest
@@ -35,6 +36,9 @@ function Assert-SafePath([string]$Path) {
 function Assert-SafeSourcePath([string]$Path) {
     Assert-SafePath $Path
     $parts = $Path.Split('/')
+    $prefix = if ($SourceScope -ceq 'fira1') { 'GPT/(FIRA1) Frailty Index Research Assistant/' } else { 'Fear-of-Falling/' }
+    if (-not $Path.StartsWith($prefix, [StringComparison]::Ordinal)) { throw 'Source scope mismatch' }
+    if ($parts -match '^(datasets|raw|participant|participants|participant-level|provenance|fi_candidate_registry\.csv|fi_changelog\.md)$') { throw 'Hard-denied source' }
     if ($Path -match '\.csv$' -and 'outputs' -cnotin $parts[0..($parts.Count - 2)]) {
         throw 'CSV outside outputs'
     }
@@ -224,6 +228,7 @@ try {
     if ($contentDigest -cne $manifestObject.content_digest) { throw 'Manifest content digest mismatch' }
     $runCorrelationDigest = Get-RunCorrelation $manifestObject.protocol_version $TransferId $contentDigest
     if ($runCorrelationDigest -cne $manifestObject.run_correlation_digest) { throw 'Manifest run correlation mismatch' }
+    if ($SourceScope -ceq 'fira1' -and ($manifestObject.source_repository_id -cne 'Python-R-Scripts' -or $manifestObject.profile_id -cne 'fira1-kb' -or $manifestObject.workstream -cne 'FIRA1')) { throw 'FIRA1 identity mismatch' }
     $metadata = [Collections.Generic.Dictionary[string,object]]::new([StringComparer]::OrdinalIgnoreCase)
     foreach ($row in @($manifestObject.files)) {
         $keys = @($row.PSObject.Properties.Name)
