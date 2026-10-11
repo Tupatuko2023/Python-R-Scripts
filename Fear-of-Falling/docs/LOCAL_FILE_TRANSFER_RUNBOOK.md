@@ -379,7 +379,6 @@ Työjuuri: komennot ajetaan `Fear-of-Falling`-juuresta, ellei toisin mainita.
 - Synteettinen validointi ja Termux-tarkistus: ks. tehtäväkortti
   `tasks/03-review/BIDIRECTIONAL_LOCAL_FILE_TRANSFER_RUNBOOK.md`.
 
-
 ## Repositoryn eksplisiittinen FIRA1-lähdevalinta (laajennuksen katselmointiehdokas)
 
 V2-wire-protokolla pysyy `FOF_ARTIFACT_HANDOFF/2`:na. Lähdetiedostojen täsmälliset repositorysuhteelliset polut, koot ja SHA-256-arvot sidotaan olemassa olevaan content digestiin; uusi wire-kenttä ei ole tarpeen. Oletus `fof` säilyttää nykyisen FOF-profiilin. Ensimmäinen uusi, erikseen valittava alias on `fira1`, jonka ainoa sallittu prefix on `GPT/(FIRA1) Frailty Index Research Assistant/`. Tämä ei avaa kaikkia aliprojekteja tai rekursiivista oletusvalintaa.
@@ -395,7 +394,6 @@ Arkistojen kuudeksi eroavaksi ehdokkaaksi tunnistettiin KB_INDEX, FI_R_WORKFLOW,
 PC:n Registryltä puuttuvat Termuxissa olevat kolme DEAC-merkintää ja Changelogista myöhemmät päätöslokit. Ehdotus on tiedostokohtainen yhdistetty muutos, joka säilyttää PC:n nykyiset rivit ja lisää vain tarkastetut puuttuvat rivit/lokit; sijainti ei määritä auktoriteettia, ja päätösten provenance on tarkastettava erikseen. Tämä PR ei tee näitä sisältömuutoksia eikä kirjoita PC-tiedostoja.
 
 Sijoitus on edelleen erillinen preview → hyväksyntä → execute -vaihe. Nykyisen kohdetiedoston muuttunut sisältö tuottaa `CONFLICT`; sitä ei ylikirjoiteta. Erillinen versionoitu kohde tai tarkastettu scoped Git-merge vaatii oman hyväksynnän. Staging ja evidenssi säilytetään repositoryjen ulkopuolella; siivous suunnitellaan erikseen eikä ole automaattinen.
-
 
 Lähdecheckoutin juuren dev/inode sidotaan avattuun descriptoriin ennen profiilin tai payloadin lukua ja varmennetaan uudelleen ennen manifestin valmistumista ja vastaanotinprosessin käynnistystä. FIRA1-tilan temporary-bundle pitää olla koko lähderepositoryn ulkopuolella. `--source-scope fira1 --smoke-test` hylätään: FIRA1-synteettiset testit käyttävät omaa `fira1-kb`-identiteettiä ja paikallisesti luotuja testitavuja. Adapterin FIRA1 `--check` vaatii receiverin `SourceScope`-parametrilta eksplisiittisen `fira1` ValidateSet -tuen; vanha receiver ei kelpaa uudelle reitille.
 
