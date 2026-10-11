@@ -148,9 +148,20 @@ ennallaan.
   (`fof-usage-43398dd`). Lopputila varmennettu: `git worktree list --porcelain`
   = vain säilytetyt kaksi.
 - **Termux-siivous (2026-10-10):** Termux-agentti poisti kaksi hyväksyttyä
-  testikloonia. Evidenssin eheys ja normaalikäytön riippuvuuksien säilyminen on
-  varmennettu.
-- **Avoin loppuvarmennus:** poiston jälkeinen `--check` estyi verkkoesteeseen
-  (exit 255, `No route to host`). Loppuvarmennus pidetään **avoimena**, kunnes A:n
-  `--check` läpäisee. Tässä ei aloiteta uusia siirtotestejä eikä korrelaatiokorjausta.
-- **Tila:** REVIEW — DONE odottaa, että A:n `--check` läpäisee.
+  **väliaikaista erilliskloonia** (kloonit, ei worktreet → poistettu hakemistoina,
+  ei `git worktree remove`). Evidenssin eheys ja normaalikäytön riippuvuuksien
+  säilyminen on varmennettu.
+- **Säilytettävät normaalikäytön checkoutit (perustelut):**
+  - `C:\GitWork\Python-R-Scripts` (PC-checkout): käyttäjän ensisijainen checkout,
+    jossa paikallisia muutoksia (2 × `ANALYSIS_PLAN.md`, `DEAC-Frailty-Index/`)
+    → ei poisteta.
+  - `prs-197-win-30286b0` (Windows): tämän sulkemistyön säilytettävä ensisijainen
+    checkout → ei poisteta.
+  - `fof-usage-43398dd`: toisen tehtävän ("usage") worktree → ei poisteta.
+- **Loppuvarmennus (valmistunut 2026-10-10):** A:n `--check` **exit 0**,
+  `FOF_V2_SSH_PREFLIGHT_OK`. Lokit säilytetty; ei payloadia eikä asetusten muutoksia.
+  Historiallinen tapahtuma: aiempi poiston jälkeinen `--check` estyi verkkoesteeseen
+  (exit 255, `No route to host`), jolloin loppuvarmennus pidettiin avoimena, kunnes se
+  läpäisi.
+- **Tila:** DONE — sulkeminen viimeistelty (worktree- ja kloonisiivous + loppuvarmennus
+  valmiit). PR #200 katselmoitavana; ei mergeä tässä.
