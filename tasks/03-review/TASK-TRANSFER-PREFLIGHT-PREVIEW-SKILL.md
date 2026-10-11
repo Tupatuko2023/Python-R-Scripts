@@ -22,30 +22,33 @@ ulkopuolella.
 - `tasks/03-review/skill-candidates/fof-transfer-preflight-preview/SKILL.md` (uusi)
 - tämä tehtäväkortti
 
-## Sijainti ja löydettävyys (tarkennettu)
+## Sijainti ja löydettävyys (OpenCode)
 
-- Ehdokas siirrettiin **pois** `.opencode/skills/fof-transfer-preflight-preview/SKILL.md`-polusta
-  (joka on OpenCoden automaattisesti skannaama) → `tasks/03-review/skill-candidates/…`.
-- **Tilat erotetaan:** *löydettävissä* (tiedosto skannattavassa hakemistossa) ≠ *ladattu*
-  (agentti kutsui `skill`-työkalua) ≠ *käytetty* (ohje muutti toimintaa). Aiempi väite
-  "ei aktivoitu" oli epätarkka: sijainti `.opencode/skills/`-hakemistossa teki ehdokkaan
-  **löydettäväksi** tässä checkoutissa.
-- Uusi sijainti `tasks/03-review/skill-candidates/…` on OpenCoden/Codexin
-  skill-löydettävyyspolkujen ulkopuolella (ks. lähteet) → ehdokas ei ole löydettävissä.
-- Repon `SKILLS.md` nimeää aktiivisten skillien sijainnit `skills/` ja `.codex/skills/`;
-  `skills/`-hakemistoa ei ole tässä repossa. Katselmointisijainti `tasks/03-review/…` on
-  review-artefakti, ei aktiivinen skill-sijainti → ei ristiriitaa ohjeiden kanssa.
+- Ehdokas on siirretty pois `.opencode/skills/…`-polusta (OpenCoden skannaama) →
+  `tasks/03-review/skill-candidates/…`, joka on OpenCoden skill-löydettävyyspolun
+  ulkopuolella.
+- **Tilat:** _löydettävissä_ (`.opencode/skills/<name>/SKILL.md`) ≠ _ladattu_ (agentti
+  kutsui OpenCoden `skill`-työkalua) ≠ _käytetty_. Löydettävyys ei yksin tarkoita
+  latausta. Tämä ehdokas ei ole löydettävissä; sijainti (ei pelkkä käyttökielto) pitää
+  sen inaktiivisena.
+- Codex-kohtainen variantti on mahdollinen **erillinen jatkotyö**, ei osa tätä
+  ensimmäistä ehdokasta.
 
 ## Requirements
 
 1. Lukee runbookin ja tunnistaa siirtosuunnan (A outbound; B pull).
-2. Valmistelee preflight- (`--check`) ja preview-komennot (siirto- ja sijoitus-preview erikseen).
-3. Selittää käyttäjän toimittamat tulosteet.
-4. Erottaa siirron `VERIFIED`, paluukuitin (`NOT_DELIVERED`) ja `PLACED`-sijoituksen.
-5. Kertoo puuttuvat tiedot ja ihmisen hyväksynnät — ei täytä niitä itse.
+2. Valmistelee komennot runbookin mukaisina kokonaisuuksina tarvittavine
+   ympäristövalintoineen (ei pelkkää adapterin `--check`-komentoa käynnistyskomentona).
+3. Selittää käyttäjän toimittamat tulosteet **suunnittain**.
+4. Päättelee `VERIFIED`, paluukuitin tilan ja `PLACED`-sijoituksen **vain** käyttäjän
+   toimittamasta, kyseiseen ajoon korreloidusta evidenssistä. Puuttuva näyttö =
+   **UNVERIFIED**. Ei kovakoodattua `NOT_DELIVERED`-tilaa.
+5. Kertoo puuttuvat tiedot **työvaiheittain** (komentojen valmistelu / preview-tulosteen
+   tulkinta / myöhempi hyväksyntävaihe) — ei vaadi `run_id`:tä ennen sen syntymistä eikä
+   digest-hyväksyntää komentojen valmisteluun.
 6. **Ei** suorita komentoja, hyväksy digestejä, aktivoi profiileja eikä siirrä tiedostoja
    (**käyttörajaus, ei tekninen esto**).
-7. Kuvaa valmisteltavien komentojen vaikutukset (kirjoitukset + verkko) koodiviittein.
+7. Kuvaa komentojen vaikutukset (kirjoitukset + verkko) koodiviittein.
 8. Viittaa runbookiin kopioimatta sitä.
 
 ## Komentojen vaikutukset (koodista tarkistettu)
@@ -62,11 +65,12 @@ ulkopuolella.
 
 ## Sources & versions (nykyinen dokumentaatio ≠ asennettu versio)
 
-- **Nykyinen dokumentaatio (virallinen):**
-  - OpenCode skills: https://opencode.ai/docs/skills/ (`.opencode/skills/<name>/SKILL.md`;
-    frontmatter `name` + `description`; nimen on vastattava hakemistoa).
-  - Codex skills: https://developers.openai.com/codex/skills , https://developers.openai.com/codex/build-skills.
-- **Asennettujen CLI-versioiden varmennus (lokaali):** `codex-cli 0.160.0`, `opencode 1.18.35`.
+- **Nykyinen dokumentaatio (virallinen, OpenCode):** <https://opencode.ai/docs/skills/> —
+  löydettävyys `.opencode/skills/<name>/SKILL.md`; frontmatter `name` + `description`;
+  nimen on vastattava hakemistoa.
+- **Asennettujen CLI-versioiden varmennus (lokaali):** `opencode 1.18.35` (ja
+  `codex-cli 0.160.0` läsnä). Nämä varmistavat asennetut työkalut, eivät sitä että
+  ehdokas on ladattu tai käytetty.
 - Python-R-Scripts lähdecommit: `23b41239027acd75f247d9ffce63998832127a10`.
 - Suunnitteluaineisto: `FOF-Dissertation-Project/docs/guides/windows-termux/windows-termux-skill.md`.
 
@@ -75,18 +79,17 @@ ulkopuolella.
 Kaikissa haaroissa samat synteettiset lähtötiedot; mittarit: **(1) valmisteluaika,
 (2) käyttäjän työvaiheet, (3) komentovirheet.**
 
-1. **Runbook yksin** — käyttäjä lukee runbookin ja muotoilee komennot itse.
-2. **Olemassa olevat shell-apurit** — **ei käytettävissä:** `fof-check`/`fof-preview`/`fof-send`
-   eivät ole olemassa repossa (`git grep` ei löydä; suunnitteluaineiston apurit ovat
-   ehdotus, ei toteutus). Haara kirjataan "ei läsnä"; lähin olemassa oleva vertailukohta
-   on raaka CLI-komentojono.
+1. **Runbook yksin** — käyttäjä lukee runbookin ja muotoilee komennot itse (myös raa'at
+   CLI-komennot kuuluvat tähän haaraan).
+2. **Olemassa olevat shell-apurit** — **NOT_AVAILABLE:** `fof-check`/`fof-preview`/`fof-send`
+   eivät ole olemassa repossa; suunnitteluaineiston apurit ovat ehdotus, ei toteutus.
 3. **Skill** — tämä ehdokas valmistelee komennot ja jäsentää tulosteet.
 
 ## Install / removal plan (ei suoritettu)
 
 - **Ylläpitopaikka:** Python-R-Scripts (runbook + skriptit ovat siellä).
-- **Asennus (myöhempi, erikseen valtuutettava):** kopioi ehdokas repossa sovittuun
-  aktiiviseen skill-sijaintiin (`.opencode/skills/…` tai `.codex/skills/…`).
+- **Asennus (myöhempi, erikseen valtuutettava):** kopioi ehdokas aktiiviseen
+  OpenCode-skill-sijaintiin (`.opencode/skills/…`).
 - **Poisto:** poista `tasks/03-review/skill-candidates/fof-transfer-preflight-preview/`
   ja palauta tämä kortti. Ei runtime-/profiilimuutoksia.
 
@@ -104,9 +107,10 @@ Kaikissa haaroissa samat synteettiset lähtötiedot; mittarit: **(1) valmistelua
 ## Log
 
 - 2026-10-11: Valmisteltu ehdokas (base `23b41239027acd75f247d9ffce63998832127a10`); siirretty
-  pois automaattisesta löydettävyydestä `tasks/03-review/skill-candidates/…`; korjattu
-  aiempi virheellinen commit-viite; tarkennettu komentojen vaikutukset ja vertailusuunnitelma.
-  Ei asennusta, ei aktivointia, ei siirtoscriptimuutoksia, ei oikeaa aineistoa.
+  pois automaattisesta löydettävyydestä; korjattu commit-viite, suuntaerottelu
+  tulostetulkinnassa (ei kovakoodattua `NOT_DELIVERED`), OpenCode-rajaus, vaiheittainen
+  puuttuvien tietojen lista ja runbook-tason komentokokonaisuudet. Ei asennusta, ei
+  aktivointia, ei siirtoscriptimuutoksia, ei oikeaa aineistoa.
 
 ## Blockers
 
