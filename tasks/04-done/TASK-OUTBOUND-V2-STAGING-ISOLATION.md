@@ -128,4 +128,43 @@ ennallaan.
   Gitin ulkopuolisessa käyttöönottokuittauksessa (ei julkisessa repositoryssa).
 - **Avoin tehtävä (erillinen):** FAILED-vastauksen `file_count`/korrelaatioristiriita →
   `tasks/00-backlog/TASK-V2-FAILED-RECEIPT-CORRELATION.md`.
-- **Tila:** DONE (Owner-merge-näytön perusteella).
+- **Tila (alkuperäinen sulkeminen):** DONE (Owner-merge-näytön perusteella).
+
+## Palautus review-tilaan (2026-10-10)
+
+- **Owner-käsky:** sulkeminen peruutetaan toistaiseksi ja tehtävä palautetaan
+  `tasks/03-review/`-tilaan odottamaan worktree-siivousta. Peruste: `WORKFLOW.md`:n
+  DONE-ehto edellyttää tehtävän kaikkien työtreiden poistoa kaikista käytetyistä
+  ympäristöistä (mukaan lukien toimitus- ja varmennusworktreet) ja lopputilan
+  varmennusta `git worktree list --porcelain`-komennolla.
+- **Säilyy:** itse toteutus, Owner-merge-näyttö (PR #198 merge `91f4037c…`), PR #199
+  (`9f1e7ae…`) sekä kaikki evidenssi. Vain lifecycle-tila palautetaan, kunnes
+  molempien ympäristöjen (Windows + Termux) siivous ja varmennus on kirjattu.
+- **Windows-siivous (2026-10-10):** poistettu `git worktree remove`-komennolla
+  (ei `--force`) valmiit tämän työn worktreet: `fof-main-9f1e7ae` (varmennus),
+  `fof-closure-91f4037c` (toimitus), `fof-v2staging-43398dd` (testattu
+  toimitushead). Kaikki puhtaita, ei julkaisemattomia committeja. Säilytetyt:
+  ensisijainen checkout (`prs-197-win-30286b0`) ja muun tehtävän worktree
+  (`fof-usage-43398dd`). Lopputila varmennettu: `git worktree list --porcelain`
+  = vain säilytetyt kaksi.
+- **Termux-siivous (2026-10-10):** Termux-agentti poisti kaksi hyväksyttyä
+  **väliaikaista erilliskloonia** (kloonit, ei worktreet → poistettu hakemistoina,
+  ei `git worktree remove`). Evidenssin eheys ja normaalikäytön riippuvuuksien
+  säilyminen on varmennettu.
+- **Säilytettävät normaalikäytön checkoutit (perustelut):**
+  - `C:\GitWork\Python-R-Scripts` (PC-checkout): käyttäjän ensisijainen checkout,
+    jossa paikallisia muutoksia (2 × `ANALYSIS_PLAN.md`, `DEAC-Frailty-Index/`)
+    → ei poisteta.
+  - `prs-197-win-30286b0` (Windows): tämän sulkemistyön säilytettävä ensisijainen
+    checkout → ei poisteta.
+  - `fof-usage-43398dd`: toisen tehtävän ("usage") worktree → ei poisteta.
+  - **Termux: kaksi säilytettävää normaalikäytön checkoutia** → ei poisteta; peruste:
+    normaalikäyttö ja sen riippuvuudet varmennettu (eivät tehtävän väliaikaisia
+    klooneja/worktreeitä, jotka poistettiin).
+- **Loppuvarmennus (valmistunut 2026-10-10):** A:n `--check` **exit 0**,
+  `FOF_V2_SSH_PREFLIGHT_OK`. Lokit säilytetty; ei payloadia eikä asetusten muutoksia.
+  Historiallinen tapahtuma: aiempi poiston jälkeinen `--check` estyi verkkoesteeseen
+  (exit 255, `No route to host`), jolloin loppuvarmennus pidettiin avoimena, kunnes se
+  läpäisi.
+- **Tila:** DONE — sulkeminen viimeistelty (worktree- ja kloonisiivous + loppuvarmennus
+  valmiit). PR #200 katselmoitavana; ei mergeä tässä.
