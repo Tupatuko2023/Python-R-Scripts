@@ -120,6 +120,22 @@ Kaikissa haaroissa samat synteettiset lähtötiedot; mittarit: **(1) valmistelua
 
 - Ei. Tuotantoprofiilien aktivointi ja oikean aineiston siirto vaativat erillisen valtuutuksen.
 
+## Keskeytys (2026-10-11)
+
+- **Syy:** Owner priorisoi **ensimmäisen artikkelin tutkimussuunnitelman**; siirtoskillinh
+  jatkokehitys ja käyttökokeilu keskeytetään.
+- **Toimituscommit:** `07dfeb31408f0f9323f4802c08a08d04c82501be`; **draft PR #201** (ei yhdistetty).
+- **Ehdokkaan sijainti:** `tasks/03-review/skill-candidates/fof-transfer-preflight-preview/SKILL.md`
+  (automaattisen löydettävyyden ulkopuolella — säilytetään siellä).
+- **Säilytetty evidenssi:** `C:\FOF_KB_RUNTIME_20261006\evidence\pr201-review-07dfeb3.zip`.
+- **Kuusi vastausta (FOLLOW-UP #12):** saman agentin esimerkkivastauksia (ei erillisiä
+  malliajoja eikä aitoa OpenCode-skill-latausta).
+- **NOT_RUN:** käyttäjävertailu (runbook–skill) ja todellinen OpenCode-latauskokeilu.
+- **Avoin kohta:** outbound-komennon ympäristöasetusten kokonaisuus (asetusten inlineäys)
+  jää avoimeksi.
+- **Jatkaminen:** alkaa käyttäjävertailusta tai Ownerin uudesta rajauksesta.
+
 ## Tila
 
-- REVIEW — katselmoitava ehdokas; ei asennettu, ei aktivoitu, ei löydettävissä.
+- BACKLOG — keskeytetty (Owner priorisoi 1. artikkelin tutkimussuunnitelman); ei asennettu,
+  ei aktivoitu, ei löydettävissä. PR #201 pysyy draftina.
