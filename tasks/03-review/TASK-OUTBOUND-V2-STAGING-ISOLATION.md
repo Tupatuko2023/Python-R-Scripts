@@ -140,9 +140,17 @@ ennallaan.
 - **Säilyy:** itse toteutus, Owner-merge-näyttö (PR #198 merge `91f4037c…`), PR #199
   (`9f1e7ae…`) sekä kaikki evidenssi. Vain lifecycle-tila palautetaan, kunnes
   molempien ympäristöjen (Windows + Termux) siivous ja varmennus on kirjattu.
-- **Windows-inventaario (2026-10-10):** siivottavat worktreet
-  `fof-main-9f1e7ae` (varmennus), `fof-closure-91f4037c` (toimitus),
-  `fof-v2staging-43398dd` (testattu toimitushead). Säilytettävät: ensisijainen
-  checkout (`prs-197-win-30286b0`) ja muun tehtävän worktree (`fof-usage-43398dd`).
-- **Termux-inventaario:** odottaa (pyydetty Termux-agentilta).
-- **Tila:** REVIEW — DONE odottaa molempien ympäristöjen varmennettua siivousta.
+- **Windows-siivous (2026-10-10):** poistettu `git worktree remove`-komennolla
+  (ei `--force`) valmiit tämän työn worktreet: `fof-main-9f1e7ae` (varmennus),
+  `fof-closure-91f4037c` (toimitus), `fof-v2staging-43398dd` (testattu
+  toimitushead). Kaikki puhtaita, ei julkaisemattomia committeja. Säilytetyt:
+  ensisijainen checkout (`prs-197-win-30286b0`) ja muun tehtävän worktree
+  (`fof-usage-43398dd`). Lopputila varmennettu: `git worktree list --porcelain`
+  = vain säilytetyt kaksi.
+- **Termux-siivous (2026-10-10):** Termux-agentti poisti kaksi hyväksyttyä
+  testikloonia. Evidenssin eheys ja normaalikäytön riippuvuuksien säilyminen on
+  varmennettu.
+- **Avoin loppuvarmennus:** poiston jälkeinen `--check` estyi verkkoesteeseen
+  (exit 255, `No route to host`). Loppuvarmennus pidetään **avoimena**, kunnes A:n
+  `--check` läpäisee. Tässä ei aloiteta uusia siirtotestejä eikä korrelaatiokorjausta.
+- **Tila:** REVIEW — DONE odottaa, että A:n `--check` läpäisee.
