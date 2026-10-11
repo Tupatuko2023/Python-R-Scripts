@@ -7,68 +7,93 @@ kaksisuuntainen ja staging-only. Siirron mekaaninen turvallisuus (hard-deny,
 ylikirjoitussuoja, kohdetörmäyksen esto, fail-closed) on yksinomaan suoritettavissa
 skripteissä (`export_artifacts_to_windows.sh`, `fof_v2_ssh_adapter.py`,
 `fof_kb_pull.py`, `place_verified_bundle.py`) — **ei** agentin ohjeistuksessa.
-Ohut, pelkästään lukeva apuskilli voi vähentää manuaalista komentojen muotoilua ja
-tulosten jäsennystä. Tämä tehtävä valmistelee **katselmoitavan ehdokkaan**; sitä ei
-asenneta eikä aktivoida.
+Ohut, lukeva apuskilli voi vähentää manuaalista komentojen muotoilua ja tulosten
+jäsennystä. Tämä tehtävä valmistelee **katselmoitavan ehdokkaan**; sitä ei asenneta
+eikä aktivoida.
 
 ## Objective
 
 Yksi ohut, lukeva avustava skill-ehdokas nykyisen Windows-agentin CLI-alustalle
-(OpenCode), ylläpidettynä Python-R-Scripts-repossa runbookin ja skriptien vieressä.
+(OpenCode), säilytettynä katselmointisijainnissa automaattisen löydettävyyden
+ulkopuolella.
 
 ## Scope (katselmoitava ehdokas)
 
-- `.opencode/skills/fof-transfer-preflight-preview/SKILL.md` (uusi)
+- `tasks/03-review/skill-candidates/fof-transfer-preflight-preview/SKILL.md` (uusi)
 - tämä tehtäväkortti
+
+## Sijainti ja löydettävyys (tarkennettu)
+
+- Ehdokas siirrettiin **pois** `.opencode/skills/fof-transfer-preflight-preview/SKILL.md`-polusta
+  (joka on OpenCoden automaattisesti skannaama) → `tasks/03-review/skill-candidates/…`.
+- **Tilat erotetaan:** *löydettävissä* (tiedosto skannattavassa hakemistossa) ≠ *ladattu*
+  (agentti kutsui `skill`-työkalua) ≠ *käytetty* (ohje muutti toimintaa). Aiempi väite
+  "ei aktivoitu" oli epätarkka: sijainti `.opencode/skills/`-hakemistossa teki ehdokkaan
+  **löydettäväksi** tässä checkoutissa.
+- Uusi sijainti `tasks/03-review/skill-candidates/…` on OpenCoden/Codexin
+  skill-löydettävyyspolkujen ulkopuolella (ks. lähteet) → ehdokas ei ole löydettävissä.
+- Repon `SKILLS.md` nimeää aktiivisten skillien sijainnit `skills/` ja `.codex/skills/`;
+  `skills/`-hakemistoa ei ole tässä repossa. Katselmointisijainti `tasks/03-review/…` on
+  review-artefakti, ei aktiivinen skill-sijainti → ei ristiriitaa ohjeiden kanssa.
 
 ## Requirements
 
-1. Lukee runbookin ja tunnistaa siirtosuunnan (A: Termux→Windows outbound;
-   B: Windows→Termux pull).
-2. Valmistelee preflight- (`--check`) ja preview-komennot (siirto-preview ja
-   sijoitus-preview erikseen).
-3. Selittää käyttäjän toimittamat tulosteet (`SUCCESS/0`, `FAILED/1`,
-   `UNKNOWN_REMOTE_STATE/3`, `EMPTY_NOT_EXECUTABLE`, `PLACE_REJECTED: <CODE>`,
-   tiedostokohtaiset tilat).
-4. Erottaa kolme eri asiaa: siirron `VERIFIED`, paluukuitti (`NOT_DELIVERED`) ja
-   `PLACED`-sijoitus (erillinen `PLACE/1`).
-5. Kertoo puuttuvat tiedot ja ihmisen hyväksynnät (`content_digest`,
-   `placement_digest`) — ei täytä niitä itse.
-6. **Ei** suorita shell-komentoja, hyväksy digestejä, aktivoi profiileja eikä siirrä
-   tiedostoja. Tämä on **käyttörajaus, ei tekninen esto** (mekaaninen turva on
-   skripteissä).
-7. Kuvaa valmisteltavien komentojen vaikutukset (kirjoitukset ja verkkoyhteydet).
-8. Viittaa runbookiin kopioimatta sitä skillin sisään.
+1. Lukee runbookin ja tunnistaa siirtosuunnan (A outbound; B pull).
+2. Valmistelee preflight- (`--check`) ja preview-komennot (siirto- ja sijoitus-preview erikseen).
+3. Selittää käyttäjän toimittamat tulosteet.
+4. Erottaa siirron `VERIFIED`, paluukuitin (`NOT_DELIVERED`) ja `PLACED`-sijoituksen.
+5. Kertoo puuttuvat tiedot ja ihmisen hyväksynnät — ei täytä niitä itse.
+6. **Ei** suorita komentoja, hyväksy digestejä, aktivoi profiileja eikä siirrä tiedostoja
+   (**käyttörajaus, ei tekninen esto**).
+7. Kuvaa valmisteltavien komentojen vaikutukset (kirjoitukset + verkko) koodiviittein.
+8. Viittaa runbookiin kopioimatta sitä.
 
-## Sources & versions
+## Komentojen vaikutukset (koodista tarkistettu)
 
-- Python-R-Scripts varmennettu lähtöcommit: `ae84e8eb6f7c6659602b415283e99a14a0f77ba1`.
-- `Fear-of-Falling/docs/LOCAL_FILE_TRANSFER_RUNBOOK.md`.
-- Nykyiset siirtoskriptit (`Fear-of-Falling/scripts/termux/…`).
+- `fof_v2_ssh_adapter.py --check`: `ssh …` → **verkko**; ei payloadia.
+- `export_artifacts_to_windows.sh` (preview): **ei SSH:tä** (vain `--execute`); rajattu
+  `<run_id>.json`-diagnostiikka vain jos `FOF_V2_DIAG_ROOT` on valmisteltu.
+- **`fof_kb_pull.py preview`: ei pelkästään lukeva — paikallisia kirjoituksia, ei verkkoa.**
+  Luo uuden erän `new_directory(batch_root, batch_id)`, `snapshots/` (0700) ja
+  `write_new(batch/'snapshots/NNNN', data)` per valittu tiedosto sekä `manifest.json` ja
+  `runtime.json` (`fof_kb_pull.py`, `def preview`). `approve` kirjoittaa hyväksynnän erään.
+  `serve`/`pull` käyttävät SSH:tä.
+- `place_verified_bundle.py preview`: **ei kirjoita**; `execute` kirjoittaa kohteet + kuitin.
+
+## Sources & versions (nykyinen dokumentaatio ≠ asennettu versio)
+
+- **Nykyinen dokumentaatio (virallinen):**
+  - OpenCode skills: https://opencode.ai/docs/skills/ (`.opencode/skills/<name>/SKILL.md`;
+    frontmatter `name` + `description`; nimen on vastattava hakemistoa).
+  - Codex skills: https://developers.openai.com/codex/skills , https://developers.openai.com/codex/build-skills.
+- **Asennettujen CLI-versioiden varmennus (lokaali):** `codex-cli 0.160.0`, `opencode 1.18.35`.
+- Python-R-Scripts lähdecommit: `23b41239027acd75f247d9ffce63998832127a10`.
 - Suunnitteluaineisto: `FOF-Dissertation-Project/docs/guides/windows-termux/windows-termux-skill.md`.
-- Asennetut CLI-versiot: **codex-cli 0.160.0**, **opencode 1.18.35**.
-- Skill-rakenne: OpenCode `.opencode/skills/<n>/SKILL.md` (YAML `name`+`description`);
-  Codex `.codex/skills/<n>/SKILL.md`.
+
+## Synthetic comparison plan (ei suoritettu) — kolme haaraa
+
+Kaikissa haaroissa samat synteettiset lähtötiedot; mittarit: **(1) valmisteluaika,
+(2) käyttäjän työvaiheet, (3) komentovirheet.**
+
+1. **Runbook yksin** — käyttäjä lukee runbookin ja muotoilee komennot itse.
+2. **Olemassa olevat shell-apurit** — **ei käytettävissä:** `fof-check`/`fof-preview`/`fof-send`
+   eivät ole olemassa repossa (`git grep` ei löydä; suunnitteluaineiston apurit ovat
+   ehdotus, ei toteutus). Haara kirjataan "ei läsnä"; lähin olemassa oleva vertailukohta
+   on raaka CLI-komentojono.
+3. **Skill** — tämä ehdokas valmistelee komennot ja jäsentää tulosteet.
 
 ## Install / removal plan (ei suoritettu)
 
-- **Ylläpitopaikka:** Python-R-Scripts, koska runbook + skriptit (skillin kohde) ovat siellä.
-- **Asennus:** tiedosto on jo repossa polussa `.opencode/skills/fof-transfer-preflight-preview/SKILL.md`;
-  OpenCode lataa sen repositorion skill-hakemistosta ilman erillistä asennusta.
-- **Poisto:** poista hakemisto `.opencode/skills/fof-transfer-preflight-preview/` ja palauta
-  tämä kortti. Ei runtime-/profiilimuutoksia.
+- **Ylläpitopaikka:** Python-R-Scripts (runbook + skriptit ovat siellä).
+- **Asennus (myöhempi, erikseen valtuutettava):** kopioi ehdokas repossa sovittuun
+  aktiiviseen skill-sijaintiin (`.opencode/skills/…` tai `.codex/skills/…`).
+- **Poisto:** poista `tasks/03-review/skill-candidates/fof-transfer-preflight-preview/`
+  ja palauta tämä kortti. Ei runtime-/profiilimuutoksia.
 
-## Synthetic comparison plan (ei suoritettu)
+## Avoimet varmennuskohdat
 
-- **Vertailu:** runbook yksin vs tämä skill, samalla synteettisellä siirtotehtävällä
-  (ei oikeaa aineistoa).
-- **Mittarit:** (1) valmisteluaika, (2) käyttäjän vaiheiden lukumäärä,
-  (3) komentovirheiden lukumäärä.
-- Tulos kirjataan erikseen; vertailua **ei** suoriteta tässä.
-
-## Validation (avoin)
-
-- Ei vielä ajettu. Ehdokas jää `03-review`-tilaan.
+- Ei vielä ajettu: vertailu ja mahdollinen aktivointi.
+- Ehdokas jää `03-review`-tilaan.
 
 ## Proposals (ei toteutettu)
 
@@ -78,14 +103,15 @@ Yksi ohut, lukeva avustava skill-ehdokas nykyisen Windows-agentin CLI-alustalle
 
 ## Log
 
-- 2026-10-11: Valmisteltu katselmoitava ehdokas eristetyssä haarassa (base `ae84e8eb…`).
+- 2026-10-11: Valmisteltu ehdokas (base `23b41239027acd75f247d9ffce63998832127a10`); siirretty
+  pois automaattisesta löydettävyydestä `tasks/03-review/skill-candidates/…`; korjattu
+  aiempi virheellinen commit-viite; tarkennettu komentojen vaikutukset ja vertailusuunnitelma.
   Ei asennusta, ei aktivointia, ei siirtoscriptimuutoksia, ei oikeaa aineistoa.
 
 ## Blockers
 
-- Ei. Tuotantoprofiilien aktivointi ja oikean aineiston siirto vaativat erillisen
-  valtuutuksen (PENDING-validoinnit + ihmisen sisältöhyväksyntä).
+- Ei. Tuotantoprofiilien aktivointi ja oikean aineiston siirto vaativat erillisen valtuutuksen.
 
 ## Tila
 
-- REVIEW — katselmoitava ehdokas; ei asennettu eikä aktivoitu.
+- REVIEW — katselmoitava ehdokas; ei asennettu, ei aktivoitu, ei löydettävissä.
