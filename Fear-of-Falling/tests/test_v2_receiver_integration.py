@@ -355,7 +355,15 @@ class NativeReceiverContractTests(unittest.TestCase):
         try:
             os.symlink(target, link, target_is_directory=True)
         except OSError as exc:
-            self.skipTest('native symlink/reparse creation unavailable: ' + str(exc.errno))
+            # winerror 1314 = symlink privilege absent; a junction is a reparse point without it.
+            import subprocess
+            made = subprocess.run(['cmd', '/c', 'mklink', '/J', str(link), str(target)],
+                                  capture_output=True, text=True)
+            if made.returncode != 0:
+                self.skipTest('native symlink/reparse creation unavailable: winerror='
+                              + str(getattr(exc, 'winerror', None)) + ' errno=' + str(exc.errno))
+        self.assertTrue(getattr(os.lstat(link), 'st_file_attributes', 0) & 0x400,
+                        'fixture is not a reparse point')
         self.staging = link
         manifest, _, wire = native_receiver_fixture()
         self.reject(manifest, wire)
