@@ -365,7 +365,11 @@ def v2_diag_write(diag_root, root, run_id, record):
                 pass
 
 
-def v2_path(value, staging=False):
+V2_SCOPES = {'fof': 'Fear-of-Falling',
+             'fira1': 'GPT/(FIRA1) Frailty Index Research Assistant'}
+
+
+def v2_path(value, staging=False, source_scope='fof'):
     if (type(value) is not str or not value.isascii()
             or len(value) > (100 if staging else 1024)):
         fail('invalid profile path')
@@ -375,7 +379,8 @@ def v2_path(value, staging=False):
     if staging:
         if len(parts) != 1:
             fail('staging must be a filename')
-    elif parts[0] != 'Fear-of-Falling' or len(parts) < 2:
+    elif (source_scope not in V2_SCOPES
+          or not value.startswith(V2_SCOPES[source_scope] + '/')):
         fail('invalid source scope')
     deny(parts)
     if any(p.lower() in V2_EXTRA_DENIED for p in parts):
@@ -383,7 +388,7 @@ def v2_path(value, staging=False):
     return parts
 
 
-def v2_load(root_fd, path, smoke_test=False):
+def v2_load(root_fd, path, smoke_test=False, source_scope='fof'):
     def unique(pairs):
         result = {}
         for key, value in pairs:
@@ -406,6 +411,8 @@ def v2_load(root_fd, path, smoke_test=False):
         fail('profile schema mismatch')
     # Smoke identity is a separate opt-in admission policy, never a profile field.
     constants = dict(V2_CONSTANTS)
+    if source_scope == 'fira1':
+        constants.update(profile_id='fira1-kb', workstream='FIRA1')
     if smoke_test:
         constants.update(profile_id='fof-synthetic-smoke', profile_version='0.0.0')
     for key, expected in constants.items():
@@ -422,7 +429,7 @@ def v2_load(root_fd, path, smoke_test=False):
     for row in p['files']:
         if type(row) is not dict or set(row) != V2_ROW_KEYS:
             fail('profile entry schema mismatch')
-        source = v2_path(row['source_path'])
+        source = v2_path(row['source_path'], source_scope=source_scope)
         target = v2_path(row['staging_path'], staging=True)
         if (row['classification'] != 'DISTRIBUTABLE_AS_IS'
                 or type(row['approval_reference']) is not str
@@ -472,6 +479,14 @@ def v2_repository(root):
     return head
 
 
+def v2_root_identity(root_fd, root):
+    held = os.fstat(root_fd)
+    current = os.lstat(os.path.dirname(root))
+    if (not stat.S_ISDIR(held.st_mode) or not stat.S_ISDIR(current.st_mode)
+            or (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino)):
+        v2_error('SOURCE_ROOT_CHANGED')
+
+
 def v2_measure(root_fd, parts):
     with opened(root_fd, parts) as fd:
         before = os.fstat(fd)
@@ -493,7 +508,7 @@ def v2_measure(root_fd, parts):
     return size, h.hexdigest()
 
 
-def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, approved_digest, smoke_test=False):
+def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, approved_digest, smoke_test=False, source_scope='fof'):
     """Explicit trusted local process only; no profile-mode SSH configuration."""
     # Local, repo-external, private diagnostics root -- a SEPARATE runtime choice
     # (FOF_V2_STAGING_DIR is the Windows staging, not the local log path).
@@ -516,7 +531,8 @@ def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, a
         emit('FAILED')
         v2_error('LOCAL_RECEIVER_REQUIRED')
     temp_root = os.path.realpath(tempfile.gettempdir())
-    if os.path.commonpath([os.path.realpath(root), temp_root]) == os.path.realpath(root):
+    source_root = os.path.dirname(root) if source_scope == 'fira1' else root
+    if os.path.commonpath([os.path.realpath(source_root), temp_root]) == os.path.realpath(source_root):
         emit('FAILED')
         v2_error('TEMP_OUTSIDE_SOURCE_REQUIRED')
     bundle_dir = tempfile.mkdtemp(prefix='fof-v2-local-', dir=temp_root)
@@ -528,7 +544,7 @@ def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, a
             info.size = len(data)
             archive.addfile(info, io.BytesIO(data))
             for row in manifest['files']:
-                parts = v2_path(row['source_path'])[1:]
+                parts = v2_path(row['source_path'], source_scope=source_scope)
                 with opened(root_fd, parts) as fd:
                     before = os.fstat(fd)
                     with os.fdopen(os.dup(fd), 'rb') as stream:
@@ -546,18 +562,22 @@ def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, a
             emit('FAILED')
             v2_error('ARCHIVE_TOO_LARGE')
     for row in manifest['files']:
-        if v2_measure(root_fd, v2_path(row['source_path'])[1:]) != (row['size_bytes'], row['sha256']):
+        if v2_measure(root_fd, v2_path(row['source_path'], source_scope=source_scope)) != (row['size_bytes'], row['sha256']):
             emit('FAILED')
             v2_error('SNAPSHOT_PARITY_FAILURE')
     if (v2_repository(root) != manifest['source_head']
-            or v2_digest(v2_load(root_fd, profile_path, smoke_test)) != v2_digest(profile)):
+            or v2_digest(v2_load(root_fd, profile_path, smoke_test, source_scope)) != v2_digest(profile)):
         emit('FAILED')
         v2_error('SOURCE_STATE_CHANGED')
+    v2_root_identity(root_fd, root)
     print('LOCAL V2 BUNDLE: ' + json.dumps(bundle_path), file=sys.stderr)
     child_env = dict(os.environ, FOF_V2_TRANSFER_ID=run_id)
     with open(bundle_path, 'rb') as wire, tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
         try:
-            result = subprocess.run([receiver], stdin=wire, stdout=stdout, stderr=stderr,
+            receiver_argv = [receiver]
+            if source_scope == 'fira1':
+                receiver_argv += ['--source-scope', 'fira1']
+            result = subprocess.run(receiver_argv, stdin=wire, stdout=stdout, stderr=stderr,
                                     timeout=60, env=child_env)
         except subprocess.TimeoutExpired:
             emit('UNKNOWN_REMOTE_STATE', None, True, 'TIMEOUT')
@@ -608,10 +628,22 @@ def v2_local_execute(root_fd, root, profile_path, profile, manifest, receiver, a
     print(v2_json({'outcome': 'SUCCESS', 'receipt': receipt}).decode('ascii'))
 
 
-def profile_main(root, path, execute, local_receiver=None, approved_digest=None, smoke_test=False):
-    root_fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+def profile_main(root, path, execute, local_receiver=None, approved_digest=None, smoke_test=False, source_scope='fof'):
+    # Source authority is the verified checkout containing this executable, never
+    # a root supplied by the profile. The CLI chooses a fixed, exact subtree.
+    if source_scope == 'fira1' and smoke_test:
+        v2_error('FIRA1_SMOKE_IDENTITY_NOT_SUPPORTED')
+    expected_root = os.lstat(os.path.dirname(root))
+    v2_repository(root)
+    path = 'Fear-of-Falling/' + path
+    root_fd = os.open(os.path.dirname(root), os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
-        p = v2_load(root_fd, path, smoke_test)
+        held_root = os.fstat(root_fd)
+        if (not stat.S_ISDIR(expected_root.st_mode)
+                or (expected_root.st_dev, expected_root.st_ino) != (held_root.st_dev, held_root.st_ino)):
+            v2_error('SOURCE_ROOT_CHANGED')
+        v2_root_identity(root_fd, root)
+        p = v2_load(root_fd, path, smoke_test, source_scope)
         head = v2_repository(root)
         if p['state'] == 'EMPTY_NOT_EXECUTABLE':
             if execute:
@@ -623,9 +655,8 @@ def profile_main(root, path, execute, local_receiver=None, approved_digest=None,
             return
         rows, total = [], 0
         for entry in p['files']:
-            parts = v2_path(entry['source_path'])
-            # root_fd already denotes Fear-of-Falling, unlike repo-relative metadata.
-            size, sha = v2_measure(root_fd, parts[1:])
+            parts = v2_path(entry['source_path'], source_scope=source_scope)
+            size, sha = v2_measure(root_fd, parts)
             if sha != entry['expected_sha256']:
                 fail('approved content hash drift')
             total += size
@@ -636,13 +667,14 @@ def profile_main(root, path, execute, local_receiver=None, approved_digest=None,
                          'size_bytes': size, 'sha256': sha})
         # A second safe-open read catches replacement after an earlier member was hashed.
         for row in rows:
-            if v2_measure(root_fd, v2_path(row['source_path'])[1:]) != (
+            if v2_measure(root_fd, v2_path(row['source_path'], source_scope=source_scope)) != (
                     row['size_bytes'], row['sha256']):
                 fail('source changed after manifest preparation')
         if v2_repository(root) != head:
             fail('source HEAD changed')
-        if v2_digest(v2_load(root_fd, path, smoke_test)) != v2_digest(p):
+        if v2_digest(v2_load(root_fd, path, smoke_test, source_scope)) != v2_digest(p):
             fail('profile changed during preparation')
+        v2_root_identity(root_fd, root)
         base = {k: p[k] for k in ('protocol_version', 'source_repository_id',
                                   'profile_id', 'profile_version', 'workstream')}
         base.update(source_head=head, profile_sha256=v2_digest(p), files=rows)
@@ -655,7 +687,7 @@ def profile_main(root, path, execute, local_receiver=None, approved_digest=None,
             fail('manifest size limit')
         if execute:
             if local_receiver is not None:
-                v2_local_execute(root_fd, root, path, p, manifest, local_receiver, approved_digest, smoke_test)
+                v2_local_execute(root_fd, root, path, p, manifest, local_receiver, approved_digest, smoke_test, source_scope)
                 return
             # No snapshots, archive, subprocess SSH, or misleading success before v2 wiring.
             v2_error('RECEIVER_NOT_AVAILABLE_FOR_PROTOCOL_V2')
@@ -670,6 +702,8 @@ def main():
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument('--allowlist', default='config/artifact-transfer.allowlist')
     modes.add_argument('--profile', help='FOF-relative v2 profile; local preview/preparation only')
+    parser.add_argument('--source-scope', choices=tuple(V2_SCOPES), default='fof',
+                        help='trusted exact source subtree; fira1 is explicit v2 opt-in')
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--smoke-test', action='store_true', help='test-only fof-synthetic-smoke/0.0.0 admission; requires --profile')
     parser.add_argument('--local-receiver', help='trusted local executable for v2; never inferred from a profile')
@@ -677,9 +711,9 @@ def main():
     args = parser.parse_args(sys.argv[2:])
     if args.profile is not None:
         profile_main(sys.argv[1], args.profile, args.execute, args.local_receiver,
-                     args.approved_content_digest, args.smoke_test)
+                     args.approved_content_digest, args.smoke_test, args.source_scope)
         return
-    if args.smoke_test or args.local_receiver is not None or args.approved_content_digest is not None:
+    if args.source_scope != 'fof' or args.smoke_test or args.local_receiver is not None or args.approved_content_digest is not None:
         v2_error('PROFILE_MODE_REQUIRED')
     root_fd = os.open(sys.argv[1], os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:

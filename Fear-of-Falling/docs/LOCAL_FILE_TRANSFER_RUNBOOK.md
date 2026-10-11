@@ -378,3 +378,25 @@ Työjuuri: komennot ajetaan `Fear-of-Falling`-juuresta, ellei toisin mainita.
   aineistoa ennen näitä.
 - Synteettinen validointi ja Termux-tarkistus: ks. tehtäväkortti
   `tasks/03-review/BIDIRECTIONAL_LOCAL_FILE_TRANSFER_RUNBOOK.md`.
+
+
+## Repositoryn eksplisiittinen FIRA1-lähdevalinta (laajennuksen katselmointiehdokas)
+
+V2-wire-protokolla pysyy `FOF_ARTIFACT_HANDOFF/2`:na. Lähdetiedostojen täsmälliset repositorysuhteelliset polut, koot ja SHA-256-arvot sidotaan olemassa olevaan content digestiin; uusi wire-kenttä ei ole tarpeen. Oletus `fof` säilyttää nykyisen FOF-profiilin. Ensimmäinen uusi, erikseen valittava alias on `fira1`, jonka ainoa sallittu prefix on `GPT/(FIRA1) Frailty Index Research Assistant/`. Tämä ei avaa kaikkia aliprojekteja tai rekursiivista oletusvalintaa.
+
+Senderin `--source-scope fira1` edellyttää eräkohtaista `fira1-kb` / `FIRA1`-profiili-identiteettiä ja täsmällistä tiedostolistaa. Profiili sijaitsee edelleen FOF:n konfiguraatiopolussa; lähdejuuri määräytyy varmennetusta senderin sisältävästä Git-checkoutista, ei profiilin tarjoamasta polusta. A4-hyväksyntä ei ole FIRA1-siirtolupa. Trusted adapteriin valitaan sama CLI-alias ja Windows-receiverin `-SourceScope fira1`; manifesti ei saa määrätä vastaanottimen trust scopea. Nykyinen pysyvä Windows-runtime pitää päivittää erikseen Git-kanavalla ja validoida ennen uuden alias-reitin käyttöä. Windows-validointi on tässä vaiheessa NOT_RUN.
+
+Hard-deny-kieltoja ei laajennus poista: lähdekoodi, suojatut polut sekä FI_CANDIDATE_REGISTRY.csv ja FI_CHANGELOG.md jäävät estetyiksi. Registry on tieteellinen current-state-artefakti ja Changelog päätöshistoria; niiden ristiriitojen arvio on metatietoa, ei CSV-siirtoluvan tai tieteellisen hyväksynnän myöntämistä. Uusia lähdekooditiedostoja toimitetaan vain erikseen hyväksytyllä Git-kontribuutiolla.
+
+FIRA1:n aiemmasta inventaariosta ei muodosteta kaikkien tiedostojen allowlistia. Jokaisen ehdokkaan julkinen/yksityinen luokittelu, tekijänoikeus ja jakelulupa, canonical-auktoriteetti suhteessa plugin-projektioon sekä suojatut viitteet arvioidaan ennen eräprofiilin tekemistä. Ohjetekstin vastaanotto ei aktivoi skillia tai korvaa nykyistä ohjetta.
+
+Arkistojen kuudeksi eroavaksi ehdokkaaksi tunnistettiin KB_INDEX, FI_R_WORKFLOW, DATA_DICTIONARY, FI_PROJECT_SPEC, FI_SOURCE_STATUS ja FI_QC_VALIDATION. Niissä havaitut erot ovat Markdown-taulukoiden muotoilua; Source Statusissa myös kursivointimerkkejä. FI_METHODS_CANONICAL ja FI_REPORTING_SPEC ovat samaa dokumenttitekstiä. Nämä ovat inventaarion kahdeksasta löydetystä FIRA1-dokumentista täsmälleen kuusi raw-hashiltaan eroavaa kopiota; raporttiliitteen puuttuessa tunnistus perustuu inventaarioon ja sisältödiffiin. Kaikki kahdeksan arkistokopiota ja PC:n RAW-037.zip säilytetään.
+
+PC:n Registryltä puuttuvat Termuxissa olevat kolme DEAC-merkintää ja Changelogista myöhemmät päätöslokit. Ehdotus on tiedostokohtainen yhdistetty muutos, joka säilyttää PC:n nykyiset rivit ja lisää vain tarkastetut puuttuvat rivit/lokit; sijainti ei määritä auktoriteettia, ja päätösten provenance on tarkastettava erikseen. Tämä PR ei tee näitä sisältömuutoksia eikä kirjoita PC-tiedostoja.
+
+Sijoitus on edelleen erillinen preview → hyväksyntä → execute -vaihe. Nykyisen kohdetiedoston muuttunut sisältö tuottaa `CONFLICT`; sitä ei ylikirjoiteta. Erillinen versionoitu kohde tai tarkastettu scoped Git-merge vaatii oman hyväksynnän. Staging ja evidenssi säilytetään repositoryjen ulkopuolella; siivous suunnitellaan erikseen eikä ole automaattinen.
+
+
+Lähdecheckoutin juuren dev/inode sidotaan avattuun descriptoriin ennen profiilin tai payloadin lukua ja varmennetaan uudelleen ennen manifestin valmistumista ja vastaanotinprosessin käynnistystä. FIRA1-tilan temporary-bundle pitää olla koko lähderepositoryn ulkopuolella. `--source-scope fira1 --smoke-test` hylätään: FIRA1-synteettiset testit käyttävät omaa `fira1-kb`-identiteettiä ja paikallisesti luotuja testitavuja. Adapterin FIRA1 `--check` vaatii receiverin `SourceScope`-parametrilta eksplisiittisen `fira1` ValidateSet -tuen; vanha receiver ei kelpaa uudelle reitille.
+
+FIRA1-execute välittää trusted paikalliselle vastaanotin-executablelle argumentit `--source-scope fira1`; käytä päivitettyä adapteria tai vastaavan explicit CLI-sopimuksen toteuttavaa tarkastettua wrapperia. FOF-oletus ei lisää argumenttia ja toimii vanhan adapterin/receiverin kanssa. Scope ei tule manifestista tai profiilin mielivaltaisesta runtime-polusta.

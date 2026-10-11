@@ -667,8 +667,6 @@ esac
         self.assertIn("FAILED:", r.stderr)
 
 
-if __name__ == "__main__":
-    unittest.main()
 
 
 # Optional environment bindings select a provenance-bound receiver snapshot and a
@@ -973,3 +971,121 @@ print(json.dumps(r))
         self.assertEqual(json.loads(result.stdout)['outcome'], 'SUCCESS')
         self.assertFalse(self.marker.exists())
         self.assertIn('RECEIVER_NOT_AVAILABLE_FOR_PROTOCOL_V2', self.smoke('--execute', success=False).stderr)
+
+
+class RepositoryScopeRuntimeTests(unittest.TestCase):
+    """Exercise the real sender with explicit synthetic repository subtrees."""
+    setUp = SenderRuntimeTests.setUp
+    save = SenderRuntimeTests.save
+    run_sender = SenderRuntimeTests.run_sender
+
+    def fira(self):
+        self.p.update(profile_id='fira1-kb', workstream='FIRA1')
+        self.p['files'] = self.p['files'][:1]
+        self.p['files'][0]['source_path'] = (
+            'GPT/(FIRA1) Frailty Index Research Assistant/knowledge/synthetic note.md')
+        path = self.base / self.p['files'][0]['source_path']
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b'abc')
+        self.save()
+        return path
+
+    def preview_scope(self, scope='fira1', success=True):
+        self.save()
+        return self.run_sender('--profile', 'config/test-profile.json',
+                               '--source-scope', scope, success=success)
+
+    def test_explicit_gpt_spaces_and_path_digest_binding(self):
+        path = self.fira()
+        before = json.loads(self.preview_scope().stdout)
+        self.assertEqual(before['files'][0]['source_path'], self.p['files'][0]['source_path'])
+        self.assertEqual(before['files'][0]['size_bytes'], 3)
+        self.assertEqual(before['profile_id'], 'fira1-kb')
+        changed = path.with_name('different note.md')
+        changed.write_bytes(b'abc')
+        self.p['files'][0]['source_path'] = changed.relative_to(self.base).as_posix()
+        after = json.loads(self.preview_scope().stdout)
+        self.assertNotEqual(before['content_digest'], after['content_digest'])
+
+    def test_default_fof_and_cross_scope_identity_rejected(self):
+        self.fira()
+        self.preview_scope('fof', success=False)
+        self.p.update(profile_id='a4-general-fi', workstream='A4')
+        self.preview_scope(success=False)
+        self.p.update(profile_id='fira1-kb', workstream='FIRA1')
+        self.p['files'][0]['source_path'] = 'Fear-of-Falling/outputs/a.md'
+        self.preview_scope(success=False)
+        self.run_sender('--source-scope', 'fira1', success=False)
+
+    def test_outside_traversal_and_source_symlink_rejected(self):
+        path = self.fira()
+        original = self.p['files'][0]['source_path']
+        for invalid in ['GPT/other/synthetic.md', original.replace('/knowledge/', '/../'),
+                        '/' + original, original.replace('GPT/', 'GPTx/')]:
+            self.p['files'][0]['source_path'] = invalid
+            self.preview_scope(success=False)
+        self.p['files'][0]['source_path'] = original
+        path.unlink()
+        path.symlink_to(self.base / 'Fear-of-Falling/outputs/a.md')
+        self.preview_scope(success=False)
+
+    def test_code_registry_changelog_and_private_paths_remain_denied(self):
+        self.fira()
+        prefix = 'GPT/(FIRA1) Frailty Index Research Assistant/'
+        for tail in ['knowledge/test.py', 'knowledge/test.R', 'knowledge/test.sh',
+                     'knowledge/test.ps1', 'knowledge/registry/FI_CANDIDATE_REGISTRY.csv',
+                     'knowledge/registry/FI_CHANGELOG.md', 'raw/test.md',
+                     'participant/test.md', '.git/test.md', 'secrets/test.md']:
+            self.p['files'][0]['source_path'] = prefix + tail
+            self.preview_scope(success=False)
+
+
+class RepositoryRootBindingTests(unittest.TestCase):
+    def namespace(self):
+        text = (ROOT / 'scripts/termux/export_artifacts_to_windows.sh').read_text()
+        code = text.split("<<'PY'\n", 1)[1].split('\ntry:\n    main()', 1)[0]
+        namespace = {}
+        exec(compile(code, '<real-sender>', 'exec'), namespace)
+        return namespace
+
+    def test_real_root_replacement_between_git_check_and_open_rejected_before_read(self):
+        import tempfile
+        import os
+        from unittest.mock import patch
+        ns = self.namespace()
+        with tempfile.TemporaryDirectory() as td:
+            repo = Path(td) / 'repo'
+            (repo / 'Fear-of-Falling').mkdir(parents=True)
+            def replaced(_):
+                repo.rename(Path(td) / 'old-repo')
+                (repo / 'Fear-of-Falling').mkdir(parents=True)
+                return '1' * 40
+            with patch.dict(ns, v2_repository=replaced), patch.dict(ns, v2_load=lambda *a: self.fail('source/profile read before binding')):
+                with self.assertRaisesRegex(ns['TransferOutcomeError'], 'SOURCE_ROOT_CHANGED'):
+                    ns['profile_main'](str(repo / 'Fear-of-Falling'), 'config/test.json', False)
+
+    def test_held_descriptor_revalidation_rejects_replaced_path(self):
+        import tempfile
+        import os
+        ns = self.namespace()
+        with tempfile.TemporaryDirectory() as td:
+            repo = Path(td) / 'repo'
+            (repo / 'Fear-of-Falling').mkdir(parents=True)
+            fd = os.open(repo, os.O_RDONLY | os.O_DIRECTORY)
+            try:
+                repo.rename(Path(td) / 'old-repo')
+                repo.mkdir()
+                with self.assertRaisesRegex(ns['TransferOutcomeError'], 'SOURCE_ROOT_CHANGED'):
+                    ns['v2_root_identity'](fd, str(repo / 'Fear-of-Falling'))
+            finally:
+                os.close(fd)
+
+    def test_fira_smoke_rejected_before_repository_access(self):
+        ns = self.namespace()
+        with self.assertRaisesRegex(ns['TransferOutcomeError'], 'FIRA1_SMOKE_IDENTITY_NOT_SUPPORTED'):
+            ns['profile_main']('/not-an-accessible-root/Fear-of-Falling', 'profile.json', False,
+                               smoke_test=True, source_scope='fira1')
+
+
+if __name__ == '__main__':
+    unittest.main()

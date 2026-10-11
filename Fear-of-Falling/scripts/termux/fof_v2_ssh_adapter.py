@@ -7,7 +7,9 @@ import re
 import sys
 
 
-def command(environ, check=False):
+def command(environ, check=False, source_scope="fof"):
+    if source_scope not in ("fof", "fira1"):
+        raise ValueError("SOURCE_SCOPE_INVALID")
     alias = environ.get("FOF_V2_SSH_ALIAS", "")
     receiver = environ.get("FOF_V2_RECEIVER_SCRIPT", "")
     staging = environ.get("FOF_V2_STAGING_DIR", "")
@@ -39,14 +41,22 @@ def command(environ, check=False):
         raise ValueError("FOF_V2_TRANSFER_ID_REQUIRED_OR_INVALID")
     # The encoded command contains only validated literal paths/session. No payload.
     if check:
+        capability = ""
+        if source_scope == "fira1":
+            capability = ("$p=(Get-Command -Name '" + receiver + "').Parameters['SourceScope']; "
+                          "if ($null -eq $p) { exit 2 }; "
+                          "$v=@($p.Attributes | Where-Object { $_ -is [System.Management.Automation.ValidateSetAttribute] }); "
+                          "if ($v.Count -ne 1 -or 'fira1' -cnotin $v[0].ValidValues) { exit 2 }; ")
         script = ("$ErrorActionPreference='Stop'; "
                   "if ($PSVersionTable.PSVersion -lt [version]'7.4') { exit 2 }; "
                   "[void][System.Formats.Tar.TarReader]; "
                   "if (-not (Test-Path -LiteralPath '" + receiver + "' -PathType Leaf)) { exit 2 }; "
                   "if (-not (Test-Path -LiteralPath '" + staging + "' -PathType Container)) { exit 2 }; "
-                  "[Console]::Error.WriteLine('FOF_V2_SSH_PREFLIGHT_OK'); exit 0")
+                  + capability + "[Console]::Error.WriteLine('FOF_V2_SSH_PREFLIGHT_OK'); exit 0")
     else:
         script = "& '" + receiver + "' -StagingDir '" + staging + "' -TransferId '" + transfer_id + "'"
+        if source_scope != "fof":
+            script += " -SourceScope '" + source_scope + "'"
         if session:
             script += " -SmokeTest -SmokeSession '" + session + "'"
         script += "; exit $LASTEXITCODE"
@@ -60,9 +70,10 @@ def command(environ, check=False):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="SSH/runtime check only; no artifact stdin")
+    parser.add_argument("--source-scope", choices=("fof", "fira1"), default="fof")
     args = parser.parse_args()
     try:
-        argv = command(os.environ, args.check)
+        argv = command(os.environ, args.check, args.source_scope)
         if args.check:
             fd = os.open(os.devnull, os.O_RDONLY)
             os.dup2(fd, 0)

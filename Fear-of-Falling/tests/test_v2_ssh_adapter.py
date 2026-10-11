@@ -381,5 +381,66 @@ class AdapterTests(unittest.TestCase):
         self.assertEqual(list(diag.glob('*.json')), [])
 
 
-if __name__=='__main__':
+
+
+class SourceScopeAdapterTests(unittest.TestCase):
+    def env(self):
+        return {'FOF_V2_SSH_ALIAS': 'synthetic-host',
+                'FOF_V2_RECEIVER_SCRIPT': 'C:/Synthetic Repo/scripts/ps7/receive_artifact_bundle.ps1',
+                'FOF_V2_STAGING_DIR': 'C:/Synthetic Staging',
+                'FOF_V2_TRANSFER_ID': '20260916T000000Z-' + 'a' * 32}
+
+    def test_scope_is_trusted_explicit_command_not_payload_or_environment(self):
+        env = self.env()
+        env['FOF_V2_SOURCE_SCOPE'] = 'fira1'
+        old = adapter.command(env)
+        old_script = base64.b64decode(old[-1].split()[-1]).decode('utf-16le')
+        self.assertNotIn('SourceScope', old_script)
+        new = adapter.command(env, source_scope='fira1')
+        script = base64.b64decode(new[-1].split()[-1]).decode('utf-16le')
+        self.assertIn("-SourceScope 'fira1'", script)
+        self.assertIn('StrictHostKeyChecking=yes', new)
+        with self.assertRaisesRegex(ValueError, 'SOURCE_SCOPE_INVALID'):
+            adapter.command(env, source_scope='GPT/other')
+
+
+class ReceiverScopeCapabilityTests(unittest.TestCase):
+    def test_fira_check_requires_receiver_validate_set_capability_before_payload(self):
+        env = SourceScopeAdapterTests().env()
+        args = adapter.command(env, check=True, source_scope='fira1')
+        script = base64.b64decode(args[-1].split()[-1]).decode('utf-16le')
+        self.assertIn(".Parameters['SourceScope']", script)
+        self.assertIn('ValidateSetAttribute', script)
+        self.assertIn("'fira1' -cnotin", script)
+        self.assertNotIn('-TransferId', script)
+        old = adapter.command(env, check=True)
+        self.assertNotIn('SourceScope', base64.b64decode(old[-1].split()[-1]).decode('utf-16le'))
+
+
+class FiraExecutionAdapterTests(unittest.TestCase):
+    setUp = AdapterTests.setUp
+    save = protocol.SenderRuntimeTests.save
+    run_sender = protocol.SenderRuntimeTests.run_sender
+    fira = protocol.RepositoryScopeRuntimeTests.fira
+
+    def test_fira_scope_reaches_real_adapter_without_manifest_selecting_scope(self):
+        self.fira()
+        self.env['TMPDIR'] = tempfile.gettempdir()
+        preview = self.run_sender('--profile', 'config/test-profile.json', '--source-scope', 'fira1')
+        approved = json.loads(preview.stdout)['content_digest']
+        result = self.run_sender('--profile', 'config/test-profile.json', '--source-scope', 'fira1',
+                                 '--execute', '--approved-content-digest', approved,
+                                 '--local-receiver', str(ADAPTER))
+        self.assertEqual(json.loads(result.stdout)['outcome'], 'SUCCESS')
+        args = json.loads((self.base / 'ssh-args.json').read_text())
+        script = base64.b64decode(args[-1].split()[-1]).decode('utf-16le')
+        self.assertIn("-SourceScope 'fira1'", script)
+        with __import__('tarfile').open(fileobj=__import__('io').BytesIO((self.base/'wire.bin').read_bytes())) as archive:
+            manifest = json.load(archive.extractfile('manifest.json'))
+        self.assertEqual(manifest['profile_id'], 'fira1-kb')
+        self.assertEqual(manifest['workstream'], 'FIRA1')
+        self.assertEqual(manifest['files'][0]['source_path'], self.p['files'][0]['source_path'])
+
+
+if __name__ == '__main__':
     unittest.main()
