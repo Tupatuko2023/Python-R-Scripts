@@ -158,6 +158,9 @@ ennallaan.
   - `prs-197-win-30286b0` (Windows): tämän sulkemistyön säilytettävä ensisijainen
     checkout → ei poisteta.
   - `fof-usage-43398dd`: toisen tehtävän ("usage") worktree → ei poisteta.
+  - **Termux: kaksi säilytettävää normaalikäytön checkoutia** → ei poisteta; peruste:
+    normaalikäyttö ja sen riippuvuudet varmennettu (eivät tehtävän väliaikaisia
+    klooneja/worktreeitä, jotka poistettiin).
 - **Loppuvarmennus (valmistunut 2026-10-10):** A:n `--check` **exit 0**,
   `FOF_V2_SSH_PREFLIGHT_OK`. Lokit säilytetty; ei payloadia eikä asetusten muutoksia.
   Historiallinen tapahtuma: aiempi poiston jälkeinen `--check` estyi verkkoesteeseen
