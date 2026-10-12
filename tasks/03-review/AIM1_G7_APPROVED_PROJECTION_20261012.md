@@ -30,6 +30,8 @@ not change scientific authority or authorize analysis.
 
 ## Log
 
+- 2026-10-12T09:39:56+00:00 PR #204 markdownlint workflow failed Prettier table alignment; G7 rows aligned to existing column widths for CI rerun.
+
 - 2026-10-12T09:37:30+00:00 Static field/scope/routing checks PASS; git diff --check PASS; tools/run-gates.sh --mode pre-push --smoke PASS. K18/QC NOT APPLICABLE: documentation-only projection.
 - 2026-10-12T09:37:30+00:00 Local markdownlint unavailable (npx --no-install); required GitHub markdownlint workflow will validate PR.
 - 2026-10-12T09:37:30+00:00 Moved IN_PROGRESS -> REVIEW for human PR review.
