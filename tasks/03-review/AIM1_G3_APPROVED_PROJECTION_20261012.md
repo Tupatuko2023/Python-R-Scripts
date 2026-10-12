@@ -33,6 +33,8 @@ Owner hyväksyi 2026-10-12 julkaistavaksi neljä G3-päätöskenttää. Suojattu
 - 2026-10-12T14:08:23+03:00 Guidance Package -päätösprojektio valmis; staattinen scope/reititys/provenance PASS, git diff --check PASS ja tools/run-gates.sh --mode pre-push --smoke PASS. K18/QC: NOT APPLICABLE (vain dokumentaatiopäivitys).
 - 2026-10-12T14:08:23+03:00 IN_PROGRESS -> REVIEW; PR odottaa ihmiskatselmointia. Paikallinen Prettier/markdownlint ei ole asennettu; GitHub CI tarkistaa ne.
 
+- 2026-10-12T14:14:33+03:00 PR #205:n Prettier-CI osoitti G3-reititinrivin lyhentäneen WHAT_BLOCKS-sarakkeen leveyttä; sanamuoto täsmennettiin säilyttämään taulukon muoto. Paikallinen Prettier 3.9.9 --check PASS; tieteellinen päätössisältö ja reititys ennallaan.
+
 ## Blockers
 
 - Ihmisen PR-katselmointi ja merge ovat myöhempiä pakollisia portteja.
