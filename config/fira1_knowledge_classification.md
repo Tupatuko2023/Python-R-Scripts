@@ -1,11 +1,41 @@
 # FIRA1 Knowledge -luokittelupolitiikka
 
-Versio: `1.0-review`. Tila: `OWNER_APPROVED_CLASSIFICATION_ONLY`.
+Versio: `1.1-public-boundary`. Tila: `OWNER_APPROVED_PUBLIC_TRACKING_SUPERSEDED_FOR_TEN`.
 Omistajan hyväksymä suunta: `MIXED_CLASSIFIED` (prompt 12, 2026-09-07).
 Omistaja hyväksyi tämän version täsmäluokat ja etusijasäännöt 2026-09-07
 paketissa `fira1-knowledge-classification-owner-approval-20260907` (prompt 13).
 Hyväksyntä koskee vain luokittelua: kirjoitus-, tracking-, migraatio- ja
 enforcement-luvat jäävät erillisiksi. Luokittelematon polku = DENY.
+
+## Voimassa oleva julkisen seurannan raja 2026-10-13
+
+Omistaja siirsi FIRA1-lisäosan ohjeiden ja KB:n ylläpidon erilliseen
+yksityiseen `FIRA1-Assistant-Private`-repoon. Alla olevien kymmenen
+täsmäpolun aiempi luokitus ja hyväksyntä säilyvät tämän tiedoston
+historiatietona, mutta niiden seuranta **julkisen analyysirepon nykytilassa**
+ei ole enää sallittu. Tämä päätös korvaa niiden julkisen tracking-luvan;
+se ei muuta tieteellisiä päätöksiä eikä anna lupaa julkaista muuta aineistoa.
+
+| Repo-relative täsmäpolku, kaikki `GPT/(FIRA1) Frailty Index Research Assistant/knowledge/`-juuren alla | Julkinen nykytila |
+| --- | --- |
+| `KB_INDEX.md` | Ei seurata |
+| `computational/FI_R_WORKFLOW.md` | Ei seurata |
+| `methods/FI_METHODS_CANONICAL.md` | Ei seurata |
+| `project/DATA_DICTIONARY.md` | Ei seurata |
+| `project/FI_PROJECT_SPEC.md` | Ei seurata |
+| `reporting/FI_REPORTING_SPEC.md` | Ei seurata |
+| `reporting/GENERAL_FI_22_DEFERRED_FUTURE_WORK_20260912.md` | Ei seurata |
+| `reporting/GENERAL_FI_22_PUBLICATION_ADAPTATION_BOUNDARY_20260912.md` | Ei seurata |
+| `sources/FI_SOURCE_STATUS.md` | Ei seurata |
+| `validation/FI_QC_VALIDATION.md` | Ei seurata |
+
+Julkisen repon `.gitignore` estää näiden täsmäpolkujen tahattoman
+uudelleenlisäyksen. Alempana olevat kahdeksan VC-riviä ja kaksi C22-riviä
+kuvaavat aiempia päätöksiä; niiden julkista Git-seurantaa koskeva osa on
+korvattu tällä uudemmalla omistajapäätöksellä. Muut GPT-kansiot,
+Fear-of-Falling-koodi, muut hyväksytyt polut sekä Registry/Changelogin
+`DENY_UNCLASSIFIED`-raja säilyvät ennallaan. Historialliset commitit jäävät
+julkiseen Git-historiaan; tämä muutos ei kirjoita historiaa uudelleen.
 
 ## Sijainti, auktoriteetti ja soveltamisala
 

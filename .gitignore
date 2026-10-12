@@ -108,3 +108,15 @@ Fear-of-Falling/R-scripts/_runs/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# FIRA1-ylläpidon yksityinen rajaus (Owner 2026-10-13): vain nämä 10 polkua.
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/KB_INDEX.md
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/computational/FI_R_WORKFLOW.md
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/methods/FI_METHODS_CANONICAL.md
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/project/DATA_DICTIONARY.md
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/project/FI_PROJECT_SPEC.md
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/reporting/FI_REPORTING_SPEC.md
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/reporting/GENERAL_FI_22_DEFERRED_FUTURE_WORK_20260912.md
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/reporting/GENERAL_FI_22_PUBLICATION_ADAPTATION_BOUNDARY_20260912.md
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/sources/FI_SOURCE_STATUS.md
+/GPT/(FIRA1) Frailty Index Research Assistant/knowledge/validation/FI_QC_VALIDATION.md
