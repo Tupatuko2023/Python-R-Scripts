@@ -61,3 +61,14 @@ repository, then mirrored here.
 
 **Done when:** a new agent in Termux can discover G4 and its prerequisites from
 this package alone.
+
+## G7 approved operational projection
+
+```text
+G7_PRIMARY = ADOPTED
+PRIMARY_COVARIATES = baseline age, baseline sex
+APPLICABILITY = E1-E4
+E5_E6 = NEEDS_VERIFICATION
+CAUSAL_MINIMAL_SUFFICIENCY = NOT_CLAIMED
+ANALYSIS_AUTHORIZED = NO
+```
