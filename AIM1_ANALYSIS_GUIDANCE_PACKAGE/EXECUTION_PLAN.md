@@ -16,7 +16,7 @@ PARTICIPANT_LEVEL_ANALYSIS_AUTHORIZED = NO
 ```text
 G6  final estimand set          [RESOLVED / ADOPTED 2026-10-07]
   → G4  costing specification + AIM1 applicability   [NEXT]
- → G3  hospital unit lock (days vs episodes)
+ → G3  hospital outcome hierarchy [RESOLVED / ADOPTED]
  → G7  final covariate set
  → G11 + bounded aggregate QC   (exact N / eligibility boundaries = DATA_QC_DEPENDENT)
  → G8  final model-family lock
@@ -71,4 +71,13 @@ APPLICABILITY = E1-E4
 E5_E6 = NEEDS_VERIFICATION
 CAUSAL_MINIMAL_SUFFICIENCY = NOT_CLAIMED
 ANALYSIS_AUTHORIZED = NO
+```
+
+## G3 approved operational projection
+
+```text
+G3 = RESOLVED / ADOPTED
+E2 = PRIMARY: injury-related hospital days/person-year
+E3 = SECONDARY: injury-related hospital episodes/person-year
+G3_TECHNICAL_RULES = OPEN
 ```
