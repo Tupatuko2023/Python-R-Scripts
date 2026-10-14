@@ -86,7 +86,7 @@ jobs:
 
       - name: Build Docker image (cached)
         # CI cached local build only; no registry push.
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: Fear-of-Falling
           file: Fear-of-Falling/Dockerfile
