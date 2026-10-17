@@ -1,5 +1,7 @@
 # AIM1 G3: hyväksytyn vastehierarkian operatiivinen projektio
 
+Tila: `04-done` (tehtävän rajattu dokumenttipäivitys; ei uutta tieteellistä päätöstä).
+
 ## Context
 
 Owner hyväksyi 2026-10-12 julkaistavaksi neljä G3-päätöskenttää. Suojattua lähdehandoffia käytetään yksityisenä provenance-näyttönä, eikä sitä julkaista. Tämä tehtävä peilaa jo hyväksytyn hierarkian Guidance Packageen; se ei tee uutta tieteellistä päätöstä.
@@ -35,9 +37,11 @@ Owner hyväksyi 2026-10-12 julkaistavaksi neljä G3-päätöskenttää. Suojattu
 
 - 2026-10-12T14:14:33+03:00 PR #205:n Prettier-CI osoitti G3-reititinrivin lyhentäneen WHAT_BLOCKS-sarakkeen leveyttä; sanamuoto täsmennettiin säilyttämään taulukon muoto. Paikallinen Prettier 3.9.9 --check PASS; tieteellinen päätössisältö ja reititys ennallaan.
 
+- 2026-10-17T15:36:14+03:00 REVIEW -> DONE: Owner `Tupatuko2023` hyväksyi tämän tehtävän rajatun toimituksen mergellä 2026-10-12T11:32:27Z. Hyväksyntänäyttö: [PR #205](https://github.com/Tupatuko2023/Python-R-Scripts/pull/205), merge-commit `31389fc57c6818815c23d32121b1300a19faecd6`; PR:n diff sisältää tämän review-tehtävän. Tämä kirjaus koskee vain G3-tehtävän lifecycle-sulkua.
+
 ## Blockers
 
-- Ihmisen PR-katselmointi ja merge ovat myöhempiä pakollisia portteja.
+- G3-toimituksen PR #205 on ihmisen mergellä hyväksytty. Tämän lifecycle-sulun PR odottaa erillistä ihmiskatselmointia ja mergeä.
 
 ## Links
 
