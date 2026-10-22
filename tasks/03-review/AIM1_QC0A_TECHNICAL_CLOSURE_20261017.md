@@ -33,7 +33,13 @@
 
 ## Log
 
+- 2026-10-22T14:42:07+03:00: READY-checkpoint palautettu nykyisestä tehtäväworktreestä; siirretty 02-in-progress-tilaan. Uusi 19.10.2026 hyväksyntänäyttö arvioidaan erillään teknisestä katselmoinnista.
+
 - 2026-10-17: Ownerin rajatusta QC0a Workflow Consolidation -toimeksiannosta valmisteltu yksi READY-kortti erillisessä tehtäväworktreessä paikallisesta `origin/main`-viitteestä. Tämä on tehtävän valmistelu; teknistä toteutusta tai tuotanto-QC0a:ta ei käynnistetty.
+
+- 2026-10-22T14:51:41+03:00: Uusi luvanäyttö sidottu repo-ulkoiseen yksityiseen evidenssiin; aiempi lupasoveltuvuuden puute päivitetty rajatun paikallisen käsittelyn osalta. Yksityinen lukijaehdokas SHA-256 `1ad5fe5047c4746f416e766a1e8afcf94cae3c51c485d6518cff12e31279fbb3`; aiempi 18/18 ja uusi 11/11 synteettinen validointi PASS. Portit PASS. QFOT2:n riippumaton loppukatselmointi ja suojatun ajon erottaminen mallipalvelusta ovat edelleen avoimia; PRODUCTION_QC0A_RUN=NOT_RUN.
+
+- 2026-10-22T15:26:44+03:00: Erillinen riippumaton vain-luku-katselmointi SHA-256-versiolle `1ad5fe5047c4746f416e766a1e8afcf94cae3c51c485d6518cff12e31279fbb3` valmis: rajattu paikallisajo PASS-ehdoin. Tarkistaja ajoi synteettiset 11/11 ja aiemmat 18/18; tuotantoajo NOT_RUN katselmoinnissa. `..`-argumentti hylätty; oikea työjuuri on päächeckoutin Fear-of-Falling ja argumentti `.`. Väliaikaisen koodisijainnin hash tarkistetaan välittömästi ennen ajoa.
 
 ## Blockers
 
@@ -45,3 +51,11 @@
 - `Fear-of-Falling/README.md`
 - `AIM1_ANALYSIS_GUIDANCE_PACKAGE/README.md`
 - Yksityiset `AIM1_QC0_HOTL_AUTHORITY_REUSE_VERDICT.md`, `AIM1_QC0_EXISTING_AUTHORITY_DECISION.md` ja `AIM1_QC0_INTEGRATED_TECHNICAL_CLOSURE.md` (ei kopioida julkiseen repositoryyn).
+
+## 2026-10-22 jatkovaltuutuksen mukainen lopputila
+
+Käyttäjän tämän tehtävän jatkotoimeksianto salli riippumattoman loppukatselmoinnin jälkeen yhden rajatun paikallisen QC0a-ajon. Tämä tarkennus korvaa yllä olevan alkuperäisen `PRODUCTION_QC0A_RUN = NO` -valmistelurajan vain tämän nimetyn ajon osalta. Katselmoitu lukija SHA-256 `1ad5fe5047c4746f416e766a1e8afcf94cae3c51c485d6518cff12e31279fbb3`; importoitu safety-moduuli SHA-256 `b5a5554561f68ace07b3a8bb3cbd5f736b68ce8a23815a60065b9137eaf7852a`. Riippumaton tekninen katselmointi: `PASS_FOR_BOUNDED_LOCAL_RUN`; synteettinen validointi: uusi 11/11 ja aiempi 18/18 PASS. Oikea työjuuri oli päächeckoutin `Fear-of-Falling/` ja argumentti `.`.
+
+`PRODUCTION_QC0A_RUN = PASS`; yksi yksityinen 0600-otsakemanifesti luotu; suojattu stdout/stderr ohjattu pois mallikontekstista. `AGGREGATE_QC_RUN = NO`; `ANALYSIS_RUN = NO`. Yksityinen ajokuitti on repo-ulkopuolella. Raakoja otsakkeita, osallistuja-arvoja, tunnisteita tai manifestin sisältöä ei lisätä repositoryyn tai tähän korttiin. Väliaikaisessa `/usr/tmp`-sijainnissa oleva koodi tarvitsee saman hashin tarkistuksen ennen mahdollista myöhempää uudelleenkäyttöä.
+
+- 2026-10-22T15:27:48+03:00: Rajattu tuotanto-QC0a PASS; yksityinen ajokuitti kirjattu ja tehtävä siirretty 03-review-tilaan ihmisen hyväksyntää varten. `04-done` ja Git-toimitus eivät sisälly tähän siirtoon.
