@@ -1,5 +1,7 @@
 # AIM1 QC0a: tuotantolukijan rajattu tekninen viimeistely
 
+Tila: `04-done` (tekninen tarkistusvaihe; ei FI-mappingin, pisteytyksen tai analyysin hyväksyntää).
+
 ## Context
 
 `AUTH-SOURCE-001`-lähteen P0-identiteetti ja `Taul1`-arkin fyysinen otsakerivi 2 on aiemmin dokumentoitu. HOTL kattaa admitoidun tehtävän palautuvat tekniset korjaukset. AIM1 QC0a:n suojatun työkirjan käsittelyoikeuden soveltuvuus on `NEEDS_VERIFICATION`, ei evätty. Nykyinen `readxl 1.4.5` -prototyyppi on validoitu vain synteettisesti (18/18); se ei ole tuotantolukija. Tämä kortti koskee yhtä teknistä työpakettia eikä muuta tutkimus- tai datankäyttövaltuutta.
@@ -59,3 +61,11 @@ Käyttäjän tämän tehtävän jatkotoimeksianto salli riippumattoman loppukats
 `PRODUCTION_QC0A_RUN = PASS`; yksi yksityinen 0600-otsakemanifesti luotu; suojattu stdout/stderr ohjattu pois mallikontekstista. `AGGREGATE_QC_RUN = NO`; `ANALYSIS_RUN = NO`. Yksityinen ajokuitti on repo-ulkopuolella. Raakoja otsakkeita, osallistuja-arvoja, tunnisteita tai manifestin sisältöä ei lisätä repositoryyn tai tähän korttiin. Lukijan, testien, katselmoinnin ja ajokuitin pysyvät yksityiset kopiot sekä hash-varmennus on kirjattu repo-ulkoiseen evidenssiin.
 
 - 2026-10-22T15:27:48+03:00: Rajattu tuotanto-QC0a PASS; yksityinen ajokuitti kirjattu ja tehtävä siirretty 03-review-tilaan ihmisen hyväksyntää varten. `04-done` ja Git-toimitus eivät sisälly tähän siirtoon.
+
+## 04-done: riippumaton ihmishyväksyntä ja tekninen sulku
+
+- Hyväksyjä: Owner `Tupatuko2023`; hyväksyntäkommentti 2026-10-22T13:42:18Z: [PR #214:n pysyvä kommentti](https://github.com/Tupatuko2023/Python-R-Scripts/pull/214#issuecomment-6342244503).
+- Kohde ja rajaus: `AIM1_QC0A_TECHNICAL_CLOSURE_20261017`, PR #214:n tehtäväkorttidiffi ja hyväksytty head-commit `01a64425295a18bcfa7d8fd4d684c392ad4dd1ac`. PR #214:n diff sisälsi vain tämän tehtäväkortin `03-review`-version.
+- PR #214: [mergetty](https://github.com/Tupatuko2023/Python-R-Scripts/pull/214) 2026-10-22T13:11:07Z, merge-commit `ff1ee10851c284960473deb78541688d6936428e`. Hyväksyntäkommentti on agentin task-lokista riippumaton; agentti ei kirjoittanut hyväksyntää eikä tehnyt mergeä.
+- Hyväksyntä koskee vain QC0a:n raportoitua rajattua teknistä tarkistusvaihetta. Se ei hyväksy FI-mappingia, DEAC-pisteytystä, kustannusmäärittelyä tai analyysien käynnistämistä.
+- 2026-10-22T16:43:49+03:00: PR:n merge, kommentin kirjoittaja, aika, kohde ja commit-rajaus varmennettu GitHubista; tämä sama tehtävä siirretty teknisesti `03-review → 04-done` erillistä lifecycle-PR:ää varten. QC0a-tuotantoajoa ei toistettu.
