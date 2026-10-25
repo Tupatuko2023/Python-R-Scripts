@@ -382,3 +382,46 @@ valmistelun havainnot ovat historiallisia, eivät nykyinen väite portin ajamatt
 - Lähteen toimitus-PR:t: FOF-Dissertation-Project #339 ja #340.
 - Repojuuren tasks/-jono omistaa tämän koordinointitehtävän.
   Aliprojektien kortteja ei siirretä eikä niiden tiloja kopioida.
+
+## Linux-validoinnin seuraava toimitustoimi (ei vielä suoritettu)
+
+Toteutussisältö c62d7abd64e3b1269cad2e2e6e0c91c6bb4585a5 on edelleen
+muuttumaton; nykyinen jatko lisää vain validointikirjauksen. Työpuu oli puhdas.
+
+Rajattu Linux-diagnoosi sallitussa prosessissa: `wsl --list --quiet` näyttää vain
+Docker Desktopin sisäisen jakelun. `wsl --exec /bin/sh -c` tulosti Linuxin,
+mutta `command -v python3` ja `command -v node` eivät löytäneet tulkkeja (exit 127).
+Tätä sisäistä jakelua ei muuteta dokumentoimattomaksi kehitysympäristöksi.
+Ei WSL-asennuksia, kontteja, järjestelmämuutoksia tai riippuvuusasennuksia tehty.
+Tässä sessiossa ei ole käytettävissä varmennettua repon CI:tä vastaavaa paikallista
+Linux/Python 3.11/Node 20 -ympäristöä. Git Bash ei ole Linux-Python-ympäristö.
+
+Valmisteltu yksi hyväksyttävä etätoimierä:
+
+1. Varmenna originin main ja mahdolliset saman haaran PR:t lukutoimilla.
+   Varmista rajattu neljän tiedoston diff sekä muuttumaton generaattori ja testit.
+   Ei pullia tai muiden checkoutien päivitystä.
+2. Pushaa nykyinen chore/project-registry-transfer-001-haara tavallisena
+   fast-forward-pushina Tupatuko2023/Python-R-Scripts-originille.
+3. Avaa draft-PR tästä haarasta mainiin, otsikolla
+   "feat: transfer project registry tooling (CI validation)".
+4. Lue ja odota nykyisten workflowien tulokset ja raportoi Linux-testit ja
+   README:n Markdown-tarkistukset. Jos virheitä jää, rajaa vain tarpeelliset
+   baseline-tarkistukset; ei yleistä korjausta.
+
+Tämä ei ole nykyisen toimeksiannon antama push- tai PR-valtuutus. Etätoimet
+odottavat yhtä konkreettista hyväksyntää make-repo-contribution-skillin mukaisesti.
+Ei mergeä, auto-mergeä, DONE-siirtoa, review-valmiusväitettä tai worktree-poistoa.
+Päärepon ohjeista ei löytynyt in-progress-kortin työhaara/draft-PR-julkaisukieltoa;
+SKILLS.md/config/agent_policy.md vaativat DoD:n ennen review-siirtoa. Kortti
+säilytetään siksi in-progressissa draftissa; sitä ei siirretä valmiiksi CI:n saamiseksi.
+Aliprojektien main/lifecycle-säännöistä ei tehdä päärepon uusia sääntöjä.
+
+PR:n nykyiset triggerit käynnistävät python-ci:n Ubuntu/Python 3.11 -testit
+ja EFI editable-asennuksen sekä FOF dev-ryhmän. README aktivoi
+markdownlint-workflowin Node 20:n, npm ci:n, Prettierin ja markdownlint-cli2:n.
+Myös soveltuvat PR:n polkusuodatin- ja CodeQL-workflowit voivat käynnistyä.
+CI-sääntöjä tai in-progress-tilan rajoja ei muuteta. K-smoke jää nykyisten
+polkusuodattimien mukaan pois; ei uusia tutkimusanalyysiajoja.
+
+- 2026-10-25T17:26:59.368680+02:00: Linux-ympäristön rajattu tarkistus valmis; push/draft-PR-erä ja PR-kuvaus valmisteltu hyväksyttäväksi. Vain kortin paikallinen kirjaus, ei etätoimia.
