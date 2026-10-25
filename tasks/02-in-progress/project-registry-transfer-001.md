@@ -8,7 +8,7 @@
 - Haara: `chore/project-registry-transfer-001`
 - Valmistelun ja myöhemmän työn worktree päächeckoutista: `tmp/project-registry-transfer-001`
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- Admission ja kolmen sisältötiedoston toteutus tehty; review-siirto odottaa pakollisen koko repon testiajotuloksen korjaantumista.
+- Admission ja toteutus tehty. Linuxin Python-CI PASS; review-siirto odottaa README:n Prettier- ja markdownlint-portteja.
 
 ## Context
 
@@ -425,3 +425,37 @@ CI-sääntöjä tai in-progress-tilan rajoja ei muuteta. K-smoke jää nykyisten
 polkusuodattimien mukaan pois; ei uusia tutkimusanalyysiajoja.
 
 - 2026-10-25T17:26:59.368680+02:00: Linux-ympäristön rajattu tarkistus valmis; push/draft-PR-erä ja PR-kuvaus valmisteltu hyväksyttäväksi. Vain kortin paikallinen kirjaus, ei etätoimia.
+
+## GitHub CI -näyttö: PR 216
+
+- Draft-PR: https://github.com/Tupatuko2023/Python-R-Scripts/pull/216
+- Puskettiin täsmälleen hyväksytty HEAD 250211d2168070c046b573d2c2876bf560e5b318
+  tavallisena pushina haaraan chore/project-registry-transfer-001. Työpuu oli
+  puhdas, PR-diffissä vain neljä sovittua polkua. Ei forcea, mergeä tai DONE-siirtoa.
+- Origin/main oli edennyt d4e03c4bbb223f9c3f273f52f20ec242e0f3e888-versioon;
+  PR oli mergeable, eikä mainia yhdistetty paikalliseen haaraan tai muihin checkoutteihin.
+- Generaattori, testit ja README ovat edelleen c62d7ab-toteutuksen mukaisia.
+- Linux/Python 3.11 PR-ajossa 40213483193 riippuvuuksien asennus ja EFI editable
+  PASS. Run tests (pytest -> JUnit XML) suoritettiin: **515 passed, 17 skipped,
+  290 subtests passed** (79.82 s). Ei epäonnistumisia, vaihe ei skipped.
+- Samassa ajossa yksityisen POSIX-HOMEn omistus/anchor varmennettiin ja
+  placement-vaihe suoritettiin: **43 passed, 1 skipped** (0.90 s).
+- Python-CI:n push-ajo 40213467990 myös success. CodeQL Python/JavaScript PASS;
+  K-smoken polkusuodatin PASS ja raskas K-ajo ei sovellu (skipped, ei testien PASS-väite).
+- Python PR-ajo: https://github.com/Tupatuko2023/Python-R-Scripts/actions/runs/40213483193
+- Markdown-ajo: https://github.com/Tupatuko2023/Python-R-Scripts/actions/runs/40213483134
+
+**Jäljellä oleva este:** Markdown-jobin Check Prettier formatting epäonnistui
+ainoaan mukana tarkistettuun README-polkuun
+`docs/governance/project_registry/README.md`: "Code style issues found in the
+above file. Run Prettier with --write to fix." Exit 123 on xargs-vaiheen tulos.
+Run markdownlint jäi tämän vuoksi skipped: ei PASS-näyttöä.
+
+Pienin korjaus on repon lukitun Prettierin `--write` vain tähän READMEhen ja
+sen jälkeen samalle tiedostolle `--check` sekä markdownlint-cli2. Generaattoriin,
+testeihin tai CI-sääntöihin ei tarvitse tehdä muutoksia tämän löydöksen vuoksi.
+Tässä hyväksytyssä CI-erässä löydös raportoidaan; READMEä ei vielä muutettu.
+Kortti jää in-progressiin ja PR draftiksi. Tämä CI-kirjaus tallennetaan vain
+paikallisesti; tarkistetun PR-HEADin tuloksia ei esitetä uuden revision ajoina.
+
+- 2026-10-25T18:52:45.733300+02:00: Hyväksytty push/draft-PR ja CI-seuranta valmis. Python-portit PASS; README Prettier FAIL ja markdownlint suorittamatta. Ei review-siirtoa.
