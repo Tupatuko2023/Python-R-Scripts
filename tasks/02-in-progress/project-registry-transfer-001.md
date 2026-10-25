@@ -221,6 +221,133 @@ vaaditaan myös soveltuvat CI-tarkistukset normaalin erikseen valtuutetun menett
 
 - 2026-10-25T16:07:24.080766+02:00: Staged repoportti PASS (exit 0); koko repon pytest ja lint-ympäristö ovat edelleen este. Toteutus tallennetaan paikalliseen committiin, jonka SHA raportoidaan vastauksessa.
 
+## Ajantasainen validointipäätös: baseline-vertailu
+
+### Todelliset porttivaatimukset
+
+- AGENTS.md:n Python-ohje käskee ajamaan unit-testit Python-muutoksessa ja
+  dokumentoi koko pytest-ajon. SKILLS.md vaatii vähintään yhden smoke-ajon.
+  Paikallinen tools/run-gates.ps1 --mode pre-push --smoke on jo PASS myös staged-koodilla.
+- .github/workflows/python-ci.yml käynnistyy näistä .py-polkujen muutoksista:
+  Ubuntu, Python 3.11, riippuvuudet requirements.txt:stä (tai konfiguroidun paketin
+  kautta), Fear-of-Falling/pyproject.toml:n dev-ryhmä sekä EFI editable-asennuksena.
+  Testivaihe EI hyväksy epäonnistumista: se säilyttää raportin mutta palauttaa rc:n.
+  POSIX-placement ajetaan erikseen omistajan hallitsemassa yksityisessä HOMEssa.
+- Makefile kuvaa Ruffin ja Blackin valinnaisiksi "if installed" -työkaluiksi.
+  make lint ajettiin: molemmat puuttuvat, virheet vaimennetaan targetissa.
+  Exit 0 EI ole lint-PASS. Näistä ei löytynyt erillistä pakollista CI-lint-jobia;
+  aiempi oletus että molempien puuttuminen yksin estäisi review'n oli liian vahva.
+- Uusi README kuuluu .github/workflows/markdownlint.yml:n soveltuviin
+  Prettier --check- ja markdownlint-cli2-tarkistuksiin. Task-kortit suodatetaan pois.
+  CI käyttää Node 20:tä ja package-lockiin sidottua npm ci:tä. Paikalliset
+  node_modules-työkalut puuttuvat; tarkistukset ovat SUORITTAMATTA, eivät PASS.
+- FOF:n R-CI, raskas K-smoke ja Quantify-Snakemake eivät aktivoidu tämän
+  siirtopaketin sisältöpoluista. PR:n yleiset polkusuodatin- ja CodeQL-jobit
+  kuuluvat myöhempään toimitukseen; etä-branch-protectionia ei haettu ilman verkkovaltuutta.
+- Ei löytynyt sääntöä, joka hyväksyisi baseline-virheet automaattiseksi poikkeukseksi.
+
+### Saman ympäristön vertailu
+
+Verrattiin c62d7abd64e3b1269cad2e2e6e0c91c6bb4585a5-revisiota sitä edeltävään
+sisältöversioon ce44996a4077bb5bc3ec0683d5dce2ff01c1463d. Baseline materialisoitiin
+omaan detached-worktreehen päächeckoutin tmp/project-registry-baseline-001-polkuun.
+Muiden checkoutien HEADia, työpuuta tai indeksiä ei vaihdettu. Ei tutkimusdatan
+siirtoa: baseline muodostettiin vain Gitin commitoiduista tiedostoista.
+
+Molemmissa sama Windows AMD64, Python 3.12.4, pytest 9.0.2, pandas 2.3.3,
+numpy 2.4.1, openpyxl 3.1.5 ja jsonschema 4.23.0, sama PATH ja samat asetukset:
+`python -m pytest -q --tb=no -o pythonpath=Electronic-Frailty-Index/src`.
+Vain havaintoja keräävä pytest-plugin lisättiin; testejä tai tuloksia ei ohitettu.
+
+| Revisio | failed | passed | skipped | subtests passed |
+|---|---|---|---|---|
+| Baseline ce44996 | 85 | 452 | 25 | 247 |
+| Toteutus c62d7ab | 85 | 475 | 25 | 268 |
+
+Vertailu perustui nodeid-, vaihe- ja virhesyytietoihin, ei vain lukumäärään.
+85 virheraportissa oli kummassakin 79 erillistä nodeidia (osa subtest-raporteista
+käyttää samaa nodeidia). Näistä 78 oli yhteisiä. Näistä 77:n virhesyyt olivat samat
+kun WSL:n prosessitunnukset ja satunnaiset synteettiset temp-polut normalisoitiin.
+Yhdessä workbook-testissä toinen ajo epäonnistui suoraan snapshot-guardissa ja
+toinen saman guardin virhetekstin regex-vertailussa. Molemmat virhetekstit säilytettiin.
+
+Kokonaisten ajojen kaksi eriävää tunnistetta olivat:
+
+- tests/test_deac_cohort_runner.py::test_xlsx_metadata_validation_and_first_visit_selection
+- tests/test_deac_cohort_runner.py::test_xlsx_reader_rejects_source_change_after_metadata_validation
+
+Nämä ajettiin erikseen kolmesti kummassakin revisiossa: molemmat virheet toistuivat
+myös baselinessa. Ensimmäinen testi sekä läpäisi että epäonnistui kummassakin
+revisiossa; toinen epäonnistui kohdennetuissa ajoissa kummassakin. Sama
+"Source workbook changed while its snapshot was read" -virhe toistui.
+Näiden testien ja DEAC-lukijan Git-diffi oli tyhjä revisioiden välillä.
+
+Tässä vertailussa ei löytynyt siirtopaketin aiheuttamaa uutta testivirhettä.
+Tämä ei todista kaikkien mahdollisten regressioiden puuttumista eikä hyväksy
+baseline-virheitä. Aiempi 86 failed -ajo vaihteli tässä 85:een; ainakin workbook-
+testien ajokohtainen vaihtelu on nyt erikseen osoitettu.
+
+### Virheiden luokittelu ja evidenssi
+
+- Ympäristösidonnaisia näyttöjä molemmissa revisioissa: WSL/Bash-käynnistys
+  (25 raporttia), Windowsin symlink-etuoikeus WinError 1314 (10), skriptin
+  käynnistys WinError 193 (8), puuttuva os.O_DIRECTORY (6), RECEIVER_REQUIRES_POSIX,
+  PosixPathin mahdottomuus Windowsissa ja POSIX-julkaisuoperaatioiden rajoitteet.
+- Baselinessa toistuvia muita virheitä: esimerkiksi kymmenen kb_pull-testin
+  TypeError ('method' / 'str') ja Quantify-metadatan case-duplicate-assertio.
+  Näille ei päätelty pelkän vertailun perusteella tarkkaa ympäristöjuurisyytä.
+- Workbookin snapshot-virheiden ajokohtainen vaihtelu on osoitettu; sen
+  syvempää korjausta tai tieteellisen lukijan muuttamista ei tehty.
+- EFI:n alkuperäinen collection-este johtui editable-asennuksen puuttumisesta;
+  pelkkä src-polun asetus mahdollisti koko vertailun ilman asennuksia.
+- Lähdetoteutuksen 23 uutta testiä näkyvät passed-erotuksena; aiempi
+  generaattorin 23/23- ja CLI-smoke-näyttö koskee muuttumatonta koodia.
+
+Täydet failed-nodeid:t, virhetekstit, kohdennetut ajot ja lokit säilytettiin
+paikallisessa väliaikaisessa evidenssikansiossa nimeltä
+prs-registry-validation-o1imlbqc. Sen sha256.json yksilöi artefaktit.
+Baseline JSON SHA256: 83c3583315b8ee62bb189f240a6410f77a2de52e34018f8d9ca1902e39314b06.
+Toteutus JSON SHA256: d18c1dab06fbee026f2484392330a1482cd35f60af0cf363df3188d4d3c14eb0.
+Evidenssi on paikallinen, ei julkaistu CI-tulos tai pysyvä hyväksyntä.
+
+### Pienin jäljellä oleva toimi
+
+Ei review-siirtoa: koko testisarjan hyväksyttyä PASS-tulosta eikä README:n
+Markdown-porttien tulosta ole. Ei aliprojektien korjauksia, asennuksia tai porttiohitusta.
+Termux ei ole välttämätön; ensisijainen dokumentoitu täysi testireferenssi on Linux-CI.
+
+Aja sama toteutus c62d7abd64e3b1269cad2e2e6e0c91c6bb4585a5 puhtaassa,
+valmiiksi varustetussa repo-worktreessä, jonka rootissa on AGENTS.md. Ei likaisen
+checkoutin kopiointia tai tutkimusdataa. Tarvitaan CI:n Python 3.11 -ympäristö,
+requirements-/EFI-paketin riippuvuudet, FOF dev-ryhmä ja EFI editable-asennuksena,
+paikallinen Git ja POSIX Bash sekä Node 20 ja lockfilen mukaiset Markdown-työkalut.
+Nämä ovat ympäristön ennakkoehtoja, eivät tämän ohjeen asennusvaltuutus.
+
+Tarkistuskomennot valmiissa Linux-ympäristössä repojuuresta:
+
+```sh
+pwd
+python -B -m unittest discover -s tools/project_registry/tests -p test_render_projects_csv.py
+python -m pytest -q --maxfail=1 --disable-warnings --ignore=Fear-of-Falling/tests/test_place_verified_bundle.py
+```
+
+Placement-testit lisäksi CI:n dokumentoidussa yksityisessä /home/foftest-HOMEssa,
+jonka omistus, moodi 0700 ja _posix_anchor on jo varmennettu CI-ohjeen mukaan:
+
+```sh
+env HOME=/home/foftest python -m pytest -q --disable-warnings Fear-of-Falling/tests/test_place_verified_bundle.py
+./node_modules/.bin/prettier --check docs/governance/project_registry/README.md
+./node_modules/.bin/markdownlint-cli2 docs/governance/project_registry/README.md
+```
+
+Jos samat baseline-virheet jäävät myös valmiissa CI-ympäristössä, tarvitaan
+nimetty repon käytäntöjen mukainen poikkeuspäätös tai erilliset baseline-korjaukset;
+ei automaattista vihreää hyväksyntää. Tässä sessiossa ei ole varmennettua valmiiksi
+varustettua POSIX-testisessiota. Sallitun Windows-prosessin Bash-portti on PASS,
+mutta se ei muuta Windows-Pythonia Linux-Pythoniksi. Ei uusia asennuksia tehty.
+
+- 2026-10-25T16:25:58.512606+02:00: Baseline-vertailu ja porttivaatimukset kirjattu. Generaattori, testit ja README muuttumattomina; vain tämä lokikortti päivitetty. Ei review-siirtoa ilman pakollista näyttöä.
+
 ## Blockers
 
 **Aktiivinen este:** koko repon Python-testit eivät läpäise tässä Windows-
