@@ -459,3 +459,22 @@ Kortti jää in-progressiin ja PR draftiksi. Tämä CI-kirjaus tallennetaan vain
 paikallisesti; tarkistetun PR-HEADin tuloksia ei esitetä uuden revision ajoina.
 
 - 2026-10-25T18:52:45.733300+02:00: Hyväksytty push/draft-PR ja CI-seuranta valmis. Python-portit PASS; README Prettier FAIL ja markdownlint suorittamatta. Ei review-siirtoa.
+
+## README:n rajattu muotoilukorjaus
+
+- Owner valtuutti README:n muotoilun, kortin ylläpidon, commitin ja pushin
+  samaan PR:ään #216 sekä review-siirron onnistuneiden CI-porttien jälkeen.
+- Tarkistettu 20f3498 on vain edellisen CI-ajon kirjaus; sisältyy tulevaan pushiin.
+- Worktreen npm ci --no-audit --no-fund asensi lukitut kehitystyökalut;
+  package.json ja package-lock.json muuttumattomia. Työkalut säilytetään
+  ignored tmp/markdown-tools/node_modules-hakemistossa, ei commitissa.
+- Prettier 3.9.9 --write ja --check vain README-polulle: PASS.
+- markdownlint-cli2 0.23.3 / markdownlint 0.41.1: yksi tiedosto lintattu,
+  nolla virhettä, exit 0. Summaryn 0 files tarkoittaa virheitä sisältävien
+  tiedostojen määrää, ei lintattujen tiedostojen määrää (Linting: 1 file).
+- README:n kaikki sisältö säilyi: vertailu normalisoi whitespace-merkit ja
+  taulukoiden separator-viivojen pituudet. Vain taulukoiden muotoilu muuttui.
+- Generaattorin/testien diffi c62d7ab-versioon tyhjä; CI-sääntöjä ei muutettu.
+- Korjauksen jälkeiset CI-portit odotetaan ennen review-siirtoa.
+
+- 2026-10-25T20:01:54.367521+02:00: README:n rajattu korjaus ja paikalliset Markdown-portit PASS; sisältövertailu PASS. Korjaus pusketaan samaan draft-PR:ään ja CI seurataan.

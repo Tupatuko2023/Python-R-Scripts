@@ -8,13 +8,13 @@ oletusgenerointi ilmoittaa `no PRJ-*.md files` ennen pilotin valmistelua.
 
 ## Versio ja alkuperä
 
-| Tieto | Arvo |
-|---|---|
-| Paikallisen siirtopaketin versio | `1.0.0` (ei lähderepon tagi) |
-| Lähderepo | `Tupatuko2023/FOF-Dissertation-Project` |
-| Toimitettu lähdecommit | `a098b62e9cce7079f84ef4cfd0665ddef93ca816` |
-| Generaattorin Git-blob | `de92f22219e2abf479bb98eb79896d4d66442865` |
-| Testien Git-blob | `2b108e05a1f260395ef62165b0231fe4bbde6f9b` |
+| Tieto                            | Arvo                                       |
+| -------------------------------- | ------------------------------------------ |
+| Paikallisen siirtopaketin versio | `1.0.0` (ei lähderepon tagi)               |
+| Lähderepo                        | `Tupatuko2023/FOF-Dissertation-Project`    |
+| Toimitettu lähdecommit           | `a098b62e9cce7079f84ef4cfd0665ddef93ca816` |
+| Generaattorin Git-blob           | `de92f22219e2abf479bb98eb79896d4d66442865` |
+| Testien Git-blob                 | `2b108e05a1f260395ef62165b0231fe4bbde6f9b` |
 
 `tools/project_registry/render_projects_csv.py` ja sen testit on siirretty
 lähdecommitin mukaisina. Käyttöohje on sovitettu tähän repoon. Myöhemmät
@@ -46,9 +46,9 @@ Tehtävän yksilöi **repoidentiteetti ja koko repojuureen suhteutettu polku**.
 Pelkkä TASK-tunnus tai tiedostonimi ei ole globaalisti yksilöllinen.
 Projektitiedoston rungossa voi käyttää taulukkoa:
 
-| repo | task | path |
-|---|---|---|
-| `Tupatuko2023/Python-R-Scripts` | kortin tunniste tai otsikko | `tasks/<elinkaarikansio>/<kortti>.md` |
+| repo                            | task                                     | path                                                  |
+| ------------------------------- | ---------------------------------------- | ----------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | kortin tunniste tai otsikko              | `tasks/<elinkaarikansio>/<kortti>.md`                 |
 | `Tupatuko2023/Python-R-Scripts` | aliprojektin kortin tunniste tai otsikko | `Fear-of-Falling/tasks/<elinkaarikansio>/<kortti>.md` |
 
 Taulukko on viitekäytäntö, ei generaattorin validoima sisäkkäinen skeema.
@@ -69,14 +69,14 @@ Projektin ihmisomistaja vahvistaa repo-kohdistuksen, tavoitteen ja hyväksynnät
 Tehtävää tekevä agentti saa päivittää vain projektitiedostoa, joka kuuluu
 tehtävän sallittuihin kirjoituspolkuihin. Tämä ohje ei laajenna kirjoitusvaltuutta.
 
-| Vaihe | Päivitys |
-|---|---|
-| Aloitus | agentti, aloituspäivä, tilahavainto, tehtäväviitteet ja seuraava askel |
-| Merkittävä välivaihe | viimeisin tilanne ja evidenssi sekä seuraava askel |
-| Keskeytys | este, keskeytyssyy, päivämäärä ja vastuullinen seuraava toimija |
-| Toimitus | toimitustila ja varmennettu commit-/PR-viite |
-| Projektin sulku | sulkutila ja päivä vain paikallisten ihmishyväksyntöjen jälkeen |
-| Worktree-havainto | erillinen inventaarion kattavuus ja säilytys-/poistoevidenssi |
+| Vaihe                | Päivitys                                                               |
+| -------------------- | ---------------------------------------------------------------------- |
+| Aloitus              | agentti, aloituspäivä, tilahavainto, tehtäväviitteet ja seuraava askel |
+| Merkittävä välivaihe | viimeisin tilanne ja evidenssi sekä seuraava askel                     |
+| Keskeytys            | este, keskeytyssyy, päivämäärä ja vastuullinen seuraava toimija        |
+| Toimitus             | toimitustila ja varmennettu commit-/PR-viite                           |
+| Projektin sulku      | sulkutila ja päivä vain paikallisten ihmishyväksyntöjen jälkeen        |
+| Worktree-havainto    | erillinen inventaarion kattavuus ja säilytys-/poistoevidenssi          |
 
 Yhden kortin DONE ei automaattisesti sulje monitehtäväistä projektia.
 Paikallisen tehtävän review -> done noudattaa SKILLS.md:n riippumattoman,
@@ -94,15 +94,15 @@ tiedostonimi vastaa pysyvää `id`-arvoa. Jäsennin tukee litteitä `key: value`
 Toistuva avain hylätään, vaikka arvot olisivat samat. Virhe kertoo tiedoston,
 avaimen ja rivin ennen CSV:n kirjoittamista.
 
-| Kentät | Merkitys |
-|---|---|
-| `id`, `title`, `short_name` | pysyvä tunniste, nimi ja lyhyt näyttönimi |
-| `repo`, `repo_ref` | repoidentiteetti ja kanoninen ref-nimi, esimerkiksi `origin/main` |
-| `state`, `delivery` | projektin tila ja erillinen toimitustila |
-| `goal`, `done_criterion` | tavoite ja todennettava projektin valmistumiskriteeri |
-| `latest_status`, `next_step` | viimeisin havainto ja seuraava konkreettinen toimi |
-| `source_description_sha256`, `source_captured_at` | lähdekuvauksen SHA256 ja talteenottopäivä |
-| `observed_at`, `observed_commit`, `observed_worktree_label` | havainnon päivä, commit ja lyhyt konelabel |
+| Kentät                                                      | Merkitys                                                          |
+| ----------------------------------------------------------- | ----------------------------------------------------------------- |
+| `id`, `title`, `short_name`                                 | pysyvä tunniste, nimi ja lyhyt näyttönimi                         |
+| `repo`, `repo_ref`                                          | repoidentiteetti ja kanoninen ref-nimi, esimerkiksi `origin/main` |
+| `state`, `delivery`                                         | projektin tila ja erillinen toimitustila                          |
+| `goal`, `done_criterion`                                    | tavoite ja todennettava projektin valmistumiskriteeri             |
+| `latest_status`, `next_step`                                | viimeisin havainto ja seuraava konkreettinen toimi                |
+| `source_description_sha256`, `source_captured_at`           | lähdekuvauksen SHA256 ja talteenottopäivä                         |
+| `observed_at`, `observed_commit`, `observed_worktree_label` | havainnon päivä, commit ja lyhyt konelabel                        |
 
 Yllä olevat kentät ovat pakollisia ja ei-tyhjiä. `PENDING` ei kelpaa ratkaisuksi.
 `repo_ref` ei sisällä havaintocommittia; se kuuluu `observed_commit`-kenttään.
@@ -175,28 +175,28 @@ vanhaa usage-exit 3 -mainintaa ei käytetä tämän paketin hyväksymiskriteerin
 UTF-8-vienti käyttää 20 saraketta, LF-rivinvaihtoja ja CSV-quotingia. Järjestys
 on pysyvä ja projektit lajitellaan tunnisteella. Vienti ei ole lähteen legacy-taulukon migraatio.
 
-| # | Sarake | Lähde |
-|---|---|---|
-| 1 | Projekti-ID | id |
-| 2 | Projekti | sanatarkka lähdekuvauslohko |
-| 3 | Nimi | short_name |
-| 4 | Tavoite ja valmistumiskriteeri | goal + done_criterion |
-| 5 | Tila | state |
-| 6 | Viimeisin tilanne | latest_status |
-| 7 | Seuraava toimenpide | next_step |
-| 8 | Este | blocker tai none_recorded |
-| 9 | Toimituksen tila | delivery |
-| 10 | Worktree-siivous | worktree-taulukko ja inventaarion kattavuus |
-| 11 | lyhenne | id ilman PRJ-etuliitettä |
-| 12 | Orkestroija | orchestrator |
-| 13 | Agentinnimi | agent |
-| 14 | Agentti | agent_tool |
-| 15 | ympäristö | environment |
-| 16 | pvm_aloitettu | started_date |
-| 17 | pvm_jäi_kesken | paused_date |
-| 18 | pvm_valmis | completed_date |
-| 19 | Jos, niin miksi projekti on nyt jäissä | pause_reason |
-| 20 | Linkki | link |
+| #   | Sarake                                 | Lähde                                       |
+| --- | -------------------------------------- | ------------------------------------------- |
+| 1   | Projekti-ID                            | id                                          |
+| 2   | Projekti                               | sanatarkka lähdekuvauslohko                 |
+| 3   | Nimi                                   | short_name                                  |
+| 4   | Tavoite ja valmistumiskriteeri         | goal + done_criterion                       |
+| 5   | Tila                                   | state                                       |
+| 6   | Viimeisin tilanne                      | latest_status                               |
+| 7   | Seuraava toimenpide                    | next_step                                   |
+| 8   | Este                                   | blocker tai none_recorded                   |
+| 9   | Toimituksen tila                       | delivery                                    |
+| 10  | Worktree-siivous                       | worktree-taulukko ja inventaarion kattavuus |
+| 11  | lyhenne                                | id ilman PRJ-etuliitettä                    |
+| 12  | Orkestroija                            | orchestrator                                |
+| 13  | Agentinnimi                            | agent                                       |
+| 14  | Agentti                                | agent_tool                                  |
+| 15  | ympäristö                              | environment                                 |
+| 16  | pvm_aloitettu                          | started_date                                |
+| 17  | pvm_jäi_kesken                         | paused_date                                 |
+| 18  | pvm_valmis                             | completed_date                              |
+| 19  | Jos, niin miksi projekti on nyt jäissä | pause_reason                                |
+| 20  | Linkki                                 | link                                        |
 
 Repoidentiteetti, koko viitetaulukko, lähdehash ja havaintoprovenance ovat
 projektitiedostossa; CSV on rajallinen näkymä, ei täydellinen rekisterivarmistus.
