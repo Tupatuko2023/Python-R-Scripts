@@ -8,7 +8,7 @@
 - Haara: `chore/project-registry-transfer-001`
 - Valmistelun ja myöhemmän työn worktree päächeckoutista: `tmp/project-registry-transfer-001`
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- Tämä ajo valmistelee vain kortin. Toteutus odottaa erillistä ajoa ja alla kuvattua admissionia.
+- Admission ja kolmen sisältötiedoston toteutus tehty; review-siirto odottaa pakollisen koko repon testiajotuloksen korjaantumista.
 
 ## Context
 
@@ -185,7 +185,56 @@ vaaditaan myös soveltuvat CI-tarkistukset normaalin erikseen valtuutetun menett
 
 - 2026-10-25T16:02:06.336259+02:00: Admission-ajo: nykyiset ohjeet, haara ja Git-näkyvä READY-kortti tarkistettu. Varsinainen tools/run-gates.ps1 --mode pre-push --smoke PASS sallitussa sandboxin ulkopuolisessa prosessissa (renv-lock luettu, ei asennuksia). Vain tämän kortin READY- ja in-progress-polut muuttuvat tässä paikallisessa vaiheessa. Ownerin yhtenäinen jatkovaltuutus kattaa seuraavan toteutusvaiheen ilman uutta päätöstä.
 
+## Toteutus ja validointinäyttö
+
+- Admissionin paikallinen commit: `ce44996a4077bb5bc3ec0683d5dce2ff01c1463d`.
+- Generaattori ja testit siirretty Git-objekteista lähdecommitista tavuntarkasti;
+  blobit vastaavat Inputs-osion arvoja. Paikallinen README kirjoitettu.
+- Python 3.12.4; generaattorin koko unittest-sarja: **23/23 PASS**.
+- Kortin synteettinen CLI-smoke: generointi kahdesti samoilla tavuilla,
+  oikea Git-ignore-portti ja `--check`: **PASS**. Ei aitoja projektirivejä.
+- `git check-ignore -v -- outputs/cache/project_registry/projects.csv`: **PASS**,
+  `.gitignore:43:**/outputs/`. Lähdevertailu Git-objekteihin: **PASS**.
+- `python -m pytest -q`: collection ERROR, EFI-pakettia ei ole editable-asennettu.
+  Root pytest.ini osoittaa src-polkuun, mutta paketti on Electronic-Frailty-Index/src.
+- Uusinta ilman asennusta: `python -m pytest -q -o pythonpath=Electronic-Frailty-Index/src`:
+  **86 failed, 474 passed, 25 skipped, 268 subtests passed** (76.68 s).
+  Koko repon vaatimus ei läpäise; tämän paketin unittestit läpäisevät myös osana ajoa.
+- Esimerkkejä rajauksen ulkopuolisista virheistä: FOF test_architecture.py:n
+  Windows-erottimen vertaaminen kauttaviivapolkuun; test_artifact_transfer.py:n
+  WSL-bash ei löydä /bin/bashia; Quantify test_metadata_files.py:n
+  case-duplicate-tarkistus sekä DEAC-runnerin testejä. Ei blanket-väitettä,
+  että jokaisen 86 virheen juurisyy olisi erikseen selvitetty.
+- `python -m ruff --version` ja `python -m black --version`: moduulit puuttuvat.
+  Ei asennuksia, massamuotoilua tai aliprojektien korjauksia. Lintille ei PASS-väitettä.
+- Varsinainen repoportti ennen admissionia: **PASS**, myös renv-lockin luku.
+  Staged-sisältöportti myös PASS: guardrails, renv-lockin luku ja molempien
+  siirrettyjen .py-tiedostojen syntaksikäännös; ei staged R-tiedostoja. R:n
+  LC_*-locale-varoitukset eivät estäneet tarkistusta (exit 0).
+- `git diff --check`: PASS. K18/QC: NOT APPLICABLE — päärepon ei-tieteellinen
+  työkalusiirto, ei tutkimusdataa, derivointeja tai analyysimuutoksia.
+- Tässä toteutusvaiheessa kolme uutta sisältötiedostoa ja nykyinen kortti:
+  neljä muutospolkua. Review-siirtoa ei tehdä puuttuvan DoD:n vuoksi.
+- Ei AGENTS-, TEMPLATE-, ignore- tai projektitietomuutoksia, etätoimia tai worktree-poistoa.
+
+- 2026-10-25T16:06:52.833322+02:00: Toteutus ja ajettu testinäyttö kirjattu. Pakollisen pytest-epäonnistumisen vuoksi ei review-siirtoa; rajauksen ulkopuolisia tiedostoja ei korjata.
+
+- 2026-10-25T16:07:24.080766+02:00: Staged repoportti PASS (exit 0); koko repon pytest ja lint-ympäristö ovat edelleen este. Toteutus tallennetaan paikalliseen committiin, jonka SHA raportoidaan vastauksessa.
+
 ## Blockers
+
+**Aktiivinen este:** koko repon Python-testit eivät läpäise tässä Windows-
+ympäristössä. Tehtävä pysyy 02-in-progress-tilassa, ei review-valmiusväitettä.
+Jatko samalla valtuutuksella: suorita yllä oleva koko testisarja repon hyväksymässä
+valmiiksi varustetussa ympäristössä (CI käyttää Linuxia ja EFI:n editable-asennusta)
+sekä vaaditut lint-tarkistukset jo asennetuilla työkaluilla. Tämän toimeksiannon
+asennus-, verkko- ja sisältörajat säilyvät. Ympäristön valmistelu tai baseline-
+korjaus, joka edellyttää niiden laajentamista, raportoidaan erikseen.
+
+Bashin alkuperäinen sandbox-este ratkesi käyttämällä normaalisti sallittua
+ulkopuolista prosessia; varsinainen portti läpäisi ennen admissionia. Alla olevat
+valmistelun havainnot ovat historiallisia, eivät nykyinen väite portin ajamattomuudesta.
+
 
 - Sandboxissa `Git Bash --noprofile --norc -c` kaatuu ennen skriptiä:
   couldn't create signal pipe, Win32 error 5; exit -1073741502.
