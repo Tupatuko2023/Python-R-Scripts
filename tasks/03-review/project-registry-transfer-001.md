@@ -2,13 +2,13 @@
 
 ## State
 
-- State: `02-in-progress`
+- State: `03-review`
 - Tunniste: `project-registry-transfer-001`
 - Omistava repo: `Tupatuko2023/Python-R-Scripts`
 - Haara: `chore/project-registry-transfer-001`
 - Valmistelun ja myöhemmän työn worktree päächeckoutista: `tmp/project-registry-transfer-001`
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- Admission ja toteutus tehty. Linuxin Python-CI PASS; review-siirto odottaa README:n Prettier- ja markdownlint-portteja.
+- Siirtopaketti ja README:n muotoilukorjaus validoitu Linux-CI:ssä. Kortti review-tilassa ihmisen katselmointia varten.
 
 ## Context
 
@@ -478,3 +478,26 @@ paikallisesti; tarkistetun PR-HEADin tuloksia ei esitetä uuden revision ajoina.
 - Korjauksen jälkeiset CI-portit odotetaan ennen review-siirtoa.
 
 - 2026-10-25T20:01:54.367521+02:00: README:n rajattu korjaus ja paikalliset Markdown-portit PASS; sisältövertailu PASS. Korjaus pusketaan samaan draft-PR:ään ja CI seurataan.
+
+## Katselmointivalmius
+
+- Katselmoitava paketti: kaksi tavuntarkkaa lähdetiedostoa, paikallinen README
+  ja tämän tehtävän review-kortti. Generaattorin/testien diffi c62d7ab-versioon tyhjä.
+- PR: https://github.com/Tupatuko2023/Python-R-Scripts/pull/216 (draft säilytetään).
+- Korjaus-HEAD eb4c26f005e6e3e8793643260c1f8fb96fddb16b: kaikki soveltuvat CI-jobit PASS.
+- Python-ajon 40219306327 päätestit ja erillinen POSIX-placement todella suoritettiin.
+  - 515 passed, 17 skipped, 290 subtests passed in 89.13s (0:01:29)
+  - 43 passed, 1 skipped in 1.01s
+- Markdown-ajon 40219306309 Prettier ja markdownlint molemmat completed/success;
+  lokissa Linting: 1 file ja 0 issues. Ei enää ohitettua README-porttia.
+- CodeQL Python ja JavaScript PASS. K-polkujen tunnistus PASS, raskas K-smoke
+  ei sovellu muutospolkuihin, eikä skipped-ajoa lasketa testien PASSiksi.
+- Tästä review-siirrosta tulevan lopullisen HEADin CI seurataan vielä ennen
+  loppuraporttia. Vain kortin polku/tila ja tämä kirjaus muuttuvat.
+- Aiemmat Blockers- ja in-progress-kirjaukset ovat vaihehistoriaa: Python- ja
+  Markdown-porttien esteet on nyt ratkaistu. Ei avoimia toteutusesteitä.
+- Tämä on agentin DoD-handoff, ei ihmisomistajan hyväksyntä eikä DONE-valtuutus.
+- Ei mergeä, DONE-siirtoa tai worktree-poistoa. AGENTS/TEMPLATE/projektipilotti
+  pysyvät seuraavina erillisinä käyttöönottovaiheina.
+
+- 2026-10-25T20:05:22.065995+02:00: Pakolliset korjaus-HEADin portit PASS; kortti siirretty 03-review-tilaan. Lopullinen CI tarkistetaan pushin jälkeen.
