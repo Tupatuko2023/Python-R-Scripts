@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `03-review`
+- State: `02-in-progress`
 - Tunniste: `project-registry-transfer-001`
 - Omistava repo: `Tupatuko2023/Python-R-Scripts`
 - Haara: `chore/project-registry-transfer-001`
@@ -501,3 +501,13 @@ paikallisesti; tarkistetun PR-HEADin tuloksia ei esitetä uuden revision ajoina.
   pysyvät seuraavina erillisinä käyttöönottovaiheina.
 
 - 2026-10-25T20:05:22.065995+02:00: Pakolliset korjaus-HEADin portit PASS; kortti siirretty 03-review-tilaan. Lopullinen CI tarkistetaan pushin jälkeen.
+
+## Ownerin valtuuttama P1/P2-rework 2026-10-27
+
+- Sama tehtävä palautetaan in-progressiin Ownerin nykyisellä rajatulla valtuutuksella. Ei uutta tehtävää.
+- Lähde-PR #341 on mergattu mainiin: f29dd518f6b697102406e543c472c1315d198050.
+- Korjataan vain generaattori, testit ja README:n provenance/turvallisuuskuvaus; lähteen workflowta ei kopioida.
+- Viisi yksilöllistä muutospolkua: kolme sisältötiedostoa sekä kortin in-progress- ja review-polut, myös palautus huomioiden.
+- Lähdetehtävän DONE odottaa erillisen säilytysreceiptin kuudennen artefaktin valtuutusta; korjauskoodi on origin/mainissa.
+- PR #216:n vanhan revision hyväksyntää ei käytetä uuden revision hyväksyntänä. Ei mergeä tai DONE-siirtoa.
+- 2026-10-27: Rework-admission, ohjeet ja puhdas eristetty työpuu varmennettu; päächeckoutiin ei kosketa.
