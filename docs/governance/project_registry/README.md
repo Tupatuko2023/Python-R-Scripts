@@ -1,4 +1,4 @@
-# Projektirekisteri: siirtopaketti 1.0.0
+# Projektirekisteri: siirtopaketti 1.0.1
 
 Projektitiedosto on ylläpidettävä lähde, josta generaattori muodostaa CSV-näkymän.
 CSV:tä ei muokata käsin. Tämä vaihe tuo työkalun ja paikallisen ohjeen;
@@ -10,17 +10,26 @@ oletusgenerointi ilmoittaa `no PRJ-*.md files` ennen pilotin valmistelua.
 
 | Tieto                            | Arvo                                       |
 | -------------------------------- | ------------------------------------------ |
-| Paikallisen siirtopaketin versio | `1.0.0` (ei lähderepon tagi)               |
+| Paikallisen siirtopaketin versio | `1.0.1` (ei lähderepon tagi)               |
 | Lähderepo                        | `Tupatuko2023/FOF-Dissertation-Project`    |
-| Toimitettu lähdecommit           | `a098b62e9cce7079f84ef4cfd0665ddef93ca816` |
-| Generaattorin Git-blob           | `de92f22219e2abf479bb98eb79896d4d66442865` |
-| Testien Git-blob                 | `2b108e05a1f260395ef62165b0231fe4bbde6f9b` |
+| Toimitettu lähdecommit           | `f29dd518f6b697102406e543c472c1315d198050` |
+| Generaattorin Git-blob           | `66a931c1528c8bd00fee315d69603ed348f2f1b2` |
+| Testien Git-blob                 | `7c42ed66cf29bdf91cc330fdcef63e6a190daa9b` |
 
 `tools/project_registry/render_projects_csv.py` ja sen testit on siirretty
 lähdecommitin mukaisina. Käyttöohje on sovitettu tähän repoon. Myöhemmät
 työkalukorjaukset verrataan kirjattuun lähdeversioon ennen siirtoa.
 Python 3.11+ ja paikallinen Git riittävät generaattoritesteihin; uusi
 Python-riippuvuus ei kuulu pakettiin. Muun repon testit tarvitsevat omat riippuvuutensa.
+
+## Turvallinen vienti
+
+Jokainen projektitiedosto luetaan kerran ajokohtaiseksi tilannekuvaksi. Metadata
+ja kuvaus validoidaan ja viedään samasta sisällöstä; kuvausta ei lueta uudelleen.
+Lähteeseen viittaava kova tai symbolinen tuloslinkki hylätään. CSV muodostetaan
+erilliseen, saman kohdehakemiston väliaikaistiedostoon ja julkaistaan atomisella
+vaihdolla. Kirjoitus- tai vaihtovirhe säilyttää lähteet ja aiemman CSV:n.
+Generaattori siivoaa vain oman ajonsa väliaikaistiedoston.
 
 ## Omistajuus ja rajaus
 
@@ -159,7 +168,8 @@ puuttuminen, säilytä mahdolliset olemassa olevat tiedostot, validoi uusi tiedo
 ja toimita se paikallisen käytännön mukaan. Myöhemmät päivitykset käyttävät guardia.
 Tämän siirtopaketin tehtävä ei valtuuta projektin ensiluontia.
 
-Generointi kirjoittaa vain yhden nimetyn CSV:n, ei rekisterilähteitä. Virheellinen
+Generointi julkaisee yhden nimetyn CSV:n erillisen väliaikaistiedoston kautta;
+rekisterilähteitä ei kirjoiteta. Virheellinen
 rekisteri ei luo CSV:tä eikä muuta vanhaa CSV:tä. Kirjoitustila vaatii Git-ignoroidun
 tulospolun; nykyinen `**/outputs/` kattaa oletuspolun. Trackattuun tulospolkuun ei
 kirjoiteta. `--skip-ignore-check` kuuluu vain synteettisiin testeihin.

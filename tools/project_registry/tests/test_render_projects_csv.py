@@ -16,6 +16,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "render_projects_csv.py"
@@ -226,6 +227,164 @@ class RenderTests(RegistryCase):
         self.assertEqual(row[5], status)
 
 
+class SafePublicationTests(RegistryCase):
+    def setUp(self):
+        super().setUp()
+        self.source = self.write("PRJ-TEST.md", project_text())
+        self.source_bytes = self.source.read_bytes()
+        self.output.parent.mkdir()
+
+    def link(self, target, link, directory=False):
+        try:
+            link.symlink_to(target, target_is_directory=directory)
+        except (OSError, NotImplementedError) as exc:
+            self.skipTest(f"symbolic links unavailable: {exc}")
+
+    def assert_rejected_without_source_change(self):
+        error = io.StringIO()
+        with contextlib.redirect_stderr(error):
+            self.assertEqual(self.render(), 1)
+        self.assertIn("publication failed", error.getvalue())
+        self.assertEqual(self.source.read_bytes(), self.source_bytes)
+        self.assertEqual(list(self.output.parent.glob(".*.tmp")), [])
+
+    def test_hard_link_to_source_is_rejected(self):
+        os.link(self.source, self.output)
+        self.assert_rejected_without_source_change()
+        self.assertEqual(self.output.read_bytes(), self.source_bytes)
+
+    def test_symbolic_link_to_source_is_rejected(self):
+        self.link(self.source, self.output)
+        self.assert_rejected_without_source_change()
+        self.assertTrue(self.output.is_symlink())
+
+    def test_parent_symbolic_link_into_registry_is_rejected(self):
+        alias = self.root / "alias"
+        self.link(self.registry_dir, alias, directory=True)
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(registry.main([
+                "--registry", str(self.registry_dir),
+                "--output", str(alias / self.source.name),
+                "--skip-ignore-check",
+            ]), 1)
+        self.assertEqual(self.source.read_bytes(), self.source_bytes)
+        self.assertEqual(sorted(p.name for p in self.registry_dir.iterdir()),
+                         [self.source.name])
+
+    def test_replace_is_same_directory_and_old_csv_survives_until_publication(self):
+        self.output.write_bytes(b"old CSV\n")
+        replace = registry.os.replace
+        calls = []
+
+        def checked_replace(temporary, target):
+            self.assertEqual(Path(temporary).parent, self.output.parent.resolve())
+            self.assertNotEqual(Path(temporary), self.output)
+            self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+            self.assertEqual(self.source.read_bytes(), self.source_bytes)
+            self.assertEqual(parse_csv(Path(temporary).read_bytes())[0], registry.HEADER)
+            calls.append(Path(temporary))
+            return replace(temporary, target)
+
+        with mock.patch.object(registry.os, "replace", side_effect=checked_replace):
+            self.assertEqual(self.render(), 0)
+        self.assertEqual(len(calls), 1)
+        self.assertFalse(calls[0].exists())
+        self.assertEqual(self.rows()[1][1], SOURCE_TEXT)
+        self.assertEqual(self.source.read_bytes(), self.source_bytes)
+
+    def test_atomic_replace_does_not_modify_other_hard_link(self):
+        old_alias = self.root / "old-view.csv"
+        old_alias.write_bytes(b"old CSV\n")
+        os.link(old_alias, self.output)
+        self.assertEqual(self.render(), 0)
+        self.assertEqual(old_alias.read_bytes(), b"old CSV\n")
+        self.assertNotEqual(self.output.read_bytes(), old_alias.read_bytes())
+
+    def test_write_and_replace_errors_preserve_old_csv_and_only_clean_owned_temp(self):
+        factory = registry.tempfile.NamedTemporaryFile
+        other = self.output.parent / ".projects.csv-other-run.tmp"
+        other.write_bytes(b"another process")
+        for stage in ("write", "short_write", "replace", "fsync"):
+            for exists in (False, True):
+                with self.subTest(stage=stage, existing_output=exists):
+                    if self.output.exists():
+                        self.output.unlink()
+                    if exists:
+                        self.output.write_bytes(b"old CSV\n")
+
+                    def broken_file(*args, **kwargs):
+                        handle = factory(*args, **kwargs)
+                        write = handle.write
+
+                        def fail_write(data):
+                            count = write(data[:3])
+                            if stage == "write":
+                                raise OSError("injected write failure")
+                            return count
+
+                        handle.write = fail_write
+                        return handle
+
+                    if stage in {"write", "short_write"}:
+                        patch = mock.patch.object(registry.tempfile, "NamedTemporaryFile",
+                                                  side_effect=broken_file)
+                    else:
+                        patch = mock.patch.object(registry.os, stage,
+                                                  side_effect=OSError(f"injected {stage} failure"))
+                    with patch, contextlib.redirect_stderr(io.StringIO()):
+                        self.assertEqual(self.render(), 1)
+                    if exists:
+                        self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+                    else:
+                        self.assertFalse(self.output.exists())
+                    self.assertEqual(self.source.read_bytes(), self.source_bytes)
+                    self.assertEqual(other.read_bytes(), b"another process")
+                    self.assertEqual(list(self.output.parent.glob(".*.tmp")), [other])
+
+    def test_alias_created_during_write_is_rechecked_before_replace(self):
+        factory = registry.tempfile.NamedTemporaryFile
+
+        def linked_during_write(*args, **kwargs):
+            handle = factory(*args, **kwargs)
+            write = handle.write
+
+            def link_after_write(data):
+                count = write(data)
+                os.link(self.source, self.output)
+                return count
+
+            handle.write = link_after_write
+            return handle
+
+        with mock.patch.object(registry.tempfile, "NamedTemporaryFile",
+                               side_effect=linked_during_write):
+            self.assert_rejected_without_source_change()
+        self.assertEqual(self.output.read_bytes(), self.source_bytes)
+
+    def test_one_read_per_source(self):
+        with mock.patch.object(registry, "read_text", wraps=registry.read_text) as read:
+            self.assertEqual(self.render(), 0)
+        self.assertEqual(read.call_count, 1)
+
+    def test_source_change_after_validation_exports_original_snapshot(self):
+        load = registry.load_registry
+        changed = project_text(latest_status="new metadata").replace(
+            SOURCE_TEXT, "UNVALIDATED second description\n")
+
+        def change_after_validation(registry_dir):
+            projects = load(registry_dir)
+            self.source.write_text(changed, encoding="utf-8", newline="")
+            return projects
+
+        with mock.patch.object(registry, "load_registry", side_effect=change_after_validation), \
+                mock.patch.object(registry, "read_text", wraps=registry.read_text) as read:
+            self.assertEqual(self.render(), 0)
+        self.assertEqual(read.call_count, 1)
+        self.assertEqual(self.rows()[1][1], SOURCE_TEXT)
+        self.assertEqual(self.rows()[1][5], "2026-10-24: testit ajettu.")
+        self.assertEqual(self.source.read_text(encoding="utf-8"), changed)
+
+
 class ValidationTests(RegistryCase):
     def test_duplicate_frontmatter_keys_preserve_output(self):
         cases = [
@@ -367,6 +526,21 @@ class GitGateTests(unittest.TestCase):
             code, messages = registry.verify_guard("registry/PRJ-TEST.md", None)
             self.assertEqual(code, 1)
             self.assertIn("INDEX_DIVERGES_FROM_HEAD", "\n".join(messages))
+
+    def test_ignored_hard_link_to_tracked_source_is_rejected(self):
+        self.init_repo()
+        self.root.joinpath(".gitignore").write_text("out/\n", encoding="utf-8")
+        output = self.root / "out" / "projects.csv"
+        output.parent.mkdir()
+        os.link(self.project, output)
+        before = self.project.read_bytes()
+        with contextlib.chdir(self.root), contextlib.redirect_stderr(io.StringIO()):
+            self.assertTrue(registry.output_is_ignored(str(output)))
+            self.assertEqual(registry.main([
+                "--registry", str(self.registry_dir), "--output", str(output),
+            ]), 1)
+        self.assertEqual(self.project.read_bytes(), before)
+        self.assertEqual(output.read_bytes(), before)
 
     def test_output_must_be_git_ignored(self):
         self.init_repo()

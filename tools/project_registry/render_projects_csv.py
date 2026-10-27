@@ -2,7 +2,7 @@
 """Render the project registry into one CSV view.
 
 Reads every ``PRJ-*.md`` file under the registry directory *without writing it*
-and writes exactly one named output path (default
+and atomically publishes one CSV at the named output path (default
 ``outputs/cache/project_registry/projects.csv``). The output path must be
 Git-ignored; a tracked path is refused. This tool is not read-only: it writes the
 CSV. Only the registry sources are read-only for it.
@@ -29,12 +29,14 @@ from __future__ import annotations
 
 import argparse
 import csv
+from dataclasses import dataclass
 import hashlib
 import io
 import os
 import re
 import subprocess
 import sys
+import tempfile
 
 BEGIN_MARKER = "<!-- source-description:begin -->"
 END_MARKER = "<!-- source-description:end -->"
@@ -353,6 +355,18 @@ def validate_project(path, text):
     return meta, block_sha, rows
 
 
+@dataclass(frozen=True)
+class ProjectSnapshot:
+    """One validated source read, including its export text and file identity."""
+
+    path: str
+    meta: dict
+    block_sha: str
+    rows: list
+    description: str
+    identity: tuple
+
+
 def load_registry(registry_dir):
     if not os.path.isdir(registry_dir):
         raise RegistryError([f"registry directory not found: {registry_dir}"])
@@ -368,7 +382,9 @@ def load_registry(registry_dir):
     errors = []
     for path in paths:
         try:
-            meta, block_sha, rows = validate_project(path, read_text(path))
+            text = read_text(path)
+            meta, block_sha, rows = validate_project(path, text)
+            source_stat = os.stat(path)
         except RegistryError as exc:
             errors.extend(exc.messages)
             continue
@@ -379,7 +395,10 @@ def load_registry(registry_dir):
             )
             continue
         seen[project_id] = os.path.basename(path)
-        projects.append((meta, block_sha, rows))
+        projects.append(ProjectSnapshot(
+            os.path.abspath(path), meta, block_sha, rows, source_block(text),
+            (source_stat.st_dev, source_stat.st_ino),
+        ))
     if errors:
         raise RegistryError(errors)
     return projects
@@ -418,12 +437,12 @@ def build_row(meta, rows, description):
     ]
 
 
-def render_csv(projects, descriptions):
+def render_csv(projects):
     buffer = io.StringIO(newline="")
     writer = csv.writer(buffer, lineterminator="\n", quoting=csv.QUOTE_MINIMAL)
     writer.writerow(HEADER)
-    for meta, _, rows in sorted(projects, key=lambda item: item[0]["id"]):
-        writer.writerow(build_row(meta, rows, descriptions[meta["id"]]))
+    for project in sorted(projects, key=lambda item: item.meta["id"]):
+        writer.writerow(build_row(project.meta, project.rows, project.description))
     return buffer.getvalue().encode("utf-8")
 
 
@@ -442,6 +461,63 @@ def output_is_ignored(output_path):
     if code == 1:
         return False
     return None
+
+
+def output_target(output_path, registry_dir, projects):
+    """Reject source aliases and return the target with its parent resolved."""
+    output_abs = os.path.abspath(output_path)
+    resolved = os.path.normcase(os.path.realpath(output_abs))
+    registry = os.path.normcase(os.path.realpath(registry_dir))
+    try:
+        inside_registry = os.path.commonpath([resolved, registry]) == registry
+    except ValueError:  # Different drives cannot overlap.
+        inside_registry = False
+    if inside_registry:
+        raise RegistryError(["output must not be written inside the registry"])
+
+    try:
+        target_stat = os.stat(output_abs)
+    except FileNotFoundError:
+        target_stat = None
+    for project in projects:
+        if resolved == os.path.normcase(os.path.realpath(project.path)):
+            raise RegistryError(["output aliases a registry source"])
+        if target_stat is not None:
+            identity = (target_stat.st_dev, target_stat.st_ino)
+            if identity == project.identity or os.path.samefile(output_abs, project.path):
+                raise RegistryError(["output aliases a registry source"])
+    return os.path.join(os.path.realpath(os.path.dirname(output_abs)),
+                        os.path.basename(output_abs))
+
+
+def publish_csv(output_path, registry_dir, projects, payload):
+    """Publish a complete, separate file without truncating the old target."""
+    target = output_target(output_path, registry_dir, projects)
+    parent = os.path.dirname(target)
+    os.makedirs(parent, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb", dir=parent, prefix=f".{os.path.basename(target)}-",
+            suffix=".tmp", delete=False,
+        ) as handle:
+            temporary = handle.name
+            if handle.write(payload) != len(payload):
+                raise OSError("incomplete CSV write")
+            handle.flush()
+            os.fsync(handle.fileno())
+        # Recheck aliases after writing, before publishing. Replace the directory
+        # entry itself, so an output symlink is never opened for writing.
+        if output_target(output_path, registry_dir, projects) != target:
+            raise RegistryError(["output parent changed during generation"])
+        os.replace(temporary, target)
+        temporary = None
+    finally:
+        if temporary is not None:
+            try:
+                os.unlink(temporary)
+            except FileNotFoundError:
+                pass
 
 
 def verify_guard(relative_path, expect_commit):
@@ -523,16 +599,12 @@ def main(argv=None):
 
     try:
         projects = load_registry(args.registry)
-        descriptions = {}
-        for meta, _, _ in projects:
-            text = read_text(os.path.join(args.registry, f"{meta['id']}.md"))
-            descriptions[meta["id"]] = source_block(text)
     except RegistryError as exc:
         for message in exc.messages:
             print(f"project-registry: {message}", file=sys.stderr)
         return 1
 
-    payload = render_csv(projects, descriptions)
+    payload = render_csv(projects)
 
     if args.check:
         try:
@@ -559,16 +631,11 @@ def main(argv=None):
                   f"output path: {args.output}", file=sys.stderr)
             return 1
 
-    registry_abs = os.path.abspath(args.registry)
-    output_abs = os.path.abspath(args.output)
-    if output_abs.startswith(registry_abs + os.sep):
-        print("project-registry: output must not be written inside the registry",
-              file=sys.stderr)
+    try:
+        publish_csv(args.output, args.registry, projects, payload)
+    except (RegistryError, OSError) as exc:
+        print(f"project-registry: publication failed: {exc}", file=sys.stderr)
         return 1
-
-    os.makedirs(os.path.dirname(output_abs) or ".", exist_ok=True)
-    with open(output_abs, "wb") as handle:
-        handle.write(payload)
     print(f"project-registry: wrote {len(projects)} project(s) to {args.output}")
     return 0
 

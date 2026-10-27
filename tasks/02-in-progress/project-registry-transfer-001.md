@@ -8,7 +8,7 @@
 - Haara: `chore/project-registry-transfer-001`
 - Valmistelun ja myöhemmän työn worktree päächeckoutista: `tmp/project-registry-transfer-001`
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- Siirtopaketti ja README:n muotoilukorjaus validoitu Linux-CI:ssä. Kortti review-tilassa ihmisen katselmointia varten.
+- P1/P2-lähdekorjausten rework käynnissä; uuden revision Linux-CI odottaa pushia.
 
 ## Context
 
@@ -31,9 +31,9 @@ porttitiedostoissa ei ollut näiden välillä eroja. Ei synkronointiväitettä e
 ## Inputs
 
 - Lähderepo: `Tupatuko2023/FOF-Dissertation-Project`.
-- Toimitettu lähdecommit: `a098b62e9cce7079f84ef4cfd0665ddef93ca816`.
-- Generaattorin Git-blob: `de92f22219e2abf479bb98eb79896d4d66442865`.
-- Testien Git-blob: `2b108e05a1f260395ef62165b0231fe4bbde6f9b`.
+- Toimitettu lähdecommit: `f29dd518f6b697102406e543c472c1315d198050`.
+- Generaattorin Git-blob: `66a931c1528c8bd00fee315d69603ed348f2f1b2`.
+- Testien Git-blob: `7c42ed66cf29bdf91cc330fdcef63e6a190daa9b`.
 - Lähteen käyttöohje: `docs/governance/project_registry/README.md` samasta commitista.
 - Kohteen `tasks/_template.md`, `.gitignore`, `tools/run-gates.ps1`,
   `tools/run-gates.sh`, Makefile ja `.github/workflows/python-ci.yml`.
@@ -511,3 +511,6 @@ paikallisesti; tarkistetun PR-HEADin tuloksia ei esitetä uuden revision ajoina.
 - Lähdetehtävän DONE odottaa erillisen säilytysreceiptin kuudennen artefaktin valtuutusta; korjauskoodi on origin/mainissa.
 - PR #216:n vanhan revision hyväksyntää ei käytetä uuden revision hyväksyntänä. Ei mergeä tai DONE-siirtoa.
 - 2026-10-27: Rework-admission, ohjeet ja puhdas eristetty työpuu varmennettu; päächeckoutiin ei kosketa.
+
+- 2026-10-27: Generaattori ja testit kopioitu Git-objekteista tavuntarkasti toimitetusta lähteestä; paikallinen pakettiversio 1.0.1. README kuvaa tilannekuvan ja atomisen julkaisun.
+- Paikallinen unittest: 33 kerättyä, 31 läpäisi, 2 symlink-testiä ohitettiin Windows-oikeuksien vuoksi. Tämä ei korvaa Linux-näyttöä. Prettier ja markdownlint PASS.
