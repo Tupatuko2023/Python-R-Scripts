@@ -8,7 +8,7 @@
 - Haara: `chore/project-registry-transfer-001`
 - Valmistelun ja myöhemmän työn worktree päächeckoutista: `tmp/project-registry-transfer-001`
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- P1/P2-lähdekorjausten rework käynnissä; uuden revision Linux-CI odottaa pushia.
+- Lähdekorjaus siirretty ja Linux-CI PASS; jatko estyy katselmoinnissa toistettuun P1-hakemistoaliasvirheeseen.
 
 ## Context
 
@@ -514,3 +514,52 @@ paikallisesti; tarkistetun PR-HEADin tuloksia ei esitetä uuden revision ajoina.
 
 - 2026-10-27: Generaattori ja testit kopioitu Git-objekteista tavuntarkasti toimitetusta lähteestä; paikallinen pakettiversio 1.0.1. README kuvaa tilannekuvan ja atomisen julkaisun.
 - Paikallinen unittest: 33 kerättyä, 31 läpäisi, 2 symlink-testiä ohitettiin Windows-oikeuksien vuoksi. Tämä ei korvaa Linux-näyttöä. Prettier ja markdownlint PASS.
+
+## Päivityksen CI ja katselmointipäätös 2026-10-27
+
+- Toteutus-HEAD: cdf517d995aae67250cd01e0ef151e3c7ca81ba9.
+- Linux/Python 3.11: https://github.com/Tupatuko2023/Python-R-Scripts/actions/runs/40555723781
+  - pytest: 525 passed, 17 skipped, 298 subtests passed.
+  - erillinen POSIX-placement: 43 passed, 1 skipped.
+  - Ladattu junit-report/junit.xml sisältää täsmälleen 33 generaattoritestitapausta:
+    0 failures, 0 errors, 0 skipped. Muun repon ohituksia ei esitetä generaattorin ohituksina.
+  - test_parent_symbolic_link_into_registry_is_rejected ja
+    test_symbolic_link_to_source_is_rejected ovat mukana ja läpäistyjä.
+- README:n Prettier ja markdownlint PASS:
+  https://github.com/Tupatuko2023/Python-R-Scripts/actions/runs/40555723792
+- CodeQL Python/JavaScript sekä Sourcery review completed/success. Sourceryn
+  check-summary: no blocking security issues. Vanhoja inline-kommentteja ei
+  tulkita tämän revision uusiksi löydöksiksi pelkän päivittyneen commit_id:n vuoksi.
+- K-smoken polkurajaus ei sovellu muutokseen; raskas K-ajo skipped, ei PASS-väite.
+- Generaattorin/testien Git-blobit vastaavat toimitettua f29dd518-lähdettä.
+  Lähderepon workflowta, projektitietoja, skeemaa tai CSV-sarakkeita ei kopioitu/muutettu.
+
+### P1: hakemistoalias ohittaa Gitin seuraaman muun tiedoston suojan
+
+Katselmoinnissa toistettu synteettisessä väliaikaisessa Git-repossa Windowsin
+hakemistoliitoksella (junction). Ei tutkimusdataa tai oikeiden repoiden tiedostoja.
+
+1. Git-indeksissä registry/PRJ-TEST.md sekä tracked/notes.md, jonka sisältö
+   TRACKED CONTENT MUST SURVIVE.
+2. .gitignore sisältää outputs/. outputs/alias on junction -> tracked/.
+3. CLI --registry registry --output outputs/alias/notes.md palauttaa 0 ja
+   korvaa seuratun tracked/notes.md:n CSV:llä. Rekisterilähde säilyy.
+4. output_is_ignored tarkistaa vain leksikaalisen aliaspolun; output_target
+   ratkaisee vanhemman mutta suojaa vain rekisterihakemiston ja rekisterilähteet.
+   os.replace julkaisee tämän vuoksi Gitin seuraaman muun tiedoston päälle.
+
+Löydös koskee myös toimitettua lähdeversiota, koska lähdeblobit ovat samat.
+Nykyinen P1-korjaus suojaa rekisterilähteen mutta ei kaikkia seurattuja tiedostoja.
+Pienin jatkokorjaus kuuluu alkuperäiseen generaattoriin: varmista myös ratkaistun
+julkaisukohteen Git-tracking/ignore-suoja ja lisää hakemistoaliasregressio, jossa
+rekisterin ulkopuolinen seurattu tiedosto säilyy. Sen jälkeen uusi lähdeversio
+siirretään tähän PR:ään. Korjausta ei toteuteta tämän kopiointierän ulkopuolella.
+
+Katselmointipäätös: KORJATTAVA. Ei review-valmiusväitettä, mergeä eikä DONE-siirtoa.
+Kortti pysyy in-progressissa estemerkinnällä. Aiempi katselmointivalmius ja
+hyväksyntä koskevat vanhaa revisiota; niitä ei siirretä uuteen toteutukseen.
+Lähdetehtävän sulkeminen on lisäksi pysäytetty säilytysreceiptin kuudennen
+artefaktin rajaan; Ownerilta pyydetty vain tähän tarvittava rajattu poikkeus.
+
+- 2026-10-27: Nykyinen CI-näyttö ja toistettu estävä löydös kirjattu; lopullisen
+  näyttöcommitin CI seurataan pushin jälkeen. Päächeckoutit ja worktreet säilytetään.
