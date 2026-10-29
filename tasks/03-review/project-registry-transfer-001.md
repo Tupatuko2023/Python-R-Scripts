@@ -2,13 +2,13 @@
 
 ## State
 
-- State: `02-in-progress`
+- State: `03-review`
 - Tunniste: `project-registry-transfer-001`
 - Omistava repo: `Tupatuko2023/Python-R-Scripts`
 - Haara: `chore/project-registry-transfer-001`
 - Valmistelun ja myöhemmän työn worktree päächeckoutista: `tmp/project-registry-transfer-001`
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- Ownerin valtuuttama hakemistoalias-rework: toimitettu lähdekorjaus siirretään; uuden HEADin Linux-CI ja katselmointi odottavat.
+- Toimitetun hakemistoalias-korjauksen siirto ja Linux-validointi PASS; kortti review-tilassa uuden revision pysyvää ihmishyväksyntää varten.
 
 ## Context
 
@@ -585,3 +585,36 @@ artefaktin rajaan; Ownerilta pyydetty vain tähän tarvittava rajattu poikkeus.
   ihmishyväksyntä tarvitaan ennen kohderepon toimitusta ja sulkemista.
 
 - 2026-10-29: Paikallinen 43 testin sarja: 41 PASS, kaksi aiempaa Windows-symlink-skippiä; kaikki 10 uutta hakemistoalias/Git-regressiota suoritettiin. Prettier, markdownlint, oikea CLI-smoke, determinismi, --check, ignore ja staged tools/run-gates.ps1 --mode pre-push --smoke PASS. Linux-näyttö vielä odottaa uutta PR-HEADia; Windowsin ohituksia ei esitetä PASSina.
+
+
+## Hakemistoalias-päivityksen katselmointivalmius 2026-10-29
+
+- Toteutus-HEAD dec16fc1a6fa428102aebd1f5d3b9f073010ed8e.
+- Linux/Python 3.11 PR-ajo:
+  https://github.com/Tupatuko2023/Python-R-Scripts/actions/runs/40922606014
+- Koko pytest 535 passed, 17 skipped, 298 subtests passed. Erillinen POSIX-
+  placement 43 passed, 1 skipped. Muun repon ohitukset eivät ole generaattoritestien ohituksia.
+- Ladattu junit-report: kaikki 43 generaattoritestiä mukana, 0 failures,
+  0 errors, 0 skipped. Nimetyt tracked-alias-, retarget-, kelvollinen aliasvienti-
+  sekä molemmat aiemmat symbolic_link-testit todella suoritettiin ja läpäisivät.
+- README Prettier ja markdownlint completed/success:
+  https://github.com/Tupatuko2023/Python-R-Scripts/actions/runs/40922606066
+- CodeQL Python/JavaScript, Sourcery-check ja muut soveltuvat checkit success.
+  Raskas K-smoke ei sovellu polkurajaukseen; skipped ei ole PASS-väite.
+- Kokonaisdiffi (alkuperäinen siirtopaketti + P1/P2- ja hakemistoalias-korjaukset)
+  katselmoitu: kolme sisältötiedostoa ja sama task. Generaattori/testit vastaavat
+  toimitettua 61b9731f-lähdettä tavuntarkasti; README säilyttää paikalliset
+  repoidentiteetti+repojuurisuhteinen polku -viitteet ja päivitysvastuut.
+  Ei lähderepon projektitietoja, tehtäväelinkaarta tai workflowta kohteen auktoriteetiksi.
+- Tekninen katselmointi: ei uusia toimituksen estäviä löydöksiä tässä
+  rajatussa lähdesiirrossa. Vahvistetut alias/atomic/snapshot-löydökset korjattu.
+  Alkuperäisen 5e44c03-revision muut botin huomiot eivät ole tämän korjauserän
+  korjauksia: litteän jäsentimen syötevalidoinnin reunatapaukset (esim. valinnaisten
+  kenttien tyypit, kalenteripäivä/ref-semanttiikka) sekä CSV:n verbatim-tekstin
+  spreadsheet-tulkinta ovat edelleen rajauksia. Niitä ei väitetä testatuiksi tai
+  korjatuiksi vihreän CI:n perusteella. Tämä review ei muuta skeemaa tai byte-copy-sopimusta.
+- Uusi pysyvä Owner-hyväksyntä vaaditaan muuttuneelle lopulliselle revisiolle;
+  vanha 5e44c03-hyväksyntä ei kata sitä. Ei PR #216:n mergeä tai DONEa.
+- Tämä review-siirto muuttaa vain korttia. Lopullisen HEADin kaikki soveltuvat
+  CI-tarkistukset ja 43 generaattoritestin skipitön Linux-suoritus varmennetaan
+  pushin jälkeen ja kirjataan PR-kuvaukseen ilman uutta metadata-commit-kierrosta.
