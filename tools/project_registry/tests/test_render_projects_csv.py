@@ -542,6 +542,207 @@ class GitGateTests(unittest.TestCase):
         self.assertEqual(self.project.read_bytes(), before)
         self.assertEqual(output.read_bytes(), before)
 
+    def make_directory_alias(self, alias, target):
+        """Use a real directory alias; this regression must never be skipped."""
+        if os.name == "nt":
+            quote = lambda p: "'" + str(p).replace("'", "''") + "'"
+            subprocess.run([
+                "powershell", "-NoProfile", "-Command",
+                f"New-Item -ItemType Junction -Path {quote(alias)} "
+                f"-Target {quote(target)} | Out-Null",
+            ], check=True, capture_output=True)
+        else:
+            alias.symlink_to(target, target_is_directory=True)
+    @contextlib.contextmanager
+    def directory_alias(self, alias, target):
+        self.make_directory_alias(alias, target)
+        try:
+            yield alias
+        finally:
+            if os.name == "nt":
+                os.rmdir(alias)  # Remove this test's junction, never its target.
+            else:
+                alias.unlink()
+
+    def export(self, output):
+        with contextlib.chdir(self.root), contextlib.redirect_stderr(io.StringIO()):
+            return registry.main([
+                "--registry", str(self.registry_dir), "--output", str(output),
+            ])
+
+    def ignored_output(self):
+        self.init_repo()
+        self.root.joinpath(".gitignore").write_text("out/\n", encoding="utf-8")
+        output = self.root / "out" / "projects.csv"
+        output.parent.mkdir()
+        return output
+
+    def test_directory_alias_to_tracked_file_is_rejected_without_changing_bytes(self):
+        output = self.ignored_output()
+        protected = self.root / "tracked"
+        protected.mkdir()
+        victim = protected / "notes.md"
+        victim.write_bytes(b"TRACKED CONTENT MUST SURVIVE\n")
+        self.commit("track protected notes")
+        before = victim.read_bytes()
+        with self.directory_alias(output.parent / "alias", protected) as alias:
+            self.assertEqual(self.export(alias / victim.name), 1)
+        self.assertEqual(victim.read_bytes(), before)
+        self.assertFalse(output.exists())
+        self.assertEqual(sorted(p.name for p in protected.iterdir()), [victim.name])
+
+    def test_directory_alias_to_nonignored_file_is_rejected(self):
+        output = self.ignored_output()
+        target = self.root / "ordinary"
+        target.mkdir()
+        victim = target / "notes.md"
+        victim.write_bytes(b"not ignored, not tracked\n")
+        with self.directory_alias(output.parent / "alias", target) as alias:
+            self.assertEqual(self.export(alias / victim.name), 1)
+        self.assertEqual(victim.read_bytes(), b"not ignored, not tracked\n")
+
+    def test_directory_alias_to_ignored_output_matches_normal_export(self):
+        output = self.ignored_output()
+        self.assertEqual(self.export(output), 0)
+        before = output.read_bytes()
+        with self.directory_alias(self.root / "view", output.parent) as alias:
+            self.assertEqual(self.export(alias / output.name), 0)
+            self.assertEqual(output.read_bytes(), before)
+            with contextlib.chdir(self.root):
+                self.assertEqual(registry.main([
+                    "--registry", str(self.registry_dir),
+                    "--output", str(alias / output.name), "--check",
+                ]), 0)
+
+    def test_nested_directory_aliases_cannot_reach_tracked_file(self):
+        output = self.ignored_output()
+        protected = self.root / "protected"
+        protected.mkdir()
+        victim = protected / "keep.txt"
+        victim.write_bytes(b"preserve nested target\n")
+        self.commit("track nested target")
+        with self.directory_alias(output.parent / "first", protected) as first:
+            with self.directory_alias(output.parent / "second", first) as second:
+                self.assertEqual(self.export(second / victim.name), 1)
+        self.assertEqual(victim.read_bytes(), b"preserve nested target\n")
+
+    def test_directory_alias_into_nested_repository_is_rejected(self):
+        output = self.ignored_output()
+        nested = output.parent / "nested"
+        nested.mkdir()
+        self.assertEqual(subprocess.run(["git", "init", "-q", str(nested)]).returncode, 0)
+        victim = nested / "notes.md"
+        victim.write_bytes(b"nested repository content\n")
+        with self.directory_alias(output.parent / "alias", nested) as alias:
+            self.assertEqual(self.export(alias / victim.name), 1)
+        self.assertEqual(victim.read_bytes(), b"nested repository content\n")
+
+    def test_tracking_change_during_write_is_rechecked(self):
+        output = self.ignored_output()
+        output.write_bytes(b"old CSV\n")
+        factory = registry.tempfile.NamedTemporaryFile
+
+        def track_after_write(*args, **kwargs):
+            handle = factory(*args, **kwargs)
+            write = handle.write
+
+            def write_and_track(data):
+                count = write(data)
+                self.assertEqual(self.git("add", "-f", str(output)).returncode, 0)
+                return count
+
+            handle.write = write_and_track
+            return handle
+
+        with mock.patch.object(registry.tempfile, "NamedTemporaryFile",
+                               side_effect=track_after_write):
+            self.assertEqual(self.export(output), 1)
+        self.assertEqual(output.read_bytes(), b"old CSV\n")
+        self.assertEqual(list(output.parent.glob(".*.tmp")), [])
+
+    def test_ignore_change_during_write_is_rechecked(self):
+        output = self.ignored_output()
+        output.write_bytes(b"old CSV\n")
+        factory = registry.tempfile.NamedTemporaryFile
+
+        def unignore_after_write(*args, **kwargs):
+            handle = factory(*args, **kwargs)
+            write = handle.write
+
+            def write_and_unignore(data):
+                count = write(data)
+                self.root.joinpath(".gitignore").write_text("", encoding="utf-8")
+                return count
+
+            handle.write = write_and_unignore
+            return handle
+
+        with mock.patch.object(registry.tempfile, "NamedTemporaryFile",
+                               side_effect=unignore_after_write):
+            self.assertEqual(self.export(output), 1)
+        self.assertEqual(output.read_bytes(), b"old CSV\n")
+        self.assertEqual(list(output.parent.glob(".*.tmp")), [])
+
+    def test_directory_alias_retargeted_during_write_preserves_both_targets(self):
+        output = self.ignored_output()
+        output.write_bytes(b"old CSV\n")
+        protected = self.root / "protected"
+        protected.mkdir()
+        victim = protected / output.name
+        victim.write_bytes(b"protected target\n")
+        self.commit("track alternate target")
+        factory = registry.tempfile.NamedTemporaryFile
+        alias = self.root / "view"
+
+        def retarget_after_write(*args, **kwargs):
+            handle = factory(*args, **kwargs)
+            write = handle.write
+
+            def write_and_retarget(data):
+                count = write(data)
+                if os.name == "nt":
+                    os.rmdir(alias)
+                else:
+                    alias.unlink()
+                self.make_directory_alias(alias, protected)
+                return count
+
+            handle.write = write_and_retarget
+            return handle
+
+        with self.directory_alias(alias, output.parent):
+            with mock.patch.object(registry.tempfile, "NamedTemporaryFile",
+                                   side_effect=retarget_after_write):
+                self.assertEqual(self.export(alias / output.name), 1)
+        self.assertEqual(output.read_bytes(), b"old CSV\n")
+        self.assertEqual(victim.read_bytes(), b"protected target\n")
+        self.assertEqual(list(output.parent.glob(".*.tmp")), [])
+        self.assertEqual(sorted(p.name for p in protected.iterdir()), [victim.name])
+
+    def test_staged_deletion_does_not_allow_overwriting_committed_file(self):
+        output = self.ignored_output()
+        output.write_bytes(b"committed CSV\n")
+        self.assertEqual(self.git("add", "-f", str(output)).returncode, 0)
+        self.commit("track output before staged deletion")
+        self.assertEqual(self.git("rm", "--cached", str(output)).returncode, 0)
+        self.assertEqual(self.export(output), 1)
+        self.assertEqual(output.read_bytes(), b"committed CSV\n")
+
+    def test_unverifiable_git_state_preserves_old_output(self):
+        output = self.ignored_output()
+        output.write_bytes(b"old CSV\n")
+        git = registry.git
+
+        def unavailable_tracking(args, **kwargs):
+            if args[0] == "ls-files":
+                return 128, ""
+            return git(args, **kwargs)
+
+        with mock.patch.object(registry, "git", side_effect=unavailable_tracking):
+            self.assertEqual(self.export(output), 1)
+        self.assertEqual(output.read_bytes(), b"old CSV\n")
+        self.assertEqual(list(output.parent.glob(".*.tmp")), [])
+
     def test_output_must_be_git_ignored(self):
         self.init_repo()
         self.registry_dir.joinpath("PRJ-TEST.md").write_text(

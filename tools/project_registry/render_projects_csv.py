@@ -450,17 +450,66 @@ def render_csv(projects):
 
 
 def output_is_ignored(output_path):
-    """True/False when git can answer, None when it cannot be determined."""
+    """Check Git protection for the same resolved directory entry we replace."""
     root = repo_root()
     if root is None:
         return None
-    rel = os.path.relpath(os.path.abspath(output_path), root).replace("\\", "/")
+    root = os.path.normcase(os.path.realpath(root))
+    output_abs = os.path.abspath(output_path)
+    target = os.path.join(os.path.realpath(os.path.dirname(output_abs)),
+                          os.path.basename(output_abs))
+    try:
+        if os.path.commonpath([os.path.normcase(target), root]) != root:
+            return False
+    except ValueError:
+        return False
+
+    # A resolved parent may enter a different/nested repository. Do not ask
+    # the calling repository's ignore rules about another repository's files.
+    ancestor = os.path.dirname(target)
+    while not os.path.isdir(ancestor):
+        parent = os.path.dirname(ancestor)
+        if parent == ancestor:
+            return None
+        ancestor = parent
+    code, actual_root = git(["rev-parse", "--show-toplevel"], cwd=ancestor)
+    if code != 0 or not actual_root.strip():
+        return None
+    if os.path.normcase(os.path.realpath(actual_root.strip())) != root:
+        return False
+
+    rel = os.path.relpath(target, root).replace("\\", "/")
+    literal = ":(literal)" + rel
+    code, tracked = git(["ls-files", "--cached", "-z", "--", literal], cwd=root)
+    if code != 0:
+        return None
+    if tracked:
+        return False
+    # A staged deletion must not make a committed tracked file writable.
+    code, _ = git(["rev-parse", "--verify", "-q", "HEAD"], cwd=root)
+    if code == 0:
+        code, tracked = git(["ls-tree", "-r", "--name-only", "-z", "HEAD",
+                             "--", literal], cwd=root)
+        if code != 0:
+            return None
+        if tracked:
+            return False
+    elif code != 1:  # An unborn synthetic repository has no HEAD yet.
+        return None
     code, _ = git(["check-ignore", "-q", "--", rel], cwd=root)
     if code == 0:
         return True
     if code == 1:
         return False
     return None
+
+
+def require_ignored_output(target):
+    ignored = output_is_ignored(target)
+    if ignored is False:
+        raise RegistryError([f"output path is tracked or not Git-ignored: {target}"])
+    if ignored is None:
+        raise RegistryError([f"cannot verify the Git-ignore state of output path: {target}"])
 
 
 def output_target(output_path, registry_dir, projects):
@@ -490,9 +539,11 @@ def output_target(output_path, registry_dir, projects):
                         os.path.basename(output_abs))
 
 
-def publish_csv(output_path, registry_dir, projects, payload):
+def publish_csv(output_path, registry_dir, projects, payload, *, check_ignore=True):
     """Publish a complete, separate file without truncating the old target."""
     target = output_target(output_path, registry_dir, projects)
+    if check_ignore:
+        require_ignored_output(target)
     parent = os.path.dirname(target)
     os.makedirs(parent, exist_ok=True)
     temporary = None
@@ -510,6 +561,8 @@ def publish_csv(output_path, registry_dir, projects, payload):
         # entry itself, so an output symlink is never opened for writing.
         if output_target(output_path, registry_dir, projects) != target:
             raise RegistryError(["output parent changed during generation"])
+        if check_ignore:
+            require_ignored_output(target)
         os.replace(temporary, target)
         temporary = None
     finally:
@@ -620,19 +673,9 @@ def main(argv=None):
         print(f"project-registry: OK ({len(projects)} project(s), output current)")
         return 0
 
-    if not args.skip_ignore_check:
-        ignored = output_is_ignored(args.output)
-        if ignored is False:
-            print("project-registry: output path is not Git-ignored: "
-                  f"{args.output}", file=sys.stderr)
-            return 1
-        if ignored is None:
-            print("project-registry: cannot verify the Git-ignore state of the "
-                  f"output path: {args.output}", file=sys.stderr)
-            return 1
-
     try:
-        publish_csv(args.output, args.registry, projects, payload)
+        publish_csv(args.output, args.registry, projects, payload,
+                    check_ignore=not args.skip_ignore_check)
     except (RegistryError, OSError) as exc:
         print(f"project-registry: publication failed: {exc}", file=sys.stderr)
         return 1

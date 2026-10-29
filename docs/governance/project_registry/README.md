@@ -1,4 +1,4 @@
-# Projektirekisteri: siirtopaketti 1.0.1
+# Projektirekisteri: siirtopaketti 1.0.2
 
 Projektitiedosto on ylläpidettävä lähde, josta generaattori muodostaa CSV-näkymän.
 CSV:tä ei muokata käsin. Tämä vaihe tuo työkalun ja paikallisen ohjeen;
@@ -10,11 +10,11 @@ oletusgenerointi ilmoittaa `no PRJ-*.md files` ennen pilotin valmistelua.
 
 | Tieto                            | Arvo                                       |
 | -------------------------------- | ------------------------------------------ |
-| Paikallisen siirtopaketin versio | `1.0.1` (ei lähderepon tagi)               |
+| Paikallisen siirtopaketin versio | `1.0.2` (ei lähderepon tagi)               |
 | Lähderepo                        | `Tupatuko2023/FOF-Dissertation-Project`    |
-| Toimitettu lähdecommit           | `f29dd518f6b697102406e543c472c1315d198050` |
-| Generaattorin Git-blob           | `66a931c1528c8bd00fee315d69603ed348f2f1b2` |
-| Testien Git-blob                 | `7c42ed66cf29bdf91cc330fdcef63e6a190daa9b` |
+| Toimitettu lähdecommit           | `61b9731fcd93bda20f080ce4d26bb24a35a729c7` |
+| Generaattorin Git-blob           | `f6d6f8c73023dcaa45f650689b57bbba6f43ee1b` |
+| Testien Git-blob                 | `b8beeee15f04c4554e0141fce341bc3c011ef7a4` |
 
 `tools/project_registry/render_projects_csv.py` ja sen testit on siirretty
 lähdecommitin mukaisina. Käyttöohje on sovitettu tähän repoon. Myöhemmät
@@ -30,6 +30,16 @@ Lähteeseen viittaava kova tai symbolinen tuloslinkki hylätään. CSV muodostet
 erilliseen, saman kohdehakemiston väliaikaistiedostoon ja julkaistaan atomisella
 vaihdolla. Kirjoitus- tai vaihtovirhe säilyttää lähteet ja aiemman CSV:n.
 Generaattori siivoaa vain oman ajonsa väliaikaistiedoston.
+
+Tulospolun hakemistokomponenttien aliasit ratkaistaan ennen Git-porttia.
+Ignore-tarkistus ja atominen julkaisu käyttävät samaa todellista
+hakemistomerkintää. Kohteen on kuuluttava ajon Git-repoon ja oltava ignoroitu;
+indeksissä tai HEADissa seurattu tiedosto hylätään myös aliaspolun ja
+staged-poiston kautta. Toiseen tai sisäkkäiseen Git-repoon johtava alias
+hylätään. Kohde ja Git-suoja tarkistetaan uudelleen ennen julkaisua, joten
+myös kirjoituksen aikainen aliasin tai tracking-/ignore-tilan muutos hylätään.
+Viimeinen symbolinen linkki korvataan hakemistomerkintänä; sen kohdetta ei
+avata kirjoitukseen. Rekisterilähteeseen viittaava linkki hylätään aina.
 
 ## Omistajuus ja rajaus
 

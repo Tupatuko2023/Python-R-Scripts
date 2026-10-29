@@ -8,7 +8,7 @@
 - Haara: `chore/project-registry-transfer-001`
 - Valmistelun ja myöhemmän työn worktree päächeckoutista: `tmp/project-registry-transfer-001`
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- Lähdekorjaus siirretty ja Linux-CI PASS; jatko estyy katselmoinnissa toistettuun P1-hakemistoaliasvirheeseen.
+- Ownerin valtuuttama hakemistoalias-rework: toimitettu lähdekorjaus siirretään; uuden HEADin Linux-CI ja katselmointi odottavat.
 
 ## Context
 
@@ -31,9 +31,9 @@ porttitiedostoissa ei ollut näiden välillä eroja. Ei synkronointiväitettä e
 ## Inputs
 
 - Lähderepo: `Tupatuko2023/FOF-Dissertation-Project`.
-- Toimitettu lähdecommit: `f29dd518f6b697102406e543c472c1315d198050`.
-- Generaattorin Git-blob: `66a931c1528c8bd00fee315d69603ed348f2f1b2`.
-- Testien Git-blob: `7c42ed66cf29bdf91cc330fdcef63e6a190daa9b`.
+- Toimitettu lähdecommit: `61b9731fcd93bda20f080ce4d26bb24a35a729c7`.
+- Generaattorin Git-blob: `f6d6f8c73023dcaa45f650689b57bbba6f43ee1b`.
+- Testien Git-blob: `b8beeee15f04c4554e0141fce341bc3c011ef7a4`.
 - Lähteen käyttöohje: `docs/governance/project_registry/README.md` samasta commitista.
 - Kohteen `tasks/_template.md`, `.gitignore`, `tools/run-gates.ps1`,
   `tools/run-gates.sh`, Makefile ja `.github/workflows/python-ci.yml`.
@@ -563,3 +563,25 @@ artefaktin rajaan; Ownerilta pyydetty vain tähän tarvittava rajattu poikkeus.
 
 - 2026-10-27: Nykyinen CI-näyttö ja toistettu estävä löydös kirjattu; lopullisen
   näyttöcommitin CI seurataan pushin jälkeen. Päächeckoutit ja worktreet säilytetään.
+
+
+## Hakemistoalias-korjauksen siirto 2026-10-29
+
+- Ownerin nykyinen rajattu toimitusketju valtuuttaa saman in-progress-tehtävän
+  jatkamisen: generaattori, testit ja README:n provenance sekä kortin ylläpito,
+  commitit ja pushit PR #216:een. Ei uutta tehtävää eikä PR #216:n mergeä/DONEa.
+- Lähde-PR #344 hyväksyttiin pysyvästi omistajakommentilla exact HEADille
+  575be9d5a7df18c25c2f45698c305fda46a6f4ff ja toimitettiin main-committiin
+  61b9731fcd93bda20f080ce4d26bb24a35a729c7. Git-objekteista tavuntarkka siirto;
+  siirtopaketin paikallinen versio 1.0.2. Ei lähderepon workflowta tai projekteja.
+- Korjaus tarkistaa kanonisen parent+leaf-julkaisukohteen Git-trackingin ja
+  ignore-tilan ennen kirjoitusta sekä uudelleen ennen os.replacea. Aiemmat
+  rekisterilähde-, atomisuus-, snapshot- ja duplikaattisuojat säilyvät.
+- Aiempi estävä tracked/notes.md-hakemistoaliaslöydös on korjattu lähteessä;
+  historialliset epäonnistumiset säilyvät yllä. Kohteen uusi näyttö varmennetaan.
+- Viiden tiedoston raja: kolme sisältötiedostoa sekä saman kortin in-progress-
+  ja review-polut. Muiden työt ja likaiset päächeckoutit säilytetään.
+- Aiemman HEADin hyväksyntä ei kata tätä muuttunutta toteutusta. Uusi pysyvä
+  ihmishyväksyntä tarvitaan ennen kohderepon toimitusta ja sulkemista.
+
+- 2026-10-29: Paikallinen 43 testin sarja: 41 PASS, kaksi aiempaa Windows-symlink-skippiä; kaikki 10 uutta hakemistoalias/Git-regressiota suoritettiin. Prettier, markdownlint, oikea CLI-smoke, determinismi, --check, ignore ja staged tools/run-gates.ps1 --mode pre-push --smoke PASS. Linux-näyttö vielä odottaa uutta PR-HEADia; Windowsin ohituksia ei esitetä PASSina.
