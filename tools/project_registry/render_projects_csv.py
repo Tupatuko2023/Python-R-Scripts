@@ -3,7 +3,7 @@
 
 Reads every ``PRJ-*.md`` file under the registry directory *without writing it*
 and atomically publishes one CSV at the named output path (default
-``outputs/cache/project_registry/projects.csv``). The output path must be
+``tools/project_registry/outputs/projects.csv``). The output path must be
 Git-ignored; a tracked path is refused. This tool is not read-only: it writes the
 CSV. Only the registry sources are read-only for it.
 
@@ -110,7 +110,7 @@ REPO_REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]*$")
 ABSOLUTE_RE = re.compile(r"^(?:[A-Za-z]:[\\/]|\\\\|~[\\/]|/)")
 
 DEFAULT_REGISTRY = "docs/governance/project_registry"
-DEFAULT_OUTPUT = "outputs/cache/project_registry/projects.csv"
+DEFAULT_OUTPUT = "tools/project_registry/outputs/projects.csv"
 
 
 class RegistryError(Exception):

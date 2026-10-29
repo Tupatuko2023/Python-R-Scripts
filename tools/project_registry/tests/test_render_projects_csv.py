@@ -757,5 +757,62 @@ class GitGateTests(unittest.TestCase):
         self.assertFalse(output.exists())
 
 
+class PythonRScriptsAdaptationTests(unittest.TestCase):
+    """Local output ownership and lossless spreadsheet text contract."""
+
+    def setup_repository(self, root, text):
+        subprocess.run(["git", "init", "-q", str(root)], check=True,
+                       capture_output=True)
+        (root / ".gitignore").write_text("**/outputs/\n", encoding="utf-8")
+        source = root / "registry" / "PRJ-TEST.md"
+        source.parent.mkdir()
+        source.write_text(text, encoding="utf-8", newline="")
+        return source
+
+    def test_default_cli_output_is_tool_owned_and_checkable(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = self.setup_repository(root, project_text())
+            before = source.read_bytes()
+            command = [sys.executable, "-B", str(MODULE_PATH),
+                       "--registry", str(source.parent)]
+            exported = subprocess.run(command, cwd=root, capture_output=True,
+                                      text=True)
+            self.assertEqual(exported.returncode, 0, exported.stderr)
+            output = root / "tools/project_registry/outputs/projects.csv"
+            self.assertTrue(output.is_file())
+            self.assertFalse((root / "outputs").exists())
+            self.assertEqual(source.read_bytes(), before)
+            payload = output.read_bytes()
+            checked = subprocess.run(command + ["--check"], cwd=root,
+                                     capture_output=True, text=True)
+            self.assertEqual(checked.returncode, 0, checked.stderr)
+            self.assertEqual(output.read_bytes(), payload)
+            self.assertEqual(subprocess.run(
+                ["git", "check-ignore", "-q", "--", str(output)],
+                cwd=root, capture_output=True).returncode, 0)
+
+    def test_formula_text_round_trips_without_rewriting_cells(self):
+        description = "=SUM(1,1)\n"
+        text = project_text(
+            short_name="=1+1",
+            source_description_sha256=registry.hashlib.sha256(
+                description.encode("utf-8")).hexdigest(),
+        ).replace(SOURCE_TEXT, description)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = self.setup_repository(root, text)
+            before = source.read_bytes()
+            with contextlib.chdir(root), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(registry.main([
+                    "--registry", str(source.parent)]), 0)
+            output = root / "tools/project_registry/outputs/projects.csv"
+            rows = list(registry.csv.reader(io.StringIO(
+                output.read_text(encoding="utf-8"), newline="")))
+            self.assertEqual(rows[1][1], description)
+            self.assertEqual(rows[1][2], "=1+1")
+            self.assertEqual(source.read_bytes(), before)
+
+
 if __name__ == "__main__":
     unittest.main()

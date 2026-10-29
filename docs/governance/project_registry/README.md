@@ -1,4 +1,4 @@
-# Projektirekisteri: siirtopaketti 1.0.2
+# Projektirekisteri: siirtopaketti 1.0.3-dev
 
 Projektitiedosto on ylläpidettävä lähde, josta generaattori muodostaa CSV-näkymän.
 CSV:tä ei muokata käsin. Tämä vaihe tuo työkalun ja paikallisen ohjeen;
@@ -10,15 +10,27 @@ oletusgenerointi ilmoittaa `no PRJ-*.md files` ennen pilotin valmistelua.
 
 | Tieto                            | Arvo                                       |
 | -------------------------------- | ------------------------------------------ |
-| Paikallisen siirtopaketin versio | `1.0.2` (ei lähderepon tagi)               |
+| Paikallisen siirtopaketin versio | `1.0.3-dev` (ei lähderepon tagi)           |
 | Lähderepo                        | `Tupatuko2023/FOF-Dissertation-Project`    |
 | Toimitettu lähdecommit           | `61b9731fcd93bda20f080ce4d26bb24a35a729c7` |
-| Generaattorin Git-blob           | `f6d6f8c73023dcaa45f650689b57bbba6f43ee1b` |
-| Testien Git-blob                 | `b8beeee15f04c4554e0141fce341bc3c011ef7a4` |
+| Lähdegeneraattorin Git-blob      | `f6d6f8c73023dcaa45f650689b57bbba6f43ee1b` |
+| Lähdetestien Git-blob            | `b8beeee15f04c4554e0141fce341bc3c011ef7a4` |
 
-`tools/project_registry/render_projects_csv.py` ja sen testit on siirretty
-lähdecommitin mukaisina. Käyttöohje on sovitettu tähän repoon. Myöhemmät
-työkalukorjaukset verrataan kirjattuun lähdeversioon ennen siirtoa.
+Tämä on vain paikallinen sovitusvalmistelu, ei lopullinen PR #216:n lähdeversio.
+Taulukon commit ja blobit yksilöivät toimitetun upstream-perustan. Uusi yhteisen
+generaattorin validointikorjaus odottaa vielä hyväksyttyä lähdetoimitusta;
+sen lähdecommit ja blobit päivitetään vasta sen jälkeen.
+
+Paikalliset poikkeamat yllä kirjatusta lähteestä:
+
+- generaattorin oletustulospolku ja sitä kuvaava moduuliteksti;
+- testit `PythonRScriptsAdaptationTests`: työkalukohtainen oletusvienti ja
+  kaava-alkuisen tekstin muuttumaton CSV-vienti;
+- tämä kohderepon käyttöohje.
+
+Generaattorin ja testien ei siis väitetä olevan tavuntarkkoja upstream-kopioita.
+Upstream-korjaukset sovitetaan ensin kirjattuun lähdeversioon ja nämä rajatut
+paikalliset poikkeamat säilytetään erikseen tunnistettavina.
 Python 3.11+ ja paikallinen Git riittävät generaattoritesteihin; uusi
 Python-riippuvuus ei kuulu pakettiin. Muun repon testit tarvitsevat omat riippuvuutensa.
 
@@ -161,9 +173,9 @@ Esimerkkien `<id>` ja `<luettu-commit>` korvataan todellisilla arvoilla.
 ```text
 python tools/project_registry/render_projects_csv.py --verify-guard docs/governance/project_registry/<id>.md --expect-commit <luettu-commit>
 python tools/project_registry/render_projects_csv.py --print-source-hash docs/governance/project_registry/<id>.md
-python tools/project_registry/render_projects_csv.py --registry docs/governance/project_registry --output outputs/cache/project_registry/projects.csv
+python tools/project_registry/render_projects_csv.py --registry docs/governance/project_registry --output tools/project_registry/outputs/projects.csv
 python tools/project_registry/render_projects_csv.py --check
-git check-ignore -v -- outputs/cache/project_registry/projects.csv
+git check-ignore -v -- tools/project_registry/outputs/projects.csv
 ```
 
 `--verify-guard`: exit 0 tarkoittaa muuttumatonta HEAD/index/työpuu-versiota;
@@ -181,7 +193,11 @@ Tämän siirtopaketin tehtävä ei valtuuta projektin ensiluontia.
 Generointi julkaisee yhden nimetyn CSV:n erillisen väliaikaistiedoston kautta;
 rekisterilähteitä ei kirjoiteta. Virheellinen
 rekisteri ei luo CSV:tä eikä muuta vanhaa CSV:tä. Kirjoitustila vaatii Git-ignoroidun
-tulospolun; nykyinen `**/outputs/` kattaa oletuspolun. Trackattuun tulospolkuun ei
+tulospolun. Oletus on työkalun oma `tools/project_registry/outputs/`, ei yhteinen
+päärepon `outputs/`. Valinta perustuu AGENTS.md:n aliprojektin tuloskäytäntöön
+ja SKILLS.md:n skriptikohtaisiin tuloksiin; nykyinen `**/outputs/` kattaa
+sekä CSV:n että saman hakemiston väliaikaistiedostot. Ignore-varmennus tehdään
+sääntöjenmukaisuuden lisäksi erikseen. Trackattuun tulospolkuun ei
 kirjoiteta. `--skip-ignore-check` kuuluu vain synteettisiin testeihin.
 
 `--check` validoi lähteet ja vertaa CSV:n tavuja kirjoittamatta: exit 0 = sama,
@@ -189,6 +205,31 @@ exit 2 = puuttuva tai vanhentunut näkymä; validointivirhe on exit 1.
 Se ei tarkista ignore-porttia, joten aja yllä oleva `git check-ignore` erikseen.
 Virheelliset komentoriviargumentit palauttavat argparsen exit 2:n; lähdekoodin
 vanhaa usage-exit 3 -mainintaa ei käytetä tämän paketin hyväksymiskriteerinä.
+
+## CSV taulukkolaskennassa: tuo kaikki sarakkeet tekstinä
+
+CSV säilyttää alkuperäisen solutekstin sanatarkkana. Myös esimerkiksi
+`=1+1` tai `=SUM(1,1)` voi olla tarkoituksellista tekstiä. Generaattori ei
+lisää apostrofia, muuta sisältöä kaavaksi eikä poista kaavamerkkejä.
+CSV:n lainausmerkit suojaavat CSV-rakennetta, eivät määrää solun tyyppiä.
+
+Älä avaa CSV:tä kaksoisnapsautuksella tai oletusarvoisella automaattituonnilla.
+Tuo se erikseen ja aseta **kaikki sarakkeet tekstiksi**:
+
+- **LibreOffice Calc:** avaa tekstin tuonti, valitse kaikki sarakkeet ja
+  saraketyypiksi **Teksti**. Poista **Evaluate formulas / Arvioi kaavat**
+  käytöstä ennen tuontia. Pelkkä CSV-quoting ei korvaa tätä asetusta.
+- **Excel:** käytä **Tiedot → Tekstistä/CSV:stä → Muunna tiedot**. Poista
+  automaattinen tyyppitunnistus ja mahdollinen automaattinen tyypinmuutosvaihe;
+  aseta kaikki sarakkeet tyypiksi **Teksti** ennen lataamista. Käytä tekstin
+  tuontia, älä CSV:n suoraa avaamista kaavoja arvioivalla oletustulkinnalla.
+
+Valitse UTF-8 ja pilkku erottimeksi. Tarkista tuonnin jälkeen, että testiteksti
+`=1+1` näkyy sellaisenaan, ei laskettuna arvona `2`. Käyttöohjeen asetukset
+estävät kaavojen arvioinnin; CSV-tiedosto ei itsessään sisällä tyyppisuojausta.
+
+Asetusten lähteet: [Calcin tekstin tuonti](https://help.libreoffice.org/latest/fi/text/shared/00/00000208.html)
+ja [Microsoftin Text/CSV-tuonti](https://learn.microsoft.com/en-us/power-query/connectors/text-csv).
 
 ## CSV-sarakkeet
 
@@ -245,3 +286,13 @@ K18/QC ei sovellu tähän päärepon ei-tieteelliseen työkalusiirtoon.
 Myöhempi pilotti varmistaa lisäksi oikean repoidentiteetin, samannimisten korttien
 erottamisen täydellä polulla ja alihakemistojen jäämisen keräilyn ulkopuolelle.
 AGENTS-velvoite ja projektipohja otetaan käyttöön erillisissä rajatuissa tehtävissä.
+
+## Avoimet jatkoehdotukset
+
+Sourcery-kommentit #12 ja #14–16 eivät kuulu tähän korjauserään eikä niitä
+esitetä ratkaistuiksi: fyysisen lähdehakemistorajan ja symlinkkien sopimus,
+tuntemattomien avainten diagnostiikka, escape-merkkien täsmällinen tulkinta
+sekä rinnakkaisten vientien julkaisu-/järjestystakuu. Ne arvioidaan erikseen;
+nykyinen vienti takaa validoidun tilannekuvan, ei uusimman rinnakkaisajon voittoa.
+Niiden vaikutus arvioidaan toimituskatselmoinnissa. CSV:n kaavatekstin säilyminen
+ei tarkoita turvallista avaamista taulukkolaskennan oletusasetuksilla.

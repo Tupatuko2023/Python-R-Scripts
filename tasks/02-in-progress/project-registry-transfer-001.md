@@ -5,10 +5,12 @@
 - State: `02-in-progress`
 - Tunniste: `project-registry-transfer-001`
 - Omistava repo: `Tupatuko2023/Python-R-Scripts`
-- Haara: `chore/project-registry-transfer-001`
-- Valmistelun ja myöhemmän työn worktree päächeckoutista: `tmp/project-registry-transfer-001`
+- Haara: `prepare/project-registry-local-adaptation-001` (vain paikallinen B-valmistelu).
+- PR #216:n toimitushaara: `chore/project-registry-transfer-001`, ei päivitetä tässä vaiheessa.
+- Aktiivinen B-valmistelun worktree: `tmp/project-registry-local-adaptation-001`.
+- PR #216:n säilytetty review-worktree: `tmp/project-registry-transfer-001`.
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- Toimitetun hakemistoalias-korjauksen siirto ja Linux-validointi PASS; kortti review-tilassa uuden revision pysyvää ihmishyväksyntää varten.
+- Paikallinen B-sovitus valmisteltu ja Windows-smoke ajettu; A-lähdekorjauksen hyväksytty main-toimitus ja lopullinen kohderepon Linux-validointi odottavat.
 
 ## Context
 
@@ -639,3 +641,30 @@ artefaktin rajaan; Ownerilta pyydetty vain tähän tarvittava rajattu poikkeus.
 - Paikallinen oletus valitaan AGENTS.md:n ja SKILLS.md:n perusteella:
   työkalun oma tools/project_registry/outputs/projects.csv, ei yhteinen
   päärepon outputs/. Ignore-varmennus on tämän lisäksi erillinen tarkistus.
+
+
+## B-valmistelun paikallinen näyttö 2026-10-29
+
+- Oletus tools/project_registry/outputs/projects.csv perustuu AGENTS.md:n
+  aliprojektin omaan outputs-käytäntöön sekä SKILLS.md:n skriptikohtaisiin
+  outputs-hakemistoihin ja yhteisen outputs-juuren kieltoon. Ignore tarkistettu
+  erikseen myös .projects.csv-*.tmp-tiedostolle; molemmat kattaa **/outputs/.
+- Vain kaksi generaattorin paikallista riviä poikkeaa toimitetusta 61b9731f-
+  lähteestä: DEFAULT_OUTPUT ja sitä kuvaava moduuliteksti. Ei upstream-
+  validointikorjauksia kopioitu ennen toimitusta. README yksilöi lähdeblobit
+  upstream-blobeiksi ja kertoo paikalliset poikkeamat, ei väitä byte-copyä.
+- Kaksi uutta sovitusregressiota: oikea CLI käyttää omaa oletustuloshakemistoa
+  ja --check onnistuu ilman --outputia; kaava-alkuinen kuvaus ja scalar säilyvät
+  CSV:ssä sekä lähteessä tavuntarkasti. Ei solujen apostrofiprefiksointia.
+- Paikallinen koko nykyiseen 61b9731f-perustaan pohjautuva sarja: 45 testiä,
+  43 PASS, kaksi aiempaa Windowsin symlink-skippiä. Ei väitettä uuden A-koodin
+  kattavuudesta tai kohderepon Linux-CI:n suorituksesta tässä erässä.
+- Prettier 3.9.9 ja markdownlint-cli2 0.23.3 / markdownlint 0.41.1 README: PASS.
+- Calc-ohje: kaikki sarakkeet Teksti, Evaluate formulas pois. Excel-ohje:
+  Text/CSV-tuonti, automaattinen tyypitys pois, kaikki sarakkeet Teksti ennen
+  latausta. Ohjeet tarkastettu virallisia tuontiohjeita vasten; GUI-tuontia
+  ei esitetä tässä ympäristössä suoritetuksi testiksi.
+- #12 ja #14–16 ovat READMEssä avoimia: ei symlink-lähderajan, tuntemattomien
+  avainten, escape-tulkinnan tai julkaisujen järjestyksen korjausväitettä.
+- PR #216 on edelleen 5c184f9e6573020637816d7f4a53d062331784a6; sitä ei
+  päivitetä eikä B-haaraa pushata ennen sovittua lähdetoimitusta.
