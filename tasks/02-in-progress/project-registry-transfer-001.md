@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `03-review`
+- State: `02-in-progress`
 - Tunniste: `project-registry-transfer-001`
 - Omistava repo: `Tupatuko2023/Python-R-Scripts`
 - Haara: `chore/project-registry-transfer-001`
@@ -618,3 +618,24 @@ artefaktin rajaan; Ownerilta pyydetty vain tähän tarvittava rajattu poikkeus.
 - Tämä review-siirto muuttaa vain korttia. Lopullisen HEADin kaikki soveltuvat
   CI-tarkistukset ja 43 generaattoritestin skipitön Linux-suoritus varmennetaan
   pushin jälkeen ja kirjataan PR-kuvaukseen ilman uutta metadata-commit-kierrosta.
+
+
+## Paikallisen sovituksen valmistelu 2026-10-29
+
+- Owner valtuutti yhden korjauskokonaisuuden A+B. Tämä on B:n paikallinen
+  valmisteluhaara prepare/project-registry-local-adaptation-001, worktree
+  tmp/project-registry-local-adaptation-001. PR #216:n alkuperäinen worktree
+  ja haara säilyvät muuttumattomina HEADissa 5c184f9; tässä ei ole toista
+  aktiivista PR-toimitusta. Valmistelun ainoa toteutusworktree on tämä.
+- Sama tehtävä jatkuu rajatussa reworkissa; ei uutta korttia per kommentti.
+  Kolme sisältötiedostoa sekä kortin review/in-progress-polut = enintään viisi.
+- Lähteen A-korjaus toteutetaan omassa tehtävässään. Tässä valmistellaan
+  vain paikallinen oletustulospolku, sen regressiot, kaavatekstin muuttumattomuus
+  sekä tekstinä tuonti- ja provenance-ohje. Ei upstream-validointikorjauksia täällä.
+- Ei PR #216:n pushia tai lopullista lähdeversion päivitystä ennen A:n
+  hyväksyttyä main-toimitusta. Ei mergeä, DONEa tai worktree-poistoa.
+- Nykyinen upstream-perusta on 61b9731fcd93bda20f080ce4d26bb24a35a729c7.
+  Uuden A-korjauksen toimittamaton revisio ei ole provenance-lähdecommit.
+- Paikallinen oletus valitaan AGENTS.md:n ja SKILLS.md:n perusteella:
+  työkalun oma tools/project_registry/outputs/projects.csv, ei yhteinen
+  päärepon outputs/. Ignore-varmennus on tämän lisäksi erillinen tarkistus.
