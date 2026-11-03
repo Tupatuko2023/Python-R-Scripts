@@ -77,16 +77,16 @@ säilytettyjen kohteiden syyt ovat alla erillään main-toimituksesta.
 
 ## Worktree-havainnot
 
-| label                       | state    | evidence                                                                                                                                                                   |
-| --------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| registry-rollout            | removed  | tmp/project-registry-rollout-001 poistettu 2026-11-03; PR #219/#220, kokonainen squash-puu sama, DONE mainissa; vain uudelleen muodostettava CSV.                          |
-| registry-local-adaptation   | removed  | tmp/project-registry-local-adaptation-001 poistettu; d9004251 on PR #216:n commit-listassa; työpuu puhdas, vain pycache.                                                   |
-| registry-source-duplicate   | removed  | FOF-Dissertation-Project: fof-project-registry-duplicate-keys-001 poistettu; HEAD mainin esi-isä, sama DONE-kortti.                                                        |
-| registry-source-safe-export | removed  | FOF-Dissertation-Project: fof-project-registry-safe-export-001 poistettu; HEAD mainin esi-isä, sama DONE-kortti.                                                           |
-| registry-source-alias       | removed  | FOF-Dissertation-Project: fof-project-registry-directory-alias-001 poistettu; HEAD mainin esi-isä, sama DONE-kortti.                                                       |
-| registry-source-validation  | removed  | FOF-Dissertation-Project: fof-project-registry-validation-001 poistettu; PR #349/#350/#351:n puut täsmäävät squash-toimituksiin, DONE mainissa.                            |
-| registry-baseline           | retained | tmp/project-registry-baseline-001 säilytetty: 21 ignored-tiedostoa, myös Quantifyn paikalliset tulokset/manifesti; säilytystarvetta ei oleteta ratkaistuksi.               |
-| registry-transfer           | retained | tmp/project-registry-transfer-001 säilytetty: paikallisia CI-raportteja, Markdown-riippuvuuksia sekä Quantifyn tuloksia/manifesti; myös tämän kirjauksen toimitusworktree. |
+| label                       | state    | evidence                                                                                                                                                                             |
+| --------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| registry-rollout            | removed  | tmp/project-registry-rollout-001 poistettu 2026-11-03; PR #219/#220, kokonainen squash-puu sama, DONE mainissa; vain uudelleen muodostettava CSV.                                    |
+| registry-local-adaptation   | removed  | tmp/project-registry-local-adaptation-001 poistettu; d9004251 on PR #216:n commit-listassa; työpuu puhdas, vain pycache.                                                             |
+| registry-source-duplicate   | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-DUPLICATE-KEYS-001.md; worktree duplicate-keys poistettu, HEAD mainin esi-isä ja sama DONE-blobi.         |
+| registry-source-safe-export | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-SAFE-EXPORT-001.md; worktree safe-export poistettu, HEAD mainin esi-isä ja sama DONE-blobi.               |
+| registry-source-alias       | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-DIRECTORY-ALIAS-001.md; worktree directory-alias poistettu, HEAD mainin esi-isä ja sama DONE-blobi.       |
+| registry-source-validation  | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-VALIDATION-001.md; worktree validation poistettu, PR #349/#350/#351:n puut täsmäävät squash-toimituksiin. |
+| registry-baseline           | retained | tmp/project-registry-baseline-001 säilytetty: 21 ignored-tiedostoa, myös Quantifyn paikalliset tulokset/manifesti; säilytystarvetta ei oleteta ratkaistuksi.                         |
+| registry-transfer           | retained | tmp/project-registry-transfer-001 säilytetty: paikallisia CI-raportteja, Markdown-riippuvuuksia sekä Quantifyn tuloksia/manifesti; myös tämän kirjauksen toimitusworktree.           |
 
 Inventaario kattaa tämän siirtäminen/käyttöönottohankkeen tunnistetut kahdeksan
 worktreetä molemmissa repoissa. Kokonaissiivous on retained, koska kaksi
@@ -98,18 +98,18 @@ eikä sitä lasketa tähän inventaarioon tai muuteta.
 
 Poistettu normaalilla git branch -d -komennolla kahdeksan toimitettua haaraa:
 
-- FOF: chore/project-registry-duplicate-keys-001,
+- Tupatuko2023/FOF-Dissertation-Project: chore/project-registry-duplicate-keys-001,
   fix/project-registry-validation-001,
   chore/project-registry-validation-closeout-001,
   chore/project-registry-validation-done-001.
-- Python-R-Scripts: chore/project-registry-rollout-001,
+- Tupatuko2023/Python-R-Scripts: chore/project-registry-rollout-001,
   chore/project-registry-rollout-closeout-001,
   chore/project-registry-transfer-001,
   chore/project-registry-transfer-closeout-001.
 
 Säilytetään ilman worktreetä kolme vanhaa paikallista haaraa:
 
-- FOF chore/project-registry-safe-export-001 ja
+- Tupatuko2023/FOF-Dissertation-Project: chore/project-registry-safe-export-001 ja
   fix/project-registry-directory-alias-001: tavallinen branch -d kieltäytyi,
   koska upstream-tehtävähaara ei sisällä paikallista merge-HEADia, vaikka
   canonical main sisältää sen. Upstreamia ei vaihdeta poistamisen kiertämiseksi.
@@ -121,3 +121,16 @@ Nykyinen chore/project-registry-cleanup-001-haara on siivouskirjauksen
 säilyvä toimitushaara. Etähaaroja ei poistettu tai muutettu siivouksen vuoksi.
 Kirjaustehtävä ja sen tarkempi näyttö löytyvät repoidentiteetillä
 Tupatuko2023/Python-R-Scripts, polusta tasks/03-review/project-registry-cleanup-001.md.
+
+### Siivousnäytön raja
+
+Kohteet olivat tehtävä-/toimitusnäytön mukaan vain tämän hankkeen valmiita
+worktreitä. Puhtaus ja havaitut kohdepolkuihin viittaavat prosessit tarkistettiin
+ennen poistoja. Kirjoittajia poissulkevaa lukkoa ei kuitenkaan käytetty; tämä
+havaintoperusteinen tarkistus ei todista atomista yksinomaista käyttöä koko
+poistovälin ajan. Aikavälin ulkopuolista tai prosessilistassa näkymätöntä
+kirjoittajaa ei voida tällä näytöllä sulkea pois. Tietojen häviämistä ei havaittu,
+mutta tämä ei ole yleinen kilpailutilanteettoman siivouksen takuu.
+Jo toteutuneita poistoja ei väitetä jälkikäteen lukituiksi. Uusia poistoja ei
+tehdä tämän kirjauksen katselmointihuomion ratkaisemiseksi. PR:n katselmoinnissa
+arvioidaan tämä historiallinen näyttöraja ennen siivouskirjauksen toimitusta.
