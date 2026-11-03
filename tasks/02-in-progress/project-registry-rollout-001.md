@@ -80,3 +80,7 @@ käsitellään käyttämällä sallittua suoritusympäristöä; ei porttien ohit
 - 2026-11-03: Erillinen admission: READY-kortti löydetty uudelleen ja Git-näkyvyys
   sekä puhdas työpuu varmennettu. Rajattu Owner-valtuutus voimassa.
   Kortti siirretty in-progressiin ennen sisältömuutoksia.
+
+- 2026-11-03: Työosuus 3: README ajantasaistettu pilotin ja TEMPLATE-pohjan
+  käyttöön, lähde-/paikallisprovenance ja avoimet #12/#14–16 säilytetty.
+  Vain README ja tämän kortin loki muuttuvat tässä työosuudessa.
