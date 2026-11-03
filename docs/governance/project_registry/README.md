@@ -1,10 +1,10 @@
 # Projektirekisteri: siirtopaketti 1.0.3
 
 Projektitiedosto on ylläpidettävä lähde, josta generaattori muodostaa CSV-näkymän.
-CSV:tä ei muokata käsin. Tämä vaihe tuo työkalun ja paikallisen ohjeen;
-projektipohja, AGENTS-kytkentä ja yhden aidon koordinointiprojektin pilotti
-tehdään erikseen. Tässä hakemistossa ei vielä ole projektitiedostoja, joten
-oletusgenerointi ilmoittaa `no PRJ-*.md files` ennen pilotin valmistelua.
+CSV:tä ei muokata käsin. Päärepon käyttöönoton pilotti on
+`PRJ-REGISTRY-ROLLOUT.md`. Se kuvaa tämän rekisterin käyttöönottoa ja
+jatkamista; aliprojektien projektitietoja ei kerätä automaattisesti mukaan.
+Toteutus, hyväksytty main-toimitus ja worktree-siivous kirjataan erikseen.
 
 ## Versio ja alkuperä
 
@@ -115,6 +115,23 @@ Lähdekuvaus säilytetään sanatarkkana; sen versiointi vaatii ihmisomistajan p
 Ristiriita tai epäonnistunut päivitys kirjataan oman tehtävän lokiin syineen;
 hyväksyttyä arvoa ei korvata arvauksella eikä osittaista päivitystä jätetä hiljaa.
 
+## Uusi projektitietue pohjasta
+
+`TEMPLATE.md` on tyhjä täyttöpohja: se ei ole validoitu projektitietue eikä
+sen nimi täsmää `PRJ-*.md`-keräilyyn. Kopioi se vain tehtävän sallimaan uuteen
+`PRJ-<SLUG>.md`-polkuun, täytä kaikki pakolliset kentät ja säilytä hyväksytty
+lähdekuvaus lohkomerkkien välissä. Tyhjät päivät/commit/hash eivät kelpaa
+valmiissa projektitiedostossa. `tasks` on merkkijonolista; poista pohjan
+esimerkkialkio tai korvaa se oikealla tunnisteella. Päivitä viitetaulukkoon
+repoidentiteetti ja koko repojuureen suhteutettu tehtäväpolku.
+
+Laske täytetyn lähdelohkon hash `--print-source-hash`-komennolla ja kirjaa se
+`source_description_sha256`-kenttään. `observed_commit` on havaintohetkellä
+luettu täysi Git-commit, ei myöhemmin automaattisesti aina HEADiin täsmäävä
+synkronointiväite. Varmista repoidentiteetti erikseen ja validoi ennen commitia.
+Guard vaatii ensimmäisen commitin; myöhemmissä päivityksissä käytä alla kuvattua
+suojaa. Älä päivitä lähdekuvausta ilman ihmisomistajan päätöstä.
+
 ## Projektitiedoston sopimus
 
 Polku on `docs/governance/project_registry/PRJ-<SLUG>.md`.
@@ -209,7 +226,8 @@ Ensiluonnissa tiedostolla ei vielä ole HEAD-blobia, joten guard ei voi hyväksy
 Luo uusi projekti vain erikseen rajatussa tehtävässä: tarkista tunniste ja polun
 puuttuminen, säilytä mahdolliset olemassa olevat tiedostot, validoi uusi tiedosto
 ja toimita se paikallisen käytännön mukaan. Myöhemmät päivitykset käyttävät guardia.
-Tämän siirtopaketin tehtävä ei valtuuta projektin ensiluontia.
+Uuden projektin ensiluonti vaatii aina sen nimen ja kirjoituspolun kattavan
+tehtävän; pelkkä työkalun käyttöönotto ei valtuuta muiden projektien luontia.
 
 Generointi julkaisee yhden nimetyn CSV:n erillisen väliaikaistiedoston kautta;
 rekisterilähteitä ei kirjoiteta. Virheellinen
@@ -297,18 +315,19 @@ git diff --check
 
 Testit käyttävät synteettistä väliaikaista aineistoa ja Git-repoja. Rekisterin
 normaalissa käytössä vaaditaan myös generointi kahdesti, tavujen vertailu,
-`--check`, ignore-tarkistus ja ennen projektipäivitystä Git-suoja. Tyhjän
-rekisterin vuoksi tässä vaiheessa CLI-smoke tehdään synteettisessä väliaikaisessa
-repossa, ei luomalla kohderepoon projektirivejä.
+`--check`, ignore-tarkistus ja ennen projektipäivitystä Git-suoja. Päärepon pilotti käyttää yhtä nimettyä koordinointiprojektia.
+Keräilyraja ja virhetilanteet kokeillaan synteettisessä väliaikaisessa repossa,
+ei aliprojektien kortteja tai tiloja muuttamalla.
 
 Pakollinen portti ajetaan sallitussa ympäristössä; `--help` ei ole PASS-näyttö.
 Stageaa ennen toimitusporttia vain tarkistetut tehtäväpolut, koska osa tarkistuksista
 lukee indeksiä. Älä asenna riippuvuuksia tai muuta ympäristön oikeuksia hiljaa.
 K18/QC ei sovellu tähän päärepon ei-tieteelliseen työkalusiirtoon.
 
-Myöhempi pilotti varmistaa lisäksi oikean repoidentiteetin, samannimisten korttien
-erottamisen täydellä polulla ja alihakemistojen jäämisen keräilyn ulkopuolelle.
-AGENTS-velvoite ja projektipohja otetaan käyttöön erillisissä rajatuissa tehtävissä.
+Pilotti varmistaa lisäksi oikean repoidentiteetin, täydet tehtäväpolut,
+mallin ja alihakemistojen jäämisen keräilyn ulkopuolelle sekä jatkamisen
+projektitiedon perusteella ilman chattia. Tehtäväkortti sisältää testinäytön;
+pilotin löytyminen työhaarasta ei vielä todista hyväksyttyä main-toimitusta.
 
 ## Avoimet jatkoehdotukset
 

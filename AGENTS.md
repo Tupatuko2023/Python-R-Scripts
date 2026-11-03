@@ -159,6 +159,17 @@ Before you finish a task, do all that apply:
 - No secrets, no private data, no generated artifacts committed unless explicitly requested.
 - Changes are minimal, scoped, and consistent with existing style; docs updated if behavior changed.
 
+## Projektirekisteri (päärepon koordinointi)
+
+Lue [projektirekisterin käyttöohje](docs/governance/project_registry/README.md),
+kun tehtävä nimeää projektitietueen. Päivitä vain tehtävään nimenomaisesti kuuluvaa
+projektitiedostoa ja vain sallituilla kirjoituspoluilla: aloituksessa, merkittävässä
+välivaiheessa, keskeytyksessä, toimituksessa ja sulussa. Älä muuta muiden
+projektien tietoja. Käytä README:n Git-suojaa ja generointi-/tarkistusohjetta.
+TASK-kortti omistaa elinkaaren ja hyväksynnät; projektitiedosto yhteenvedon,
+seuraavan askeleen ja esteet. Main-toimitus ja worktree-siivous kirjataan erikseen.
+Aliprojektien tehtäväkäytännöt säilyvät omina kokonaisuuksinaan.
+
 ## References
 
 - [codex-security]: https://developers.openai.com/codex/security/
