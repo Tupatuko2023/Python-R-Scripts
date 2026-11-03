@@ -5,12 +5,12 @@
 - State: `03-review`
 - Tunniste: `project-registry-transfer-001`
 - Omistava repo: `Tupatuko2023/Python-R-Scripts`
-- Haara: `chore/project-registry-transfer-001` (vain paikallinen B-valmistelu).
-- PR #216:n toimitushaara: `chore/project-registry-transfer-001`, ei päivitetä tässä vaiheessa.
-- Aktiivinen B-valmistelun worktree: `tmp/project-registry-local-adaptation-001`.
-- PR #216:n säilytetty review-worktree: `tmp/project-registry-transfer-001`.
+- Haara: `chore/project-registry-transfer-001`.
+- PR #216 päivitetty toimitettuun lähdekorjaukseen ja paikalliseen sovitukseen.
+- Säilytetty, ei-aktiivinen sovitusvalmistelu: `tmp/project-registry-local-adaptation-001`.
+- Aktiivinen PR #216:n review-worktree: `tmp/project-registry-transfer-001`.
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- Paikallinen B-sovitus valmisteltu ja Windows-smoke ajettu; A-lähdekorjauksen hyväksytty main-toimitus ja lopullinen kohderepon Linux-validointi odottavat.
+- Lähdekorjaus toimitettu; integraation Linux 62/62 PASS ilman ohituksia. Lopullisen korttirevision CI varmennetaan PR-kuvauksessa ennen ihmishyväksyntää.
 
 ## Context
 
@@ -33,9 +33,9 @@ porttitiedostoissa ei ollut näiden välillä eroja. Ei synkronointiväitettä e
 ## Inputs
 
 - Lähderepo: `Tupatuko2023/FOF-Dissertation-Project`.
-- Toimitettu lähdecommit: `61b9731fcd93bda20f080ce4d26bb24a35a729c7`.
-- Generaattorin Git-blob: `f6d6f8c73023dcaa45f650689b57bbba6f43ee1b`.
-- Testien Git-blob: `b8beeee15f04c4554e0141fce341bc3c011ef7a4`.
+- Toimitettu lähdecommit: `de850e13f2e2165ab01d647c28f40c06f00a1b43`.
+- Generaattorin Git-blob: `98d606fc4d057f21c87db76bcd96cf2e853c0b69`.
+- Testien Git-blob: `b281dd224ed2df64d206a80fc5798ca98f01859d`.
 - Lähteen käyttöohje: `docs/governance/project_registry/README.md` samasta commitista.
 - Kohteen `tasks/_template.md`, `.gitignore`, `tools/run-gates.ps1`,
   `tools/run-gates.sh`, Makefile ja `.github/workflows/python-ci.yml`.
@@ -723,3 +723,7 @@ artefaktin rajaan; Ownerilta pyydetty vain tähän tarvittava rajattu poikkeus.
   varmennetaan uudelleen ja linkitetään PR-kuvaukseen ilman lisäcommitkierrosta.
 - Ei PR #216:n mergeä tai DONE-siirtoa. Aiempi hyväksyntä koskee vanhaa
   revisiota; uusi tarkka SHA tarvitsee pysyvän riippumattoman ihmishyväksynnän.
+
+- 2026-11-03: Lopputarkastuksessa ajantasaistettu kortin State/Inputs-yläkooste;
+  vanha paikallisen valmistelun yhteenveto ei enää kuvaa toimitettua integraatiota.
+  Historialliset lokit säilytetty. Vain korttimuutos, ei koodimuutosta.
