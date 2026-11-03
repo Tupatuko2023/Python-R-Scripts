@@ -21,8 +21,7 @@ Exit codes
 ----------
   0  OK
   1  validation or output-gate rejection
-  2  --check mismatch, or a stale/foreign observation copy
-  3  usage error
+  2  --check mismatch, a stale/foreign observation copy, or CLI usage error
 """
 
 from __future__ import annotations
@@ -30,6 +29,7 @@ from __future__ import annotations
 import argparse
 import csv
 from dataclasses import dataclass
+from datetime import date
 import hashlib
 import io
 import os
@@ -103,10 +103,15 @@ OPTIONAL_EMPTY_KEYS = (
     "link",
 )
 
+DATE_KEYS = ("started_date", "paused_date", "completed_date",
+             "source_captured_at", "observed_at")
+CANONICAL_KEYS = ("id", "repo", "repo_ref", "state", "delivery", "worktree_inventory",
+                  "source_description_sha256", "observed_commit", "observed_worktree_label",
+                  *DATE_KEYS)
+
 ID_RE = re.compile(r"^PRJ-[A-Z0-9]+(?:-[A-Z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
-REPO_REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]*$")
 ABSOLUTE_RE = re.compile(r"^(?:[A-Za-z]:[\\/]|\\\\|~[\\/]|/)")
 
 DEFAULT_REGISTRY = "docs/governance/project_registry"
@@ -125,8 +130,11 @@ class RegistryError(Exception):
 
 
 def read_text(path):
-    with open(path, encoding="utf-8", newline="") as handle:
-        return handle.read()
+    try:
+        with open(path, encoding="utf-8", newline="") as handle:
+            return handle.read()
+    except (OSError, UnicodeError) as exc:
+        raise RegistryError([f"{path}: cannot read UTF-8 source: {exc}"]) from exc
 
 
 def normalise_newlines(text):
@@ -193,8 +201,14 @@ def parse_frontmatter(text):
         if stripped.startswith("- "):
             if current_list is None:
                 raise RegistryError([f"frontmatter line {number}: list item without key"])
-            meta[current_list].append(scalar(stripped[2:].strip()))
+            item = stripped[2:].strip()
+            if (item.startswith(("{", "[")) or
+                    (not item.startswith(("'", '\"')) and re.search(r":(?:\s|$)", item))):
+                raise RegistryError([f"frontmatter line {number}: nested collections are not supported"])
+            meta[current_list].append(scalar(item))
             continue
+        if raw != stripped:
+            raise RegistryError([f"frontmatter line {number}: nested mappings are not supported"])
         if ":" not in raw:
             raise RegistryError([f"frontmatter line {number}: expected 'key: value'"])
         key, value = raw.split(":", 1)
@@ -202,6 +216,8 @@ def parse_frontmatter(text):
         if key in meta:
             raise RegistryError([f"frontmatter line {number}: duplicate key {key!r}"])
         value = value.strip()
+        if value.startswith(("{", "[")):
+            raise RegistryError([f"frontmatter line {number}: nested collections are not supported"])
         if value == "":
             meta[key] = []
             current_list = key
@@ -218,7 +234,9 @@ def source_block(text):
             [f"source block markers missing ({BEGIN_MARKER} / {END_MARKER})"]
         )
     start = text.index(BEGIN_MARKER) + len(BEGIN_MARKER)
-    end = text.index(END_MARKER, start)
+    end = text.index(END_MARKER)
+    if end < start:
+        raise RegistryError(["source block end marker precedes the begin marker"])
     block = text[start:end]
     if block.startswith("\n"):
         block = block[1:]
@@ -297,6 +315,17 @@ def validate_project(path, text):
         elif not str(meta[key]).strip() or str(meta[key]).strip() == "PENDING":
             errors.append(f"{name}: key {key!r} is empty or unresolved")
 
+    for key in (*OPTIONAL_EMPTY_KEYS, "worktree_inventory"):
+        if key in meta and not isinstance(meta[key], str):
+            errors.append(f"{name}: key {key!r} must be a scalar")
+    if "tasks" in meta and (not isinstance(meta["tasks"], list) or
+                            any(not isinstance(item, str) for item in meta["tasks"])):
+        errors.append(f"{name}: key 'tasks' must be a list of strings")
+    for key in CANONICAL_KEYS:
+        value = meta.get(key)
+        if isinstance(value, str) and value != value.strip():
+            errors.append(f"{name}: key {key!r} must not have surrounding whitespace")
+
     state = str(meta.get("state", "")).strip()
     if state and state not in STATES:
         errors.append(f"{name}: state {state!r} not in {sorted(STATES)}")
@@ -306,8 +335,12 @@ def validate_project(path, text):
 
     repo_ref = str(meta.get("repo_ref", "")).strip()
     if repo_ref:
-        if not REPO_REF_RE.match(repo_ref):
-            errors.append(f"{name}: repo_ref must be a ref name, got {repo_ref!r}")
+        code, _ = ((1, "") if (repo_ref.startswith("-") or "\x00" in repo_ref) else
+                   git(["check-ref-format", "--allow-onelevel", repo_ref]))
+        if code == 1:
+            errors.append(f"{name}: repo_ref must be a Git ref name, got {repo_ref!r}")
+        elif code != 0:
+            errors.append(f"{name}: cannot verify repo_ref Git syntax")
         if "@" in repo_ref:
             errors.append(
                 f"{name}: repo_ref must not carry an observation commit; "
@@ -337,11 +370,15 @@ def validate_project(path, text):
             if ".git/" in item.replace("\\", "/"):
                 errors.append(f"{name}: field {key!r} references Git internals")
 
-    for key in ("started_date", "paused_date", "completed_date",
-                "source_captured_at", "observed_at"):
-        value = str(meta.get(key, "")).strip()
-        if value and not DATE_RE.match(value):
-            errors.append(f"{name}: {key} must be YYYY-MM-DD, got {value!r}")
+    for key in DATE_KEYS:
+        value = str(meta.get(key, ""))
+        if value:
+            try:
+                if not DATE_RE.fullmatch(value):
+                    raise ValueError("date format")
+                date.fromisoformat(value)
+            except ValueError:
+                errors.append(f"{name}: {key} must be a real YYYY-MM-DD date, got {value!r}")
 
     for label, row_state, _ in rows:
         if row_state not in WORKTREE_STATES:
@@ -370,11 +407,14 @@ class ProjectSnapshot:
 def load_registry(registry_dir):
     if not os.path.isdir(registry_dir):
         raise RegistryError([f"registry directory not found: {registry_dir}"])
-    paths = sorted(
-        os.path.join(registry_dir, name)
-        for name in os.listdir(registry_dir)
-        if name.startswith("PRJ-") and name.endswith(".md")
-    )
+    try:
+        paths = sorted(
+            os.path.join(registry_dir, name)
+            for name in os.listdir(registry_dir)
+            if name.startswith("PRJ-") and name.endswith(".md")
+        )
+    except OSError as exc:
+        raise RegistryError([f"{registry_dir}: cannot list registry sources: {exc}"]) from exc
     if not paths:
         raise RegistryError([f"no PRJ-*.md files in {registry_dir}"])
     projects = []
@@ -387,6 +427,9 @@ def load_registry(registry_dir):
             source_stat = os.stat(path)
         except RegistryError as exc:
             errors.extend(exc.messages)
+            continue
+        except OSError as exc:
+            errors.append(f"{path}: cannot inspect source identity: {exc}")
             continue
         project_id = meta["id"]
         if project_id in seen:
@@ -625,28 +668,36 @@ def main(argv=None):
                         help="registry directory holding PRJ-*.md files")
     parser.add_argument("--output", default=DEFAULT_OUTPUT,
                         help="single CSV output path (must be Git-ignored)")
-    parser.add_argument("--check", action="store_true",
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--check", action="store_true",
                         help="validate and compare with --output; write nothing")
-    parser.add_argument("--verify-guard", metavar="FILE",
+    modes.add_argument("--verify-guard", metavar="FILE",
                         help="pre-write guard for one registry file")
     parser.add_argument("--expect-commit", metavar="SHA",
                         help="commit whose version of FILE was read (guard mode)")
-    parser.add_argument("--print-source-hash", metavar="FILE",
+    modes.add_argument("--print-source-hash", metavar="FILE",
                         help="print the SHA256 of the stored source block")
     parser.add_argument("--skip-ignore-check", action="store_true",
                         help="skip the Git-ignore gate (tests only)")
     args = parser.parse_args(argv)
+    for option, value in (("--verify-guard", args.verify_guard),
+                          ("--print-source-hash", args.print_source_hash),
+                          ("--expect-commit", args.expect_commit)):
+        if value is not None and not value.strip():
+            parser.error(f"{option} requires a non-empty value")
+    if args.expect_commit is not None and args.verify_guard is None:
+        parser.error("--expect-commit requires --verify-guard")
 
-    if args.verify_guard:
+    if args.verify_guard is not None:
         code, messages = verify_guard(args.verify_guard, args.expect_commit)
         print("\n".join(messages))
         return code
 
-    if args.print_source_hash:
+    if args.print_source_hash is not None:
         try:
             print(source_sha256(read_text(args.print_source_hash)))
         except RegistryError as exc:
-            print("\n".join(exc.messages), file=sys.stderr)
+            print(f"project-registry: {args.print_source_hash}: {exc}", file=sys.stderr)
             return 1
         return 0
 

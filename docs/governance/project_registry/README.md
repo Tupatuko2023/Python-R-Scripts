@@ -1,4 +1,4 @@
-# Projektirekisteri: siirtopaketti 1.0.3-dev
+# Projektirekisteri: siirtopaketti 1.0.3
 
 Projektitiedosto on ylläpidettävä lähde, josta generaattori muodostaa CSV-näkymän.
 CSV:tä ei muokata käsin. Tämä vaihe tuo työkalun ja paikallisen ohjeen;
@@ -10,16 +10,15 @@ oletusgenerointi ilmoittaa `no PRJ-*.md files` ennen pilotin valmistelua.
 
 | Tieto                            | Arvo                                       |
 | -------------------------------- | ------------------------------------------ |
-| Paikallisen siirtopaketin versio | `1.0.3-dev` (ei lähderepon tagi)           |
+| Paikallisen siirtopaketin versio | `1.0.3` (ei lähderepon tagi)               |
 | Lähderepo                        | `Tupatuko2023/FOF-Dissertation-Project`    |
-| Toimitettu lähdecommit           | `61b9731fcd93bda20f080ce4d26bb24a35a729c7` |
-| Lähdegeneraattorin Git-blob      | `f6d6f8c73023dcaa45f650689b57bbba6f43ee1b` |
-| Lähdetestien Git-blob            | `b8beeee15f04c4554e0141fce341bc3c011ef7a4` |
+| Toimitettu lähdecommit           | `de850e13f2e2165ab01d647c28f40c06f00a1b43` |
+| Lähdegeneraattorin Git-blob      | `98d606fc4d057f21c87db76bcd96cf2e853c0b69` |
+| Lähdetestien Git-blob            | `b281dd224ed2df64d206a80fc5798ca98f01859d` |
 
-Tämä on vain paikallinen sovitusvalmistelu, ei lopullinen PR #216:n lähdeversio.
-Taulukon commit ja blobit yksilöivät toimitetun upstream-perustan. Uusi yhteisen
-generaattorin validointikorjaus odottaa vielä hyväksyttyä lähdetoimitusta;
-sen lähdecommit ja blobit päivitetään vasta sen jälkeen.
+Lähdekorjaus toimitettiin PR #349:ssä yllä nimettyyn main-committiin.
+Taulukon blobit ovat tämän toimitetun lähdeversion Git-objekteja.
+Paikallinen sovitus perustuu tarkistettuun valmistelucommittiin `d9004251`.
 
 Paikalliset poikkeamat yllä kirjatusta lähteestä:
 
@@ -146,7 +145,8 @@ lähderepon orkestroijan nimiä. Tyhjä este tarkoittaa ettei estettä ole kirja
 ei varmennettua esteettömyyttä. Puuttuvien roolien viennissä käytetään eksplisiittisiä
 `NOT_SET`-, `NOT_ASSIGNED`- ja `NOT_RECORDED`-arvoja.
 
-Päiväkentät käyttävät `YYYY-MM-DD`-muotoa. Frontmatteriin ei kirjoiteta
+Päiväkentät käyttävät todellista kalenteripäivää muodossa `YYYY-MM-DD`, myös
+karkauspäivät tarkistetaan. Frontmatteriin ei kirjoiteta
 absoluuttisia konepolkuja tai Gitin sisäisiä polkuja. Validointi ei ole yleinen
 salaisuus- tai polkuskanneri; sisällön tarkastus kuuluu kirjoittajalle.
 
@@ -164,6 +164,27 @@ Täsmällisen `## Worktree-havainnot`-otsikon alla taulukon sarakkeet ovat
 CSV:n `removed` vaatii vähintään yhden poistetun worktreen ja `complete`-inventaarion.
 Tyhjä tai kattavuudeltaan tuntematon inventaario antaa `unknown`; aktiivinen tai
 säilytetty työpuu antaa `retained`. Toimitus ja projektin sulku eivät todista siivousta.
+
+## Kenttävalidoinnin rajattu sopimus
+
+`repo_ref` tarkistetaan Gitin `check-ref-format --allow-onelevel` -syntaksilla.
+Refin ei tarvitse olla paikallisessa repossa olemassa; esimerkiksi `main`,
+`origin/main` ja `refs/heads/main` ovat sallittuja nimiä. Optioksi tulkittava
+alkuväliviiva ja NUL-merkki hylätään ennen Git-prosessia.
+
+Tunnetut pakolliset ja valinnaiset skalaarikentät vaativat merkkijonon.
+`tasks` on merkkijonolista. Sisäkkäiset mapping-rakenteet ja inline-kokoelmat
+hylätään hallitusti; lainattu vapaa teksti voi sisältää esimerkiksi kaksoispisteen ja välilyönnin.
+Yleistä YAML-tulkintaa tai escape-sekvenssien dekoodausta ei lisätä.
+
+Kanonisten tunniste-, repo-, ref-, tila-, päivämäärä-, hash-, havaintocommit-
+ja worktree-label-/inventory-kenttien reunavälilyönnit hylätään. Vapaata tekstiä
+ja kaava-alkuisia soluja ei trimmata tai kirjoiteta uudelleen.
+
+Puuttuvat tai väärässä järjestyksessä olevat lähdekuvausmerkit sekä lähteen
+luku-, UTF-8-, listaus- ja stat-virheet palauttavat hallitun, tiedoston
+nimeävän validointivirheen. Virheellinen lähde ei luo CSV:tä eikä muuta vanhaa.
+Myös lähdehashin tulostus käyttää hallittua virhesopimusta.
 
 ## Komennot ja kirjoitussuoja
 
@@ -203,8 +224,10 @@ kirjoiteta. `--skip-ignore-check` kuuluu vain synteettisiin testeihin.
 `--check` validoi lähteet ja vertaa CSV:n tavuja kirjoittamatta: exit 0 = sama,
 exit 2 = puuttuva tai vanhentunut näkymä; validointivirhe on exit 1.
 Se ei tarkista ignore-porttia, joten aja yllä oleva `git check-ignore` erikseen.
-Virheelliset komentoriviargumentit palauttavat argparsen exit 2:n; lähdekoodin
-vanhaa usage-exit 3 -mainintaa ei käytetä tämän paketin hyväksymiskriteerinä.
+`--check`, `--verify-guard` ja `--print-source-hash` ovat toisensa poissulkevia.
+`--expect-commit` kuuluu vain guard-moodiin. Ristiriitaiset moodit, tyhjät
+FILE-/expect-arvot ja muut virheelliset komentoriviargumentit palauttavat
+argparsen exit 2:n ennen lähdelukua tai CSV:n kirjoittamista.
 
 ## CSV taulukkolaskennassa: tuo kaikki sarakkeet tekstinä
 
@@ -294,5 +317,8 @@ esitetä ratkaistuiksi: fyysisen lähdehakemistorajan ja symlinkkien sopimus,
 tuntemattomien avainten diagnostiikka, escape-merkkien täsmällinen tulkinta
 sekä rinnakkaisten vientien julkaisu-/järjestystakuu. Ne arvioidaan erikseen;
 nykyinen vienti takaa validoidun tilannekuvan, ei uusimman rinnakkaisajon voittoa.
-Niiden vaikutus arvioidaan toimituskatselmoinnissa. CSV:n kaavatekstin säilyminen
+Niitä ei ole tutkittu loppuun. Rajattu toimitus edellyttää luotettua,
+katselmoitua rekisterisyötettä ja kenttien manuaalista tarkastusta; työkalu
+ei ole epäluotettavan syötteen palvelu. Omistaja arvioi rajoitteiden sopivuuden
+ennen uuden revision hyväksyntää. CSV:n kaavatekstin säilyminen
 ei tarkoita turvallista avaamista taulukkolaskennan oletusasetuksilla.

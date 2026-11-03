@@ -668,3 +668,24 @@ artefaktin rajaan; Ownerilta pyydetty vain tähän tarvittava rajattu poikkeus.
   avainten, escape-tulkinnan tai julkaisujen järjestyksen korjausväitettä.
 - PR #216 on edelleen 5c184f9e6573020637816d7f4a53d062331784a6; sitä ei
   päivitetä eikä B-haaraa pushata ennen sovittua lähdetoimitusta.
+
+
+## Toimitetun validation-korjauksen integrointi 2026-11-03
+
+- Owner valtuutti nykyisessä toimeksiannossa PR #349:n toimituksen ja saman
+  PR #216:n rajatut päivitykset, commitit, pushit ja CI-seurannan.
+- Lähde toimitettu mainiin: de850e13f2e2165ab01d647c28f40c06f00a1b43.
+  Generaattoriblob 98d606fc4d057f21c87db76bcd96cf2e853c0b69,
+  testiblob b281dd224ed2df64d206a80fc5798ca98f01859d.
+- Tarkistettu d9004251:n paikallinen sovitus tuotu fast-forwardilla. Aiemman
+  rework-admissionin sama kortti on in-progress ennen lähdekoodin päivitystä.
+  Vain tämä PR-worktree on aktiivinen; paikallinen prep-worktree jää säilytetyksi.
+- Generaattori vastaa lähdeblobia lukuun ottamatta kahta oletustulospolun
+  esiintymää. Testit sisältävät kaikki 60 lähdetestiä ja kaksi paikallista
+  PythonRScriptsAdaptationTests-regressiota. README kuvaa todelliset poikkeamat.
+- Oletus tools/project_registry/outputs/projects.csv perustuu kohderepon
+  tuloskäytäntöihin. CSV-tekstiä ei muuteta; käyttöohjeessa kaikki sarakkeet
+  tuodaan tekstinä ja kaavojen arviointi estetään.
+- #12 ja #14–16 pysyvät näkyvinä, toteuttamattomina jatkoehdotuksina.
+- Ei workflow-, AGENTS-, TEMPLATE-, projektirivi-, data- tai analyysimuutoksia.
+  PR #216:n merge ja DONE odottavat muuttuneen revision ihmishyväksyntää.

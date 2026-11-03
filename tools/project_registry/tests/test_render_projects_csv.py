@@ -467,6 +467,254 @@ class ValidationTests(RegistryCase):
         self.assertEqual(before, self.output.read_bytes())
 
 
+class ValidationContractTests(RegistryCase):
+    def assert_invalid_source_preserves_output(self, text):
+        for exists in (False, True):
+            with self.subTest(existing_output=exists):
+                source = self.write("PRJ-TEST.md", text)
+                before = source.read_bytes()
+                if self.output.exists():
+                    self.output.unlink()
+                if exists:
+                    self.output.parent.mkdir(exist_ok=True)
+                    self.output.write_bytes(b"old CSV\n")
+                error = io.StringIO()
+                with contextlib.redirect_stderr(error):
+                    self.assertEqual(self.render(), 1)
+                self.assertIn(source.name, error.getvalue())
+                self.assertNotIn("Traceback", error.getvalue())
+                self.assertEqual(source.read_bytes(), before)
+                if exists:
+                    self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+                else:
+                    self.assertFalse(self.output.exists())
+
+    def test_invalid_calendar_dates_preserve_output(self):
+        for value in ("2026-02-29", "1900-02-29", "2026-02-30", "2026-04-31",
+                      "0000-01-01", "2026-00-10", "2026-13-01", "2026-01-00", "2026-1-01"):
+            with self.subTest(value=value):
+                self.assert_invalid_source_preserves_output(project_text(observed_at=value))
+        for key in ("started_date", "paused_date", "completed_date", "source_captured_at"):
+            with self.subTest(key=key):
+                self.assert_invalid_source_preserves_output(project_text(**{key: "2026-02-30"}))
+
+    def test_valid_calendar_dates_and_empty_optional_dates_export(self):
+        for value in ("2024-02-29", "2000-02-29", "2026-04-30"):
+            with self.subTest(value=value):
+                self.write("PRJ-TEST.md", project_text(observed_at=value, started_date=""))
+                self.assertEqual(self.render(), 0)
+        self.assertEqual(self.rows()[1][15:18], ["", "", ""])
+
+    def test_invalid_git_ref_syntax_preserves_output(self):
+        for value in ("main..broken", "topic/.hidden", "topic/foo.lock", "topic//double",
+                      "topic/", "topic^bad", "topic~bad", "topic?bad", "topic[bad",
+                      "topic bad", "@", "topic@{one}", "topic\\bad", "name.", "--help"):
+            with self.subTest(value=value):
+                self.assert_invalid_source_preserves_output(project_text(repo_ref=value))
+
+    def test_ref_options_and_nul_are_rejected_without_invoking_git(self):
+        for value in ("--help", "--normalize", "-topic", "bad\x00ref"):
+            with mock.patch.object(registry, "git") as git:
+                self.assert_invalid_source_preserves_output(project_text(repo_ref=value))
+            git.assert_not_called()
+        with self.assertRaises(registry.RegistryError) as failure:
+            registry.validate_project("PRJ-TEST.md", project_text(repo_ref="bad\x00ref"))
+        self.assertIn("PRJ-TEST.md", str(failure.exception))
+        self.assertIn("repo_ref", str(failure.exception))
+        self.assertIn(r"\x00", str(failure.exception))
+
+    def test_valid_git_refs_do_not_need_to_exist(self):
+        for value in ("origin/main", "main", "refs/heads/main", "refs/tags/v1.0",
+                      "future/not-created", "single-level", "topic+name"):
+            with self.subTest(value=value):
+                self.write("PRJ-TEST.md", project_text(repo_ref=value))
+                self.assertEqual(self.render(), 0)
+
+    def test_optional_scalar_fields_reject_lists(self):
+        for key in (*registry.OPTIONAL_EMPTY_KEYS, "worktree_inventory"):
+            with self.subTest(key=key):
+                text = registry.re.sub(rf"^{key}:.*$", f'{key}:\n  - "wrong type"',
+                                       project_text(), count=1, flags=registry.re.MULTILINE)
+                self.assert_invalid_source_preserves_output(text)
+
+    def test_tasks_remains_a_string_list(self):
+        for value in ('tasks: "TASK-ONE"', 'tasks: ""'):
+            self.assert_invalid_source_preserves_output(
+                project_text().replace('tasks:\n  - "TASK-TEST-001"', value))
+        for value in ("tasks:", 'tasks:\n  - "TASK-ONE"\n  - "repo: task/path.md"'):
+            self.write("PRJ-TEST.md", project_text().replace('tasks:\n  - "TASK-TEST-001"', value))
+            self.assertEqual(self.render(), 0)
+
+    def test_nested_mappings_and_collections_are_rejected(self):
+        values = [
+            ('blocker: ""', 'blocker:\n  nested: "stealth"'),
+            ('blocker: ""', 'blocker: {nested: "stealth"}'),
+            ('blocker: ""', 'blocker: ["a", "b"]'),
+            ('tasks:\n  - "TASK-TEST-001"', 'tasks:\n  - child: "mapping"'),
+            ('tasks:\n  - "TASK-TEST-001"', 'tasks:\n  - ["nested list"]'),
+        ]
+        for old, new in values:
+            with self.subTest(new=new):
+                self.assert_invalid_source_preserves_output(project_text().replace(old, new))
+
+    def test_canonical_padding_is_rejected(self):
+        meta = registry.parse_frontmatter(project_text())
+        for key in ("id", "repo", "repo_ref", "state", "delivery", "worktree_inventory",
+                    "source_description_sha256", "observed_commit", "observed_worktree_label",
+                    "started_date", "paused_date", "completed_date", "source_captured_at", "observed_at"):
+            for padding in (" ", "\t"):
+                with self.subTest(key=key, padding=padding):
+                    self.assert_invalid_source_preserves_output(
+                        project_text(**{key: padding + meta.get(key, "") + padding}))
+
+    def test_free_text_and_formula_like_content_are_not_changed(self):
+        description = "=SUM(1,1)\n"
+        text = project_text(short_name="  =1+1  ", latest_status="  status  ", blocker="  note: value  ")
+        text = text.replace(SOURCE_TEXT, description).replace(
+            registry.hashlib.sha256(SOURCE_TEXT.encode()).hexdigest(),
+            registry.hashlib.sha256(description.encode()).hexdigest())
+        self.write("PRJ-TEST.md", text)
+        self.assertEqual(self.render(), 0)
+        row = self.rows()[1]
+        self.assertEqual(row[1], description)
+        self.assertEqual(row[2], "  =1+1  ")
+        self.assertEqual(row[5], "  status  ")
+        self.assertEqual(row[7], "  note: value  ")
+
+    def test_missing_and_reversed_source_markers_preserve_output(self):
+        text = project_text()
+        for invalid in (text.replace(registry.BEGIN_MARKER, ""),
+                        text.replace(registry.END_MARKER, ""),
+                        text.replace(registry.BEGIN_MARKER, "TEMP_MARKER")
+                            .replace(registry.END_MARKER, registry.BEGIN_MARKER)
+                            .replace("TEMP_MARKER", registry.END_MARKER)):
+            self.assert_invalid_source_preserves_output(invalid)
+
+    def test_invalid_utf8_is_controlled_and_preserves_output(self):
+        for exists in (False, True):
+            source = self.write("PRJ-TEST.md", project_text())
+            source.write_bytes(b"\xff")
+            if self.output.exists():
+                self.output.unlink()
+            if exists:
+                self.output.parent.mkdir(exist_ok=True)
+                self.output.write_bytes(b"old CSV\n")
+            error = io.StringIO()
+            with contextlib.redirect_stderr(error):
+                self.assertEqual(self.render(), 1)
+            self.assertIn(source.name, error.getvalue())
+            self.assertEqual(source.read_bytes(), b"\xff")
+            if exists:
+                self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+            else:
+                self.assertFalse(self.output.exists())
+
+    def test_source_open_and_stat_errors_are_controlled(self):
+        source = self.write("PRJ-TEST.md", project_text())
+        stat = registry.os.stat
+        for stage in ("open", "stat"):
+            for exists in (False, True):
+                with self.subTest(stage=stage, existing_output=exists):
+                    if self.output.exists():
+                        self.output.unlink()
+                    if exists:
+                        self.output.parent.mkdir(exist_ok=True)
+                        self.output.write_bytes(b"old CSV\n")
+
+                    def unavailable_stat(path, *args, **kwargs):
+                        if registry.os.fspath(path) == str(source):
+                            raise PermissionError("injected source stat denial")
+                        return stat(path, *args, **kwargs)
+
+                    patch = (mock.patch("builtins.open", side_effect=PermissionError("injected read denial"))
+                             if stage == "open" else
+                             mock.patch.object(registry.os, "stat", side_effect=unavailable_stat))
+                    error = io.StringIO()
+                    with patch, contextlib.redirect_stderr(error):
+                        self.assertEqual(self.render(), 1)
+                    self.assertIn(source.name, error.getvalue())
+                    if exists:
+                        self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+                    else:
+                        self.assertFalse(self.output.exists())
+
+    def test_registry_listing_error_is_controlled(self):
+        self.write("PRJ-TEST.md", project_text())
+        self.output.parent.mkdir()
+        self.output.write_bytes(b"old CSV\n")
+        error = io.StringIO()
+        with mock.patch.object(registry.os, "listdir", side_effect=PermissionError("injected list denial")), \
+                contextlib.redirect_stderr(error):
+            self.assertEqual(self.render(), 1)
+        self.assertIn(str(self.registry_dir), error.getvalue())
+        self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+
+    def test_source_hash_read_and_marker_failures_identify_the_file(self):
+        source = self.write("PRJ-TEST.md", project_text())
+        self.output.parent.mkdir()
+        self.output.write_bytes(b"old CSV\n")
+        for value in (b"\xff", project_text().replace(registry.END_MARKER, "").encode()):
+            source.write_bytes(value)
+            error = io.StringIO()
+            with contextlib.redirect_stderr(error):
+                self.assertEqual(registry.main([
+                    "--print-source-hash", str(source), "--output", str(self.output),
+                ]), 1)
+            self.assertIn(source.name, error.getvalue())
+            self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+        source.unlink()
+        error = io.StringIO()
+        with contextlib.redirect_stderr(error):
+            self.assertEqual(registry.main(["--print-source-hash", str(source)]), 1)
+        self.assertIn(source.name, error.getvalue())
+        self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+
+    def test_cli_modes_are_exclusive_before_reading_or_writing(self):
+        source = self.write("PRJ-TEST.md", project_text())
+        modes = [["--check"], ["--verify-guard", str(source)], ["--print-source-hash", str(source)]]
+        for left, right in ((0, 1), (0, 2), (1, 2)):
+            for exists in (False, True):
+                with self.subTest(left=left, right=right, existing_output=exists):
+                    if self.output.exists():
+                        self.output.unlink()
+                    if exists:
+                        self.output.parent.mkdir(exist_ok=True)
+                        self.output.write_bytes(b"old CSV\n")
+                    error = io.StringIO()
+                    with mock.patch.object(registry, "load_registry") as load, \
+                            contextlib.redirect_stderr(error), self.assertRaises(SystemExit) as stop:
+                        registry.main(["--output", str(self.output), *modes[left], *modes[right]])
+                    self.assertEqual(stop.exception.code, 2)
+                    load.assert_not_called()
+                    if exists:
+                        self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+                    else:
+                        self.assertFalse(self.output.exists())
+
+    def test_usage_exit_and_guard_only_expect_commit(self):
+        self.output.parent.mkdir()
+        self.output.write_bytes(b"old CSV\n")
+        cases = [
+            ["--not-a-real-option"], ["--expect-commit", "deadbeef"],
+            ["--expect-commit", ""], ["--verify-guard", ""],
+            ["--print-source-hash", ""], ["--verify-guard", "   "],
+            ["--verify-guard", "source.md", "--expect-commit", ""],
+        ]
+        for args in cases:
+            with self.subTest(args=args), contextlib.redirect_stderr(io.StringIO()), \
+                    mock.patch.object(registry, "load_registry") as load, \
+                    mock.patch.object(registry, "read_text") as read, \
+                    mock.patch.object(registry, "verify_guard", return_value=(0, ["OK"])) as guard, \
+                    mock.patch.object(registry, "publish_csv") as publish, \
+                    self.assertRaises(SystemExit) as stop:
+                registry.main([*args, "--output", str(self.output)])
+            self.assertEqual(stop.exception.code, 2)
+            for operation in (load, read, guard, publish):
+                operation.assert_not_called()
+            self.assertEqual(self.output.read_bytes(), b"old CSV\n")
+        self.assertNotIn("3  usage error", registry.__doc__)
+
+
 class GitGateTests(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
