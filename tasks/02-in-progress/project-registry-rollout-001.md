@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `01-ready`
+- State: `02-in-progress`
 - Tunniste: `project-registry-rollout-001`
 - Repo: `Tupatuko2023/Python-R-Scripts`
 - Haara: `chore/project-registry-rollout-001`
@@ -76,3 +76,7 @@ käsitellään käyttämällä sallittua suoritusympäristöä; ei porttien ohit
 - Ohje: docs/governance/project_registry/README.md
 - Pilotti: docs/governance/project_registry/PRJ-REGISTRY-ROLLOUT.md
 - Edeltäjä: tasks/04-done/project-registry-transfer-001.md
+
+- 2026-11-03: Erillinen admission: READY-kortti löydetty uudelleen ja Git-näkyvyys
+  sekä puhdas työpuu varmennettu. Rajattu Owner-valtuutus voimassa.
+  Kortti siirretty in-progressiin ennen sisältömuutoksia.
