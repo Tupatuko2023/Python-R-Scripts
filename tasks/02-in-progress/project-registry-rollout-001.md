@@ -84,3 +84,20 @@ käsitellään käyttämällä sallittua suoritusympäristöä; ei porttien ohit
 - 2026-11-03: Työosuus 3: README ajantasaistettu pilotin ja TEMPLATE-pohjan
   käyttöön, lähde-/paikallisprovenance ja avoimet #12/#14–16 säilytetty.
   Vain README ja tämän kortin loki muuttuvat tässä työosuudessa.
+
+- 2026-11-03: Pilotti toteutettu: AGENTS-kytkentä koskee vain tehtävän sallimaa
+  projektia; TEMPLATE ei ole PRJ-tietue. Ensiluonnin Prettier lisäsi tyhjän
+  rivin lähdelohkoon ja ensimmäinen generointi hylkäsi hashin. Hash päivitetty
+  vastaamaan lopullista lohkoa; tämän jälkeen kuvauksen tavut pidetään samoina.
+- Todellinen CSV: yksi projekti, 1035 merkin lähdekuvaus sanatarkasti, seuraava
+  askel ja este säilyvät. Kaksi generointia identtiset, --check ja ignore PASS.
+  delivery=not_delivered, Worktree-siivous=retained; main ei ole vielä toimitettu.
+- Synteettisessä Git-repossa kopioitu TEMPLATE ja invalidi nested/PRJ-NESTED.md
+  jätettiin pois; vain suora nimetty pilotti kerättiin. Aliprojekteihin ei kirjoitettu.
+- Jatkamiskoe ilman chattia: repoidentiteetti, kaksi täyttä tehtäväpolkua ja kortin
+  tarkistukset löytyvät; agentin seuraava toimi on CI-validointi, omistajan
+  seuraava päätös uuden revision katselmointi/toimitus. Viitteet todella löytyvät.
+- Git-guard PASS ennen tilapäivitystä; latest_status ja next_step päivitetty
+  alkuperäisen lähdelohkon sisältöä muuttamatta. Päivitetty vienti tarkistetaan.
+- Markdownin frontmatter-title lasketaan otsikoksi: body-otsikot korjattu
+  kakkostasolle MD025:n mukaisesti. Ei lint-sääntöjen poikkeuksia.

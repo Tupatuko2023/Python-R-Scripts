@@ -8,12 +8,12 @@ state: "active"
 delivery: "not_delivered"
 goal: "Agentti löytää, päivittää ja jatkaa päärepon koordinointiprojektia rekisteritiedoston ja tehtäväviitteiden avulla."
 done_criterion: "AGENTS-kytkentä, pohja ja yhden projektin pilotti on validoitu, ihmisen hyväksymä ja varmennettu mainista; worktree-siivous raportoidaan erikseen."
-latest_status: "Ohjekytkentä, täyttöpohja ja pilottitietue toteutettu paikallisesti; käytännön validointi on seuraava työvaihe."
-next_step: "Suorita tasks/02-in-progress/project-registry-rollout-001.md:n pilottitarkistukset ja palauta sama tehtävä review-tilaan."
+latest_status: "Paikallinen pilotti läpäisi sisällön, determinismin, checkin, ignore-tarkistuksen, keräilyrajan ja tiedostopohjaisen jatkamiskokeen; PR:n CI ja ihmiskatselmointi ovat seuraavat vaiheet."
+next_step: "Jatkava agentti: varmista käyttöönottotehtävän PR:n CI ja siirrä kortti reviewiin; omistaja katselmoi uuden revision ennen main-toimitusta."
 source_description_sha256: "83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1"
 source_captured_at: "2026-11-03"
 observed_at: "2026-11-03"
-observed_commit: "d0ad7a0afc11a2f9e2c40af71e1b058fc8245889"
+observed_commit: "f5040205e2f7e85e0495dfab8b76bbedad15de18"
 observed_worktree_label: "registry-rollout"
 blocker: "Main-toimitus odottaa tämän uuden käyttöönottorevision ihmiskatselmointia ja erillistä toimitusvaltuutusta."
 orchestrator: ""
@@ -31,7 +31,7 @@ tasks:
   - "project-registry-transfer-001"
 ---
 
-# Projektirekisterin käyttöönotto
+## Projektirekisterin käyttöönotto
 
 ## Lähdekuvaus
 
@@ -59,7 +59,8 @@ taulukko ei ylläpidä sen lifecycle-tilaa toisena totuutena.
 Lue ensin yllä olevan käyttöönottotehtävän kortti ja tämän hakemiston README.
 Siirtopaketti on jo mainissa commitissa f3da52a4d86de7aa3a2aa7ff951405568000f8a2
 (PR #216 ja sulkeminen #218); tämän uuden pilotin toimitus on vielä erillinen asia.
-Seuraava toimija on tehtävää jatkava agentti: suorita kortin pilottivalidoinnit.
+Seuraava toimija on tehtävää jatkava agentti: varmista kortissa nimetyn PR:n CI.
+Paikalliset pilottivalidoinnit läpäisivät 2026-11-03; omistajan hyväksyntä odottaa.
 Omistaja arvioi uuden revision ennen toimitusta. Pelkkä CSV tai valmis toteutus
 ei osoita main-toimitusta eikä taskin DONE worktreen poistamista.
 

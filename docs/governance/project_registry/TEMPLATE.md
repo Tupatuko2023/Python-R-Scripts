@@ -30,7 +30,7 @@ tasks:
   - "<tehtävän tunniste>"
 ---
 
-# Projektin täyttöpohja
+## Projektin täyttöpohja
 
 Tämä on tyhjä pohja, ei kerättävä PRJ-tietue. Kopioi vain tehtävän sallimaan
 PRJ-<SLUG>.md-polkuun ja täytä nykyisen README-sopimuksen mukaisesti.
