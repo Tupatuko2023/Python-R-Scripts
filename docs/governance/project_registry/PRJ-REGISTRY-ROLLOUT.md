@@ -10,7 +10,7 @@ goal: "Agentti löytää, päivittää ja jatkaa päärepon koordinointiprojekti
 done_criterion: "AGENTS-kytkentä, pohja ja yhden projektin pilotti on validoitu, ihmisen hyväksymä ja varmennettu mainista; worktree-siivous raportoidaan erikseen."
 latest_status: "Ohjekytkentä, täyttöpohja ja pilottitietue toteutettu paikallisesti; käytännön validointi on seuraava työvaihe."
 next_step: "Suorita tasks/02-in-progress/project-registry-rollout-001.md:n pilottitarkistukset ja palauta sama tehtävä review-tilaan."
-source_description_sha256: "2b83131e1050337412ec870868ee96b068aa1d236ff35e9020a1338f99dfdf11"
+source_description_sha256: "83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1"
 source_captured_at: "2026-11-03"
 observed_at: "2026-11-03"
 observed_commit: "d0ad7a0afc11a2f9e2c40af71e1b058fc8245889"
