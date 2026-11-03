@@ -8,8 +8,8 @@ state: "active"
 delivery: "not_delivered"
 goal: "Agentti löytää, päivittää ja jatkaa päärepon koordinointiprojektia rekisteritiedoston ja tehtäväviitteiden avulla."
 done_criterion: "AGENTS-kytkentä, pohja ja yhden projektin pilotti on validoitu, ihmisen hyväksymä ja varmennettu mainista; worktree-siivous raportoidaan erikseen."
-latest_status: "Paikallinen pilotti läpäisi sisällön, determinismin, checkin, ignore-tarkistuksen, keräilyrajan ja tiedostopohjaisen jatkamiskokeen; PR:n CI ja ihmiskatselmointi ovat seuraavat vaiheet."
-next_step: "Jatkava agentti: varmista käyttöönottotehtävän PR:n CI ja siirrä kortti reviewiin; omistaja katselmoi uuden revision ennen main-toimitusta."
+latest_status: "Paikallinen pilotti, staged-portit ja käyttöönottodiffin Markdown/CodeQL-CI läpäisivät; toteutus on katselmointivalmis PR:ssä 219, main-toimitusta ei ole vielä tehty."
+next_step: "Omistaja: katselmoi PR 219:n lopullinen revisio ja käyttörajoitteet; anna pysyvä hyväksyntä ja erillinen toimitusvaltuutus ennen main-mergeä."
 source_description_sha256: "83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1"
 source_captured_at: "2026-11-03"
 observed_at: "2026-11-03"
@@ -24,7 +24,7 @@ started_date: "2026-11-03"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
-link: ""
+link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/219"
 worktree_inventory: "complete"
 tasks:
   - "project-registry-rollout-001"
@@ -46,10 +46,10 @@ Tämä projekti ei muuta Fear-of-Fallingin tai Quantifyn tehtäväjonoja, hyväk
 
 ## Tehtäväviitteet
 
-| repo                          | task                          | path                                                 |
-| ----------------------------- | ----------------------------- | ---------------------------------------------------- |
-| Tupatuko2023/Python-R-Scripts | project-registry-rollout-001  | tasks/02-in-progress/project-registry-rollout-001.md |
-| Tupatuko2023/Python-R-Scripts | project-registry-transfer-001 | tasks/04-done/project-registry-transfer-001.md       |
+| repo                          | task                          | path                                            |
+| ----------------------------- | ----------------------------- | ----------------------------------------------- |
+| Tupatuko2023/Python-R-Scripts | project-registry-rollout-001  | tasks/03-review/project-registry-rollout-001.md |
+| Tupatuko2023/Python-R-Scripts | project-registry-transfer-001 | tasks/04-done/project-registry-transfer-001.md  |
 
 Polut ratkaistaan nimetyn repon juuresta. Lue kortti omasta polustaan; tämä
 taulukko ei ylläpidä sen lifecycle-tilaa toisena totuutena.
@@ -59,8 +59,11 @@ taulukko ei ylläpidä sen lifecycle-tilaa toisena totuutena.
 Lue ensin yllä olevan käyttöönottotehtävän kortti ja tämän hakemiston README.
 Siirtopaketti on jo mainissa commitissa f3da52a4d86de7aa3a2aa7ff951405568000f8a2
 (PR #216 ja sulkeminen #218); tämän uuden pilotin toimitus on vielä erillinen asia.
-Seuraava toimija on tehtävää jatkava agentti: varmista kortissa nimetyn PR:n CI.
-Paikalliset pilottivalidoinnit läpäisivät 2026-11-03; omistajan hyväksyntä odottaa.
+Seuraava toimija on ihmisomistaja: katselmoi PR 219:n lopullinen revisio
+osoitteessa [PR 219](https://github.com/Tupatuko2023/Python-R-Scripts/pull/219).
+Agentin valtuutettu toteutus on katselmointivalmis; ennen mahdollista toimitusta
+varmista PR:n täsmä-HEADin CI ja pysyvä ihmishyväksyntä sekä toimitusvaltuutus.
+Paikalliset pilottivalidoinnit ja toteutusrevision CI läpäisivät 2026-11-03.
 Omistaja arvioi uuden revision ennen toimitusta. Pelkkä CSV tai valmis toteutus
 ei osoita main-toimitusta eikä taskin DONE worktreen poistamista.
 

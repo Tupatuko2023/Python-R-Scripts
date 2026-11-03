@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `02-in-progress`
+- State: `03-review`
 - Tunniste: `project-registry-rollout-001`
 - Repo: `Tupatuko2023/Python-R-Scripts`
 - Haara: `chore/project-registry-rollout-001`
@@ -101,3 +101,36 @@ käsitellään käyttämällä sallittua suoritusympäristöä; ei porttien ohit
   alkuperäisen lähdelohkon sisältöä muuttamatta. Päivitetty vienti tarkistetaan.
 - Markdownin frontmatter-title lasketaan otsikoksi: body-otsikot korjattu
   kakkostasolle MD025:n mukaisesti. Ei lint-sääntöjen poikkeuksia.
+
+## Review-handoff 2026-11-03
+
+- Draft-PR: https://github.com/Tupatuko2023/Python-R-Scripts/pull/219
+- Toteutusrevisio b896f88acd22e352067cdf8cb3b99b7e02ec1903: Markdown-CI
+  41690785273 suoritti Prettierin ja markdownlintin SUCCESS; CodeQL-CI
+  41690785378 Python/JavaScript sekä CodeQL SUCCESS. K-smoke luokitteli
+  dokumentaatiomuutoksen ei-soveltuvaksi; skippi ei ole PASS-testiajo.
+- Python-workflow ei käynnisty vain Markdownia muuttavasta diffistä. Generaattori
+  ja sen testit ovat tavuntarkasti mainin mukaiset; tämän tehtävän näyttö on
+  oikealla työkalulla ajettu pilotti, ei väite uudesta Linux-pytest-ajosta.
+- Koko diffi katselmoitu: AGENTS-linkki on 11 rivin rajattu velvoite; TEMPLATE
+  ei ole PRJ-tietue; pilotti koskee vain käyttöönottoa. Repoidentiteetti ja
+  täydet tehtäväpolut tarkistettu. Ei vahvistettua korjausta vaativaa löydöstä.
+  Tämä on tekninen agenttikatselmointi, ei ihmisomistajan hyväksyntä.
+- Projektitietueen suojattu toinen tilapäivitys kirjaa omistajan seuraavaksi
+  toimijaksi ja PR:n katselmoinnin seuraavaksi toimeksi. Task-viite päivitetty
+  samaan review-polkuun, jonne kortti siirtyy. Lähdekuvaus säilyy samana.
+- Komennot: python -B tools/project_registry/render_projects_csv.py;
+  sama --check; sama --verify-guard <projektipolku> --expect-commit <luettu HEAD>;
+  git check-ignore -v -- tools/project_registry/outputs/projects.csv;
+  Prettier --check ja markdownlint-cli2 neljälle sisältö-Markdownille;
+  tools/run-gates.ps1 --mode pre-push --smoke staged-indeksistä; git diff --check.
+  Sisältö/determinismi/keräilyraja/jatkaminen kokeiltu Python-assertioilla
+  synteettisissä ignored-tilapäisrepoissa; ei pysyviä koerivejä aliprojekteihin.
+- README päivitettiin omassa kahden polun työosuudessa. Tässä työosuudessa
+  AGENTS/TEMPLATE/PRJ ja saman kortin in-progress/review-polut = enintään viisi.
+- Lopullisen handoff-HEADin CI ja päivitetyn CSV:n sisältö varmennetaan ja
+  kirjataan PR-kuvaukseen ilman uutta metadata-commit-kierrosta.
+- #12 ja #14–16 säilyvät avoimina. Käyttö luotetulle, katselmoidulle rekisterille;
+  ei yleistä tuntemattomien avainten/escapejen/lähdesymlink-rajan tai
+  rinnakkaiskirjoittajien järjestystakuuta. Omistaja arvioi soveltuvuuden.
+- Ei mergeä, DONE-siirtoa tai worktree-/haarapoistoja. Päächeckout säilytetty.
