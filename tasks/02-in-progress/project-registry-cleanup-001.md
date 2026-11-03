@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `01-ready`
+- State: `02-in-progress`
 - Tunniste: `project-registry-cleanup-001`
 - Repo: Tupatuko2023/Python-R-Scripts
 - Haara: chore/project-registry-cleanup-001
@@ -60,3 +60,5 @@ Säilytettävät ignored-artefaktit estävät vain kyseisten worktreeiden poisto
 
 - Pilotti: docs/governance/project_registry/PRJ-REGISTRY-ROLLOUT.md
 - Käyttöönotto: tasks/04-done/project-registry-rollout-001.md
+
+- 2026-11-03: READY löydetty ja Git-näkyvyys varmennettu erillisessä admission-työosuudessa; in-progress ennen siivouskirjausta.
