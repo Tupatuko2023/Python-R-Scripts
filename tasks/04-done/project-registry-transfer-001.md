@@ -2,15 +2,15 @@
 
 ## State
 
-- State: `03-review`
+- State: `04-done`
 - Tunniste: `project-registry-transfer-001`
 - Omistava repo: `Tupatuko2023/Python-R-Scripts`
-- Haara: `chore/project-registry-transfer-001`.
+- Toteutushaara: `chore/project-registry-transfer-001`; sulkemishaara `chore/project-registry-transfer-closeout-001`.
 - PR #216 päivitetty toimitettuun lähdekorjaukseen ja paikalliseen sovitukseen.
 - Säilytetty, ei-aktiivinen sovitusvalmistelu: `tmp/project-registry-local-adaptation-001`.
 - Aktiivinen PR #216:n review-worktree: `tmp/project-registry-transfer-001`.
 - Pohjacommit: `470f9ffe75c7f341abae11b45664976bf197974a` (paikallinen origin/main; ei uutta fetchiä).
-- Lähdekorjaus toimitettu; integraation Linux 62/62 PASS ilman ohituksia. Lopullisen korttirevision CI varmennetaan PR-kuvauksessa ennen ihmishyväksyntää.
+- Siirtopaketti toimitettu PR #216:ssa. Lopullisen hyväksytyn revision Linux 62/62 PASS ilman generaattoritestien ohituksia; Ownerin pysyvä hyväksyntä varmennettu.
 
 ## Context
 
@@ -727,3 +727,29 @@ artefaktin rajaan; Ownerilta pyydetty vain tähän tarvittava rajattu poikkeus.
 - 2026-11-03: Lopputarkastuksessa ajantasaistettu kortin State/Inputs-yläkooste;
   vanha paikallisen valmistelun yhteenveto ei enää kuvaa toimitettua integraatiota.
   Historialliset lokit säilytetty. Vain korttimuutos, ei koodimuutosta.
+
+
+## Hyväksyntä ja tekninen sulkeminen 2026-11-03
+
+- Hyväksyjä: Tupatuko2023 (OWNER), 2026-11-03T17:40:27Z.
+- Pysyvä, agentin task-lokista riippumaton omistajahyväksyntä:
+  https://github.com/Tupatuko2023/Python-R-Scripts/pull/216#issuecomment-6611169364
+- Hyväksytty tehtävä project-registry-transfer-001 ja revisio
+  e4bd36ab7ce5ba0d338d952abd53dab478677cfe; hyväksyntä kattaa main-toimituksen,
+  sulkemisen sekä kuvatut käyttörajoitteet ja #12/#14–16:n jättämisen jatkoehdotuksiksi.
+- Ownerin nykyinen toimeksianto valtuuttaa toimitusketjun, sulkemiscommitit,
+  pushit ja tarvittavan sulkemis-PR:n toimituksen. Agentti ei anna omaa hyväksyntää.
+- PR #216 mergetty normaalisti committiin 912433627fef80ea7b6983b307ce836fe3dfd7c2.
+  Kaikki soveltuvat tarkistukset hyväksytyltä HEADilta läpäisivät.
+  Ubuntu/Python 3.11 -JUnit: kaikki 60 lähdetestiä ja kaksi paikallista testiä
+  suoritettiin, 0 skipped/failure/error generaattorisarjassa. Koko repoajossa
+  615 tapausta, 18 muiden testien ohitusta, 0 failure/error.
+  Prettier ja markdownlint todella suoritettiin, CodeQL PASS. Viimeisen
+  korttipäivityksen Sourcery-skippiä ei esitetä uutena koodikatselmointina.
+- Tämä sulkemis-PR muuttaa vain saman kortin elinkaaripolkua, tilaa ja lokia.
+  Generaattori, testit ja README säilyvät hyväksytyn toimituksen mukaisina.
+- DONE koskee siirtopaketin toimitusta. AGENTS-kytkentä, tyhjä projektipohja ja
+  yhden päärepon koordinointiprojektin pilotti puuttuvat edelleen eikä niitä
+  toteuteta tässä ajossa. #12 ja #14–16 jäävät näkyviksi avoimiksi jatkoehdotuksiksi.
+- Owner kielsi worktree-/haarapoistot ja likaisten päächeckoutien muuttamisen.
+  Ne säilytetään; paikallisen mainin fast-forwardia ei tehdä.
