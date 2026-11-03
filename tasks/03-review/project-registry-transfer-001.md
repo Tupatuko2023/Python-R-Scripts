@@ -2,10 +2,10 @@
 
 ## State
 
-- State: `02-in-progress`
+- State: `03-review`
 - Tunniste: `project-registry-transfer-001`
 - Omistava repo: `Tupatuko2023/Python-R-Scripts`
-- Haara: `prepare/project-registry-local-adaptation-001` (vain paikallinen B-valmistelu).
+- Haara: `chore/project-registry-transfer-001` (vain paikallinen B-valmistelu).
 - PR #216:n toimitushaara: `chore/project-registry-transfer-001`, ei päivitetä tässä vaiheessa.
 - Aktiivinen B-valmistelun worktree: `tmp/project-registry-local-adaptation-001`.
 - PR #216:n säilytetty review-worktree: `tmp/project-registry-transfer-001`.
@@ -689,3 +689,37 @@ artefaktin rajaan; Ownerilta pyydetty vain tähän tarvittava rajattu poikkeus.
 - #12 ja #14–16 pysyvät näkyvinä, toteuttamattomina jatkoehdotuksina.
 - Ei workflow-, AGENTS-, TEMPLATE-, projektirivi-, data- tai analyysimuutoksia.
   PR #216:n merge ja DONE odottavat muuttuneen revision ihmishyväksyntää.
+
+
+## Koottu Linux-validointi ja katselmointi 2026-11-03
+
+- Tarkistettu sisältö-HEAD cb51d6600ac1e3e6eadf41f5e5d0e9c748d59ce4.
+- Python 3.11 / Ubuntu: koko python-ci PASS sekä push- että PR-ajossa.
+  Push-ajon 41684364553 JUnit-artefaktista varmennettu kaikki 62 tämän
+  generaattorin testiä: 60 lähdetestiä + 2 PythonRScriptsAdaptationTests,
+  0 skipped/failure/error. Molemmat aiemmat symlink-testit mukana.
+  JUnit sisältää yhteensä 615 testitapausta kahdessa raportissa; koko repon
+  muiden testien ohituksia ei esitetä suoritetuiksi testeiksi.
+- PR-ajon 41684394344, Markdown 41684394379 (Prettier ja markdownlint),
+  CodeQL ja Sourcery check valmistuivat success. Sourceryn vanha 19-kommentin
+  review on vanhalta revisiolta; vihreä check ei yksin ole ihmishyväksyntä.
+- Paikallinen koko sarja: 62 testiä, 60 PASS + kaksi Windows-symlink-ohitusta.
+  Varsinainen staged run-gates.ps1 --mode pre-push --smoke PASS: guardrails,
+  renv-lukon sanity, ei R-muutoksia, molempien Python-tiedostojen compile.
+  Prettier, markdownlint ja diff --check PASS.
+- Koko PR-diffi ja uusi korjauserä katselmoitu: vain kolme sisältötiedostoa
+  ja saman tehtäväkortin elinkaaripolut. Generaattori vastaa toimitettua
+  lähdeblobia täsmälleen, kun kaksi oletuspolun esiintymää palautetaan;
+  testit ovat muuttumaton lähdesarja plus paikallinen kahden testin luokka.
+- README kuvaa kohderepon omistajuuden, tehtäväviitteet, tulospolun,
+  tekstintuonnin, todellisen provenancen ja validoinnin rajat. Lähderepon
+  projektitietoja tai työnkulkua ei kopioitu auktoriteetiksi.
+- Katselmointipäätös: hyväksyttävissä uuden revision ihmiskatselmointiin
+  rajatussa, luotetun rekisterin käytössä. #12 ja #14–16 jäävät näkyviksi
+  toteuttamattomiksi jatkoehdotuksiksi; niitä ei hyväksytä yleisesti sivuun
+  vihreän CI:n perusteella. Omistaja arvioi sopivuuden ennen toimitusta.
+- Palautetaan sama kortti review-tilaan. Tämä viimeinen commit muuttaa vain
+  korttia; lopullisen HEADin pakollinen CI ja 62 testin skipitön näyttö
+  varmennetaan uudelleen ja linkitetään PR-kuvaukseen ilman lisäcommitkierrosta.
+- Ei PR #216:n mergeä tai DONE-siirtoa. Aiempi hyväksyntä koskee vanhaa
+  revisiota; uusi tarkka SHA tarvitsee pysyvän riippumattoman ihmishyväksynnän.
