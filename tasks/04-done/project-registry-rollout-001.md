@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `03-review`
+- State: `04-done`
 - Tunniste: `project-registry-rollout-001`
 - Repo: `Tupatuko2023/Python-R-Scripts`
 - Haara: `chore/project-registry-rollout-001`
@@ -134,3 +134,25 @@ käsitellään käyttämällä sallittua suoritusympäristöä; ei porttien ohit
   ei yleistä tuntemattomien avainten/escapejen/lähdesymlink-rajan tai
   rinnakkaiskirjoittajien järjestystakuuta. Omistaja arvioi soveltuvuuden.
 - Ei mergeä, DONE-siirtoa tai worktree-/haarapoistoja. Päächeckout säilytetty.
+
+## Omistajan hyväksyntä ja tekninen sulkeminen 2026-11-03
+
+- Hyväksyjä Tupatuko2023 (OWNER), 2026-11-03T18:17:05Z. Pysyvä näyttö:
+  https://github.com/Tupatuko2023/Python-R-Scripts/pull/219#issuecomment-6611936077
+  kattaa revision 5066579dfa2ef113e4b950b8280cff52e24d9fbf main-toimituksen
+  ja käyttöönottotehtävän sulkemisen tarkistusten ja katselmoinnin jälkeen.
+- Täsmärevision tekninen katselmointi: ei korjausta vaativaa löydöstä.
+  AGENTS rajaa projektin/kirjoituspolut, TEMPLATE vastaa skeemaa eikä keräänny,
+  pilotin tila ja viitteet perustuvat näyttöön, toimitus ja siivous erillään,
+  aliprojektien käytäntöjä ei muuteta. Markdown ja CodeQL SUCCESS.
+- PR #219 mergetty normaalisti mainiin f8a660634cafd4e2d0b30ee20516c0cd5c5ad2a1.
+  Ownerin nykyinen toimeksianto kattaa DONE-siirron, projektin toimitustiedon
+  päivityksen, commitit, pushit ja tarvittavan sulkemis-PR:n toimituksen.
+- Pilotin Git-guard PASS toimitetulta mainilta ennen päivitystä. Projektin
+  delivery=delivered ja state=closed perustuvat hyväksyttyyn main-toimitukseen;
+  alkuperäinen lähdekuvaus ja hash säilytetään. Tehtäväviite siirretään samaan
+  DONE-polkuun. Projektikohtainen worktree merkitään retained, ei removed.
+- Avoimet #12 ja #14–16 jäävät READMEhen. Ei niiden korjauksia, generaattori- tai
+  workflow-muutoksia, worktree-/haarapoistoja tai likaisten päächeckoutien muutoksia.
+- Vain sama kortti (kaksi lifecycle-polkua) ja nimetty projektitietue muuttuvat.
+  Sulkemisen CI seurataan ja tuotokset varmennetaan lopuksi origin/mainista.
