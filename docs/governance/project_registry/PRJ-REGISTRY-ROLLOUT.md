@@ -8,12 +8,12 @@ state: "closed"
 delivery: "delivered"
 goal: "Agentti löytää, päivittää ja jatkaa päärepon koordinointiprojektia rekisteritiedoston ja tehtäväviitteiden avulla."
 done_criterion: "AGENTS-kytkentä, pohja ja yhden projektin pilotti on validoitu, ihmisen hyväksymä ja varmennettu mainista; worktree-siivous raportoidaan erikseen."
-latest_status: "Omistajan hyväksymä AGENTS-kytkentä, pohja ja validoitu pilotti toimitettu PR 219:ssä mainiin f8a660634cafd4e2d0b30ee20516c0cd5c5ad2a1; käyttöönotto valmis, worktree säilytetään."
-next_step: "Uusi agentti: lue AGENTS.md ja rekisterin README; valitse tehtävä paikallisen jonon mukaan ja päivitä vain siihen nimenomaisesti kuuluvaa projektitietuetta."
+latest_status: "Käyttöönotto toimitettu ja suljettu. Hankkeen 6 varmennettua worktreetä ja 8 paikallista tehtävähaaraa poistettu; 2 worktreetä ja 3 vanhaa haaraa säilytetään dokumentoiduista syistä."
+next_step: "Säilytä baseline- ja transfer-worktreeiden paikalliset artefaktit. Lue siivouskortti ennen mahdollista jatkosiivousta; poistoja ei pakoteta eikä etähaaroja muuteta."
 source_description_sha256: "83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1"
 source_captured_at: "2026-11-03"
 observed_at: "2026-11-03"
-observed_commit: "f8a660634cafd4e2d0b30ee20516c0cd5c5ad2a1"
+observed_commit: "dc655d39ba9e1662aaa4d09b5e6e3e5a683f2526"
 observed_worktree_label: "registry-rollout"
 blocker: ""
 orchestrator: ""
@@ -29,6 +29,7 @@ worktree_inventory: "complete"
 tasks:
   - "project-registry-rollout-001"
   - "project-registry-transfer-001"
+  - "project-registry-cleanup-001"
 ---
 
 ## Projektirekisterin käyttöönotto
@@ -71,13 +72,65 @@ päivitystä. Uuden projektin luonti vaatii sen kattavan tehtävävaltuutuksen.
 
 Tämä käyttöönotto on valmis. Avoimet #12 ja #14–16 ovat READMEssä kuvattuja
 erillisiä jatkoehdotuksia; niiden toteutusta ei aloitettu. Main-toimitus ei
-merkitse worktree-poistoa. Omistaja kielsi poistot, ja työpuu säilytetään.
+merkitse worktree-poistoa. Owner valtuutti myöhemmin rajatun siivouksen. Toteutuneet poistot ja
+säilytettyjen kohteiden syyt ovat alla erillään main-toimituksesta.
 
 ## Worktree-havainnot
 
-| label            | state    | evidence                                                                                        |
-| ---------------- | -------- | ----------------------------------------------------------------------------------------------- |
-| registry-rollout | retained | Owner kielsi poistot toimitusohjeessa 2026-11-03; tmp/project-registry-rollout-001 säilytetään. |
+| label                       | state    | evidence                                                                                                                                                                             |
+| --------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| registry-rollout            | removed  | tmp/project-registry-rollout-001 poistettu 2026-11-03; PR #219/#220, kokonainen squash-puu sama, DONE mainissa; vain uudelleen muodostettava CSV.                                    |
+| registry-local-adaptation   | removed  | tmp/project-registry-local-adaptation-001 poistettu; d9004251 on PR #216:n commit-listassa; työpuu puhdas, vain pycache.                                                             |
+| registry-source-duplicate   | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-DUPLICATE-KEYS-001.md; worktree duplicate-keys poistettu, HEAD mainin esi-isä ja sama DONE-blobi.         |
+| registry-source-safe-export | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-SAFE-EXPORT-001.md; worktree safe-export poistettu, HEAD mainin esi-isä ja sama DONE-blobi.               |
+| registry-source-alias       | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-DIRECTORY-ALIAS-001.md; worktree directory-alias poistettu, HEAD mainin esi-isä ja sama DONE-blobi.       |
+| registry-source-validation  | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-VALIDATION-001.md; worktree validation poistettu, PR #349/#350/#351:n puut täsmäävät squash-toimituksiin. |
+| registry-baseline           | retained | tmp/project-registry-baseline-001 säilytetty: 21 ignored-tiedostoa, myös Quantifyn paikalliset tulokset/manifesti; säilytystarvetta ei oleteta ratkaistuksi.                         |
+| registry-transfer           | retained | tmp/project-registry-transfer-001 säilytetty: paikallisia CI-raportteja, Markdown-riippuvuuksia sekä Quantifyn tuloksia/manifesti; myös tämän kirjauksen toimitusworktree.           |
 
-Inventaario on complete vain tämän projektin yhdelle uudelle käyttöönottotyöpuulle.
-Vanhojen siirtotehtävien worktreeitä ei lasketa tämän projektin siivotuiksi työpuiksi.
+Inventaario kattaa tämän siirtäminen/käyttöönottohankkeen tunnistetut kahdeksan
+worktreetä molemmissa repoissa. Kokonaissiivous on retained, koska kaksi
+worktreetä säilytetään; kuusi onnistunutta poistoa ei tarkoita kaiken poistamista.
+Erillinen FOF-repon SKR1-maintenance-002-worktree on eri keskeneräinen tehtävä,
+eikä sitä lasketa tähän inventaarioon tai muuteta.
+
+### Paikalliset haarat ja säilytyssyyt
+
+Poistettu normaalilla git branch -d -komennolla kahdeksan toimitettua haaraa:
+
+- Tupatuko2023/FOF-Dissertation-Project: chore/project-registry-duplicate-keys-001,
+  fix/project-registry-validation-001,
+  chore/project-registry-validation-closeout-001,
+  chore/project-registry-validation-done-001.
+- Tupatuko2023/Python-R-Scripts: chore/project-registry-rollout-001,
+  chore/project-registry-rollout-closeout-001,
+  chore/project-registry-transfer-001,
+  chore/project-registry-transfer-closeout-001.
+
+Säilytetään ilman worktreetä kolme vanhaa paikallista haaraa:
+
+- Tupatuko2023/FOF-Dissertation-Project: chore/project-registry-safe-export-001 ja
+  fix/project-registry-directory-alias-001: tavallinen branch -d kieltäytyi,
+  koska upstream-tehtävähaara ei sisällä paikallista merge-HEADia, vaikka
+  canonical main sisältää sen. Upstreamia ei vaihdeta poistamisen kiertämiseksi.
+- Python-R-Scripts prepare/project-registry-local-adaptation-001: commitit
+  ovat toimitetun PR #216:n historiassa, mutta branch -d ei hyväksy squash-
+  historiaa mainiin eikä haaralla ole upstreamia. Ei force-poistoa.
+
+Nykyinen chore/project-registry-cleanup-001-haara on siivouskirjauksen
+säilyvä toimitushaara. Etähaaroja ei poistettu tai muutettu siivouksen vuoksi.
+Kirjaustehtävä ja sen tarkempi näyttö löytyvät repoidentiteetillä
+Tupatuko2023/Python-R-Scripts, polusta tasks/03-review/project-registry-cleanup-001.md.
+
+### Siivousnäytön raja
+
+Kohteet olivat tehtävä-/toimitusnäytön mukaan vain tämän hankkeen valmiita
+worktreitä. Puhtaus ja havaitut kohdepolkuihin viittaavat prosessit tarkistettiin
+ennen poistoja. Kirjoittajia poissulkevaa lukkoa ei kuitenkaan käytetty; tämä
+havaintoperusteinen tarkistus ei todista atomista yksinomaista käyttöä koko
+poistovälin ajan. Aikavälin ulkopuolista tai prosessilistassa näkymätöntä
+kirjoittajaa ei voida tällä näytöllä sulkea pois. Tietojen häviämistä ei havaittu,
+mutta tämä ei ole yleinen kilpailutilanteettoman siivouksen takuu.
+Jo toteutuneita poistoja ei väitetä jälkikäteen lukituiksi. Uusia poistoja ei
+tehdä tämän kirjauksen katselmointihuomion ratkaisemiseksi. PR:n katselmoinnissa
+arvioidaan tämä historiallinen näyttöraja ennen siivouskirjauksen toimitusta.
