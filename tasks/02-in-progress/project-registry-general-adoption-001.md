@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `01-ready`
+- State: `02-in-progress`
 - Tunniste: `project-registry-general-adoption-001`
 - Repo: `Tupatuko2023/Python-R-Scripts`
 - Orkestroija: `FCPO2`
@@ -100,6 +100,10 @@ tutkimusaineiston käsittelyä tai työpuiden siivousta.
   `tmp/project-registry-general-adoption-001` ja haara
   `docs/project-registry-general-adoption-001` perustettu koskematta päächeckoutiin
   tai muihin worktreeihin. Vain tämä READY-kortti valmisteltu Ajossa 1 (1 polku).
+- 2026-11-17T17:38:00+02:00: Ajo 2 (admission): READY-kortti varmennettu,
+  `tools/run-gates.ps1 --mode pre-push --smoke` PASS (guardrails, `renv.lock`,
+  R/Python-syntaksi). Kortti siirretty `01-ready` -> `02-in-progress` ennen
+  sisältömuutoksia (2 polkua tässä ajossa).
 
 ## Blockers
 
