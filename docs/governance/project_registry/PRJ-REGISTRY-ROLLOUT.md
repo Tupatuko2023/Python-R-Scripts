@@ -1,35 +1,36 @@
 ---
 id: "PRJ-REGISTRY-ROLLOUT"
-title: "Projektirekisterin käyttöönotto päärepossa"
+title: "Projektirekisterin käyttöönotto analyysirepossa"
 short_name: "Rekisterin käyttöönotto"
 repo: "Tupatuko2023/Python-R-Scripts"
 repo_ref: "origin/main"
-state: "closed"
-delivery: "delivered"
-goal: "Agentti löytää, päivittää ja jatkaa päärepon koordinointiprojektia rekisteritiedoston ja tehtäväviitteiden avulla."
-done_criterion: "AGENTS-kytkentä, pohja ja yhden projektin pilotti on validoitu, ihmisen hyväksymä ja varmennettu mainista; worktree-siivous raportoidaan erikseen."
-latest_status: "Käyttöönotto toimitettu ja suljettu. Hankkeen 6 varmennettua worktreetä ja 8 paikallista tehtävähaaraa poistettu; 2 worktreetä ja 3 vanhaa haaraa säilytetään dokumentoiduista syistä."
-next_step: "Säilytä baseline- ja transfer-worktreeiden paikalliset artefaktit. Lue siivouskortti ennen mahdollista jatkosiivousta; poistoja ei pakoteta eikä etähaaroja muuteta."
+state: "active"
+delivery: "not_delivered"
+goal: "Agentti löytää, päivittää ja jatkaa päärepon ja aliprojektien nimettyjä projekteja yhteisen projektirekisterin ja tehtäväviitteiden avulla ilman rinnakkaista tehtäväjonoa."
+done_criterion: "Yleisen käytön ohjeet (README, AGENTS.md, SKILLS.md) ja tämän projektitietueen jatkovaihe on validoitu, ihmisen hyväksymä ja varmennettu mainista; pilotin toimitus- ja siivoushistoria sekä alkuperäinen lähdekuvaus säilyvät."
+latest_status: "2026-11-17: Yleisen käyttöönoton jatkovaihe (project-registry-general-adoption-001) katselmoitavana. Pilottivaihe (PR #219/#220) ja siivouskirjaus (PR #221) on aiemmin toimitettu mainiin."
+next_step: "Owner: katselmoi yleisen käyttöönoton PR ja anna täsmärevisiolle pysyvä hyväksyntä ennen main-yhdistämistä ja sulkua."
 source_description_sha256: "83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1"
 source_captured_at: "2026-11-03"
-observed_at: "2026-11-03"
-observed_commit: "dc655d39ba9e1662aaa4d09b5e6e3e5a683f2526"
-observed_worktree_label: "registry-rollout"
+observed_at: "2026-11-17"
+observed_commit: "66d1209f9aa716f36adf9125dff1d628e63f85bb"
+observed_worktree_label: "registry-general-adoption"
 blocker: ""
-orchestrator: ""
-agent: "Codex"
-agent_tool: "Codex"
+orchestrator: "FCPO2"
+agent: "Antigravity"
+agent_tool: "Antigravity"
 environment: "Windows PowerShell; GitHub Ubuntu CI"
 started_date: "2026-11-03"
 paused_date: ""
-completed_date: "2026-11-03"
+completed_date: ""
 pause_reason: ""
-link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/219"
-worktree_inventory: "complete"
+link: "tasks/03-review/project-registry-general-adoption-001.md"
+worktree_inventory: "unknown"
 tasks:
   - "project-registry-rollout-001"
   - "project-registry-transfer-001"
   - "project-registry-cleanup-001"
+  - "project-registry-general-adoption-001"
 ---
 
 ## Projektirekisterin käyttöönotto
@@ -47,13 +48,17 @@ Tämä projekti ei muuta Fear-of-Fallingin tai Quantifyn tehtäväjonoja, hyväk
 
 ## Tehtäväviitteet
 
-| repo                          | task                          | path                                           |
-| ----------------------------- | ----------------------------- | ---------------------------------------------- |
-| Tupatuko2023/Python-R-Scripts | project-registry-rollout-001  | tasks/04-done/project-registry-rollout-001.md  |
-| Tupatuko2023/Python-R-Scripts | project-registry-transfer-001 | tasks/04-done/project-registry-transfer-001.md |
+| repo                          | task                                  | path                                                     |
+| ----------------------------- | ------------------------------------- | -------------------------------------------------------- |
+| Tupatuko2023/Python-R-Scripts | project-registry-rollout-001          | tasks/04-done/project-registry-rollout-001.md            |
+| Tupatuko2023/Python-R-Scripts | project-registry-transfer-001         | tasks/04-done/project-registry-transfer-001.md           |
+| Tupatuko2023/Python-R-Scripts | project-registry-cleanup-001          | tasks/03-review/project-registry-cleanup-001.md          |
+| Tupatuko2023/Python-R-Scripts | project-registry-general-adoption-001 | tasks/03-review/project-registry-general-adoption-001.md |
 
 Polut ratkaistaan nimetyn repon juuresta. Lue kortti omasta polustaan; tämä
-taulukko ei ylläpidä sen lifecycle-tilaa toisena totuutena.
+taulukko ei ylläpidä sen lifecycle-tilaa toisena totuutena. Erillinen
+`project-registry-cleanup-001` on mukana vain viitteenä eikä sen sulkeminen
+kuulu yleisen käyttöönoton tehtävään.
 
 ## Jatkamismuistio
 
@@ -75,6 +80,26 @@ erillisiä jatkoehdotuksia; niiden toteutusta ei aloitettu. Main-toimitus ei
 merkitse worktree-poistoa. Owner valtuutti myöhemmin rajatun siivouksen. Toteutuneet poistot ja
 säilytettyjen kohteiden syyt ovat alla erillään main-toimituksesta.
 
+### Jatkopäätös 2026-11-17: yleinen käyttöönotto koko analyysirepossa
+
+Owner ja orkestroija (`FCPO2`) avasivat tälle samalle `PRJ-REGISTRY-ROLLOUT`-tunnukselle
+jatkovaiheen tehtävässä `project-registry-general-adoption-001`. Tavoitteena on
+ottaa olemassa oleva projektirekisteri koko `Tupatuko2023/Python-R-Scripts`-repon
+normaaliin käyttöön mukaan lukien aliprojektien (`Fear-of-Falling`,
+`Quantify-FOF-Utilization-Costs`, `DEAC-Frailty-Index`,
+`Electronic-Frailty-Index`) erikseen nimetyt monitehtäväiset projektit ilman
+rinnakkaista tehtäväjonoa tai rekursiivista keräilyä.
+
+Päätöksen mukaisesti yllä oleva pilottivaiheen lähdekuvauslohko ja sen SHA256
+(`83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1`) säilytetään
+muuttumattomina ilman uudelleenmuotoilua, ja pilottivaiheen toimitus- (PR #219/#220)
+sekä siivoushistoria (PR #221) pidetään osana tämän tietueen historiaa.
+Toteutuksen ja katselmoinnin ajan `state` on `active` ja `delivery` on
+`not_delivered`. Erillinen `tasks/03-review/project-registry-cleanup-001.md`
+säilyy omassa `03-review`-tilassaan vain viitteenä. Seuraava toimenpide on
+ihmisomistajan katselmointi ja täsmärevision pysyvä hyväksyntä ennen
+main-toimitusta ja sulkua.
+
 ## Worktree-havainnot
 
 | label                       | state    | evidence                                                                                                                                                                             |
@@ -87,10 +112,16 @@ säilytettyjen kohteiden syyt ovat alla erillään main-toimituksesta.
 | registry-source-validation  | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-VALIDATION-001.md; worktree validation poistettu, PR #349/#350/#351:n puut täsmäävät squash-toimituksiin. |
 | registry-baseline           | retained | tmp/project-registry-baseline-001 säilytetty: 21 ignored-tiedostoa, myös Quantifyn paikalliset tulokset/manifesti; säilytystarvetta ei oleteta ratkaistuksi.                         |
 | registry-transfer           | retained | tmp/project-registry-transfer-001 säilytetty: paikallisia CI-raportteja, Markdown-riippuvuuksia sekä Quantifyn tuloksia/manifesti; myös tämän kirjauksen toimitusworktree.           |
+| registry-general-adoption   | active   | tmp/project-registry-general-adoption-001 perustettu 2026-11-17 haaralle docs/project-registry-general-adoption-001 yleisen käyttöönoton toteutusta ja katselmointia varten.         |
 
-Inventaario kattaa tämän siirtäminen/käyttöönottohankkeen tunnistetut kahdeksan
-worktreetä molemmissa repoissa. Kokonaissiivous on retained, koska kaksi
-worktreetä säilytetään; kuusi onnistunutta poistoa ei tarkoita kaiken poistamista.
+Inventaario kattaa aiemman siirto-/käyttöönottohankkeen tunnistetut kahdeksan
+worktreetä molemmissa repoissa (2026-11-03) sekä tämän jatkovaiheen aktiivisen
+worktreen `registry-general-adoption` (2026-11-17). Koska uusi työpuu avasi
+uuden vaiheen eikä koko monorepon kaikkia työpuita inventoitu uudelleen tässä
+dokumentaatiotehtävässä, `worktree_inventory` on asetettu arvoon `unknown`
+(aiempi `complete` ei siirry automaattisesti uuden vaiheen kattavuusväitteeksi).
+CSV:n `Worktree-siivous` on `retained`, koska aktiivinen ja kaksi säilytettyä
+worktreetä ovat olemassa; kuusi aiempaa poistoa ei tarkoita kaiken poistamista.
 Erillinen FOF-repon SKR1-maintenance-002-worktree on eri keskeneräinen tehtävä,
 eikä sitä lasketa tähän inventaarioon tai muuteta.
 

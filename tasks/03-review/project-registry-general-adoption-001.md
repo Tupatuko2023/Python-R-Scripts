@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `02-in-progress`
+- State: `03-review`
 - Tunniste: `project-registry-general-adoption-001`
 - Repo: `Tupatuko2023/Python-R-Scripts`
 - Orkestroija: `FCPO2`
@@ -111,6 +111,38 @@ tutkimusaineiston käsittelyä tai työpuiden siivousta.
   alkuperäisen tulospolun, provenancen ja Sourcery `#12`/`#14–16` säilytys),
   päivitetty `AGENTS.md`:n projektirekisteriosio koko repolle ja lisätty lyhyt
   rekisteriviite `SKILLS.md`:hen. Vain 4 polkua muutettu tässä ajossa.
+- 2026-11-17T18:20:00+02:00: Ajo 4 (projektitietue, validointi, review-siirto ja
+  PR): tarkistettu `origin/main` (`d7ba40bd9c3c450059707386e287afdc21f23248`,
+  vain Dependabot-päivitys `#224` polkuihin `package.json`/`package-lock.json`,
+  ei päällekkäisyyttä rekisteripolkujen kanssa) sekä suoritettu `--verify-guard`
+  tarkistuksella `66d1209f9aa716f36adf9125dff1d628e63f85bb` (`OK`, exit 0).
+  Päivitetty `docs/governance/project_registry/PRJ-REGISTRY-ROLLOUT.md`
+  jatkovaiheeseen (`state: "active"`, `delivery: "not_delivered"`,
+  `worktree_inventory: "unknown"`, päivätty jatkopäätös, vanha
+  `project-registry-cleanup-001` vain viitteenä). Alkuperäinen lähdelohko ja sen
+  SHA256 (`83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1`)
+  varmennettu tavuntarkasti muuttumattomiksi ilman uudelleenmuotoilua. Kortti
+  siirretty `02-in-progress` -> `03-review` (3 polkua tässä ajossa).
+
+## Review-handoff ja validointinäyttö 2026-11-17
+
+- Ajokohtainen 5 tiedoston raja toteutunut jokaisessa ajossa:
+  - Ajo 1 (`f8b5477`): 1 polku (`tasks/01-ready/project-registry-general-adoption-001.md`).
+  - Ajo 2 (`4bd8bd2`): 2 polkua (`01-ready` -> `02-in-progress`).
+  - Ajo 3 (`66d1209`): 4 polkua (`README.md`, `AGENTS.md`, `SKILLS.md`, `02-in-progress`-kortti).
+  - Ajo 4: 3 seurattua polkua (`PRJ-REGISTRY-ROLLOUT.md` sekä `02-in-progress` -> `03-review`) + gitignored CSV.
+- Paikalliset validoinnit worktreen repojuuresta:
+  - `--verify-guard docs/governance/project_registry/PRJ-REGISTRY-ROLLOUT.md --expect-commit 66d1209f9aa716f36adf9125dff1d628e63f85bb`: **PASS** (`OK`, exit 0).
+  - `--print-source-hash docs/governance/project_registry/PRJ-REGISTRY-ROLLOUT.md`: **PASS** (`83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1`, 1035 tavun lähdelohko tavuntarkasti identtinen `49564468...`-pohjan kanssa).
+  - CSV-generointi kahdesti `tools/project_registry/outputs/projects.csv`: **PASS** (molemmat 2402 tavua, tavuntarkasti samat; `state=active`, `delivery=not_delivered`, `Worktree-siivous=retained`, `Orkestroija=FCPO2`).
+  - `render_projects_csv.py --check`: **PASS** (exit 0).
+  - `git check-ignore -v -- tools/project_registry/outputs/projects.csv`: **PASS** (`.gitignore:43:**/outputs/`, exit 0).
+  - Generaattorin yksikkötestit (`python -B -m unittest discover -s tools/project_registry/tests -p test_render_projects_csv.py`): **62 testiä ajettu, 60 PASS, 2 Windows-symlink-oikeusohitusta** (exit 0; generaattoriin tai testeihin ei tehty muutoksia).
+  - Synteettinen moniprojekti-, aliprojektiviite- ja keräilyrajakoe väliaikaisessa Git-repossa: **PASS** (`PRJ-FOF-SUBPROJ` + `PRJ-ROOT-COORD` lajiteltuina, `Fear-of-Falling/tasks/...`- ja `Quantify-FOF-Utilization-Costs/tasks/...`-polkuviitteet, `TEMPLATE.md` ja alihakemistojen `PRJ-*.md`-tiedostot rajautuvat pois, determinismi, `--check` ja ignore PASS). Jatkamispolut tarkistettu oikeasta rekisteritietueesta ilman chattia.
+  - Prettier `--check` ja `markdownlint-cli2` kaikille neljälle muuttuneelle ei-`tasks/` Markdown-tiedostolle (`README.md`, `AGENTS.md`, `SKILLS.md`, `PRJ-REGISTRY-ROLLOUT.md`): **PASS** (0 virhettä, lähdelohkoa ei muotoiltu uudelleen).
+  - Staged `tools/run-gates.ps1 --mode pre-push --smoke` ja `git diff --check`: **PASS** (exit 0).
+  - `K18/QC: NOT APPLICABLE` — päärepon ei-tieteellinen hallinta- ja rekisteriohjemuutos; ei tutkimusdataa tai analyysikoodia. `.py`-tiedostoja ei muutettu, joten `python-ci.yml` ei aktivoidu pelkästä Markdown-diffistä (ei väitettä uudesta Linux-pytest-ajosta).
+- Agentti ei hyväksy omaa työtään eikä tee mergeä, DONE-siirtoa tai worktree-/haarasiivousta. Merge ja sulku odottavat täsmärevision riippumatonta ihmishyväksyntää.
 
 ## Blockers
 
