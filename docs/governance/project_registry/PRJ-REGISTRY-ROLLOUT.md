@@ -117,7 +117,7 @@ Tehtävän tekninen `04-done`-siirto ja tämän jatkovaiheen `closed` / `deliver
 | registry-source-validation  | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-VALIDATION-001.md; worktree validation poistettu, PR #349/#350/#351:n puut täsmäävät squash-toimituksiin. |
 | registry-baseline           | retained | tmp/project-registry-baseline-001 säilytetty: 21 ignored-tiedostoa, myös Quantifyn paikalliset tulokset/manifesti; säilytystarvetta ei oleteta ratkaistuksi.                         |
 | registry-transfer           | retained | tmp/project-registry-transfer-001 säilytetty: paikallisia CI-raportteja, Markdown-riippuvuuksia sekä Quantifyn tuloksia/manifesti; myös tämän kirjauksen toimitusworktree.           |
-| registry-general-adoption   | retained | tmp/project-registry-general-adoption-001 säilytetty PR #225:n (e603111a) jälkeen sulkukirjausta varten; paikalliset ja etähaarat säilytetään ilman poistoja.                       |
+| registry-general-adoption   | retained | tmp/project-registry-general-adoption-001 säilytetty PR #225:n (e603111a) jälkeen sulkukirjausta varten; paikalliset ja etähaarat säilytetään ilman poistoja.                        |
 
 Inventaario kattaa aiemman siirto-/käyttöönottohankkeen tunnistetut kahdeksan
 worktreetä molemmissa repoissa (2026-11-03) sekä tämän jatkovaiheen säilytetyn
