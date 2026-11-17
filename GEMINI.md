@@ -12,9 +12,16 @@ Tämä repo koostuu useista itsenäisistä tutkimusprojekteista. Agentin on tunn
 
 ## 2) Etusijajärjestys (Precedence)
 
-1. **Projektikohtainen ohje**: Jos olet tekemässä muutoksia alikansioon (esim. `Fear-of-Falling/`),
-   noudata kyseisen kansion `GEMINI.md` tai `AGENTS.md` -tiedostoa.
-2. **Globaali ohje**: Tämä tiedosto (`/GEMINI.md`) ohjaa yleistä käyttäytymistä ja globaaleja työkaluja.
+1. **Tehtäväelinkaari, kontribuutiot ja projektirekisteri**: Lue ja noudata aina
+   repojuuren [SKILLS.md](SKILLS.md)- ja [AGENTS.md](AGENTS.md)-ohjeita (TODO-jono,
+   5 tiedoston ajoraja, pysyvä ihmishyväksyntänäyttö ja PR-työnkulku). Kun tehtävä
+   nimeää projektitietueen (`docs/governance/project_registry/PRJ-*.md`), noudata
+   [projektirekisterin käyttöohjetta](docs/governance/project_registry/README.md)
+   sekä päärepon että aliprojektien hankkeissa.
+2. **Projektikohtainen analyysiohje**: Jos olet tekemässä muutoksia alikansioon
+   (esim. `Fear-of-Falling/`), noudata analyysikoodissa, `renv`-ympäristössä ja
+   QC-porteissa kyseisen kansion `GEMINI.md`- ja `AGENTS.md`-tiedostoja.
+3. **Globaali ohje**: Tämä tiedosto (`/GEMINI.md`) ohjaa yleistä käyttäytymistä ja globaaleja työkaluja.
 
 ## 3) Yleiset säännöt (Global Rules)
 

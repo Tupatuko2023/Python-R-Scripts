@@ -131,6 +131,14 @@ tutkimusaineiston käsittelyä tai työpuiden siivousta.
   `GEMINI.md` ja `Fear-of-Falling/GEMINI.md` (Sourcery #4) sekä `README.md`:n
   tarkennukset (Sourcery #1 ja #2). Kortti palautettu `03-review` ->
   `02-in-progress` ennen uusia sisältömuutoksia (2 polkua tässä ajossa).
+- 2026-11-17T18:49:00+02:00: Rework-ajo 2 (ohjetarkennukset): lisätty viitteet
+  repojuuren `SKILLS.md`:hen, `AGENTS.md`:hen ja projektirekisteriohjeeseen
+  tiedostoihin `GEMINI.md` ja `Fear-of-Falling/GEMINI.md` (Sourcery #4;
+  `Quantify-FOF-Utilization-Costs/GEMINI.md` viittaa jo `SKILLS.md`:hen) sekä
+  tarkennettu `docs/governance/project_registry/README.md`:ssä saman `PRJ`-tietueen
+  päivitysten sarjallistaminen ja rebase/sovitus vasta aiemman PR:n main-mergen
+  jälkeen (Sourcery #1) sekä `paused_date`/`pause_reason`-kenttien tyhjennys
+  jatkettaessa `active`-tilaan (Sourcery #2). Vain 4 polkua muutettu tässä ajossa.
 
 ## Review-handoff ja validointinäyttö 2026-11-17
 

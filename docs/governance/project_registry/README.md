@@ -82,8 +82,8 @@ projektiksi, sen `PRJ-<SLUG>.md` sijoitetaan tähän yhteiseen päärekisteriin
 jonoissaan. Aliprojektien tehtäviä ei siirretä päärepon `tasks/`-kansioon eikä
 nosteta automaattisesti projekteiksi. Projektin koontitieto ei korvaa
 tehtäväkortin elinkaarta, valtuutusta, evidenssiä, QC-portteja tai
-ihmishyväksyntää. Paikalliset `AGENTS.md`-, `SKILLS.md`-, `agent_policy`- ja
-`steering`-säännöt säilyvät voimassa kaikissa työvaiheissa.
+ihmishyväksyntää. Paikalliset `AGENTS.md`-, `GEMINI.md`-, `SKILLS.md`-,
+`agent_policy`- ja `steering`-säännöt säilyvät voimassa kaikissa työvaiheissa.
 
 Generaattori lukee vain nimetyn rekisterihakemiston suorat `PRJ-*.md`-tiedostot.
 Se ei lue tehtäväjonoja eikä käy rekursiivisesti aliprojekteissa, worktreeissä
@@ -138,13 +138,16 @@ Paikallisen tehtävän review -> done ja projektin sulkeminen noudattavat
 Agentti ei hyväksy omaa työtään. Erillisen tehtäväkortin liittäminen viitetaulukkoon
 ei muuta kyseisen kortin tilaa eikä valtuuta sen sulkemista.
 
-Kun suljettua tai aiemmin toimitettua projektia jatketaan samalla `PRJ-<SLUG>`-tunnuksella
-ihmisomistajan tai orkestroijan päätöksellä, aiemman vaiheen toimitus-, hyväksyntä- ja
-siivoushistoria säilytetään tiedoston rungossa. Toteutuksen ajaksi asetetaan
-`state: "active"` ja `delivery: "not_delivered"` (sekä tyhjennetään `completed_date`
-uuden vaiheen ajaksi), ja jatkovaihe kirjataan päivättyyn jatkopäätökseen. Uuden
-työpuun perustaminen edellyttää myös `worktree_inventory`-kattavuuden uudelleenarviointia:
-aiemman vaiheen `complete` ei siirry automaattisesti uuden vaiheen kattavuusväitteeksi.
+Kun keskeytettyä, suljettua tai aiemmin toimitettua projektia jatketaan samalla
+`PRJ-<SLUG>`-tunnuksella ihmisomistajan tai orkestroijan päätöksellä, aiemman
+vaiheen toimitus-, keskeytys-, hyväksyntä- ja siivoushistoria säilytetään tiedoston
+rungossa. Toteutuksen ajaksi asetetaan `state: "active"` ja `delivery: "not_delivered"`
+sekä tyhjennetään `completed_date`, `paused_date` ja `pause_reason` (ja päivitetään
+`blocker` kuvaamaan vain nykyistä tilannetta), jotta CSV ei näytä aktiiviselle
+projektille vanhentunutta valmistumis- tai keskeytystietoa. Jatkovaihe kirjataan
+päivättyyn jatkopäätökseen. Uuden työpuun perustaminen edellyttää myös
+`worktree_inventory`-kattavuuden uudelleenarviointia: aiemman vaiheen `complete`
+ei siirry automaattisesti uuden vaiheen kattavuusväitteeksi.
 
 Lähdekuvaus säilytetään sanatarkkana merkkien välissä; sen muuttaminen tai versiointi
 vaatii aina ihmisomistajan nimenomaisen päätöksen. Markdown-muotoilu (esimerkiksi
@@ -263,13 +266,14 @@ automaattinen lukko.
 
 `--verify-guard` tarkistaa vain nykyisen työpuun tilan eikä lukitse eri
 worktreissä tai etähaaroissa työskenteleviä kirjoittajia. Saman `PRJ-<SLUG>.md`-tietueen
-muutokset on siksi koordinoitava tehtävänannossa niin, että tietuetta päivittää
-kerrallaan yksi valtuutettu tehtäväketju. Ennen PR:n yhdistämistä tarkistetaan
-ajantasainen kohdehaara (`origin/main`); jos sama tietue on muuttunut
-kohdehaarassa rinnakkain, havaintopohja luetaan uudelleen ja päivitys sovitetaan
-hallitusti ylikirjoittamatta toimitettua historiaa tai lähdekuvausta. Eri
-projektien tietueet (`PRJ-A.md` ja `PRJ-B.md`) ovat erillisiä tiedostoja, ja
-generoitu CSV on työpuukohtainen ignoroitu tulostiedosto.
+muutokset on siksi sarjallistettava tehtävänannossa niin, että tietuetta päivittää
+kerrallaan vain yksi avoin tehtäväketju ja PR. Jos aiempi päivitys samaan
+tietueeseen yhdistetään `origin/main`iin rinnakkaisen haaran aikana, myöhempää
+PR:ää ei saa yhdistää vanhalta pohjalta: haara on rebasattava tai päivitettävä
+vasta aiemman PR:n main-yhdistämisen jälkeen, toimitettu tietue luettava
+uudelleen uutta HEADia vasten ja tila-/historiatiedot sovitettava hallitusti
+ennen yhdistämistä. Eri projektien tietueet (`PRJ-A.md` ja `PRJ-B.md`) ovat
+erillisiä tiedostoja, ja generoitu CSV on työpuukohtainen ignoroitu tulostiedosto.
 
 Ensiluonnissa tiedostolla ei vielä ole HEAD-blobia, joten guard ei voi hyväksyä sitä.
 Luo uusi projekti vain erikseen rajatussa tehtävässä: tarkista tunniste ja polun
