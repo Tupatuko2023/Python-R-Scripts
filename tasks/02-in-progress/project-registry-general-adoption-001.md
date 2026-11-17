@@ -104,6 +104,13 @@ tutkimusaineiston käsittelyä tai työpuiden siivousta.
   `tools/run-gates.ps1 --mode pre-push --smoke` PASS (guardrails, `renv.lock`,
   R/Python-syntaksi). Kortti siirretty `01-ready` -> `02-in-progress` ennen
   sisältömuutoksia (2 polkua tässä ajossa).
+- 2026-11-17T18:03:00+02:00: Ajo 3 (ohjekytkennät): päivitetty
+  `docs/governance/project_registry/README.md` yleiseen käyttöön (`PRJ`/`TASK`-valinta,
+  aliprojektien projektiviitteet ilman rinnakkaista tehtäväjonoa, luonti/päivitys/keskeytys/sulku/jatkovaihe,
+  eri worktreiden `PRJ`-kirjoitusten koordinointi, lähdelohkon muotoilukielto sekä
+  alkuperäisen tulospolun, provenancen ja Sourcery `#12`/`#14–16` säilytys),
+  päivitetty `AGENTS.md`:n projektirekisteriosio koko repolle ja lisätty lyhyt
+  rekisteriviite `SKILLS.md`:hen. Vain 4 polkua muutettu tässä ajossa.
 
 ## Blockers
 
