@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `02-in-progress`
+- State: `03-review`
 - Tunniste: `project-registry-general-adoption-001`
 - Repo: `Tupatuko2023/Python-R-Scripts`
 - Orkestroija: `FCPO2`
@@ -139,6 +139,13 @@ tutkimusaineiston käsittelyä tai työpuiden siivousta.
   päivitysten sarjallistaminen ja rebase/sovitus vasta aiemman PR:n main-mergen
   jälkeen (Sourcery #1) sekä `paused_date`/`pause_reason`-kenttien tyhjennys
   jatkettaessa `active`-tilaan (Sourcery #2). Vain 4 polkua muutettu tässä ajossa.
+- 2026-11-17T18:58:30+02:00: Rework-ajo 3 (PRJ-päivitys, validointi ja push):
+  `--verify-guard` tarkistuksella `c1d04896fbdc2b5c7b91f49f77ac098807ea6982`
+  PASS (`OK`, exit 0). Päivitetty `PRJ-REGISTRY-ROLLOUT.md`:n `done_criterion`,
+  `latest_status` ja `observed_commit` lähdelohkoa ja SHA256:ta muuttamatta.
+  Prettier `--check` ja `markdownlint-cli2` kaikille kuudelle sisältö-Markdownille
+  PASS, CSV kahdesti (`2553` tavua, identtiset), `--check` ja ignore PASS.
+  Kortti siirretty `02-in-progress` -> `03-review` (3 polkua tässä ajossa).
 
 ## Review-handoff ja validointinäyttö 2026-11-17
 
