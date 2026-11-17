@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `03-review`
+- State: `04-done`
 - Tunniste: `project-registry-general-adoption-001`
 - Repo: `Tupatuko2023/Python-R-Scripts`
 - Orkestroija: `FCPO2`
@@ -146,6 +146,40 @@ tutkimusaineiston käsittelyä tai työpuiden siivousta.
   Prettier `--check` ja `markdownlint-cli2` kaikille kuudelle sisältö-Markdownille
   PASS, CSV kahdesti (`2553` tavua, identtiset), `--check` ja ignore PASS.
   Kortti siirretty `02-in-progress` -> `03-review` (3 polkua tässä ajossa).
+- 2026-11-17T20:19:30+02:00: Sulkuajo: Ownerin pysyvä hyväksyntä PR #225:ssä
+  varmennettu täsmärevisiolle `8bd959eae643e41c7d4aceb96076dd8eda1ac157`, PR #225
+  yhdistetty `origin/main`-committiin `e603111a946b3b54cada7e87a7e1cc0b58feff9f`,
+  `--verify-guard` varmennettu toimitetulta mainilta (`OK`), kortti siirretty
+  `03-review` -> `04-done` ja `PRJ-REGISTRY-ROLLOUT.md` päivitetty `closed` /
+  `delivered` -tilaan (3 polkua tässä ajossa).
+
+## Omistajan hyväksyntä ja tekninen sulkeminen 2026-11-17
+
+- Hyväksyjä: `Tupatuko2023` (`OWNER`), `2026-11-17T18:15:41Z`.
+- Pysyvä, agentin lokista riippumaton hyväksyntänäyttö:
+  https://github.com/Tupatuko2023/Python-R-Scripts/pull/225#issuecomment-6956840532
+- Kohdetehtävä ja hyväksytty täsmärevisio: `project-registry-general-adoption-001`,
+  PR #225 HEAD `8bd959eae643e41c7d4aceb96076dd8eda1ac157` (kaikki pakolliset
+  tarkistukset `Lint Markdown`, `CodeQL`, `Detect Smoke-Relevant Changes` ja
+  `Sourcery review` completed/success).
+- PR #225 yhdistetty squash-mergellä `origin/main`-committiin
+  `e603111a946b3b54cada7e87a7e1cc0b58feff9f` (`2026-11-17T18:18:18Z`);
+  toimitus varmennettu suoraan etä-`origin/main`ista.
+- `--verify-guard` PASS toimitetulta `origin/main`ilta ennen päivitystä.
+  `PRJ-REGISTRY-ROLLOUT.md` päivitetty `state: "closed"`, `delivery: "delivered"`,
+  `completed_date: "2026-11-17"`, `link` PR #225:een ja tehtäväviite tähän
+  `04-done`-polkuun. Alkuperäinen lähdekuvauslohko ja sen SHA256
+  (`83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1`) sekä
+  pilotin ja siivouksen historia säilytetty muuttumattomina.
+- Työpuu `tmp/project-registry-general-adoption-001` sekä haarat
+  `docs/project-registry-general-adoption-001` ja
+  `chore/project-registry-general-adoption-closeout-001` säilytetään
+  (`registry-general-adoption` merkitty `retained`, `worktree_inventory: "unknown"`).
+  Erillistä `tasks/03-review/project-registry-cleanup-001.md`-korttia,
+  päächeckoutia tai kirjoitusrajaus-backlogia ei muutettu.
+- Tässä sulku-PR:ssä muuttuvat vain tämän saman kortin elinkaaripolut ja
+  `PRJ-REGISTRY-ROLLOUT.md` (3 seurattua polkua <= 5). Sulku-PR odottaa omaa
+  riippumatonta ihmishyväksyntäänsä ennen yhdistämistä.
 
 ## Review-handoff ja validointinäyttö 2026-11-17
 
