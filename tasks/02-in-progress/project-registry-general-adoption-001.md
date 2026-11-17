@@ -2,7 +2,7 @@
 
 ## State
 
-- State: `03-review`
+- State: `02-in-progress`
 - Tunniste: `project-registry-general-adoption-001`
 - Repo: `Tupatuko2023/Python-R-Scripts`
 - Orkestroija: `FCPO2`
@@ -50,6 +50,9 @@ Hyväksytyt muutospolut:
 - `docs/governance/project_registry/README.md`
 - `AGENTS.md`
 - `SKILLS.md` (vain lyhyt rekisteriviite)
+- `GEMINI.md` ja `Fear-of-Falling/GEMINI.md` (Ownerin 2026-11-17 hyväksymä
+  kirjoitusrajan laajennus: vain lyhyet viitteet `SKILLS.md`:hen, `AGENTS.md`:hen
+  ja projektirekisteriohjeeseen)
 - `docs/governance/project_registry/PRJ-REGISTRY-ROLLOUT.md`
 - tämän tehtäväkortin paikallisen elinkaaren mukaiset polut
 
@@ -123,6 +126,11 @@ tutkimusaineiston käsittelyä tai työpuiden siivousta.
   SHA256 (`83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1`)
   varmennettu tavuntarkasti muuttumattomiksi ilman uudelleenmuotoilua. Kortti
   siirretty `02-in-progress` -> `03-review` (3 polkua tässä ajossa).
+- 2026-11-17T18:45:30+02:00: Rework-ajo 1 (rework-admission): Owner hyväksyi
+  PR #225:n katselmoinnin perusteella kirjoitusrajan laajennuksen polkuihin
+  `GEMINI.md` ja `Fear-of-Falling/GEMINI.md` (Sourcery #4) sekä `README.md`:n
+  tarkennukset (Sourcery #1 ja #2). Kortti palautettu `03-review` ->
+  `02-in-progress` ennen uusia sisältömuutoksia (2 polkua tässä ajossa).
 
 ## Review-handoff ja validointinäyttö 2026-11-17
 
