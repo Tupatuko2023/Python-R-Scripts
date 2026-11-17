@@ -1,10 +1,12 @@
 # Projektirekisteri: siirtopaketti 1.0.3
 
 Projektitiedosto on ylläpidettävä lähde, josta generaattori muodostaa CSV-näkymän.
-CSV:tä ei muokata käsin. Päärepon käyttöönoton pilotti on
-`PRJ-REGISTRY-ROLLOUT.md`. Se kuvaa tämän rekisterin käyttöönottoa ja
-jatkamista; aliprojektien projektitietoja ei kerätä automaattisesti mukaan.
-Toteutus, hyväksytty main-toimitus ja worktree-siivous kirjataan erikseen.
+CSV:tä ei muokata käsin. Rekisteri palvelee koko `Tupatuko2023/Python-R-Scripts`-repon
+normaalia projektikoordinaatiota, mukaan lukien aliprojektien erikseen nimetyt
+projektit. `PRJ-REGISTRY-ROLLOUT.md` kuvaa rekisterin alkuperäisen pilotin ja
+yleisen käyttöönoton jatkovaiheen; aliprojektien tehtäväkortteja ei kerätä
+automaattisesti mukaan. Toteutus, hyväksytty main-toimitus ja worktree-siivous
+kirjataan aina erikseen.
 
 ## Versio ja alkuperä
 
@@ -52,23 +54,43 @@ myös kirjoituksen aikainen aliasin tai tracking-/ignore-tilan muutos hylätää
 Viimeinen symbolinen linkki korvataan hakemistomerkintänä; sen kohdetta ei
 avata kirjoitukseen. Rekisterilähteeseen viittaava linkki hylätään aina.
 
-## Omistajuus ja rajaus
+## Omistajuus, rajaus ja valintaperuste
 
-Ensimmäinen pilotti kuuluu päärepon koordinointiin. Omistava repoidentiteetti on
-`Tupatuko2023/Python-R-Scripts`. Projektitiedoston `repo` tarkistetaan erikseen
-tätä vasten: generaattori tarkistaa kentän olemassaolon, ei oikeaa repoidentiteettiä.
-Lähderepon projekteja ei kopioida mukana.
+Omistava repoidentiteetti on `Tupatuko2023/Python-R-Scripts`. Projektitiedoston
+`repo` tarkistetaan erikseen tätä vasten: generaattori tarkistaa kentän
+olemassaolon ja muodon, ei oikeaa repoidentiteettiä. Lähderepon projekteja ei
+kopioida mukana.
 
-Fear-of-Falling ja Quantify-FOF-Utilization-Costs ovat tässä repossa hakemistoja,
-joilla on omat tehtäväjononsa ja ohjeensa. Niiden tehtäviä ei nosteta automaattisesti
-päärepon projekteiksi. Projektin koontitieto ei korvaa tehtäväkortin elinkaarta,
-valtuutusta, evidenssiä tai ihmishyväksyntää. Paikalliset AGENTS.md-, SKILLS.md-,
-agent_policy- ja steering-säännöt säilyvät voimassa kaikissa työvaiheissa.
+- **`TASK`-kortti on aina pakollinen suorituksen yksikkö:** jokainen toteutus,
+  kirjoitusvaltuutus, validointinäyttö ja ihmishyväksyntä kulkee paikallisen
+  tehtäväjonon kautta (`tasks/` tai aliprojektin oma `tasks/`). Yksittäinen
+  rajattu muutos, korjaus, analyysiajo tai dokumenttipäivitys toteutetaan
+  pelkällä `TASK`-kortilla ilman omaa `PRJ`-tietuetta.
+- **`PRJ-<SLUG>` luodaan vain nimetyille monitehtäväisille kokonaisuuksille:**
+  ihmisomistaja tai orkestroija päättää `PRJ`-tietueen perustamisesta, kun työ
+  jakautuu useaan tehtävään, istuntoon tai työpuuhun ja tarvitsee chatista
+  riippumatonta projektitason tilannekuvaa (tavoite, valmistumiskriteeri,
+  nykytila, seuraava toimenpide, esteet, toimitustila ja worktree-inventaario).
+  Agentti ei luo uutta projektitietuetta ilman sen polun nimeävää tehtävää.
+
+`Fear-of-Falling`, `Quantify-FOF-Utilization-Costs`, `DEAC-Frailty-Index` ja
+`Electronic-Frailty-Index` ovat tämän monorepon aliprojekteja, joilla on omat
+ohjeensa ja soveltuvin osin omat tehtäväjononsa (`Fear-of-Falling/tasks/`,
+`Quantify-FOF-Utilization-Costs/tasks/`). Kun aliprojektin hanke rekisteröidään
+projektiksi, sen `PRJ-<SLUG>.md` sijoitetaan tähän yhteiseen päärekisteriin
+(`docs/governance/project_registry/`), mutta tehtäväkortit säilyvät omissa
+jonoissaan. Aliprojektien tehtäviä ei siirretä päärepon `tasks/`-kansioon eikä
+nosteta automaattisesti projekteiksi. Projektin koontitieto ei korvaa
+tehtäväkortin elinkaarta, valtuutusta, evidenssiä, QC-portteja tai
+ihmishyväksyntää. Paikalliset `AGENTS.md`-, `GEMINI.md`-, `SKILLS.md`-,
+`agent_policy`- ja `steering`-säännöt säilyvät voimassa kaikissa työvaiheissa.
 
 Generaattori lukee vain nimetyn rekisterihakemiston suorat `PRJ-*.md`-tiedostot.
 Se ei lue tehtäväjonoja eikä käy rekursiivisesti aliprojekteissa, worktreeissä
-tai arkistoissa. Päärepon ensimmäinen rekisteri pidetään vain päärepon omille
-koordinointiprojekteille; muiden rekisterien koonti on erillinen tuleva työ.
+tai arkistoissa; aliprojekteihin ei perusteta rinnakkaisia rekistereitä. Aja
+rekisterityökalun komennot worktreen repojuuresta ja aliprojektin omat
+analyysikomennot aliprojektin juuresta. Projektipäivitys lasketaan mukaan
+`config/steering.md`:n viiden tiedoston ajorajaan yhdessä korttisiirtojen kanssa.
 
 ## Tehtäväviitteet
 
@@ -99,19 +121,38 @@ Projektin ihmisomistaja vahvistaa repo-kohdistuksen, tavoitteen ja hyväksynnät
 Tehtävää tekevä agentti saa päivittää vain projektitiedostoa, joka kuuluu
 tehtävän sallittuihin kirjoituspolkuihin. Tämä ohje ei laajenna kirjoitusvaltuutta.
 
-| Vaihe                | Päivitys                                                               |
-| -------------------- | ---------------------------------------------------------------------- |
-| Aloitus              | agentti, aloituspäivä, tilahavainto, tehtäväviitteet ja seuraava askel |
-| Merkittävä välivaihe | viimeisin tilanne ja evidenssi sekä seuraava askel                     |
-| Keskeytys            | este, keskeytyssyy, päivämäärä ja vastuullinen seuraava toimija        |
-| Toimitus             | toimitustila ja varmennettu commit-/PR-viite                           |
-| Projektin sulku      | sulkutila ja päivä vain paikallisten ihmishyväksyntöjen jälkeen        |
-| Worktree-havainto    | erillinen inventaarion kattavuus ja säilytys-/poistoevidenssi          |
+| Vaihe                | Päivitys                                                                                |
+| -------------------- | --------------------------------------------------------------------------------------- |
+| Luonti               | uuden `PRJ-<SLUG>.md`:n avaus `TEMPLATE.md`:stä vain polun sallivassa tehtävässä        |
+| Aloitus              | agentti, aloituspäivä, tilahavainto, tehtäväviitteet ja seuraava askel                  |
+| Merkittävä välivaihe | viimeisin tilanne ja evidenssi sekä seuraava askel                                      |
+| Keskeytys            | `paused`, keskeytyspäivä, keskeytyssyy, este ja vastuullinen seuraava toimija           |
+| Toimitus             | `delivered` ja varmennettu commit-/PR-viite vasta hyväksytyn main-yhdistämisen jälkeen  |
+| Projektin sulku      | `closed` ja valmistumispäivä vasta valmistumiskriteerin ja ihmishyväksynnän täytyttyä   |
+| Jatkovaihe           | päivätty jatkopäätös (`active` / `not_delivered`), aiempi toimitus- ja lähdetieto pysyy |
+| Worktree-havainto    | erillinen inventaarion kattavuus ja säilytys-/poistoevidenssi                           |
 
 Yhden kortin DONE ei automaattisesti sulje monitehtäväistä projektia.
-Paikallisen tehtävän review -> done noudattaa SKILLS.md:n riippumattoman,
-pysyvän ihmishyväksyntänäytön sääntöä. Agentti ei hyväksy omaa työtään.
-Lähdekuvaus säilytetään sanatarkkana; sen versiointi vaatii ihmisomistajan päätöksen.
+Paikallisen tehtävän review -> done ja projektin sulkeminen noudattavat
+`SKILLS.md`:n riippumattoman, pysyvän ihmishyväksyntänäytön sääntöä täsmärevisiolle.
+Agentti ei hyväksy omaa työtään. Erillisen tehtäväkortin liittäminen viitetaulukkoon
+ei muuta kyseisen kortin tilaa eikä valtuuta sen sulkemista.
+
+Kun keskeytettyä, suljettua tai aiemmin toimitettua projektia jatketaan samalla
+`PRJ-<SLUG>`-tunnuksella ihmisomistajan tai orkestroijan päätöksellä, aiemman
+vaiheen toimitus-, keskeytys-, hyväksyntä- ja siivoushistoria säilytetään tiedoston
+rungossa. Toteutuksen ajaksi asetetaan `state: "active"` ja `delivery: "not_delivered"`
+sekä tyhjennetään `completed_date`, `paused_date` ja `pause_reason` (ja päivitetään
+`blocker` kuvaamaan vain nykyistä tilannetta), jotta CSV ei näytä aktiiviselle
+projektille vanhentunutta valmistumis- tai keskeytystietoa. Jatkovaihe kirjataan
+päivättyyn jatkopäätökseen. Uuden työpuun perustaminen edellyttää myös
+`worktree_inventory`-kattavuuden uudelleenarviointia: aiemman vaiheen `complete`
+ei siirry automaattisesti uuden vaiheen kattavuusväitteeksi.
+
+Lähdekuvaus säilytetään sanatarkkana merkkien välissä; sen muuttaminen tai versiointi
+vaatii aina ihmisomistajan nimenomaisen päätöksen. Markdown-muotoilu (esimerkiksi
+Prettier) ei saa muuttaa lukitun lähdelohkon sisältöä, tyhjiä rivejä tai rivinvaihtoja,
+sillä mikä tahansa tavumuutos rikkoo `source_description_sha256`-tarkistuksen.
 Ristiriita tai epäonnistunut päivitys kirjataan oman tehtävän lokiin syineen;
 hyväksyttyä arvoa ei korvata arvauksella eikä osittaista päivitystä jätetä hiljaa.
 
@@ -220,7 +261,19 @@ git check-ignore -v -- tools/project_registry/outputs/projects.csv
 exit 1 ilmoittaa esimerkiksi käyttäjän muutoksen tai commitoimattoman tiedoston;
 exit 2 kertoo vanhasta tai vieraasta havaintocommitista. Lue lähde uudelleen tai
 raportoi ristiriita. Älä käytä stashia, resetiä tai restorea suojan kiertämiseen.
-Tämä on erillinen ennen kirjoitusta ajettava tarkistus, ei automaattinen lukko.
+Tämä on erillinen ennen kirjoitusta ajettava paikallinen tarkistus, ei
+automaattinen lukko.
+
+`--verify-guard` tarkistaa vain nykyisen työpuun tilan eikä lukitse eri
+worktreissä tai etähaaroissa työskenteleviä kirjoittajia. Saman `PRJ-<SLUG>.md`-tietueen
+muutokset on siksi sarjallistettava tehtävänannossa niin, että tietuetta päivittää
+kerrallaan vain yksi avoin tehtäväketju ja PR. Jos aiempi päivitys samaan
+tietueeseen yhdistetään `origin/main`iin rinnakkaisen haaran aikana, myöhempää
+PR:ää ei saa yhdistää vanhalta pohjalta: haara on rebasattava tai päivitettävä
+vasta aiemman PR:n main-yhdistämisen jälkeen, toimitettu tietue luettava
+uudelleen uutta HEADia vasten ja tila-/historiatiedot sovitettava hallitusti
+ennen yhdistämistä. Eri projektien tietueet (`PRJ-A.md` ja `PRJ-B.md`) ovat
+erillisiä tiedostoja, ja generoitu CSV on työpuukohtainen ignoroitu tulostiedosto.
 
 Ensiluonnissa tiedostolla ei vielä ole HEAD-blobia, joten guard ei voi hyväksyä sitä.
 Luo uusi projekti vain erikseen rajatussa tehtävässä: tarkista tunniste ja polun
@@ -315,19 +368,24 @@ git diff --check
 
 Testit käyttävät synteettistä väliaikaista aineistoa ja Git-repoja. Rekisterin
 normaalissa käytössä vaaditaan myös generointi kahdesti, tavujen vertailu,
-`--check`, ignore-tarkistus ja ennen projektipäivitystä Git-suoja. Päärepon pilotti käyttää yhtä nimettyä koordinointiprojektia.
-Keräilyraja ja virhetilanteet kokeillaan synteettisessä väliaikaisessa repossa,
-ei aliprojektien kortteja tai tiloja muuttamalla.
+`--check`, ignore-tarkistus, lukitun lähdehashin säilymisen tarkistus sekä ennen
+projektipäivitystä Git-suoja. Moniprojekti-, aliprojektiviite-, keräilyraja- ja
+virhetilanteet kokeillaan synteettisessä väliaikaisessa repossa, ei oikeiden
+aliprojektien tehtäväkortteja tai tiloja muuttamalla.
 
 Pakollinen portti ajetaan sallitussa ympäristössä; `--help` ei ole PASS-näyttö.
 Stageaa ennen toimitusporttia vain tarkistetut tehtäväpolut, koska osa tarkistuksista
-lukee indeksiä. Älä asenna riippuvuuksia tai muuta ympäristön oikeuksia hiljaa.
-K18/QC ei sovellu tähän päärepon ei-tieteelliseen työkalusiirtoon.
+lukee indeksiä, ja tarkista jokaisessa ajossa viiden tiedoston ajorajan täyttyminen.
+Älä asenna riippuvuuksia tai muuta ympäristön oikeuksia hiljaa.
+K18/QC ei sovellu ei-tieteellisiin rekisteri- ja hallintadokumenttimuutoksiin;
+aliprojektien omat tieteelliset tehtävät noudattavat omia QC-sääntöjään.
 
-Pilotti varmistaa lisäksi oikean repoidentiteetin, täydet tehtäväpolut,
-mallin ja alihakemistojen jäämisen keräilyn ulkopuolelle sekä jatkamisen
-projektitiedon perusteella ilman chattia. Tehtäväkortti sisältää testinäytön;
-pilotin löytyminen työhaarasta ei vielä todista hyväksyttyä main-toimitusta.
+Käyttöönotto ja ylläpito varmistavat oikean repoidentiteetin, täydet
+repojuureen suhteutetut tehtäväpolut (sekä päärepon `tasks/` että aliprojektien
+omat `tasks/`-jonot), mallin ja alihakemistojen jäämisen keräilyn ulkopuolelle
+sekä jatkamisen projektitiedon perusteella ilman chattia. Tehtäväkortti sisältää
+testinäytön; muutoksen löytyminen työhaarasta ei vielä todista hyväksyttyä
+main-toimitusta.
 
 ## Avoimet jatkoehdotukset
 

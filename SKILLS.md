@@ -79,6 +79,11 @@ eksplisiittisellä käskyllä:
 - Jokaisella skriptillä on omat `outputs/` ja `logs/` -alihakemistot.
 - Outputit ovat aina gitignored ja skriptikohtaisia.
 - Yhteisiä `outputs/`-hakemistoja ei käytetä.
+- Kun tehtävä nimeää projektitietueen (`docs/governance/project_registry/PRJ-*.md`),
+  noudata [projektirekisterin käyttöohjetta](docs/governance/project_registry/README.md):
+  päivitä vain tehtävään sallittua tietuetta Git-suojan kautta lukittua
+  lähdekuvausta muuttamatta, säilytä tehtäväkortit omissa jonoissaan ja laske
+  projektitiedoston muutos mukaan 5 tiedoston ajorajaan.
 
 ## GitHub Auth (Non-Interactive) — Termux-safe
 

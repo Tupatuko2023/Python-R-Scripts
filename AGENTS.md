@@ -159,16 +159,20 @@ Before you finish a task, do all that apply:
 - No secrets, no private data, no generated artifacts committed unless explicitly requested.
 - Changes are minimal, scoped, and consistent with existing style; docs updated if behavior changed.
 
-## Projektirekisteri (päärepon koordinointi)
+## Projektirekisteri
 
 Lue [projektirekisterin käyttöohje](docs/governance/project_registry/README.md),
-kun tehtävä nimeää projektitietueen. Päivitä vain tehtävään nimenomaisesti kuuluvaa
-projektitiedostoa ja vain sallituilla kirjoituspoluilla: aloituksessa, merkittävässä
-välivaiheessa, keskeytyksessä, toimituksessa ja sulussa. Älä muuta muiden
-projektien tietoja. Käytä README:n Git-suojaa ja generointi-/tarkistusohjetta.
-TASK-kortti omistaa elinkaaren ja hyväksynnät; projektitiedosto yhteenvedon,
-seuraavan askeleen ja esteet. Main-toimitus ja worktree-siivous kirjataan erikseen.
-Aliprojektien tehtäväkäytännöt säilyvät omina kokonaisuuksinaan.
+kun tehtävä nimeää projektitietueen (`docs/governance/project_registry/PRJ-*.md`).
+`TASK`-kortti on aina pakollinen suorituksen ja hyväksynnän yksikkö; `PRJ`-tietuetta
+käytetään vain erikseen nimetyille monitehtäväisille päärepon tai aliprojektien
+kokonaisuuksille. Päivitä vain tehtävään nimenomaisesti kuuluvaa projektitiedostoa
+ja vain sallituilla kirjoituspoluilla: aloituksessa, merkittävässä välivaiheessa,
+keskeytyksessä, toimituksessa, sulussa ja valtuutetussa jatkovaiheessa. Älä muuta
+muiden projektien tietoja tai lukittua lähdekuvausta ja sen SHA256-tiivistettä.
+Aja rekisterikomennot ja Git-suoja worktreen repojuuresta, koordinoi saman
+tietueen muutokset eri worktreiden välillä ja laske projektipäivitys mukaan
+viiden tiedoston ajorajaan. Main-toimitus ja worktree-siivous kirjataan erikseen.
+Aliprojektien omat tehtäväjonot ja ohjeet säilyvät omina kokonaisuuksinaan.
 
 ## References
 
