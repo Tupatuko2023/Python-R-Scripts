@@ -1,9 +1,15 @@
 # AGENTS.md — DEAC-Frailty-Index
 
-Nämä ohjeet koskevat vain `DEAC-Frailty-Index/`-aliprojektia. Noudata lisäksi
-repojuuren `AGENTS.md`-, `SKILLS.md`- ja `config/steering.md`-sääntöjä.
-Varmista työhakemisto ennen komentoja ja aja myöhemmät aliprojektin skriptit
-sen juuresta.
+Nämä ohjeet koskevat vain `DEAC-Frailty-Index/`-aliprojektia. Hallinnollisessa
+työnkulussa (tehtäväkohtainen kirjoitus- ja toimitusrajaus, PR-menettely,
+`main`-toimitus, tekninen `04-done`-sulku ja siivous) noudata lisäksi repojuuren
+[../SKILLS.md](../SKILLS.md)-, [../AGENTS.md](../AGENTS.md)- ja
+[../config/steering.md](../config/steering.md)-sääntöjä; ne eivät koskaan
+syrjäytä alla olevaa tieteellistä auktoriteettia tai `DATA_ROOT`-suojausta, ja
+ratkaisematon ristiriita pysäyttää riippuvan toimenpiteen eikä anna lupaa valita
+heikompaa sääntöä. Varmista työhakemisto ennen komentoja: aja aliprojektin
+skriptit sen juuresta (`DEAC-Frailty-Index/`) ja valtuutetut repojuuren
+hallinta-/rekisterikomennot saman eristetyn worktreen repojuuresta.
 
 ## Auktoriteetti ja ensimmäinen ajo
 
@@ -27,5 +33,8 @@ sen juuresta.
   mukaan. Käytä synteettisiä testisyötteitä ja pysähdy puuttuvaan skeemaan.
 - Pidä raskas laskenta erillään raportoinnista ja renderöinnistä. Kirjaa
   myöhemmät artefaktit repojuuren manifesti- ja output-käytäntöjen mukaan.
-- Pidä muutokset pieninä ja rajattuina tähän aliprojektiin. Älä tee commitia,
-  pushia tai mergeä ilman omistajan valtuutusta.
+- Pidä muutokset pieninä ja rajattuina tähän aliprojektiin. Etene vain
+  tehtäväkortin hyväksytyissä kirjoituspoluissa ja sovittuun toimitusrajaan asti
+  ([../SKILLS.md](../SKILLS.md)): älä puske suoraan `main`-haaraan, älä tee
+  valtuuttamattomia etäoperaatioita tai mergeä ilman täsmärevision riippumatonta
+  ihmishyväksyntää, ja pidä työpuun/haarojen siivous erillään toimituksesta.

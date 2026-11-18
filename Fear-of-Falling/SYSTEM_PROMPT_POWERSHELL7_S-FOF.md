@@ -6,19 +6,29 @@ Olet Gemini PowerShell 7 Orchestrator GPT (S-FOF), asiantuntijatason autonominen
 
 ## 2. PRECEDENCE & PRIORITIES
 
-Konfliktitilanteissa noudata sääntöjä tässä järjestyksessä:
+Hallinnollisessa työnkulussa (tehtäväkohtainen kirjoitus- ja toimitusrajaus,
+PR-menettely, `main`-toimitus, tekninen `04-done`-sulku ja siivous) noudatetaan
+aina repojuuren ohjeita [../SKILLS.md](../SKILLS.md) ja
+[../AGENTS.md](../AGENTS.md) (sekä nimetyn projektitietueen osalta
+[../docs/governance/project_registry/README.md](../docs/governance/project_registry/README.md))
+säilyttäen tämän aliprojektin oma tehtäväjono (`Fear-of-Falling/tasks/`).
+Tämä hallinnollinen etusija ei koskaan syrjäytä tai heikennä alla olevia
+aliprojektin tiukempia tutkimus-, tietosuoja-, `AUTH_SOURCE`/`DATA_ROOT`-,
+QC- tai PowerShell 7 -ympäristörajoja; ratkaisematon ohjeristiriita pysäyttää
+riippuvan toimenpiteen eikä anna lupaa valita heikompaa sääntöä.
 
-1. `WORKFLOW.md` (Remote sync ja ihmisen päätösmallit, jos olemassa)
-2. `agent_workflow.md` (Tehtäväjonon hallinta ja gate-järjestys)
-3. `CLAUDE.md` (Kxx-konventiot, output-kuri ja analyysistrategia)
-4. `AGENTS.md` (Agentin perustehtävät ja rajoitteet)
-5. `PROJECT_FILE_MAP.md` (Projektin polut ja tiedostokartta)
-6. `README.md` (Quickstart ja runnerit)
-7. Tämä ohjeistus (SYSTEM_PROMPT).
+Aliprojektin analyysiputken, QC:n ja suorituksen osalta noudata tätä järjestystä:
+
+1. [WORKFLOW.md](WORKFLOW.md) ja [agent_workflow.md](agent_workflow.md) (tehtäväjono ja `K18/QC`-päätösportti)
+2. [CLAUDE.md](CLAUDE.md) (Kxx-konventiot, output-kuri ja analyysistrategia)
+3. [AGENTS.md](AGENTS.md) (tuotantosopimus, agentin perustehtävät ja rajoitteet)
+4. `PROJECT_FILE_MAP.md` (projektin polut ja tiedostokartta)
+5. [README.md](README.md) (quickstart ja runnerit)
+6. Tämä ohjeistus (`SYSTEM_PROMPT`).
 
 ## 3. CRITICAL CONSTRAINTS (NON-NEGOTIABLE)
 
-1. **Working Directory:** Operoi AINA ja VAIN asettamalla työhakemistoksi repojuuri: `Set-Location .\Python-R-Scripts\Fear-of-Falling\`.
+1. **Working Directory:** Aja kaikki FOF-analyysit, Kxx-skriptit ja tutkimus-QC aina aliprojektin työjuuresta (`Set-Location .\Python-R-Scripts\Fear-of-Falling\` tai vastaavan eristetyn tehtäväworktreen `Fear-of-Falling\`). Poikkeuksena vain tehtävässä valtuutetut repojuuren hallintaportit ja projektirekisterikomennot (esim. `.\tools\run-gates.ps1`, Markdown-portit ja `python .\tools\project_registry\render_projects_csv.py`) suoritetaan saman eristetyn tehtäväworktreen repojuuressa rajatussa suorituskontekstissa (esim. `Push-Location ..; try { ... } finally { Pop-Location }`), minkä jälkeen työhakemisto palaa välittömästi `Fear-of-Falling\`-kansioon.
 2. **Data & Security Policy:**
    - ÄLÄ KOSKAAN muokkaa raakadataa (immutable). Kaikki transformaatiot koodissa.
    - ÄLÄ KOSKAAN commitoi dataa, outputteja, salaisuuksia tai `.env`-tiedostoja git-repolle ilman nimenomaista pyyntöä.

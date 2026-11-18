@@ -1,19 +1,45 @@
 # Agent Execution Protocol
 
-Standard operating procedure for Gemini Agents gpa1qf-gpa4qf:
+Tämä protokolla määrittelee `Fear-of-Falling`-aliprojektin tehtäväsuorituksen
+yhdessä repojuuren [../SKILLS.md](../SKILLS.md)- ja [WORKFLOW.md](WORKFLOW.md)-ohjeiden
+kanssa. Repojuuren `../SKILLS.md` ohjaa tehtäväkohtaista kirjoitus- ja
+toimitusrajausta, PR-menettelyä, `main`-toimitusta, teknistä sulkua ja siivousta;
+tämän aliprojektin oma tehtäväjono (`Fear-of-Falling/tasks/`) sekä alla oleva
+`K18/QC`-portti ja muut tutkimus-/tietosuojarajat säilyvät tiukasti voimassa
+(ratkaisematon ristiriita pysäyttää riippuvan toimenpiteen eikä anna lupaa valita
+heikompaa sääntöä):
 
-1. **Discovery**: 'git pull' to stay in sync with other agents.
-2. **QC applicability**: decide whether K18/QC is REQUIRED or NOT APPLICABLE
-   before selecting commands or writing the execution plan.
-3. **Work**: Move task from `tasks/01-ready/` to `tasks/02-in-progress/`,
-   then execute only the task scope.
-4. **Validation**: Run smoke tests and applicable QC.
-5. **Review handoff**: Move the task to `tasks/03-review/` after validation
-   and reporting.
-6. **Completion**: Only a human may move a task from `tasks/03-review/` to
-   `tasks/04-done/`. The remote-sync rule in `WORKFLOW.md` remains a
-   prerequisite for done approval; it does not grant the agent authority to
-   close the task as done.
+1. **Lähtötila, työpuu ja valtuutus:** Perusta tehtävälle eristetty worktree
+   `git fetch origin main` -haun jälkeen varmennetusta täydestä commit-SHA:sta
+   koskematta päächeckoutin haaraan tai paikallisiin muutoksiin, ja tarkista
+   hyväksytyt kirjoituspolut sekä toimitusraja ([../SKILLS.md](../SKILLS.md)).
+2. **QC-soveltuvuus (`K18/QC`):** Päätä alla olevan päätösportin mukaan ennen
+   komentojen valintaa tai toteutusta, onko `K18/QC` `REQUIRED` vai
+   `NOT APPLICABLE`. Puhdas hallinto- tai dokumentaatiomuutos ei käynnistä
+   tutkimusajoa tai suojatun aineiston lukua.
+3. **Toteutus (`01-ready -> 02-in-progress`):** Siirrä tehtäväkortti tämän
+   aliprojektin omassa jonossa (`Fear-of-Falling/tasks/01-ready/` ->
+   `Fear-of-Falling/tasks/02-in-progress/`), päivitä mahdollisen linkitetyn
+   `PRJ-*.md`-rekisteritietueen tehtäväpolku samassa muutoksessa ja toteuta vain
+   hyväksytty kirjoitusrajaus.
+4. **Validointi ja suoritushakemisto:** Aja FOF-analyysit ja tutkimus-QC aina
+   `Fear-of-Falling/`-työjuuresta; valtuutetut repojuuren hallintaportit ja
+   rekisterikomennot suoritetaan saman eristetyn worktreen repojuuressa rajatussa
+   suorituskontekstissa.
+5. **Katselmointiin luovutus (`03-review`):** Siirrä kortti samassa jonossa
+   polkuun `Fear-of-Falling/tasks/03-review/` (päivittäen mahdollisen linkitetyn
+   `PRJ-*.md`-tietueen tehtäväpolun samassa muutoksessa) ja toimita PR
+   katselmointiin valtuutetun toimitusrajan puitteissa.
+6. **Hyväksyntä, `main`-toimitus ja tekninen sulku (`04-done`):** Agentti ei saa
+   hyväksyä omaa työtään eikä puskea suoraan `main`-haaraan. Vasta täsmärevisioon
+   kohdistuvan pysyvän riippumattoman ihmishyväksyntänäytön, valtuutetun
+   PR-mergen ja `origin/main`-toimitusvarmennuksen jälkeen agentti saa erillisen
+   sulkuvaltuutuksen nojalla siirtää kortin teknisesti
+   `Fear-of-Falling/tasks/03-review/` -> `Fear-of-Falling/tasks/04-done/`,
+   päivittää mahdollisen linkitetyn `PRJ-*.md`-tietueen tehtäväpolun (erottaen
+   `TASK`-sulun projektin omista valmistumiskriteereistä) ja avata sulku-PR:n
+   ([../SKILLS.md](../SKILLS.md)). Työpuun ja haarojen siivous pidetään tästä
+   erillisenä.
 
 ## K18/QC Applicability Decision Gate
 

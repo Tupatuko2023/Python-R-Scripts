@@ -1,0 +1,88 @@
+---
+id: "PRJ-WORKFLOW-GUIDANCE-ALIGNMENT"
+title: "Työnkulkuohjeiden yhtenäistäminen päärepossa ja aliprojekteissa"
+short_name: "Työnkulkuohjeiden yhtenäistäminen päärepossa ja aliprojekteissa"
+repo: "Tupatuko2023/Python-R-Scripts"
+repo_ref: "origin/main"
+state: "active"
+delivery: "not_delivered"
+goal: "Yhtenäistetään päärepon ja aliprojektien työnkulkuohjeet valmistumisen, main-toimituksen ja siivouksen erottelun, PR-/ihmishyväksyntämenettelyn sekä hallinnollisten etusijaviittausten osalta."
+done_criterion: "Päärepon ja aliprojektien työnkulkuohjeiden ristiriidat (valmistumisen, main-toimituksen ja siivouksen erottelu, suorapush-/DONE-säännöt sekä keskinäiset etusijaviittaukset) on yhtenäistetty, validoitu, hyväksytty, toimitettu kanoniseen mainiin ja tehtävä suljettu repon menettelyn mukaisesti."
+latest_status: "2026-11-18: Katselmointivaiheessa (03-review, PR #229). Toteutettu koottu katselmointikorjauserä (eristetty aloitus-SHA, ehdollinen siivous, hallinnon etusija, tarkistusten soveltuvuus, jonojen ja rekisteripolkujen synkronointi, TASK/PRJ-sulun erottelu ja FOF-työjuuren porttipoikkeus) ja validoitu portit."
+next_step: "Odottaa riippumatonta ihmishyväksyntää PR #229:n päivitetylle täsmärevisiolle ennen main-toimitusta ja tehtävän workflow-guidance-alignment-001 teknistä 04-done-sulkua."
+source_description_sha256: "6d8d4564d58eef72484dc6901f9a4c9bbb304f2f42afa415c0fa3b43b94fc6d0"
+source_captured_at: "2026-11-18"
+observed_at: "2026-11-18"
+observed_commit: "66659456b09fdee12843a6428dd2d62fa2cd4c4a"
+observed_worktree_label: "workflow-guidance-alignment"
+blocker: ""
+orchestrator: "FCPO2"
+agent: "Antigravity"
+agent_tool: "Antigravity"
+environment: "Windows PowerShell; GitHub Ubuntu CI"
+started_date: "2026-11-18"
+paused_date: ""
+completed_date: ""
+pause_reason: ""
+link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/229"
+worktree_inventory: "unknown"
+tasks:
+  - "workflow-guidance-alignment-001"
+---
+
+## Työnkulkuohjeiden yhtenäistäminen päärepossa ja aliprojekteissa
+
+## Lähdekuvaus
+
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable MD032 -->
+<!-- source-description:begin -->
+Yhtenäistetään Python-R-Scripts-repon päärepon ja aliprojektien
+ristiriitaiset työnkulkuohjeet vastaamaan nykyistä PR-, hyväksyntä-
+ja tehtäväkohtaisen kirjoitusrajauksen menettelyä:
+1. Erotetaan työn valmistuminen katselmointiin (03-review),
+   hyväksytty main-toimitus ja tekninen sulku (04-done) sekä
+   erikseen valtuutettava työpuun ja haarojen siivous.
+2. Korjataan aliprojektien vanhat suorapush- ja automaattiset
+   DONE-ohjeet vastaamaan SKILLS.md:n PR- ja ihmishyväksyntäportteja.
+3. Selkeytetään ohjeiden keskinäiset etusija- ja polkuviittaukset
+   säilyttäen aliprojektien omat tehtäväjonot ja kaikki
+   tutkimusaineiston, ympäristön ja QC:n suojaukset.
+Historiallisia tehtäväkortteja tai muutoslokeja ei kirjoiteta uusiksi.
+<!-- source-description:end -->
+<!-- markdownlint-enable MD032 -->
+<!-- prettier-ignore-end -->
+
+## Tehtäväviitteet
+
+| repo                            | task                              | path                                                 |
+| ------------------------------- | --------------------------------- | ---------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `workflow-guidance-alignment-001` | `tasks/03-review/workflow-guidance-alignment-001.md` |
+
+Taulukko viittaa tehtävään repoidentiteetillä ja koko repojuureen suhteutetulla
+polulla; tehtäväkortti omistaa elinkaaren ja hyväksynnät.
+
+## Jatkamismuistio
+
+Lue `SKILLS.md`, `AGENTS.md` ja `docs/governance/project_registry/README.md` ennen
+päivityksiä. Owner (`Tupatuko2023`) ja orkestroija (`FCPO2`) hyväksyivät
+2026-11-18 tämän projektitietueen perustamisen sekä tehtävän
+`workflow-guidance-alignment-001` kirjoitusrajauksen ja toimitusrajan
+PR-katselmointiin asti.
+
+Toteutus tehdään eristetyssä worktreessä `tmp/workflow-guidance-alignment-001`
+haarassa `docs/workflow-guidance-alignment-001` suoraan varmennetusta
+`origin/main`-commitista `8e71adfa539b05f95361134eb7b8e57e6a898199`. Likainen
+päächeckout sekä kaikki 13 aiempaa työpuuta säilytetään koskemattomina. Käytä
+kaikissa tämän ensiluonnin jälkeisissä päivityksissä `--verify-guard`-tarkistusta
+ennen kirjoitusta ja pidä toteutuksen valmistuminen, `main`-toimitus sekä
+worktree-siivous erillään.
+
+## Worktree-havainnot
+
+| label                       | state  | evidence                                                                                                                                                  |
+| --------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| workflow-guidance-alignment | active | tmp/workflow-guidance-alignment-001 perustettu origin/mainista (8e71adfa); päächeckout ja 13 aiemmin olemassa olevaa työpuuta säilytetään koskemattomina. |
+
+Inventaario kattaa tämän projektin oman toteutustyöpuun; muita työpuita ei
+siivota tässä tehtävässä, joten `worktree_inventory` on `unknown`.

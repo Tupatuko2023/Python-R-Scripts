@@ -2,11 +2,21 @@
 
 ## 0. PRECEDENCE & PRIORITIES
 
-Konfliktitilanteissa noudata sääntöjä tässä järjestyksessä:
+Hallinnollisessa työnkulussa (tehtäväkohtainen kirjoitus- ja toimitusrajaus,
+PR-menettely, `main`-toimitus, tekninen `04-done`-sulku ja siivous) noudatetaan
+aina repojuuren ohjeita [../SKILLS.md](../SKILLS.md) ja
+[../AGENTS.md](../AGENTS.md) (sekä nimetyn projektitietueen osalta
+[../docs/governance/project_registry/README.md](../docs/governance/project_registry/README.md))
+säilyttäen tämän aliprojektin oma tehtäväjono (`Fear-of-Falling/tasks/`).
+Tämä hallinnollinen etusija ei koskaan syrjäytä tai heikennä alla olevia
+aliprojektin tiukempia tutkimus-, tietosuoja-, `AUTH_SOURCE`/`DATA_ROOT`-,
+QC- tai Termux/PRoot-ympäristörajoja; ratkaisematon ohjeristiriita pysäyttää
+riippuvan toimenpiteen eikä anna lupaa valita heikompaa sääntöä.
 
-1. `WORKFLOW.md` (Remote sync säännöt, jos tiedosto olemassa)
-2. `agent_workflow.md` (Työjonon ja tehtävien hallinta)
-3. Tämä ohjeistus (SYSTEM_PROMPT_UPDATE)
+Aliprojektin analyysiputken, QC:n ja suorituksen osalta noudata tätä järjestystä:
+
+1. [WORKFLOW.md](WORKFLOW.md) ja [agent_workflow.md](agent_workflow.md) (työjonon hallinta ja `K18/QC`-päätösportti)
+2. Tämä ohjeistus (`SYSTEM_PROMPT_UPDATE`)
 
 **Source of Truth (SOT) -dokumentit (näitä ei saa ohittaa, ohjaavat toimintaa):**
 
@@ -17,7 +27,7 @@ Konfliktitilanteissa noudata sääntöjä tässä järjestyksessä:
 
 ## 1. CRITICAL CONSTRAINTS (NON-NEGOTIABLE)
 
-- **Working Directory:** Operoi AINA ja VAIN kansiosta `Python-R-Scripts/Fear-of-Falling/`.
+- **Working Directory:** Aja kaikki FOF-analyysit, Kxx-skriptit ja tutkimus-QC aina aliprojektin työjuuresta (`Python-R-Scripts/Fear-of-Falling/` tai vastaavan eristetyn tehtäväworktreen `Fear-of-Falling/`). Poikkeuksena vain tehtävässä valtuutetut repojuuren hallintaportit ja projektirekisterikomennot (esim. `bash tools/run-gates.sh`, Markdown-portit ja `python3 tools/project_registry/render_projects_csv.py`) suoritetaan saman eristetyn tehtäväworktreen repojuuressa rajatussa alikuoressa (esim. `(cd .. && bash tools/run-gates.sh --mode pre-push --smoke)`), jolloin oletustyöhakemisto säilyy `Fear-of-Falling/`-kansiossa.
 - **Data & Security Policy:**
   - ÄLÄ KOSKAAN muokkaa raakadataa (immutable). Kaikki transformaatiot on tehtävä koodissa.
   - ÄLÄ KOSKAAN commitoi dataa, outputteja, salaisuuksia tai `.env`-tiedostoja git-repolle ilman nimenomaista pyyntöä.
