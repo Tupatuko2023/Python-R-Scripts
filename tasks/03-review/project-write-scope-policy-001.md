@@ -2,12 +2,13 @@
 
 ## Context
 
-Tila: IN_PROGRESS. Tehtävätunnus: `project-write-scope-policy-001`.
+Tila: REVIEW. Tehtävätunnus: `project-write-scope-policy-001`.
 Omistaja: Tomi Korpi. Orkestroija: FCPO2.
 Projekti: `PRJ-PROJECT-WRITE-SCOPE-POLICY` (`docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`).
 Repo: `Tupatuko2023/Python-R-Scripts`.
 Perustahaara ja varmennettu `origin/main`: `b0499e2de483e68f1f73f65d88859cac9b6778af`.
 Työpuu ja tehtävähaara: `tmp/project-write-scope-policy-001` / `docs/project-write-scope-policy-001`.
+PR: https://github.com/Tupatuko2023/Python-R-Scripts/pull/227
 
 Projektirekisterin yleisen käyttöönoton suunnittelussa viiden tiedoston
 ajokohtainen raja johti neljään erilliseen ajoon ja ehdotukseen pyytää
@@ -114,33 +115,68 @@ Paikallinen generoitu tulos (gitignored, ei commitoida):
 
 ## Definition of Done (DoD)
 
-- [ ] Nykyinen viiden tiedoston sääntö, sen viittaukset ja mahdollinen
+- [x] Nykyinen viiden tiedoston sääntö, sen viittaukset ja mahdollinen
       koneellinen valvonta on selvitetty tiedosto- ja revisionäytöllä.
-- [ ] Hyväksytty korvaava sääntö määrittelee tavoitteen, kirjoitusrajauksen,
+- [x] Hyväksytty korvaava sääntö määrittelee tavoitteen, kirjoitusrajauksen,
       valtuutuksen voimassaolon, toimitusrajan ja uutta päätöstä vaativat muutokset
       kanonisesti `SKILLS.md`:ssä (sekä korjaa `git add -A`- ja automerge-kohdat).
-- [ ] Nykyohjeisiin ei jää ristiriitaista yleistä viiden tiedoston ajorajaa.
+- [x] Nykyohjeisiin ei jää ristiriitaista yleistä viiden tiedoston ajorajaa.
       Historialliset tehtäväkortit ja aiempien päätösten näyttö säilyvät.
-- [ ] Aliprojektien soveltamisalat on huomioitu ilman yleistä ohjerefactorointia.
-- [ ] Dokumentoitu tapausvertailu osoittaa vähintään seuraavat tulokset:
+- [x] Aliprojektien soveltamisalat on huomioitu ilman yleistä ohjerefactorointia.
+- [x] Dokumentoitu tapausvertailu osoittaa vähintään seuraavat tulokset:
       hyväksytyt kuusi sisältöpolkua eivät aiheuta lukumääräpysähdystä;
       uusi hyväksymätön polku aiheuttaa rajauspäätöksen;
       saman tehtävän session jatko ei pyydä samaa lupaa;
       PR:ään rajattu valtuutus ei salli mergeä;
       muiden paikallinen työ säilyy;
       pakollisen portin epäonnistuminen ei oikeuta sen ohittamista.
-- [ ] Projektitietue `PRJ-PROJECT-WRITE-SCOPE-POLICY.md` ja generoitu
+- [x] Projektitietue `PRJ-PROJECT-WRITE-SCOPE-POLICY.md` ja generoitu
       `tools/project_registry/outputs/projects.csv` läpäisevät lähdehash-,
       `--verify-guard`-, determinismi-, `--check`-, `git check-ignore`- ja
       yksikkötestitarkistukset.
-- [ ] Soveltuvat Markdown- ja toimitusportit sekä `git diff --check` läpäisevät.
+- [x] Soveltuvat Markdown- ja toimitusportit sekä `git diff --check` läpäisevät.
       `tools/run-gates.sh` päivittää vain vanhan ilmoitustekstin heikentämättä
       porttia. Tutkimusanalyysejä tai K18/QC-ajoja ei käynnistetä (`NOT APPLICABLE`).
 - [ ] Riippumaton hyväksyntänäyttö kohdistuu katselmoituun revisioon, ja toimitus
       kanoniseen mainiin sekä tehtävän sulku on varmennettu paikallisin säännöin
       (myöhempi sulkuvaihe PR-katselmoinnin jälkeen).
-- [ ] Työpuun säilytys tai erikseen valtuutettu siivous on raportoitu erillään
-      toteutuksesta ja main-toimituksesta.
+- [x] Työpuun säilytys tai erikseen valtuutettu siivous on raportoitu erillään
+      toteutuksesta ja main-toimituksesta (`tmp/project-write-scope-policy-001`
+      `active`, päächeckout ja 12 muuta työpuuta säilytetty koskemattomina).
+
+## Tapausvertailu (6 skenaariota)
+
+| # | Skenaario | Vanha 5 tiedoston ajoraja (`b0499e2d`) | Uusi tehtäväkohtainen kirjoitusrajaus (`SKILLS.md`) | Todennettu näyttö tässä tehtävässä |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | **Hyväksytyt >= 6 sisältöpolkua** | Mekaaninen pysähdys 5 polun kohdalla (ml. kortin `git mv` = 2 polkua + `PRJ`), pilkkominen 4 erilliseen ajoon välikuittauksin. | Etenee yhtenä kokonaisuutena hyväksyttyyn toimitusrajaan ilman lukumäärä-, commit- tai vuoroporttia; muutosmäärä raportoidaan katselmointiin (`SKILLS.md` r. 46–61). | Commit `9ec97525` kattoi 11 hyväksyttyä sisältö-/rekisteripolkua + kortin yhdessä loogisessa toteutusvaiheessa ilman välikyselyjä. |
+| 2 | **Uusi hyväksymätön polku** | Saattoi mahtua lukumäärän sisään (jos <= 5 polkua) tai vaatia sekä uuden ajon että polun tarkistuksen. | Välitön pysähdys ja yksi koottu muutosesitys perusteluineen ennen kirjoitusta (`SKILLS.md` r. 66–69; `.codex/skills/make-repo-contribution/SKILL.md` r. 58–59). | `npm ci` paljasti, ettei `.gitignore` sisällä `node_modules/`-riviä; `.gitignore` ei kuulunut hyväksyttyihin polkuihin, joten sitä ei muokattu vaan käytettiin kohdistettua stageausta. |
+| 3 | **Saman tehtävän session jatko** | Epäselvä "per run / per batch" -tulkinta johti uuden luvan kysymiseen uuden session tai keskusteluvuoron alussa. | Tarkistaa nykytilan ja tallennetun valtuutuksen tehtäväkortista/`PRJ`-tietueesta ja jatkaa sovittuun toimitusrajaan asti ilman saman luvan toistamista (`SKILLS.md` r. 56–61). | Valtuutus, hyväksytyt polut ja toimitusraja on tallennettu pysyvästi sekä tähän korttiin että `PRJ-PROJECT-WRITE-SCOPE-POLICY.md`-tietueeseen. |
+| 4 | **PR:ään rajattu valtuutus vs. merge** | `SKILLS.md`:n vanha mekaaninen PR-lista ohjeisti `gh pr merge --auto --squash` tarkistusten jälkeen. | Toimitus päättyy PR:n avaamiseen/päivittämiseen; merge ja auto-merge vaativat aina erillisen merge-valtuutuksen ja riippumattoman ihmishyväksyntänäytön (`SKILLS.md` r. 70–76, 260–271). | PR #227 on avattu katselmointiin; mergeä, auto-mergeä, `04-done`-siirtoa tai `delivered`/`closed`-tilaa ei ole tehty. |
+| 5 | **Muiden paikallisen työn säilytys** | `SKILLS.md`:n vanha `git add -A` vaaransi likaisen työpuun ja seuraamattomat tiedostot. | Eristetty worktree ja pakollinen kohdistettu stageaus (`git add -- <approved-paths>`; `SKILLS.md` r. 247–256) pitävät muut tiedostot koskemattomina. | Päächeckoutin 2 muokattua seurattua tiedostoa, 19 seuraamatonta polkua (ml. `tasks/00-backlog/project-write-scope-policy-001.md`), kaikki 12 muuta worktreetä ja tämän worktreen `node_modules/` säilyivät koskemattomina/commitoimattomina. |
+| 6 | **Pakollisen portin epäonnistuminen** | Riski pyytää turha uusi lupa hyväksytyn polun muotoilukorjaukseen tai yrittää ohittaa portti. | Virheen saa korjata suoraan hyväksytyissä poluissa ilman uutta lupaa, mutta pakollista porttia ei saa koskaan ohittaa; ratkaisematon virhe estää toimituksen (`SKILLS.md` r. 62–65). | `markdownlint-cli2` / Prettier havaitsi `PRJ-PROJECT-WRITE-SCOPE-POLICY.md`:n taulukkosarakkeen `MD060`-tasausvirheen; virhe korjattiin hyväksytyssä polussa ja portit ajettiin uudelleen tuloksella PASS (`5e46c7af...` säilyi). |
+
+## Tarkistusten tulokset (PASS / FAIL / SKIPPED / NOT APPLICABLE)
+
+- **PASS:**
+  - `render_projects_csv.py --print-source-hash docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`: `5e46c7af00b837cf3ede2eed2e5256bc1df5f11f7d71785160bcfe98b6ee4367` (tallennetusta lähdelohkosta laskettu ja säilynyt tavuntarkasti myös Prettier-muotoilun jälkeen; `PRJ-REGISTRY-ROLLOUT.md` säilyi `83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1`).
+  - `render_projects_csv.py --verify-guard` ennen molempia päivityksiä (`479813b6...` ja `9ec97525...`): `OK` (exit 0).
+  - `render_projects_csv.py` CSV-generointi kahdesti peräkkäin kohteeseen `tools/project_registry/outputs/projects.csv`: tavuntarkasti identtiset ajot sekä `render_projects_csv.py --check` (`OK`, exit 0).
+  - `git check-ignore -v -- tools/project_registry/outputs/projects.csv`: `.gitignore:43:**/outputs/` (exit 0).
+  - `python -B -m unittest discover -s tools/project_registry/tests -p test_render_projects_csv.py`: 62 testiä ajettu, 60 PASS (exit 0).
+  - `npx --no-install prettier --check` kaikille muuttuneille CI-piirin Markdown-tiedostoille (`SKILLS.md`, `AGENTS.md`, `GEMINI.md`, `Fear-of-Falling/GEMINI.md`, `docs/governance/project_registry/README.md`, `docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`, `.codex/skills/make-repo-contribution/SKILL.md`): exit 0.
+  - `npx --no-install markdownlint-cli2` edellä mainituille + `config/steering.md`, `config/agent_policy.md`, `tasks/_template.md`: 0 virhettä (exit 0).
+  - Staged `& ./tools/run-gates.ps1 --mode pre-push --smoke`: `OK: guardrails (pre-push)`, `OK: renv check (pre-push)`, `OK: smoke gates (pre-push)` ja päivitetty `write scope: task-approved paths` -ilmoitusteksti (exit 0).
+  - `git diff --check` ja LF-rivinvaihtojen tarkistus (`tools/run-gates.sh` ja kaikki muokatut tiedostot): exit 0.
+  - Aktiivisten ohjeiden `git grep` vanhalle 5 tiedoston ajorajalle: 0 jäänyttä sääntöviittausta nykyohjeissa; historialliset tehtäväkortit säilytetty koskemattomina.
+- **FAIL:** Ei avoimia epäonnistuneita tarkistuksia (`0`).
+- **SKIPPED:** `test_render_projects_csv.py`:n 2 Windows-symlink-oikeustestiä (`skipped=2`, normaali Windowsin ei-admin-käytös).
+- **NOT APPLICABLE:** `K18/QC` ja R-/Python-tutkimusanalyysiajot — päärepon ei-tieteellinen hallinta- ja rekisteriohjemuutos; tutkimusdataa, mallikoodia tai `.py`/`.R`-tiedostoja ei muutettu.
+
+## Erillisiksi jätetyt rajauksen ulkopuoliset havainnot
+
+- Päärepon `WORKFLOW.md` (r. 44) sisältää edelleen yleisen worktree-poistovaatimuksen ennen `04-done`-tilaa, kun taas projektirekisterin `README.md` ja Owner-päätökset erottavat `main`-toimituksen ja erikseen valtuutettavan worktree-siivouksen (`SKILLS.md` voittaa).
+- Aliprojektien vanhat `WORKFLOW.md`- ja `agent_workflow.md`-tiedostot (`Electronic-Frailty-Index/`, `Fear-of-Falling/`, `Quantify-FOF-Utilization-Costs/`) sisältävät historiallisia `gpa1qf-gpa4qf`-suorapush/`04-done`-ohjeita, jotka ohittuvat repojuuren `SKILLS.md`-etusijalla.
+- Repojuuren `.gitignore` ei listaa `node_modules/`-hakemistoa; paikallinen `npm ci` pidettiin commitoimattomana kohdistetulla stageauksella.
 
 ## Log
 
@@ -155,18 +191,20 @@ Paikallinen generoitu tulos (gitignored, ei commitoida):
   kannaksi `b0499e2de483e68f1f73f65d88859cac9b6778af`. Perustettu eristetty
   worktree `tmp/project-write-scope-policy-001` ja haara
   `docs/project-write-scope-policy-001` koskematta päächeckoutiin tai muihin
-  työpuihin. Valmisteltu tämä READY-kortti ja projektitietue `planned` /
+  työpuihin. Valmisteltu READY-kortti ja projektitietue `planned` /
   `not_delivered` -alkutilaan (`479813b6380eb5b541c67e8dd6c9cccccd0e8ee4`).
 - 2026-11-18T16:15:00+02:00: Suoritettu `--verify-guard` (`OK`, exit 0)
   revisiota `479813b6380eb5b541c67e8dd6c9cccccd0e8ee4` vasten, siirretty kortti
-  `01-ready` -> `02-in-progress`, vaihdettu `PRJ-PROJECT-WRITE-SCOPE-POLICY.md`
-  `active` / `not_delivered` -tilaan ja toteutettu korvaava sääntö kanonisesti
-  `SKILLS.md`:hen (ml. kohdistettu stageaus ja automerge-rajaus) sekä
-  viite-/pohja-/ilmoituspäivitykset hyväksyttyihin polkuihin (`config/steering.md`,
-  `config/agent_policy.md`, `AGENTS.md`, `GEMINI.md`, `Fear-of-Falling/GEMINI.md`,
-  `docs/governance/project_registry/README.md`,
-  `.codex/skills/make-repo-contribution/SKILL.md`, `tasks/_template.md`,
-  `tools/run-gates.sh`).
+  `01-ready` -> `02-in-progress` (`68fc70ad442b597c06b2bd1435702bccab2578cc`),
+  vaihdettu `PRJ-PROJECT-WRITE-SCOPE-POLICY.md` `active` / `not_delivered` -tilaan
+  ja toteutettu korvaava sääntö kanonisesti `SKILLS.md`:hen (ml. kohdistettu
+  stageaus ja automerge-rajaus) sekä viite-/pohja-/ilmoituspäivitykset hyväksyttyihin
+  polkuihin (`9ec9752537e2e72c6d295cb8b028b97a0e3d37af`).
+- 2026-11-18T16:20:00+02:00: Avattu PR #227 katselmointiin, suoritettu
+  `--verify-guard` (`OK`, exit 0) revisiota `9ec9752537e2e72c6d295cb8b028b97a0e3d37af`
+  vasten, siirretty kortti `02-in-progress` -> `03-review`, kirjattu kuuden
+  tapauksen vertailu ja validointinäyttö sekä päivitetty `PRJ-PROJECT-WRITE-SCOPE-POLICY.md`
+  viittaamaan PR #227:ään ja `03-review`-polkuun (`active` / `not_delivered`).
 
 ## Blockers
 

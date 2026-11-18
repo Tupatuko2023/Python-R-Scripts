@@ -8,12 +8,12 @@ state: "active"
 delivery: "not_delivered"
 goal: "Korvataan mekaaninen viiden tiedoston ajoraja tehtäväkohtaisella, ennalta hyväksytyllä tavoitteella, yksilöidyillä kirjoituspoluilla ja toimitusrajalla nykyohjeet yhtenäistäen."
 done_criterion: "Korvaava sääntö ja välttämättömät viitekorjaukset on validoitu tehtäväkortin hyväksymiskriteereillä, hyväksytty, toimitettu kanoniseen mainiin ja tehtävä suljettu repon menettelyn mukaisesti."
-latest_status: "2026-11-18: Toteutusvaihe käynnissä (02-in-progress). SKILLS.md:n kanoninen kirjoitusrajaussääntö, kohdistettu stageaus, automerge-raja sekä yhdeksän viite-/pohja-/porttitiedoston päivitykset toteutettu."
-next_step: "Suorita täydet rekisteri-, Markdown- ja toimitusporttitarkistukset, kirjaa kuuden tapauksen vertailunäyttö, siirrä tehtävä 03-review-tilaan ja avaa PR katselmointiin."
+latest_status: "2026-11-18: Toteutus validoitu ja toimitettu PR-katselmointiin (03-review, PR #227). Korvaava sääntö ja viitekorjaukset läpäisevät rekisteri-, Markdown- ja toimitusportit; odottaa riippumatonta ihmishyväksyntää."
+next_step: "Odota PR #227:n riippumatonta ihmishyväksyntää ja main-yhdistämistä; sen jälkeen päivitä tämä tietue delivered/closed-tilaan ja siirrä tehtäväkortti 04-done-kansioon."
 source_description_sha256: "5e46c7af00b837cf3ede2eed2e5256bc1df5f11f7d71785160bcfe98b6ee4367"
 source_captured_at: "2026-11-18"
 observed_at: "2026-11-18"
-observed_commit: "68fc70ad442b597c06b2bd1435702bccab2578cc"
+observed_commit: "9ec9752537e2e72c6d295cb8b028b97a0e3d37af"
 observed_worktree_label: "project-write-scope-policy"
 blocker: ""
 orchestrator: "FCPO2"
@@ -24,7 +24,7 @@ started_date: "2026-11-18"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
-link: ""
+link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/227"
 worktree_inventory: "unknown"
 tasks:
   - "project-write-scope-policy-001"
@@ -51,9 +51,9 @@ säilyttäminen pysyvät voimassa.
 
 ## Tehtäväviitteet
 
-| repo                            | task                             | path                                                     |
-| ------------------------------- | -------------------------------- | -------------------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `project-write-scope-policy-001` | `tasks/02-in-progress/project-write-scope-policy-001.md` |
+| repo                            | task                             | path                                                |
+| ------------------------------- | -------------------------------- | --------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `project-write-scope-policy-001` | `tasks/03-review/project-write-scope-policy-001.md` |
 
 Taulukko viittaa tehtävään repoidentiteetillä ja koko repojuureen suhteutetulla
 polulla; tehtäväkortti omistaa elinkaaren ja hyväksynnät.
