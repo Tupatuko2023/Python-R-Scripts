@@ -76,6 +76,10 @@ Hyväksytyt seuratut sisältö- ja rekisteripolut (repojuureen suhteutettuina):
 - `tasks/_template.md`
 - `tools/run-gates.sh` (vain vanhaa tiedostorajaa kuvaava ilmoitusteksti;
   porttilogiikkaa ei heikennetä)
+- `reports/K18_QC_runbook.md` (Ownerin lisävaltuutus 2026-11-18: vain
+  merge-esimerkin täsmennys erillisestä merge-valtuutuksesta, täsmärevision
+  riippumattomasta ihmishyväksynnästä ja pakollisten tarkistusten läpäisystä
+  sekä `--delete-branch`-valitsimen poisto)
 - `docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`
 
 Lisäksi tämän tehtäväkortin elinkaaripolut eristetyssä worktreessä:
@@ -168,7 +172,7 @@ ei koneellisesti vertaa muutospolkuja tehtävän valtuutukseen)._
   - `render_projects_csv.py` CSV-generointi kahdesti peräkkäin kohteeseen `tools/project_registry/outputs/projects.csv`: tavuntarkasti identtiset ajot sekä `render_projects_csv.py --check` (`OK`, exit 0).
   - `git check-ignore -v -- tools/project_registry/outputs/projects.csv`: `.gitignore:43:**/outputs/` (exit 0).
   - `python -B -m unittest discover -s tools/project_registry/tests -p test_render_projects_csv.py`: 62 testiä ajettu, 60 PASS (exit 0).
-  - `npx --no-install prettier --check` kaikille muuttuneille CI-piirin Markdown-tiedostoille (`SKILLS.md`, `AGENTS.md`, `GEMINI.md`, `Fear-of-Falling/GEMINI.md`, `docs/governance/project_registry/README.md`, `docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`, `.codex/skills/make-repo-contribution/SKILL.md`): exit 0.
+  - `npx --no-install prettier --check` kaikille muuttuneille CI-piirin Markdown-tiedostoille (`SKILLS.md`, `AGENTS.md`, `GEMINI.md`, `Fear-of-Falling/GEMINI.md`, `docs/governance/project_registry/README.md`, `docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`, `.codex/skills/make-repo-contribution/SKILL.md`, `reports/K18_QC_runbook.md`): exit 0.
   - `npx --no-install markdownlint-cli2` edellä mainituille + `config/steering.md`, `config/agent_policy.md`, `tasks/_template.md`: 0 virhettä (exit 0).
   - Staged `& ./tools/run-gates.ps1 --mode pre-push --smoke`: `OK: guardrails (pre-push)`, `OK: renv check (pre-push)`, `OK: smoke gates (pre-push)` ja täsmennetty muistutusilmoitus (`follow task-approved write scope (changed paths vs. task authorization are not mechanically validated by this gate)`) (exit 0).
   - `git diff --check` ja LF-rivinvaihtojen tarkistus (`tools/run-gates.sh` ja kaikki muokatut tiedostot): exit 0.
@@ -179,18 +183,16 @@ ei koneellisesti vertaa muutospolkuja tehtävän valtuutukseen)._
 
 ## PR #227 katselmointihavaintojen (Sourcery #1–#6 ja PR-kuvaus) ratkaisut
 
-1. **Sourcery #1 (`reports/K18_QC_runbook.md` merge-komento):** Paikannettu
-   polkuun `reports/K18_QC_runbook.md` (`origin/main` `b0499e2d`, Git-blob
-   `2d995d91d189221bf5a7cf25067f081a33fb770c`, rivit 197–198:
-   `# Merge with squash strategy` / `gh pr merge <PR_NUM> --squash --delete-branch`).
-   Kyseessä on historiallisen PR #49:n (`909f534`, 2026-01-05)
-   operaattorirunbookin komentoesimerkki, joka on alisteinen `SKILLS.md`:n
-   ylimmälle etusijalle, `Fear-of-Falling/GEMINI.md`:n PR-etusijasäännölle sekä
-   `.codex/skills/make-repo-contribution/SKILL.md`:n turvarajalle #1
-   (dokumenttiproosan komentoja ei suoriteta sellaisenaan) ja eksplisiittiselle
-   merge-kiellolle. Polku ei kuulu tämän tehtävän hyväksyttyyn kirjoitusrajaukseen,
-   joten sitä ei muokattu; mahdollinen yhden polun vapaaehtoinen täsmennysehdotus
-   on raportoitu Ownerille.
+1. **Sourcery #1 (`reports/K18_QC_runbook.md` merge-komento):** Ratkaistu
+   Ownerin rajatulla kirjoituspolkulaajennuksella tiedostoon
+   `reports/K18_QC_runbook.md` (lähtötila `origin/main` `b0499e2d`, Git-blob
+   `2d995d91d189221bf5a7cf25067f081a33fb770c`, rivit 197–199). Merge-esimerkin
+   yhteyteen on täsmennetty, että yhdistäminen edellyttää `SKILLS.md`:n
+   mukaisesti erillistä merge-valtuutusta, hyväksyttävään täsmärevisioon
+   kohdistuvaa pysyvää riippumatonta ihmishyväksyntänäyttöä sekä pakollisten
+   tarkistusten läpäisyä, ja komentoesimerkistä on poistettu `--delete-branch`
+   -valitsin, jottei esimerkki ohjaa valtuuttamattomaan haaran poistoon. Muita
+   runbookin menettelyjä ei muutettu.
 2. **Sourcery #2 (`tools/run-gates.sh` r. 24 ilmoitusteksti):** Ratkaistu
    täsmentämällä rivin 24 `echo`-ilmoitus muotoon, joka ilmaisee tehtäväkohtaisen
    kirjoitusrajauksen olevan noudatettava käytäntö, mutta ettei portti
@@ -258,7 +260,14 @@ ei koneellisesti vertaa muutospolkuja tehtävän valtuutukseen)._
   `.codex/skills/make-repo-contribution/SKILL.md`:n tässä PR:ssä lisätyt/muutetut
   kohdat, selvitetty `reports/K18_QC_runbook.md` (blob `2d995d91...`) muuttamatta
   rajauksen ulkopuolista polkua, kirjattu Sourcery #1–#6 vastineet tähän korttiin
-  sekä korjattu PR #227:n kuvaus ilman kontrollimerkkejä.
+  sekä korjattu PR #227:n kuvaus ilman kontrollimerkkejä (`d5dd4189468fa5cfcae8fbad3e3f0184e72a6f63`).
+- 2026-11-18T16:50:00+02:00: Owner laajensi sallittuja kirjoituspolkuja
+  tiedostolla `reports/K18_QC_runbook.md` (`--verify-guard` `OK` revisiolle
+  `d5dd4189468fa5cfcae8fbad3e3f0184e72a6f63`). Täsmennetty `reports/K18_QC_runbook.md`:n
+  merge-esimerkkiin erillinen merge-valtuutus, täsmärevisioon kohdistuva pysyvä
+  riippumaton ihmishyväksyntänäyttö ja pakollisten tarkistusten läpäisy sekä
+  poistettu `--delete-branch`-valitsin; päivitetty tämän kortin kirjoitusrajaus
+  ja Sourcery #1 -vastine.
 
 ## Blockers
 
@@ -279,3 +288,4 @@ ihmishyväksyntää.
 - `.codex/skills/make-repo-contribution/SKILL.md`
 - `tasks/_template.md`
 - `tools/run-gates.sh`
+- `reports/K18_QC_runbook.md`
