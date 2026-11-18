@@ -2,15 +2,15 @@
 
 ## Context
 
-- Tila: `REVIEW`
+- Tila: `DONE`
 - Tehtävätunnus: `workflow-guidance-alignment-001`
 - Omistaja: Tomi Korpi (`Tupatuko2023`)
 - Orkestroija: `FCPO2`
 - Projekti: `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT` (`docs/governance/project_registry/PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md`)
-- PR: <https://github.com/Tupatuko2023/Python-R-Scripts/pull/229>
+- Toteutus-PR: <https://github.com/Tupatuko2023/Python-R-Scripts/pull/229> (`MERGED`, `8657ea22e79bc14c35b04d0f43e934d7a8e95b17`)
 - Repo: `Tupatuko2023/Python-R-Scripts`
-- Varmennettu lähtörevisio (`origin/main`): `8e71adfa539b05f95361134eb7b8e57e6a898199`
-- Eristetty työpuu ja tehtävähaara: `tmp/workflow-guidance-alignment-001` / `docs/workflow-guidance-alignment-001`
+- Varmennettu lähtörevisio (`origin/main`): `8e71adfa539b05f95361134eb7b8e57e6a898199` (toimitettu `origin/main` PR #229:n jälkeen: `8657ea22e79bc14c35b04d0f43e934d7a8e95b17`)
+- Eristetty työpuu ja tehtävähaarat: `tmp/workflow-guidance-alignment-001` / `docs/workflow-guidance-alignment-001` (`fa29be19258f4a585af2afd76d97eed6051567b1`) ja sulkuhaara `chore/workflow-guidance-alignment-closeout-001` (säilytetty `retained`)
 - Tavoite: Yhtenäistetään päärepon ja aliprojektien ristiriitaiset työnkulkuohjeet kolmessa rajatussa asiassa:
   1. Erotetaan työn valmistuminen katselmointiin (`03-review`), hyväksytty `main`-toimitus ja tekninen sulku (`04-done`) sekä erikseen valtuutettava työpuun ja haarojen siivous.
   2. Korjataan aliprojektien vanhat suorapush- ja automaattiset `DONE`-ohjeet vastaamaan `SKILLS.md`:n PR- ja ihmishyväksyntäportteja.
@@ -59,6 +59,7 @@
   - `tasks/01-ready/workflow-guidance-alignment-001.md`
   - `tasks/02-in-progress/workflow-guidance-alignment-001.md`
   - `tasks/03-review/workflow-guidance-alignment-001.md`
+  - `tasks/04-done/workflow-guidance-alignment-001.md` (Ownerin `2026-11-18T17:23:22Z` hyväksyntä- ja sulkuvaltuutuksella `#issuecomment-6986138907`)
 - Sallitut paikalliset `gitignored`-tulokset (ei commitoida):
   - `tools/project_registry/outputs/projects.csv` (sekä generaattorin atomisen julkaisun väliaikaistiedostot)
 - Rajauksen ulkopuoliset toimet: historiallisten tai muiden tehtäväkorttien, `tasks/_template.md`:n, muutoslokien (`CHANGELOG*`, `10_handover.md`, `.txt`-viennit), `CLAUDE.md`-konventioiden, `DEAC_HANDOVER.md`:n tai koodi-/analyysiskriptien muuttaminen; tutkimusajot; merge, `04-done` ja siivous.
@@ -72,7 +73,27 @@
 - [x] `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` ja `tools/project_registry/outputs/projects.csv` läpäisevät lähdehash-, `--verify-guard`-, determinismi-, `--check`-, `git check-ignore`- ja yksikkötestit.
 - [x] Muuttuneet Markdown-ohjeet läpäisevät `prettier --check`-, `markdownlint-cli2`-, LF-, `git diff --check`- ja `tools/run-gates.ps1 --mode pre-push --smoke` -tarkistukset; staattinen toimintatapavertailu ja Sourceryn 14 havainnon vastinetaulukko on kirjattu, ja suorittamattomat ajonaikaiset testit on merkitty `NOT_RUN`.
 - [x] Katselmoitava PR (#229) ja katselmointikorjauserä on toimitettu ja tehtäväkortti on polussa `tasks/03-review/workflow-guidance-alignment-001.md`.
-- [ ] PR:n uusi täsmärevisio on saanut riippumattoman ihmishyväksynnän ja myöhempi `main`-toimitus sekä tekninen `04-done`-sulku on suoritettu paikallisen menettelyn mukaisesti.
+- [x] PR:n uusi täsmärevisio (`fa29be19258f4a585af2afd76d97eed6051567b1`) on saanut riippumattoman ihmishyväksynnän (`Tupatuko2023`, `2026-11-18T17:23:22Z`, `#issuecomment-6986138907`), toimitettu `origin/main`iin (`8657ea22e79bc14c35b04d0f43e934d7a8e95b17`) ja tekninen `04-done`-sulku on valmisteltu erilliseen sulku-PR:ään paikallisen menettelyn mukaisesti.
+
+## Riippumaton ihmishyväksyntä, `main`-toimitus, tekninen sulku ja työpuun säilytys
+
+1. **Riippumaton ihmishyväksyntänäyttö (`SKILLS.md`):**
+   - Hyväksyjä: Tomi Korpi (`Tupatuko2023`)
+   - Päätöksen aika: `2026-11-18T17:23:22Z` (`2026-11-18T19:23:22+02:00`)
+   - Kohdetehtävä ja projekti: `workflow-guidance-alignment-001` / `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT`
+   - Hyväksytty täsmärevisio: `fa29be19258f4a585af2afd76d97eed6051567b1`
+   - Pysyvä hyväksyntä-URL: <https://github.com/Tupatuko2023/Python-R-Scripts/pull/229#issuecomment-6986138907>
+2. **Varmennettu `main`-toimitus (erillään teknisestä sulusta):**
+   - Sisältö-PR [#229](https://github.com/Tupatuko2023/Python-R-Scripts/pull/229) yhdistettiin `--squash --match-head-commit fa29be19258f4a585af2afd76d97eed6051567b1` -suojauksella ilman haaran poistoa (`mergedAt: 2026-11-18T17:26:27Z`).
+   - `git fetch origin main` vahvisti kanoniseksi `origin/main`-merge-commitiksi `8657ea22e79bc14c35b04d0f43e934d7a8e95b17` (kaikki 17 hyväksyttyä polkua toimitettiin `origin/main`iin).
+3. **Tekninen `04-done`-sulku ja projektin valmistumiskriteerien (`done_criterion`) tarkistus:**
+   - Tehtäväkortti on siirretty polkuun `tasks/04-done/workflow-guidance-alignment-001.md` (`DONE`).
+   - Projektin `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT` oma `done_criterion` tarkistettiin ennen projektin tilapäivitystä: kaikki kolme lähdekuvauksen osa-aluetta (valmistumisen/`main`-toimituksen/siivouksen erottelu, aliprojektien suorapush- ja `DONE`-ohjeiden korjaus sekä hallinnollisen etusijan ja polkuviittausten selkeytys tutkimus-/tietosuoja-/QC-/ympäristösuojaukset säilyttäen) on yhtenäistetty, validoitu, hyväksytty ja toimitettu `origin/main`iin (`8657ea22...`), muita avoimia tehtäviä ei projektissa ole (`tasks: ["workflow-guidance-alignment-001"]`) ja tehtävä suljetaan tässä sulku-PR:ssä -> `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` on asetettu tilaan `closed` / `delivered` (`completed_date: "2026-11-18"`).
+4. **Suorittamattomat ajonaikaiset testit (`NOT_RUN`, erillään dokumentaatiovalidoinnista):**
+   - Windows PowerShell 7 `Fear-of-Falling/scripts/ps7/run_gemini_orchestrator.ps1` ajonaikainen promptin lataus- ja käyttäytymisajo: `NOT_RUN`
+   - Termux/PRoot-ajonaikainen promptin lataus- ja käyttäytymistesti (`SYSTEM_PROMPT_TERMUX_S-FOF.md`): `NOT_RUN`
+5. **Työpuun ja haarojen säilytys (`retained`, erillään `main`-toimituksesta ja sulusta):**
+   - Eristetty tehtäväworktree `tmp/workflow-guidance-alignment-001`, tehtävähaara `docs/workflow-guidance-alignment-001` (`fa29be19258f4a585af2afd76d97eed6051567b1`), sen etähaara, tämä sulkuhaara `chore/workflow-guidance-alignment-closeout-001`, likainen päächeckout sekä kaikki 13 aiempaa työpuuta on säilytetty koskemattomina ilman poistoja.
 
 ## Katselmointivastineet (Sourcery PR #229, 14 havaintoa)
 
@@ -143,7 +164,8 @@
 - 2026-11-18T17:49:00+02:00: Owner hyväksyi kirjoitusrajauksen, lähdekuvauksen ja toimitusrajan PR-katselmointiin asti. `git fetch origin main` vahvisti lähtörevisioksi `8e71adfa539b05f95361134eb7b8e57e6a898199`. Perustettu eristetty worktree `tmp/workflow-guidance-alignment-001` ja haara `docs/workflow-guidance-alignment-001` koskematta päächeckoutiin tai olemassa oleviin työpuihin. Valmisteltu `READY`-kortti ja projektitietue tilaan `planned / not_delivered` (`7e1955ae15da43dd2dfd093bdc7c88bf77af0684`).
 - 2026-11-18T17:56:00+02:00: Suoritettu `--verify-guard` (`OK`, exit 0) revisiota `7e1955ae15da43dd2dfd093bdc7c88bf77af0684` vasten, siirretty kortti `01-ready` -> `02-in-progress`, vaihdettu `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` tilaan `active / not_delivered` ja toteutettu 15 ohjetiedostopäivitystä (`0fb0f2dec52205818f498948831959ac9b458c05`).
 - 2026-11-18T18:02:00+02:00: Varmennettu projektirekisterin yksikkötestit (`62 ran, OK, skipped=2`), suoritettu `--verify-guard` (`OK`, exit 0) revisiota `0fb0f2dec52205818f498948831959ac9b458c05` vasten, avattu PR #229 (<https://github.com/Tupatuko2023/Python-R-Scripts/pull/229>) ja siirretty tehtäväkortti polkuun `tasks/03-review/workflow-guidance-alignment-001.md` (`66659456b09fdee12843a6428dd2d62fa2cd4c4a`).
-- 2026-11-18T18:22:00+02:00: Toteutettu Ownerin hyväksymä koottu katselmointikorjauserä PR #229:n Sourcery-havaintoihin (14 havaintoa käsitelty vastinetaulukossa: 12 korjattu, 1 vanhentunut, 1 perustellusti ei muutosta), suoritettu `--verify-guard` (`OK`, exit 0) revisiota `66659456b09fdee12843a6428dd2d62fa2cd4c4a` vasten, päivitetty `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` ja generoitu `projects.csv`, sekä toistettu kaikki soveltuvat Markdown-, linkki-, rekisteri- ja toimitusportit.
+- 2026-11-18T18:22:00+02:00: Toteutettu Ownerin hyväksymä koottu katselmointikorjauserä PR #229:n Sourcery-havaintoihin (14 havaintoa käsitelty vastinetaulukossa: 12 korjattu, 1 vanhentunut, 1 perustellusti ei muutosta), suoritettu `--verify-guard` (`OK`, exit 0) revisiota `66659456b09fdee12843a6428dd2d62fa2cd4c4a` vasten, päivitetty `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` ja generoitu `projects.csv`, sekä toistettu kaikki soveltuvat Markdown-, linkki-, rekisteri- ja toimitusportit (`fa29be19258f4a585af2afd76d97eed6051567b1`).
+- 2026-11-18T19:27:00+02:00: Varmennettu Ownerin (`Tupatuko2023`) pysyvä ihmishyväksyntä ja sulkuvaltuutus (`2026-11-18T17:23:22Z`, `#issuecomment-6986138907`) täsmärevisiolle `fa29be19258f4a585af2afd76d97eed6051567b1`, yhdistetty PR #229 `--squash --match-head-commit` -suojauksella ilman haaran poistoa, varmennettu `origin/main`-toimitus (`8657ea22e79bc14c35b04d0f43e934d7a8e95b17`), tarkistettu projektin `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT` valmistumiskriteerit (`done_criterion`), suoritettu `--verify-guard` (`OK`, exit 0), siirretty kortti polkuun `tasks/04-done/workflow-guidance-alignment-001.md` (`DONE`), päivitetty `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` tilaan `closed / delivered` (työpuu ja haarat `retained`, ajonaikaiset PS7/Termux-testit `NOT_RUN`), generoitu `projects.csv` ja avattu sulku-PR ihmiskatselmointiin.
 
 ## Blockers
 
