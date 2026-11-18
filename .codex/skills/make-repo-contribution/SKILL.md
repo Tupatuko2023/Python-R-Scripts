@@ -39,16 +39,28 @@ This applies to any agent entrypoint, orchestrator, or wrapper that can initiate
 
 ## Approval Model
 
+- Canonical repository scope and authorization rules live in `SKILLS.md`; this
+  skill applies them to branch, commit, push, issue, and PR actions without
+  creating separate file-count or per-commit gates.
 - Drafting plans, issue text, commit messages, and pull-request descriptions is
   read-only and does not require remote-write approval.
-- One explicit approval may cover one bounded contribution batch, such as branch
-  creation, scoped edits, repository-owned validation, and a commit.
-- The same approval may cover named remote operations only when those operations
-  are explicitly included in the approved batch.
-- Stop and request new approval if the file scope, remote target, destructive
-  impact, or purpose materially changes.
-- Without explicit approval, do not push, create or update remote issues, or
-  create or update pull requests. Never merge unless explicitly instructed.
+- One explicit task approval covers the declared objective, exact repo-relative
+  write paths (including task lifecycle moves, named `PRJ-*.md` records, and
+  local gitignored outputs), validation or gate fixes within those approved
+  paths, one or more logical targeted commits, and named remote operations up to
+  the approved delivery boundary (such as PR creation/update).
+- Resuming the same task across chat turns or a new session reuses the recorded
+  authorization once current repository state and recorded approval are verified;
+  do not re-request the same approval due to file count, commit, tool call, or
+  conversation turn.
+- Mandatory repository gates may never be bypassed: fix gate failures within the
+  approved paths when possible, or stop if unresolved.
+- Stop and present one consolidated change request if the objective, write
+  paths, remote target, destructive impact, or required operations expand.
+- Without explicit approval in the task's authorization, do not fetch/pull/push,
+  create or update remote issues, or create or update pull requests. Never merge
+  unless separate merge authorization and durable human approval evidence exist
+  per `SKILLS.md`.
 
 ## Instructions
 
@@ -140,4 +152,6 @@ git commit -m "<message>"
 - If security boundaries conflict with docs, stop and report.
 - Trusted repository gates may run after inspection and within scope.
 - No approval means no push, remote issue mutation, or pull-request mutation.
-- A bounded approval remains valid only while its declared scope is unchanged.
+- A task-scoped approval remains valid up to its declared delivery boundary
+  while its objective, write paths, and authorized operations remain unchanged
+  (see `SKILLS.md`).

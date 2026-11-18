@@ -2,7 +2,7 @@
 
 ## Context
 
-Tila: READY. Tehtävätunnus: `project-write-scope-policy-001`.
+Tila: IN_PROGRESS. Tehtävätunnus: `project-write-scope-policy-001`.
 Omistaja: Tomi Korpi. Orkestroija: FCPO2.
 Projekti: `PRJ-PROJECT-WRITE-SCOPE-POLICY` (`docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`).
 Repo: `Tupatuko2023/Python-R-Scripts`.
@@ -156,7 +156,17 @@ Paikallinen generoitu tulos (gitignored, ei commitoida):
   worktree `tmp/project-write-scope-policy-001` ja haara
   `docs/project-write-scope-policy-001` koskematta päächeckoutiin tai muihin
   työpuihin. Valmisteltu tämä READY-kortti ja projektitietue `planned` /
-  `not_delivered` -alkutilaan.
+  `not_delivered` -alkutilaan (`479813b6380eb5b541c67e8dd6c9cccccd0e8ee4`).
+- 2026-11-18T16:15:00+02:00: Suoritettu `--verify-guard` (`OK`, exit 0)
+  revisiota `479813b6380eb5b541c67e8dd6c9cccccd0e8ee4` vasten, siirretty kortti
+  `01-ready` -> `02-in-progress`, vaihdettu `PRJ-PROJECT-WRITE-SCOPE-POLICY.md`
+  `active` / `not_delivered` -tilaan ja toteutettu korvaava sääntö kanonisesti
+  `SKILLS.md`:hen (ml. kohdistettu stageaus ja automerge-rajaus) sekä
+  viite-/pohja-/ilmoituspäivitykset hyväksyttyihin polkuihin (`config/steering.md`,
+  `config/agent_policy.md`, `AGENTS.md`, `GEMINI.md`, `Fear-of-Falling/GEMINI.md`,
+  `docs/governance/project_registry/README.md`,
+  `.codex/skills/make-repo-contribution/SKILL.md`, `tasks/_template.md`,
+  `tools/run-gates.sh`).
 
 ## Blockers
 

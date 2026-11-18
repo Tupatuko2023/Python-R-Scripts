@@ -14,7 +14,9 @@ Tämä tiedosto ohjaa agentin yleistä toimintaa ja fokusta. Ihmistutkija päivi
 
 ## Global Constraints (Globaalit Rajoitteet)
 
-- **Max changes per run:** 5 files
+- **Write scope & delivery boundary:** Tehtäväkohtaiset, ennalta hyväksytyt
+  kirjoituspolut ja toimitusraja (ei mekaanista ajokohtaista tiedostomäärärajaa;
+  kanoninen sääntö: `SKILLS.md`). Muutosmäärä raportoidaan katselmointia varten.
 - **Safe mode:** `true` (Vaatii hyväksynnän tiedostojen poistolle)
 - **Language:** Finnish (dokumentaatio), English (koodi/muuttujat)
 - **Poikkeus:** `DEAC-Frailty-Index/docs/DEAC_HANDOVER.md` saa säilyä

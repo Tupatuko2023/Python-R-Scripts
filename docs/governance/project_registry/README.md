@@ -89,8 +89,9 @@ Generaattori lukee vain nimetyn rekisterihakemiston suorat `PRJ-*.md`-tiedostot.
 Se ei lue tehtäväjonoja eikä käy rekursiivisesti aliprojekteissa, worktreeissä
 tai arkistoissa; aliprojekteihin ei perusteta rinnakkaisia rekistereitä. Aja
 rekisterityökalun komennot worktreen repojuuresta ja aliprojektin omat
-analyysikomennot aliprojektin juuresta. Projektipäivitys lasketaan mukaan
-`config/steering.md`:n viiden tiedoston ajorajaan yhdessä korttisiirtojen kanssa.
+analyysikomennot aliprojektin juuresta. Projektitiedosto ja tehtäväkortin
+elinkaaripolut yksilöidään tehtävän hyväksytyissä kirjoituspoluissa
+`SKILLS.md`:n kanonisen kirjoitusrajauksen mukaisesti.
 
 ## Tehtäväviitteet
 
@@ -374,8 +375,9 @@ virhetilanteet kokeillaan synteettisessä väliaikaisessa repossa, ei oikeiden
 aliprojektien tehtäväkortteja tai tiloja muuttamalla.
 
 Pakollinen portti ajetaan sallitussa ympäristössä; `--help` ei ole PASS-näyttö.
-Stageaa ennen toimitusporttia vain tarkistetut tehtäväpolut, koska osa tarkistuksista
-lukee indeksiä, ja tarkista jokaisessa ajossa viiden tiedoston ajorajan täyttyminen.
+Stageaa ennen toimitusporttia vain tehtävän hyväksytyt kirjoituspolut, koska osa
+tarkistuksista lukee indeksiä, ja varmista että muutetut polut pysyvät
+`SKILLS.md`:n mukaisessa hyväksytyssä rajauksessa.
 Älä asenna riippuvuuksia tai muuta ympäristön oikeuksia hiljaa.
 K18/QC ei sovellu ei-tieteellisiin rekisteri- ja hallintadokumenttimuutoksiin;
 aliprojektien omat tieteelliset tehtävät noudattavat omia QC-sääntöjään.

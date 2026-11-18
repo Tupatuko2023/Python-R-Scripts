@@ -14,7 +14,8 @@ Tämä repo koostuu useista itsenäisistä tutkimusprojekteista. Agentin on tunn
 
 1. **Tehtäväelinkaari, kontribuutiot ja projektirekisteri**: Lue ja noudata aina
    repojuuren [SKILLS.md](SKILLS.md)- ja [AGENTS.md](AGENTS.md)-ohjeita (TODO-jono,
-   5 tiedoston ajoraja, pysyvä ihmishyväksyntänäyttö ja PR-työnkulku). Kun tehtävä
+   tehtäväkohtainen kirjoitusrajaus ja toimitusraja, pysyvä ihmishyväksyntänäyttö
+   sekä PR-työnkulku). Kun tehtävä
    nimeää projektitietueen (`docs/governance/project_registry/PRJ-*.md`), noudata
    [projektirekisterin käyttöohjetta](docs/governance/project_registry/README.md)
    sekä päärepon että aliprojektien hankkeissa.

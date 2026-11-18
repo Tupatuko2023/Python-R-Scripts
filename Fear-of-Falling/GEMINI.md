@@ -6,9 +6,9 @@ Tämä dokumentti määrittelee pakolliset säännöt, konventiot ja workflow’
 
 ## 0) Precedence (ristiriidat)
 
-Tehtäväelinkaaressa, 5 tiedoston ajorajassa, ihmishyväksyntänäytössä ja
-Git/PR-kontribuutioissa noudatetaan aina repojuuren `../SKILLS.md`- ja
-`../AGENTS.md`-ohjeita. Kun tehtävä nimeää projektitietueen
+Tehtäväelinkaaressa, tehtäväkohtaisessa kirjoitusrajauksessa ja toimitusrajassa,
+ihmishyväksyntänäytössä sekä Git/PR-kontribuutioissa noudatetaan aina repojuuren
+`../SKILLS.md`- ja `../AGENTS.md`-ohjeita. Kun tehtävä nimeää projektitietueen
 (`docs/governance/project_registry/PRJ-*.md`), noudatetaan
 [projektirekisterin käyttöohjetta](../docs/governance/project_registry/README.md)
 säilyttäen tämän aliprojektin oma tehtäväjono (`Fear-of-Falling/tasks/`).
