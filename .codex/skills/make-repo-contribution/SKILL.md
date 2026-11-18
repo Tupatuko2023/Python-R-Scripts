@@ -39,28 +39,32 @@ This applies to any agent entrypoint, orchestrator, or wrapper that can initiate
 
 ## Approval Model
 
-- Canonical repository scope and authorization rules live in `SKILLS.md`; this
-  skill applies them to branch, commit, push, issue, and PR actions without
-  creating separate file-count or per-commit gates.
+- Kanoniset kirjoitusrajaus- ja valtuutussäännöt määritellään tiedostossa
+  `SKILLS.md`; tämä ohje soveltaa niitä haara-, commit-, push-, issue- ja
+  PR-toimiin luomatta erillisiä tiedostomäärä- tai commit-kohtaisia portteja.
 - Drafting plans, issue text, commit messages, and pull-request descriptions is
   read-only and does not require remote-write approval.
-- One explicit task approval covers the declared objective, exact repo-relative
-  write paths (including task lifecycle moves, named `PRJ-*.md` records, and
-  local gitignored outputs), validation or gate fixes within those approved
-  paths, one or more logical targeted commits, and named remote operations up to
-  the approved delivery boundary (such as PR creation/update).
-- Resuming the same task across chat turns or a new session reuses the recorded
-  authorization once current repository state and recorded approval are verified;
-  do not re-request the same approval due to file count, commit, tool call, or
-  conversation turn.
-- Mandatory repository gates may never be bypassed: fix gate failures within the
-  approved paths when possible, or stop if unresolved.
-- Stop and present one consolidated change request if the objective, write
-  paths, remote target, destructive impact, or required operations expand.
-- Without explicit approval in the task's authorization, do not fetch/pull/push,
-  create or update remote issues, or create or update pull requests. Never merge
-  unless separate merge authorization and durable human approval evidence exist
-  per `SKILLS.md`.
+- Yksi nimenomainen tehtävävaltuutus kattaa hyväksytyn tavoitteen, täsmälliset
+  repojuureen suhteutetut kirjoituspolut (ml. tehtäväkortin elinkaarisiirrot,
+  nimetyt `PRJ-*.md`-tietueet ja paikalliset `gitignored`-tulokset),
+  tarkistus- tai porttivirheiden korjaukset näissä hyväksytyissä poluissa,
+  yhden tai useamman loogisen kohdistetun commitin sekä nimetyt etäoperaatiot
+  sovitulle toimitusrajalle asti (esim. PR:n luonti ja päivitys).
+- Saman tehtävän jatkaminen keskusteluvuorojen yli tai uudessa sessiossa
+  hyödyntää jo kirjattua valtuutusta, kun repon nykytila ja tallennettu
+  päätös on tarkistettu; älä pyydä samaa lupaa uudelleen tiedostomäärän,
+  commitin, työkalukutsun tai keskusteluvuoron vuoksi.
+- Pakollisia tarkistusportteja ei saa koskaan ohittaa: korjaa porttivirhe
+  hyväksytyissä poluissa jos mahdollista, tai pysäytä toimitus jos virhe jää
+  ratkaisematta.
+- Pysähdy ja esitä yksi koottu muutosesitys perusteluineen, jos tavoite,
+  kirjoituspolut, etäkohde, poistovaikutus tai tarvittavat operaatiot
+  laajenevat.
+- Ilman tehtävän valtuutukseen sisältyvää lupaa älä aja `git fetch`-,
+  `git pull`- tai `git push` -komentoja äläkä luo tai päivitä etä-issueita tai
+  PR:iä (`gh issue` / `gh pr`). Älä koskaan tee `merge`-toimenpidettä ilman
+  erillistä merge-valtuutusta ja `SKILLS.md`:n mukaista pysyvää riippumatonta
+  ihmishyväksyntänäyttöä.
 
 ## Instructions
 
@@ -152,6 +156,6 @@ git commit -m "<message>"
 - If security boundaries conflict with docs, stop and report.
 - Trusted repository gates may run after inspection and within scope.
 - No approval means no push, remote issue mutation, or pull-request mutation.
-- A task-scoped approval remains valid up to its declared delivery boundary
-  while its objective, write paths, and authorized operations remain unchanged
-  (see `SKILLS.md`).
+- Tehtäväkohtainen valtuutus pysyy voimassa sovittuun toimitusrajaan asti niin
+  kauan kuin sen tavoite, kirjoituspolut ja valtuutetut operaatiot pysyvät
+  muuttumattomina (ks. `SKILLS.md`).

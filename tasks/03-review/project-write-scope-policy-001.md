@@ -144,9 +144,14 @@ Paikallinen generoitu tulos (gitignored, ei commitoida):
       toteutuksesta ja main-toimituksesta (`tmp/project-write-scope-policy-001`
       `active`, päächeckout ja 12 muuta työpuuta säilytetty koskemattomina).
 
-## Tapausvertailu (6 skenaariota)
+## Tapausvertailu (6 skenaariota — dokumentoitu sääntö- ja toimintatapavertailu)
 
-| # | Skenaario | Vanha 5 tiedoston ajoraja (`b0499e2d`) | Uusi tehtäväkohtainen kirjoitusrajaus (`SKILLS.md`) | Todennettu näyttö tässä tehtävässä |
+_Huomio: Alla oleva taulukko on dokumentoitu sääntö- ja toimintatapavertailu
+sekä tämän tehtävän todellisten työvaiheiden havainnointi — se ei ole
+koneellisesti suoritettu valtuutusvalvonnan automaattitesti (`tools/run-gates.sh`
+ei koneellisesti vertaa muutospolkuja tehtävän valtuutukseen)._
+
+| # | Skenaario | Vanha 5 tiedoston ajoraja (`b0499e2d`) | Uusi tehtäväkohtainen kirjoitusrajaus (`SKILLS.md`) | Todennettu havainto tässä tehtävässä |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | **Hyväksytyt >= 6 sisältöpolkua** | Mekaaninen pysähdys 5 polun kohdalla (ml. kortin `git mv` = 2 polkua + `PRJ`), pilkkominen 4 erilliseen ajoon välikuittauksin. | Etenee yhtenä kokonaisuutena hyväksyttyyn toimitusrajaan ilman lukumäärä-, commit- tai vuoroporttia; muutosmäärä raportoidaan katselmointiin (`SKILLS.md` r. 46–61). | Commit `9ec97525` kattoi 11 hyväksyttyä sisältö-/rekisteripolkua + kortin yhdessä loogisessa toteutusvaiheessa ilman välikyselyjä. |
 | 2 | **Uusi hyväksymätön polku** | Saattoi mahtua lukumäärän sisään (jos <= 5 polkua) tai vaatia sekä uuden ajon että polun tarkistuksen. | Välitön pysähdys ja yksi koottu muutosesitys perusteluineen ennen kirjoitusta (`SKILLS.md` r. 66–69; `.codex/skills/make-repo-contribution/SKILL.md` r. 58–59). | `npm ci` paljasti, ettei `.gitignore` sisällä `node_modules/`-riviä; `.gitignore` ei kuulunut hyväksyttyihin polkuihin, joten sitä ei muokattu vaan käytettiin kohdistettua stageausta. |
@@ -165,12 +170,52 @@ Paikallinen generoitu tulos (gitignored, ei commitoida):
   - `python -B -m unittest discover -s tools/project_registry/tests -p test_render_projects_csv.py`: 62 testiä ajettu, 60 PASS (exit 0).
   - `npx --no-install prettier --check` kaikille muuttuneille CI-piirin Markdown-tiedostoille (`SKILLS.md`, `AGENTS.md`, `GEMINI.md`, `Fear-of-Falling/GEMINI.md`, `docs/governance/project_registry/README.md`, `docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`, `.codex/skills/make-repo-contribution/SKILL.md`): exit 0.
   - `npx --no-install markdownlint-cli2` edellä mainituille + `config/steering.md`, `config/agent_policy.md`, `tasks/_template.md`: 0 virhettä (exit 0).
-  - Staged `& ./tools/run-gates.ps1 --mode pre-push --smoke`: `OK: guardrails (pre-push)`, `OK: renv check (pre-push)`, `OK: smoke gates (pre-push)` ja päivitetty `write scope: task-approved paths` -ilmoitusteksti (exit 0).
+  - Staged `& ./tools/run-gates.ps1 --mode pre-push --smoke`: `OK: guardrails (pre-push)`, `OK: renv check (pre-push)`, `OK: smoke gates (pre-push)` ja täsmennetty muistutusilmoitus (`follow task-approved write scope (changed paths vs. task authorization are not mechanically validated by this gate)`) (exit 0).
   - `git diff --check` ja LF-rivinvaihtojen tarkistus (`tools/run-gates.sh` ja kaikki muokatut tiedostot): exit 0.
   - Aktiivisten ohjeiden `git grep` vanhalle 5 tiedoston ajorajalle: 0 jäänyttä sääntöviittausta nykyohjeissa; historialliset tehtäväkortit säilytetty koskemattomina.
 - **FAIL:** Ei avoimia epäonnistuneita tarkistuksia (`0`).
 - **SKIPPED:** `test_render_projects_csv.py`:n 2 Windows-symlink-oikeustestiä (`skipped=2`, normaali Windowsin ei-admin-käytös).
 - **NOT APPLICABLE:** `K18/QC` ja R-/Python-tutkimusanalyysiajot — päärepon ei-tieteellinen hallinta- ja rekisteriohjemuutos; tutkimusdataa, mallikoodia tai `.py`/`.R`-tiedostoja ei muutettu.
+
+## PR #227 katselmointihavaintojen (Sourcery #1–#6 ja PR-kuvaus) ratkaisut
+
+1. **Sourcery #1 (`reports/K18_QC_runbook.md` merge-komento):** Paikannettu
+   polkuun `reports/K18_QC_runbook.md` (`origin/main` `b0499e2d`, Git-blob
+   `2d995d91d189221bf5a7cf25067f081a33fb770c`, rivit 197–198:
+   `# Merge with squash strategy` / `gh pr merge <PR_NUM> --squash --delete-branch`).
+   Kyseessä on historiallisen PR #49:n (`909f534`, 2026-01-05)
+   operaattorirunbookin komentoesimerkki, joka on alisteinen `SKILLS.md`:n
+   ylimmälle etusijalle, `Fear-of-Falling/GEMINI.md`:n PR-etusijasäännölle sekä
+   `.codex/skills/make-repo-contribution/SKILL.md`:n turvarajalle #1
+   (dokumenttiproosan komentoja ei suoriteta sellaisenaan) ja eksplisiittiselle
+   merge-kiellolle. Polku ei kuulu tämän tehtävän hyväksyttyyn kirjoitusrajaukseen,
+   joten sitä ei muokattu; mahdollinen yhden polun vapaaehtoinen täsmennysehdotus
+   on raportoitu Ownerille.
+2. **Sourcery #2 (`tools/run-gates.sh` r. 24 ilmoitusteksti):** Ratkaistu
+   täsmentämällä rivin 24 `echo`-ilmoitus muotoon, joka ilmaisee tehtäväkohtaisen
+   kirjoitusrajauksen olevan noudatettava käytäntö, mutta ettei portti
+   koneellisesti validoi muutospolkujen vastaavuutta tehtävän valtuutukseen.
+   Porttilogiikkaa ei muutettu.
+3. **Sourcery #3 (kortti `02-in-progress`-polussa) ja #4 (tapausvertailu ja
+   review-tila):** Havainnot kohdistuivat aiempaan välivaiheen committiin
+   `9ec9752537e2e72c6d295cb8b028b97a0e3d37af`. Ne on ratkaistu jo
+   review-handoff-commitissa `aacb5ad4da973c4b0e08a530985b1fd7820d027f`, jossa
+   kortti on polussa `tasks/03-review/project-write-scope-policy-001.md`
+   (`Tila: REVIEW`), kuuden skenaarion dokumentoitu tapausvertailu on tässä
+   kortissa ja `docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`
+   viittaa `03-review`-polkuun.
+4. **Sourcery #5 (viiden tiedoston ajorajan poistaminen ja >5 polun muutos):**
+   Tarkoituksellinen, tehtävän tavoitteen mukainen muutos. Ownerin 2026-11-18
+   päätös ja nimetty kertapoikkeus vanhasta 5 tiedoston ajorajasta on kirjattu
+   tämän kortin osioon `Ownerin toteutuspäätös ja valtuutus (2026-11-18)`.
+   Viiden tiedoston rajaa ei palauteta.
+5. **Sourcery #6 (`.codex/skills/make-repo-contribution/SKILL.md` uudet
+   ohjetekstit englanniksi):** Ratkaistu suomentamalla tässä PR:ssä lisätyt ja
+   muutetut ohjekohdat (`Approval Model` ja `Validation` viimeinen luettelokohta)
+   repon kielipolitiikan mukaisesti kääntämättä vanhaa muuttumatonta tiedostoa.
+6. **PR #227 -kuvauksen rikkoutuneet merkit ja koodiaidat:** Ratkaistu
+   päivittämällä PR #227:n kuvaus PowerShellin literal here-stringillä (`@'...'@`)
+   ja `gh pr edit 227 --body-file` -komennolla ilman kontrollimerkkejä.
 
 ## Erillisiksi jätetyt rajauksen ulkopuoliset havainnot
 
@@ -204,7 +249,16 @@ Paikallinen generoitu tulos (gitignored, ei commitoida):
   `--verify-guard` (`OK`, exit 0) revisiota `9ec9752537e2e72c6d295cb8b028b97a0e3d37af`
   vasten, siirretty kortti `02-in-progress` -> `03-review`, kirjattu kuuden
   tapauksen vertailu ja validointinäyttö sekä päivitetty `PRJ-PROJECT-WRITE-SCOPE-POLICY.md`
-  viittaamaan PR #227:ään ja `03-review`-polkuun (`active` / `not_delivered`).
+  viittaamaan PR #227:ään ja `03-review`-polkuun (`active` / `not_delivered`,
+  `aacb5ad4da973c4b0e08a530985b1fd7820d027f`).
+- 2026-11-18T16:33:00+02:00: Jatkettiin aiemmalla valtuutuksella PR #227:n
+  katselmointikorjauksiin (`--verify-guard` `OK` revisiolle
+  `aacb5ad4da973c4b0e08a530985b1fd7820d027f`). Täsmennetty `tools/run-gates.sh`
+  r. 24 ilmoitusteksti (ei koneellista muutospolkuvalvontaa), suomennettu
+  `.codex/skills/make-repo-contribution/SKILL.md`:n tässä PR:ssä lisätyt/muutetut
+  kohdat, selvitetty `reports/K18_QC_runbook.md` (blob `2d995d91...`) muuttamatta
+  rajauksen ulkopuolista polkua, kirjattu Sourcery #1–#6 vastineet tähän korttiin
+  sekä korjattu PR #227:n kuvaus ilman kontrollimerkkejä.
 
 ## Blockers
 
