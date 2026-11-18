@@ -8,12 +8,12 @@ state: "active"
 delivery: "not_delivered"
 goal: "Yhtenäistetään päärepon ja aliprojektien työnkulkuohjeet valmistumisen, main-toimituksen ja siivouksen erottelun, PR-/ihmishyväksyntämenettelyn sekä hallinnollisten etusijaviittausten osalta."
 done_criterion: "Päärepon ja aliprojektien työnkulkuohjeiden ristiriidat (valmistumisen, main-toimituksen ja siivouksen erottelu, suorapush-/DONE-säännöt sekä keskinäiset etusijaviittaukset) on yhtenäistetty, validoitu, hyväksytty, toimitettu kanoniseen mainiin ja tehtävä suljettu repon menettelyn mukaisesti."
-latest_status: "2026-11-18: Toteutusvaihe käynnissä (02-in-progress). Päärepon ja aliprojektien 15 työnkulku- ja järjestelmäohjeen päivitykset toteutettu hyväksytyissä poluissa suojatut osiot säilyttäen."
-next_step: "Suorita suhteellisten linkkien, suojattujen osioiden tavutarkkuuden, projektirekisterin, Markdown-porttien ja toimitusportin tarkistukset, siirrä tehtävä 03-review-tilaan ja avaa PR katselmointiin."
+latest_status: "2026-11-18: Katselmointivaiheessa (03-review, PR #229). Päärepon ja aliprojektien 15 työnkulku- ja järjestelmäohjeen päivitykset validoitu suojatut osiot tavuntarkasti säilyttäen."
+next_step: "Odottaa riippumatonta ihmishyväksyntää PR #229:n täsmärevisiolle ennen main-toimitusta ja tehtävän workflow-guidance-alignment-001 teknistä 04-done-sulkua."
 source_description_sha256: "6d8d4564d58eef72484dc6901f9a4c9bbb304f2f42afa415c0fa3b43b94fc6d0"
 source_captured_at: "2026-11-18"
 observed_at: "2026-11-18"
-observed_commit: "7e1955ae15da43dd2dfd093bdc7c88bf77af0684"
+observed_commit: "0fb0f2dec52205818f498948831959ac9b458c05"
 observed_worktree_label: "workflow-guidance-alignment"
 blocker: ""
 orchestrator: "FCPO2"
@@ -24,7 +24,7 @@ started_date: "2026-11-18"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
-link: ""
+link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/229"
 worktree_inventory: "unknown"
 tasks:
   - "workflow-guidance-alignment-001"
@@ -55,9 +55,9 @@ Historiallisia tehtäväkortteja tai muutoslokeja ei kirjoiteta uusiksi.
 
 ## Tehtäväviitteet
 
-| repo                            | task                              | path                                                      |
-| ------------------------------- | --------------------------------- | --------------------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `workflow-guidance-alignment-001` | `tasks/02-in-progress/workflow-guidance-alignment-001.md` |
+| repo                            | task                              | path                                                 |
+| ------------------------------- | --------------------------------- | ---------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `workflow-guidance-alignment-001` | `tasks/03-review/workflow-guidance-alignment-001.md` |
 
 Taulukko viittaa tehtävään repoidentiteetillä ja koko repojuureen suhteutetulla
 polulla; tehtäväkortti omistaa elinkaaren ja hyväksynnät.
