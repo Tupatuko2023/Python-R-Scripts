@@ -6,10 +6,18 @@ backlog
 
 ## Workflow
 
-Follow `agent_workflow.md`. Only a task in `tasks/01-ready/` may be started.
-The agent moves the task to `tasks/02-in-progress/` before work and to
-`tasks/03-review/` after reporting. Only a human may move the task to
-`tasks/04-done/`.
+Noudata aliprojektin ohjetta [../agent_workflow.md](../agent_workflow.md),
+[../WORKFLOW.md](../WORKFLOW.md) sekä hallinnollisessa työnkulussa repojuuren
+kanonista ohjetta [../../SKILLS.md](../../SKILLS.md) (ja
+[../../AGENTS.md](../../AGENTS.md)). Uusi tehtävä aloitetaan vain kansiosta
+`Fear-of-Falling/tasks/01-ready/`, siirretään ennen työtä kansioon
+`tasks/02-in-progress/` ja validoinnin jälkeen katselmointiin kansioon
+`tasks/03-review/`. Tekninen siirto `tasks/04-done/`-kansioon tehdään vasta
+täsmärevisioon kohdistuvan pysyvän riippumattoman ihmishyväksynnän,
+`origin/main`-toimitusvarmennuksen ja sulkuvaltuutuksen jälkeen; työpuun ja
+haarojen siivous pidetään erillisenä. *(Huom. yllä olevat `../`- ja `../../`-polut
+ovat suhteessa tähän korttitiedostoon; aja FOF-analyysikomennot kansiosta
+`Fear-of-Falling/` ja päärepon portti-/rekisterikomennot worktreen repojuuresta.)*
 
 ## Scope
 
@@ -30,7 +38,9 @@ The agent moves the task to `tasks/02-in-progress/` before work and to
 
 - Do not modify raw data.
 - Keep changes minimal, reversible, and documented.
-- Do not commit or push unless separately authorized.
+- Etene vain tehtäväkortissa hyväksytyissä kirjoituspoluissa ja sovittuun
+  toimitusrajaan asti ([../../SKILLS.md](../../SKILLS.md)); älä tee
+  valtuuttamattomia etäoperaatioita, mergeä tai poistoja.
 - Do not expose secrets or participant-level data.
 
 ## Acceptance Criteria

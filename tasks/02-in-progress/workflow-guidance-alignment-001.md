@@ -2,7 +2,7 @@
 
 ## Context
 
-- Tila: `READY`
+- Tila: `IN_PROGRESS`
 - Tehtävätunnus: `workflow-guidance-alignment-001`
 - Omistaja: Tomi Korpi (`Tupatuko2023`)
 - Orkestroija: `FCPO2`
@@ -71,7 +71,8 @@
 ## Log
 
 - 2026-11-18T17:35:00+02:00: Suoritettu read-only-nykytilan lukutarkastus suoraan `origin/main`-revisiosta `8e71adfa539b05f95361134eb7b8e57e6a898199` ja valmisteltu 16 polun kirjoitusrajaus projektille `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT`.
-- 2026-11-18T17:49:00+02:00: Owner hyväksyi kirjoitusrajauksen, lähdekuvauksen ja toimitusrajan PR-katselmointiin asti. `git fetch origin main` vahvisti lähtörevisioksi `8e71adfa539b05f95361134eb7b8e57e6a898199` (ei päällekkäisiä uusia muutoksia). Perustettu eristetty worktree `tmp/workflow-guidance-alignment-001` ja haara `docs/workflow-guidance-alignment-001` koskematta päächeckoutiin tai olemassa oleviin työpuihin. Valmisteltu tämä `READY`-kortti ja projektitietue tilaan `planned / not_delivered`.
+- 2026-11-18T17:49:00+02:00: Owner hyväksyi kirjoitusrajauksen, lähdekuvauksen ja toimitusrajan PR-katselmointiin asti. `git fetch origin main` vahvisti lähtörevisioksi `8e71adfa539b05f95361134eb7b8e57e6a898199` (ei päällekkäisiä uusia muutoksia). Perustettu eristetty worktree `tmp/workflow-guidance-alignment-001` ja haara `docs/workflow-guidance-alignment-001` koskematta päächeckoutiin tai olemassa oleviin työpuihin. Valmisteltu `READY`-kortti ja projektitietue tilaan `planned / not_delivered` (`7e1955ae15da43dd2dfd093bdc7c88bf77af0684`).
+- 2026-11-18T17:56:00+02:00: Suoritettu `--verify-guard` (`OK`, exit 0) revisiota `7e1955ae15da43dd2dfd093bdc7c88bf77af0684` vasten, siirretty kortti `01-ready` -> `02-in-progress`, vaihdettu `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` tilaan `active / not_delivered` ja toteutettu kaikki 15 hyväksyttyä ohjetiedostopäivitystä suojatut osiot tavuntarkasti säilyttäen.
 
 ## Blockers
 

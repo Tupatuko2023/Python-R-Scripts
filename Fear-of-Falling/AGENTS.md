@@ -337,6 +337,18 @@ Käytännöt:
 
 ## Change management
 
+Hallinnollinen tehtävä- ja PR-työnkulku noudattaa repojuuren kanonista ohjetta
+[../SKILLS.md](../SKILLS.md) sekä [../AGENTS.md](../AGENTS.md)-,
+[WORKFLOW.md](WORKFLOW.md)- ja [agent_workflow.md](agent_workflow.md)-ohjeita
+säilyttäen tämän aliprojektin oman tehtäväjonon (`Fear-of-Falling/tasks/`) ja
+kaikki yllä määritellyt tutkimus-, `AUTH_SOURCE`/`DATA_ROOT`- ja `K18/QC`-rajat:
+
+- Etene vain hyväksytyissä kirjoituspoluissa sovittuun toimitusrajaan asti; älä
+  puske suoraan `main`-haaraan äläkä päivitä likaista päächeckoutia väkisin.
+- Toteutuksen valmistuminen (`03-review` + PR), riippumattoman ihmishyväksynnän
+  jälkeinen `main`-toimitus / tekninen `04-done`-sulku sekä erikseen
+  valtuutettava työpuun ja haarojen siivous pidetään aina erillään.
+
 Commit- ja PR-periaatteet:
 
 - Yksi muutoskokonaisuus per commit.

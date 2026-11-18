@@ -4,23 +4,23 @@ title: "Työnkulkuohjeiden yhtenäistäminen päärepossa ja aliprojekteissa"
 short_name: "Työnkulkuohjeiden yhtenäistäminen päärepossa ja aliprojekteissa"
 repo: "Tupatuko2023/Python-R-Scripts"
 repo_ref: "origin/main"
-state: "planned"
+state: "active"
 delivery: "not_delivered"
 goal: "Yhtenäistetään päärepon ja aliprojektien työnkulkuohjeet valmistumisen, main-toimituksen ja siivouksen erottelun, PR-/ihmishyväksyntämenettelyn sekä hallinnollisten etusijaviittausten osalta."
 done_criterion: "Päärepon ja aliprojektien työnkulkuohjeiden ristiriidat (valmistumisen, main-toimituksen ja siivouksen erottelu, suorapush-/DONE-säännöt sekä keskinäiset etusijaviittaukset) on yhtenäistetty, validoitu, hyväksytty, toimitettu kanoniseen mainiin ja tehtävä suljettu repon menettelyn mukaisesti."
-latest_status: "2026-11-18: Read-only-lukutarkastus suoritettu ja Owner hyväksynyt 16 polun kirjoitusrajauksen, lähdekuvauksen ja toimitusrajan PR-katselmointiin asti. READY-kortti ja tämä planned-tietue alustettu origin/mainista (8e71adfa)."
-next_step: "Siirrä workflow-guidance-alignment-001 tilaan 02-in-progress, aktivoi tämä projektitietue Git-suojan (--verify-guard) kautta ja toteuta hyväksytyt 15 ohjetiedoston päivitykset."
+latest_status: "2026-11-18: Toteutusvaihe käynnissä (02-in-progress). Päärepon ja aliprojektien 15 työnkulku- ja järjestelmäohjeen päivitykset toteutettu hyväksytyissä poluissa suojatut osiot säilyttäen."
+next_step: "Suorita suhteellisten linkkien, suojattujen osioiden tavutarkkuuden, projektirekisterin, Markdown-porttien ja toimitusportin tarkistukset, siirrä tehtävä 03-review-tilaan ja avaa PR katselmointiin."
 source_description_sha256: "6d8d4564d58eef72484dc6901f9a4c9bbb304f2f42afa415c0fa3b43b94fc6d0"
 source_captured_at: "2026-11-18"
 observed_at: "2026-11-18"
-observed_commit: "8e71adfa539b05f95361134eb7b8e57e6a898199"
+observed_commit: "7e1955ae15da43dd2dfd093bdc7c88bf77af0684"
 observed_worktree_label: "workflow-guidance-alignment"
 blocker: ""
 orchestrator: "FCPO2"
 agent: "Antigravity"
 agent_tool: "Antigravity"
 environment: "Windows PowerShell; GitHub Ubuntu CI"
-started_date: ""
+started_date: "2026-11-18"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
@@ -35,6 +35,7 @@ tasks:
 ## Lähdekuvaus
 
 <!-- prettier-ignore-start -->
+<!-- markdownlint-disable MD032 -->
 <!-- source-description:begin -->
 Yhtenäistetään Python-R-Scripts-repon päärepon ja aliprojektien
 ristiriitaiset työnkulkuohjeet vastaamaan nykyistä PR-, hyväksyntä-
@@ -49,13 +50,14 @@ ja tehtäväkohtaisen kirjoitusrajauksen menettelyä:
    tutkimusaineiston, ympäristön ja QC:n suojaukset.
 Historiallisia tehtäväkortteja tai muutoslokeja ei kirjoiteta uusiksi.
 <!-- source-description:end -->
+<!-- markdownlint-enable MD032 -->
 <!-- prettier-ignore-end -->
 
 ## Tehtäväviitteet
 
-| repo                            | task                              | path                                                |
-| ------------------------------- | --------------------------------- | --------------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `workflow-guidance-alignment-001` | `tasks/01-ready/workflow-guidance-alignment-001.md` |
+| repo                            | task                              | path                                                      |
+| ------------------------------- | --------------------------------- | --------------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `workflow-guidance-alignment-001` | `tasks/02-in-progress/workflow-guidance-alignment-001.md` |
 
 Taulukko viittaa tehtävään repoidentiteetillä ja koko repojuureen suhteutetulla
 polulla; tehtäväkortti omistaa elinkaaren ja hyväksynnät.

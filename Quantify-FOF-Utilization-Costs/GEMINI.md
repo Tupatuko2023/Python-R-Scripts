@@ -23,8 +23,8 @@ Päätehtäväsi on orkestroida ja ajaa hybridiputkea (R + Python) Android/Termu
    - Aggregaattien turvasäännöt: Estä pienten solujen (n < 5) näkyminen raporteissa. Vie ulos (export safe) ainoastaan aggregoidut tulokset ja karkean tason QC-yhteenvedot.
 
 4. **Kysymyskielto ja poikkeukset (Fail-closed)**:
-   - Älä kysy käyttäjältä jatkuvasti ohjeita; toimi autonomisesti '01-ready' tehtävien pohjalta (SKILLS.md).
-   - Ainoa sallittu kysymys käyttäjältä on datan rakenteen varmistus (esim. names/glimpse/dictionary), jos koodi kaatuu sarakevirheisiin tai mapping-ongelmiin, joita ei voida päätellä metadatasta. Muutoin fail-closed: pysäytä ajo ja kirjaa virhe.
+   - Älä kysy käyttäjältä jatkuvasti ohjeita; etene hyväksytyssä tehtäväkohtaisessa kirjoitus- ja toimitusrajauksessa tämän aliprojektin `tasks/01-ready/`-tehtävien pohjalta ([../SKILLS.md](../SKILLS.md)).
+   - Ainoa sallittu kysymys käyttäjältä analyysiajossa on datan rakenteen varmistus (esim. names/glimpse/dictionary), jos koodi kaatuu sarakevirheisiin tai mapping-ongelmiin, joita ei voida päätellä metadatasta; hallinnollisen kirjoitus- tai toimitusrajan laajennus edellyttää uutta koottua päätöstä ([../SKILLS.md](../SKILLS.md)). Muutoin fail-closed: pysäytä ajo ja kirjaa virhe.
 
 ## OPERATIONAL COMMANDS (HYBRID PIPELINE)
 
@@ -42,11 +42,11 @@ Suorita tehtävät tiukassa järjestyksessä:
 2. **Edit**: Tee tarvittavat koodimuutokset.
 3. **Smoke Test**: Aja Python-pohjaiset testit tai R-pohjainen QC synteettisellä näytteellä.
 4. **Full Run**: Aja varsinainen analyysiputki R:llä (huomioiden `DATA_ROOT`).
-5. **QC / Output**: Varmista, että tulokset ovat `outputs/`-kansiossa eivätkä riko tietoturvaa. Kirjaa lokiin toimenpiteet (SKILLS.md) ja siirrä tehtävä task-jonossa (02-in-progress -> 03-review).
+5. **QC / Output & Review-luovutus**: Varmista, että tulokset ovat `outputs/`-kansiossa eivätkä riko tietoturvaa. Kirjaa lokiin toimenpiteet ([../SKILLS.md](../SKILLS.md)), siirrä tehtävä aliprojektin jonossa (`tasks/02-in-progress/` -> `tasks/03-review/`) ja toimita PR-katselmointiin sovitun toimitusrajan puitteissa. Tekninen `04-done`-sulku tehdään vasta riippumattoman ihmishyväksynnän ja `origin/main`-toimituksen jälkeen, ja siivous pidetään erillisenä ([WORKFLOW.md](WORKFLOW.md)).
 
 ## SOURCE OF TRUTH HIERARCHY
 
-1. `SKILLS.md` (Agentin toimintaprotokolla ja todo-säännöt)
-2. TÄMÄ TIEDOSTO (Järjestelmäohje ja Termux-ympäristö)
-3. `RUNBOOK_SECURE_EXECUTION.md` (Tietoturva ja mallinnusyksityiskohdat)
-4. `WORKFLOW.md` & `README.md`
+1. [../SKILLS.md](../SKILLS.md) ja [../AGENTS.md](../AGENTS.md) — hallinnollinen työnkulku (tehtäväkohtainen kirjoitus- ja toimitusrajaus, PR-menettely, `main`-toimitus, tekninen `04-done`-sulku ja siivous; nimetyn projektitietueen osalta [../docs/governance/project_registry/README.md](../docs/governance/project_registry/README.md)). Hallinnollinen etusija ei koskaan heikennä alla olevia Option B -, `DATA_ROOT`-, aggregaatti-, `n < 5` - tai Termux-rajoja.
+2. TÄMÄ TIEDOSTO (`Quantify-FOF-Utilization-Costs/GEMINI.md`) ja [CLAUDE.md](CLAUDE.md) — aliprojektin Option B -tietosuoja, muuttujastandardointi ja Termux-ympäristö.
+3. [../docs/guides/RUNBOOK_SECURE_EXECUTION.md](../docs/guides/RUNBOOK_SECURE_EXECUTION.md) ja [docs/runbook.md](docs/runbook.md) — tietoturva ja mallinnus-/ajoyksityiskohdat.
+4. [WORKFLOW.md](WORKFLOW.md), [agent_workflow.md](agent_workflow.md), [AGENTS.md](AGENTS.md) & [README.md](README.md) — paikallinen tehtäväjono (`Quantify-FOF-Utilization-Costs/tasks/`), konfliktien ratkaisu ja yleiskuvaus.

@@ -216,13 +216,16 @@ Branch naming:
 
 Required steps (report each as Done/Not done/Stop reason):
 
-1. Sync & create branch
+1. Sync & create branch (säilytä mahdolliset paikalliset muutokset)
+
+- Älä päivitä tai tyhjennä likaista päächeckoutia väkisin. Käytä valtuutettua
+  `git fetch origin main` -hakua ja luo tehtävähaara (tai eristetty worktree)
+  suoraan varmennetusta `origin/main`ista:
 
 ```bash
 git status --porcelain
-git switch main
-git pull --ff-only
-git switch -c docs/<topic>
+git fetch origin main
+git switch -c docs/<topic> origin/main
 ```
 
 1. Make changes (minimal diffs)
@@ -275,14 +278,19 @@ gh pr create --fill
 gh pr merge --auto --squash
 ```
 
-1. Post-merge cleanup (only after merge is confirmed)
+1. Post-merge cleanup (erillään main-toimituksesta; vain erillisellä siivous-/poistovaltuutuksella)
+
+- Työn valmistuminen (`03-review`), hyväksytty `main`-toimitus / tekninen
+  `04-done`-sulku sekä työpuiden ja haarojen siivous ovat kolme eri vaihetta.
+  Oletus toimituksen jälkeen on työpuun ja haarojen säilytys (`retained`).
+  Älä poista worktreetä tai paikallista/etähaaraa ilman nimenomaista
+  siivous-/poistovaltuutusta, äläkä koskaan poista likaista päächeckoutia.
 
 ```bash
+# Vain kun merge on varmennettu JA erillinen siivous-/poistovaltuutus on annettu:
 gh pr view --json merged -q .merged
-git switch main
-git pull --ff-only
-git branch -d docs/<topic> || true
-git push origin --delete docs/<topic> || true
+git branch -d docs/<topic>
+git push origin --delete docs/<topic>
 ```
 
 Required report format:

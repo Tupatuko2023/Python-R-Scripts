@@ -1,60 +1,100 @@
 # Analysis Ops Workflow
 
 Tämä repositorio noudattaa Agent-First -metodologiaa analyysityössä (R + Python).
+Hallinnollisessa työnkulussa (tehtäväkohtainen kirjoitus- ja toimitusrajaus,
+PR-menettely, `main`-toimitus, tekninen `04-done`-sulku ja siivous) ylin kanoninen
+ohje on [SKILLS.md](SKILLS.md). Aliprojektien tiukemmat tutkimus-, tietosuoja-,
+QC- ja ympäristörajat säilyvät täysimääräisesti voimassa.
 
 ## Roolit
 
 - **Human Supervisor (Ihmistutkija):**
-  - Luo tehtäviä `tasks/00-backlog/`.
-  - Määrittelee tehtävän vaatimukset (`definition_of_done`) ja siirtää `tasks/01-ready/`.
-  - Tarkistaa `tasks/03-review/` kansion tuotokset.
-  - Tekee tehtävän hyväksymis- tai hylkäyspäätöksen ja arvioi sekä mergeää
-    mahdollisen lifecycle-PR:n.
-  - Hallinnoi `config/steering.md` fokusta.
+  - Luo tehtäviä `tasks/00-backlog/` (tai aliprojektin omaan `tasks/00-backlog/`).
+  - Määrittelee tehtävän tavoitteen, kirjoituspolut, toimitusrajan ja
+    hyväksymiskriteerit (`Definition of Done`) sekä siirtää tehtävän
+    `tasks/01-ready/`.
+  - Tarkistaa `tasks/03-review/`-kansion tuotokset ja PR:n.
+  - Tekee tehtävän hyväksymis- tai hylkäyspäätöksen ja arvioi sekä mergeää PR:n.
+  - Hallinnoi [config/steering.md](config/steering.md) -fokusta.
 
 - **AI Researcher (Agentti):**
-  - Lukee `config/agent_policy.md` ja `REPO_CONTEXT.md`.
-  - Poimii tehtäviä `tasks/01-ready/`.
-  - Suorittaa työn ja siirtää tehtävän `tasks/03-review/`.
-  - Saa kirjatun ihmishyväksynnän jälkeen tehdä saman tehtävän teknisen
-    `04-done`-siirron, validoinnin ja lifecycle-PR:n; ei hyväksy omaa työtään.
+  - Lukee [SKILLS.md](SKILLS.md), [AGENTS.md](AGENTS.md),
+    [config/agent_policy.md](config/agent_policy.md) ja
+    [REPO_CONTEXT.md](REPO_CONTEXT.md).
+  - Poimii uuden toteutustehtävän vain `tasks/01-ready/`-kansiosta (tai
+    aliprojektin omasta `tasks/01-ready/`-jonosta).
+  - Etenee hyväksytyissä kirjoituspoluissa sovittuun toimitusrajaan asti ja
+    siirtää tehtävän `tasks/03-review/`-kansioon PR-katselmointia varten.
+  - Saa todennetun, pysyvän riippumattoman ihmishyväksynnän jälkeen tehdä saman
+    tehtävän teknisen `04-done`-siirron, validoinnin ja sulku-PR:n; ei hyväksy
+    omaa työtään.
 
-## Prosessi (Workflow)
+## Prosessi ja vaiheiden erottelu (Workflow)
 
 1. **Speksaus (Spec):**
    - Ihminen luo idean `tasks/00-backlog/`.
-   - Kun idea on kypsä (selkeät input/output ja DoD), ihminen siirtää tiedoston `tasks/01-ready/`.
+   - Kun tavoite, kirjoituspolut, hyväksytyt operaatiot, toimitusraja ja DoD ovat
+     selkeät, tehtävä siirretään `tasks/01-ready/`.
 
 2. **Suoritus (Execute):**
-   - Agentti valitsee tehtävän (ks. `config/agent_policy.md`).
-   - Agentti siirtää tiedoston `tasks/02-in-progress/`.
-   - Agentti suorittaa työn (koodaa, kirjoittaa, analysoi).
-   - Agentti päivittää lokia tehtävätiedostossa.
+   - Agentti varmistaa ajantasaisen lähtötilan (likaista päächeckoutia
+     pakottamatta, esim. eristetyssä worktreessä varmennetusta `origin/main`ista)
+     ja siirtää kortin `tasks/02-in-progress/`.
+   - Agentti toteuttaa muutokset vain hyväksytyissä kirjoituspoluissa ja päivittää
+     tehtäväkortin lokia.
+   - Jos tehtävä nimeää projektitietueen (`docs/governance/project_registry/PRJ-*.md`),
+     noudatetaan [projektirekisterin käyttöohjetta](docs/governance/project_registry/README.md).
 
-3. **Tarkistus (Review):**
-   - Agentti siirtää valmiin työn `tasks/03-review/`.
-   - Ihminen tarkistaa työn laadun.
+3. **Valmistuminen katselmointiin (`03-review` + PR):**
+   - **Ennen `03-review`-siirtoa suoritettavat soveltuvat tarkistukset:**
+     - Jos muutos koskee analyysikoodia, datajohdannaisia tai ympäristöä, aja
+       aliprojektin ohjeiden mukainen smoke-run (Rscript tai Python) aliprojektin
+       omasta työjuuresta, tarkista `renv/`-ympäristö ja kirjaa tarvittaessa
+       `sessionInfo()` tai `renv::diagnostics()`, sekä aja aliprojektin QC-portti
+       (esim. `K18/QC`) kun se on soveltuva. Ei-tieteellisissä hallinta- ja
+       dokumentaatiotehtävissä analyysi- ja QC-ajot merkitään perustellusti
+       `NOT APPLICABLE` eikä niitä käynnistetä turhaan.
+     - Aja repon valmiit portit ja tarkistukset (kuten toimitusportti,
+       Markdown-lint ja projektirekisteritarkistukset) worktreen repojuuresta
+       laajentamatta työkaluketjua luvatta.
+   - Agentti siirtää tehtävän `tasks/03-review/`-kansioon ja avaa tai päivittää
+     PR:n sovitun toimitusrajan puitteissa. Suora push `main`-haaraan on kielletty.
 
-4. **Hyväksyntä (Done):**
-   - **Ennen siirtoa:**
-     - Suorita vähintään yksi tyypillinen smoke-run (Rscript tai python) kyseisen aliprojektin ohjeiden mukaan.
-     - Jos aliprojektissa on `renv/`, varmista että ympäristö on palautettavissa (`renv::restore()` tarpeen mukaan) ja kirjaa tarvittaessa `sessionInfo()` tai `renv::diagnostics()` lokiin.
-     - Jos aliprojektissa on QC-runner (esim. `K18`-tyyppinen QC tai termux-runner), aja se ennen review-siirtoa.
-     - Aja testit/lintit vain jos repo jo tarjoaa ne eikä se laajenna toolchainia (esim. `python -m pytest` tai projektin oma komento).
-     - **Worktree- ja kloonisiivous (edellytys DONE:lle):** poista tehtävän kaikki worktreet kaikista käytetyistä ympäristöistä (`git worktree remove`, ei `--force`), mukaan lukien toimitus- ja varmennusworktreet. Poista lisäksi tehtävän **väliaikaiset erilliskloonit** niiden omalla tavalla: klooni ei ole worktree, joten se poistetaan hakemistona (esim. `Remove-Item -Recurse` / `rm -rf`) `git worktree remove`-komennon sijaan — varmista ensin, ettei kloonissa ole julkaisemattomia committeja tai säilytettävää sisältöä. Säilytä tarvittava evidenssi worktreeiden/kloonien ulkopuolella ja varmista kopiot ennen poistoa. Varmenna lopputila kussakin ympäristössä (`git worktree list --porcelain`; erilliskloonit tarkistetaan erikseen). Viimeinen siivous ja DONE-kirjaus tehdään säilytettävästä checkoutista, jotta sulkemistyö ei jätä uutta worktreetä. **Kirjaa säilytettävät normaalikäytön checkoutit perusteluineen** (esim. käyttäjän ensisijainen checkout, jossa on paikallisia muutoksia) äläkä poista niitä. Jos aktiivista käyttöä tai säilytettävää sisältöä löytyy, raportoi este äläkä poista kohdetta. Loppuvarmennus on osa DONE-ehtoa: tehtävän toiminnallinen lopputarkistus (esim. `--check`) on läpäistävä ennen `04-done`-siirtoa; jos se estyy (esim. verkko), tehtävä jää `03-review`-tilaan avoimena.
-   - **Hyväksytty:** Owner tai muu tehtävälle määrätty ihminen kirjaa
-     hyväksymispäätöksen agentin task-lokista riippumattomaan, pysyvään lähteeseen
-     `SKILLS.md`:n näyttövaatimusten mukaisesti. Agentin oma task-merkintä ei
-     kelpaa päätökseksi. Todennetun hyväksynnän jälkeen agentti saa siirtää
-     saman tehtävän teknisesti `tasks/03-review/`-kansiosta kohteeseen
-     `tasks/04-done/`, kirjata hyväksyntäviitteen, validoida rajatun muutoksen ja avata
-     lifecycle-PR:n. Ihminen arvioi ja mergeää PR:n erikseen.
-   - **Hylätty:** Ihminen palauttaa tiedoston `tasks/01-ready/` ja lisää palautteen tehtävänanto-osioon.
+4. **Hyväksytty `main`-toimitus ja tekninen sulku (`04-done`):**
+   - **Hyväksyntä ja toimitus:** Owner tai muu tehtävälle määrätty ihminen kirjaa
+     hyväksymispäätöksen täsmärevisiolle agentin task-lokista riippumattomaan,
+     pysyvään lähteeseen [SKILLS.md](SKILLS.md):n näyttövaatimusten mukaisesti.
+     Agentin oma task-merkintä ei kelpaa päätökseksi. Hyväksytty toteutus-PR
+     yhdistetään `main`iin vasta erillisen merge-valtuutuksen ja tarkistusten
+     läpäisyn jälkeen, ja toimitus varmennetaan `origin/main`ista.
+   - **Tekninen sulku:** Varmennetun `main`-toimituksen ja hyväksynnän jälkeen
+     agentti saa valtuutuksen mukaisesti siirtää saman tehtävän teknisesti
+     `tasks/03-review/` -> `tasks/04-done/`, kirjata hyväksyntä- ja
+     toimitusprovenancen, päivittää mahdollisen nimetyn `PRJ-*.md`-tietueen
+     (`closed` / `delivered`), validoida rajatun muutoksen ja avata sulku-PR:n
+     ihmiskatselmointiin.
+   - **Hylätty tai korjattava:** Tarvittavat katselmointikorjaukset tehdään
+     hyväksytyissä poluissa samaan PR:ään tai tehtävä palautetaan `tasks/01-ready/`
+     palautteen kera.
+
+5. **Työpuun, haaran ja kloonin siivous (erillinen vaihe, EI `DONE`-edellytys):**
+   - Toteutuksen valmistuminen (`03-review`), `main`-toimitus / `04-done`-sulku
+     ja siivous ovat erillisiä vaiheita: oletus toimituksen jälkeen on työpuiden,
+     haarojen ja päächeckoutin säilyttäminen (`retained`).
+   - Työpuita (`git worktree remove`, ei `--force`), haaroja (`git branch -d`,
+     `git push origin --delete`) tai väliaikaisia erillisklooneja poistetaan
+     **vain ihmisomistajan nimenomaisella erillisellä siivousvaltuutuksella** sen
+     jälkeen, kun `main`-toimitus on varmennettu eikä kohteessa ole
+     julkaisemattomia committeja, paikallisia säilytettäviä tuloksia tai aktiivista
+     käyttöä.
+   - Käyttäjän ensisijainen tai paikallisia muutoksia sisältävä checkout
+     säilytetään aina koskemattomana. Toteutuneet poistot ja säilytetyt kohteet
+     perusteluineen kirjataan erillään `main`-toimituksesta.
 
 ## Hakemistorakenne
 
-- `tasks/`: Tehtäväjono (The Queue)
+- `tasks/`: Päärepon tehtäväjono (aliprojekteilla on omat tehtäväjononsa, esim. `Fear-of-Falling/tasks/` ja `Quantify-FOF-Utilization-Costs/tasks/`)
 - `config/`: Ohjaus ja asetukset (Steering)
-- `docs/`: Dokumentaatio (vain jos tehtävä vaatii)
-- `data/`: Data (älä muokkaa raakadataa ilman erillistä tehtävää)
+- `docs/`: Dokumentaatio ja projektirekisteri (`docs/governance/project_registry/`)
+- `data/`: Data (älä muokkaa raakadataa)
 - `src/`: Koodi ja analyysit

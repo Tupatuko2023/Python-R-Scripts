@@ -2,11 +2,20 @@
 
 ## 0. PRECEDENCE & PRIORITIES
 
-Konfliktitilanteissa noudata sääntöjä tässä järjestyksessä:
+Hallinnollisessa työnkulussa (tehtäväkohtainen kirjoitus- ja toimitusrajaus,
+PR-menettely, `main`-toimitus, tekninen `04-done`-sulku ja siivous) noudatetaan
+aina repojuuren ohjeita [../SKILLS.md](../SKILLS.md) ja
+[../AGENTS.md](../AGENTS.md) (sekä nimetyn projektitietueen osalta
+[../docs/governance/project_registry/README.md](../docs/governance/project_registry/README.md))
+säilyttäen tämän aliprojektin oma tehtäväjono (`Fear-of-Falling/tasks/`).
+Tämä hallinnollinen etusija ei koskaan syrjäytä tai heikennä alla olevia
+aliprojektin tiukempia tutkimus-, tietosuoja-, `AUTH_SOURCE`/`DATA_ROOT`-,
+QC- tai Termux/PRoot-ympäristörajoja.
 
-1. `WORKFLOW.md` (Remote sync säännöt, jos tiedosto olemassa)
-2. `agent_workflow.md` (Työjonon ja tehtävien hallinta)
-3. Tämä ohjeistus (SYSTEM_PROMPT_UPDATE)
+Aliprojektin analyysiputken, QC:n ja suorituksen osalta noudata tätä järjestystä:
+
+1. [WORKFLOW.md](WORKFLOW.md) ja [agent_workflow.md](agent_workflow.md) (työjonon hallinta ja `K18/QC`-päätösportti)
+2. Tämä ohjeistus (`SYSTEM_PROMPT_UPDATE`)
 
 **Source of Truth (SOT) -dokumentit (näitä ei saa ohittaa, ohjaavat toimintaa):**
 
