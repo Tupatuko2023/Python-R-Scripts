@@ -10,14 +10,17 @@ Noudata aliprojektin ohjetta [../agent_workflow.md](../agent_workflow.md),
 [../WORKFLOW.md](../WORKFLOW.md) sekä hallinnollisessa työnkulussa repojuuren
 kanonista ohjetta [../../SKILLS.md](../../SKILLS.md) (ja
 [../../AGENTS.md](../../AGENTS.md)). Uusi tehtävä aloitetaan vain kansiosta
-`Fear-of-Falling/tasks/01-ready/`, siirretään ennen työtä kansioon
-`tasks/02-in-progress/` ja validoinnin jälkeen katselmointiin kansioon
-`tasks/03-review/`. Tekninen siirto `tasks/04-done/`-kansioon tehdään vasta
-täsmärevisioon kohdistuvan pysyvän riippumattoman ihmishyväksynnän,
+`Fear-of-Falling/tasks/01-ready/` ja säilyy jokaisessa siirrossa tässä samassa
+tehtäväjonossa (`Fear-of-Falling/tasks/02-in-progress/` ->
+`Fear-of-Falling/tasks/03-review/` -> `Fear-of-Falling/tasks/04-done/`; jos
+tehtävä on linkitetty `PRJ-*.md`-rekisteriin, päivitä rekisterin tehtäväpolku
+samassa muutoksessa). Tekninen siirto `Fear-of-Falling/tasks/04-done/`-kansioon
+tehdään vasta täsmärevisioon kohdistuvan pysyvän riippumattoman ihmishyväksynnän,
 `origin/main`-toimitusvarmennuksen ja sulkuvaltuutuksen jälkeen; työpuun ja
 haarojen siivous pidetään erillisenä. *(Huom. yllä olevat `../`- ja `../../`-polut
-ovat suhteessa tähän korttitiedostoon; aja FOF-analyysikomennot kansiosta
-`Fear-of-Falling/` ja päärepon portti-/rekisterikomennot worktreen repojuuresta.)*
+ovat suhteessa tähän korttitiedostoon; aja FOF-analyysit ja tutkimus-QC kansiosta
+`Fear-of-Falling/` ja valtuutetut repojuuren hallinta-/rekisterikomennot saman
+eristetyn worktreen repojuuressa rajatussa suorituskontekstissa.)*
 
 ## Scope
 

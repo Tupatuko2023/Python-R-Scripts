@@ -6,10 +6,12 @@ repojuuren ohjeita [../SKILLS.md](../SKILLS.md) ja [../AGENTS.md](../AGENTS.md)
 sekä tämän aliprojektin [WORKFLOW.md](WORKFLOW.md)- ja
 [agent_workflow.md](agent_workflow.md)-ohjeita säilyttäen oma tehtäväjono
 (`Quantify-FOF-Utilization-Costs/tasks/`). Tutkimusaineistossa, Option B
--tietosuojassa (`DATA_ROOT`, `n < 5`) ja koodistandardeissa noudatetaan tiukasti
-[GEMINI.md](GEMINI.md)- ja [CLAUDE.md](CLAUDE.md)-tiedostoja. Aliprojektin
-analyysiskriptit ajetaan tästä hakemistosta ja päärepon portti-/rekisterikomennot
-worktreen repojuuresta.
+-tietosuojassa (`DATA_ROOT`, aggregaattien kaksiosainen valtuutus, `n < 5`) ja
+koodistandardeissa noudatetaan tiukasti [GEMINI.md](GEMINI.md)- ja
+[CLAUDE.md](CLAUDE.md)-tiedostoja; ratkaisematon ristiriita pysäyttää riippuvan
+toimenpiteen eikä anna lupaa valita heikompaa sääntöä. Aliprojektin
+analyysiskriptit ajetaan tästä hakemistosta ja valtuutetut repojuuren
+hallinta-/rekisterikomennot saman eristetyn worktreen repojuuresta.
 
 ## Conflict Resolution Protocol
 

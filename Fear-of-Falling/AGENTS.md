@@ -341,13 +341,18 @@ Hallinnollinen tehtävä- ja PR-työnkulku noudattaa repojuuren kanonista ohjett
 [../SKILLS.md](../SKILLS.md) sekä [../AGENTS.md](../AGENTS.md)-,
 [WORKFLOW.md](WORKFLOW.md)- ja [agent_workflow.md](agent_workflow.md)-ohjeita
 säilyttäen tämän aliprojektin oman tehtäväjonon (`Fear-of-Falling/tasks/`) ja
-kaikki yllä määritellyt tutkimus-, `AUTH_SOURCE`/`DATA_ROOT`- ja `K18/QC`-rajat:
+kaikki yllä määritellyt tutkimus-, `AUTH_SOURCE`/`DATA_ROOT`- ja `K18/QC`-rajat
+(ratkaisematon ristiriita pysäyttää riippuvan toimenpiteen eikä anna lupaa valita
+heikompaa sääntöä):
 
-- Etene vain hyväksytyissä kirjoituspoluissa sovittuun toimitusrajaan asti; älä
-  puske suoraan `main`-haaraan äläkä päivitä likaista päächeckoutia väkisin.
+- Perusta tehtävälle eristetty worktree `git fetch origin main` -haun jälkeen
+  varmennetusta täydestä commit-SHA:sta koskematta päächeckoutin haaraan tai
+  paikallisiin muutoksiin; etene vain hyväksytyissä kirjoituspoluissa sovittuun
+  toimitusrajaan asti äläkä puske suoraan `main`-haaraan.
 - Toteutuksen valmistuminen (`03-review` + PR), riippumattoman ihmishyväksynnän
-  jälkeinen `main`-toimitus / tekninen `04-done`-sulku sekä erikseen
-  valtuutettava työpuun ja haarojen siivous pidetään aina erillään.
+  jälkeinen `main`-toimitus / tekninen `04-done`-sulku (erillään projektin
+  `PRJ-*.md`-sulusta) sekä erikseen valtuutettava työpuun ja haarojen siivous
+  pidetään aina erillään.
 
 Commit- ja PR-periaatteet:
 

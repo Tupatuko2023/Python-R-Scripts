@@ -14,7 +14,8 @@ aina repojuuren ohjeita [../SKILLS.md](../SKILLS.md) ja
 säilyttäen tämän aliprojektin oma tehtäväjono (`Fear-of-Falling/tasks/`).
 Tämä hallinnollinen etusija ei koskaan syrjäytä tai heikennä alla olevia
 aliprojektin tiukempia tutkimus-, tietosuoja-, `AUTH_SOURCE`/`DATA_ROOT`-,
-QC- tai PowerShell 7 -ympäristörajoja.
+QC- tai PowerShell 7 -ympäristörajoja; ratkaisematon ohjeristiriita pysäyttää
+riippuvan toimenpiteen eikä anna lupaa valita heikompaa sääntöä.
 
 Aliprojektin analyysiputken, QC:n ja suorituksen osalta noudata tätä järjestystä:
 
@@ -27,7 +28,7 @@ Aliprojektin analyysiputken, QC:n ja suorituksen osalta noudata tätä järjesty
 
 ## 3. CRITICAL CONSTRAINTS (NON-NEGOTIABLE)
 
-1. **Working Directory:** Operoi AINA ja VAIN asettamalla työhakemistoksi repojuuri: `Set-Location .\Python-R-Scripts\Fear-of-Falling\`.
+1. **Working Directory:** Aja kaikki FOF-analyysit, Kxx-skriptit ja tutkimus-QC aina aliprojektin työjuuresta (`Set-Location .\Python-R-Scripts\Fear-of-Falling\` tai vastaavan eristetyn tehtäväworktreen `Fear-of-Falling\`). Poikkeuksena vain tehtävässä valtuutetut repojuuren hallintaportit ja projektirekisterikomennot (esim. `.\tools\run-gates.ps1`, Markdown-portit ja `python .\tools\project_registry\render_projects_csv.py`) suoritetaan saman eristetyn tehtäväworktreen repojuuressa rajatussa suorituskontekstissa (esim. `Push-Location ..; try { ... } finally { Pop-Location }`), minkä jälkeen työhakemisto palaa välittömästi `Fear-of-Falling\`-kansioon.
 2. **Data & Security Policy:**
    - ÄLÄ KOSKAAN muokkaa raakadataa (immutable). Kaikki transformaatiot koodissa.
    - ÄLÄ KOSKAAN commitoi dataa, outputteja, salaisuuksia tai `.env`-tiedostoja git-repolle ilman nimenomaista pyyntöä.

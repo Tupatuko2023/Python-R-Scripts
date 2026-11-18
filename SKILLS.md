@@ -2,11 +2,11 @@
 
 ## Rule of precedence (MUST)
 
-- SKILLS.md on ylin totuus kaikissa agenttitoiminnoissa.
+- `SKILLS.md` on ylin kanoninen ohje **hallinnollisessa työnkulussa**: tehtäväjonon ja elinkaaren hallinnassa, tehtäväkohtaisessa kirjoitus- ja toimitusrajauksessa, GitHub-autentikoinnissa, PR- ja katselmointimenettelyssä, riippumattomassa ihmishyväksyntänäytössä, `main`-toimituksessa, teknisessä `04-done`-sulussa ja siivouksessa.
 - Ennen mitään `gh`-komentoja, PR-työtä tai mergeä: lue tämä tiedosto ensin ja noudata kirjaimellisesti.
 - **MANDATORY:** Ennen mitään kontribuutiota (Issue/Branch/Commit/PR), konsultoi ja noudata ohjeita tiedostossa `.codex/skills/make-repo-contribution/SKILL.md`.
 - Tämä kontribuutiosääntö koskee koko repoa ja kaikkia agent-entrypointteja/orchestratoreita/wrappereita, jotka voivat käynnistää kontribuutiotoimia.
-- Jos tämä tiedosto on ristiriidassa muiden ohjeiden kanssa: SKILLS.md voittaa.
+- Hallinnollisen työnkulun ristiriidoissa `SKILLS.md` voittaa. Tämä hallinnollinen etusija **ei koskaan syrjäytä tai heikennä** aliprojektien tiukempia tutkimusmenetelmä-, tietosuoja- (esim. Option B, `DATA_ROOT`, `AUTH_SOURCE`, aggregaattien kaksiosainen valtuutus ja `n < 5` -suojaus), QC- (esim. `K18/QC`) tai ajo-/ympäristövaatimuksia. Jos ohjeiden välillä ilmenee ratkaisematon ristiriita, se **pysäyttää riippuvan toimenpiteen** (`STOP` ja koottu täsmennyspyyntö), eikä koskaan anna lupaa valita heikompaa suojausta tai sääntöä.
 
 ---
 
@@ -14,16 +14,8 @@
 
 Pakollinen työjono ja toimintalogiikka:
 
-- **Selection rule:** valitse uusi toteutustehtävä vain `tasks/01-ready/`-kansiosta.
-  Jos jono on tyhjä: STOP ja pyydä ihmiseltä tehtävää. Ihmisen erikseen
-  hyväksymän, jo `03-review`-tilassa olevan tehtävän tekninen sulkeminen ei ole
-  uuden tehtävän valinta.
-- **Transitions:** agentti siirtää tehtävän `01-ready → 02-in-progress → 03-review`.
-  Owner tai muu tehtävälle määrätty ihminen tekee hyväksymispäätöksen; agentti
-  ei saa hyväksyä omaa työtään. Vasta kirjatun hyväksynnän jälkeen agentti saa
-  siirtää saman tehtävän teknisesti `03-review → 04-done`, kirjata hyväksynnän
-  provenance-tiedot, validoida muutoksen ja avata lifecycle-PR:n. Ihminen arvioi
-  ja mergeää PR:n erikseen.
+- **Selection rule & tehtäväjono (`<queue-root>`):** jokaisella tehtäväkortilla on oma kiinteä tehtäväjono — joko päärepon `tasks/` tai aliprojektin oma `<aliprojekti>/tasks/` (esim. `Fear-of-Falling/tasks/`, `Quantify-FOF-Utilization-Costs/tasks/`). Valitse uusi toteutustehtävä vain asianomaisen jonon `<queue-root>/01-ready/`-kansiosta. Jos jono on tyhjä: STOP ja pyydä ihmiseltä tehtävää. Ihmisen erikseen hyväksymän, jo `<queue-root>/03-review/`-tilassa olevan tehtävän tekninen sulkeminen ei ole uuden tehtävän valinta.
+- **Transitions:** agentti siirtää tehtäväkorttia aina sen **omassa tehtäväjonossa** `<queue-root>/01-ready → <queue-root>/02-in-progress → <queue-root>/03-review` (aliprojektin kortti ei koskaan siirry päärepon `tasks/`-jonoon eikä päinvastoin). Jos tehtävä on linkitetty nimettyyn `docs/governance/project_registry/PRJ-*.md`-tietueeseen, päivitä tietueen tehtävätaulukon polku samassa elinkaarimuutoksessa. Owner tai muu tehtävälle määrätty ihminen tekee hyväksymispäätöksen; agentti ei saa hyväksyä omaa työtään. Vasta kirjatun hyväksynnän jälkeen agentti saa siirtää saman tehtävän teknisesti `<queue-root>/03-review → <queue-root>/04-done`, kirjata hyväksynnän provenance-tiedot, päivittää mahdollisen linkitetyn `PRJ-*.md`-tietueen tehtäväpolun (tarkistaen erikseen projektin omat valmistumiskriteerit ennen projektin tilan muuttamista), validoida muutoksen ja avata lifecycle-PR:n. Ihminen arvioi ja mergeää PR:n erikseen.
 - **Approval evidence (MUST):** ennen teknistä sulkua tarkista agentin omasta
   task-lokista riippumaton ja pysyvä ihmishyväksyntä. Näytöksi kelpaa tehtävälle
   määrätyn hyväksyjän GitHub PR-/issue-kommentti tai hänen tekemänsä hyväksytyn
@@ -36,7 +28,10 @@ Pakollinen työjono ja toimintalogiikka:
   Jos hyväksyjä, kohde tai rajaus ei ole todennettavissa, STOP ja pyydä ihmistä
   täydentämään hyväksyntänäyttöä ennen siirtoa.
 - **Log:** lisää tehtävätiedostoon aikaleimallinen lokimerkintä (ISO-8601; local time ok) jokaisesta merkittävästä toimesta.
-- **DoD gate (analyysirepo):** tee vähintään yksi smoke-run (Rscript/python) aliprojektin ohjeiden mukaan. Aja QC-runner, jos repo tarjoaa sen. Jos `renv/` on käytössä, varmista että `renv::restore()` on mahdollinen ja kirjaa tarvittaessa `sessionInfo()`/`renv::diagnostics()`.
+- **DoD gate (tehtävän luonteen mukaiset tarkistukset):**
+  - _Soveltuvat toimitus- ja dokumentaatiotarkistukset ovat aina pakollisia:_ aja muutokseen soveltuvat repojuuren toimitusportit (esim. `tools/run-gates.sh --mode pre-push --smoke` tai `tools/run-gates.ps1 --mode pre-push --smoke`), Markdown-/muotoilutarkistukset ja mahdolliset projektirekisteritarkistukset.
+  - _Analyysikoodi-, datajohdannais- ja ympäristömuutokset:_ tee vähintään yksi aliprojektin ohjeiden mukainen smoke-run (`Rscript`/`python`) aliprojektin työjuuresta, aja soveltuva QC-portti (esim. `Fear-of-Falling/agent_workflow.md`:n `K18/QC Applicability Decision Gate`) ja jos `renv/` on käytössä, varmista `renv`-yhteensopivuus sekä kirjaa tarvittaessa `sessionInfo()`/`renv::diagnostics()`.
+  - _Puhdas hallinto- tai dokumentaatiomuutos:_ ei itsessään valtuuta tai käynnistä tutkimusajoa, analyysiputkea eikä suojatun aineiston (`DATA_ROOT`/`AUTH_SOURCE`) lukua; soveltumattomat analyysi- ja QC-ajot merkitään perustellusti `NOT APPLICABLE`.
 - **Blocker:** jos olet epävarma, luo blocker-merkintä tehtävään tai pyydä ihmiseltä täsmennys ennen jatkoa.
 
 **Steering integration & tehtäväkohtainen kirjoitusrajaus (MUST, kanoninen sääntö):**
@@ -113,8 +108,10 @@ eksplisiittisellä käskyllä:
 - Kun tehtävä nimeää projektitietueen (`docs/governance/project_registry/PRJ-*.md`),
   noudata [projektirekisterin käyttöohjetta](docs/governance/project_registry/README.md):
   päivitä vain tehtävän hyväksyttyihin kirjoituspolkuihin kuuluvaa tietuetta
-  Git-suojan kautta lukittua lähdekuvausta muuttamatta ja säilytä tehtäväkortit
-  omissa jonoissaan.
+  Git-suojan (`--verify-guard`) kautta lukittua lähdekuvausta muuttamatta,
+  päivitä tehtävätaulukon polku samassa muutoksessa kortin elinkaarisiirron kanssa,
+  säilytä tehtäväkortit omissa jonoissaan ja erota yksittäisen tehtävän `04-done`-sulku
+  projektin `closed`/`delivered`-päätöksestä.
 
 ## GitHub Auth (Non-Interactive) — Termux-safe
 
@@ -216,16 +213,22 @@ Branch naming:
 
 Required steps (report each as Done/Not done/Stop reason):
 
-1. Sync & create branch (säilytä mahdolliset paikalliset muutokset)
+1. Sync & create isolated task worktree (säilytä päächeckout ja muiden paikallinen työ)
 
-- Älä päivitä tai tyhjennä likaista päächeckoutia väkisin. Käytä valtuutettua
-  `git fetch origin main` -hakua ja luo tehtävähaara (tai eristetty worktree)
-  suoraan varmennetusta `origin/main`ista:
+- Älä koskaan vaihda jaetun päächeckoutin haaraa (`git switch`), älä tyhjennä
+  tai siirrä sen paikallisia muutoksia äläkä aja rinnakkaisia tehtäviä samassa
+  työpuussa. Jokainen tehtävä käyttää omaa eristettyä tehtäväworktreetä.
+- Aja valtuutettu `git fetch origin main`, ota talteen ja varmenna lähtöpisteen
+  täysi muuttumaton commit-SHA (`BASE_SHA`) ja luo eristetty tehtäväworktree sekä
+  tehtävähaara suoraan tästä varmennetusta täydestä SHA:sta:
 
 ```bash
-git status --porcelain
+git status --porcelain # vain havainnointi; päächeckoutin haaraan tai muutoksiin ei kosketa
 git fetch origin main
-git switch -c docs/<topic> origin/main
+BASE_SHA="$(git rev-parse --verify origin/main^{commit})"
+printf 'Verified base SHA: %s\n' "$BASE_SHA"
+git worktree add -b docs/<topic> tmp/<task-id> "$BASE_SHA"
+cd tmp/<task-id>
 ```
 
 1. Make changes (minimal diffs)
@@ -278,27 +281,47 @@ gh pr create --fill
 gh pr merge --auto --squash
 ```
 
-1. Post-merge cleanup (erillään main-toimituksesta; vain erillisellä siivous-/poistovaltuutuksella)
+1. Post-merge cleanup (erillään main-toimituksesta; vain erillisellä nimetyllä siivousvaltuutuksella)
 
 - Työn valmistuminen (`03-review`), hyväksytty `main`-toimitus / tekninen
   `04-done`-sulku sekä työpuiden ja haarojen siivous ovat kolme eri vaihetta.
   Oletus toimituksen jälkeen on työpuun ja haarojen säilytys (`retained`).
-  Älä poista worktreetä tai paikallista/etähaaraa ilman nimenomaista
-  siivous-/poistovaltuutusta, äläkä koskaan poista likaista päächeckoutia.
-
-```bash
-# Vain kun merge on varmennettu JA erillinen siivous-/poistovaltuutus on annettu:
-gh pr view --json merged -q .merged
-git branch -d docs/<topic>
-git push origin --delete docs/<topic>
-```
+- Älä suorita sokeaa komentosarjaa. Siivous on sallittu vain, kun jokainen
+  seuraavista ehdoista tarkistetaan ja täyttyy järjestyksessä (mikä tahansa
+  epäonnistuminen pysäyttää ketjun välittömästi ennen seuraavaa poistoa):
+  1. **Erillinen nimetty siivousvaltuutus:** ihmisomistaja on antanut nimenomaisen,
+     poistettavan worktreen ja/tai haaran yksilöivän siivousvaltuutuksen (pelkkä
+     merge- tai `04-done`-valtuutus ei riitä).
+  2. **Toimituksen varmennus (myös squash-mergelle):** `git fetch origin main`
+     on ajettu ja sekä PR:n tila (`MERGED`, kohde `main`, `mergeCommit`) että
+     `origin/main`-historia vahvistavat toimituksen. Koska squash-mergessä
+     tehtävähaaran yksittäiset commitit eivät ole suoraan `origin/main`in
+     esivanhempia, tarkista squash-mergen `mergeCommit` `origin/main`ista ja
+     varmista, ettei tehtävähaarassa ole yhtään hyväksytyn PR-`HEAD`in jälkeistä
+     julkaisematonta committia; jos tarkistus epäonnistuu tai PR ei ole
+     yhdistetty, **STOP**.
+  3. **Sisällön ja aktiivisen käytön tarkistus:** tarkista kohdeworktreen
+     tracked-, staged-, untracked- ja `gitignored`-sisältö (`git status --porcelain --ignored`)
+     sekä varmista, ettei mikään prosessi, terminaali tai rinnakkainen agentti
+     käytä kohdetta eikä nykyinen työhakemisto ole sen sisällä. Päächeckoutia tai
+     tallennettavaa paikallista sisältöä sisältävää työpuuta ei koskaan poisteta.
+  4. **Suoritusjärjestys ja välitön pysäytys virheessä:** siirry ensin pois
+     kohdeworktreestä -> poista eristetty tehtäväworktree (`git worktree remove <path>`) ->
+     poista paikallinen haara turvallisella tarkistuksella (`git branch -d <branch>`;
+     jos `git branch -d` estyy esim. squash-mergen vuoksi, jätä haara `retained`-tilaan
+     tai pyydä ihmistä tarkistamaan — älä jatka sokeasti) -> poista etähaara
+     (`git push origin --delete <branch>`) vasta, kun valtuutetut edeltävät
+     tarkistukset ja paikalliset vaiheet ovat onnistuneet ilman virheitä.
+  5. **Ehdottomat kiellot:** älä koskaan käytä `--force`-, `git branch -D`- tai
+     virheiden ohitusmenettelyä (`|| true` tms.). Raportoi poistot ja säilytetyt
+     (`retained`) kohteet aina erillään `main`-toimituksesta.
 
 Required report format:
 
 ```text
 Auth model used: (gh-authenticated device) OR (GH_TOKEN/GITHUB_TOKEN env)
 Checklist:
-Sync & branch: Done/Not done/Stop reason
+Sync & isolated worktree: Done/Not done/Stop reason
 Checks: Done/Not done/Stop reason
 PR created: Done/Not done/Stop reason
 Auto-merge: Done/Not done/Stop reason

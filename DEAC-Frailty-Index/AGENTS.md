@@ -5,10 +5,11 @@ työnkulussa (tehtäväkohtainen kirjoitus- ja toimitusrajaus, PR-menettely,
 `main`-toimitus, tekninen `04-done`-sulku ja siivous) noudata lisäksi repojuuren
 [../SKILLS.md](../SKILLS.md)-, [../AGENTS.md](../AGENTS.md)- ja
 [../config/steering.md](../config/steering.md)-sääntöjä; ne eivät koskaan
-syrjäytä alla olevaa tieteellistä auktoriteettia tai `DATA_ROOT`-suojausta.
-Varmista työhakemisto ennen komentoja: aja aliprojektin skriptit sen juuresta
-(`DEAC-Frailty-Index/`) ja päärepon portti-/rekisterikomennot worktreen
-repojuuresta.
+syrjäytä alla olevaa tieteellistä auktoriteettia tai `DATA_ROOT`-suojausta, ja
+ratkaisematon ristiriita pysäyttää riippuvan toimenpiteen eikä anna lupaa valita
+heikompaa sääntöä. Varmista työhakemisto ennen komentoja: aja aliprojektin
+skriptit sen juuresta (`DEAC-Frailty-Index/`) ja valtuutetut repojuuren
+hallinta-/rekisterikomennot saman eristetyn worktreen repojuuresta.
 
 ## Auktoriteetti ja ensimmäinen ajo
 
