@@ -193,9 +193,15 @@ gh pr create --title "fix(K18): QC guardrail violations + acceptance memo" \
   --body "Resolves K18 QC blockers with output discipline fixes"
 
 # Before merge: run evidence gates (Steps 5a-5d)
+```
 
-# Merge with squash strategy
-gh pr merge <PR_NUM> --squash --delete-branch
+Yhdistäminen (`merge`) edellyttää `SKILLS.md`:n mukaisesti erillistä
+merge-valtuutusta, hyväksyttävään täsmärevisioon kohdistuvaa pysyvää
+riippumatonta ihmishyväksyntänäyttöä sekä pakollisten tarkistusten läpäisyä
+(haaran poisto edellyttää aina omaa erillistä valtuutustaan):
+
+```bash
+gh pr merge <PR_NUM> --squash
 ```
 
 ---

@@ -9,7 +9,9 @@ Tämä tiedosto täydentää SKILLS.md:tä. Jos ristiriitaa: SKILLS.md voittaa.
   tehtävän. Muuten STOP. Jo hyväksytyn `03-review`-tehtävän tekninen sulkeminen
   ei vaadi ready-tehtävää; tarkista ensin `SKILLS.md`:n riippumaton
   ihmishyväksynnän näyttö.
-- Noudata `config/steering.md`: max 5 file change/run, safe mode, approvals required, kielipolitiikka.
+- Noudata `SKILLS.md`:n kanonista tehtäväkohtaista kirjoitusrajausta ja
+  toimitusrajaa sekä `config/steering.md`:tä (safe mode, approvals required,
+  kielipolitiikka).
 
 ## Tehtäväjono (Agent-First)
 

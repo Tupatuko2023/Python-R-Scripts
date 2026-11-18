@@ -39,9 +39,40 @@ Pakollinen työjono ja toimintalogiikka:
 - **DoD gate (analyysirepo):** tee vähintään yksi smoke-run (Rscript/python) aliprojektin ohjeiden mukaan. Aja QC-runner, jos repo tarjoaa sen. Jos `renv/` on käytössä, varmista että `renv::restore()` on mahdollinen ja kirjaa tarvittaessa `sessionInfo()`/`renv::diagnostics()`.
 - **Blocker:** jos olet epävarma, luo blocker-merkintä tehtävään tai pyydä ihmiseltä täsmennys ennen jatkoa.
 
-**Steering integration (MUST):** lue `config/steering.md` ennen työn aloitusta ja noudata sitä:
+**Steering integration & tehtäväkohtainen kirjoitusrajaus (MUST, kanoninen sääntö):**
+lue `config/steering.md` ennen työn aloitusta ja noudata tätä kanonista rajaussääntöä
+(muut ohjeet viittaavat tähän osioon tai tiivistävät sen):
 
-- Max changes per run: 5 files
+- **Tavoite, kirjoituspolut ja toimitusraja:** jokaisella toteutuksella on ennalta
+  hyväksytty tavoite, yksilöidyt repojuureen suhteutetut kirjoituspolut (ml.
+  tehtäväkortin elinkaaripolut, mahdollinen nimetty
+  `docs/governance/project_registry/PRJ-*.md`-tietue ja tarpeelliset paikalliset
+  gitignored-tulokset), hyväksytyt operaatiot sekä eksplisiittinen toimitusraja
+  (esim. read-only, paikallinen commit tai PR-katselmointi). Muutosmäärä
+  raportoidaan katselmointia varten; mekaanista ajokohtaista tiedostomäärärajaa ei
+  ole.
+- **Eteneminen ja session jatko ilman toistuvia lupapyyntöjä:** hyväksytyssä
+  rajauksessa agentti etenee sovittuun toimitusrajaan asti (ml. yksi tai useampi
+  looginen kohdistettu commit) pyytämättä samaa lupaa uudelleen tiedostomäärän,
+  commitin, työkalukutsun tai keskusteluvuoron vuoksi. Saman tehtävän jatko
+  keskeytyksen tai uuden session jälkeen käyttää kirjattua valtuutusta, kun
+  nykytila ja tallennettu valtuutus on tarkistettu; tekninen session käynnistys ei
+  ole uusi sisältöhyväksyntä, eikä puuttuvaa valtuutusnäyttöä keksitä.
+- **Tarkistusvirheet ja pakolliset portit:** pakollisen portin tai tarkistuksen
+  virheen saa korjata hyväksytyissä kirjoituspoluissa ja tavoitteen sisällä ilman
+  uutta lupapyyntöä. Pakollista porttia ei saa koskaan ohittaa: ratkaisematon
+  virhe estää toimituksen.
+- **Uutta päätöstä vaativat laajennukset:** jos tavoite, kirjoituspolut,
+  vaikutukset tai tarvittavat operaatiot laajenevat — tai jos ilmenee
+  ratkaisematon ohjeristiriita tai riski muiden paikalliselle työlle — agentti
+  pysähtyy ja esittää yhden kootun muutosesityksen perusteluineen.
+- **Operaatioiden valtuutus ja erilliset portit:** etäoperaatiot (`git fetch`,
+  `git pull`, `git push`, `gh issue`/`gh pr`), merge, `04-done`-sulku ja poistot
+  eivät tule automaattisesti sallituiksi pelkän kirjoituspolkulistan perusteella.
+  Operaatiot voidaan hyväksyä yhdessä tehtävän alussa osana kirjattua valtuutusta
+  ja toimitusrajaa, jolloin lupaa ei kysytä uudelleen jokaisella käyttökerralla.
+  Merge ja `04-done` vaativat aina nimenomaisen valtuutuksen sekä yllä määritellyn
+  riippumattoman ihmishyväksyntänäytön.
 - Safe mode: `true` → tiedostojen poistot vaativat hyväksynnän
 - Approvals required: `docs/` tai `src/` poistot, uudet Python-riippuvuudet, `data/`-rakenteen muutokset
 - Language policy: dokumentaatio suomeksi, koodi/muuttujat englanniksi
@@ -81,9 +112,9 @@ eksplisiittisellä käskyllä:
 - Yhteisiä `outputs/`-hakemistoja ei käytetä.
 - Kun tehtävä nimeää projektitietueen (`docs/governance/project_registry/PRJ-*.md`),
   noudata [projektirekisterin käyttöohjetta](docs/governance/project_registry/README.md):
-  päivitä vain tehtävään sallittua tietuetta Git-suojan kautta lukittua
-  lähdekuvausta muuttamatta, säilytä tehtäväkortit omissa jonoissaan ja laske
-  projektitiedoston muutos mukaan 5 tiedoston ajorajaan.
+  päivitä vain tehtävän hyväksyttyihin kirjoituspolkuihin kuuluvaa tietuetta
+  Git-suojan kautta lukittua lähdekuvausta muuttamatta ja säilytä tehtäväkortit
+  omissa jonoissaan.
 
 ## GitHub Auth (Non-Interactive) — Termux-safe
 
@@ -213,23 +244,34 @@ proot-distro login debian --termux-home -- bash -lc "cd <ABS_REPO_ROOT> && bash 
 proot-distro login debian --termux-home -- bash -lc "cd <ABS_REPO_ROOT> && quarto render"
 ```
 
-1. Commit (one logical change per commit)
+1. Commit (one logical change per commit, targeted staging only)
+
+- Stageaa aina vain tehtävän hyväksytyt kirjoituspolut. Älä käytä `git add -A`
+  -komentoa, jotta muiden paikalliset tai seuraamattomat tiedostot säilyvät
+  koskemattomina.
 
 ```bash
-git add -A
+git add -- <approved-paths>
+git diff --cached --name-status
 git commit -m "docs: enforce non-interactive gh auth protocol"
 ```
 
-1. Push and open PR (non-interactive)
+1. Push and open PR (non-interactive; vain kun sisältyy hyväksyttyyn toimitusrajaan)
 
 ```bash
 git push -u origin HEAD
 gh pr create --fill
 ```
 
-1. Enable auto-merge only after checks pass
+1. Merge tai auto-merge (vain erillisellä merge-valtuutuksella ja riippumattoman ihmishyväksynnän jälkeen)
+
+- PR-katselmointiin rajattu toimitusvaltuutus päättyy PR:n luontiin/päivittämiseen
+  ja tarkistusten raportointiin. Älä aja `gh pr merge` -komentoa tai kytke
+  auto-mergeä päälle ilman nimenomaista merge-valtuutusta ja tämän tiedoston
+  mukaista riippumatonta ihmishyväksyntänäyttöä.
 
 ```bash
+# Vain kun erillinen merge-valtuutus ja riippumaton ihmishyväksyntä on varmennettu:
 gh pr merge --auto --squash
 ```
 

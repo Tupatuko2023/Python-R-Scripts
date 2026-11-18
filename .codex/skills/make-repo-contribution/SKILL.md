@@ -39,16 +39,32 @@ This applies to any agent entrypoint, orchestrator, or wrapper that can initiate
 
 ## Approval Model
 
+- Kanoniset kirjoitusrajaus- ja valtuutussäännöt määritellään tiedostossa
+  `SKILLS.md`; tämä ohje soveltaa niitä haara-, commit-, push-, issue- ja
+  PR-toimiin luomatta erillisiä tiedostomäärä- tai commit-kohtaisia portteja.
 - Drafting plans, issue text, commit messages, and pull-request descriptions is
   read-only and does not require remote-write approval.
-- One explicit approval may cover one bounded contribution batch, such as branch
-  creation, scoped edits, repository-owned validation, and a commit.
-- The same approval may cover named remote operations only when those operations
-  are explicitly included in the approved batch.
-- Stop and request new approval if the file scope, remote target, destructive
-  impact, or purpose materially changes.
-- Without explicit approval, do not push, create or update remote issues, or
-  create or update pull requests. Never merge unless explicitly instructed.
+- Yksi nimenomainen tehtävävaltuutus kattaa hyväksytyn tavoitteen, täsmälliset
+  repojuureen suhteutetut kirjoituspolut (ml. tehtäväkortin elinkaarisiirrot,
+  nimetyt `PRJ-*.md`-tietueet ja paikalliset `gitignored`-tulokset),
+  tarkistus- tai porttivirheiden korjaukset näissä hyväksytyissä poluissa,
+  yhden tai useamman loogisen kohdistetun commitin sekä nimetyt etäoperaatiot
+  sovitulle toimitusrajalle asti (esim. PR:n luonti ja päivitys).
+- Saman tehtävän jatkaminen keskusteluvuorojen yli tai uudessa sessiossa
+  hyödyntää jo kirjattua valtuutusta, kun repon nykytila ja tallennettu
+  päätös on tarkistettu; älä pyydä samaa lupaa uudelleen tiedostomäärän,
+  commitin, työkalukutsun tai keskusteluvuoron vuoksi.
+- Pakollisia tarkistusportteja ei saa koskaan ohittaa: korjaa porttivirhe
+  hyväksytyissä poluissa jos mahdollista, tai pysäytä toimitus jos virhe jää
+  ratkaisematta.
+- Pysähdy ja esitä yksi koottu muutosesitys perusteluineen, jos tavoite,
+  kirjoituspolut, etäkohde, poistovaikutus tai tarvittavat operaatiot
+  laajenevat.
+- Ilman tehtävän valtuutukseen sisältyvää lupaa älä aja `git fetch`-,
+  `git pull`- tai `git push` -komentoja äläkä luo tai päivitä etä-issueita tai
+  PR:iä (`gh issue` / `gh pr`). Älä koskaan tee `merge`-toimenpidettä ilman
+  erillistä merge-valtuutusta ja `SKILLS.md`:n mukaista pysyvää riippumatonta
+  ihmishyväksyntänäyttöä.
 
 ## Instructions
 
@@ -140,4 +156,6 @@ git commit -m "<message>"
 - If security boundaries conflict with docs, stop and report.
 - Trusted repository gates may run after inspection and within scope.
 - No approval means no push, remote issue mutation, or pull-request mutation.
-- A bounded approval remains valid only while its declared scope is unchanged.
+- Tehtäväkohtainen valtuutus pysyy voimassa sovittuun toimitusrajaan asti niin
+  kauan kuin sen tavoite, kirjoituspolut ja valtuutetut operaatiot pysyvät
+  muuttumattomina (ks. `SKILLS.md`).

@@ -112,7 +112,9 @@ run `fof-qc-summarizer` -> then proceed to modeling.
   saman tehtävän teknisen `04-done`-siirron, validoinnin ja lifecycle-PR:n ilman
   uutta ready-tehtävää. Agentti ei hyväksy omaa työtään; ihminen arvioi ja
   mergeää PR:n.
-- MUST: noudata `config/steering.md` (max 5 files/run, safe mode, approvals required).
+- MUST: noudata `SKILLS.md`:n kanonista tehtäväkohtaista kirjoitusrajausta ja
+  toimitusrajaa sekä `config/steering.md`:tä (safe mode, approvals required,
+  kielipolitiikka).
 - SHOULD: yksityiskohdat ja DoD: katso `SKILLS.md` (single source of truth).
 
 ## Lint/Format
@@ -170,8 +172,9 @@ ja vain sallituilla kirjoituspoluilla: aloituksessa, merkittävässä välivaihe
 keskeytyksessä, toimituksessa, sulussa ja valtuutetussa jatkovaiheessa. Älä muuta
 muiden projektien tietoja tai lukittua lähdekuvausta ja sen SHA256-tiivistettä.
 Aja rekisterikomennot ja Git-suoja worktreen repojuuresta, koordinoi saman
-tietueen muutokset eri worktreiden välillä ja laske projektipäivitys mukaan
-viiden tiedoston ajorajaan. Main-toimitus ja worktree-siivous kirjataan erikseen.
+tietueen muutokset eri worktreiden välillä ja sisällytä projektitiedosto
+tehtävän hyväksyttyihin kirjoituspolkuihin (ks. `SKILLS.md`). Main-toimitus ja
+worktree-siivous kirjataan erikseen.
 Aliprojektien omat tehtäväjonot ja ohjeet säilyvät omina kokonaisuuksinaan.
 
 ## References
