@@ -2,13 +2,13 @@
 
 ## Context
 
-Tila: REVIEW. Tehtävätunnus: `project-write-scope-policy-001`.
+Tila: DONE. Tehtävätunnus: `project-write-scope-policy-001`.
 Omistaja: Tomi Korpi. Orkestroija: FCPO2.
 Projekti: `PRJ-PROJECT-WRITE-SCOPE-POLICY` (`docs/governance/project_registry/PRJ-PROJECT-WRITE-SCOPE-POLICY.md`).
 Repo: `Tupatuko2023/Python-R-Scripts`.
-Perustahaara ja varmennettu `origin/main`: `b0499e2de483e68f1f73f65d88859cac9b6778af`.
-Työpuu ja tehtävähaara: `tmp/project-write-scope-policy-001` / `docs/project-write-scope-policy-001`.
-PR: https://github.com/Tupatuko2023/Python-R-Scripts/pull/227
+Perustahaara ja varmennettu `origin/main`: `b0499e2de483e68f1f73f65d88859cac9b6778af` (toimitettu `origin/main`: `e96e146b3abda3ffe4c40143085e870bd31cdb56`).
+Työpuu ja tehtävähaarat: `tmp/project-write-scope-policy-001` / `docs/project-write-scope-policy-001` ja sulkuhaara `chore/project-write-scope-policy-closeout-001`.
+Toteutus-PR: https://github.com/Tupatuko2023/Python-R-Scripts/pull/227 (MERGED)
 
 Projektirekisterin yleisen käyttöönoton suunnittelussa viiden tiedoston
 ajokohtainen raja johti neljään erilliseen ajoon ja ehdotukseen pyytää
@@ -87,6 +87,8 @@ Lisäksi tämän tehtäväkortin elinkaaripolut eristetyssä worktreessä:
 - `tasks/01-ready/project-write-scope-policy-001.md`
 - `tasks/02-in-progress/project-write-scope-policy-001.md`
 - `tasks/03-review/project-write-scope-policy-001.md`
+- `tasks/04-done/project-write-scope-policy-001.md` (Ownerin 2026-11-18T14:59:11Z
+  hyväksyntä- ja sulkuvaltuutus PR #227:ssä)
 
 Paikallinen generoitu tulos (gitignored, ei commitoida):
 
@@ -141,12 +143,12 @@ Paikallinen generoitu tulos (gitignored, ei commitoida):
 - [x] Soveltuvat Markdown- ja toimitusportit sekä `git diff --check` läpäisevät.
       `tools/run-gates.sh` päivittää vain vanhan ilmoitustekstin heikentämättä
       porttia. Tutkimusanalyysejä tai K18/QC-ajoja ei käynnistetä (`NOT APPLICABLE`).
-- [ ] Riippumaton hyväksyntänäyttö kohdistuu katselmoituun revisioon, ja toimitus
+- [x] Riippumaton hyväksyntänäyttö kohdistuu katselmoituun revisioon, ja toimitus
       kanoniseen mainiin sekä tehtävän sulku on varmennettu paikallisin säännöin
-      (myöhempi sulkuvaihe PR-katselmoinnin jälkeen).
+      (PR #227 `87cd0490` -> `origin/main` `e96e146b`).
 - [x] Työpuun säilytys tai erikseen valtuutettu siivous on raportoitu erillään
       toteutuksesta ja main-toimituksesta (`tmp/project-write-scope-policy-001`
-      `active`, päächeckout ja 12 muuta työpuuta säilytetty koskemattomina).
+      `retained`, haarat säilytetty, päächeckout ja 12 muuta työpuuta koskemattomina).
 
 ## Tapausvertailu (6 skenaariota — dokumentoitu sääntö- ja toimintatapavertailu)
 
@@ -267,13 +269,51 @@ ei koneellisesti vertaa muutospolkuja tehtävän valtuutukseen)._
   merge-esimerkkiin erillinen merge-valtuutus, täsmärevisioon kohdistuva pysyvä
   riippumaton ihmishyväksyntänäyttö ja pakollisten tarkistusten läpäisy sekä
   poistettu `--delete-branch`-valitsin; päivitetty tämän kortin kirjoitusrajaus
-  ja Sourcery #1 -vastine.
+  ja Sourcery #1 -vastine (`87cd0490696178cc9c46f215a868b3bd4465794e`).
+- 2026-11-18T17:02:00+02:00: Varmennettu Ownerin pysyvä riippumaton hyväksyntä
+  PR #227:ssä täsmärevisiolle `87cd0490696178cc9c46f215a868b3bd4465794e` sekä
+  kaikkien pakollisten tarkistusten läpäisy ilman uusia katselmointihavaintoja.
+  Yhdistetty PR #227 `--squash --match-head-commit` -suojauksella haaraa
+  poistamatta `origin/main`-committiin `e96e146b3abda3ffe4c40143085e870bd31cdb56`
+  ja varmennettu toimitus suoraan etä-`origin/main`ista. Suoritettu
+  `--verify-guard` (`OK`, exit 0) toimitetulta `origin/main`ilta, siirretty
+  kortti `03-review` -> `04-done` ja päivitetty `PRJ-PROJECT-WRITE-SCOPE-POLICY.md`
+  tilaan `closed` / `delivered` lähdelohkoa ja SHA256:ta muuttamatta.
+
+## Omistajan hyväksyntä, main-toimitus ja tekninen sulkeminen 2026-11-18
+
+- **Hyväksyjä ja aika:** `Tupatuko2023` (`OWNER`), `2026-11-18T14:59:11Z`.
+- **Pysyvä, agentin lokista riippumaton hyväksyntänäyttö:**
+  https://github.com/Tupatuko2023/Python-R-Scripts/pull/227#issuecomment-6982284690
+- **Kohdetehtävä ja hyväksytty täsmärevisio:** `project-write-scope-policy-001`,
+  PR #227 HEAD `87cd0490696178cc9c46f215a868b3bd4465794e` (pakolliset tarkistukset
+  `Lint Markdown`, `CodeQL`, `Detect Smoke-Relevant Changes` ja `Sourcery review`
+  `COMPLETED` / `SUCCESS`; ei uusia katselmointihavaintoja).
+- **Main-toimitus ja etävarmennus:** PR #227 yhdistetty squash-mergellä
+  (`--match-head-commit 87cd0490696178cc9c46f215a868b3bd4465794e`, ilman
+  haaran poistoa) `2026-11-18T15:00:48Z` `origin/main`-committiin
+  `e96e146b3abda3ffe4c40143085e870bd31cdb56`. Toimitus ja kaikki 13 polkua on
+  varmennettu `git fetch origin main` -haun jälkeen suoraan `origin/main`ista.
+- **Rekisteripäivitys ja sulku-PR:** `--verify-guard` läpäisi toimitetulta
+  `origin/main`-revisiolta (`e96e146b3abda3ffe4c40143085e870bd31cdb56`, `OK`).
+  `PRJ-PROJECT-WRITE-SCOPE-POLICY.md` on päivitetty tilaan `state: "closed"`,
+  `delivery: "delivered"`, `completed_date: "2026-11-18"` ja tehtäväviite tähän
+  `04-done`-polkuun; alkuperäinen lähdekuvauslohko ja sen SHA256
+  (`5e46c7af00b837cf3ede2eed2e5256bc1df5f11f7d71785160bcfe98b6ee4367`) on
+  säilytetty tavuntarkasti muuttumattomina.
+- **Työpuun ja haarojen säilytys (erillään main-toimituksesta):** työpuu
+  `tmp/project-write-scope-policy-001` sekä haarat
+  `docs/project-write-scope-policy-001` ja
+  `chore/project-write-scope-policy-closeout-001` säilytetään ilman poistoja
+  (`project-write-scope-policy`: `retained`, `worktree_inventory: "unknown"`).
+  Likainen päächeckout (`49564468`, ml. seuraamaton
+  `tasks/00-backlog/project-write-scope-policy-001.md`) ja muut 12 työpuuta on
+  säilytetty koskemattomina.
 
 ## Blockers
 
-Ei aktiivisia esteitä PR-katselmointiin etenemiseksi. Merge, `04-done`-sulku ja
-mahdollinen työpuun siivous odottavat PR-katselmoinnin jälkeistä erillistä
-ihmishyväksyntää.
+Ei aktiivisia esteitä. Tämä tekninen sulku-PR jätetään ihmiskatselmointiin ja
+yhdistettäväksi `SKILLS.md`:n mukaisesti.
 
 ## Links
 
