@@ -2,15 +2,15 @@
 
 ## Context
 
-- Tila: `REVIEW`
+- Tila: `DONE`
 - Tehtävätunnus: `worktree-cleanup-001`
 - Omistaja: Tomi Korpi (`Tupatuko2023`)
 - Orkestroija: `FCPO2`
-- PR: <https://github.com/Tupatuko2023/Python-R-Scripts/pull/231>
+- Toteutus-PR: <https://github.com/Tupatuko2023/Python-R-Scripts/pull/231> (`MERGED`, `3bfb9ba3f9527f9737c07477d872f1f12ef3273e`)
 - Repo: `Tupatuko2023/Python-R-Scripts`
-- Projektitietue: Ei uutta `PRJ-*`-tietuetta (`docs/governance/project_registry/README.md`: yksittäinen siivoustehtävä toteutetaan pelkällä `TASK`-kortilla; olemassa olevien suljettujen projektien `PRJ-REGISTRY-ROLLOUT`, `PRJ-PROJECT-WRITE-SCOPE-POLICY` ja `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT` worktree-taulukot päivitetään vain toteutuneiden poistojen osalta).
-- Varmennettu lähtörevisio (`origin/main`): `b12155dd760e86bc0077d0ad966fc5ee08c0c135`
-- Eristetty väliaikainen siivoustyöpuu ja haara: `tmp/worktree-cleanup-001` / `chore/worktree-cleanup-001`
+- Projektitietue: Ei uutta `PRJ-*`-tietuetta (`docs/governance/project_registry/README.md`: yksittäinen siivoustehtävä toteutetaan pelkällä `TASK`-kortilla; olemassa olevien suljettujen projektien `PRJ-REGISTRY-ROLLOUT`, `PRJ-PROJECT-WRITE-SCOPE-POLICY` ja `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT` worktree-taulukot päivitettiin toteutuneiden poistojen osalta PR #231:ssä).
+- Varmennettu lähtörevisio (`origin/main`): `b12155dd760e86bc0077d0ad966fc5ee08c0c135` (toimitettu `origin/main` PR #231:n jälkeen: `3bfb9ba3f9527f9737c07477d872f1f12ef3273e`)
+- Eristetty väliaikainen siivoustyöpuu ja haarat: `tmp/worktree-cleanup-001` / `chore/worktree-cleanup-001` (`b3b464822514dd39bb536e004dcb015e213db3d8`) ja sulkuhaara `chore/worktree-cleanup-closeout-001` (vielä paikallaan; odottavat tämän sulku-PR:n `origin/main`-toimituksen jälkeistä loppusiivousta)
 - Tavoite: Poistetaan Ownerin 2026-11-19 hyväksymässä rajauksessa yksilöidyt 8 toimitettua ja tarkistettua työpuuta sekä 11 toimitettua paikallista tehtävähaaraa ilman pakotusta (`--force` tai `-D`), säilyttäen etähaarat, päächeckout paikallisine töineen, `tmp/deac-fira1-bootstrap` sekä kaikki muut säilytettäviksi merkityt työpuut, ja kirjataan vain toteutuneet poistot.
 - Hyväksytyt operaatiot ja toimitusraja (`SKILLS.md`):
   - eristetyn `tmp/worktree-cleanup-001`-työpuun perustaminen varmennetusta `origin/main`ista (`b12155dd760e86bc0077d0ad966fc5ee08c0c135`) ja `npm ci` vain tässä työpuussa lukitustiedoston mukaisesti;
@@ -49,7 +49,22 @@
 - [x] Päächeckout, `tmp/deac-fira1-bootstrap`, kaikki muut säilytettäviksi merkityt työpuut sekä kaikki etähaarat (`origin/*`) ovat säilyneet täysin koskemattomina.
 - [x] `PRJ-REGISTRY-ROLLOUT.md`, `PRJ-PROJECT-WRITE-SCOPE-POLICY.md` ja `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` kirjaavat vain toteutuneet poistot säilyttäen `closed / delivered` -tilat, valmistumishistorian, lähdekuvaukset, SHA256-arvot ja totuudenmukaisen `worktree_inventory`-arvon (`unknown`).
 - [x] Soveltuvat rekisteri-, yksikkötesti-, Markdown-, LF- ja `tools/run-gates.ps1 --mode pre-push --smoke` -tarkistukset ovat läpäisseet ja siivouskirjauksen PR (#231) on avattu katselmointiin (`03-review`).
-- [ ] PR:n täsmärevisio on saanut riippumattoman ihmishyväksynnän, yhdistetty `origin/main`iin, suljettu `04-done`-sulku-PR:llä ja sen yhdistämisen jälkeen `tmp/worktree-cleanup-001` paikallisine haaroineen on siivottu ja todennettu sulku-PR:n kommentissa ilman uutta PR-ketjua.
+- [x] PR #231:n täsmärevisio (`b3b464822514dd39bb536e004dcb015e213db3d8`) on saanut riippumattoman ihmishyväksynnän (`Tupatuko2023`, `2026-11-19T18:48:14Z`, `#issuecomment-7018697697`), yhdistetty `origin/main`iin (`3bfb9ba3f9527f9737c07477d872f1f12ef3273e`) ja kortti on siirretty polkuun `tasks/04-done/worktree-cleanup-001.md` omaa sulku-PR:ää varten (`tmp/worktree-cleanup-001` odottaa vielä sulku-PR:n yhdistämisen jälkeistä loppusiivousta).
+
+## Riippumaton ihmishyväksyntä, `main`-toimitus ja odottava oman työpuun loppusiivous
+
+1. **Riippumaton ihmishyväksyntänäyttö (`SKILLS.md`):**
+   - Hyväksyjä: Tomi Korpi (`Tupatuko2023`)
+   - Päätöksen aika: `2026-11-19T18:48:14Z` (`2026-11-19T20:48:14+02:00`)
+   - Kohdetehtävä: `worktree-cleanup-001`
+   - Hyväksytty täsmärevisio: `b3b464822514dd39bb536e004dcb015e213db3d8`
+   - Pysyvä hyväksyntä-URL: <https://github.com/Tupatuko2023/Python-R-Scripts/pull/231#issuecomment-7018697697>
+2. **Varmennettu `main`-toimitus (PR #231):**
+   - Yhdistetty komennolla `gh pr merge 231 --squash --match-head-commit b3b464822514dd39bb536e004dcb015e213db3d8` ilman haaran poistoa (`mergedAt: 2026-11-19T18:50:01Z`).
+   - `git fetch origin main` vahvisti kanoniseksi `origin/main`-merge-commitiksi `3bfb9ba3f9527f9737c07477d872f1f12ef3273e` (kaikki 4 polkua toimitettiin `origin/main`iin).
+3. **Oman siivoustyöpuun vielä odottava loppusiivous (EI merkitty ennakolta poistetuksi):**
+   - Tämän tehtävän oma väliaikainen työpuu `tmp/worktree-cleanup-001` sekä sen paikalliset tehtävähaarat (`chore/worktree-cleanup-001` ja `chore/worktree-cleanup-closeout-001`) ovat tämän `04-done`-sulku-PR:n aikana edelleen olemassa (`retained / pending post-merge cleanup`).
+   - Vasta kun tämä sulku-PR on saanut riippumattoman ihmishyväksynnän, yhdistetty `origin/main`iin ja varmennettu tuoreesta `origin/main`ista, `tmp/worktree-cleanup-001` (regeneroitava `node_modules/` ja mahdolliset välimuistit tarkistettuina) sekä sen kaksi paikallista tehtävähaaraa poistetaan ilman pakotusta, ja toteutunut poistonäyttö kirjataan sulku-PR:n kommenttiin ja loppuraporttiin ilman uutta tehtävää tai PR-ketjua.
 
 ## Toteutuneet poistot ja säilytetyt kohteet (2026-11-19)
 
@@ -93,7 +108,7 @@ Kaikkien 11 haaran `origin/main`-toimitusnäyttö (suora esivanhemmuus tai PR:n 
 5. **`tmp/deac-fira1-bootstrap` (`73d98b5c11`):** säilytetty Ownerin päätöksen mukaisesti (PR #165:n `c1dc26aa0d`-esivanhemmuus puuttuu paikallisesta objektikannasta ja päächeckoutissa on samanniminen untracked-kortti).
 6. **`tmp/project-registry-baseline-001` (`ce44996a40`, `detached`):** säilytetty (`gitignored` Quantify-tulokset ja `manifest/run_log.local.csv`).
 7. **`tmp/project-registry-transfer-001` (`bef9422eac`):** säilytetty (`03-review`-kortin `project-registry-cleanup-001` toimitusworktree sekä Quantify-tulokset ja CI-näyttö).
-8. **`tmp/worktree-cleanup-001` (`chore/worktree-cleanup-001`):** tämän siivouskirjauksen oma väliaikainen toimitusworktree; poistetaan valtuutuksen mukaisesti heti hyväksytyn `04-done`-sulku-PR:n `origin/main`-toimituksen jälkeen ja todennetaan sulku-PR:n kommentissa.
+8. **`tmp/worktree-cleanup-001` (`chore/worktree-cleanup-closeout-001`):** tämän siivouskirjauksen oma väliaikainen toimitusworktree; **edelleen paikallaan (ei poistettu ennakolta)** ja odottaa tämän `04-done`-sulku-PR:n hyväksytyn `origin/main`-toimituksen jälkeistä loppusiivousta, jonka poistonäyttö kirjataan sulku-PR:n kommenttiin.
 
 ### 4. Siivousnäytön raja ja tarkistustulokset
 
@@ -110,11 +125,12 @@ Kaikkien 11 haaran `origin/main`-toimitusnäyttö (suora esivanhemmuus tai PR:n 
 
 - 2026-11-19T20:16:00+02:00: Varmennettu `git fetch origin main` -> `b12155dd760e86bc0077d0ad966fc5ee08c0c135`, tarkistettu ettei vastaavaa tehtävää ole jonossa, perustettu eristetty työpuu `tmp/worktree-cleanup-001` haaralle `chore/worktree-cleanup-001` ja lisätty tehtäväkortti `READY`-tilaan (`6ff4242a35f7ce6fa135a69e0816e84c20afa0fd`).
 - 2026-11-19T20:21:00+02:00: Suoritettu `--verify-guard` (`OK`, exit 0) kaikille kolmelle `PRJ-*.md`-tiedostolle, siirretty kortti `01-ready -> 02-in-progress`, todennettu kaikkien 8 hyväksytyn työpuun Git-omistajuus (`Python-R-Scripts`), `origin/main`-toimitus ja sisältö sekä poistettu kaikki 8 työpuuta (`git worktree remove`) ja 11 paikallista tehtävähaaraa (`git branch -d`) ilman pakotusta. Päivitetty 3 `PRJ-*.md`-tietuetta toteutuneilla poistoilla (`4706734`).
-- 2026-11-19T20:26:00+02:00: Avattu PR #231 (<https://github.com/Tupatuko2023/Python-R-Scripts/pull/231>), siirretty kortti polkuun `tasks/03-review/worktree-cleanup-001.md` (`REVIEW`), suoritettu kaikki Markdown-, rekisteri- ja toimitusportit ja toimitettu katselmoitavaksi.
+- 2026-11-19T20:26:00+02:00: Avattu PR #231 (<https://github.com/Tupatuko2023/Python-R-Scripts/pull/231>), siirretty kortti polkuun `tasks/03-review/worktree-cleanup-001.md` (`REVIEW`), suoritettu kaikki Markdown-, rekisteri- ja toimitusportit ja toimitettu katselmoitavaksi (`b3b464822514dd39bb536e004dcb015e213db3d8`).
+- 2026-11-19T20:50:00+02:00: Varmennettu Ownerin (`Tupatuko2023`) pysyvä ihmishyväksyntä (`2026-11-19T18:48:14Z`, `#issuecomment-7018697697`) täsmärevisiolle `b3b464822514dd39bb536e004dcb015e213db3d8`, yhdistetty PR #231 `--squash --match-head-commit` -suojauksella ilman haaran poistoa, varmennettu `origin/main`-toimitus (`3bfb9ba3f9527f9737c07477d872f1f12ef3273e`) ja siirretty tämä kortti polkuun `tasks/04-done/worktree-cleanup-001.md` (`DONE`) sulku-PR:ää varten (`tmp/worktree-cleanup-001` odottaa edelleen sulku-PR:n yhdistämisen jälkeistä loppusiivousta).
 
 ## Blockers
 
-- Ei aktiivisia esteitä. Odottaa riippumatonta ihmishyväksyntää PR #231:n täsmärevisiolle ennen mergeä ja `04-done`-sulkuvaihetta.
+- Ei aktiivisia esteitä. Odottaa riippumatonta ihmishyväksyntää tämän `04-done`-sulku-PR:n täsmärevisiolle ennen mergeä ja `tmp/worktree-cleanup-001`:n loppusiivousta.
 
 ## Links
 
