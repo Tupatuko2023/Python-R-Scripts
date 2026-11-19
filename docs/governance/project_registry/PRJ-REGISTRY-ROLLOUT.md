@@ -8,12 +8,12 @@ state: "closed"
 delivery: "delivered"
 goal: "Agentti löytää, päivittää ja jatkaa päärepon ja aliprojektien nimettyjä projekteja yhteisen projektirekisterin ja tehtäväviitteiden avulla ilman rinnakkaista tehtäväjonoa."
 done_criterion: "Yleisen käytön ohjeet (README, AGENTS.md, SKILLS.md, GEMINI.md, Fear-of-Falling/GEMINI.md) ja tämän projektitietueen jatkovaihe on validoitu, ihmisen hyväksymä ja varmennettu mainista; pilotin toimitus- ja siivoushistoria sekä alkuperäinen lähdekuvaus säilyvät."
-latest_status: "2026-11-17: Yleisen käyttöönoton jatkovaihe (project-registry-general-adoption-001) hyväksytty ja toimitettu mainiin (PR #225, e603111a) sekä suljettu. Pilottivaihe (PR #219/#220) ja siivouskirjaus (PR #221) säilyvät historiassa; työpuu ja haarat säilytetään."
+latest_status: "2026-11-19: Jatkovaiheen työpuu tmp/project-registry-general-adoption-001 sekä paikalliset haarat poistettu valtuutetussa siivouksessa (worktree-cleanup-001) PR #225/#226:n toimitusnäytöllä; baseline- ja transfer-työpuut sekä etähaarat säilytetään."
 next_step: "Rekisteri on koko repon normaalissa käytössä. Luo tai päivitä projektitietueita vain tehtäväkortin valtuuttamilla kirjoituspoluilla README-ohjeen mukaan; älä avaa valmiita käyttöönottokortteja uudelleen."
 source_description_sha256: "83d725739700bef4dbd47f3bb23777d389cdf7096148d40b0a57301b3af27dd1"
 source_captured_at: "2026-11-03"
-observed_at: "2026-11-17"
-observed_commit: "e603111a946b3b54cada7e87a7e1cc0b58feff9f"
+observed_at: "2026-11-19"
+observed_commit: "b12155dd760e86bc0077d0ad966fc5ee08c0c135"
 observed_worktree_label: "registry-general-adoption"
 blocker: ""
 orchestrator: "FCPO2"
@@ -117,16 +117,15 @@ Tehtävän tekninen `04-done`-siirto ja tämän jatkovaiheen `closed` / `deliver
 | registry-source-validation  | removed  | Tupatuko2023/FOF-Dissertation-Project; tasks/04-done/TASK-PROJECT-REGISTRY-VALIDATION-001.md; worktree validation poistettu, PR #349/#350/#351:n puut täsmäävät squash-toimituksiin. |
 | registry-baseline           | retained | tmp/project-registry-baseline-001 säilytetty: 21 ignored-tiedostoa, myös Quantifyn paikalliset tulokset/manifesti; säilytystarvetta ei oleteta ratkaistuksi.                         |
 | registry-transfer           | retained | tmp/project-registry-transfer-001 säilytetty: paikallisia CI-raportteja, Markdown-riippuvuuksia sekä Quantifyn tuloksia/manifesti; myös tämän kirjauksen toimitusworktree.           |
-| registry-general-adoption   | retained | tmp/project-registry-general-adoption-001 säilytetty PR #225:n (e603111a) jälkeen sulkukirjausta varten; paikalliset ja etähaarat säilytetään ilman poistoja.                        |
+| registry-general-adoption   | removed  | tmp/project-registry-general-adoption-001 poistettu 2026-11-19 ilman forcea (worktree-cleanup-001); PR #225/#226 (b0499e2de4) sama squash-puu mainissa, vain regeneroitava CSV.      |
 
 Inventaario kattaa aiemman siirto-/käyttöönottohankkeen tunnistetut kahdeksan
-worktreetä molemmissa repoissa (2026-11-03) sekä tämän jatkovaiheen säilytetyn
-worktreen `registry-general-adoption` (2026-11-17). Koska uusi työpuu avasi
-uuden vaiheen eikä koko monorepon kaikkia työpuita inventoitu uudelleen tässä
-dokumentaatiotehtävässä, `worktree_inventory` on asetettu arvoon `unknown`
-(aiempi `complete` ei siirry automaattisesti uuden vaiheen kattavuusväitteeksi).
-CSV:n `Worktree-siivous` on `retained`, koska kolme säilytettyä worktreetä on
-olemassa; kuusi aiempaa poistoa ei tarkoita kaiken poistamista.
+worktreetä molemmissa repoissa (2026-11-03) sekä jatkovaiheen nyt poistetun
+worktreen `registry-general-adoption` (2026-11-19). Koska koko monorepossa on
+edelleen säilytettyjä työpuita ja siivoustehtävän oma väliaikainen työpuu oli
+aktiivinen kirjaushetkellä, `worktree_inventory` pidetään arvossa `unknown`.
+CSV:n `Worktree-siivous` on `retained`, koska kaksi tämän projektin aiempaa
+worktreetä (`registry-baseline`, `registry-transfer`) säilytetään edelleen.
 Erillinen FOF-repon SKR1-maintenance-002-worktree on eri keskeneräinen tehtävä,
 eikä sitä lasketa tähän inventaarioon tai muuteta.
 
@@ -157,11 +156,12 @@ Nykyinen chore/project-registry-cleanup-001-haara on siivouskirjauksen
 säilyvä toimitushaara. Etähaaroja ei poistettu tai muutettu siivouksen vuoksi.
 Kirjaustehtävä ja sen tarkempi näyttö löytyvät repoidentiteetillä
 Tupatuko2023/Python-R-Scripts, polusta tasks/03-review/project-registry-cleanup-001.md.
-Lisäksi yleisen käyttöönoton jatkovaiheen työpuu
-`tmp/project-registry-general-adoption-001` sekä haarat
-`docs/project-registry-general-adoption-001` (`8bd959ea`) ja
-`chore/project-registry-general-adoption-closeout-001` säilytetään
-toimeksiannon mukaisesti koskemattomina ilman poistoja.
+Jatkovaiheen työpuu `tmp/project-registry-general-adoption-001` sekä paikalliset
+haarat `docs/project-registry-general-adoption-001` (`8bd959ea`, PR #225) ja
+`chore/project-registry-general-adoption-closeout-001` (`627a2470`, PR #226)
+poistettiin 2026-11-19 Ownerin valtuuttamassa siivoustehtävässä
+`worktree-cleanup-001` tavallisilla `git worktree remove`- ja `git branch -d`
+-komennoilla `origin/main`-toimitusvarmennuksen jälkeen; etähaarat säilytettiin.
 
 ### Siivousnäytön raja
 
