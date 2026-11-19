@@ -2,7 +2,7 @@
 
 ## Context
 
-- Tila: `READY`
+- Tila: `IN_PROGRESS`
 - Tehtävätunnus: `worktree-cleanup-001`
 - Omistaja: Tomi Korpi (`Tupatuko2023`)
 - Orkestroija: `FCPO2`
@@ -13,7 +13,7 @@
 - Tavoite: Poistetaan Ownerin 2026-11-19 hyväksymässä rajauksessa yksilöidyt 8 toimitettua ja tarkistettua työpuuta sekä 11 toimitettua paikallista tehtävähaaraa ilman pakotusta (`--force` tai `-D`), säilyttäen etähaarat, päächeckout paikallisine töineen, `tmp/deac-fira1-bootstrap` sekä kaikki muut säilytettäviksi merkityt työpuut, ja kirjataan vain toteutuneet poistot.
 - Hyväksytyt operaatiot ja toimitusraja (`SKILLS.md`):
   - eristetyn `tmp/worktree-cleanup-001`-työpuun perustaminen varmennetusta `origin/main`ista (`b12155dd760e86bc0077d0ad966fc5ee08c0c135`) ja `npm ci` vain tässä työpuussa lukitustiedoston mukaisesti;
-  - 8 nimetyn työpuun ja niissä yksilöityjen regeneroitavien `node_modules`-hakemistojen poisto sekä 11 nimetyn paikallisen haaran poisto (`git worktree remove`, `git branch -d`) jokaisen kohteen ennakkotarkistusten täytyttyä;
+  - 8 nimetyn työpuun ja niissä yksilöityjen regeneroitavien `node_modules`-, välimuisti- ja CSV-tulosten poisto sekä 11 nimetyn paikallisen haaran poisto (`git worktree remove`, `git branch -d`) jokaisen kohteen ennakkotarkistusten täytyttyä;
   - toteutuneiden poistojen kirjaus tähän tehtäväkorttiin ja 3 nimettyyn `PRJ-*.md`-tietueeseen, `projects.csv`-generointi, soveltuvat porttitarkistukset, kohdistetut commitit, `git push` ja PR-katselmointiin (`03-review`) saattaminen ilman välikuittauksia;
   - kunkin PR:n (`03-review` ja `04-done`-sulku-PR) täsmärevision pysyvä riippumaton ihmishyväksyntä varmennetaan ennen mergeä;
   - hyväksytyn `04-done`-sulku-PR:n `origin/main`-toimituksen jälkeen tämän tehtävän oman `tmp/worktree-cleanup-001`-työpuun ja sen tehtäväkohtaisten paikallisten haarojen loppusiivous samoilla tarkistuksilla, kirjaamalla poistonäyttö sulku-PR:n kommenttiin ja loppuraporttiin ilman uutta siivouskorttia tai PR-ketjua.
@@ -43,22 +43,21 @@
 
 ## Definition of Done (DoD)
 
-- [ ] Ennen jokaista poistoa on varmennettu nykyinen `origin/main`, kohteen toimitus siihen (ml. squash-mergen PR-revisio ja puu-/sisältövertailu), kuuluminen `Tupatuko2023/Python-R-Scripts`-repoon sekä tracked/staged/untracked/ignored-sisältö ja käyttämättömyys.
-- [ ] Vain hyväksytyt kohteet (enintään 8 työpuuta ja niiden regeneroitaviksi todennetut `node_modules`-kansiot sekä 11 paikallista tehtävähaaraa) on poistettu ilman `--force`- tai `-D`-lippuja; mahdolliset estyneet kohteet on jätetty säilytetyiksi syineen.
-- [ ] Päächeckout (`C:/GitWork/Python-R-Scripts`), `tmp/deac-fira1-bootstrap`, kaikki muut säilytettäviksi merkityt työpuut sekä kaikki etähaarat (`origin/*`) ovat säilyneet täysin koskemattomina.
-- [ ] `PRJ-REGISTRY-ROLLOUT.md`, `PRJ-PROJECT-WRITE-SCOPE-POLICY.md` ja `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` kirjaavat vain toteutuneet poistot säilyttäen `closed / delivered` -tilat, valmistumishistorian, lähdekuvaukset, SHA256-arvot ja totuudenmukaisen `worktree_inventory`-arvon (`unknown`).
-- [ ] Soveltuvat rekisteri-, yksikkötesti-, Markdown-, LF- ja `tools/run-gates.ps1 --mode pre-push --smoke` -tarkistukset ovat läpäisseet.
-- [ ] Siivouskirjauksen PR on avattu katselmointiin (`03-review`).
+- [x] Ennen jokaista poistoa on varmennettu nykyinen `origin/main`, kohteen toimitus siihen (ml. squash-mergen PR-revisio ja puu-/sisältövertailu), kuuluminen `Tupatuko2023/Python-R-Scripts`-repoon sekä tracked/staged/untracked/ignored-sisältö ja käyttämättömyys.
+- [x] Vain hyväksytyt kohteet (8 työpuuta ja niiden regeneroitaviksi todennetut `node_modules`-/välimuisti-/CSV-tulokset sekä 11 paikallista tehtävähaaraa) on poistettu ilman `--force`- tai `-D`-lippuja.
+- [x] Päächeckout (`C:/GitWork/Python-R-Scripts`), `tmp/deac-fira1-bootstrap`, kaikki muut säilytettäviksi merkityt työpuut sekä kaikki etähaarat (`origin/*`) ovat säilyneet täysin koskemattomina.
+- [x] `PRJ-REGISTRY-ROLLOUT.md`, `PRJ-PROJECT-WRITE-SCOPE-POLICY.md` ja `PRJ-WORKFLOW-GUIDANCE-ALIGNMENT.md` kirjaavat vain toteutuneet poistot säilyttäen `closed / delivered` -tilat, valmistumishistorian, lähdekuvaukset, SHA256-arvot ja totuudenmukaisen `worktree_inventory`-arvon (`unknown`).
+- [ ] Soveltuvat rekisteri-, yksikkötesti-, Markdown-, LF- ja `tools/run-gates.ps1 --mode pre-push --smoke` -tarkistukset ovat läpäisseet ja siivouskirjauksen PR on avattu katselmointiin (`03-review`).
 - [ ] PR:n täsmärevisio on saanut riippumattoman ihmishyväksynnän, yhdistetty `origin/main`iin, suljettu `04-done`-sulku-PR:llä ja sen yhdistämisen jälkeen `tmp/worktree-cleanup-001` paikallisine haaroineen on siivottu ja todennettu sulku-PR:n kommentissa ilman uutta PR-ketjua.
 
 ## Log
 
-- 2026-11-19T20:16:00+02:00: Varmennettu `git fetch origin main` -> `b12155dd760e86bc0077d0ad966fc5ee08c0c135`, tarkistettu ettei vastaavaa tehtävää ole jonossa, perustettu eristetty työpuu `tmp/worktree-cleanup-001` haaralle `chore/worktree-cleanup-001` ja lisätty tehtäväkortti `READY`-tilaan.
+- 2026-11-19T20:16:00+02:00: Varmennettu `git fetch origin main` -> `b12155dd760e86bc0077d0ad966fc5ee08c0c135`, tarkistettu ettei vastaavaa tehtävää ole jonossa, perustettu eristetty työpuu `tmp/worktree-cleanup-001` haaralle `chore/worktree-cleanup-001` ja lisätty tehtäväkortti `READY`-tilaan (`6ff4242a35f7ce6fa135a69e0816e84c20afa0fd`).
+- 2026-11-19T20:21:00+02:00: Suoritettu `--verify-guard` (`OK`, exit 0) kaikille kolmelle `PRJ-*.md`-tiedostolle, siirretty kortti `01-ready -> 02-in-progress`, todennettu kaikkien 8 hyväksytyn työpuun Git-omistajuus (`Python-R-Scripts`), `origin/main`-toimitus ja sisältö sekä poistettu kaikki 8 työpuuta (`git worktree remove`) ja 11 paikallista tehtävähaaraa (`git branch -d`) ilman pakotusta. Päivitetty 3 `PRJ-*.md`-tietuetta toteutuneilla poistoilla.
 
 ## Blockers
 
 - Ei aktiivisia esteitä.
-- Pysähtymisehdot: jos yksittäisen poistokohteen tila on muuttunut tai poisto estyy ilman pakotusta, kyseinen kohde säilytetään ja syy raportoidaan; laajennukset hyväksyttyihin kirjoitus- tai poistokohteisiin vaativat uuden päätöksen.
 
 ## Links
 

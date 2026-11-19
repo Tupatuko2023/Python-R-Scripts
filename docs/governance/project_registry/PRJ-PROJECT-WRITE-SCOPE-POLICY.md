@@ -8,12 +8,12 @@ state: "closed"
 delivery: "delivered"
 goal: "Korvataan mekaaninen viiden tiedoston ajoraja tehtäväkohtaisella, ennalta hyväksytyllä tavoitteella, yksilöidyillä kirjoituspoluilla ja toimitusrajalla nykyohjeet yhtenäistäen."
 done_criterion: "Korvaava sääntö ja välttämättömät viitekorjaukset on validoitu tehtäväkortin hyväksymiskriteereillä, hyväksytty, toimitettu kanoniseen mainiin ja tehtävä suljettu repon menettelyn mukaisesti."
-latest_status: "2026-11-18: Toteutus hyväksytty (revisio 87cd0490), toimitettu mainiin (PR #227, e96e146b) ja suljettu (04-done). Työpuu tmp/project-write-scope-policy-001 ja haarat säilytetään koskemattomina ilman poistoja."
-next_step: "Projekti on toimitettu ja suljettu; tehtäväkohtainen kirjoitusrajaus on voimassa SKILLS.md:ssä. Älä avaa valmista korttia uudelleen; mahdollinen myöhempi worktree- ja haarasiivous vaatii erillisen valtuutuksen."
+latest_status: "2026-11-19: Toteutus hyväksytty (87cd0490), toimitettu mainiin (PR #227, e96e146b) ja suljettu (PR #228, 8e71adfa). Työpuu tmp/project-write-scope-policy-001 ja paikalliset tehtävähaarat poistettu valtuutetussa siivouksessa (worktree-cleanup-001); etähaarat säilytetään."
+next_step: "Projekti on toimitettu ja suljettu, ja sen toteutustyöpuu paikallisine haaroineen on siivottu. Älä avaa valmista korttia uudelleen."
 source_description_sha256: "5e46c7af00b837cf3ede2eed2e5256bc1df5f11f7d71785160bcfe98b6ee4367"
 source_captured_at: "2026-11-18"
-observed_at: "2026-11-18"
-observed_commit: "e96e146b3abda3ffe4c40143085e870bd31cdb56"
+observed_at: "2026-11-19"
+observed_commit: "b12155dd760e86bc0077d0ad966fc5ee08c0c135"
 observed_worktree_label: "project-write-scope-policy"
 blocker: ""
 orchestrator: "FCPO2"
@@ -76,16 +76,24 @@ pysyvä [hyväksyntä](https://github.com/Tupatuko2023/Python-R-Scripts/pull/227
 `origin/main`-committiin `e96e146b3abda3ffe4c40143085e870bd31cdb56`.
 
 Tehtävän tekninen `04-done`-siirto ja tämän projektitietueen `closed` /
-`delivered` -sulku toimitetaan yhdessä omassa sulku-PR:ssään. Likainen
-päächeckout (ja sen seuraamaton `tasks/00-backlog/project-write-scope-policy-001.md`
--kopio), tämä toteutustyöpuu, tehtävähaarat sekä kaikki muut 12 työpuuta
-säilytetään koskemattomina erillään `main`-toimituksesta.
+`delivered` -sulku toimitettiin [PR #228:ssa](https://github.com/Tupatuko2023/Python-R-Scripts/pull/228)
+`origin/main`-committiin `8e71adfa539b05f95361134eb7b8e57e6a898199`. Ownerin
+2026-11-19 valtuuttamassa siivoustehtävässä `worktree-cleanup-001` työpuu
+`tmp/project-write-scope-policy-001` (varmennetut regeneroitavat `node_modules/`
+ja `projects.csv` poistettuina) sekä paikalliset haarat
+`docs/project-write-scope-policy-001` (`87cd0490`) ja
+`chore/project-write-scope-policy-closeout-001` (`899dc00b`) poistettiin ilman
+pakotusta (`git worktree remove`, `git branch -d`). Likainen päächeckout (ja sen
+seuraamaton `tasks/00-backlog/project-write-scope-policy-001.md` -kopio) sekä
+etähaarat säilytettiin koskemattomina. Tarkistus perustui toimitus-, Git-omistajuus-,
+status- ja prosessihavaintoihin ilman käyttöjärjestelmätason eksklusiivista lukkoa.
 
 ## Worktree-havainnot
 
-| label                      | state    | evidence                                                                                                                                                                                                                                |
-| -------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| project-write-scope-policy | retained | tmp/project-write-scope-policy-001 sekä haarat docs/project-write-scope-policy-001 (87cd0490) ja chore/project-write-scope-policy-closeout-001 säilytetty PR #227:n (e96e146b) jälkeen; päächeckout ja 12 muuta työpuuta koskemattomia. |
+| label                      | state   | evidence                                                                                                                                                                                                                                    |
+| -------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| project-write-scope-policy | removed | tmp/project-write-scope-policy-001 ja paikalliset haarat docs/project-write-scope-policy-001 (87cd0490) sekä chore/project-write-scope-policy-closeout-001 (899dc00b) poistettu 2026-11-19 ilman forcea; PR #227/#228 squash-puut mainissa. |
 
-Inventaario kattaa tämän projektin oman toteutustyöpuun; koko monorepon muita
-työpuita ei siivota tässä tehtävässä, joten `worktree_inventory` on `unknown`.
+Inventaario kattaa tämän projektin oman toteutustyöpuun; koska monorepossa on
+edelleen muita säilytettyjä työpuita eikä poissulkevaa lukkoa käytetty,
+`worktree_inventory` pidetään arvossa `unknown`.
