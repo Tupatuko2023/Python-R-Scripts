@@ -15,7 +15,7 @@ source_captured_at: "2026-11-19"
 observed_at: "2026-11-19"
 observed_commit: "b12155dd760e86bc0077d0ad966fc5ee08c0c135"
 observed_worktree_label: "aim1-wp1-20261119"
-blocker: "Nykyinen omistava METHODS_AND_SCORING.md §3.1 puuttuu tieteellisestä vahvistuksesta. Juuren LICENSE/README ilmoittavat MIT:n ja saman repon npm-paketin package.json ISC:n; oikeudenhaltijan vahvistus Python-tiedostojen julkaisu- ja ilmoitusoikeudesta puuttuu. Nämä eivät estä teknistä katselmointia."
+blocker: "Nykyinen omistava METHODS_AND_SCORING.md §3.1 puuttuu tieteellisestä vahvistuksesta. Juuren LICENSE/README ja .github/CONTRIBUTING.md tukevat MIT:n soveltumista Python-koodiin, mutta saman repon npm-paketin package.json ilmoittaa ISC:n; oikeudenhaltijan vahvistus julkaisu- ja ilmoitusoikeudesta puuttuu. Nämä eivät estä teknistä katselmointia."
 orchestrator: "Owner"
 agent: "Termux Codex"
 agent_tool: "Codex"
@@ -61,9 +61,10 @@ Tehtävä on `03-review`-jonossa. Seuraavaksi suoritetaan viimeiset paikalliset
 toimitusportit ja pyydetään ihmisomistajan katselmointi.
 Nykyinen §3.1 tarvitaan pisteytyksen tieteelliseen vahvistukseen, mutta sen
 puuttuminen ei pysäytä rungon, tavukopioiden tai synteettisen testin valmistelua.
-Lähderepon `LICENSE` ja README kuvaavat MIT-lisenssiä; saman repon npm-paketin
-`package.json` ilmoittaa ISC:n. `package.json` ei nimeä siirrettyjä Python-tiedostoja
-eikä DEAC-hakemistossa ole erillistä lisenssitiedostoa. Merkinnät voivat koskea
+Lähderepon `LICENSE`, README ja `.github/CONTRIBUTING.md` tukevat MIT:n
+soveltumista Python-koodiin; saman repon npm-paketin `package.json` ilmoittaa
+ISC:n. `package.json` ei nimeä siirrettyjä Python-tiedostoja eikä
+DEAC-hakemistossa ole erillistä lisenssitiedostoa. Merkinnät näyttävät koskevan
 eri sisältöjä, mutta oikeudenhaltijan vahvistus Python-tiedostojen
 julkaisuoikeudesta ja tarvittavista ilmoituksista puuttuu.
 Main-toimitusta ei ole tehty. WP1:n työpuuta eikä muita työpuita siivota.
