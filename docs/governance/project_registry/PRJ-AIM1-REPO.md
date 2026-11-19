@@ -8,14 +8,14 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-19: WP1:n paikallinen runko ja kaksi tavutarkkaa pilottikopiota tehty paikalliseen commit-revisioon 8429141; alkuperäinen synteettinen testi 17/17 PASS. Tehtävä on review-jonossa. Main-toimitusta tai työpuun siivousta ei ole tehty."
-next_step: "Suorita viimeiset toimitusportit ja pyydä WP1:n ihmisomistajan katselmointia; jatka muita AIM1-työpaketteja erillisillä korteilla."
+latest_status: "2026-11-19: WP1:n tekninen toteutus ja 17/17 synteettistä testiä ovat valmiit. Lopullinen diff ja lisenssimerkintöjen soveltamisala on katselmoitu; tehtävä odottaa ihmisomistajan hyväksyntää review-jonossa. Main-toimitusta tai työpuun siivousta ei ole tehty."
+next_step: "Pyydä ihmisomistajaa katselmoimaan WP1:n rajattu toteutus ja vahvistamaan siirrettyjen Python-tiedostojen julkaisuoikeus erikseen. Main-toimitus ja työpuun siivous vaativat omat toteutuneet porttinsa."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
 observed_at: "2026-11-19"
 observed_commit: "b12155dd760e86bc0077d0ad966fc5ee08c0c135"
 observed_worktree_label: "aim1-wp1-20261119"
-blocker: "Nykyinen omistava METHODS_AND_SCORING.md §3.1 puuttuu tieteellisestä vahvistuksesta; lähderepon LICENSE/README ilmoittaa MIT:n mutta package.json ISC:n, joten julkisen toimituksen oikeusperuste ja julkaisuvaltuutus ovat avoimia. Nämä eivät estäneet teknistä pilottia."
+blocker: "Nykyinen omistava METHODS_AND_SCORING.md §3.1 puuttuu tieteellisestä vahvistuksesta. Juuren LICENSE/README ilmoittavat MIT:n ja saman repon npm-paketin package.json ISC:n; oikeudenhaltijan vahvistus Python-tiedostojen julkaisu- ja ilmoitusoikeudesta puuttuu. Nämä eivät estä teknistä katselmointia."
 orchestrator: "Owner"
 agent: "Termux Codex"
 agent_tool: "Codex"
@@ -61,10 +61,19 @@ Tehtävä on `03-review`-jonossa. Seuraavaksi suoritetaan viimeiset paikalliset
 toimitusportit ja pyydetään ihmisomistajan katselmointi.
 Nykyinen §3.1 tarvitaan pisteytyksen tieteelliseen vahvistukseen, mutta sen
 puuttuminen ei pysäytä rungon, tavukopioiden tai synteettisen testin valmistelua.
-Lähderepon `LICENSE` ja README kuvaavat MIT-lisenssiä, kun taas `package.json`
-ilmoittaa ISC:n; ristiriidan soveltuvuus siirrettyihin Python-tiedostoihin on
-selvitettävä ennen julkista toimitusta.
+Lähderepon `LICENSE` ja README kuvaavat MIT-lisenssiä; saman repon npm-paketin
+`package.json` ilmoittaa ISC:n. `package.json` ei nimeä siirrettyjä Python-tiedostoja
+eikä DEAC-hakemistossa ole erillistä lisenssitiedostoa. Merkinnät voivat koskea
+eri sisältöjä, mutta oikeudenhaltijan vahvistus Python-tiedostojen
+julkaisuoikeudesta ja tarvittavista ilmoituksista puuttuu.
 Main-toimitusta ei ole tehty. WP1:n työpuuta eikä muita työpuita siivota.
+
+## Vaiheiden erottelu 2026-11-19
+
+- Tekninen toteutus ja synteettinen testaus: valmis katselmointiin.
+- Ihmisen WP1-hyväksyntä: odottaa päätöstä.
+- Main-toimitus: ei tehty.
+- Tämän tehtävän worktree-siivous: ei tehty.
 
 ## Worktree-havainnot
 
