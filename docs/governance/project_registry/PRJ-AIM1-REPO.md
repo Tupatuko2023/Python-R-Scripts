@@ -8,8 +8,8 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-19: WP1:n tekninen toteutus ja 17/17 synteettistä testiä ovat valmiit. Lopullinen diff ja lisenssimerkintöjen soveltamisala on katselmoitu; tehtävä odottaa ihmisomistajan hyväksyntää review-jonossa. Main-toimitusta tai työpuun siivousta ei ole tehty."
-next_step: "Pyydä ihmisomistajaa katselmoimaan WP1:n rajattu toteutus ja vahvistamaan siirrettyjen Python-tiedostojen julkaisuoikeus erikseen. Main-toimitus ja työpuun siivous vaativat omat toteutuneet porttinsa."
+latest_status: "2026-11-19: WP1:n tekninen toteutus ja 17/17 synteettistä testiä ovat valmiit. PRS:n dokumentaatio-PR #233 on review-vaiheessa; Sourceryn huomiot käsitellään. Ihmishyväksyntä, main-toimitus ja työpuun siivous puuttuvat."
+next_step: "Tarkista PR #233:n päivitetyn revision CI ja katselmointihuomiot sekä pyydä sen jälkeen ihmisomistajan päätös tästä dokumentaatiotoimituksesta. Python-koodin julkaisuoikeuden vahvistus ja §3.1:n tieteellinen tarkistus etenevät erikseen."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
 observed_at: "2026-11-19"
@@ -57,8 +57,11 @@ yksittäisen työpaketin valmistumisesta.
 WP1:n paikallinen runko, tavutarkka siirto ja alkuperäinen synteettinen testi
 ovat valmistuneet paikalliseen kohderepon commit-revisioon `84291412792211fa30a98f5c15fbfa31ded9f6dc`;
 testi läpäisi 17/17 tapausta eristetyssä ympäristössä.
-Tehtävä on `03-review`-jonossa. Seuraavaksi suoritetaan viimeiset paikalliset
-toimitusportit ja pyydetään ihmisomistajan katselmointi.
+Tiedostokohtaiset lähde- ja kohdehashit ovat tehtäväkortissa; kummankin tiedoston
+kaksi kappaletta vastaavat tavutasolla. PRS:n dokumentaatio-PR #233 on avattu
+ihmiskatselmointia varten. Tehtävä on edelleen `03-review`-jonossa. Seuraavaksi
+tarkistetaan päivitetyn PR-revision CI- ja review-tulos ja pyydetään ihmisomistajan
+päätös.
 Nykyinen §3.1 tarvitaan pisteytyksen tieteelliseen vahvistukseen, mutta sen
 puuttuminen ei pysäytä rungon, tavukopioiden tai synteettisen testin valmistelua.
 Lähderepon `LICENSE`, README ja `.github/CONTRIBUTING.md` tukevat MIT:n
