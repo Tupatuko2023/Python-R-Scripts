@@ -8,8 +8,8 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-19: WP1:n tekninen pilotti on hyväksytty ja 17/17 synteettistä testiä läpäisi. PRS:n dokumentaatio-PR #233 toimitettiin mainiin commitilla 1c90b7ed8ab1cc4a977acee2ebcf9e1ec83b615c. WP1:n tekninen 04-done-sulku on erillisessä lifecycle-katselmoinnissa; työpuun siivousta ei ole tehty. AIM1-projekti jatkuu."
-next_step: "Katselmoi WP1:n erillinen lifecycle-PR. Selvitä Python-tiedostojen julkaisuoikeus ja nykyinen omistava §3.1 erillisinä jatkoasioina. Älä julkaise AIM1-kohderepoa tai poista työpuita ilman erillistä päätöstä."
+latest_status: "2026-11-19: WP1:n tekninen pilotti on hyväksytty ja 17/17 synteettistä testiä läpäisi. PRS:n dokumentaatio-PR #233 toimitettiin mainiin commitilla 1c90b7ed8ab1cc4a977acee2ebcf9e1ec83b615c. WP1:n tekninen 04-done-kirjaus on lifecycle-PR #234:ssä; sen main-toimituksen tila tarkistetaan PR:stä. Työpuun siivousta ei ole tehty. AIM1-projekti jatkuu."
+next_step: "Selvitä Python-tiedostojen julkaisuoikeus ja nykyinen omistava §3.1 erillisinä jatkoasioina. Arvioi AIM1-projektin seuraavat työpaketit erikseen. Älä julkaise AIM1-kohderepoa tai poista työpuita ilman erillistä päätöstä."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
 observed_at: "2026-11-19"
@@ -62,7 +62,8 @@ kaksi kappaletta vastaavat tavutasolla. Ihmisomistaja hyväksyi PRS:n
 dokumentaatio-PR #233:n revision `f16380a66b511bf83116a9817abda4d46e08a65a`
 [pysyvässä kommentissa](https://github.com/Tupatuko2023/Python-R-Scripts/pull/233#issuecomment-7020512654).
 PR yhdistettiin mainiin commitilla `1c90b7ed8ab1cc4a977acee2ebcf9e1ec83b615c`.
-WP1:n tekninen `04-done`-sulku on valmisteltu erilliseen lifecycle-katselmointiin.
+WP1:n tekninen `04-done`-kirjaus on [lifecycle-PR #234:ssä](https://github.com/Tupatuko2023/Python-R-Scripts/pull/234);
+sen main-toimitus todennetaan erikseen PR:n tilasta.
 Nykyinen §3.1 tarvitaan pisteytyksen tieteelliseen vahvistukseen, mutta sen
 puuttuminen ei pysäytä rungon, tavukopioiden tai synteettisen testin valmistelua.
 Lähderepon `LICENSE`, README ja `.github/CONTRIBUTING.md` tukevat MIT:n
@@ -79,7 +80,7 @@ WP1:n työpuuta eikä muita työpuita siivota.
 - Tekninen toteutus ja synteettinen testaus: valmis, 17/17 PASS.
 - Ihmisen WP1-hyväksyntä: annettu täsmärevisiolle; viite yllä.
 - PRS:n WP1-dokumentaation main-toimitus: tehty ja varmennettu.
-- WP1:n tekninen `04-done`-sulku: valmisteltu erilliseen lifecycle-PR:ään.
+- WP1:n tekninen `04-done`-kirjaus: tehty lifecycle-PR #234:ssä; sen main-toimitus tarkistetaan PR:stä.
 - Tämän tehtävän worktree-siivous: ei tehty.
 
 ## Worktree-havainnot
