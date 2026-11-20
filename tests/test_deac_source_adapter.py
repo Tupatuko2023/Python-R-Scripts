@@ -668,3 +668,80 @@ def test_missing_gait_time_does_not_become_inability_from_aid_metadata() -> None
 
     scores = adapter.score_source_row(row, bindings, (1, 2, 3, 4))
     assert scores["maximal_10m_gait_speed"] is None
+
+
+def _single_walking_fixture() -> tuple[dict[str, object], adapter.SourceBindings, dict]:
+    header = "synthetic_walking_header"
+    row: dict[str, object] = {header: 0}
+    bindings = adapter.SourceBindings(
+        columns={"walking_500m": header},
+        ordinary_missing_codes={"walking_500m": ("synthetic_missing",)},
+    )
+    schema = {
+        "actual_sha256": "a" * 64,
+        "expected_sha256": "a" * 64,
+        "physical_headers": ("synthetic_other_header", header, "synthetic_neighbour"),
+        "label_row": ("other", "synthetic walking difficulty", "other question"),
+        "source_position": 1,
+        "semantic_prefix": "synthetic walking difficulty",
+    }
+    return row, bindings, schema
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [(0, 0.0), (1, 0.5), (2, 1.0), ("synthetic_missing", None), (None, None)],
+)
+def test_single_walking_component_uses_bound_source_and_existing_scorer(
+    value: object, expected: float | None
+) -> None:
+    row, bindings, schema = _single_walking_fixture()
+    row[bindings.columns["walking_500m"]] = value
+    assert adapter.score_bound_walking_500m(row, bindings, **schema) == expected
+
+
+@pytest.mark.parametrize("value", [99, True, "unlisted", 1.0, ComponentStatus.NOT_APPLICABLE])
+def test_single_walking_component_rejects_unlisted_or_wrong_type(value: object) -> None:
+    row, bindings, schema = _single_walking_fixture()
+    row[bindings.columns["walking_500m"]] = value
+    with pytest.raises(ValueError):
+        adapter.score_bound_walking_500m(row, bindings, **schema)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"actual_sha256": "b" * 64},
+        {"source_position": 2},
+        {"semantic_prefix": "different question"},
+        {"physical_headers": ("synthetic_other_header", "", "synthetic_neighbour")},
+        {"label_row": ("other", "", "other question")},
+    ],
+)
+def test_single_walking_component_rejects_wrong_or_missing_schema(change: dict) -> None:
+    row, bindings, schema = _single_walking_fixture()
+    schema.update(change)
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_walking_500m(row, bindings, **schema)
+
+
+def test_single_walking_component_rejects_wrong_or_missing_bound_header() -> None:
+    row, bindings, schema = _single_walking_fixture()
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_walking_500m(
+            row,
+            adapter.SourceBindings(columns={"walking_500m": "synthetic_neighbour"}),
+            **schema,
+        )
+    with pytest.raises(ValueError, match="missing"):
+        adapter.score_bound_walking_500m({}, bindings, **schema)
+
+
+def test_single_walking_component_cannot_mark_a_scoreable_value_missing() -> None:
+    row, bindings, schema = _single_walking_fixture()
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        ordinary_missing_codes={"walking_500m": (1,)},
+    )
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_walking_500m(row, bindings, **schema)

@@ -8,13 +8,13 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-20: Lähdeselvitys ja yksityisen paketin vastaanotto tehty. Ihmisomistaja hyväksyi PR #237:n täsmärevision 4ad584b3709791ac6a8242810c527b39248f15a5; dokumentaatio toimitettiin origin/mainiin commitilla 116737082a053aa1b7500b856e3525356a0e83ed. Tehtävän tekninen 04-done-sulku on erillisessä katselmoitavassa lifecycle-toimituksessa. Kahden Python-tiedoston MIT-sisällytysoikeus on vahvistettu. Nykyinen §3.1 on AUTHORITY_UNRESOLVED ja toteutusvastaavuus NEEDS_VERIFICATION. AIM1-projekti jatkuu aktiivisena."
-next_step: "Katselmoi lähdeselvitystehtävän lifecycle-PR ja varmista sen erillinen main-toimitus. Myöhemmässä työssä tarvitaan nykyisen omistavan §3.1:n ja 0.5.2-draftin tavut sekä alkuperäiset hyväksyntä- ja korvaavuusviitteet ennen tieteellistä vastaavuusväitettä. AIM1-kohderepon julkaisu vaatii erillisen ihmisomistajan päätöksen ja sisältötarkistuksen."
+latest_status: "2026-11-20: Lähdeselvitystehtävä toimitettiin mainiin PR #238:ssa (9df51409f8b0cf21bb333232fcd46dbe8b594938). WALK500:n rajattu lähdesidonta on paikallisesti 03-review-tilassa: yksityinen metadataan sidottu synteettinen tarkistus 16/16 PASS ja sovittimen pytest-tiedosto 70/70 PASS. Ei pushia tai PR:ää tälle työpaketille. AIM1-projekti jatkuu aktiivisena."
+next_step: "Ihmisomistaja katselmoi WALK500:n täsmärevision, synteettisen näytön ja yksityisen lähderaportin. Nykyisen §3.1:n auktoriteetti ja AIM1-kohderepon julkaisupäätös pysyvät erillisinä avoimina asioina."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
 observed_at: "2026-11-20"
-observed_commit: "116737082a053aa1b7500b856e3525356a0e83ed"
-observed_worktree_label: "aim1-authority-closeout-20261120"
+observed_commit: "9df51409f8b0cf21bb333232fcd46dbe8b594938"
+observed_worktree_label: "aim1-walk500-20261120"
 blocker: "AIM1-kohderepon erillinen julkaisupäätös puuttuu, vaikka kahden yksilöidyn Python-tiedostoversion MIT-sisällytysoikeus on vahvistettu. Historiallinen 0.4.1-draft ja D-005…D-009-merkinnät ovat saatavilla, mutta alkuperäiset hyväksyntäpaketit, myöhempi 0.5.2-draft, D-011 sekä nykyinen päätös- ja korvaavuusketju puuttuvat tieteellisestä vastaavuustarkistuksesta. Nämä eivät estä rajattua paikallista selvitystä."
 orchestrator: "Owner"
 agent: "Termux Codex"
@@ -25,11 +25,12 @@ paused_date: ""
 completed_date: ""
 pause_reason: ""
 link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/236"
-worktree_inventory: "complete"
+worktree_inventory: "unknown"
 tasks:
   - "AIM1_REPO_WP1_20261119"
   - "AIM1_WP1_CLEANUP_20261120"
   - "AIM1_AUTHORITY_SOURCE_REVIEW_20261120"
+  - "TASK-DEAC20-K40-WALK500-FIRST-BINDING"
 ---
 
 ## AIM1:n erillinen analyysirepo
@@ -55,6 +56,7 @@ yksittäisen työpaketin valmistumisesta.
 | `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                |
 | `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`             | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`             |
 | `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120` | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md` |
+| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-WALK500-FIRST-BINDING` | `tasks/03-review/TASK-DEAC20-K40-WALK500-FIRST-BINDING.md` |
 
 ## Jatkamismuistio
 
@@ -110,7 +112,9 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
 - Siivouksen dokumentaation main-toimitus: tehty ja varmennettu PR #235:stä.
 - Siivoustehtävän tekninen `04-done`-kirjaus: toimitettu mainiin PR #236:ssa.
 - Siivouskirjauksen nimetyt työpuut ja haarat: poistettu; kuittaus PR #236:ssa.
-- Julkaisuoikeuden ja omistavan §3.1:n lähdeselvitys: tehty ja hyväksytty PR #237:ssa; tekninen `04-done`-sulku on tässä erillisessä lifecycle-toimituksessa.
+- Julkaisuoikeuden ja omistavan §3.1:n lähdeselvitys: tehty ja hyväksytty PR #237:ssa; tekninen `04-done`-sulku toimitettu mainiin PR #238:ssa.
+- WALK500:n paikallinen tekninen sidonta: synteettiset testit läpäisty;
+  tehtävä `03-review`-tilassa, ei vielä toimitettu mainiin.
 
 ## Worktree-havainnot
 
@@ -121,8 +125,10 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
 | aim1-wp1-cleanup-20261120          | removed  | PR #235 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
 | aim1-wp1-cleanup-closeout-20261120 | removed  | PR #236 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
 | aim1-authority-review-20261120     | retained | Alkuperäinen yksityinen lähdetyöpuu; sen committia ei toimitettu PR #237:ssä.                |
-| aim1-authority-public-20261120     | retained | PR #237:n toimitustyöpuu; main-toimitus varmennettu, siivous tekemättä.                      |
-| aim1-authority-closeout-20261120   | active   | Tämän lifecycle-PR:n työpuu; toimitus ja myöhempi siivous vielä avoimia.                     |
+| aim1-authority-public-20261120     | removed  | PR #237:n main-toimitus varmennettu; nimetty työpuu ja haarat poistettu 20.11.2026.          |
+| aim1-authority-closeout-20261120   | removed  | PR #238:n main-toimitus varmennettu; nimetty työpuu ja haarat poistettu 20.11.2026.          |
+| aim1-walk500-20261120              | active   | WALK500:n paikallinen katselmointityöpuu; ei pushia tai PR:ää.                              |
 
-Inventaario kattaa tämän projektin tehtävätyöpuut. Gitin koko työpuulista
-tarkistettiin, mutta muiden projektien työpuita ei siivottu.
+Taulukko kuvaa tämän projektin nimetyt työpuut tähän havaintoon asti.
+Uuden WALK500-työpuun vuoksi koko työpuuinventaarion kattavuus on `unknown`;
+muiden projektien työpuita ei siivottu.

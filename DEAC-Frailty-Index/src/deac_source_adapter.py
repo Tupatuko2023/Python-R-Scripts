@@ -346,6 +346,75 @@ def _read_value(
     return value
 
 
+def score_bound_walking_500m(
+    row: Mapping[str, object],
+    bindings: SourceBindings,
+    *,
+    actual_sha256: str,
+    expected_sha256: str,
+    physical_headers: Sequence[str],
+    label_row: Sequence[str],
+    source_position: int,
+    semantic_prefix: str,
+) -> float | None:
+    """Score one bound component after caller-supplied metadata validation.
+
+    The caller provides protected source metadata and a field-specific missing
+    code configuration. No file or participant row is loaded by this helper.
+    Other components and index eligibility are deliberately out of scope.
+    """
+    logical_field = "walking_500m"
+    if not isinstance(row, Mapping) or not isinstance(bindings, SourceBindings):
+        raise ValueError("Expected a row mapping and source bindings")
+    if set(bindings.columns) != {logical_field}:
+        raise SourceSchemaError("Bind exactly the requested semantic field")
+    if (
+        set(bindings.ordinary_missing_codes) - {logical_field}
+        or bindings.invalid_codes_as_missing
+        or bindings.performance_codes
+        or bindings.reason_columns
+        or bindings.verified_functional_inability_codes
+    ):
+        raise SourceSchemaError("Unsupported configuration for this component")
+    missing_codes = bindings.ordinary_missing_codes.get(logical_field, ())
+    if isinstance(missing_codes, (str, bytes)) or not isinstance(
+        missing_codes, Sequence
+    ) or any(
+        isinstance(code, bool) or code is ComponentStatus.NOT_APPLICABLE
+        for code in missing_codes
+    ):
+        raise SourceSchemaError("Ordinary missing codes must be a valid sequence")
+    for code in missing_codes:
+        try:
+            score_walking_500m(code)  # type: ignore[arg-type]
+        except ValueError:
+            pass
+        else:
+            raise SourceSchemaError("A scoreable category cannot be marked missing")
+    validate_source_schema_bindings(
+        actual_sha256,
+        expected_sha256,
+        physical_headers,
+        label_row,
+        {logical_field: source_position},
+        {logical_field: semantic_prefix},
+    )
+    header = physical_headers[source_position]
+    label = label_row[source_position]
+    if (
+        not header.strip()
+        or not label.strip()
+        or header != bindings.columns[logical_field]
+    ):
+        raise SourceSchemaError("Bound source header or label is missing or different")
+    value = row.get(header)
+    if isinstance(value, bool) or value is ComponentStatus.NOT_APPLICABLE:
+        raise ValueError("Unsupported source status for this component")
+    return score_walking_500m(
+        _read_value(row, bindings, logical_field)  # type: ignore[arg-type]
+    )
+
+
 def normalize_preselected_test_value(
     value: object,
     codebook: Mapping[object, PerformanceDisposition],
