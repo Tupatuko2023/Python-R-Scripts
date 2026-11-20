@@ -24,7 +24,9 @@ tuotantoajoa eikä AIM1-kohderepon julkaisua.
 ## Sallitut kirjoituspolut
 
 - `tasks/01-ready/TASK-DEAC20-K40-WALK500-FIRST-BINDING.md` →
-  `tasks/02-in-progress/` → `tasks/03-review/` saman tiedostonimen alla.
+  `tasks/02-in-progress/` → `tasks/03-review/` → `tasks/04-done/`
+  saman tiedostonimen alla. Viimeinen siirto tehtiin ihmisomistajan
+  täsmähyväksynnän jälkeen repo-ohjeen mukaisena teknisenä sulkuna.
 - `DEAC-Frailty-Index/src/deac_source_adapter.py` vain todettuun rajapinta-aukkoon.
 - `tests/test_deac_source_adapter.py` vain synteettisiin yleisiin testeihin.
 - `docs/governance/project_registry/PRJ-AIM1-REPO.md`.
@@ -82,6 +84,19 @@ Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muutet
   ja synteettinen testi sisältää toisen kentän sekä `None`-puuttuvuuden.
   Tehtäväkortin otsikot käännetty suomeksi. Rajattu pytest-ajo
   78/78 PASS ja yksityinen metadataan sidottu tarkistus 16/16 PASS.
+- 2026-11-20T21:56:44+02:00 Ihmisomistaja `Tupatuko2023` hyväksyi
+  PR #239:n täsmärevision `7bab41c48d294f55acabd763bc3ab1f4f93a40a9`
+  ja kahden viimeisen Sourcery-huomion vastineet
+  [pysyvässä GitHub-kommentissa](https://github.com/Tupatuko2023/Python-R-Scripts/pull/239#issuecomment-7049246851).
+  Sourceryn kirjallista arviota ei kirjata hyväksytyksi.
+- 2026-11-20T21:58:00+02:00 PR #239 yhdistettiin mainiin commitilla
+  `2de6c1e516ee207aa8fb193d684807e31e3fbb33`; toimitus varmennettiin
+  `origin/main`-haarasta. Hyväksytyn HEADin tarkistukset läpäisivät, eikä
+  avoimia review-ketjuja ollut ennen yhdistämistä.
+- 2026-11-20T21:59:27+02:00 Sama tehtävä siirrettiin teknisesti
+  `03-review`-tilasta `04-done`-tilaan erillisessä sulkuhaarassa.
+  Sulkukirjauksen PR-toimitus ja tämän tehtävän työpuiden siivous ovat
+  vielä tekemättä; AIM1-projekti pysyy aktiivisena.
 
 ## Esteet
 
@@ -96,3 +111,4 @@ Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muutet
 
 - `docs/governance/project_registry/PRJ-AIM1-REPO.md`
 - `https://github.com/Tupatuko2023/Python-R-Scripts/pull/239`
+- `https://github.com/Tupatuko2023/Python-R-Scripts/pull/239#issuecomment-7049246851`
