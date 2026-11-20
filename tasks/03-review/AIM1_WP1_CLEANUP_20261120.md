@@ -11,7 +11,9 @@ muut työpuut ja yksityiset säilytysaineistot säilytetään.
 ## Sallitut kirjoituspolut
 
 - Tämän kortin polut `tasks/01-ready/`, `tasks/02-in-progress/` ja
-  `tasks/03-review/`-jonoissa.
+  `tasks/03-review/`-jonoissa. Myöhempi
+  `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md` sallitaan vain tämän tehtävän
+  pysyvän ihmisomistajahyväksynnän jälkeen repon elinkaariohjeen mukaisesti.
 - `docs/governance/project_registry/PRJ-AIM1-REPO.md`.
 - Ignoroitu `tools/project_registry/outputs/projects.csv`.
 - Yksityinen uusi PRS-bundle ja sen palautustarkistus erillisissä,
@@ -67,3 +69,17 @@ muut työpuut ja yksityiset säilytysaineistot säilytetään.
   tarkistus läpäisivät. Rekisterin 62 yksikkötestiä läpäisivät Debian-Pythonilla.
   Termux-Pythonilla neljä testiä ei voinut käyttää puuttuvaa `os.link`-funktiota;
   kyse on ympäristön rajoituksesta, ei muuttuneesta rekisterikoodista.
+- 2026-11-20: Projektirekisterin `--verify-guard` läpäisi ennen ensimmäistä
+  muutosta `origin/main`-revisiolla `02fbcd96303d2c9e9b4e5441176af00d20e5a5f9`
+  ja uudelleen ennen katselmointikorjausta tämän haaran revisiolla
+  `54d06e9f48a893e9d96b9fae2aeea9991650e6b4`. Repojuuren
+  `tools/run-gates.sh --mode pre-push --smoke` läpäisi. Analyysi- ja QC-ajot:
+  `NOT APPLICABLE`, koska muutos koskee vain siivouksen hallinnollista kirjausta
+  eikä analyysikoodia, aineistoa tai tutkimusajoa.
+- 2026-11-20: Etähaarojen kärjet tarkistettiin juuri ennen normaaleja
+  `git push origin --delete` -poistoja. Poistokomento ei kuitenkaan ollut
+  kärjen OID:hen sidottu, joten tarkistuksen ja poiston välistä mahdollista
+  rinnakkaista päivitystä ei voi sulkea pois jälkikäteen. Palautuskelpoinen
+  yksityinen bundle kattaa tarkistetut kaksi kärki-HEADia. Yksityinen
+  säilytysmanifesti nimeää tämän palautuskopioksi ja kaksi alustavaa bundlea
+  palautukseen kelpaamattomiksi; kaikkien kolmen hashit tarkistettiin.
