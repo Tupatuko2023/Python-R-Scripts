@@ -39,6 +39,29 @@ Myöhemmän version omistavaa sisältöä ja hyväksyntä-/korvaavuusnäyttöä 
 voitu tarkistaa. Täsmäpolun ja hashin löytyminen johdetusta kortista ei
 muuta tieteellisen vastaavuuden tilaa `NEEDS_VERIFICATION`.
 
+## Yksityisen lähdetoimituksen vastaanotto 20.11.2026
+
+Erillisen yksityisen toimituksen manifesti (SHA-256
+`a02d4e9401cce9ff70a75c5dfd842640b3beb596f22ee655e55cf1eea162c49d`)
+ja kaikki sen kuusi lähde- tai ohjetiedostoa tarkistettiin ilmoitettuihin
+SHA-256-arvoihin. Seitsemän tiedoston tavukopio varmennettiin pysyvässä
+yksityisessä säilytyksessä. Vastaanotto-ohje on käsittelyohje, ei uusi
+tutkimuspäätös tai hyväksyntä.
+
+| Lähde                                                                                                                                           | Nyt varmennettu näyttö                                                                                                                           | Auktoriteettiraja                                                                                                           |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `METHODS_AND_SCORING.md` 0.4.1-draft, SHA-256 `192e59c6ce3d4f86cc1816e71ecbe68cb33205acd23508147c9a521e5411adad`                                | Historiallisen §3.1:n sääntötason D-005…D-009-hyväksyntämerkinnät ovat itse luonnoksessa; koko tiedosto on DRAFT.                                | Ei todista myöhempää tai nykyistä omistavaa sääntöä.                                                                        |
+| `DECISION_LOG.md` 1.2.1:n D-005…D-009-otteet; lähteen koko tiedoston SHA-256 `57d453c051aa6d048ce7ae457369a9dd96350b5e7e0ce2f4e174c4c8352463dc` | Historialliset päätösmerkinnät kirjaavat 22.9.2026 ihmisomistajan hyväksynnät ja nimeävät niiden alkuperäiset hyväksyntäpaketit.                 | Alkuperäisiä päivättyjä hyväksyntäpaketteja ei toimitettu; `SUPERSEDED_BY: none` kuvaa vain tämän vanhan lokiversion tilaa. |
+| PRS:n DEAC-handover 1.2.0 ja D-012:n valmis tehtävä                                                                                             | Handover raportoi D-010:n ja D-012:n myöhemmät täsmennykset. D-012-tehtävä ja PR #176:n omistajamerge tukevat rajattua MOI-tulkinnan toteutusta. | Handover on johdettu; PR:n hyväksyntä ei hyväksy koko nykyistä §3.1:tä eikä osoita D-010:n alkuperäistä päätöstä.           |
+| `deac_index.py`, SHA-256 `c3fe94b631d488a5c5923ce4f31edca866b435464b8e6ce986b5e07c568593d7`                                                     | Toimitettu vertailumoduuli vastaa WP1:n tavukopiota.                                                                                             | Toteutus on vertailukohde, ei menetelmäsäännön hyväksyntä.                                                                  |
+
+D-011:n alkuperäistä päätöstä, D-010:n ja D-012:n alkuperäisiä
+hyväksyntämerkintöjä, myöhempää päätöslokia eikä 0.5.2-draft-version tavuja
+ole toimituksessa. Vanhan ja myöhemmän koko tiedoston hashit eroavat, mutta
+§3.1:n todellista tekstieroa ei voi tarkistaa ilman myöhemmän version tavuja.
+Nykyisen omistavan säännön tila säilyy `AUTHORITY_UNRESOLVED` ja sen
+vastaavuus toteutukseen `NEEDS_VERIFICATION`.
+
 ## Täsmäversion ja ilmoitusten varmennus
 
 Sekä alkuperäisen PRS-lähteen että paikallisen AIM1-kohteen kahden Python-tiedoston
@@ -61,7 +84,10 @@ Vertailukoodi on paikallisen AIM1-kohderepon
 `c3fe94b631d488a5c5923ce4f31edca866b435464b8e6ce986b5e07c568593d7`.
 Se vastaa tavutasolla WP1:n PRS-lähdettä. Vertailun sääntölähde on yllä
 mainittu luettu **vanhempi** `0.4.1-draft`-kopio; tästä ei päätellä
-ajantasaisen §3.1:n vastaavuutta.
+ajantasaisen §3.1:n vastaavuutta. Uusi toimitus ei muuttanut tämän jo tehdyn
+vertailun lähdeversiota. Handoverin D-010/D-012-täsmennykset koskevat
+komponenttien ylävirran pisteytystä ja luokittelua; kokoajamoduuli vastaanottaa
+vain valmiiksi normalisoidut arvot.
 
 | Kohta                          | Havainto vanhempaan §3.1-kopioon nähden                                                                                                                                                                                                                    | Rajaus                                                                                          |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |

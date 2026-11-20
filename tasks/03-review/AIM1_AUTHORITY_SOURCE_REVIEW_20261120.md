@@ -85,3 +85,12 @@ lisenssejä ei muuteta, AIM1-kohderepoa ei julkaista eikä viestejä lähetetä.
   paikallisen commitin toimitusraja yllä on historiallinen; tämä uusi
   valtuutus koskee vain raporttia, tehtäväkorttia ja projektirekisteriä.
   AIM1-kohderepon julkaisu, merge ja `04-done`-siirto jäävät ulkopuolelle.
+- 2026-11-20: Erillisen yksityisen DEAC-lähdetoimituksen manifesti ja kaikki
+  kuusi muuta tiedostoa varmennettiin SHA-256-arvoilla. Paketti kopioitiin
+  tavutarkasti pysyvään yksityiseen säilytykseen; julkiseen toimitukseen
+  kirjattiin vain lähdekohtaiset johtopäätökset. Historiallinen 0.4.1-draft
+  ja D-005…D-009:n päätösmerkinnät saatiin, mutta alkuperäiset hyväksynnät,
+  D-011, myöhempi päätösloki ja 0.5.2-draft puuttuvat. D-010/D-012:n
+  handover-viitteitä ei ylennetty nykyiseksi hyväksytyksi säännöksi.
+  `AUTHORITY_UNRESOLVED` ja `NEEDS_VERIFICATION` säilyvät; tehtävä pysyy
+  `03-review`-tilassa.
