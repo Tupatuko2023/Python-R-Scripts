@@ -115,3 +115,8 @@ lisenssejä ei muuteta, AIM1-kohderepoa ei julkaista eikä viestejä lähetetä.
   `tools/run-gates.sh --mode pre-push --smoke` läpäisivät. Analyysi- ja QC-ajot
   eivät sovellu pelkkään lifecycle-dokumentaatioon. PR #237:n kolme tiedostoa
   täsmäsivät hyväksytyn HEADin ja `origin/main`-haaran välillä.
+- 2026-11-20T15:59:04Z: Lifecycle-PR:n Sourcery-huomio osoitti rekisterin
+  vanhentuneen `observed_commit`- ja `observed_worktree_label`-parin.
+  Kirjoitussuoja tarkistettiin uudelleen ennen korjausta. Kentät päivitettiin
+  PR #237:n varmennettuun main-committiin ja nykyiseen sulkutyöpuuhun;
+  tutkimus- tai julkaisutiloja ei muutettu.
