@@ -50,10 +50,10 @@ yksittäisen työpaketin valmistumisesta.
 
 ## Tehtäväviitteet
 
-| repo                            | task                        | path                                         |
-| ------------------------------- | --------------------------- | -------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`    | `tasks/04-done/AIM1_REPO_WP1_20261119.md`    |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120` | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md` |
+| repo                            | task                                    | path                                                       |
+| ------------------------------- | --------------------------------------- | ---------------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                  |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`             | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`               |
 | `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120` | `tasks/03-review/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md` |
 
 ## Jatkamismuistio
@@ -110,13 +110,13 @@ havainnot ovat `reports/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`:ssä.
 
 ## Worktree-havainnot
 
-| label                              | state    | evidence                                                                                                  |
-| ---------------------------------- | -------- | --------------------------------------------------------------------------------------------------------- |
-| aim1-wp1-20261119                  | removed  | PR #233 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.                |
-| aim1-wp1-lifecycle-20261119        | removed  | PR #234 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.                |
-| aim1-wp1-cleanup-20261120          | removed  | PR #235 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026.             |
-| aim1-wp1-cleanup-closeout-20261120 | removed  | PR #236 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026.             |
-| aim1-authority-review-20261120     | active   | Uuden rajatun lähde- ja julkaisuoikeusselvityksen työpuu; toimitus vielä avoin.                             |
+| label                              | state   | evidence                                                                                     |
+| ---------------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| aim1-wp1-20261119                  | removed | PR #233 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.   |
+| aim1-wp1-lifecycle-20261119        | removed | PR #234 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.   |
+| aim1-wp1-cleanup-20261120          | removed | PR #235 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
+| aim1-wp1-cleanup-closeout-20261120 | removed | PR #236 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
+| aim1-authority-review-20261120     | active  | Uuden rajatun lähde- ja julkaisuoikeusselvityksen työpuu; toimitus vielä avoin.              |
 
 Inventaario kattaa tämän projektin tehtävätyöpuut. Gitin koko työpuulista
 tarkistettiin, mutta muiden projektien työpuita ei siivottu.
