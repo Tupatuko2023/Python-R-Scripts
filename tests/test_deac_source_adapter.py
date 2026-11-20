@@ -670,8 +670,9 @@ def test_missing_gait_time_does_not_become_inability_from_aid_metadata() -> None
     assert scores["maximal_10m_gait_speed"] is None
 
 
-def _single_walking_fixture() -> tuple[dict[str, object], adapter.SourceBindings, dict]:
-    header = "synthetic_walking_header"
+def _single_walking_fixture(
+    header: str = "synthetic_walking_header",
+) -> tuple[dict[str, object], adapter.SourceBindings, dict]:
     row: dict[str, object] = {header: 0}
     bindings = adapter.SourceBindings(
         columns={"walking_500m": header},
@@ -698,6 +699,12 @@ def test_single_walking_component_uses_bound_source_and_existing_scorer(
     row, bindings, schema = _single_walking_fixture()
     row[bindings.columns["walking_500m"]] = value
     assert adapter.score_bound_walking_500m(row, bindings, **schema) == expected
+
+
+def test_single_walking_component_uses_alternate_bound_header() -> None:
+    row, bindings, schema = _single_walking_fixture("synthetic_alternate_header")
+    row[bindings.columns["walking_500m"]] = 2
+    assert adapter.score_bound_walking_500m(row, bindings, **schema) == 1.0
 
 
 @pytest.mark.parametrize("value", [99, True, "unlisted", 1.0, ComponentStatus.NOT_APPLICABLE])
@@ -737,11 +744,33 @@ def test_single_walking_component_rejects_wrong_or_missing_bound_header() -> Non
         adapter.score_bound_walking_500m({}, bindings, **schema)
 
 
+def test_single_walking_component_rejects_ambiguous_physical_header() -> None:
+    row, bindings, schema = _single_walking_fixture()
+    schema["physical_headers"] = (
+        "synthetic_walking_header",
+        "synthetic_walking_header",
+        "synthetic_neighbour",
+    )
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_walking_500m(row, bindings, **schema)
+
+
 def test_single_walking_component_cannot_mark_a_scoreable_value_missing() -> None:
     row, bindings, schema = _single_walking_fixture()
     bindings = adapter.SourceBindings(
         columns=bindings.columns,
         ordinary_missing_codes={"walking_500m": (1,)},
+    )
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_walking_500m(row, bindings, **schema)
+
+
+@pytest.mark.parametrize("code", [0.0, 1.0, 2.0])
+def test_single_walking_component_rejects_numeric_alias_as_missing(code: float) -> None:
+    row, bindings, schema = _single_walking_fixture()
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        ordinary_missing_codes={"walking_500m": (code,)},
     )
     with pytest.raises(adapter.SourceSchemaError):
         adapter.score_bound_walking_500m(row, bindings, **schema)

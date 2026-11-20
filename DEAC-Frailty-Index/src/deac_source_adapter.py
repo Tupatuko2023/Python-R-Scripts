@@ -360,8 +360,10 @@ def score_bound_walking_500m(
     """Score one bound component after caller-supplied metadata validation.
 
     The caller provides protected source metadata and a field-specific missing
-    code configuration. No file or participant row is loaded by this helper.
-    Other components and index eligibility are deliberately out of scope.
+    code configuration. The row must come from the same immutable source
+    snapshot as the supplied fingerprint; this helper cannot establish the
+    provenance of an arbitrary mapping. No file or participant row is loaded
+    by this helper. Other components and index eligibility are out of scope.
     """
     logical_field = "walking_500m"
     if not isinstance(row, Mapping) or not isinstance(bindings, SourceBindings):
@@ -384,13 +386,8 @@ def score_bound_walking_500m(
         for code in missing_codes
     ):
         raise SourceSchemaError("Ordinary missing codes must be a valid sequence")
-    for code in missing_codes:
-        try:
-            score_walking_500m(code)  # type: ignore[arg-type]
-        except ValueError:
-            pass
-        else:
-            raise SourceSchemaError("A scoreable category cannot be marked missing")
+    if any(_matches_code(category, missing_codes) for category in (0, 1, 2)):
+        raise SourceSchemaError("A scoreable category cannot be marked missing")
     validate_source_schema_bindings(
         actual_sha256,
         expected_sha256,
@@ -405,14 +402,13 @@ def score_bound_walking_500m(
         not header.strip()
         or not label.strip()
         or header != bindings.columns[logical_field]
+        or sum(candidate == header for candidate in physical_headers) != 1
     ):
         raise SourceSchemaError("Bound source header or label is missing or different")
-    value = row.get(header)
+    value = _read_value(row, bindings, logical_field)
     if isinstance(value, bool) or value is ComponentStatus.NOT_APPLICABLE:
         raise ValueError("Unsupported source status for this component")
-    return score_walking_500m(
-        _read_value(row, bindings, logical_field)  # type: ignore[arg-type]
-    )
+    return score_walking_500m(value)  # type: ignore[arg-type]
 
 
 def normalize_preselected_test_value(

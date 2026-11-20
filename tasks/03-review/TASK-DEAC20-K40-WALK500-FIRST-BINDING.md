@@ -69,12 +69,22 @@ Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muutet
 - 2026-11-20T21:17:45+02:00 PR #239:n lint löysi rekisteritaulukon
   Prettier-muotoilupoikkeaman. Taulukon sarakeleveydet korjattu;
   paikallinen Prettier-, markdownlint-, CSV- ja diff-tarkistus läpäisi.
+- 2026-11-20T21:24:27+02:00 Sourceryn kirjallinen katselmointi toi
+  seitsemän huomiota. Pisteytettävän numeerisen arvon puuttuvuusalias,
+  monitulkintainen fyysinen otsake ja vaihtoehtoinen synteettinen otsake
+  käsiteltiin koodissa ja testeissä. Rajattu pytest-ajo 75/75 PASS ja
+  yksityinen metadataan sidottu synteettinen tarkistus 16/16 PASS.
+  Tuotantokohortin integrointi ja rivin alkuperän todistus eivät kuulu
+  tämän yhden komponentin eristettyyn tekniseen pilottiin.
 
 ## Blockers
 
 - Menetelmän nykyinen §3.1-auktoriteetti ja AIM1-kohderepon julkaisuvaltuutus
   pysyvät erillisinä avoimina asioina; ne eivät estä tätä paikallista
   synteettistä teknistä tehtävää.
+- Tuotantokäyttö edellyttää, että kutsuja sitoo rivin ja metadatan samaan
+  muuttumattomaan lähdeversioon. Tämä pilotti ei todista mielivaltaisen
+  rivimappingin alkuperää eikä muuta kohorttiajoa.
 
 ## Links
 
