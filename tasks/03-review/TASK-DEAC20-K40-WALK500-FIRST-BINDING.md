@@ -1,6 +1,6 @@
 # DEAC20: 500 m kävelyvaikeuden rajattu lähdesidonta
 
-## Context
+## Tausta
 
 Yksityinen, hash-varmennettu toimeksianto rajaa ensimmäisen komponentin
 lähdesidonnan. Nykyinen komponenttipisteyttäjä kattaa pisteytettävät luokat;
@@ -9,13 +9,13 @@ synteettisen varmennuksen. Lähteen tarkka skeema ja koodiselite pysyvät
 erillisessä yksityisessä toimituksessa. Tämä kortti ei hyväksy menetelmää,
 tuotantoajoa eikä AIM1-kohderepon julkaisua.
 
-## Inputs
+## Syötteet
 
 - PRS:n nykyinen `deac_components.py` ja `deac_source_adapter.py`.
 - Erikseen toimitettu yksityinen, vain metadataa sisältävä lähdepaketti.
 - Ihmisomistajan 20.11.2026 antama rajattu toteutusvaltuutus.
 
-## Outputs
+## Tuotokset
 
 - Yhden 500 m -komponentin lähdesidottu, synteettisesti testattava tulos.
 - Yksityinen täsmäskeeman ja koodiselitteen tarkastusraportti.
@@ -33,7 +33,7 @@ tuotantoajoa eikä AIM1-kohderepon julkaisua.
 Yksityinen täsmäsidonta ja raportti kirjoitetaan vain toimeksiannon nimeämään
 Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muuteta.
 
-## Definition of Done (DoD)
+## Valmistumiskriteerit (DoD)
 
 - Lähdemetadata varmennettu ilman osallistujarivejä.
 - Pisteyttäjä käytetään muuttumattomana; dokumentoimaton koodi ja väärä
@@ -43,7 +43,7 @@ Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muutet
   hallintadokumentaation. Yksityiset lähdetekstit ja polut pysyvät ulkona.
 - Rekisteri ja CSV validoitu. Tehtävä siirretään katselmointiin, ei `04-done`.
 
-## Log
+## Loki
 
 - 2026-11-20T20:17:15+02:00 Tehtäväkortti luotu ihmisomistajan valtuuttamana;
   toimeksiannon SHA-256 ja suojatun metadatalähteen tiivisteet varmennettu.
@@ -76,8 +76,14 @@ Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muutet
   yksityinen metadataan sidottu synteettinen tarkistus 16/16 PASS.
   Tuotantokohortin integrointi ja rivin alkuperän todistus eivät kuulu
   tämän yhden komponentin eristettyyn tekniseen pilottiin.
+- 2026-11-20T21:28:33+02:00 Toisen, edeltävään revisioon kohdistuneen
+  Sourcery-katselmoinnin lisähuomiot käsitelty: semanttinen selite
+  tarkistetaan seliteriviltä, sidonta luetaan paikallisesta kopiosta,
+  ja synteettinen testi sisältää toisen kentän sekä `None`-puuttuvuuden.
+  Tehtäväkortin otsikot käännetty suomeksi. Rajattu pytest-ajo
+  78/78 PASS ja yksityinen metadataan sidottu tarkistus 16/16 PASS.
 
-## Blockers
+## Esteet
 
 - Menetelmän nykyinen §3.1-auktoriteetti ja AIM1-kohderepon julkaisuvaltuutus
   pysyvät erillisinä avoimina asioina; ne eivät estä tätä paikallista
@@ -86,7 +92,7 @@ Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muutet
   muuttumattomaan lähdeversioon. Tämä pilotti ei todista mielivaltaisen
   rivimappingin alkuperää eikä muuta kohorttiajoa.
 
-## Links
+## Linkit
 
 - `docs/governance/project_registry/PRJ-AIM1-REPO.md`
 - `https://github.com/Tupatuko2023/Python-R-Scripts/pull/239`

@@ -673,7 +673,7 @@ def test_missing_gait_time_does_not_become_inability_from_aid_metadata() -> None
 def _single_walking_fixture(
     header: str = "synthetic_walking_header",
 ) -> tuple[dict[str, object], adapter.SourceBindings, dict]:
-    row: dict[str, object] = {header: 0}
+    row: dict[str, object] = {"synthetic_decoy_header": 2, header: 0}
     bindings = adapter.SourceBindings(
         columns={"walking_500m": header},
         ordinary_missing_codes={"walking_500m": ("synthetic_missing",)},
@@ -755,6 +755,13 @@ def test_single_walking_component_rejects_ambiguous_physical_header() -> None:
         adapter.score_bound_walking_500m(row, bindings, **schema)
 
 
+def test_single_walking_component_requires_semantic_label() -> None:
+    row, bindings, schema = _single_walking_fixture("synthetic walking difficulty code")
+    schema["label_row"] = ("other", "unrelated question", "other question")
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_walking_500m(row, bindings, **schema)
+
+
 def test_single_walking_component_cannot_mark_a_scoreable_value_missing() -> None:
     row, bindings, schema = _single_walking_fixture()
     bindings = adapter.SourceBindings(
@@ -774,3 +781,31 @@ def test_single_walking_component_rejects_numeric_alias_as_missing(code: float) 
     )
     with pytest.raises(adapter.SourceSchemaError):
         adapter.score_bound_walking_500m(row, bindings, **schema)
+
+
+def test_single_walking_component_allows_none_in_missing_configuration() -> None:
+    row, bindings, schema = _single_walking_fixture()
+    bindings = adapter.SourceBindings(
+        columns=bindings.columns,
+        ordinary_missing_codes={"walking_500m": (None, "synthetic_missing")},
+    )
+    assert adapter.score_bound_walking_500m(row, bindings, **schema) == 0.0
+
+
+def test_single_walking_component_uses_validated_binding_snapshot() -> None:
+    row, _, schema = _single_walking_fixture()
+    columns = {"walking_500m": "synthetic_walking_header"}
+    missing_codes: dict[str, tuple[object, ...]] = {
+        "walking_500m": ("synthetic_missing",)
+    }
+    bindings = adapter.SourceBindings(
+        columns=columns, ordinary_missing_codes=missing_codes
+    )
+
+    class ChangingRow(dict[str, object]):
+        def __getitem__(self, key: str) -> object:
+            columns["walking_500m"] = "synthetic_decoy_header"
+            missing_codes["walking_500m"] = (0,)
+            return super().__getitem__(key)
+
+    assert adapter.score_bound_walking_500m(ChangingRow(row), bindings, **schema) == 0.0
