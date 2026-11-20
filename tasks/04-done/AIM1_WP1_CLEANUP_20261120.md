@@ -83,3 +83,15 @@ muut työpuut ja yksityiset säilytysaineistot säilytetään.
   yksityinen bundle kattaa tarkistetut kaksi kärki-HEADia. Yksityinen
   säilytysmanifesti nimeää tämän palautuskopioksi ja kaksi alustavaa bundlea
   palautukseen kelpaamattomiksi; kaikkien kolmen hashit tarkistettiin.
+- 2026-11-20T03:27:38Z: Ihmisomistaja `Tupatuko2023` hyväksyi tämän
+  siivoustehtävän teknisen valmistumisen ja [PR #235:n täsmärevision
+  `82fd14e69ea6ca0e2755bbf14ee5b2ebecbf3333`](https://github.com/Tupatuko2023/Python-R-Scripts/pull/235#issuecomment-7029426709).
+  Kommentti valtuutti PR:n main-yhdistämisen ja sulkukirjauksen valmistelun.
+  Tämä pysyvä kommentti on tehtävälokista riippumaton hyväksyntänäyttö.
+- 2026-11-20: PR #235 yhdistettiin hyväksytystä HEADista mainiin squash-
+  commitilla `7c87864a0aacb65b6ba976295d604b5aa42035ed`; `MERGED`-tila,
+  kohde `main` ja commitin esiintyminen noudetussa `origin/main`-haarassa
+  varmennettiin. Kortti siirrettiin teknisesti `04-done`-jonoon erillisessä
+  elinkaarityöpuussa. Tämän sulkukirjauksen oma PR ja sen ihmishyväksyntä
+  ovat vielä avoimia. Siivouskirjauksen työpuu ja haara säilyvät, kunnes
+  niiden erikseen valtuutetun loppusiivouksen ehdot täyttyvät.
