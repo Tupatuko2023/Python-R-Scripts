@@ -8,14 +8,14 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-20: WP1:n tekninen pilotti ja kaksi vanhaa työpuuta on suljettu valtuutetusti. PRS:n dokumentaatio-PR:t #233, #234 ja #235 on varmennettu mainista. Siivoustehtävän tekninen 04-done-siirto on valmisteltu erilliseen elinkaarikatselmointiin; siivouskirjauksen toimitustyöpuu ja haara säilyvät. AIM1-projekti jatkuu."
-next_step: "Katselmoi siivoustehtävän erillinen elinkaarikirjaus. Sen main-toimituksen jälkeen tarkista ja tee vain erikseen valtuutettu siivouskirjauksen työpuun ja haaran loppusiivous. Selvitä Python-tiedostojen julkaisuoikeus ja nykyinen omistava §3.1 erillisinä jatkoasioina; AIM1-kohderepo pysyy paikallisena."
+latest_status: "2026-11-20: WP1:n ketju on päätetty ja kahden täsmäversion MIT-sisällytysoikeus vahvistettu. Yksityinen lähdetoimitus varmennettiin ja säilytettiin: 0.4.1-draft sekä D-005…D-009:n historialliset päätösmerkinnät saatiin, alkuperäiset hyväksyntäpaketit ja myöhempi 0.5.2-draft puuttuvat. D-010/D-012 ovat johdettuja viitteitä. Nykyinen §3.1 on AUTHORITY_UNRESOLVED ja toteutusvastaavuus NEEDS_VERIFICATION; selvitys on 03-review-tilassa. AIM1-projekti jatkuu."
+next_step: "Katselmoi päivitetty rajattu lähdeselvitys. Hanki nykyisen omistavan §3.1:n ja 0.5.2-draftin tavut sekä alkuperäiset hyväksyntä- ja korvaavuusviitteet ennen tieteellistä vastaavuusväitettä. AIM1-kohderepon julkaisu vaatii erillisen ihmisomistajan päätöksen ja toimituksen sisältötarkistuksen."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
 observed_at: "2026-11-20"
-observed_commit: "7c87864a0aacb65b6ba976295d604b5aa42035ed"
-observed_worktree_label: "aim1-wp1-cleanup-closeout-20261120"
-blocker: "Nykyinen omistava METHODS_AND_SCORING.md §3.1 puuttuu tieteellisestä vahvistuksesta. Juuren LICENSE/README ja .github/CONTRIBUTING.md tukevat MIT:n soveltumista Python-koodiin, mutta saman repon npm-paketin package.json ilmoittaa ISC:n; oikeudenhaltijan vahvistus julkaisu- ja ilmoitusoikeudesta puuttuu. Nämä eivät estä teknistä katselmointia."
+observed_commit: "30d01bb762f5f391f4fe77311594c1a9705f6fb7"
+observed_worktree_label: "aim1-authority-review-20261120"
+blocker: "AIM1-kohderepon erillinen julkaisupäätös puuttuu, vaikka kahden yksilöidyn Python-tiedostoversion MIT-sisällytysoikeus on vahvistettu. Historiallinen 0.4.1-draft ja D-005…D-009-merkinnät ovat saatavilla, mutta alkuperäiset hyväksyntäpaketit, myöhempi 0.5.2-draft, D-011 sekä nykyinen päätös- ja korvaavuusketju puuttuvat tieteellisestä vastaavuustarkistuksesta. Nämä eivät estä rajattua paikallista selvitystä."
 orchestrator: "Owner"
 agent: "Termux Codex"
 agent_tool: "Codex"
@@ -24,11 +24,12 @@ started_date: "2026-11-19"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
-link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/235"
+link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/236"
 worktree_inventory: "complete"
 tasks:
   - "AIM1_REPO_WP1_20261119"
   - "AIM1_WP1_CLEANUP_20261120"
+  - "AIM1_AUTHORITY_SOURCE_REVIEW_20261120"
 ---
 
 ## AIM1:n erillinen analyysirepo
@@ -49,10 +50,11 @@ yksittäisen työpaketin valmistumisesta.
 
 ## Tehtäväviitteet
 
-| repo                            | task                        | path                                         |
-| ------------------------------- | --------------------------- | -------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`    | `tasks/04-done/AIM1_REPO_WP1_20261119.md`    |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120` | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md` |
+| repo                            | task                                    | path                                                       |
+| ------------------------------- | --------------------------------------- | ---------------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                  |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`             | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`               |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120` | `tasks/03-review/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md` |
 
 ## Jatkamismuistio
 
@@ -71,9 +73,14 @@ puuttuminen ei pysäytä rungon, tavukopioiden tai synteettisen testin valmistel
 Lähderepon `LICENSE`, README ja `.github/CONTRIBUTING.md` tukevat MIT:n
 soveltumista Python-koodiin; saman repon npm-paketin `package.json` ilmoittaa
 ISC:n. `package.json` ei nimeä siirrettyjä Python-tiedostoja eikä
-DEAC-hakemistossa ole erillistä lisenssitiedostoa. Merkinnät näyttävät koskevan
-eri sisältöjä, mutta oikeudenhaltijan vahvistus Python-tiedostojen
-julkaisuoikeudesta ja tarvittavista ilmoituksista puuttuu.
+DEAC-hakemistossa ole erillistä lisenssitiedostoa. WP1:n katselmoinnin aikaan
+oikeudenhaltijan vahvistus puuttui. Ihmisomistaja vahvisti 20.11.2026
+oikeudenhaltijana täsmäversioiden `deac_index.py` (SHA-256
+`c3fe94b631d488a5c5923ce4f31edca866b435464b8e6ce986b5e07c568593d7`)
+ja `test_deac_index.py` (SHA-256
+`396b798f73aced664deb0479a495bc2d9e8febb825bfc9dc5177b71e9ead1713`)
+sisällyttämisen AIM1-kohderepoon MIT-lisenssillä. Lähteen MIT-teksti ja nykyiset
+merkinnät säilytetään. Vahvistus ei valtuuta kohderepon julkaisemista.
 PRS:n WP1-dokumentaatio-PR #233 ja sulkukirjaus-PR #234 ovat `MERGED`-tilassa.
 Niiden main-commitit `1c90b7ed8ab1cc4a977acee2ebcf9e1ec83b615c` ja
 `02fbcd96303d2c9e9b4e5441176af00d20e5a5f9` on varmennettu `origin/main`-haarasta.
@@ -82,8 +89,12 @@ Käyttäjän erikseen nimeämät kaksi WP1-työpuuta ja niiden haarat siivottiin
 Tämä siivouskirjaus toimitettiin mainiin
 [PR #235:ssä](https://github.com/Tupatuko2023/Python-R-Scripts/pull/235)
 commitilla `7c87864a0aacb65b6ba976295d604b5aa42035ed`.
-Siivoustehtävän tekninen `04-done`-siirto valmistellaan erilliseen PR:ään;
-sen hyväksyntä ja main-toimitus ovat vielä avoimia.
+Siivoustehtävän tekninen `04-done`-siirto toimitettiin mainiin
+[PR #236:ssa](https://github.com/Tupatuko2023/Python-R-Scripts/pull/236)
+commitilla `30d01bb762f5f391f4fe77311594c1a9705f6fb7`.
+Toteutunut loppusiivous on kirjattu [PR:n pysyvään kommenttiin](https://github.com/Tupatuko2023/Python-R-Scripts/pull/236#issuecomment-7029737997).
+Uusi lähde- ja julkaisuoikeusselvitys on erillinen työpaketti; sen rajatut
+havainnot ovat `reports/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`:ssä.
 
 ## Vaiheiden erottelu 2026-11-20
 
@@ -93,17 +104,19 @@ sen hyväksyntä ja main-toimitus ovat vielä avoimia.
 - WP1:n tekninen `04-done`-kirjaus: tehty ja toimitettu mainiin PR #234:ssä.
 - Nimettyjen WP1-työpuiden siivous: tehty 20.11.2026.
 - Siivouksen dokumentaation main-toimitus: tehty ja varmennettu PR #235:stä.
-- Siivoustehtävän tekninen `04-done`-kirjaus: valmisteltu erilliseen katselmointiin; main-toimitus avoin.
-- Siivouskirjauksen oman työpuun ja haaran loppusiivous: tekemättä.
+- Siivoustehtävän tekninen `04-done`-kirjaus: toimitettu mainiin PR #236:ssa.
+- Siivouskirjauksen nimetyt työpuut ja haarat: poistettu; kuittaus PR #236:ssa.
+- Julkaisuoikeuden ja omistavan §3.1:n lähdeselvitys: uusi rajattu tehtävä käynnissä.
 
 ## Worktree-havainnot
 
-| label                              | state    | evidence                                                                                                  |
-| ---------------------------------- | -------- | --------------------------------------------------------------------------------------------------------- |
-| aim1-wp1-20261119                  | removed  | PR #233 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.                |
-| aim1-wp1-lifecycle-20261119        | removed  | PR #234 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.                |
-| aim1-wp1-cleanup-20261120          | retained | Siivouskirjauksen PR #235 on mainissa; tämä työpuu ja haara odottavat valtuutetun loppusiivouksen ehtoja. |
-| aim1-wp1-cleanup-closeout-20261120 | active   | Teknisen `04-done`-sulkukirjauksen erillinen työpuu; oma katselmointi ja toimitus avoimia.                |
+| label                              | state   | evidence                                                                                     |
+| ---------------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| aim1-wp1-20261119                  | removed | PR #233 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.   |
+| aim1-wp1-lifecycle-20261119        | removed | PR #234 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.   |
+| aim1-wp1-cleanup-20261120          | removed | PR #235 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
+| aim1-wp1-cleanup-closeout-20261120 | removed | PR #236 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
+| aim1-authority-review-20261120     | active  | Uuden rajatun lähde- ja julkaisuoikeusselvityksen työpuu; toimitus vielä avoin.              |
 
 Inventaario kattaa tämän projektin tehtävätyöpuut. Gitin koko työpuulista
 tarkistettiin, mutta muiden projektien työpuita ei siivottu.
