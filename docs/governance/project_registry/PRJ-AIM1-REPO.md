@@ -8,8 +8,8 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-20: WP1:n ketju on päätetty ja kahden täsmäversion MIT-sisällytysoikeus vahvistettu. Yksityinen lähdetoimitus varmennettiin ja säilytettiin: 0.4.1-draft sekä D-005…D-009:n historialliset päätösmerkinnät saatiin, alkuperäiset hyväksyntäpaketit ja myöhempi 0.5.2-draft puuttuvat. D-010/D-012 ovat johdettuja viitteitä. Nykyinen §3.1 on AUTHORITY_UNRESOLVED ja toteutusvastaavuus NEEDS_VERIFICATION; selvitys on 03-review-tilassa. AIM1-projekti jatkuu."
-next_step: "Katselmoi päivitetty rajattu lähdeselvitys. Hanki nykyisen omistavan §3.1:n ja 0.5.2-draftin tavut sekä alkuperäiset hyväksyntä- ja korvaavuusviitteet ennen tieteellistä vastaavuusväitettä. AIM1-kohderepon julkaisu vaatii erillisen ihmisomistajan päätöksen ja toimituksen sisältötarkistuksen."
+latest_status: "2026-11-20: Lähdeselvitys ja yksityisen paketin vastaanotto tehty. Ihmisomistaja hyväksyi PR #237:n täsmärevision 4ad584b3709791ac6a8242810c527b39248f15a5; dokumentaatio toimitettiin origin/mainiin commitilla 116737082a053aa1b7500b856e3525356a0e83ed. Tehtävän tekninen 04-done-sulku on erillisessä katselmoitavassa lifecycle-toimituksessa. Kahden Python-tiedoston MIT-sisällytysoikeus on vahvistettu. Nykyinen §3.1 on AUTHORITY_UNRESOLVED ja toteutusvastaavuus NEEDS_VERIFICATION. AIM1-projekti jatkuu aktiivisena."
+next_step: "Katselmoi lähdeselvitystehtävän lifecycle-PR ja varmista sen erillinen main-toimitus. Myöhemmässä työssä tarvitaan nykyisen omistavan §3.1:n ja 0.5.2-draftin tavut sekä alkuperäiset hyväksyntä- ja korvaavuusviitteet ennen tieteellistä vastaavuusväitettä. AIM1-kohderepon julkaisu vaatii erillisen ihmisomistajan päätöksen ja sisältötarkistuksen."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
 observed_at: "2026-11-20"
@@ -50,11 +50,11 @@ yksittäisen työpaketin valmistumisesta.
 
 ## Tehtäväviitteet
 
-| repo                            | task                                    | path                                                       |
-| ------------------------------- | --------------------------------------- | ---------------------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                  |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`             | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`               |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120` | `tasks/03-review/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md` |
+| repo                            | task                                    | path                                                     |
+| ------------------------------- | --------------------------------------- | -------------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`             | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`             |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120` | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md` |
 
 ## Jatkamismuistio
 
@@ -95,6 +95,10 @@ commitilla `30d01bb762f5f391f4fe77311594c1a9705f6fb7`.
 Toteutunut loppusiivous on kirjattu [PR:n pysyvään kommenttiin](https://github.com/Tupatuko2023/Python-R-Scripts/pull/236#issuecomment-7029737997).
 Uusi lähde- ja julkaisuoikeusselvitys on erillinen työpaketti; sen rajatut
 havainnot ovat `reports/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`:ssä.
+Ihmisomistaja hyväksyi selvityksen [PR #237:n täsmäkommentissa](https://github.com/Tupatuko2023/Python-R-Scripts/pull/237#issuecomment-7043856754).
+Dokumentaatio toimitettiin `origin/main`-haaraan commitilla
+`116737082a053aa1b7500b856e3525356a0e83ed`. Tämä ei vahvista
+nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
 
 ## Vaiheiden erottelu 2026-11-20
 
@@ -106,17 +110,19 @@ havainnot ovat `reports/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`:ssä.
 - Siivouksen dokumentaation main-toimitus: tehty ja varmennettu PR #235:stä.
 - Siivoustehtävän tekninen `04-done`-kirjaus: toimitettu mainiin PR #236:ssa.
 - Siivouskirjauksen nimetyt työpuut ja haarat: poistettu; kuittaus PR #236:ssa.
-- Julkaisuoikeuden ja omistavan §3.1:n lähdeselvitys: uusi rajattu tehtävä käynnissä.
+- Julkaisuoikeuden ja omistavan §3.1:n lähdeselvitys: tehty ja hyväksytty PR #237:ssa; tekninen `04-done`-sulku on tässä erillisessä lifecycle-toimituksessa.
 
 ## Worktree-havainnot
 
-| label                              | state   | evidence                                                                                     |
-| ---------------------------------- | ------- | -------------------------------------------------------------------------------------------- |
-| aim1-wp1-20261119                  | removed | PR #233 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.   |
-| aim1-wp1-lifecycle-20261119        | removed | PR #234 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.   |
-| aim1-wp1-cleanup-20261120          | removed | PR #235 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
-| aim1-wp1-cleanup-closeout-20261120 | removed | PR #236 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
-| aim1-authority-review-20261120     | active  | Uuden rajatun lähde- ja julkaisuoikeusselvityksen työpuu; toimitus vielä avoin.              |
+| label                              | state    | evidence                                                                                     |
+| ---------------------------------- | -------- | -------------------------------------------------------------------------------------------- |
+| aim1-wp1-20261119                  | removed  | PR #233 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.   |
+| aim1-wp1-lifecycle-20261119        | removed  | PR #234 varmennettu mainista; työpuu ja paikallis- sekä origin-haara poistettu 20.11.2026.   |
+| aim1-wp1-cleanup-20261120          | removed  | PR #235 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
+| aim1-wp1-cleanup-closeout-20261120 | removed  | PR #236 mainissa; työpuu ja paikallis- sekä origin-haara poistettu valtuutetusti 20.11.2026. |
+| aim1-authority-review-20261120     | retained | Alkuperäinen yksityinen lähdetyöpuu; sen committia ei toimitettu PR #237:ssä.                |
+| aim1-authority-public-20261120     | retained | PR #237:n toimitustyöpuu; main-toimitus varmennettu, siivous tekemättä.                      |
+| aim1-authority-closeout-20261120   | active   | Tämän lifecycle-PR:n työpuu; toimitus ja myöhempi siivous vielä avoimia.                     |
 
 Inventaario kattaa tämän projektin tehtävätyöpuut. Gitin koko työpuulista
 tarkistettiin, mutta muiden projektien työpuita ei siivottu.

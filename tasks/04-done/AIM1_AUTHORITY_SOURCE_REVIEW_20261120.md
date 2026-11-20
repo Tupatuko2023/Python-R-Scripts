@@ -94,3 +94,24 @@ lisenssejä ei muuteta, AIM1-kohderepoa ei julkaista eikä viestejä lähetetä.
   handover-viitteitä ei ylennetty nykyiseksi hyväksytyksi säännöksi.
   `AUTHORITY_UNRESOLVED` ja `NEEDS_VERIFICATION` säilyvät; tehtävä pysyy
   `03-review`-tilassa.
+- 2026-11-20T15:47:06Z: Ihmisomistaja `Tupatuko2023` hyväksyi
+  [PR #237:n pysyvässä kommentissa](https://github.com/Tupatuko2023/Python-R-Scripts/pull/237#issuecomment-7043856754)
+  tämän tehtävän dokumentaatiotoimituksen täsmärevision
+  `4ad584b3709791ac6a8242810c527b39248f15a5` ja valtuutti sen
+  yhdistämisen mainiin. Hyväksyntä ei koske nykyistä DEAC §3.1 -sääntöä,
+  tieteellistä toteutusvastaavuutta eikä AIM1-kohderepon julkaisua.
+- 2026-11-20: PR #237:n tarkistukset läpäisivät; PR yhdistettiin mainiin
+  squash-commitilla `116737082a053aa1b7500b856e3525356a0e83ed`.
+  PR:n `MERGED`-tila, täsmä-HEAD ja commit varmennettiin noudetusta
+  `origin/main`-haarasta. Lähdeselvityksen ja paketin vastaanoton kirjaus
+  on toimitettu. Ihmisomistaja valtuutti saman tehtävän sulkukirjauksen
+  valmistelun, pushin ja PR:n avaamisen. Tehtävä siirrettiin teknisesti
+  `04-done`-tilaan erillisessä lifecycle-PR:ssä; sen oma main-toimitus ja työpuiden
+  siivous eivät vielä ole tapahtuneet. Projektin tila pysyy aktiivisena,
+  ja `AUTHORITY_UNRESOLVED` sekä `NEEDS_VERIFICATION` säilyvät.
+- 2026-11-20T15:51:39Z: Rekisterin `--verify-guard` ja lähdekuvauksen hash
+  täsmäsivät. CSV generoitiin kahdesti samoilla tavuilla; `--check`,
+  ignore-tarkistus, Prettier, `git diff --check` ja repojuuren
+  `tools/run-gates.sh --mode pre-push --smoke` läpäisivät. Analyysi- ja QC-ajot
+  eivät sovellu pelkkään lifecycle-dokumentaatioon. PR #237:n kolme tiedostoa
+  täsmäsivät hyväksytyn HEADin ja `origin/main`-haaran välillä.
