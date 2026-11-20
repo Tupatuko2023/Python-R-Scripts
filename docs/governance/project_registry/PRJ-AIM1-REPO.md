@@ -51,11 +51,11 @@ yksittäisen työpaketin valmistumisesta.
 
 ## Tehtäväviitteet
 
-| repo                            | task                                    | path                                                     |
-| ------------------------------- | --------------------------------------- | -------------------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`             | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`             |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120` | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md` |
+| repo                            | task                                    | path                                                       |
+| ------------------------------- | --------------------------------------- | ---------------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                  |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`             | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`               |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120` | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`   |
 | `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-WALK500-FIRST-BINDING` | `tasks/03-review/TASK-DEAC20-K40-WALK500-FIRST-BINDING.md` |
 
 ## Jatkamismuistio

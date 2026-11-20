@@ -66,6 +66,9 @@ Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muutet
   pushattava historia tarkistettu; haara puskettiin ja PR #239 avattiin
   main-haaraan. Ihmisomistajan täsmähyväksyntä, CI-katselmointi ja
   main-toimitus odottavat.
+- 2026-11-20T21:17:45+02:00 PR #239:n lint löysi rekisteritaulukon
+  Prettier-muotoilupoikkeaman. Taulukon sarakeleveydet korjattu;
+  paikallinen Prettier-, markdownlint-, CSV- ja diff-tarkistus läpäisi.
 
 ## Blockers
 
