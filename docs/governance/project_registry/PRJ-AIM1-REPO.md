@@ -8,12 +8,12 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-20: Lähdeselvitystehtävä toimitettiin mainiin PR #238:ssa (9df51409f8b0cf21bb333232fcd46dbe8b594938). WALK500:n rajattu lähdesidonta on paikallisesti 03-review-tilassa: yksityinen metadataan sidottu synteettinen tarkistus 16/16 PASS ja sovittimen pytest-tiedosto 70/70 PASS. Ei pushia tai PR:ää tälle työpaketille. AIM1-projekti jatkuu aktiivisena."
-next_step: "Ihmisomistaja katselmoi WALK500:n täsmärevision, synteettisen näytön ja yksityisen lähderaportin. Nykyisen §3.1:n auktoriteetti ja AIM1-kohderepon julkaisupäätös pysyvät erillisinä avoimina asioina."
+latest_status: "2026-11-20: Lähdeselvitystehtävä toimitettiin mainiin PR #238:ssa. WALK500:n rajattu lähdesidonta on 03-review-tilassa ja PR #239 on avattu ihmisomistajan katselmointiin. Yksityinen metadataan sidottu synteettinen tarkistus 16/16 PASS ja sovittimen pytest-tiedosto 70/70 PASS. AIM1-projekti jatkuu aktiivisena."
+next_step: "Varmista PR #239:n CI ja katselmointitulos; ihmisomistaja katselmoi lopullisen täsmärevision, synteettisen näytön ja yksityisen lähderaportin. Nykyisen §3.1:n auktoriteetti ja AIM1-kohderepon julkaisupäätös pysyvät erillisinä avoimina asioina."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
 observed_at: "2026-11-20"
-observed_commit: "9df51409f8b0cf21bb333232fcd46dbe8b594938"
+observed_commit: "b7f2a8ce3a96b5de192174277a00c5322192442d"
 observed_worktree_label: "aim1-walk500-20261120"
 blocker: "AIM1-kohderepon erillinen julkaisupäätös puuttuu, vaikka kahden yksilöidyn Python-tiedostoversion MIT-sisällytysoikeus on vahvistettu. Historiallinen 0.4.1-draft ja D-005…D-009-merkinnät ovat saatavilla, mutta alkuperäiset hyväksyntäpaketit, myöhempi 0.5.2-draft, D-011 sekä nykyinen päätös- ja korvaavuusketju puuttuvat tieteellisestä vastaavuustarkistuksesta. Nämä eivät estä rajattua paikallista selvitystä."
 orchestrator: "Owner"
@@ -24,7 +24,7 @@ started_date: "2026-11-19"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
-link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/236"
+link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/239"
 worktree_inventory: "unknown"
 tasks:
   - "AIM1_REPO_WP1_20261119"
@@ -113,8 +113,8 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
 - Siivoustehtävän tekninen `04-done`-kirjaus: toimitettu mainiin PR #236:ssa.
 - Siivouskirjauksen nimetyt työpuut ja haarat: poistettu; kuittaus PR #236:ssa.
 - Julkaisuoikeuden ja omistavan §3.1:n lähdeselvitys: tehty ja hyväksytty PR #237:ssa; tekninen `04-done`-sulku toimitettu mainiin PR #238:ssa.
-- WALK500:n paikallinen tekninen sidonta: synteettiset testit läpäisty;
-  tehtävä `03-review`-tilassa, ei vielä toimitettu mainiin.
+- WALK500:n rajattu tekninen sidonta: synteettiset testit läpäisty;
+  PR #239 avattu, tehtävä `03-review`-tilassa, ei toimitettu mainiin.
 
 ## Worktree-havainnot
 
@@ -127,7 +127,7 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
 | aim1-authority-review-20261120     | retained | Alkuperäinen yksityinen lähdetyöpuu; sen committia ei toimitettu PR #237:ssä.                |
 | aim1-authority-public-20261120     | removed  | PR #237:n main-toimitus varmennettu; nimetty työpuu ja haarat poistettu 20.11.2026.          |
 | aim1-authority-closeout-20261120   | removed  | PR #238:n main-toimitus varmennettu; nimetty työpuu ja haarat poistettu 20.11.2026.          |
-| aim1-walk500-20261120              | active   | WALK500:n paikallinen katselmointityöpuu; ei pushia tai PR:ää.                              |
+| aim1-walk500-20261120              | active   | WALK500:n katselmointityöpuu; PR #239 avoin, main-toimitus ja siivous tekemättä.             |
 
 Taulukko kuvaa tämän projektin nimetyt työpuut tähän havaintoon asti.
 Uuden WALK500-työpuun vuoksi koko työpuuinventaarion kattavuus on `unknown`;

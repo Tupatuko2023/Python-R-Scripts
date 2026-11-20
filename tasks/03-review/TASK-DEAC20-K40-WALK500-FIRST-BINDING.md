@@ -62,6 +62,10 @@ Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muutet
   teknisen toteutuksen ja rajattujen testien valmistuttua.
   Ihmisomistajan sisältöhyväksyntä ja mahdollinen PR-toimitus odottavat;
   tätä korttia ei siirretty `04-done`-tilaan.
+- 2026-11-20T21:13:17+02:00 Julkisen toimituksen neljä tiedostoa ja
+  pushattava historia tarkistettu; haara puskettiin ja PR #239 avattiin
+  main-haaraan. Ihmisomistajan täsmähyväksyntä, CI-katselmointi ja
+  main-toimitus odottavat.
 
 ## Blockers
 
@@ -72,3 +76,4 @@ Git-ignoroituun yksityiseen tuloshakemistoon. Muita seurattuja polkuja ei muutet
 ## Links
 
 - `docs/governance/project_registry/PRJ-AIM1-REPO.md`
+- `https://github.com/Tupatuko2023/Python-R-Scripts/pull/239`
