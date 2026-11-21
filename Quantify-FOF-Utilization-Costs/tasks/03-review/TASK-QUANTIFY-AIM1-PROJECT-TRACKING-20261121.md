@@ -18,7 +18,7 @@
 - `docs/governance/project_registry/PRJ-QUANTIFY-AIM1-UTILIZATION-COSTS.md` ja sen ohjeenmukainen, ignoroitu CSV-näkymä.
 - Tämä tehtäväkortti `03-review`-tilassa, kun dokumentaatiomuutos ja tarkistukset valmistuvat.
 - Sallitut kirjoituspolut: `Quantify-FOF-Utilization-Costs/tasks/01-ready/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `Quantify-FOF-Utilization-Costs/tasks/02-in-progress/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `Quantify-FOF-Utilization-Costs/tasks/03-review/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `docs/governance/project_registry/PRJ-QUANTIFY-AIM1-UTILIZATION-COSTS.md`, ignoroitu `tools/project_registry/outputs/projects.csv`.
-- Toimitusraja: paikallinen katselmoitava muutos. Ei pushia, PR:ää, main-mergeä, `04-done`-siirtoa eikä työpuun siivousta.
+- Toimitusraja: alkuperäinen valtuutus kattoi paikallisen katselmoitavan commitin. Käyttäjän 21.11.2026 jatkovaltuutus kattaa tämän toimitushaaran pushin ja PR:n avaamisen. Ei main-mergeä, `04-done`-siirtoa eikä työpuun siivousta.
 
 ## Definition of Done
 
@@ -33,6 +33,7 @@
 - 2026-11-21T03:16:36Z: Uuden rekisteritietueen lähdehash `30f71e7f28837812dccaa0b5467bfc07a6fa7a813c78fbfc2afa456bf31102b3` vastasi tallennettua kenttää. CSV muodostettiin kahdesti; SHA-256 pysyi `3361a5aab9edbffc33647f513a40f5ca7b808b556005b6fc28c593947844f33f`. Viisi projektia, `--check` PASS, ignore-portti PASS ja repojuuren pre-push-smoke PASS.
 - 2026-11-21T03:16:36Z: Rekisterin 62 synteettisen unittestin sarjassa 58 testiä suorittui ilman virhettä ja neljä pysähtyi Termux-Pythonin puuttuvaan `os.link`-ominaisuuteen (`AttributeError`). Koko sarjaa ei merkitä PASSiksi; tämä dokumentaatiomuutos ei koske generaattorikoodia. Ei tutkimus- tai aineistoajoa.
 - 2026-11-21T03:16:36Z: Rajattu dokumentaatiomuutos siirrettiin `03-review`-tilaan ja projektitietueen tehtäväpolku päivitettiin. Ihmisomistajan hyväksyntää, main-toimitusta tai työpuun siivousta ei ole tehty.
+- 2026-11-21T09:53:24Z: Käyttäjä valtuutti lähtöcommitin `fffc75752bc96922261322f42d4788aeed81e379` rajatun pushin ja PR:n. Diffissä on vain tämä kortti ja uusi projektitietue; suojattuja tuloksia, tunnisteita tai yksityisiä absoluuttisia polkuja ei löytynyt. Termuxin unittest-sarjassa 62 testiä, neljä `AttributeError: module 'os' has no attribute 'link'` -virhettä: `GitGateTests.test_ignored_hard_link_to_tracked_source_is_rejected`, `SafePublicationTests.test_alias_created_during_write_is_rechecked_before_replace`, `SafePublicationTests.test_atomic_replace_does_not_modify_other_hard_link` ja `SafePublicationTests.test_hard_link_to_source_is_rejected`. Linux-CI:n soveltuva tarkistus selvitetään; koko sarja ei ole PASS.
 
 ## Blockers
 
