@@ -15,7 +15,7 @@
 Pakollinen työjono ja toimintalogiikka:
 
 - **Selection rule & tehtäväjono (`<queue-root>`):** jokaisella tehtäväkortilla on oma kiinteä tehtäväjono — joko päärepon `tasks/` tai aliprojektin oma `<aliprojekti>/tasks/` (esim. `Fear-of-Falling/tasks/`, `Quantify-FOF-Utilization-Costs/tasks/`). Valitse uusi toteutustehtävä vain asianomaisen jonon `<queue-root>/01-ready/`-kansiosta. Jos jono on tyhjä: STOP ja pyydä ihmiseltä tehtävää. Ihmisen erikseen hyväksymän, jo `<queue-root>/03-review/`-tilassa olevan tehtävän tekninen sulkeminen ei ole uuden tehtävän valinta.
-- **Transitions:** agentti siirtää tehtäväkorttia aina sen **omassa tehtäväjonossa** `<queue-root>/01-ready → <queue-root>/02-in-progress → <queue-root>/03-review` (aliprojektin kortti ei koskaan siirry päärepon `tasks/`-jonoon eikä päinvastoin). Jos tehtävä on linkitetty nimettyyn `docs/governance/project_registry/PRJ-*.md`-tietueeseen, päivitä tietueen tehtävätaulukon polku samassa elinkaarimuutoksessa. Owner tai muu tehtävälle määrätty ihminen tekee hyväksymispäätöksen; agentti ei saa hyväksyä omaa työtään. Vasta kirjatun hyväksynnän jälkeen agentti saa siirtää saman tehtävän teknisesti `<queue-root>/03-review → <queue-root>/04-done`, kirjata hyväksynnän provenance-tiedot, päivittää mahdollisen linkitetyn `PRJ-*.md`-tietueen tehtäväpolun (tarkistaen erikseen projektin omat valmistumiskriteerit ennen projektin tilan muuttamista), validoida muutoksen ja avata lifecycle-PR:n. Ihminen arvioi ja mergeää PR:n erikseen.
+- **Transitions:** agentti siirtää tehtäväkorttia aina sen **omassa tehtäväjonossa** `<queue-root>/01-ready → <queue-root>/02-in-progress → <queue-root>/03-review` (aliprojektin kortti ei koskaan siirry päärepon `tasks/`-jonoon eikä päinvastoin). Jos tehtävä on linkitetty nimettyyn `docs/governance/project_registry/PRJ-*.md`-tietueeseen, päivitä tietueen tehtävätaulukon polku samassa elinkaarimuutoksessa. Owner tai muu tehtävälle määrätty ihminen tekee hyväksymispäätöksen; agentti ei saa hyväksyä omaa työtään. Vasta kirjatun hyväksynnän jälkeen agentti saa siirtää saman tehtävän teknisesti `<queue-root>/03-review → <queue-root>/04-done`, kirjata hyväksynnän provenance-tiedot, päivittää mahdollisen linkitetyn `PRJ-*.md`-tietueen tehtäväpolun (tarkistaen erikseen projektin omat valmistumiskriteerit ennen projektin tilan muuttamista), validoida muutoksen ja avata lifecycle-PR:n. Ihminen arvioi ja mergeää PR:n erikseen. Alla rajattu komponenttitoimitus voi käyttää yhden PR:n menettelyä.
 - **Approval evidence (MUST):** ennen teknistä sulkua tarkista agentin omasta
   task-lokista riippumaton ja pysyvä ihmishyväksyntä. Näytöksi kelpaa tehtävälle
   määrätyn hyväksyjän GitHub PR-/issue-kommentti tai hänen tekemänsä hyväksytyn
@@ -27,6 +27,32 @@ Pakollinen työjono ja toimintalogiikka:
   tai kommentti ei kelpaa ainoaksi näytöksi.
   Jos hyväksyjä, kohde tai rajaus ei ole todennettavissa, STOP ja pyydä ihmistä
   täydentämään hyväksyntänäyttöä ennen siirtoa.
+- **Rajattu yhden PR:n menettely uusille DEAC-komponenttitoimituksille:**
+  Käytä tätä menettelyä vain, kun se on nimetty hyväksytyssä tehtäväkortissa
+  ja toteutuksen, soveltuvan testinäytön, kortin ja nimetyn projektitietueen
+  voi katselmoida yhdessä. Valitse kortti normaalisti `01-ready`-jonosta,
+  siirrä se `02-in-progress`-jonoon ja kirjaa tekninen valmistuminen ja DoD
+  `03-review`-vaiheessa. Valmistele samassa toimitushaarassa ja samassa PR:ssä
+  kortin lopullinen `04-done`-polku sekä projektitietueen vastaava viite.
+  Ennen yhdistämistä polku on PR:ssä ehdotettu lopputila. Merkitse korttiin
+  tekninen valmistuminen ja se, että hyväksyntä ja main-toimitus odottavat
+  PR:n avaushetkellä. Kirjaa toteutuneet testit, ratkaisemattomat esteet ja
+  varmennetut rekisterihavainnot. Tarkista rekisterin kirjoitussuoja, kortin
+  ja rekisteriviitteen vastaavuus sekä soveltuva CSV-vienti kuten muissa
+  projektirekisterin muutoksissa.
+  Toimituspäivä, toimituscommit ja siivoustila perustuvat havaintoihin.
+  Ihmisomistaja hyväksyy PR-kommentissa lopullisen HEADin koko diffin,
+  myös tehtävä- ja rekisterikirjaukset.
+  Samassa kommentissa voi valtuuttaa yhdistämisen sekä jäljempänä kuvatun
+  nimetyn siivouksen. Uusi HEAD vaatii uuden täsmähyväksynnän.
+  Kun pakolliset portit ja hyväksyntä on tarkistettu, PR voidaan yhdistää
+  HEAD-lukittuna valtuutuksen rajoissa. Kortin `04-done` tulee voimaan vasta
+  main-toimituksessa. Varmenna toimitus `origin/main`ista ja kirjaa samaan
+  PR:ään omistajan hyväksynnän URL, hyväksytty HEAD, toimituscommit, aika
+  ja tehtäväpolku sekä erillinen siivoustulos. Kommentti on toimitus- ja
+  siivousnäyttö. Omistajan kommentti on hyväksyntänäyttö. Tätä menettelyä
+  käyttävässä toimitus-PR:ssä katselmoidaan myös elinkaarisiirto.
+  Muiden sekä jo aiemmalla menettelyllä aloitettujen tehtävien säännöt säilyvät.
 - **Log:** lisää tehtävätiedostoon aikaleimallinen lokimerkintä (ISO-8601; local time ok) jokaisesta merkittävästä toimesta.
 - **DoD gate (tehtävän luonteen mukaiset tarkistukset):**
   - _Soveltuvat toimitus- ja dokumentaatiotarkistukset ovat aina pakollisia:_ aja muutokseen soveltuvat repojuuren toimitusportit (esim. `tools/run-gates.sh --mode pre-push --smoke` tai `tools/run-gates.ps1 --mode pre-push --smoke`), Markdown-/muotoilutarkistukset ja mahdolliset projektirekisteritarkistukset.
@@ -66,8 +92,9 @@ lue `config/steering.md` ennen työn aloitusta ja noudata tätä kanonista rajau
   eivät tule automaattisesti sallituiksi pelkän kirjoituspolkulistan perusteella.
   Operaatiot voidaan hyväksyä yhdessä tehtävän alussa osana kirjattua valtuutusta
   ja toimitusrajaa, jolloin lupaa ei kysytä uudelleen jokaisella käyttökerralla.
-  Merge ja `04-done` vaativat aina nimenomaisen valtuutuksen sekä yllä määritellyn
-  riippumattoman ihmishyväksyntänäytön.
+  Merge ja `04-done` vaativat nimenomaisen valtuutuksen ja riippumattoman
+  ihmishyväksyntänäytön. Yhden PR:n menettelyssä sama täsmähyväksyntä ja
+  yhdistämisvaltuutus kattavat PR:n mukana mainiin toimitettavan elinkaarisiirron.
 - Safe mode: `true` → tiedostojen poistot vaativat hyväksynnän
 - Approvals required: `docs/` tai `src/` poistot, uudet Python-riippuvuudet, `data/`-rakenteen muutokset
 - Language policy: dokumentaatio suomeksi, koodi/muuttujat englanniksi
@@ -286,6 +313,15 @@ gh pr merge --auto --squash
 - Työn valmistuminen (`03-review`), hyväksytty `main`-toimitus / tekninen
   `04-done`-sulku sekä työpuiden ja haarojen siivous ovat kolme eri vaihetta.
   Oletus toimituksen jälkeen on työpuun ja haarojen säilytys (`retained`).
+- **Yhden PR:n komponenttitoimitus:** sama täsmähyväksyntäkommentti voi sisältää
+  kohdassa 1 vaaditun nimetyn siivousvaltuutuksen. Yksilöi työpuu, paikallinen
+  haara, etähaara ja niiden odotetut OID-arvot. Varmenna säilytettävän aineiston
+  kopiot ja tarvittaessa haarakärjen palautettavuus ennen poistamista.
+  Tarkista squash-toimituksen sisältö ja haaran historian yhdistyminen erikseen.
+  Sido etäpoisto atomisesti tarkistettuun OID-arvoon paikallisten vaiheiden
+  jälkeen. Jos normaali poisto, turvallinen OID-ehto tai muu edellytys estyy,
+  säilytä kohde ja siitä riippuvat kohteet. Kirjaa `retained` ja syy saman
+  yhdistetyn PR:n kommenttiin. Tämä päättää siivouksen kyseisiltä osin.
 - Älä suorita sokeaa komentosarjaa. Siivous on sallittu vain, kun jokainen
   seuraavista ehdoista tarkistetaan ja täyttyy järjestyksessä (mikä tahansa
   epäonnistuminen pysäyttää ketjun välittömästi ennen seuraavaa poistoa):

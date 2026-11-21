@@ -15,8 +15,8 @@ Tämä tiedosto täydentää SKILLS.md:tä. Jos ristiriitaa: SKILLS.md voittaa.
 
 ## Tehtäväjono (Agent-First)
 
-- Valitse uusi toteutustehtävä vain `tasks/01-ready/`-kansiosta. Hyväksytyn
-  `03-review`-tehtävän tekninen `04-done`-sulku on tästä valinnasta erillinen.
+- Valitse uusi toteutustehtävä vain `tasks/01-ready/`-kansiosta. Teknisen
+  `04-done`-siirron ja yhden PR:n menettelyn ehdot määritellään `SKILLS.md`:ssä.
 - Siirrä uusi toteutustehtävä `tasks/02-in-progress/`-kansioon ennen työn
   aloittamista; hyväksyttyä `03-review`-tehtävää ei palauteta sinne sulkua varten.
 - Lokita aikaleimalla jokainen merkittävä toimi.
