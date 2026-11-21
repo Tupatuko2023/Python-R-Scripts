@@ -420,6 +420,102 @@ def score_bound_walking_500m(
     return score_walking_500m(value)  # type: ignore[arg-type]
 
 
+_NEUROLOGICAL_FIELDS = ("alzheimer", "parkinson", "stroke_avh")
+
+
+def score_bound_neurological(
+    row: Mapping[str, object],
+    bindings: SourceBindings,
+    *,
+    actual_sha256: str,
+    expected_sha256: str,
+    physical_headers: Sequence[str],
+    label_row: Sequence[str],
+    positions_by_field: Mapping[str, int],
+    semantic_prefixes: Mapping[str, str],
+) -> float | None:
+    """Score one three-field component after protected metadata validation.
+
+    The caller must establish that its metadata and row share one immutable
+    source snapshot. This helper opens no file and does not establish that
+    provenance. Only documented 0/1 values and ordinary None are accepted.
+    """
+    fields = set(_NEUROLOGICAL_FIELDS)
+    if not isinstance(row, Mapping) or not isinstance(bindings, SourceBindings):
+        raise ValueError("Expected a row mapping and source bindings")
+    if (
+        not isinstance(bindings.columns, Mapping)
+        or set(bindings.columns) != fields
+        or not isinstance(bindings.ordinary_missing_codes, Mapping)
+        or set(bindings.ordinary_missing_codes) - fields
+        or bindings.invalid_codes_as_missing
+        or bindings.performance_codes
+        or bindings.reason_columns
+        or bindings.verified_functional_inability_codes
+        or not isinstance(positions_by_field, Mapping)
+        or set(positions_by_field) != fields
+        or not isinstance(semantic_prefixes, Mapping)
+        or set(semantic_prefixes) != fields
+    ):
+        raise SourceSchemaError("Bind exactly the three neurological source fields")
+    columns = dict(bindings.columns)
+    for codes in bindings.ordinary_missing_codes.values():
+        if (
+            isinstance(codes, (str, bytes))
+            or not isinstance(codes, Sequence)
+            or any(code is not None for code in codes)
+        ):
+            raise SourceSchemaError("Undocumented missing aliases are not allowed")
+    for fingerprint in (actual_sha256, expected_sha256):
+        if (
+            not isinstance(fingerprint, str)
+            or len(fingerprint) != 64
+            or any(char not in "0123456789abcdefABCDEF" for char in fingerprint)
+        ):
+            raise SourceSchemaError("Invalid source workbook fingerprint")
+    validate_source_schema_bindings(
+        actual_sha256,
+        expected_sha256,
+        physical_headers,
+        label_row,
+        positions_by_field,
+        semantic_prefixes,
+    )
+    headers = []
+    for field_name in _NEUROLOGICAL_FIELDS:
+        position = positions_by_field[field_name]
+        header = physical_headers[position]
+        label = label_row[position]
+        if (
+            not header.strip()
+            or not label.strip()
+            or columns[field_name] != header
+            or sum(candidate == header for candidate in physical_headers) != 1
+            or not _compact_schema_text(label).startswith(
+                _compact_schema_text(semantic_prefixes[field_name])
+            )
+        ):
+            raise SourceSchemaError("Bound neurological header or label is different")
+        headers.append(header)
+    if len(set(headers)) != len(fields):
+        raise SourceSchemaError("Bound neurological headers are not unique")
+
+    values: list[int | None] = []
+    for field_name in _NEUROLOGICAL_FIELDS:
+        try:
+            raw = row[columns[field_name]]
+        except KeyError as exc:
+            raise ValueError(
+                f"Bound source column is missing for {field_name}"
+            ) from exc
+        if raw is not None and (type(raw) is not int or raw not in (0, 1)):
+            raise UnresolvedSourceCodeError(
+                f"Unmapped neurological source code for {field_name}"
+            )
+        values.append(raw)
+    return score_neurological(*values)
+
+
 _QUESTION_SCORERS = {
     "diabetes": score_diabetes,
     "alcohol": score_alcohol,
