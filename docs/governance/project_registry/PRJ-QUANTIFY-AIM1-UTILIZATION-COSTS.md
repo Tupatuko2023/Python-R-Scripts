@@ -8,14 +8,14 @@ state: "active"
 delivery: "not_delivered"
 goal: "Koota Quantify-FOF-Utilization-Costs-aliprojektin AIM1-palvelukäyttö- ja kustannustyön lähteet, rajatut analyysit ja raportointipäätökset katselmoitavaksi kokonaisuudeksi."
 done_criterion: "Sovittu AIM1-kokonaisuus ja sen lähde- sekä menetelmärajaukset on ihmisen hyväksymä, toimitettu mainiin ja projektin sulku on päätetty erikseen."
-latest_status: "2026-11-21: G4:n paikallinen valmistelukortti on yhä kesken ja seuraamaton jaetussa työpuussa. Kortin mukaan ehdolliset rahalliset kokonaismallit, ennustekäyrät, 12 luokan kuvaileva euroerittely ja yhdeksän luokkamallin diagnostiikka on raportoitu paikallisissa katselmointitoimituksissa; toimitustunnisteet ovat jatkamismuistiossa. S70–S79:n splinikäyrien pistekohtainen HC3-lisä on raportoitu paikalliseen REVIEW-pakettiin. Luokkamallien raportointipäätöstä ei ole tehty."
+latest_status: "2026-11-21: Projektiseurannan rajattu PR #241 on hyväksytty ja toimitettu mainiin commitilla 6d11037d0a78f61cd98a398d0cdf76e3f6110e58; siihen liittyvä tehtävä siirrettiin tekniseen 04-done-tilaan. G4:n paikallinen valmistelukortti on edelleen kesken. Rahalliset analyysit ja diagnostiikka on raportoitu paikallisissa katselmointitoimituksissa, mutta luokkamallien raportointipäätöstä ei ole tehty."
 next_step: "Katselmoi S70–S79:n splinin epävarmuuslisä sekä kaikkien yhdeksän luokkamallin raportointiehdotus tutkijan ja biostatistikon kanssa; päätä sen jälkeen, mitä siirretään esityksen ja käsikirjoituksen tuloksiin. Tarkista G4-kortin julkaisukelpoisuus erillisenä rajattuna tehtävänä."
 source_description_sha256: "30f71e7f28837812dccaa0b5467bfc07a6fa7a813c78fbfc2afa456bf31102b3"
 source_captured_at: "2026-11-21"
 observed_at: "2026-11-21"
-observed_commit: "3a29c4c4359edf0252efbe3a14afc3eb2cccf644"
+observed_commit: "6d11037d0a78f61cd98a398d0cdf76e3f6110e58"
 observed_worktree_label: "quantify-fof-project-registry-20261121"
-blocker: "G4:n tieteellinen raportointiratkaisu ja osa kustannuslähteen semantiikasta ovat avoimia; nykyinen paikallinen G4-kortti ei ole julkaistavissa tähän seurantamuutokseen sellaisenaan. Nämä eivät estä projektimerkinnän katselmointia."
+blocker: "G4:n tieteellinen raportointiratkaisu ja osa kustannuslähteen semantiikasta ovat avoimia; nykyinen paikallinen G4-kortti ei ole julkaistavissa tähän seurantamuutokseen sellaisenaan. Nämä eivät estä projektin aktiivista jatkoseurantaa."
 orchestrator: "Owner"
 agent: "Termux Codex"
 agent_tool: "Codex"
@@ -42,9 +42,9 @@ Quantify-FOF-Utilization-Costs-aliprojektin AIM1-työssä selvitetään lähtöt
 
 ## Tehtäväviitteet
 
-| repo                            | task                                           | path                                                                                             |
-| ------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `Tupatuko2023/Python-R-Scripts` | `TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121` | `Quantify-FOF-Utilization-Costs/tasks/03-review/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md` |
+| repo                            | task                                           | path                                                                                           |
+| ------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121` | `Quantify-FOF-Utilization-Costs/tasks/04-done/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md` |
 
 ## Jatkamismuistio
 
@@ -58,15 +58,15 @@ Quantify-FOF-Utilization-Costs-aliprojektin AIM1-työssä selvitetään lähtöt
 
 - Katselmointipaketit: paikallisesti valmisteltu; yksittäisen viimeisen paketin Windows-vastaanottoa ei varmennettu tässä seurantatehtävässä.
 - Ihmisomistajan tieteellinen hyväksyntä: avoin.
-- Tämän projektiseurantamuutoksen `origin/main`-toimitus: tekemättä.
+- Tämän projektiseurantamuutoksen `origin/main`-toimitus: PR #241, squash-commit `6d11037d0a78f61cd98a398d0cdf76e3f6110e58`, varmennettu 21.11.2026. Tekninen `04-done`-sulkukirjaus käsitellään erillisessä lifecycle-PR:ssä.
 - G4-työn Git-toimitus: ei varmennettu tämän paikallisen kortin perusteella.
 - Työpuun siivous: tekemättä; mitään työpuuta ei poistettu.
 
 ## Worktree-havainnot
 
-| label                                  | state    | evidence                                                                                          |
-| -------------------------------------- | -------- | ------------------------------------------------------------------------------------------------- |
-| quantify-fof-project-registry-20261121 | active   | Puhdas `origin/main`-pohjainen seurantatehtävän työpuu perustettu 21.11.2026; siivousta ei tehty. |
-| shared-main-checkout                   | retained | Jaetussa työpuussa on seuraamaton G4-kortti ja muiden töiden muutoksia; sitä ei muutettu.         |
+| label                                  | state    | evidence                                                                                                                                    |
+| -------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| quantify-fof-project-registry-20261121 | active   | PR #241 toimitettiin mainiin; erillinen tekninen sulkukirjaus valmistellaan samassa eristetyssä työpuussa. Työpuuta tai haaraa ei poisteta. |
+| shared-main-checkout                   | retained | Jaetussa työpuussa on seuraamaton G4-kortti ja muiden töiden muutoksia; sitä ei muutettu.                                                   |
 
 Inventaarion kattavuus on `unknown`; taulukko ei väitä kaikkien Quantify-työpuiden siivousta.
