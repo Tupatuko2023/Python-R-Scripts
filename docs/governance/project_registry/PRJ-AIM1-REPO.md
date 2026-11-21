@@ -8,12 +8,12 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-21: Kahdeksan kyselykomponentin toteutus toimitettiin PR #242:ssa ja 04-done-sulku PR #243:ssa mainiin; neurologisen yhdistelmän rajattu lähdesidonta ja synteettiset testit ovat katselmoitavana (`03-review`). AIM1-projekti jatkuu aktiivisena."
-next_step: "Katselmoi neurologisen yhdistelmän rajattu lähdesidonta ja sen synteettiset testit; toimita se mainiin vain erillisellä täsmähyväksynnällä. Hanki muille kymmenelle komponentille puuttuva lähdenäyttö erillisissä tehtävissä. Nykyisen §3.1:n auktoriteetti ja AIM1-kohderepon julkaisupäätös pysyvät avoimina."
+latest_status: "2026-11-21: Neurologisen yhdistelmän rajattu lähdesidonta toimitettiin PR #245:ssa mainiin hyväksytyltä täsmärevisiolta. Aiempien kahdeksan komponentin toteutus ja tekninen sulku toimitettiin PR:issä #242 ja #243. AIM1-projekti jatkuu aktiivisena."
+next_step: "Hanki kymmenen muun komponentin kenttäkohtainen lähde- ja päätösnäyttö erillisissä tehtävissä. Varmenna nykyisen §3.1:n täsmäversio ja käsittele AIM1-kohderepon julkaisupäätös erikseen."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
 observed_at: "2026-11-21"
-observed_commit: "6d11037d0a78f61cd98a398d0cdf76e3f6110e58"
+observed_commit: "7f544327e6ddcf0fa456d4eafcbc01f1f5f1a270"
 observed_worktree_label: "aim1-deac-neurological-binding-20261121"
 blocker: "AIM1-kohderepon erillinen julkaisupäätös puuttuu; kahden aiemman Python-täsmäversion MIT-sisällytysoikeus on vahvistettu. Nykyisen §3.1:n täsmäversio sekä hyväksyntä- ja korvaavuusketju puuttuvat tieteellisestä vastaavuustarkistuksesta. Kymmenen muun komponentin sidontaa odottavat kenttäkohtaiset vastauslegendat, aistitoimintojen päätösnäyttö, versioidut MOI-ohjeet, kipuasteikon kuvaus sekä suorituskykytestien protokollat ja poikkeuskoodit."
 orchestrator: "Owner"
@@ -24,7 +24,7 @@ started_date: "2026-11-19"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
-link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/243"
+link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/245"
 worktree_inventory: "unknown"
 tasks:
   - "AIM1_REPO_WP1_20261119"
@@ -53,14 +53,14 @@ yksittäisen työpaketin valmistumisesta.
 
 ## Tehtäväviitteet
 
-| repo                            | task                                                   | path                                                                      |
-| ------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                               | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                                 |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`                            | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`                              |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120`                | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`                  |
-| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-WALK500-FIRST-BINDING`                | `tasks/04-done/TASK-DEAC20-K40-WALK500-FIRST-BINDING.md`                  |
-| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121`     | `tasks/04-done/TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121.md`       |
-| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-NEUROLOGICAL-SOURCE-BINDING-20261121` | `tasks/03-review/TASK-DEAC20-K40-NEUROLOGICAL-SOURCE-BINDING-20261121.md` |
+| repo                            | task                                                   | path                                                                    |
+| ------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                               | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                               |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`                            | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`                            |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120`                | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`                |
+| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-WALK500-FIRST-BINDING`                | `tasks/04-done/TASK-DEAC20-K40-WALK500-FIRST-BINDING.md`                |
+| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121`     | `tasks/04-done/TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121.md`     |
+| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-NEUROLOGICAL-SOURCE-BINDING-20261121` | `tasks/04-done/TASK-DEAC20-K40-NEUROLOGICAL-SOURCE-BINDING-20261121.md` |
 
 ## Jatkamismuistio
 
@@ -148,9 +148,9 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
   commitilla `9acc14240de042d7f73cb0440a7e4d3004976b4a`.
   Nimettyjen työpuiden ja haarojen poistot on kirjattu
   [PR #243:n kuittaukseen](https://github.com/Tupatuko2023/Python-R-Scripts/pull/243#issuecomment-7062133813).
-- Neurologisen yhdistelmän eristetty sidonta ja synteettiset testit valmistuivat
-  katselmointiin; tuotantorivin ja metadatan saman snapshotin alkuperä on
-  myöhemmän tuotantokäytön erillinen ehto.
+- Neurologisen yhdistelmän eristetty sidonta ja synteettiset testit toimitettiin
+  mainiin PR #245:ssa omistajan täsmähyväksynnän jälkeen. Tuotantorivin ja
+  metadatan saman snapshotin alkuperä on myöhemmän tuotantokäytön erillinen ehto.
 
 ## Worktree-havainnot
 
@@ -167,7 +167,7 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
 | aim1-walk500-closure-20261120             | removed  | PR #240 mainissa; nimetty työpuu ja haarat poistettu 20.11.2026.                             |
 | aim1-deac-eight-bindings-20261121         | removed  | PR #242 mainissa; työpuu ja paikallis- sekä origin-haara poistettu 21.11.2026.               |
 | aim1-deac-eight-bindings-closure-20261121 | removed  | PR #243 mainissa; työpuu ja paikallis- sekä origin-haara poistettu 21.11.2026.               |
-| aim1-deac-neurological-binding-20261121   | active   | Neurologisen sidonnan eristetty työpuu; katselmointi ja main-toimitus odottavat.             |
+| aim1-deac-neurological-binding-20261121   | retained | PR #245 mainissa. Toteutuksen työpuu ja haarat säilytetty.                                   |
 
 Taulukko kuvaa tämän projektin nimetyt työpuut tähän havaintoon asti.
 Uuden työpuun perustamisen jälkeen koko inventaarion kattavuus on `unknown`;
