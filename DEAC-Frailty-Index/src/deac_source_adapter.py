@@ -467,18 +467,18 @@ def score_bound_question_components(
     positions_by_field: Mapping[str, int],
     semantic_prefixes: Mapping[str, str],
 ) -> dict[str, float | None]:
-    """Score only eight metadata-bound question components.
+    """Score the verified subset of eight metadata-bound question components.
 
     The caller supplies protected source metadata and field-specific missing
     tokens. It must establish that the row and metadata refer to the same
     immutable source snapshot. No files, other components, or index are read.
     """
-    fields = set(_QUESTION_SCORERS)
     if not isinstance(row, Mapping) or not isinstance(bindings, SourceBindings):
         raise ValueError("Expected a row mapping and source bindings")
+    fields = set(bindings.columns) if isinstance(bindings.columns, Mapping) else set()
     if (
-        not isinstance(bindings.columns, Mapping)
-        or set(bindings.columns) != fields
+        not fields
+        or not fields <= _QUESTION_SCORERS.keys()
         or not isinstance(bindings.ordinary_missing_codes, Mapping)
         or set(bindings.ordinary_missing_codes) != fields
         or bindings.invalid_codes_as_missing
@@ -490,11 +490,13 @@ def score_bound_question_components(
         or not isinstance(semantic_prefixes, Mapping)
         or set(semantic_prefixes) != fields
     ):
-        raise SourceSchemaError("Bind exactly the eight requested semantic fields")
+        raise SourceSchemaError("Bind only verified requested semantic fields")
 
     columns = dict(bindings.columns)
     missing_by_field: dict[str, tuple[object, ...]] = {}
     for field_name, scorer in _QUESTION_SCORERS.items():
+        if field_name not in fields:
+            continue
         codes = bindings.ordinary_missing_codes[field_name]
         if isinstance(codes, (str, bytes)) or not isinstance(codes, Sequence):
             raise SourceSchemaError("Ordinary missing codes must be sequences")
@@ -519,6 +521,8 @@ def score_bound_question_components(
     )
     headers = []
     for field_name in _QUESTION_SCORERS:
+        if field_name not in fields:
+            continue
         position = positions_by_field[field_name]
         header = physical_headers[position]
         label = label_row[position]
@@ -536,18 +540,27 @@ def score_bound_question_components(
     if len(set(headers)) != len(fields):
         raise SourceSchemaError("Bound source headers are not unique")
 
-    snapshot_bindings = SourceBindings(
-        columns=columns,
-        ordinary_missing_codes=missing_by_field,
-    )
     scores: dict[str, float | None] = {}
     for field_name, scorer in _QUESTION_SCORERS.items():
-        raw = row.get(columns[field_name])
-        if columns[field_name] not in row:
-            raise ValueError(f"Bound source column is missing for {field_name}")
-        if isinstance(raw, bool) or raw is ComponentStatus.NOT_APPLICABLE or isinstance(raw, float):
+        if field_name not in fields:
+            continue
+        try:
+            raw = row[columns[field_name]]
+        except KeyError as exc:
+            raise ValueError(
+                f"Bound source column is missing for {field_name}"
+            ) from exc
+        if (
+            isinstance(raw, bool)
+            or raw is ComponentStatus.NOT_APPLICABLE
+            or isinstance(raw, float)
+        ):
             raise ValueError("Unsupported source type or status for this component")
-        value = _read_value(row, snapshot_bindings, field_name)
+        value = (
+            None
+            if raw is None or _matches_code(raw, missing_by_field[field_name])
+            else raw
+        )
         scores[field_name] = scorer(value)  # type: ignore[arg-type]
     return scores
 

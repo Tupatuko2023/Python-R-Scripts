@@ -67,6 +67,12 @@ Tämä kortti ei laajenna yksityistä kirjoitusrajausta.
   tarkastettiin. Repoportit, Markdownlint, Prettier ja rekisterin CSV-tarkistus
   läpäisivät. Haara puskettiin ja PR #242 avattiin main-haaraan
   ihmiskatselmointia varten; sitä ei ole yhdistetty.
+- 2026-11-21T12:13:01+02:00 Sourceryn kolmesta huomiosta korjattiin
+  riviarvon kertalukeminen ja tyylin pitkät rivit. Varmennettujen kenttien
+  osajoukko voidaan pisteyttää, kun toisen kentän lähdenäyttö puuttuu.
+  Rajatut julkiset regressiotestit läpäisivät 351/351 ja erillinen yksityinen
+  metadatatarkistus 117/117 synteettistä väitettä. Päivityksen repoportit,
+  CI ja katselmointi tarkistetaan ennen lopullista toimitusraporttia.
 
 ## Esteet
 
