@@ -63,6 +63,10 @@ Tämä kortti ei laajenna yksityistä kirjoitusrajausta.
 - 2026-11-21T11:59:47+02:00 Kortti siirretty `03-review`-tilaan
   teknisen toteutuksen ja synteettisten testien jälkeen. Ihmisomistajan
   sisältöhyväksyntä ja main-toimitus odottavat.
+- 2026-11-21T12:06:07+02:00 Neljän tiedoston diff ja pushattava historia
+  tarkastettiin. Repoportit, Markdownlint, Prettier ja rekisterin CSV-tarkistus
+  läpäisivät. Haara puskettiin ja PR #242 avattiin main-haaraan
+  ihmiskatselmointia varten; sitä ei ole yhdistetty.
 
 ## Esteet
 
@@ -72,3 +76,4 @@ Tämä kortti ei laajenna yksityistä kirjoitusrajausta.
 ## Linkit
 
 - `docs/governance/project_registry/PRJ-AIM1-REPO.md`
+- `https://github.com/Tupatuko2023/Python-R-Scripts/pull/242`

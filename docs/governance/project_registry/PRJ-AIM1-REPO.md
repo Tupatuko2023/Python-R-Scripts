@@ -8,7 +8,7 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-21: WALK500:n sulkukirjaus toimitettiin PR #240:ssä mainiin ja nimetyt työpuut sekä haarat siivottiin. Kahdeksan kyselykomponentin rajattu lähdesidonta ja synteettiset testit valmistuivat; tehtävä on 03-review-tilassa. Julkisen sovittimen ja pisteyttäjien regressiotestit 349/349 PASS sekä erillinen yksityinen metadataan sidottu tarkistus 117/117 PASS. AIM1-projekti jatkuu aktiivisena."
+latest_status: "2026-11-21: WALK500:n sulkukirjaus toimitettiin PR #240:ssä mainiin ja nimetyt työpuut sekä haarat siivottiin. Kahdeksan kyselykomponentin rajattu lähdesidonta ja synteettiset testit valmistuivat; tehtävä on 03-review-tilassa ja PR #242 on avoin. Julkisen sovittimen ja pisteyttäjien regressiotestit 349/349 PASS sekä erillinen yksityinen metadataan sidottu tarkistus 117/117 PASS. AIM1-projekti jatkuu aktiivisena."
 next_step: "Tarkista kahdeksan komponentin rajattu PR ja sen CI- sekä katselmointitulokset; ihmisomistajan hyväksyntä ja main-toimitus ovat erillisiä seuraavia vaiheita. Nykyisen §3.1:n auktoriteetti ja AIM1-kohderepon julkaisupäätös pysyvät avoimina."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
@@ -24,7 +24,7 @@ started_date: "2026-11-19"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
-link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/239"
+link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/242"
 worktree_inventory: "unknown"
 tasks:
   - "AIM1_REPO_WP1_20261119"
@@ -132,7 +132,9 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
   erottaa siivouksen main-toimituksesta.
 - Kahdeksan kyselykomponentin erillinen lähdesidontatehtävä aloitettiin
   eristetyssä työpuussa. Rajattu toteutus ja synteettiset testit valmistuivat;
-  tehtävä siirrettiin `03-review`-tilaan. PR-toimitus arvioidaan erikseen.
+  tehtävä siirrettiin `03-review`-tilaan ja
+  [PR #242](https://github.com/Tupatuko2023/Python-R-Scripts/pull/242)
+  avattiin ihmiskatselmointia varten. Main-toimitus on avoin.
 
 ## Worktree-havainnot
 
