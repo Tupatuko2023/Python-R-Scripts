@@ -50,9 +50,25 @@ tuotantorivin alkuperä ja AIM1-kohderepon julkaisuvaltuutus ovat erillisiä.
   mukaan lukien sovitin- ja pisteyttäjätestit. `PRJ-AIM1-REPO` päivitettiin
   ja kortti siirrettiin `03-review`-tilaan.
 
+- 2026-11-21T19:58:59+02:00 Varmennettiin hyväksyntä ja main-toimitus.
+  Kortti siirrettiin teknisesti `04-done`-jonoon sulkuhaaraan ja
+  projektirekisterin tehtäväviite päivitettiin.
+
+## Hyväksyntä ja main-toimitus
+
+- Ihmisomistaja `Tupatuko2023` hyväksyi 2026-11-21T17:35:39Z tämän tehtävän
+  neurologisen lähdesidonnan PR:ssä #245, rajattuna HEADiin
+  `26369127646774e2bf15294f28f34863021376a6`.
+  [Pysyvä hyväksyntänäyttö](https://github.com/Tupatuko2023/Python-R-Scripts/pull/245#issuecomment-7066599156)
+- PR #245 toimitettiin mainiin 2026-11-21T17:37:31Z squash-commitilla
+  `7f544327e6ddcf0fa456d4eafcbc01f1f5f1a270`. Commit varmennettiin `origin/main`ista
+  ja sen tiedostopuu vastasi hyväksyttyä HEADia.
+- Python CI, Markdown CI ja CodeQL läpäisivät. Sourceryn katselmointi ohitettiin
+  kiintiön vuoksi. Työpuu ja toteutushaarat on kirjattu säilytettäviksi.
+
 ## Tila
 
-- REVIEW. Ihmisomistajan katselmointi odottaa.
+- DONE. Neurologisen lähdesidonnan rajattu tehtävä on toimitettu.
 
 ## Esteet
 
