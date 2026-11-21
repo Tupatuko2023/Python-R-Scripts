@@ -34,15 +34,17 @@ tasks:
 
 ## Lähdekuvaus
 
+<!-- prettier-ignore-start -->
 <!-- source-description:begin -->
 Quantify-FOF-Utilization-Costs-aliprojektin AIM1-työssä selvitetään lähtötilanteen DEAC20:n yhteyttä myöhempään palvelukäyttöön ja laskennalliseen rahalliseen arvoon. Työ etenee erillisinä lähde-, menetelmä-, toteutus- ja raportointitehtävinä. Ehdolliset analyysit ja katselmointipaketit eivät yksin vahvista tieteellisiä tulkintoja eivätkä osoita toimitusta mainiin.
 <!-- source-description:end -->
+<!-- prettier-ignore-end -->
 
 ## Tehtäväviitteet
 
-| repo                            | task                                              | path                                                                                                                      |
-| ------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121`   | `Quantify-FOF-Utilization-Costs/tasks/03-review/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`                         |
+| repo                            | task                                           | path                                                                                             |
+| ------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `Tupatuko2023/Python-R-Scripts` | `TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121` | `Quantify-FOF-Utilization-Costs/tasks/03-review/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md` |
 
 ## Jatkamismuistio
 
@@ -61,9 +63,9 @@ Quantify-FOF-Utilization-Costs-aliprojektin AIM1-työssä selvitetään lähtöt
 
 ## Worktree-havainnot
 
-| label                              | state    | evidence                                                                                 |
-| ---------------------------------- | -------- | ---------------------------------------------------------------------------------------- |
-| quantify-fof-project-registry-20261121 | active | Puhdas `origin/main`-pohjainen seurantatehtävän työpuu perustettu 21.11.2026; siivousta ei tehty. |
-| shared-main-checkout               | retained | Jaetussa työpuussa on seuraamaton G4-kortti ja muiden töiden muutoksia; sitä ei muutettu. |
+| label                                  | state    | evidence                                                                                          |
+| -------------------------------------- | -------- | ------------------------------------------------------------------------------------------------- |
+| quantify-fof-project-registry-20261121 | active   | Puhdas `origin/main`-pohjainen seurantatehtävän työpuu perustettu 21.11.2026; siivousta ei tehty. |
+| shared-main-checkout                   | retained | Jaetussa työpuussa on seuraamaton G4-kortti ja muiden töiden muutoksia; sitä ei muutettu.         |
 
 Inventaarion kattavuus on `unknown`; taulukko ei väitä kaikkien Quantify-työpuiden siivousta.
