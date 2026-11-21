@@ -95,6 +95,10 @@ Tämä kortti ei laajenna yksityistä kirjoitusrajausta.
   neljä kovien linkkien testiä pysähtyi ympäristön puuttuvaan `os.link`-
   tukeen. Nämä neljä läpäisivät erikseen Debianin `/usr/bin/python3`-
   tulkissa. Rekisterin CSV muodostettiin Git-ignoroituun tulospolkuun.
+- 2026-11-21T12:53:31+02:00 Sulku-PR:n Sourcery-huomio osoitti
+  projektirekisterin vanhentuneen havaintocommitin ja työpuutunnisteen.
+  Ne päivitettiin PR #242:n varmennettuun main-committiin ja tämän
+  sulkukirjauksen työpuuhun; projektin lähdekuvaus säilyi ennallaan.
 
 ## Sulkutila
 
