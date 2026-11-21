@@ -420,6 +420,151 @@ def score_bound_walking_500m(
     return score_walking_500m(value)  # type: ignore[arg-type]
 
 
+_QUESTION_SCORERS = {
+    "diabetes": score_diabetes,
+    "alcohol": score_alcohol,
+    "memory": score_memory,
+    "mood": score_mood,
+    "sleep": score_sleep,
+    "self_rated_mobility": score_self_rated_mobility,
+    "balance_difficulty": score_balance_difficulty,
+    "fear_of_falling": score_fear_of_falling,
+}
+
+
+def _scoreable_missing_alias(code: object, scorer: Any) -> bool:
+    """Reject a configured missing token that denotes a scoreable category."""
+    candidate: int | None = None
+    if isinstance(code, int) and not isinstance(code, bool):
+        candidate = code
+    elif isinstance(code, float) and isfinite(code) and code.is_integer():
+        candidate = int(code)
+    elif isinstance(code, str):
+        try:
+            numeric = float(code.strip())
+        except ValueError:
+            pass
+        else:
+            if isfinite(numeric) and numeric.is_integer():
+                candidate = int(numeric)
+    if candidate is None:
+        return False
+    try:
+        scorer(candidate)
+    except ValueError:
+        return False
+    return True
+
+
+def score_bound_question_components(
+    row: Mapping[str, object],
+    bindings: SourceBindings,
+    *,
+    actual_sha256: str,
+    expected_sha256: str,
+    physical_headers: Sequence[str],
+    label_row: Sequence[str],
+    positions_by_field: Mapping[str, int],
+    semantic_prefixes: Mapping[str, str],
+) -> dict[str, float | None]:
+    """Score the verified subset of eight metadata-bound question components.
+
+    The caller supplies protected source metadata and field-specific missing
+    tokens. It must establish that the row and metadata refer to the same
+    immutable source snapshot. No files, other components, or index are read.
+    """
+    if not isinstance(row, Mapping) or not isinstance(bindings, SourceBindings):
+        raise ValueError("Expected a row mapping and source bindings")
+    fields = set(bindings.columns) if isinstance(bindings.columns, Mapping) else set()
+    if (
+        not fields
+        or not fields <= _QUESTION_SCORERS.keys()
+        or not isinstance(bindings.ordinary_missing_codes, Mapping)
+        or set(bindings.ordinary_missing_codes) != fields
+        or bindings.invalid_codes_as_missing
+        or bindings.performance_codes
+        or bindings.reason_columns
+        or bindings.verified_functional_inability_codes
+        or not isinstance(positions_by_field, Mapping)
+        or set(positions_by_field) != fields
+        or not isinstance(semantic_prefixes, Mapping)
+        or set(semantic_prefixes) != fields
+    ):
+        raise SourceSchemaError("Bind only verified requested semantic fields")
+
+    columns = dict(bindings.columns)
+    missing_by_field: dict[str, tuple[object, ...]] = {}
+    for field_name, scorer in _QUESTION_SCORERS.items():
+        if field_name not in fields:
+            continue
+        codes = bindings.ordinary_missing_codes[field_name]
+        if isinstance(codes, (str, bytes)) or not isinstance(codes, Sequence):
+            raise SourceSchemaError("Ordinary missing codes must be sequences")
+        snapshot = tuple(codes)
+        if any(
+            code is ComponentStatus.NOT_APPLICABLE
+            or isinstance(code, bool)
+            or not (code is None or isinstance(code, (int, str)))
+            or _scoreable_missing_alias(code, scorer)
+            for code in snapshot
+        ):
+            raise SourceSchemaError("Invalid or scoreable ordinary missing code")
+        missing_by_field[field_name] = snapshot
+
+    validate_source_schema_bindings(
+        actual_sha256,
+        expected_sha256,
+        physical_headers,
+        label_row,
+        positions_by_field,
+        semantic_prefixes,
+    )
+    headers = []
+    for field_name in _QUESTION_SCORERS:
+        if field_name not in fields:
+            continue
+        position = positions_by_field[field_name]
+        header = physical_headers[position]
+        label = label_row[position]
+        if (
+            not header.strip()
+            or not label.strip()
+            or columns[field_name] != header
+            or sum(candidate == header for candidate in physical_headers) != 1
+            or not _compact_schema_text(label).startswith(
+                _compact_schema_text(semantic_prefixes[field_name])
+            )
+        ):
+            raise SourceSchemaError("Bound source header or label is different")
+        headers.append(header)
+    if len(set(headers)) != len(fields):
+        raise SourceSchemaError("Bound source headers are not unique")
+
+    scores: dict[str, float | None] = {}
+    for field_name, scorer in _QUESTION_SCORERS.items():
+        if field_name not in fields:
+            continue
+        try:
+            raw = row[columns[field_name]]
+        except KeyError as exc:
+            raise ValueError(
+                f"Bound source column is missing for {field_name}"
+            ) from exc
+        if (
+            isinstance(raw, bool)
+            or raw is ComponentStatus.NOT_APPLICABLE
+            or isinstance(raw, float)
+        ):
+            raise ValueError("Unsupported source type or status for this component")
+        value = (
+            None
+            if raw is None or _matches_code(raw, missing_by_field[field_name])
+            else raw
+        )
+        scores[field_name] = scorer(value)  # type: ignore[arg-type]
+    return scores
+
+
 def normalize_preselected_test_value(
     value: object,
     codebook: Mapping[object, PerformanceDisposition],

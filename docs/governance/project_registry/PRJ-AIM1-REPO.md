@@ -8,13 +8,13 @@ state: "active"
 delivery: "not_delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-20: Ihmisomistaja hyväksyi WALK500:n täsmärevision ja PR #239 toimitettiin varmennetusti mainiin commitilla 2de6c1e516ee207aa8fb193d684807e31e3fbb33. Rajattu tekninen tehtävä siirrettiin 04-done-tilaan; sulkukirjauksen oma PR-toimitus ja nimetty työpuusiivous odottavat. Sovittimen pytest 78/78 PASS ja erillinen yksityinen synteettinen tarkistus 16/16 PASS. AIM1-projekti jatkuu aktiivisena."
-next_step: "Katselmoi ja toimita WALK500:n tekninen sulkukirjaus erillisessä PR:ssä. Päätä sen jälkeen nimetystä työpuu- ja haarasiivouksesta erikseen. Nykyisen §3.1:n auktoriteetti ja AIM1-kohderepon julkaisupäätös pysyvät erillisinä avoimina asioina."
+latest_status: "2026-11-21: WALK500:n sulkukirjaus toimitettiin PR #240:ssä mainiin ja nimetyt työpuut sekä haarat siivottiin. Kahdeksan kyselykomponentin rajattu lähdesidonta ja synteettiset testit valmistuivat; tehtävä on 03-review-tilassa ja PR #242 on avoin. Sourceryn huomioiden jälkeiset julkisen sovittimen ja pisteyttäjien regressiotestit 351/351 PASS sekä erillinen yksityinen metadataan sidottu tarkistus 117/117 PASS. AIM1-projekti jatkuu aktiivisena."
+next_step: "Tarkista kahdeksan komponentin rajattu PR ja sen CI- sekä katselmointitulokset; ihmisomistajan hyväksyntä ja main-toimitus ovat erillisiä seuraavia vaiheita. Nykyisen §3.1:n auktoriteetti ja AIM1-kohderepon julkaisupäätös pysyvät avoimina."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
-observed_at: "2026-11-20"
-observed_commit: "2de6c1e516ee207aa8fb193d684807e31e3fbb33"
-observed_worktree_label: "aim1-walk500-closure-20261120"
+observed_at: "2026-11-21"
+observed_commit: "3a29c4c4359edf0252efbe3a14afc3eb2cccf644"
+observed_worktree_label: "aim1-deac-eight-bindings-20261121"
 blocker: "AIM1-kohderepon erillinen julkaisupäätös puuttuu, vaikka kahden yksilöidyn Python-tiedostoversion MIT-sisällytysoikeus on vahvistettu. Historiallinen 0.4.1-draft ja D-005…D-009-merkinnät ovat saatavilla, mutta alkuperäiset hyväksyntäpaketit, myöhempi 0.5.2-draft, D-011 sekä nykyinen päätös- ja korvaavuusketju puuttuvat tieteellisestä vastaavuustarkistuksesta. Nämä eivät estä rajattua paikallista selvitystä."
 orchestrator: "Owner"
 agent: "Termux Codex"
@@ -24,13 +24,14 @@ started_date: "2026-11-19"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
-link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/239"
+link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/242"
 worktree_inventory: "unknown"
 tasks:
   - "AIM1_REPO_WP1_20261119"
   - "AIM1_WP1_CLEANUP_20261120"
   - "AIM1_AUTHORITY_SOURCE_REVIEW_20261120"
   - "TASK-DEAC20-K40-WALK500-FIRST-BINDING"
+  - "TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121"
 ---
 
 ## AIM1:n erillinen analyysirepo
@@ -51,12 +52,13 @@ yksittäisen työpaketin valmistumisesta.
 
 ## Tehtäväviitteet
 
-| repo                            | task                                    | path                                                     |
-| ------------------------------- | --------------------------------------- | -------------------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`             | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`             |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120` | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md` |
-| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-WALK500-FIRST-BINDING` | `tasks/04-done/TASK-DEAC20-K40-WALK500-FIRST-BINDING.md` |
+| repo                            | task                                               | path                                                                  |
+| ------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                           | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                             |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`                        | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`                          |
+| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120`            | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`              |
+| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-WALK500-FIRST-BINDING`            | `tasks/04-done/TASK-DEAC20-K40-WALK500-FIRST-BINDING.md`              |
+| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121` | `tasks/03-review/TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121.md` |
 
 ## Jatkamismuistio
 
@@ -121,6 +123,19 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
   sulkukirjauksen oma PR-toimitus odottaa katselmointia.
 - WALK500:n nimetyt työpuut ja haarat: säilytetty; siivousta ei ole tehty.
 
+## Jatkovaihe 2026-11-21
+
+- WALK500:n `04-done`-sulkukirjaus toimitettiin mainiin PR #240:ssä commitilla
+  `3a29c4c4359edf0252efbe3a14afc3eb2cccf644`.
+- Nimetyt WALK500-työpuut ja niiden paikalliset sekä origin-haarat poistettiin;
+  [pysyvä kuittaus](https://github.com/Tupatuko2023/Python-R-Scripts/pull/240#issuecomment-7050347297)
+  erottaa siivouksen main-toimituksesta.
+- Kahdeksan kyselykomponentin erillinen lähdesidontatehtävä aloitettiin
+  eristetyssä työpuussa. Rajattu toteutus ja synteettiset testit valmistuivat;
+  tehtävä siirrettiin `03-review`-tilaan ja
+  [PR #242](https://github.com/Tupatuko2023/Python-R-Scripts/pull/242)
+  avattiin ihmiskatselmointia varten. Main-toimitus on avoin.
+
 ## Worktree-havainnot
 
 | label                              | state    | evidence                                                                                     |
@@ -132,9 +147,10 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
 | aim1-authority-review-20261120     | retained | Alkuperäinen yksityinen lähdetyöpuu; sen committia ei toimitettu PR #237:ssä.                |
 | aim1-authority-public-20261120     | removed  | PR #237:n main-toimitus varmennettu; nimetty työpuu ja haarat poistettu 20.11.2026.          |
 | aim1-authority-closeout-20261120   | removed  | PR #238:n main-toimitus varmennettu; nimetty työpuu ja haarat poistettu 20.11.2026.          |
-| aim1-walk500-20261120              | retained | PR #239 toimitettu mainiin; alkuperäinen tehtävätyöpuu ja haara säilytetty.                  |
-| aim1-walk500-closure-20261120      | active   | Teknisen `04-done`-kirjauksen toimitustyöpuu; oma PR ja siivous vielä avoimia.               |
+| aim1-walk500-20261120              | removed  | PR #239 mainissa; nimetty työpuu ja haarat poistettu 20.11.2026.                             |
+| aim1-walk500-closure-20261120      | removed  | PR #240 mainissa; nimetty työpuu ja haarat poistettu 20.11.2026.                             |
+| aim1-deac-eight-bindings-20261121  | active   | Kahdeksan komponentin rajatun tehtävän eristetty työpuu; toimitus odottaa.                   |
 
 Taulukko kuvaa tämän projektin nimetyt työpuut tähän havaintoon asti.
-WALK500-työpuiden vuoksi koko työpuuinventaarion kattavuus on `unknown`;
+Uuden työpuun perustamisen jälkeen koko inventaarion kattavuus on `unknown`;
 muiden projektien työpuita ei siivottu.

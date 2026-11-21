@@ -809,3 +809,244 @@ def test_single_walking_component_uses_validated_binding_snapshot() -> None:
             return super().__getitem__(key)
 
     assert adapter.score_bound_walking_500m(ChangingRow(row), bindings, **schema) == 0.0
+
+
+QUESTION_FIELDS = (
+    "diabetes",
+    "alcohol",
+    "memory",
+    "mood",
+    "sleep",
+    "self_rated_mobility",
+    "balance_difficulty",
+    "fear_of_falling",
+)
+
+
+def _question_fixture() -> tuple[dict[str, object], adapter.SourceBindings, dict]:
+    columns = {field: f"fictional_header_{field}" for field in QUESTION_FIELDS}
+    row: dict[str, object] = {header: 0 for header in columns.values()}
+    labels = tuple(f"fictional label {field}" for field in QUESTION_FIELDS)
+    schema = {
+        "actual_sha256": "a" * 64,
+        "expected_sha256": "a" * 64,
+        "physical_headers": tuple(columns.values()) + ("fictional_neighbor",),
+        "label_row": labels + ("different fictional question",),
+        "positions_by_field": {field: i for i, field in enumerate(QUESTION_FIELDS)},
+        "semantic_prefixes": {
+            field: f"fictional label {field}" for field in QUESTION_FIELDS
+        },
+    }
+    bindings = adapter.SourceBindings(
+        columns=columns,
+        ordinary_missing_codes={field: () for field in QUESTION_FIELDS},
+    )
+    return row, bindings, schema
+
+
+def test_question_bundle_scores_only_its_own_fields(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    row, bindings, schema = _question_fixture()
+    row[bindings.columns["alcohol"]] = 1
+    row[bindings.columns["memory"]] = 1
+    row["fictional_neighbor"] = 999
+    monkeypatch.setattr(
+        adapter, "score_source_row", lambda *args: pytest.fail("called full adapter")
+    )
+    monkeypatch.setattr(
+        adapter, "assemble_deac_index", lambda *args: pytest.fail("called index")
+    )
+
+    scores = adapter.score_bound_question_components(row, bindings, **schema)
+    assert set(scores) == set(QUESTION_FIELDS)
+    assert scores["alcohol"] == 0.5
+    assert scores["memory"] == 1.0
+    assert scores["diabetes"] == 0.0
+
+
+@pytest.mark.parametrize("field", QUESTION_FIELDS)
+def test_question_bundle_normalizes_only_configured_missing_field(field: str) -> None:
+    row, bindings, schema = _question_fixture()
+    marker = "fictional_missing"
+    row[bindings.columns[field]] = marker
+    codes = dict(bindings.ordinary_missing_codes)
+    codes[field] = (marker,)
+    configured = adapter.SourceBindings(
+        columns=bindings.columns, ordinary_missing_codes=codes
+    )
+
+    scores = adapter.score_bound_question_components(row, configured, **schema)
+    assert scores[field] is None
+    assert all(scores[other] == 0.0 for other in QUESTION_FIELDS if other != field)
+
+
+@pytest.mark.parametrize("field", QUESTION_FIELDS)
+@pytest.mark.parametrize(
+    "bad", [999, True, 1.0, "fictional_unknown", ComponentStatus.NOT_APPLICABLE]
+)
+def test_question_bundle_rejects_unknown_type_or_status(
+    field: str, bad: object
+) -> None:
+    row, bindings, schema = _question_fixture()
+    row[bindings.columns[field]] = bad
+    with pytest.raises(ValueError):
+        adapter.score_bound_question_components(row, bindings, **schema)
+
+
+@pytest.mark.parametrize("field", QUESTION_FIELDS)
+def test_question_bundle_accepts_blank_as_missing(field: str) -> None:
+    row, bindings, schema = _question_fixture()
+    row[bindings.columns[field]] = None
+    scores = adapter.score_bound_question_components(row, bindings, **schema)
+    assert scores[field] is None
+
+
+@pytest.mark.parametrize(
+    "bad_code", [0, 0.0, "0", True, ComponentStatus.NOT_APPLICABLE]
+)
+def test_question_bundle_rejects_scoreable_or_invalid_missing_alias(
+    bad_code: object,
+) -> None:
+    row, bindings, schema = _question_fixture()
+    codes = dict(bindings.ordinary_missing_codes)
+    codes["diabetes"] = (bad_code,)
+    configured = adapter.SourceBindings(
+        columns=bindings.columns, ordinary_missing_codes=codes
+    )
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_question_components(row, configured, **schema)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"actual_sha256": "b" * 64},
+        {
+            "positions_by_field": {
+                **{field: i for i, field in enumerate(QUESTION_FIELDS)},
+                "fear_of_falling": 8,
+            }
+        },
+        {
+            "label_row": tuple(
+                f"fictional label {field}" for field in QUESTION_FIELDS[:-1]
+            ) + ("wrong neighbor", "different fictional question")
+        },
+        {
+            "physical_headers": tuple(
+                f"fictional_header_{field}" for field in QUESTION_FIELDS[:-1]
+            ) + ("", "fictional_neighbor")
+        },
+    ],
+)
+def test_question_bundle_rejects_wrong_schema(change: dict) -> None:
+    row, bindings, schema = _question_fixture()
+    schema.update(change)
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_question_components(row, bindings, **schema)
+
+
+def test_question_bundle_rejects_duplicate_header_and_wrong_neighbor() -> None:
+    row, bindings, schema = _question_fixture()
+    schema["physical_headers"] = (
+        *schema["physical_headers"][:-1],
+        bindings.columns["fear_of_falling"],
+    )
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_question_components(row, bindings, **schema)
+    row, bindings, schema = _question_fixture()
+    columns = dict(bindings.columns)
+    columns["fear_of_falling"] = "fictional_neighbor"
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_question_components(
+            row,
+            adapter.SourceBindings(
+                columns=columns,
+                ordinary_missing_codes=bindings.ordinary_missing_codes,
+            ),
+            **schema,
+        )
+
+
+def test_question_bundle_rejects_missing_field_or_extra_configuration() -> None:
+    row, bindings, schema = _question_fixture()
+    del row[bindings.columns["sleep"]]
+    with pytest.raises(ValueError, match="missing"):
+        adapter.score_bound_question_components(row, bindings, **schema)
+    row, bindings, schema = _question_fixture()
+    codes = dict(bindings.ordinary_missing_codes)
+    del codes["sleep"]
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_question_components(
+            row,
+            adapter.SourceBindings(
+                columns=bindings.columns, ordinary_missing_codes=codes
+            ),
+            **schema,
+        )
+
+
+def test_question_bundle_uses_binding_snapshot() -> None:
+    row, bindings, schema = _question_fixture()
+    columns = dict(bindings.columns)
+    codes = dict(bindings.ordinary_missing_codes)
+    configured = adapter.SourceBindings(columns=columns, ordinary_missing_codes=codes)
+
+    class ChangingRow(dict[str, object]):
+        def __getitem__(self, key: str) -> object:
+            columns["fear_of_falling"] = "fictional_neighbor"
+            codes["fear_of_falling"] = (0,)
+            return super().__getitem__(key)
+
+    scores = adapter.score_bound_question_components(
+        ChangingRow(row), configured, **schema
+    )
+    assert scores["fear_of_falling"] == 0.0
+
+
+def test_question_bundle_scores_verified_subset_when_other_binding_is_missing() -> None:
+    row, bindings, schema = _question_fixture()
+    excluded = "sleep"
+    fields = set(QUESTION_FIELDS) - {excluded}
+    subset = adapter.SourceBindings(
+        columns={
+            field: header
+            for field, header in bindings.columns.items()
+            if field in fields
+        },
+        ordinary_missing_codes={field: () for field in fields},
+    )
+    schema["positions_by_field"] = {
+        field: position
+        for field, position in schema["positions_by_field"].items()
+        if field in fields
+    }
+    schema["semantic_prefixes"] = {
+        field: prefix
+        for field, prefix in schema["semantic_prefixes"].items()
+        if field in fields
+    }
+    del row[bindings.columns[excluded]]
+
+    scores = adapter.score_bound_question_components(row, subset, **schema)
+    assert set(scores) == fields
+    assert all(score == 0.0 for score in scores.values())
+
+
+def test_question_bundle_reads_each_bound_value_once() -> None:
+    row, bindings, schema = _question_fixture()
+    reads: dict[str, int] = {}
+
+    class ChangingRow(dict[str, object]):
+        def __getitem__(self, key: str) -> object:
+            reads[key] = reads.get(key, 0) + 1
+            if reads[key] > 1:
+                return 999
+            return super().__getitem__(key)
+
+    scores = adapter.score_bound_question_components(
+        ChangingRow(row), bindings, **schema
+    )
+    assert set(scores) == set(QUESTION_FIELDS)
+    assert all(count == 1 for count in reads.values())
