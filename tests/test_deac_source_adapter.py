@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from itertools import product
 from pathlib import Path
 
 import pytest
@@ -1050,3 +1051,162 @@ def test_question_bundle_reads_each_bound_value_once() -> None:
     )
     assert set(scores) == set(QUESTION_FIELDS)
     assert all(count == 1 for count in reads.values())
+
+
+NEUROLOGICAL_FIELDS = ("alzheimer", "parkinson", "stroke_avh")
+
+
+def _neurological_fixture() -> tuple[dict[str, object], adapter.SourceBindings, dict]:
+    columns = {
+        field: f"fictional_neurological_header_{field}"
+        for field in NEUROLOGICAL_FIELDS
+    }
+    row: dict[str, object] = {header: 0 for header in columns.values()}
+    schema = {
+        "actual_sha256": "a" * 64,
+        "expected_sha256": "a" * 64,
+        "physical_headers": tuple(columns.values()) + ("fictional_neighbor",),
+        "label_row": tuple(
+            f"fictional neurological label {field}" for field in NEUROLOGICAL_FIELDS
+        ) + ("different fictional question",),
+        "positions_by_field": {field: i for i, field in enumerate(NEUROLOGICAL_FIELDS)},
+        "semantic_prefixes": {
+            field: f"fictional neurological label {field}"
+            for field in NEUROLOGICAL_FIELDS
+        },
+    }
+    return row, adapter.SourceBindings(columns=columns), schema
+
+
+@pytest.mark.parametrize("values", list(product((0, 1, None), repeat=3)))
+def test_bound_neurological_all_documented_combinations(
+    values: tuple[int | None, int | None, int | None],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    row, bindings, schema = _neurological_fixture()
+    for field, value in zip(NEUROLOGICAL_FIELDS, values, strict=True):
+        row[bindings.columns[field]] = value
+    monkeypatch.setattr(
+        adapter, "score_source_row", lambda *args: pytest.fail("called full adapter")
+    )
+    monkeypatch.setattr(
+        adapter, "assemble_deac_index", lambda *args: pytest.fail("called index")
+    )
+    expected = 1.0 if 1 in values else None if None in values else 0.0
+    assert adapter.score_bound_neurological(row, bindings, **schema) == expected
+
+
+@pytest.mark.parametrize("field", NEUROLOGICAL_FIELDS)
+@pytest.mark.parametrize(
+    "bad", [2, "fictional_unknown", True, 1.0, ComponentStatus.NOT_APPLICABLE]
+)
+def test_bound_neurological_rejects_unlisted_code_or_type(
+    field: str, bad: object
+) -> None:
+    row, bindings, schema = _neurological_fixture()
+    row[bindings.columns[field]] = bad
+    with pytest.raises(adapter.UnresolvedSourceCodeError):
+        adapter.score_bound_neurological(row, bindings, **schema)
+
+
+@pytest.mark.parametrize("bad_code", [0, 1, 0.0, 1.0, "0", "1", "E1", True])
+def test_bound_neurological_rejects_unverified_missing_alias(bad_code: object) -> None:
+    row, bindings, schema = _neurological_fixture()
+    configured = adapter.SourceBindings(
+        columns=bindings.columns,
+        ordinary_missing_codes={"alzheimer": (bad_code,)},
+    )
+    with pytest.raises(adapter.SourceSchemaError, match="missing aliases"):
+        adapter.score_bound_neurological(row, configured, **schema)
+
+
+def test_bound_neurological_allows_only_ordinary_none_configuration() -> None:
+    row, bindings, schema = _neurological_fixture()
+    configured = adapter.SourceBindings(
+        columns=bindings.columns,
+        ordinary_missing_codes={"alzheimer": (None,)},
+    )
+    assert adapter.score_bound_neurological(row, configured, **schema) == 0.0
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"actual_sha256": "b" * 64},
+        {"expected_sha256": "not a digest"},
+        {"positions_by_field": {
+            "alzheimer": 1, "parkinson": 0, "stroke_avh": 2,
+        }},
+        {"positions_by_field": {
+            "alzheimer": 0, "parkinson": 0, "stroke_avh": 2,
+        }},
+        {"physical_headers": (
+            "fictional_neurological_header_alzheimer", "",
+            "fictional_neurological_header_stroke_avh", "fictional_neighbor",
+        )},
+        {"physical_headers": (
+            "fictional_neurological_header_alzheimer",
+            "fictional_neurological_header_parkinson",
+            "fictional_neurological_header_stroke_avh",
+            "fictional_neurological_header_alzheimer",
+        )},
+        {"label_row": (
+            "fictional neurological label alzheimer", "wrong question",
+            "fictional neurological label stroke_avh", "different fictional question",
+        )},
+    ],
+)
+def test_bound_neurological_rejects_wrong_schema_before_row_read(change: dict) -> None:
+    class NoReadRow(dict[str, object]):
+        def __getitem__(self, key: str) -> object:
+            pytest.fail("row read before schema validation")
+
+    row, bindings, schema = _neurological_fixture()
+    schema.update(change)
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_neurological(NoReadRow(row), bindings, **schema)
+
+
+def test_bound_neurological_rejects_wrong_neighbor_and_missing_row_column() -> None:
+    row, bindings, schema = _neurological_fixture()
+    columns = dict(bindings.columns)
+    columns["stroke_avh"] = "fictional_neighbor"
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_neurological(
+            row, adapter.SourceBindings(columns=columns), **schema
+        )
+    del row[bindings.columns["stroke_avh"]]
+    with pytest.raises(ValueError, match="missing"):
+        adapter.score_bound_neurological(row, bindings, **schema)
+
+
+def test_bound_neurological_rejects_extra_or_duplicate_binding() -> None:
+    row, bindings, schema = _neurological_fixture()
+    columns = dict(bindings.columns)
+    columns["unrelated"] = "fictional_neighbor"
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_neurological(
+            row, adapter.SourceBindings(columns=columns), **schema
+        )
+    columns = dict(bindings.columns)
+    columns["parkinson"] = columns["alzheimer"]
+    with pytest.raises(adapter.SourceSchemaError):
+        adapter.score_bound_neurological(
+            row, adapter.SourceBindings(columns=columns), **schema
+        )
+
+
+def test_bound_neurological_uses_validated_binding_snapshot() -> None:
+    row, bindings, schema = _neurological_fixture()
+    columns = dict(bindings.columns)
+    configured = adapter.SourceBindings(columns=columns)
+
+    class ChangingRow(dict[str, object]):
+        def __getitem__(self, key: str) -> object:
+            columns["stroke_avh"] = "fictional_neighbor"
+            return super().__getitem__(key)
+
+    assert (
+        adapter.score_bound_neurological(ChangingRow(row), configured, **schema)
+        == 0.0
+    )
