@@ -1,0 +1,544 @@
+import json
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+
+TOOLS_DIR = Path(__file__).resolve().parents[1]
+if str(TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(TOOLS_DIR))
+
+import synth_file_search_fixture as fixture  # noqa: E402
+
+
+VALID_RESPONSE_FI = (
+    "1. Käsikirjoitus: `manuscripts/SYNTH_COHORT_REVIEW_20261120.qmd` rivi 17.\n"
+    "2. Päälähde: `runs/20261119_model_s2_primary/model_estimates.tsv` rivi 4 "
+    "(`1.4204`, `1.1102`, `1.8173`, `0.0052`), manifesti "
+    "`runs/20261119_model_s2_primary/run_manifest.json`.\n"
+    "3. Hylätyt: `runs/20261118_model_s2_prelim/model_estimates.tsv`.\n"
+    "4. Siirtotapa QMD-taulukkoon jää avoimeksi (ei voida todentaa onko käsin vai ulkoisella skriptillä).\n"
+)
+
+
+class SynthFileSearchFixtureTests(unittest.TestCase):
+    def test_materialize_is_deterministic_and_writes_cli_settings(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp1, tempfile.TemporaryDirectory() as tmp2:
+            b1 = Path(tmp1)
+            b2 = Path(tmp2)
+            k1 = fixture.materialize(b1 / "ws", b1 / "eval")
+            k2 = fixture.materialize(b2 / "ws", b2 / "eval")
+            self.assertEqual(k1["workspace_files_sha256"], k2["workspace_files_sha256"])
+            self.assertEqual(k1["prompt_sha256"], k2["prompt_sha256"])
+            self.assertFalse((b1 / "ws" / "expected_answer_key.json").exists())
+            self.assertTrue((b1 / "eval" / "expected_answer_key.json").is_file())
+            settings = json.loads((b1 / "eval" / "cli_settings.json").read_text("utf-8"))
+            self.assertIn("command(*)", settings["permissions"]["deny"])
+            self.assertIn(
+                "mcp(filesystem/directory_tree)", settings["permissions"]["allow"]
+            )
+
+    def test_overlapping_workspace_and_eval_dirs_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            with self.assertRaises(ValueError):
+                fixture.materialize(base / "ws", base / "ws" / "eval")
+            with self.assertRaises(ValueError):
+                fixture.materialize(base / "ws", base / "ws")
+
+    def test_workspace_inside_repo_rejected_by_default(self) -> None:
+        inside = fixture.REPO_ROOT / "tools" / "antigravity_harness" / "outputs" / "_bad_ws"
+        with tempfile.TemporaryDirectory() as tmp_eval:
+            with self.assertRaises(ValueError):
+                fixture.materialize(inside, Path(tmp_eval) / "eval")
+
+    def test_evaluate_passes_valid_filesystem_mcp_and_read_file_trace(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            ws = base / "ws"
+            ev = base / "eval"
+            fixture.materialize(ws, ev)
+
+            events = [
+                {
+                    "event": "init",
+                    "conversation_id": "conv-synth-pass",
+                    "init": {"model": "gemini-4-carbon-medium", "cwd": str(ws)},
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 1,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "duration_seconds": 0.01,
+                        "tool_info": {
+                            "name": "read_file",
+                            "parameters": {
+                                "Path": "/home/user/.gemini/antigravity-cli/mcp/filesystem/directory_tree.json"
+                            },
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 2,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "call_mcp_tool",
+                        "duration_seconds": 0.02,
+                        "tool_info": {
+                            "name": "call_mcp_tool",
+                            "parameters": {
+                                "ServerName": "filesystem",
+                                "ToolName": "directory_tree",
+                                "Arguments": {"path": str(ws)},
+                            },
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 3,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "duration_seconds": 0.02,
+                        "tool_info": {
+                            "name": "read_file",
+                            "parameters": {
+                                "Path": str(
+                                    ws / "runs/20261119_model_s2_primary/model_estimates.tsv"
+                                )
+                            },
+                        },
+                    },
+                },
+                {
+                    "event": "result",
+                    "result": {
+                        "conversation_id": "conv-synth-pass",
+                        "status": "SUCCESS",
+                        "response": VALID_RESPONSE_FI,
+                        "duration_seconds": 12.3,
+                        "num_turns": 1,
+                        "usage": {"input_tokens": 1000, "output_tokens": 200},
+                    },
+                },
+            ]
+            stream_file = base / "run.jsonl"
+            stream_file.write_text(
+                "\n".join(json.dumps(e) for e in events) + "\n", encoding="utf-8"
+            )
+            rep = fixture.evaluate(
+                ev, stream_file, base / "report.json", base / "report.md"
+            )
+            self.assertTrue(rep["primary_criterion_pass"])
+            self.assertTrue(rep["source_search_pass"])
+            self.assertTrue(rep["log_compliance_pass"])
+            self.assertTrue(rep["checks"]["workspace_isolated"])
+            self.assertEqual(rep["mcp_schema_reads"], ["directory_tree.json"])
+            self.assertEqual(rep["sqlite_schema_reads"], [])
+            self.assertEqual(rep["sqlite_tool_executions"], [])
+            self.assertFalse(rep["checks"]["unsupported_manual_copy_claim"])
+
+    def test_sqlite_schema_read_without_tool_execution_separates_source_and_log(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            ws = base / "ws"
+            ev = base / "eval"
+            fixture.materialize(ws, ev)
+
+            events = [
+                {
+                    "event": "init",
+                    "conversation_id": "conv-sqlite-schema-only",
+                    "init": {"model": "gemini-4-carbon-medium", "cwd": str(ws)},
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 1,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": "/home/user/.gemini/antigravity-cli/mcp/sqlite/list_tables.json"
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 2,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "runs/20261119_model_s2_primary/model_estimates.tsv"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "result",
+                    "result": {
+                        "conversation_id": "conv-sqlite-schema-only",
+                        "status": "SUCCESS",
+                        "response": VALID_RESPONSE_FI,
+                        "duration_seconds": 10.0,
+                        "num_turns": 1,
+                        "usage": {},
+                    },
+                },
+            ]
+            stream_file = base / "sqlite_schema.jsonl"
+            stream_file.write_text(
+                "\n".join(json.dumps(e) for e in events) + "\n", encoding="utf-8"
+            )
+            md_path = base / "sqlite_schema.md"
+            rep = fixture.evaluate(
+                ev, stream_file, base / "sqlite_schema.json", md_path
+            )
+            self.assertTrue(rep["source_search_pass"])
+            self.assertFalse(rep["log_compliance_pass"])
+            self.assertFalse(rep["primary_criterion_pass"])
+            self.assertTrue(rep["checks"]["tool_execution_compliant"])
+            self.assertFalse(rep["checks"]["path_scope_compliant"])
+            self.assertEqual(rep["sqlite_schema_reads"], ["list_tables.json"])
+            self.assertEqual(rep["sqlite_tool_executions"], [])
+            self.assertEqual(rep["non_schema_outside_paths"], [])
+            md_text = md_path.read_text(encoding="utf-8")
+            self.assertIn("**Lähdehaun tulos (`source_search_pass`):** `PASS`", md_text)
+            self.assertIn(
+                "**Työkalujen ja polkujen sääntöjenmukaisuus (`log_compliance_pass`):** `FAIL`",
+                md_text,
+            )
+            self.assertIn("SQLite-kuvaustiedoston luku", md_text)
+            self.assertIn("Varsinaisen SQLite-työkalun suoritus", md_text)
+
+    def test_regression_replication_run_out_of_scope_schema_reads(self) -> None:
+        """Regression test for replication run (4e545ac4): valid source file, row,
+        and exact values produce source_search_pass=True (PASS), while out-of-scope
+        MCP schema reads produce log_compliance_pass=False and primary_criterion_pass=False (FAIL).
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            ws = base / "ws"
+            ev = base / "eval"
+            fixture.materialize(ws, ev)
+
+            events = [
+                {
+                    "event": "init",
+                    "conversation_id": "conv-rep2-regression",
+                    "init": {"model": "gemini-4-carbon-medium", "cwd": str(ws)},
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 2,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "manuscripts/SYNTH_COHORT_REVIEW_20261120.qmd"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 5,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": "/home/user/.gemini/antigravity-cli/mcp/filesystem/directory_tree.json"
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 8,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": "/home/user/.gemini/antigravity-cli/mcp/sqlite/list_tables.json"
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 9,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": "/home/user/.gemini/antigravity-cli/mcp/sqlite/execute_query.json"
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 11,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "call_mcp_tool",
+                        "tool_info": {
+                            "parameters": {
+                                "ServerName": "filesystem",
+                                "ToolName": "directory_tree",
+                                "Arguments": {"path": str(ws)},
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 16,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "runs/20261119_model_s2_primary/model_estimates.tsv"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 17,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "runs/20261119_model_s2_primary/run_manifest.json"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "result",
+                    "result": {
+                        "conversation_id": "conv-rep2-regression",
+                        "status": "SUCCESS",
+                        "response": VALID_RESPONSE_FI,
+                        "duration_seconds": 178.48,
+                        "num_turns": 1,
+                        "usage": {"input_tokens": 22270, "output_tokens": 10356},
+                    },
+                },
+            ]
+            stream_file = base / "rep2_regression.jsonl"
+            stream_file.write_text(
+                "\n".join(json.dumps(e) for e in events) + "\n", encoding="utf-8"
+            )
+            md_path = base / "rep2_regression.md"
+            rep = fixture.evaluate(
+                ev, stream_file, base / "rep2_regression.json", md_path
+            )
+            self.assertTrue(rep["source_search_pass"])
+            self.assertFalse(rep["log_compliance_pass"])
+            self.assertFalse(rep["primary_criterion_pass"])
+            self.assertFalse(rep["checks"]["observed_log_compliant"])
+            self.assertTrue(rep["checks"]["tool_execution_compliant"])
+            self.assertFalse(rep["checks"]["path_scope_compliant"])
+            self.assertEqual(rep["mcp_schema_reads"], ["directory_tree.json"])
+            self.assertEqual(
+                rep["disallowed_mcp_schema_reads"],
+                ["sqlite/list_tables.json", "sqlite/execute_query.json"],
+            )
+            self.assertEqual(
+                rep["sqlite_schema_reads"],
+                ["list_tables.json", "execute_query.json"],
+            )
+            self.assertEqual(rep["sqlite_tool_executions"], [])
+            self.assertEqual(rep["non_schema_outside_paths"], [])
+            md_text = md_path.read_text(encoding="utf-8")
+            self.assertIn(
+                "**Yhdistetty ensisijainen onnistumiskriteeri (`primary_criterion_pass`):** `FAIL`",
+                md_text,
+            )
+            self.assertIn("**Lähdehaun tulos (`source_search_pass`):** `PASS`", md_text)
+            self.assertIn(
+                "**Työkalujen ja polkujen sääntöjenmukaisuus (`log_compliance_pass`):** `FAIL`",
+                md_text,
+            )
+
+    def test_sqlite_tool_execution_recorded_separately_from_schema_read(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            ws = base / "ws"
+            ev = base / "eval"
+            fixture.materialize(ws, ev)
+
+            events = [
+                {
+                    "event": "init",
+                    "conversation_id": "conv-sqlite-exec",
+                    "init": {"model": "gemini-4-carbon-medium", "cwd": str(ws)},
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 1,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "call_mcp_tool",
+                        "tool_info": {
+                            "parameters": {
+                                "ServerName": "sqlite",
+                                "ToolName": "execute_query",
+                                "Arguments": {"query": "SELECT 1"},
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 2,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "runs/20261119_model_s2_primary/model_estimates.tsv"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "result",
+                    "result": {
+                        "conversation_id": "conv-sqlite-exec",
+                        "status": "SUCCESS",
+                        "response": VALID_RESPONSE_FI,
+                        "duration_seconds": 9.0,
+                        "num_turns": 1,
+                        "usage": {},
+                    },
+                },
+            ]
+            stream_file = base / "sqlite_exec.jsonl"
+            stream_file.write_text(
+                "\n".join(json.dumps(e) for e in events) + "\n", encoding="utf-8"
+            )
+            rep = fixture.evaluate(
+                ev, stream_file, base / "sqlite_exec.json", base / "sqlite_exec.md"
+            )
+            self.assertTrue(rep["source_search_pass"])
+            self.assertFalse(rep["log_compliance_pass"])
+            self.assertFalse(rep["primary_criterion_pass"])
+            self.assertFalse(rep["checks"]["tool_execution_compliant"])
+            self.assertTrue(rep["checks"]["path_scope_compliant"])
+            self.assertEqual(rep["sqlite_schema_reads"], [])
+            self.assertEqual(rep["sqlite_tool_executions"], ["execute_query"])
+            self.assertIn(
+                "call_mcp_tool(sqlite/execute_query)", rep["forbidden_tools_used"]
+            )
+
+    def test_evaluate_fails_escape_or_forbidden_tool_and_flags_manual_copy(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            ws = base / "ws"
+            ev = base / "eval"
+            fixture.materialize(ws, ev)
+
+            bad_response = (
+                "Lähde on `runs/20261118_model_s2_prelim/model_estimates.tsv` ja "
+                "luvut on käsin kopioitu taulukkoon."
+            )
+            events = [
+                {
+                    "event": "init",
+                    "conversation_id": "conv-synth-fail",
+                    "init": {"model": "gemini-4-carbon-medium", "cwd": str(ws)},
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 1,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "run_command",
+                        "tool_info": {"parameters": {"CommandLine": "ls"}},
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 2,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {"Path": str(ev / "expected_answer_key.json")}
+                        },
+                    },
+                },
+                {
+                    "event": "result",
+                    "result": {
+                        "conversation_id": "conv-synth-fail",
+                        "status": "SUCCESS",
+                        "response": bad_response,
+                        "duration_seconds": 5.0,
+                        "num_turns": 1,
+                        "usage": {},
+                    },
+                },
+            ]
+            stream_file = base / "bad.jsonl"
+            stream_file.write_text(
+                "\n".join(json.dumps(e) for e in events) + "\n", encoding="utf-8"
+            )
+            rep = fixture.evaluate(
+                ev, stream_file, base / "bad_report.json", base / "bad_report.md"
+            )
+            self.assertFalse(rep["primary_criterion_pass"])
+            self.assertFalse(rep["source_search_pass"])
+            self.assertFalse(rep["log_compliance_pass"])
+            self.assertFalse(rep["checks"]["workspace_isolated"])
+            self.assertIn("run_command", rep["forbidden_tools_used"])
+            self.assertTrue(rep["checks"]["wrong_distractor_as_primary"])
+            self.assertTrue(rep["checks"]["unsupported_manual_copy_claim"])
+
+
+if __name__ == "__main__":
+    unittest.main()
