@@ -227,6 +227,177 @@ class SynthFileSearchFixtureTests(unittest.TestCase):
             self.assertIn("SQLite-kuvaustiedoston luku", md_text)
             self.assertIn("Varsinaisen SQLite-työkalun suoritus", md_text)
 
+    def test_regression_replication_run_out_of_scope_schema_reads(self) -> None:
+        """Regression test for replication run (4e545ac4): valid source file, row,
+        and exact values produce source_search_pass=True (PASS), while out-of-scope
+        MCP schema reads produce log_compliance_pass=False and primary_criterion_pass=False (FAIL).
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            ws = base / "ws"
+            ev = base / "eval"
+            fixture.materialize(ws, ev)
+
+            events = [
+                {
+                    "event": "init",
+                    "conversation_id": "conv-rep2-regression",
+                    "init": {"model": "gemini-4-carbon-medium", "cwd": str(ws)},
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 2,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "manuscripts/SYNTH_COHORT_REVIEW_20261120.qmd"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 5,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": "/home/user/.gemini/antigravity-cli/mcp/filesystem/directory_tree.json"
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 8,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": "/home/user/.gemini/antigravity-cli/mcp/sqlite/list_tables.json"
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 9,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": "/home/user/.gemini/antigravity-cli/mcp/sqlite/execute_query.json"
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 11,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "call_mcp_tool",
+                        "tool_info": {
+                            "parameters": {
+                                "ServerName": "filesystem",
+                                "ToolName": "directory_tree",
+                                "Arguments": {"path": str(ws)},
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 16,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "runs/20261119_model_s2_primary/model_estimates.tsv"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 17,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "runs/20261119_model_s2_primary/run_manifest.json"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "result",
+                    "result": {
+                        "conversation_id": "conv-rep2-regression",
+                        "status": "SUCCESS",
+                        "response": VALID_RESPONSE_FI,
+                        "duration_seconds": 178.48,
+                        "num_turns": 1,
+                        "usage": {"input_tokens": 22270, "output_tokens": 10356},
+                    },
+                },
+            ]
+            stream_file = base / "rep2_regression.jsonl"
+            stream_file.write_text(
+                "\n".join(json.dumps(e) for e in events) + "\n", encoding="utf-8"
+            )
+            md_path = base / "rep2_regression.md"
+            rep = fixture.evaluate(
+                ev, stream_file, base / "rep2_regression.json", md_path
+            )
+            self.assertTrue(rep["source_search_pass"])
+            self.assertFalse(rep["log_compliance_pass"])
+            self.assertFalse(rep["primary_criterion_pass"])
+            self.assertFalse(rep["checks"]["observed_log_compliant"])
+            self.assertTrue(rep["checks"]["tool_execution_compliant"])
+            self.assertFalse(rep["checks"]["path_scope_compliant"])
+            self.assertEqual(rep["mcp_schema_reads"], ["directory_tree.json"])
+            self.assertEqual(
+                rep["disallowed_mcp_schema_reads"],
+                ["sqlite/list_tables.json", "sqlite/execute_query.json"],
+            )
+            self.assertEqual(
+                rep["sqlite_schema_reads"],
+                ["list_tables.json", "execute_query.json"],
+            )
+            self.assertEqual(rep["sqlite_tool_executions"], [])
+            self.assertEqual(rep["non_schema_outside_paths"], [])
+            md_text = md_path.read_text(encoding="utf-8")
+            self.assertIn(
+                "**Yhdistetty ensisijainen onnistumiskriteeri (`primary_criterion_pass`):** `FAIL`",
+                md_text,
+            )
+            self.assertIn("**Lähdehaun tulos (`source_search_pass`):** `PASS`", md_text)
+            self.assertIn(
+                "**Työkalujen ja polkujen sääntöjenmukaisuus (`log_compliance_pass`):** `FAIL`",
+                md_text,
+            )
+
     def test_sqlite_tool_execution_recorded_separately_from_schema_read(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)

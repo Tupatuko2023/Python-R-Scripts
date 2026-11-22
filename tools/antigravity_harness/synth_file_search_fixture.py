@@ -556,6 +556,7 @@ def evaluate(
         "checks": {
             "tool_execution_compliant": tool_execution_compliant,
             "path_scope_compliant": path_scope_compliant,
+            "observed_log_compliant": log_compliance_pass,
             "workspace_isolated": workspace_isolated,
             "source_file_found": source_file_found,
             "target_line_cited": target_line_cited,
@@ -612,8 +613,9 @@ def evaluate(
         "",
         "## 3. Ajon rajoitteet",
         "",
+        "- Lokitarkistus (`log_compliance_pass`) arvioi vain ajossa havaittuja `stream-json`-tapahtumia suhteessa sallittuun työkalu- ja polkurajaukseen; teknisen hakemistoeristyksen todentaminen on tästä erillinen kysymys.",
         "- Antigravity CLI `1.5.14` ei sisällä natiivia hakemistolistaustyökalua, joten hakemistorakenne listataan vain lukuoikeuksisella `mcp(filesystem/directory_tree|list_directory|search_files)`-kutsulla, kun `command(*)`, `write_file(*)`, `read_url(*)` ja muut MCP-palvelimet on estetty `cli_settings.json`-tiedostossa (ilman `--dangerously-skip-permissions`-lippua).",
-        "- Koska natiivi `read_file` on oletuksena avoin polkujen lukuun paikallisten estojen ulkopuolella, synteettinen koe pidetään erillään suojatusta tutkimusaineistosta ja jokaisen työkalukutsun polku tarkistetaan jälkikäteen `stream-json`-lokista säilyttäen tiukan sallittujen polkujen rajauksen.",
+        "- Koska natiivi `read_file` on oletuksena avoin polkujen lukuun paikallisten estojen ulkopuolella, synteettinen koe pidetään erillään suojatusta tutkimusaineistosta.",
     ]
     report_md_path.parent.mkdir(parents=True, exist_ok=True)
     report_md_path.write_text("\n".join(md_lines) + "\n", encoding="utf-8")
