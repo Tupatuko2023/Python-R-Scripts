@@ -1,179 +1,197 @@
-Analysis Plan: Pelkokaadon (FOF) yhteys palvelukäyttöön ja kustannuksiin (paneelidata, Aim 2)
-Status: Draft (paneelidata-päivitys)
-Context: Aim 2 of the FOF Project
-Governance: Option B (No raw data in repo)
+# Analyysisuunnitelma (Draft v2): Kaatumisen pelon (FOF) ja frailtyn yhteys tapaturmiin liittyvään palvelukäyttöön ja terveydenhuollon kustannuksiin (Osatyö II / Aim 2)
 
-1. Research Objectives
-   Quantify Utilization (panel): Onko lähtötilanteen Fear of Falling (FOF) yhteydessä suurempaan terveyspalvelujen käyttöön (käynnit/episodit) seurannassa henkilö–jakso -paneelissa?
-   Quantify Costs (panel): Onko lähtötilanteen FOF yhteydessä suurempiin suoriin terveydenhuollon kustannuksiin henkilö–jakso -paneelissa?
-   Heterogeneity (secondary): Vaihteleeko FOF–käyttö-/kustannusyhteys haurauden (frailty; ensisijaisesti K40-johdettu `frailty_index_fi` / `FI_22`) tai ajan (periodi) mukaan (efektimodifikaatio, ei kausaaliväitteitä)?
-2. Study Population & Design
-   Cohort: MFFP-osallistujat (rekisterilinkitys kontrolloidussa ympäristössä).
-   Linkage: Rekisteriaineistot DATA_ROOT-hakemistosta (esim. Avohilmo, Hilmo) + mahdolliset muut projektissa määritellyt lähteet.
-   Time horizon: Paneeliseuranta lähtötilanteen indeksipäivästä seurannan loppuun (esim. kuolema/muutto/seurannan päättymispäivä).
-   Panel definition: henkilö–jakso (person–period), unbalanced panel sallittu.
-   Periodin pituus: KB missing → assumed: 1 kalenterivuosi. (Jos projekti lukitsee periodin kuukausi/kvartaali, käytetään sitä; analyysikoodi ja raportointi ovat periodi-agnostisia, kunhan period ja person_time ovat oikein.)
-   Exposure groups: Lähtötilanteen FOF (FOF=1) vs ei-FOF (FOF=0). FOF on lähtötilanteen muuttuja, joka kantautuu kaikille henkilö–jakso -riveille.
-3. Data Variables & Standardization
-   Adherence / “Do not guess”: Kaikki analyysissä käytettävät muuttujat on oltava standardoituna tiedostossa data/VARIABLE_STANDARDIZATION.csv (Option B: repo sisältää vain metadataa; data pysyy DATA_ROOT:issa). Englanninkielisiä muuttujanimiä ei saa keksiä tai käyttää, ellei niitä ole standardoinnissa.
-   Mapping governance: analyysissa saa käyttää vain `frozen`-status mappingeja DATA_DICTIONARY_WORKFLOW.md:n sääntöjen mukaan; `inferred`, `tbd` ja `artifact`-tilaiset rivit ovat oletuksena blokattuja.
-   Cleanup deferral: artifact-, duplicate- ja redacted-riskit käsitellään erillisessä Phase 2 -taskissa, eivät tämän analyysisuunnitelman oletuspolussa.
+- **Tila:** `Draft v2` (menetelmäluonnos katselmointiin — ei lopullinen hyväksytty AIM2-SAP)
+- **Konteksti:** Osatyö II (Aim 2), `Quantify-FOF-Utilization-Costs`
+- **Tietosuoja ja hallinta:** Option B (raakadata ja henkilötason rekisteriaineisto pysyvät repon ulkopuolella `DATA_ROOT`-ympäristössä; pienten solujen suoja `n < 5`; [GEMINI.md](../GEMINI.md), [CLAUDE.md](../CLAUDE.md), [WORKFLOW.md](../WORKFLOW.md))
 
-3.1 Assumptions & definitions (locked)
-Analyysiyksikkö: henkilö–jakso (person–period).
-Aikajaksotus: paneeliaineisto; jokainen rivi kuvaa henkilöä id jaksolla period.
-Seuranta-aika ja offset:
-person_time = henkilön riskiaika kyseisessä periodissa (yksikkö: henkilövuotta, PY).
-Offset: offset = log(person_time) kaikissa ensisijaisissa malleissa (count ja cost).
-Censorointi: kuolema/muutto/seurannan loppu katkaisee periodin riskiajan; tällöin person_time < periodin täysi pituus.
+---
 
-Count-outcome (käynnit/episodit):
-Lasketaan periodikohtaiset tapahtumamäärät (käynnit/episodit) per palveluluokka.
-Raportointiyksikkö: rate/PY (ennustettu tapahtumatiheys per henkilövuosi).
+## 1. Dokumentin tarkoitus ja kolmen tason erottelu
 
-Cost-outcome (kustannukset):
-Periodikohtaiset kustannukset euroina (kokonaiskustannus ja/tai komponentit).
-Raportointiyksikkö: €/PY (ennustettu kustannus per henkilövuosi).
-Hintavuosi: KB missing → assumed: kustannukset ovat yhteismitallisia (yhden hintavuoden euroja). Hintavuosi ja deflatointi (jos tarpeen) on lukittava projektin costing mapissa ennen lopullista raportointia.
+Tämä dokumentti jäsentää Osatyön II (Aim 2) analyysisuunnitelman valmistelutilan ja erottaa kolme tasoa, joita ei saa sekoittaa toisiinsa:
 
-FOF ja frailty:
-FOF: lähtötilanteen binäärimuuttuja (0/1).
-Frailty: ensisijainen kovariaatti on K40 `FI22_nonperformance_KAAOS` -contractista johdettu potilastason `frailty_index_fi` (tai skaalattu `frailty_index_fi_z`); Fried-proxy säilyy vain fallback / sensitivity -roolissa, jos FI-kenttiä ei ole integroituna paneliaineistoon. Toissijaisesti efektimodifikaatio arvioidaan muodossa FOF×frailty_index_fi.
+1. **Hyväksytyt tutkimus-, hallinta- ja tietosuojarajaukset:** ei-kausaalinen assosiaatiotulkinta, Option B -tietosuoja, `frozen`-tason muuttujamappaus ([DATA_DICTIONARY_WORKFLOW.md](DATA_DICTIONARY_WORKFLOW.md)), aggregaattien kaksiosainen valtuutus ja `n < 5` -suojaus, tapaturmiin liittyvän erikoissairaanhoidon rekisterikehys sekä terveysvajeiden kertymään (_deficit accumulation_) perustuva frailty-malliperhe (Fried-fenotyyppiä ei ole valittu projektin malliksi).
+2. **Luonnosasteiset menetelmäehdotukset (`PROPOSED / DRAFT`):** henkilö–jakso-paneeliasetelma (vaihtoehtona koko seurantaikkunan henkilötason analyysille), negatiivinen binomiregressio palvelukäyttölaskureille, positiivisten kustannusten Gamma-GLM, kaksiosainen (_two-part / hurdle_) malli yhtenä nollahavainnot huomioivana mallivaihtoehtona sekä henkilötason klusterirobustit keskivirheet ja klusteri-bootstrap. Nämä ovat ehdotuksia eivätkä lukitse lopullista AIM2-SAPia.
+3. **Nykyiset versioidut toteutustiedostot ja avoimet menetelmäpäätökset (`OPEN`):** aliprojektissa versioidut skriptit ovat teknisiä apuvälineitä tai aiempien työvaiheiden luonnoksia eivätkä vahvista AIM2:n lopullista tieteellistä spesifikaatiota. Osatyön I (Aim 1) mittari-, seuranta-, kovariaatti- tai arvotusratkaisuja ei siirretä Osatyöhön II ilman erillistä AIM2-soveltuvuuden arviointia ja hyväksyntää.
 
-Nollakustannukset:
-Gamma-GLM vaatii positiiviset kustannukset; nollien osuus arvioidaan QC-gatessa.
-Jos nollia on merkittävästi, käytetään herkkyysanalyysinä two-part/hurdle (logit any_cost + Gamma(log) positive costs) ja raportoidaan unconditional €/PY.
+---
 
-3.2 Required fields (conceptual; must map to standardized names)
-Standardoinnista löydetyt (esimerkkisnapshot):
-id (henkilö-ID; pseudonymisoitu avain analyysiympäristössä)
-FOF_status (FOF; binäärinen)
-age (lähtötilanneikä; vuosina)
-sex (esim. 1=M, 2=F standardoinnin mukaan)
+## 2. Tutkimustavoitteet ja asetelman rajaukset
 
-KB missing → required for panel analysis (must be mapped/derived and added to standardization):
-period (jakso; factor/numeric)
-riskiaika per periodi (KB missing; needs standardization mapping before run)
-frailty_index_fi / frailty_index_fi_z (ensisijainen K40 FI_22 -frailtykenttä)
-n_deficits_observed / coverage / fi_eligible (K40 FI QC -kentät, jos FI-pohjainen malli ajetaan)
-frailty*\_(Fried-proxy -indikaattori tai -pistemäärä; vain fallback / sensitivity)
-lähtötilanteen komorbiditeettikenttä/-kentät (KB missing; needs standardization mapping before run)
-aiemmat kaatumiset tai vastaava lähtötilanteen riskihistoriakenttä (KB missing; needs standardization mapping before run)
+### 2.1 Tutkimuskysymykset
 
-FI QC -kenttiä (`fi_eligible`, `coverage`, `n_deficits_observed`) käytetään FI-pohjaisten mallien analyysikelpoisuuden ja datan kattavuuden arviointiin; ne eivät itsessään määritä frailtya, mutta niitä voidaan käyttää analyyttisen otoksen rajaamiseen tai sensitivity-analyyseihin.
+- **Suorat terveydenhuollon kustannukset (Osatyön II ydinkysymys):** Miten lähtötilanteen kaatumisen pelko (_fear of falling_, `FOF`) ja frailty ovat yhteydessä ikääntyneiden tapaturmiin liittyvien erikoissairaanhoidon avohoitokäyntien ja sairaalahoitojaksojen suoriin kustannuksiin?
+- **Palvelukäyttö (rinnakkainen / tukeva tarkastelu — esittämisraja `OPEN`):** Miten lähtötilanteen `FOF` (ja hyväksyttävän spesifikaation mukaisesti frailty) on yhteydessä tapaturmiin liittyvien erikoissairaanhoidon avohoitokäyntien ja sairaalahoitojaksojen määrään? Palvelukäyttö ja kustannukset pidetään käsitteellisesti ja analyyttisesti erillisinä tarkastelukohteina; Osatyön I ja Osatyön II lopullinen keskinäinen esittämisraja vahvistetaan tutkimussuunnitelman päivityksessä.
+- **Mahdollinen heterogeenisyystarkastelu (`PROPOSED / OPEN`):** Vaihteleeko `FOF`:n yhteys palvelukäyttöön tai kustannuksiin hyväksyttävän _deficit accumulation_ -frailtymittarin tai seuranta-ajan mukaan (efektimodifikaatio ilman kausaaliväitteitä)? Yhdysvaikutustermit (`FOF × frailty` tai `FOF × period`) eivät ole ennalta lukittuja ja sisällytetään vain, jos lopullinen hyväksytty SAP ne nimenomaisesti määrittelee.
 
-Count-outcomes: palveluluokkakohtaiset periodilaskurit (esim. päivystyskäynnit, osastoepisodit, avohoitokäynnit, kuntoutusepisodit, kotihoitokontaktit)
-Cost-outcomes: periodikohtaiset kustannukset (kokonaiskustannus ja/tai komponentit)
+### 2.2 Kohortti, palvelualue ja avoin seurantarakenne
 
-3.3 Baseline variables carried forward
-Kaikki lähtötilanteen muuttujat (FOF, ikä, sukupuoli, frailty, lähtötilanteen komorbiditeetit) liitetään henkilö–jakso -tauluun ja toistuvat kaikilla periodeilla samalle henkilölle.
-Aikavaihtuvat kovariaatit (jos SAP määrittelee) mallinnetaan period-tasolla ja dokumentoidaan erikseen; oletuksena tässä suunnitelmassa kovariaatit ovat lähtötilanteen mittauksia, ellei projektin SAP lukitse muuta.
+- **Kohortti ja rekisterilinkitys:** KAAOS/MFFP-kohortin lähtötilanteen kliiniset ja toiminnalliset havainnot yhdistettynä tapaturmiin liittyviin alueellisen erikoissairaanhoidon avohoidon ja sairaalahoidon rekisteritietoihin kontrolloidussa `DATA_ROOT`-ympäristössä. Aiemman suunnitelmaluonnoksen yleisluontoiset kotihoito- ja kuntoutusesimerkit eivät kuvaa tätä rekisterirajausta.
+- **Analyysiasetelma ja jakson pituus (`OPEN`):**
+  - _Vaihtoehto A (`PROPOSED` tässä luonnoksessa):_ Epätasapainoinen henkilö–jakso-paneeli (_person–period_), jossa jakson pituus (esim. kalenterivuosi tai muu jakso) päätetään ennen aineiston muodostusta.
+  - _Vaihtoehto B (`OPEN` vertailuvaihtoehto):_ Koko seurantaikkunan henkilötason analyysi (jolloin paneelirakenne voi toimia täydentävänä tarkasteluna tai jäädä pois).
+- **Seuranta-aika ja päättävät tapahtumat (`OPEN` AIM2-vahvistukselle):** Lähtötilanteen indeksipäivän määrittely, hallinnollinen päättymispäivä, kuoleman käsittely (riskiajan päättyminen vs. kilpaileva tapahtuma sekä kuolinhetken ja mahdollisten kuolemanjälkeisten kirjausten käsittely), poismuutto ja rekisteriaukot lukitaan AIM2:n lopullisessa SAPissa ennen tuotantoajoja. Osatyön I seuranta- tai kuolemansääntöjä ei oleteta automaattisesti voimassa oleviksi AIM2:ssa.
+- **Pääaltiste:** Lähtötilanteen `FOF` (`FOF = 1` vs. `FOF = 0`), joka mahdollisessa paneeliasetelmassa kantautuu henkilön seurantajaksoille.
 
-1. Statistical Models
-   4.0 Mallivalinta (paneelirakenne ja epävarmuus)
-   Paneeliaineistossa toistomittaukset huomioidaan ensisijaisesti population-averaged-tulkinnan mukaisesti käyttäen cluster-robust vakiovirheitä henkilötasolla (id).
-   Mixed/GEE-estimaattorit voidaan lisätä, jos SAP/KB vaatii; tässä suunnitelmassa ensisijainen raportointi perustuu pooled-malleihin + robust SE + cluster bootstrap ennusteille.
+---
 
-4.1 Utilization (Count Data) — Primary: Negative Binomial with offset
-Päämalli (kullekin count-outcomelle erikseen):
-[
-Y*{it} \sim \text{NegBin}, \quad \log(E[Y*{it}]) =
-\beta*0 + \beta_1 \text{FOF}\_i + \gamma_t(\text{period}\_t) + \mathbf{X}\_i\boldsymbol{\beta}
-\log(\text{person_time}*{it})
-]
-Spesifikaatio (template):
-count_it ~ FOF_status + period + age + sex + morbidity + prior_falls + frailty_index_fi + offset(log(person_time))
-Toissijaisesti: FOF_status × frailty_index_fi ja/tai FOF_status × period (vain jos raportointisuunnitelma/synopsis tätä edellyttää; muuten pidetään mallit parsimonisina). Fried-proxy-termit kuuluvat vain fallback / sensitivity -malleihin.
+## 3. Muuttujastandardointi, käsitteiden erottelu ja avoimet mittariportit
 
-Raportointi (mallikertoimet):
-FOF-kerroin IRR-muodossa: IRR = exp(β1) + 95% LV (cluster-robust).
+### 3.1 Muuttujastandardointi ja tietosuojasäännöt (voimassa olevat velvoitteet)
 
-Recycled predictions (ensisijaiset tulokset):
-Ennustettu rate/PY FOF=1 vs FOF=0 (kaikille havainnoille vuorotellen asetettuna), sekä:
-rate-ratio (FOF=1 / FOF=0)
-absolute difference (FOF=1 − FOF=0) rate/PY
+- **Ei arvailua (_Adherence / “Do not guess”_):** Kaikki analyysissä käytettävät muuttujat on kartoitettava tiedostoon `data/VARIABLE_STANDARDIZATION.csv` ([VARIABLE_STANDARDIZATION.md](../data/VARIABLE_STANDARDIZATION.md); Option B: repo sisältää vain metatietoa ja synteettisiä esimerkkejä, varsinainen data pysyy `DATA_ROOT`-polussa). Muuttujanimiä, yksiköitä tai koodauksia ei saa keksiä.
+- **Mapping governance:** Analyysissä saa käyttää vain `frozen`-tilaan hyväksyttyjä mappauksia ohjeen [DATA_DICTIONARY_WORKFLOW.md](DATA_DICTIONARY_WORKFLOW.md) sääntöjen mukaisesti; `inferred`-, `tbd`- ja `artifact`-tilaiset rivit ovat oletuksena estettyjä.
+- **Cleanup deferral:** Mahdolliset `artifact`-, duplikaatti- ja redaktointiriskit ratkaistaan erillisessä metatietojen siivoustehtävässä (`Phase 2`), eivät analyysisuunnitelman oletuspolussa.
+- **Tunniste- ja tulostesuoja:** `DIRECT_IDENTIFIER`-merkittyjä kenttiä, yksilötason rivejä tai absoluuttisia polkuja ei saa tallentaa repoon eikä tulostaa loki- tai konsolitulosteisiin ([runbook.md](runbook.md), [RUNBOOK_SECURE_EXECUTION.md](../../docs/guides/RUNBOOK_SECURE_EXECUTION.md)).
 
-Epävarmuus ennusteille:
-Cluster bootstrap (resample id) → 95% LV recycled prediction -estimaateille (percentile CI; BCa mahdollinen jos sovittu).
+### 3.2 Palvelukäytön ja neljän rahallisen käsitteen erottelu
 
-4.2 Costs (Continuous, skewed) — Primary: Gamma GLM (log link) with offset
-Päämalli (kullekin cost-outcomelle erikseen):
-[
-\text{Cost}{it} \mid \text{Cost}{it}>0 \sim \Gamma,\quad
-\log(E[\text{Cost}_{it}]) =
-\alpha*0 + \alpha_1 \text{FOF}\_i + \gamma_t(\text{period}\_t) + \mathbf{X}\_i\boldsymbol{\alpha}
-\log(\text{person_time}*{it})
-]
-Spesifikaatio (template):
-cost_it ~ FOF_status + period + age + sex + morbidity + prior_falls + frailty_index_fi + offset(log(person_time)), family = Gamma(link="log")
+Suunnittelussa, koodissa ja raportoinnissa seuraavia viittä käsitettä ei saa nimetä toisikseen ilman suoraa lähdevarmistusta:
 
-Huom (positiivisuus):
-Gamma-GLM sovitetaan positiivisille kustannuksille (cost>0). Nollaosuuden suuruus raportoidaan QC-gatessa.
+1. **Palvelukäyttö (_service utilization_):** Rekisteristä johdettu tapahtumamäärä tai hoitojaksojen/päivien lukumäärä (esim. avohoidon kirjausrivit tai uniikit käyntipäivät; sairaalahoidon jaksoaloitukset tai päällekkäisyyksistä yhdistetyt päivät).
+2. **Laskennallinen rahallinen arvo (_calculated monetary valuation_):** Rekisteristä johdettujen palvelukäyttöyksiköiden määrä kerrottuna yksikköhintataulukolla määritellyssä hintavuodessa.
+3. **Toteutunut terveydenhuollon kustannus (_realized production cost_):** Palveluntuottajan kustannuslaskenta- tai rekisterijärjestelmästä yksilö- tai hoitojaksotasolla todennettu suora tuotantokustannus.
+4. **Laskutushinta (_billed price / tariff_):** Palveluntuottajan tilaajalta, hyvinvointialueelta, kunnalta tai vakuutusyhtiöltä veloittama sopimus- tai hinnastohinta.
+5. **Asiakasmaksu (_patient out-of-pocket fee_):** Potilaalta perittävä lakisääteinen maksu, joka ei kuvaa hoidon kokonaiskustannusta.
 
-Raportointi (mallikertoimet):
-FOF-kerroin mean ratio -muodossa: MR = exp(α1) + 95% LV (cluster-robust).
+AIM2:n arvotusmenetelmä (yksilötason toteutunut kustannus vs. yksikköhintapohjainen rahallinen arvo), hintavuosi ja mahdollinen deflatointi ovat tilassa **`OPEN`**; Osatyön I hintavuosi- tai arvotusratkaisuja ei siirretä AIM2:een ilman erillistä hyväksyntää.
 
-Recycled predictions (ensisijaiset tulokset):
-Ennustettu €/PY FOF=1 vs FOF=0 positiivisten kustannusten osajoukossa.
-Jos nollaosuus on merkittävä, ensisijainen unconditional €/PY raportoidaan herkkyysmallista (two-part), ks. 4.3.
+### 3.3 Kolmen tulossuureen erottelu: ehdollinen keskiarvo, koko kohortin odotettu kustannus ja `EUR/PY`
 
-Epävarmuus ennusteille:
-Cluster bootstrap (resample id) → 95% LV recycled prediction -estimaateille.
+Kustannus- ja arvotusanalyyseissä seuraavat kolme suuretta kuvaavat eri ilmiöitä ja on pidettävä erillään:
 
-4.3 Sensitivity (choose one) — Primary sensitivity: Two-part / hurdle for costs
-Perustelu: Paneeliperiodissa kustannuksissa on usein huomattava nollaosuus (ei palvelunkäyttöä kyseisenä periodina) ja voimakas vinous. Two-part tuottaa suoraan unconditional €/PY.
-Two-part/hurdle:
-Any-cost -osa: I(cost_it>0) ~ FOF_status + period + covariates (logit)
-Positive-cost -osa: cost_it | cost_it>0 ~ Gamma(log) + offset(log(person_time))
-Unconditional recycled prediction:
-E[cost_it] = Pr(cost_it>0) × E[cost_it | cost_it>0]
-Raportointi: €/PY FOF=1 vs 0, ratio ja absolute €-difference, + cluster bootstrap 95% LV.
+1. **Positiivisten kustannusten ehdollinen keskiarvo** ($\mathbb{E}[\text{Cost} \mid \text{Cost} > 0]$): kuvaa keskimääräistä kustannusta ainoastaan niillä henkilöillä tai jaksoilla, joilla syntyi positiivisia kustannuksia ($\text{Cost} > 0$). Se ei sisällä nollahavaintoja eikä yksinään kuvaa koko kohortin kustannuseroa.
+2. **Koko kohortin odotettu kustannus** ($\mathbb{E}[\text{Cost}]$, ehdoton / _unconditional_ odotusarvo euroina `€`): kattaa koko analyysikohortin nollahavainnot ($\text{Cost} = 0$) mukaan lukien määritellyssä seurantaikkunassa tai jaksossa.
+3. **Henkilöaikaan suhteutettu tulos (`EUR/PY`, `€/henkilövuosi`):** suhteuttaa rahallisen suureen kertyneeseen henkilöaikaan ja riippuu suoraan siitä, miten seuranta-aika, jaksotus ja päättävät tapahtumat määritellään.
 
-1. QC Gates (Quality Control)
-   Ennen mallinnusta tuotetaan QC-yhteenveto (metadata-only output outputs/-hakemistoon):
-   Logical consistency: counts ≥ 0, costs ≥ 0, person_time > 0
-   Completeness: FOF, frailty, covariates
-   Panel integrity: periodien määrä, aukot
-   Zeros & skew: nollaosuus, outlierit
-   QC:n tulokset kirjataan lyhyesti ja niiden perusteella lukitaan two-part käyttö.
-2. Runbook & Reproducibility
-   Environment: renv::restore()
-   Script naming:
-   scripts/10_build_panel_person_period.R
-   scripts/20_qc_panel_summary.R
-   scripts/30_models_panel_nb_gamma.R
-   Output logging: manifest/
+### 3.4 Tapaturmavasteiden yksiköt ja sairaalaskeeman tarkistusportti (`OPEN`)
 
-# scripts/30_models_panel_nb_gamma.R
+- **Vasteyksiköt (`OPEN`):** Ennen analyysiä lukitaan avohoidon laskentayksikkö (toimitetut lähderivit vs. uniikit käyntipäivät), sairaalahoidon laskentayksikkö (jaksoaloitukset vs. päällekkäisyyksistä yhdistetyt hoito-/kalenteripäivät) sekä tapaturmadiagnoosien rajaussääntö.
+- **Sairaalaskeeman tarkistus:** Sisäinen selvitys [2026-02-10_hospital_outcome_reconciliation.md](reports/2026-02-10_hospital_outcome_reconciliation.md) dokumentoi huomattavan eron pelkän episoditaulun ja diagnoositiedostoon yhdistetyn päivämittarin ([table2_technical_reproducibility_note.md](table2_technical_reproducibility_note.md)) välillä. Sairaalamittarin muodostussääntö ja monidiagnoosi-/siirtotilanteiden käsittely vahvistetaan ennen mallinnusta.
+- **Nollat vs. puuttuva tieto (`OPEN`):** Rekisteriotteen rivittömyyden tulkinta todelliseksi nollakäytöksi tai nollakustannukseksi edellyttää lähdeaineiston väestö-, alue- ja aikakattavuuden varmistamista.
 
-# Template-runner (Option B safe-by-default): packages -> prep -> NB + Gamma
+### 3.5 Altiste (`FOF`), frailty ja komponenttien päällekkäisyyskysymys (`OPEN`)
 
-# -> cluster-robust SE -> recycled predictions -> cluster bootstrap -> tables
+- **Frailtyn malliperhe ja avoin mittarivalinta (`OPEN`):**
+  - Projektitasolla frailty-malliperheeksi on valittu **terveysvajeiden kertymä (_deficit accumulation_)**; Fried-fenotyyppiä ei ole valittu projektin malliksi, eikä Fried-proxy saa korvata varsinaista frailty-mittaria automaattisena oletuksena tai fallbackina.
+  - Aiemmassa suunnitelmaluonnoksessa ja skriptissä [K40_FI_KAAOS.R](../R/40_FI/K40_FI_KAAOS.R) esiintynyt `FI22_nonperformance_KAAOS` (`frailty_index_fi`) on historiallisen analyysilinjan sopimus eikä ole AIM2:lle lukittu mittari. Vastaavasti [DEAC_HANDOVER.md](../../DEAC-Frailty-Index/docs/DEAC_HANDOVER.md) kuvaa Osatyötä I varten valmistellun 20 komponentin vajeindeksiluonnoksen, jonka suhde aiempiin `FI22`-variantteihin sekä Osatöiden I ja II lopullinen frailty-operationalisointi ovat vielä vahvistamatta.
+- **Ratkaistava menetelmäkysymys — `FOF`:n ja muiden kovariaattien sisältyminen vajeindeksiin (`OPEN`):**
+  - Jos tarkasteltava vajeindeksi sisältää osatekijöinä kaatumisen pelon (`FOF`), aiemmat kaatumiset tai sairastavuuskomponentin (kuten tiedostossa [DEAC_HANDOVER.md](../../DEAC-Frailty-Index/docs/DEAC_HANDOVER.md) kuvatussa 20 komponentin luonnoksessa), `FOF_status`-pääaltisteen ja tällaisen vajeindeksin sekä erillisten sairastavuus- ja kaatumishistoriakenttien samanaikainen sisällyttäminen samaan malliin aiheuttaa mekaanisen rakennepäällekkäisyyden ja mahdollisen ylivakioinnin.
+  - Tätä kysymystä **ei ratkaista tässä luonnoksessa ennakko-oletuksella** (esimerkiksi esittämällä yhden komponentin poistamista tai pelkkää ikä- ja sukupuolivakiointia valmiiksi hyväksyttynä ratkaisuna), vaan AIM2:n frailty-mittari ja kovariaattirakenne päätetään nimenomaisella tieteellisellä SAP-päätöksellä ennen malliajoja.
 
-suppressPackageStartupMessages({
-library(dplyr)
-library(readr)
-library(stringr)
-library(MASS) # glm.nb
-library(sandwich) # vcovCL
-library(lmtest) # coeftest
-library(broom) # tidy
-})
+### 3.6 Käsitteellinen muuttujatarvelista (vaatii `frozen`-standardoinnin ennen ajoa)
 
-# [Full R code template implied from prompt]
+Standardoinnista tarkistettavat peruskentät:
 
-#
+- `id` (pseudonymisoitu henkilöavain analyysiympäristössä)
+- `FOF_status` (lähtötilanteen binäärinen FOF-altiste)
+- `age` (lähtötilanneikä vuosina)
+- `sex` (sukupuoli standardoinnin mukaisesti)
 
-1. Interpretation & Reporting
-   7.1 Report-ready outputs (default)
-   Counts: IRR(FOF), Recycled predictions (rate/PY, ratio, diff) + 95% boot CI
-   Costs: MR(FOF) (pos), Recycled predictions (€/PY, ratio, diff) + 95% boot CI (Two-part if needed)
+Ennen malliajoa täsmennettävät ja `frozen`-tilaan vietävät kentät (`OPEN` lopulliselle SAP-päätökselle):
 
-7.2 Conservative interpretation
-Assosiaatiokieli. Efektikoot.
+- `period` (jaksoavain, jos henkilö–jakso-paneeliasetelma valitaan)
+- seuranta- / riskiaikakenttä (`person_time`, `PY`) hyväksyttävän seurantasäännön mukaisesti
+- hyväksyttävä _deficit accumulation_ -frailtykenttä sekä sen kattavuus- ja kelpoisuuskentät
+- mahdolliset muut lähtötilanteen taustamuuttujat (kuten sairastavuus tai aiemmat kaatumiset) vain siltä osin kuin lopullinen SAP sisällyttää ne ilman rakennepäällekkäisyyttä
+- tapaturmiin liittyvät erikoissairaanhoidon avo- ja sairaalahoidon määrälaskurit (`Count-outcomes`) ja rahalliset suureet (`Cost-outcomes`)
 
-7.3 Table-to-text crosscheck
-Varmista offset ja yksiköt.
+Mahdollisessa henkilö–jakso-paneelissa lähtötilanteen muuttujat liitetään henkilön jaksoriveille henkilötunnisteella (`id`); aikavaihtuvia kovariaatteja ei oleteta käytettäviksi ilman erillistä SAP-päätöstä.
 
-7.4 Internal consistency check
-Lukitse period, person_time, aktiivinen frailty-kenttä (`frailty_index_fi` / `frailty_index_fi_z`), mahdollinen FI QC -kelpoisuus (`fi_eligible`, `coverage`, `n_deficits_observed`) ja hintavuosi.
+---
+
+## 4. Tilastomallien luonnosehdotukset (`PROPOSED / DRAFT` — ei lukittu AIM2-SAPiksi)
+
+### 4.0 Yleiset mallinnusvaraukset
+
+Alla esitetyt mallit ovat alustavia **menetelmäehdotuksia**. Merkintä $m$ viittaa valittavan asetelman mukaiseen havaintoyksikköön — henkilö–jakso-ehdotuksessa $(i, t)$ ja koko seurantaikkunan henkilötason vaihtoehdossa henkilöön $i$. Vektori $\mathbf{X}_i$ on konseptuaalinen paikkamerkki lopullisessa SAPissa hyväksyttävälle lähtötilanteen kovariaattijoukolle (ei lukittu pelkkään `age + sex` -joukkoon eikä aiemman luonnoksen laajaan kovariaattilistaan). Toistomittausasetelmassa korrelaatiorakenne ehdotetaan huomioitavaksi henkilötason (`id`) klusterirobusteilla keskivirheillä (tai vaihtoehtoisesti GEE-/sekamallirakenteella SAP-päätöksen mukaan).
+
+### 4.1 Palvelukäytön laskurivasteet (`PROPOSED`: negatiivinen binomimalli)
+
+Henkilö–jakso-ehdotuksessa laskurivasteelle $Y_{it}$ ja riskiajalle $\text{person\_time}_{it} > 0$:
+
+$$
+Y_{it} \sim \text{NegBin}, \quad
+\log\bigl(\mathbb{E}[Y_{it}]\bigr) = \beta_0 + \beta_1\,\text{FOF}_i + \gamma_t + \mathbf{X}_i^{\top}\boldsymbol{\beta} + \log(\text{person\_time}_{it})
+$$
+
+- **Konseptuaalinen kaavarunko (ehdotus):**
+  `count_it ~ FOF_status + period + X_approved + offset(log(person_time))`
+- **Mahdolliset yhdysvaikutukset (`OPEN`):** `FOF_status × frailty` tai `FOF_status × period` vain, jos lopullinen SAP ne hyväksyy.
+- **Raportoitavat suureet (ehdotus):** suhteellinen tiheyssuhde $\text{IRR} = \exp(\beta_1)$ (95 % LV) sekä kierrätetyt ennusteet (_recycled predictions_: ennustettu `rate/PY` ryhmille `FOF = 1` vs. `FOF = 0`, suhde ja erotus henkilötason klusteri-bootstrapilla).
+
+### 4.2 Positiivisten kustannusten ehdollinen malli (`PROPOSED`: Gamma-GLM, seuranta-ajan käsittely avoin)
+
+Positiivisten rahallisten arvojen ($\text{Cost}_m > 0$) ehdollinen luonnosmalli ilman ennalta lukittua offset-oletusta:
+
+$$
+\text{Cost}_m \mid \text{Cost}_m > 0 \sim \text{Gamma}, \quad
+\log\bigl(\mathbb{E}[\text{Cost}_m \mid \text{Cost}_m > 0]\bigr) = \alpha_0 + \alpha_1\,\text{FOF}_m + \mathbf{Z}_m^{\top}\boldsymbol{\alpha} + h(\text{seuranta-aika}_m)
+$$
+
+missä $\mathbf{Z}_m$ sisältää hyväksyttävät kovariaatit (ja paneelivaihtoehdossa jaksoefektin $\gamma_t$) ja ehdollinen termi $h(\text{seuranta-aika}_m)$ jätetään **avoimeksi (`OPEN`)**:
+
+- vaihtoehtoina lopullisessa SAPissa ovat esimerkiksi (a) koko seurantaikkunan malli ilman offsetia tai seuranta-aika kovariaattina, tai (b) ehdollinen log-offset `offset(log(person_time))`, jos tavoitteena on suora jakso- tai henkilöaikakohtainen intensiteettisuure.
+- **Konseptuaalinen kaavarunko:**
+  `cost_m ~ FOF_status + Z_approved [+ ehdollinen seuranta-ajan termi], family = Gamma(link = "log")`
+- **Tulkintaraja:** Kerroin $\exp(\alpha_1)$ ja tästä osasta lasketut ennusteet kuvaavat **vain positiivisten kustannusten ehdollista keskiarvoa** ($\mathbb{E}[\text{Cost}_m \mid \text{Cost}_m > 0]$), eivät koko kohortin odotettua kustannusta tai koko kohortin `EUR/PY`-eroa (ks. luku 3.3).
+
+### 4.3 Koko kohortin nollat huomioivat kustannusmallit (`PROPOSED`: kaksiosainen malli yhtenä vaihtoehtona)
+
+Koska palvelukäyttöön liittyvissä kustannusaineistoissa esiintyy tyypillisesti nollahavaintoja ($\text{Cost}_m = 0$) ja voimakasta oikeaa vinoutta, koko kohortin odotetun kustannuksen ($\mathbb{E}[\text{Cost}_m]$) arviointiin tarvitaan nollahavainnot huomioiva lähestymistapa.
+
+- **Ehdotus A — Kaksiosainen (_two-part / hurdle_) malli (`PROPOSED`, ei ainoa vaihtoehto):**
+  1. _Osa 1 (positiivisen kustannuksen todennäköisyys):_ logistinen regressio $\Pr(\text{Cost}_m > 0 \mid \text{FOF}_m, \mathbf{Z}_m, \dots)$.
+  2. _Osa 2 (positiivisen kustannuksen ehdollinen taso):_ $\mathbb{E}[\text{Cost}_m \mid \text{Cost}_m > 0]$ esim. `Gamma(link = "log")` -mallilla (seuranta-ajan käsittely $h(\cdot)$ päätetään yhtenäisesti SAPissa).
+  3. _Koko kohortin odotettu kustannus:_ $\mathbb{E}[\text{Cost}_m] = \Pr(\text{Cost}_m > 0) \times \mathbb{E}[\text{Cost}_m \mid \text{Cost}_m > 0]$, josta voidaan muodostaa kierrätetyt ennusteet ja henkilötason klusteri-bootstrapin luottamusvälit.
+- **Muut SAP-vaiheessa arvioitavat vaihtoehdot (`OPEN`):** Kaksiosainen malli ei ole ainoa mahdollinen nollat huomioiva ratkaisu. Aineiston nollaosuuden, jakaumamuodon ja pienempien alaryhmien koon perusteella lopullisessa SAPissa voidaan arvioida vaihtoehtoina tai herkkyysanalyyseinä myös esimerkiksi yksiosaista yleistettyä lineaarista mallia koko otoksessa (kuten Tweedie- tai Poisson/Quasi-GLM log-linkillä) tai ei-parametrisia bootstrap-pohjaisia odotusarvovertailuja.
+
+---
+
+## 5. Laadunvarmistus-, valtuutus- ja tietosuojaportit (QC & Security Gates)
+
+Kaikki myöhemmät aineisto- ja malliajot ovat alisteisia aliprojektin voimassa oleville valtuutus- ja tietosuojaporteille ([GEMINI.md](../GEMINI.md), [CLAUDE.md](../CLAUDE.md), [WORKFLOW.md](../WORKFLOW.md), [runbook.md](runbook.md), [RUNBOOK_SECURE_EXECUTION.md](../../docs/guides/RUNBOOK_SECURE_EXECUTION.md)). **Tässä dokumenttipäivityksessä (`Draft v2`) tuotantoaineiston QC- tai analyysiajoja ei suoriteta eikä `DATA_ROOT`-aineistoa lueta.**
+
+1. **Tehtäväkohtainen ajovaltuutusportti:** Tuotantoaineiston esikäsittely-, QC- tai malliajoja (`Full Run`) saa käynnistää vain nimenomaisesti valtuutetussa analyysitehtävässä, kun vaaditut SAP- ja mappausportit on hyväksytty. Puhtaat dokumentaatio- ja hallintotehtävät eivät koskaan käynnistä `DATA_ROOT`-ajoja.
+2. **Option B -polku- ja tunnistepolitiikka:** Aineisto luetaan vain ulkoisesta `DATA_ROOT`-sijainnista (paikallinen `config/.env`). Tulosteet ohjataan gitignoroituun `outputs/`-kansioon ilman yksilörivejä, suoria tunnisteita (`DIRECT_IDENTIFIER`) tai absoluuttisia polkuja (`qc_no_abs_paths_check` pysäyttää ajon virheeseen polkuvuodosta).
+3. **Aggregaattien kaksiosainen valtuutusportti (_double-gated aggregates_) ja `n < 5` -suojaus:** Aggregaattitulosteiden muodostaminen ja vienti vaativat samanaikaisesti (i) ihmisomistajan nimenomaisen tehtäväkohtaisen valtuutuksen ja (ii) eksplisiittisen ympäristö-/ajokytkimen (`ALLOW_AGGREGATES=1` sekä soveltuvissa työkaluissa `--allow-aggregates`). Kaikissa raporteissa ja aggregaateissa estetään pienten solujen (`n < 5`) näkyminen.
+4. **Aineiston tekniset QC-tarkistukset ennen mallinnusta (kun ajo on erikseen valtuutettu):**
+   - `frozen`-mappausten täydellisyys (`data/VARIABLE_STANDARDIZATION.csv`) ja sairaalahoidon lähdeskeeman (`episodefile` vs. diagnoosiyhdiste) varmistus;
+   - looginen eheys (`counts >= 0`, `costs >= 0`, hyväksytty seuranta-aika `> 0`, päivämäärien järjestys ja mahdollisten kuolemanjälkeisten kirjausten tarkistus);
+   - `FOF_status`-altisteen, hyväksyttävän frailty-mittarin ja kovariaattien puuttuvuus ja kattavuus;
+   - nollahavaintojen osuus, jakauman oikea vinous ja yksittäisten suurten kustannushavaintojen vaikutus ennen kustannusmallin lopullista valintaa.
+
+---
+
+## 6. Aliprojektissa versioidut toteutustiedostot ja toistettavuusrajat
+
+Tässä aliprojektihakemistossa ovat tällä hetkellä versioituina mm. seuraavat skriptit:
+
+- **Metatieto-, esikäsittely- ja synteettiset apuskriptit (`scripts/`):** [00_inventory_manifest.py](../scripts/00_inventory_manifest.py), [10_preprocess_tabular.py](../scripts/10_preprocess_tabular.py), [30_qc_summary.py](../scripts/30_qc_summary.py), [40_build_knowledge_package.py](../scripts/40_build_knowledge_package.py), [50_build_report.py](../scripts/50_build_report.py), [01_generate_synthetic_panel.py](../scripts/01_generate_synthetic_panel.py) ja [10_build_panel_person_period.R](../scripts/10_build_panel_person_period.R).
+- **R-analyysi- ja taulukkoluonnokset (`R/`):** [20_qc_panel_summary.R](../R/20_qc_panel_summary.R), [30_models_panel_nb_gamma.R](../R/30_models_panel_nb_gamma.R), [40_run_secure_panel_analysis.R](../R/40_run_secure_panel_analysis.R) sekä aiempien työvaiheiden skriptit kansioissa `R/10_table1/`, `R/15_table2/`, `R/20_table3/`, [K40_FI_KAAOS.R](../R/40_FI/K40_FI_KAAOS.R) ja [K41_FI22_FOF_models.R](../R/41_models/K41_FI22_FOF_models.R).
+
+**Sitovat tulkinta- ja toistettavuusrajat:**
+
+- Yllä oleva luettelo kuvaa vain tässä hakemistossa tällä hetkellä versioidut tiedostot; muiden työtilojen, aiempien analyysiajojen tai `DATA_ROOT`-ympäristön mahdollisten toteutusten olemassaoloa ei ole tässä dokumenttipäivityksessä tarkastettu, eikä niiden olemassaolosta tehdä poissulkevia väitteitä.
+- Olemassa olevien luonnosskriptien sisäiset oletukset (kuten kiinteä paneelioffset kustannusmallissa tai aiemmat `K40`-/Fried-proxy-viittaukset) **eivät** lukitse AIM2:n lopullista SAPia, vaan skriptit mukautetaan myöhemmin vastaamaan hyväksyttyjä päätöksiä.
+- Erikseen valtuutetuissa satunnaisuutta sisältävissä ajoissa (esim. bootstrap) käytetään kiinteää siemenlukua (`set.seed(20251124)`), `renv.lock`-ympäristöä ja manifestikirjausta.
+
+---
+
+## 7. Tulkinta, raportointi ja viisi avointa AIM2-päätöstä
+
+### 7.1 Tulkinta- ja raportointiperiaatteet
+
+- **Suureiden erillisyys raportoinnissa:** Palvelukäytön tiheydet (`rate/PY`) ja tapahtumamäärät pidetään erillään rahallisista suureista, ja rahallisissa tuloksissa yksilöidään aina: (i) käytetty rahakäsite (laskennallinen rahallinen arvo vs. toteutunut kustannus) ja hintavuosi, sekä (ii) onko kyse positiivisten kustannusten ehdollisesta keskiarvosta ($\mathbb{E}[\text{Cost} \mid \text{Cost} > 0]$), koko kohortin odotetusta kustannuksesta (`€`) vai henkilöaikaan suhteutetusta suureesta (`EUR/PY`).
+- **Konservatiivinen assosiaatiokieli:** Tulokset esitetään havaittuina tai mallinnettuina yhteyksinä ilman kausaaliväitteitä. Jos luottamusväli kattaa nollavaikutuksen, tulosta kuvataan epätarkaksi väittämättä yhteyttä osoitetuksi tai poissuljetuksi.
+- **Taulukko–teksti-ristiintarkistus:** Raportoitavat luvut ja yksiköt varmistetaan suoraan `n < 5` -suojatuista tulostaulukoista.
+
+### 7.2 Viisi avointa AIM2-menetelmäpäätöstä ennen lopullista SAP-hyväksyntää (`OPEN`)
+
+Ennen kuin tätä suunnitelmaa voidaan pitää hyväksyttynä toteutus-SAPina tai käynnistää lopullisia AIM2-malliajoja, seuraavat viisi menetelmäpäätöstä on ratkaistava ja dokumentoitava:
+
+1. **Tutkimusasetelma ja seurantasäännöt (`OPEN`):** Valitaanko AIM2:n pääasetelmaksi henkilö–jakso-paneeli (ja mikä jakson pituus) vai koko seurantaikkunan henkilötason analyysi, sekä mitkä ovat AIM2:lle hyväksytyt indeksipäivä-, päättymispäivä-, kuolema-, poismuutto-, rekisteriaukko- ja seuranta-ajan mallinnussäännöt?
+2. **Palvelukäytön ja kustannusten esittämisraja Osatyö I vs. Osatyö II (`OPEN`):** Miten tapaturmiin liittyvän palvelukäytön ja suorien kustannusten analyysit rajataan Osatöiden I ja II kesken päivitetyn tutkimussuunnitelman mukaisesti?
+3. **AIM2:n frailty-spesifikaatio ja rakennepäällekkäisyyden ratkaisu (`OPEN`):** Mikä _deficit accumulation_ -mittari hyväksytään AIM2:een, ja miten ratkaistaan `FOF`:n (sekä mahdollisten aiempien kaatumisten ja sairastavuuden) mahdollinen sisältyminen vajeindeksin komponentteihin silloin, kun `FOF` on pääaltiste?
+4. **Lopullinen kovariaattijoukko ja yhdysvaikutukset (`OPEN`):** Mitkä muuttujat kuuluvat hyväksyttyyn kovariaattivektoriin, ja sisällytetäänkö `FOF × frailty` (tai `FOF × period`) osaksi esispesifioitua analyysia?
+5. **Vasteyksiköt, arvotusmenetelmä, hintavuosi ja nollakustannusmalli (`OPEN`):** Lukitaanko avohoidossa lähderivit vai uniikit käyntipäivät ja sairaalahoidossa jaksoaloitukset vai diagnoosiyhdistetyt päivät, perustuuko rahasuure toteutuneisiin yksilökustannuksiin vai yksikköhintapohjaiseen laskennalliseen arvoon (ja mihin hintavuoteen), ja mikä nollahavainnot huomioiva kustannusmalli valitaan päämalliksi?
