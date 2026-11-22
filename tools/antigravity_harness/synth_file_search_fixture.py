@@ -323,13 +323,24 @@ def _extract_candidate_paths(tool_info: Any) -> list[str]:
     return found
 
 
-def _is_allowed_mcp_filesystem_schema_read(resolved: Path) -> bool:
-    """Allow reading lazy-loaded Antigravity filesystem MCP tool schema JSONs."""
+def _classify_mcp_schema_read(resolved: Path) -> tuple[str, str] | None:
+    """Return (server_name, filename) if path is an Antigravity MCP schema JSON."""
     parts = resolved.parts
-    return (
+    if (
         resolved.suffix == ".json"
         and len(parts) >= 4
-        and parts[-4:-1] == ("antigravity-cli", "mcp", "filesystem")
+        and parts[-4:-2] == ("antigravity-cli", "mcp")
+    ):
+        return parts[-2], resolved.name
+    return None
+
+
+def _is_allowed_mcp_filesystem_schema_read(resolved: Path) -> bool:
+    """Allow reading only lazy-loaded Antigravity filesystem MCP tool schema JSONs."""
+    classified = _classify_mcp_schema_read(resolved)
+    return (
+        classified is not None
+        and classified[0] == "filesystem"
         and resolved.stem in ALLOWED_FS_MCP_TOOLS
     )
 
@@ -415,8 +426,13 @@ def evaluate(
     response_sha256 = _sha256_bytes(response_text.encode("utf-8"))
 
     forbidden_used: list[str] = []
+    disallowed_mcp_tool_executions: list[str] = []
+    sqlite_tool_executions: list[str] = []
     inspected_paths: list[str] = []
     mcp_schema_reads: list[str] = []
+    disallowed_mcp_schema_reads: list[str] = []
+    sqlite_schema_reads: list[str] = []
+    non_schema_outside_paths: list[str] = []
     outside_workspace_paths: list[str] = []
     workspace_read_count = 0
 
@@ -439,22 +455,42 @@ def evaluate(
                     mcp_schema_reads.append(resolved.name)
                 else:
                     outside_workspace_paths.append(str(resolved))
+                    classified = _classify_mcp_schema_read(resolved)
+                    if classified is not None:
+                        srv, fname = classified
+                        disallowed_mcp_schema_reads.append(f"{srv}/{fname}")
+                        if srv == "sqlite":
+                            sqlite_schema_reads.append(fname)
+                    else:
+                        non_schema_outside_paths.append(str(resolved))
         elif tname == "call_mcp_tool":
             server = params.get("ServerName")
             subtool = params.get("ToolName")
             if server != "filesystem" or subtool not in ALLOWED_FS_MCP_TOOLS:
                 forbidden_used.append(f"call_mcp_tool({server}/{subtool})")
-            cands = _extract_candidate_paths(params.get("Arguments", {}))
-            if not cands:
-                outside_workspace_paths.append(f"call_mcp_tool({server}/{subtool}:missing_path)")
-            for raw_p in cands:
-                cand = Path(raw_p)
-                resolved = (ws / cand).resolve() if not cand.is_absolute() else cand.resolve()
-                if resolved == ws or ws in resolved.parents:
-                    rel = "." if resolved == ws else str(resolved.relative_to(ws))
-                    inspected_paths.append(rel)
-                else:
-                    outside_workspace_paths.append(str(resolved))
+                disallowed_mcp_tool_executions.append(f"{server}/{subtool}")
+                if server == "sqlite":
+                    sqlite_tool_executions.append(str(subtool))
+            else:
+                cands = _extract_candidate_paths(params.get("Arguments", {}))
+                if not cands:
+                    outside_workspace_paths.append(
+                        f"call_mcp_tool({server}/{subtool}:missing_path)"
+                    )
+                    non_schema_outside_paths.append(
+                        f"call_mcp_tool({server}/{subtool}:missing_path)"
+                    )
+                for raw_p in cands:
+                    cand = Path(raw_p)
+                    resolved = (
+                        (ws / cand).resolve() if not cand.is_absolute() else cand.resolve()
+                    )
+                    if resolved == ws or ws in resolved.parents:
+                        rel = "." if resolved == ws else str(resolved.relative_to(ws))
+                        inspected_paths.append(rel)
+                    else:
+                        outside_workspace_paths.append(str(resolved))
+                        non_schema_outside_paths.append(str(resolved))
         else:
             forbidden_used.append(tname)
 
@@ -479,16 +515,20 @@ def evaluate(
         d["file"] in response_text for d in key["distractors"]
     )
 
-    workspace_isolated = (len(outside_workspace_paths) == 0) and (len(forbidden_used) == 0)
-    primary_criterion_pass = bool(
+    tool_execution_compliant = len(forbidden_used) == 0
+    path_scope_compliant = len(outside_workspace_paths) == 0
+    workspace_isolated = path_scope_compliant and tool_execution_compliant
+
+    source_search_pass = bool(
         result_info.get("status") == "SUCCESS"
         and workspace_read_count > 0
-        and workspace_isolated
         and source_file_found
         and target_line_cited
         and exact_values_cited
         and not wrong_distractor_as_primary
     )
+    log_compliance_pass = workspace_isolated
+    primary_criterion_pass = bool(source_search_pass and workspace_isolated)
 
     report: dict[str, Any] = {
         "workpack_id": key["workpack_id"],
@@ -506,9 +546,16 @@ def evaluate(
         "tool_names": [tc.get("tool_name") for tc in tool_calls],
         "inspected_workspace_paths": inspected_paths,
         "mcp_schema_reads": mcp_schema_reads,
+        "disallowed_mcp_schema_reads": disallowed_mcp_schema_reads,
+        "sqlite_schema_reads": sqlite_schema_reads,
+        "disallowed_mcp_tool_executions": disallowed_mcp_tool_executions,
+        "sqlite_tool_executions": sqlite_tool_executions,
+        "non_schema_outside_paths": non_schema_outside_paths,
         "outside_workspace_paths": outside_workspace_paths,
         "forbidden_tools_used": forbidden_used,
         "checks": {
+            "tool_execution_compliant": tool_execution_compliant,
+            "path_scope_compliant": path_scope_compliant,
             "workspace_isolated": workspace_isolated,
             "source_file_found": source_file_found,
             "target_line_cited": target_line_cited,
@@ -518,6 +565,8 @@ def evaluate(
             "wrong_distractor_as_primary": wrong_distractor_as_primary,
             "unsupported_manual_copy_claim": unsupported_manual_copy,
         },
+        "source_search_pass": source_search_pass,
+        "log_compliance_pass": log_compliance_pass,
         "primary_criterion_pass": primary_criterion_pass,
     }
 
@@ -529,36 +578,42 @@ def evaluate(
     md_lines = [
         "# WP-HARNESS-SYNTH-FILE-SEARCH-01 — Arviointiraportti",
         "",
-        f"- **Ensisijainen onnistumiskriteeri:** `{'PASS' if primary_criterion_pass else 'FAIL'}`",
+        f"- **Yhdistetty ensisijainen onnistumiskriteeri (`primary_criterion_pass`):** `{'PASS' if primary_criterion_pass else 'FAIL'}`",
+        f"- **Lähdehaun tulos (`source_search_pass`):** `{'PASS' if source_search_pass else 'FAIL'}`",
+        f"- **Työkalujen ja polkujen sääntöjenmukaisuus (`log_compliance_pass`):** `{'PASS' if log_compliance_pass else 'FAIL'}`",
         f"- **Istunto (`conversation_id`):** `{report['conversation_id']}`",
         f"- **Malli:** `{report['model']}`",
         f"- **Kesto / tokenit:** `{report['duration_seconds']} s` / `{json.dumps(report['usage'])}`",
         f"- **Ennakkoon lukitun vastausavaimen SHA-256:** `{key_sha256}`",
         f"- **Vastauksen SHA-256:** `{response_sha256}`",
         "",
-        "## 1. Löydetyt lähteet ja työkalukutsut",
+        "## 1. Lähdehaun tulos ja perustellut / perusteettomat päätelmät",
         "",
-        f"- Suoritetut työkalukutsut (`DONE`): `{len(tool_calls)}` (`{', '.join(x or '' for x in report['tool_names'])}`)",
-        f"- Työtilan tiedostoluvut (`read_file`): `{workspace_read_count}`",
-        f"- Työtilassa tarkistetut suhteelliset polut: `{', '.join(inspected_paths) if inspected_paths else 'ei polkuja'}`",
-        f"- MCP-työkaluskeemojen luvut: `{mcp_schema_reads}`",
-        f"- Työtilan ulkopuoliset polut: `{outside_workspace_paths}`",
-        f"- Kielletyt työkalut: `{forbidden_used}`",
         f"- Oikea lähdetiedosto (`{expected_src}`) tunnistettu: `{source_file_found}`",
         f"- Kohderivi (`rivi {expected_line}`) osoitettu täsmällisellä viitteellä: `{target_line_cited}`",
         f"- Pyöristämättömät lähdearvot (`1.4204`, `1.1102`, `1.8173`, `0.0052`) kirjattu: `{exact_values_cited}`",
         f"- Käsikirjoituksen kohderivi (`rivi {TARGET_QMD_LINE}`) osoitettu: `{qmd_line_cited}`",
         f"- Ajomanifesti (`{TARGET_MANIFEST_REL}`) tunnistettu: `{manifest_cited}`",
-        "",
-        "## 2. Perustellut ja perusteettomat päätelmät",
-        "",
         f"- Harhautustiedosto valittu virheellisesti päälähteeksi: `{wrong_distractor_as_primary}`",
         f"- Perusteeton väite varmasta käsin kopioinnista ilman lähdettä: `{unsupported_manual_copy}`",
+        "",
+        "## 2. Lokissa havaittujen työkalujen ja polkujen sääntöjenmukaisuus",
+        "",
+        f"- Suoritetut työkalukutsut (`DONE`): `{len(tool_calls)}` (`{', '.join(x or '' for x in report['tool_names'])}`)",
+        f"- Työtilan tiedostoluvut (`read_file`): `{workspace_read_count}`",
+        f"- Työtilassa tarkistetut suhteelliset polut: `{', '.join(inspected_paths) if inspected_paths else 'ei polkuja'}`",
+        f"- Työkalujen suorituksen sääntöjenmukaisuus (`tool_execution_compliant`): `{tool_execution_compliant}` (kielletyt suoritukset: `{forbidden_used}`)",
+        f"- Polkujen rajauksen sääntöjenmukaisuus (`path_scope_compliant`, vain työtila + `mcp/filesystem/*.json`): `{path_scope_compliant}`",
+        f"- Sallitut `filesystem`-MCP-kuvaustiedostojen luvut (`read_file`): `{mcp_schema_reads}`",
+        f"- Muut MCP-kuvaustiedostojen luvut (`read_file`, ei työkalun suoritusta): `{disallowed_mcp_schema_reads}`",
+        f"- **SQLite-kuvaustiedoston luku (`read_file` `mcp/sqlite/*.json`):** `{sqlite_schema_reads}` (`{len(sqlite_schema_reads)}` kpl)",
+        f"- **Varsinaisen SQLite-työkalun suoritus (`call_mcp_tool` `sqlite/*`):** `{sqlite_tool_executions}` (`{len(sqlite_tool_executions)}` kpl)",
+        f"- Muut työtilan ulkopuoliset polut (ei-MCP-kuvaustiedostot): `{non_schema_outside_paths}`",
         "",
         "## 3. Ajon rajoitteet",
         "",
         "- Antigravity CLI `1.5.14` ei sisällä natiivia hakemistolistaustyökalua, joten hakemistorakenne listataan vain lukuoikeuksisella `mcp(filesystem/directory_tree|list_directory|search_files)`-kutsulla, kun `command(*)`, `write_file(*)`, `read_url(*)` ja muut MCP-palvelimet on estetty `cli_settings.json`-tiedostossa (ilman `--dangerously-skip-permissions`-lippua).",
-        "- Koska natiivi `read_file` on oletuksena avoin polkujen lukuun paikallisten estojen ulkopuolella, synteettinen koe pidetään erillään suojatusta tutkimusaineistosta ja jokaisen työkalukutsun polku tarkistetaan jälkikäteen `stream-json`-lokista.",
+        "- Koska natiivi `read_file` on oletuksena avoin polkujen lukuun paikallisten estojen ulkopuolella, synteettinen koe pidetään erillään suojatusta tutkimusaineistosta ja jokaisen työkalukutsun polku tarkistetaan jälkikäteen `stream-json`-lokista säilyttäen tiukan sallittujen polkujen rajauksen.",
     ]
     report_md_path.parent.mkdir(parents=True, exist_ok=True)
     report_md_path.write_text("\n".join(md_lines) + "\n", encoding="utf-8")
@@ -595,6 +650,8 @@ def main(argv: list[str] | None = None) -> int:
             )
             print(
                 f"evaluated primary_criterion_pass={rep['primary_criterion_pass']} "
+                f"source_search_pass={rep['source_search_pass']} "
+                f"log_compliance_pass={rep['log_compliance_pass']} "
                 f"tool_calls={rep['tool_calls_count']}"
             )
             return 0 if rep["primary_criterion_pass"] else 1

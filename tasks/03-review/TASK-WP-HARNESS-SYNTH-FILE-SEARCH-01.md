@@ -3,7 +3,7 @@
 ## Context
 
 - Projekti: `PRJ-ANTIGRAVITY-HARNESS` (aktiivinen; pilotti-PR #248 yhdistetty `origin/main`-commitiin `6e68aaacc210e573a3ebeb509708eda91f540797` ja perustamis-PR #249 yhdistetty `origin/main`-commitiin `463e020f727ec2fc64e2d3dd4207ffda46442798`).
-- Tavoite: toteuttaa ja todentaa ensimmäinen varsinainen harness-työpaketti `WP-HARNESS-SYNTH-FILE-SEARCH-01`, jonka ensimmäisenä onnistumiskriteerinä tuore Antigravity CLI -istunto löytää erillisestä synteettisestä työtilasta oikean lähdetiedoston ja osoittaa kohderivin täsmällisellä viitteellä sekä vertaa tulosta ennakolta lukittuihin odotuksiin (löydetyt lähteet, perustellut ja perusteettomat päätelmät sekä ajon rajoitteet). B- ja B′-ohjeiden vertailu tehdään seuraavassa vaiheessa tämän tiedostopohjaisen lähtötason toimivuuden jälkeen.
+- Tavoite: toteuttaa ja todentaa ensimmäinen varsinainen harness-työpaketti `WP-HARNESS-SYNTH-FILE-SEARCH-01`, jonka ensimmäisenä onnistumiskriteerinä tuore Antigravity CLI -istunto löytää erillisestä synteettisestä työtilasta oikean lähdetiedoston ja osoittaa kohderivin täsmällisellä viitteellä sekä vertaa tulosta ennakolta lukittuihin odotuksiin. Arviointiraportissa näytetään erikseen lähdehaun tulos (`source_search_pass`) ja lokissa havaittujen työkalujen ja polkujen sääntöjenmukaisuus (`log_compliance_pass`, ml. SQLite-kuvaustiedoston luku erillään varsinaisen SQLite-työkalun suorituksesta) säilyttäen tiukan yhdistetyn kriteerin (`primary_criterion_pass`) ja sen sallittujen polkujen rajauksen.
 - Pohjarevisio: varmennettu `origin/main` `463e020f727ec2fc64e2d3dd4207ffda46442798` erillisessä puhtaassa työpuussa `wp-harness-synth-file-search-01` (`chore/wp-harness-synth-file-search-01`). Pilottinäytön työpuu (`agy-aim1-nb-trace-pilot-20261121`), perustamistyöpuu (`antigravity-harness-registry-20261122`) ja jaettu `919b5cc`-päätyöpuu säilytetään koskemattomina.
 
 ## Inputs
@@ -19,7 +19,7 @@
 - Toistettava ajo- ja arviointiohje toiselle istunnolle: `tools/antigravity_harness/README.md`.
 - Päivitetty projektitietue: `docs/governance/project_registry/PRJ-ANTIGRAVITY-HARNESS.md`.
 - Tämä tehtäväkortti katselmointitilassa: `tasks/03-review/TASK-WP-HARNESS-SYNTH-FILE-SEARCH-01.md`.
-- Git-ignoroidut ajotulokset ja arviointiartefaktit: `tools/antigravity_harness/outputs/wp_synth_verified_20261122T0901Z/` (sekä alustavan lupa-asetuskokeen `wp_synth_baseline_20261122T0850Z/`) ja `tools/project_registry/outputs/projects.csv`.
+- Git-ignoroidut ajotulokset ja arviointiartefaktit: `tools/antigravity_harness/outputs/wp_synth_verified_20261122T0901Z/`, riippumattoman toistoajon `tools/antigravity_harness/outputs/synth_run_rep2_20261122T0930Z/` (sekä alustavan lupa-asetuskokeen `wp_synth_baseline_20261122T0850Z/`) ja `tools/project_registry/outputs/projects.csv`.
 - Sallitut kirjoituspolut:
   - `tasks/01-ready/TASK-WP-HARNESS-SYNTH-FILE-SEARCH-01.md`
   - `tasks/02-in-progress/TASK-WP-HARNESS-SYNTH-FILE-SEARCH-01.md`
@@ -29,29 +29,32 @@
   - `tools/antigravity_harness/README.md`
   - `docs/governance/project_registry/PRJ-ANTIGRAVITY-HARNESS.md`
   - ignoroidut `tools/antigravity_harness/outputs/**` ja `tools/project_registry/outputs/projects.csv`
-- Toimitusraja: paikallinen katselmointivalmis commit (`03-review`) tässä erillisessä työpuussa. Ei `git push`-, PR-, `merge`- tai `04-done`-toimia ilman erillistä valtuutusta.
+- Toimitusraja: alkuperäinen valtuutus kattoi paikallisen `03-review`-commitin, ja 22.11.2026 jatkovaltuutukset kattavat haaran `chore/wp-harness-synth-file-search-01` pushin, katselmointi-PR #250:n avaamisen, riippumattoman toistoajon sekä arviointiraportin erittelyviimeistelyn PR #250:een. Ei `main`-mergeä, `04-done`-siirtoa eikä työpuun siivousta.
 
 ## Definition of Done (DoD)
 
 - Synteettinen työtila generoidaan repon ulkopuoliseen tyhjään hakemistoon ilman suojattua tutkimusaineistoa, ja ennakolta lukittu vastausavain tallennetaan työtilan ulkopuolelle ennen ajoa.
-- Tuore Antigravity CLI -istunto suorittaa tiedostopohjaisen haun synteettisessä työtilassa (`workspace_read_count > 0`, `outside_workspace_paths == []`, `forbidden_tools_used == []`), löytää oikean lähdetiedoston kilpailevien harhautustiedostojen joukosta ja osoittaa kohderivin täsmällisellä tiedosto- ja riviviitteellä.
-- Raportti ja arvioija dokumentoivat löydetyt lähteet, perustellut ja perusteettomat päätelmät sekä ajon rajoitteet, ja ohje (`tools/antigravity_harness/README.md`) mahdollistaa kokeen toistamisen toisessa istunnossa.
-- Yksikkötestit (sekä Termuxissa että Linuxissa), rekisterin `--verify-guard` / `--print-source-hash` / CSV-tarkistukset, Prettier/markdownlint ja `tools/run-gates.sh --mode pre-push --smoke` läpäisevät.
+- Tuore Antigravity CLI -istunto ja sen riippumaton toisto suorittavat tiedostopohjaisen haun synteettisessä työtilassa, löytävät oikean lähdetiedoston kilpailevien harhautustiedostojen joukosta ja osoittavat kohderivin täsmällisellä tiedosto- ja riviviitteellä.
+- Arviointiraportti näyttää erikseen lähdehaun tuloksen (`source_search_pass`) sekä lokin työkalujen ja polkujen sääntöjenmukaisuuden (`log_compliance_pass`), erottaa SQLite-kuvaustiedoston luvun (`read_file` `mcp/sqlite/*.json`) ja varsinaisen SQLite-työkalun suorituksen (`call_mcp_tool` `sqlite/*`) sekä säilyttää tiukan yhdistetyn kriteerin (`primary_criterion_pass`) ja sen sallittujen polkujen rajauksen.
+- Yksikkötestit (`7/7` Termuxissa ja Linuxissa), rekisterin `--verify-guard` / `--print-source-hash` / CSV-tarkistukset, Prettier/markdownlint ja `tools/run-gates.sh --mode pre-push --smoke` läpäisevät.
 
 ## Log
 
 - 2026-11-22T08:46:00Z: Kortti luotu `tasks/01-ready/`-kansioon varmennetusta `origin/main`-revisiosta `463e020f727ec2fc64e2d3dd4207ffda46442798` erillisessä työpuussa `wp-harness-synth-file-search-01`, `PRJ-ANTIGRAVITY-HARNESS.md` tarkistettu `--verify-guard`-suojalla (`OK`) ja kortti siirretty `tasks/02-in-progress/`-tilaan.
-- 2026-11-22T08:53:14Z: Ensimmäisessä alustavassa koeajossa (`12d6ed64-5be2-4c87-b1ab-7cc8f13fb0a3`, vastausavain `137302bc…`) malli löysi oikean lähdetiedoston `runs/20261119_model_s2_primary/model_estimates.tsv` ja rivin `4`, mutta lippu `--dangerously-skip-permissions` sekä väärän muotoiset `run_command`-estot päästivät läpi `run_command`-yrityksen. Tarkistettiin `agy`:n virallinen lupasyntaksi (`command(*)`, `write_file(*)`, `read_url(*)`, `mcp(...)` ilman `--dangerously-skip-permissions`-lippua) ja todennettiin erillisellä savutestillä, että `command(*)` ja `mcp(shell/*)` estävät komentosuorituksen teknisesti, mutta `read_file(<polku>/**)` ei estä natiivia `read_file`-kutsua.
-- 2026-11-22T09:06:42Z: **Varmennettu synteettinen tiedostohakuajo (`wp_synth_verified_20261122T0901Z`, `PASS`):** Lukittiin vastausavain ennen ajoa (`05eaf5b1863a5359eb3a64b000f35408b70f3fb167707f0129d6cabf79f30a5c`). Tuore `agy`-istunto (`da5edbee-d179-4ad7-9b84-866d5153b5e7`, `gemini-4-carbon-medium`, `effort=medium`, `186.19 s`, `30 594` tokenia, vastaus SHA-256 `e83fe5e8a5507b592b858ee44943f31aa84afb2f6091e6741e105927f449a1ab`) suoritti `11` työkalukutsua (`1` `mcp(filesystem/directory_tree)`, `3` MCP-skeemalukua ja `7` `read_file`-lukua synteettisen työtilan sisällä; `outside_workspace_paths = []`, `forbidden_tools_used = []`). Istunto tunnisti käsikirjoituksen rivin `17` (`manuscripts/SYNTH_COHORT_REVIEW_20261120.qmd`), löysi ensisijaisen lähdetiedoston `runs/20261119_model_s2_primary/model_estimates.tsv` kohderivin `rivi 4` tarkkoine arvoineen (`1.4204`, `1.1102`, `1.8173`, `0.0052`) sekä ajomanifestin (`run_manifest.json`), hylkäsi kaikki kolme harhautustiedostoa oikein perustein ja jätti QMD-siirtotavan (`käsin vai ulkoisella skriptillä`), `Recurrent fall rate` -nimikkeen koodikirjan, ylävirran `SYNTH_PANEL_V2`-syötteen ja SHA-256-tarkistussumman komentorivilaskennan eksplisiittisesti avoimiksi.
-- 2026-11-22T09:08:30Z: Päivitettiin `PRJ-ANTIGRAVITY-HARNESS.md`, ajettiin yksikkötestit Termuxissa ja Debian Linuxissa, rekisteritarkistukset ja toimitusportit sekä siirrettiin kortti `tasks/03-review/`-kansioon paikalliseen katselmointiin.
+- 2026-11-22T08:53:14Z: Alustavassa koeajossa (`12d6ed64-5be2-4c87-b1ab-7cc8f13fb0a3`, vastausavain `137302bc…`) malli löysi oikean lähdetiedoston ja rivin `4`, mutta `--dangerously-skip-permissions` ohitti estolistan. Tarkistettiin virallinen lupasyntaksi (`command(*)`, `write_file(*)`, `read_url(*)`, `mcp(...)` ilman `--dangerously-skip-permissions`-lippua) ja todennettiin savutestillä, että `command(*)` ja `mcp(shell/*)` estävät suorituksen teknisesti, mutta `read_file(<polku>/**)` ei estä natiivia `read_file`-kutsua.
+- 2026-11-22T09:06:42Z: **Ajo 1 (`wp_synth_verified_20261122T0901Z`, `da5edbee-d179-4ad7-9b84-866d5153b5e7`, vastausavain `05eaf5b1…`, vastaus `e83fe5e8…`, `186.19 s`, `30 594` tokenia):** `11` työkalukutsua (`7` työtilan `read_file`, `1` `filesystem/directory_tree`, `3` `mcp/filesystem/*.json`-skeemalukua). `source_search_pass = True`, `log_compliance_pass = True`, `primary_criterion_pass = True`: löysi `runs/20261119_model_s2_primary/model_estimates.tsv` `rivi 4` (`1.4204`, `1.1102`, `1.8173`, `0.0052`), hylkäsi kolme harhautustiedostoa ja jätti QMD-siirtotavan avoimeksi.
+- 2026-11-22T09:29:03Z: Commit `58823de0e0bf5aab2b6477a595be4541a7474ae5` puskettiin ja PR #250 avattiin katselmointiin (`8/8` GitHub CI -tarkistusta `SUCCESS`).
+- 2026-11-22T09:33:17Z: **Ajo 2 — riippumaton toisto (`synth_run_rep2_20261122T0930Z`, `4e545ac4-79f6-4dcc-b387-f5ac125263b6`, vastausavain `1ff26b8d…`, vastaus `35905cfc…`, `178.48 s`, `32 626` tokenia):** ajettu uuteen synteettiseen työtilaan ilman Ajon 1 vastausta tai vastausavainta. `source_search_pass = True` (löysi `runs/20261119_model_s2_primary/model_estimates.tsv` `rivi 4` tarkkoine arvoineen ja jätti QMD-siirtotavan avoimeksi), varsinaisia kiellettyjä työkaluja ei suoritettu (`sqlite_tool_executions = []`, `forbidden_tools_used = []`) eikä repon tai vastausavaimen polkuja luettu (`non_schema_outside_paths = []`), mutta alkukartoituksen `read_file` luki kaksi estettyjen työkalujen kuvaustiedostoa (`mcp/sqlite/list_tables.json`, `mcp/sqlite/execute_query.json`), joten tiukka polkurajaus antoi `log_compliance_pass = False` ja `primary_criterion_pass = False`.
+- 2026-11-22T10:36:00Z: Täydennettiin `synth_file_search_fixture.py` ja testit (`7/7 OK`) näyttämään arviointiraportissa erikseen `source_search_pass` ja `log_compliance_pass` sekä erottamaan SQLite-kuvaustiedoston luvun (`sqlite_schema_reads`) varsinaisen SQLite-työkalun suorituksesta (`sqlite_tool_executions`) säilyttäen yhdistetyn kriteerin ja sen sallittujen polkujen rajauksen ennallaan. Päivitettiin tallennettujen Ajon 1 ja Ajon 2 arviointiraportit muuttamatta ajovirtoja tai vastausavaimia ja toimitettiin päivitys PR #250:een.
 
 ## Blockers
 
-- `agy` `1.5.14` natiivi `read_file` ei noudata polkukohtaista `permissions.deny`-rajausta, minkä vuoksi vastausavain on pidettävä kehotteessa nimeämättömässä ulkopuolisessa polussa, ajo on tehtävä ilman suojattua tutkimusaineistoa ja `stream-json`-polkuloki on tarkistettava mekaanisesti jokaisesta ajosta.
-- Etäpush, PR:n avaus, `main`-merge ja aiempien korttien `04-done`-siirto odottavat erillistä ihmispäätöstä.
+- `agy` `1.5.14` natiivi `read_file` voi lukea nimettyjä paikallisia polkuja ja estettyjen MCP-palvelimien `.json`-kuvaustiedostoja ilman suoritusta; siksi tiukka polkurajaus säilytetään mekaanisessa jälkiarvioinnissa ja raportissa näytetään lähdehaun tulos sekä lokin sääntöjenmukaisuus erikseen.
+- Ihmisomistajan katselmointi, `origin/main`-merge ja aiempien korttien `04-done`-siirto odottavat erillistä ihmispäätöstä.
 
 ## Links
 
 - `docs/governance/project_registry/PRJ-ANTIGRAVITY-HARNESS.md`
 - `tools/antigravity_harness/README.md`
 - `tools/antigravity_harness/synth_file_search_fixture.py`
+- [PR #250](https://github.com/Tupatuko2023/Python-R-Scripts/pull/250)

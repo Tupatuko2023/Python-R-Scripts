@@ -5,7 +5,7 @@ Tämä paketti toteuttaa `PRJ-ANTIGRAVITY-HARNESS`-projektin ensimmäisen varsin
 ## Rakenne ja turvarajat
 
 - `tools/antigravity_harness/synth_file_search_fixture.py`: luo deterministisen synteettisen työtilan repon ulkopuoliseen väliaikaishakemistoon (`--workspace-dir`) ja tallettaa ennakkoon lukitun vastausavaimen (`expected_answer_key.json`), lähtötason kehotteen (`prompt_baseline_b.txt`) sekä istuntokohtaisen lupamäärityksen (`cli_settings.json`) erilliseen arviointikansioon (`--eval-dir`). Kieltäytyy ajosta, jos kansiot menevät päällekkäin tai jos työtila osoittaa repon sisälle.
-- `tools/antigravity_harness/tests/test_synth_file_search_fixture.py`: yksikkötestit deterministiselle generoinnille, hakemistoeristykselle, `cli_settings.json`-säännöille ja `stream-json`-arvioinnille.
+- `tools/antigravity_harness/tests/test_synth_file_search_fixture.py`: yksikkötestit deterministiselle generoinnille, hakemistoeristykselle, `cli_settings.json`-säännöille sekä lähdehaun tuloksen ja lokisääntöjenmukaisuuden (ml. SQLite-kuvaustiedostoluvun ja SQLite-työkalusuorituksen) erottelulle.
 - `tools/antigravity_harness/outputs/`: Git-ignoroitu (`**/outputs/`) tuloshakemisto ajokohtaisille vastausavaimille, `stream-json`-tapahtumavirroille ja arviointiraporteille.
 
 ## Toistettava ajo-ohje (toinen istunto)
@@ -43,11 +43,14 @@ python tools/antigravity_harness/synth_file_search_fixture.py evaluate \
   --report-md "${OUT_DIR}/evaluation_report.md"
 ```
 
-## Ensimmäisen vaiheen onnistumiskriteeri ja tunnetut rajoitteet
+## Arviointiraportin kriteerit ja tunnetut rajoitteet
 
-1. **Ensimmäinen onnistumiskriteeri (`primary_criterion_pass`):** tuore CLI-istunto lukee synteettisen työtilan tiedostoja (`workspace_read_count > 0`) ilman kiellettyjä työkaluja tai työtilan ulkopuolisia datapolkuja (`workspace_isolated == True`), erottaa oikean lähdetiedoston `runs/20261119_model_s2_primary/model_estimates.tsv` kolmesta harhautustiedostosta ja osoittaa kohderivin täsmällisellä viitteellä (`rivi 4` / `L4`, arvot `1.4204`, `1.1102`, `1.8173`, `0.0052`).
+1. **Arviointiraportin kolmitasoinen erittely (yhdistetty kriteeri ja sallittujen polkujen rajaus säilytettyinä):**
+   - **Lähdehaun tulos (`source_search_pass`):** tuore istunto lukee synteettisen työtilan tiedostoja (`workspace_read_count > 0`), erottaa oikean lähdetiedoston `runs/20261119_model_s2_primary/model_estimates.tsv` kolmesta harhautustiedostosta ja osoittaa kohderivin täsmällisellä viitteellä (`rivi 4` / `L4`, arvot `1.4204`, `1.1102`, `1.8173`, `0.0052`).
+   - **Työkalujen ja polkujen sääntöjenmukaisuus (`log_compliance_pass` / `workspace_isolated`):** yhtäkään kiellettyä työkalua ei suoriteta (`tool_execution_compliant == True`) ja kaikki luetut polut pysyvät synteettisen työtilan sisällä tai sallituissa `antigravity-cli/mcp/filesystem/{directory_tree,list_directory,search_files}.json`-kuvaustiedostoissa (`path_scope_compliant == True`). Raportti näyttää aina erillisinä tapahtumina mahdollisen **SQLite-kuvaustiedoston luvun** (`read_file` `mcp/sqlite/*.json`) ja **varsinaisen SQLite-työkalun suorituksen** (`call_mcp_tool` `sqlite/*`) sekä muut ulkopuoliset polut.
+   - **Yhdistetty ensisijainen kriteeri (`primary_criterion_pass`):** vaatii molempien toteutumisen (`source_search_pass and log_compliance_pass`).
 2. **Empiiriset alustarajoitteet (`agy` `1.5.14`):**
    - `agy` `1.5.14` ei sisällä natiivia hakemistolistaustyökalua, joten hakemistojen selaus sallitaan `cli_settings.json`-tiedostossa vain lukuoikeuksisille `mcp(filesystem/directory_tree|list_directory|search_files)`-kutsuille samalla kun `command(*)`, `write_file(*)`, `read_url(*)` ja kaikki muut MCP-palvelimet estetään teknisesti.
    - Lippu `--dangerously-skip-permissions` ohittaa `permissions.deny`-säännöt kokonaan, joten sitä ei saa käyttää eristetyissä ajoissa.
-   - Empiirisen savutestin perusteella `read_file(<polku>/**)`-estosääntö `permissions.deny`-listassa **ei** estä natiivia `read_file`-työkalua lukemasta nimettyä paikallista polkua. Siksi vastausavain on pidettävä työtilan ulkopuolisessa, kehotteessa nimeämättömässä polussa, kokeessa ei saa olla suojattua tutkimusaineistoa samalla käyttäjätunnuksella ja jokainen `read_file`-kutsu on tarkistettava jälkikäteen `stream-json`-tapahtumavirrasta (`outside_workspace_paths == []`).
-3. **Seuraava vaihe:** kun tämä tiedostopohjainen lähtötaso toimii ja toinen istunto pystyy toistamaan sen, saman synteettisen työtilan ja arvioijan päällä voidaan verrata B- ja B′-ohjeita (mekanismin lähteen vaatimus).
+   - Empiirisen savutestin perusteella `read_file(<polku>/**)`-estosääntö `permissions.deny`-listassa **ei** estä natiivia `read_file`-työkalua lukemasta nimettyä paikallista polkua tai estettyjen MCP-palvelimien staattisia `.json`-kuvaustiedostoja. Siksi vastausavain on pidettävä työtilan ulkopuolisessa, kehotteessa nimeämättömässä polussa, kokeessa ei saa olla suojattua tutkimusaineistoa samalla käyttäjätunnuksella ja jokainen `read_file`-kutsu tarkistetaan `stream-json`-tapahtumavirrasta.
+3. **Seuraava vaihe:** tämän tiedostopohjaisen lähtötason päällä voidaan verrata B- ja B′-ohjeita (mekanismin lähteen vaatimus) samoilla tiedostoilla ja työkaluilla.

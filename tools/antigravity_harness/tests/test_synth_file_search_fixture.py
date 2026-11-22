@@ -11,6 +11,16 @@ if str(TOOLS_DIR) not in sys.path:
 import synth_file_search_fixture as fixture  # noqa: E402
 
 
+VALID_RESPONSE_FI = (
+    "1. Käsikirjoitus: `manuscripts/SYNTH_COHORT_REVIEW_20261120.qmd` rivi 17.\n"
+    "2. Päälähde: `runs/20261119_model_s2_primary/model_estimates.tsv` rivi 4 "
+    "(`1.4204`, `1.1102`, `1.8173`, `0.0052`), manifesti "
+    "`runs/20261119_model_s2_primary/run_manifest.json`.\n"
+    "3. Hylätyt: `runs/20261118_model_s2_prelim/model_estimates.tsv`.\n"
+    "4. Siirtotapa QMD-taulukkoon jää avoimeksi (ei voida todentaa onko käsin vai ulkoisella skriptillä).\n"
+)
+
+
 class SynthFileSearchFixtureTests(unittest.TestCase):
     def test_materialize_is_deterministic_and_writes_cli_settings(self) -> None:
         with tempfile.TemporaryDirectory() as tmp1, tempfile.TemporaryDirectory() as tmp2:
@@ -49,14 +59,6 @@ class SynthFileSearchFixtureTests(unittest.TestCase):
             ev = base / "eval"
             fixture.materialize(ws, ev)
 
-            response = (
-                "1. Käsikirjoitus: `manuscripts/SYNTH_COHORT_REVIEW_20261120.qmd` rivi 17.\n"
-                "2. Päälähde: `runs/20261119_model_s2_primary/model_estimates.tsv` rivi 4 "
-                "(`1.4204`, `1.1102`, `1.8173`, `0.0052`), manifesti "
-                "`runs/20261119_model_s2_primary/run_manifest.json`.\n"
-                "3. Hylätyt: `runs/20261118_model_s2_prelim/model_estimates.tsv`.\n"
-                "4. Siirtotapa QMD-taulukkoon jää avoimeksi (ei voida todentaa onko käsin vai ulkoisella skriptillä).\n"
-            )
             events = [
                 {
                     "event": "init",
@@ -120,7 +122,7 @@ class SynthFileSearchFixtureTests(unittest.TestCase):
                     "result": {
                         "conversation_id": "conv-synth-pass",
                         "status": "SUCCESS",
-                        "response": response,
+                        "response": VALID_RESPONSE_FI,
                         "duration_seconds": 12.3,
                         "num_turns": 1,
                         "usage": {"input_tokens": 1000, "output_tokens": 200},
@@ -135,9 +137,170 @@ class SynthFileSearchFixtureTests(unittest.TestCase):
                 ev, stream_file, base / "report.json", base / "report.md"
             )
             self.assertTrue(rep["primary_criterion_pass"])
+            self.assertTrue(rep["source_search_pass"])
+            self.assertTrue(rep["log_compliance_pass"])
             self.assertTrue(rep["checks"]["workspace_isolated"])
             self.assertEqual(rep["mcp_schema_reads"], ["directory_tree.json"])
+            self.assertEqual(rep["sqlite_schema_reads"], [])
+            self.assertEqual(rep["sqlite_tool_executions"], [])
             self.assertFalse(rep["checks"]["unsupported_manual_copy_claim"])
+
+    def test_sqlite_schema_read_without_tool_execution_separates_source_and_log(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            ws = base / "ws"
+            ev = base / "eval"
+            fixture.materialize(ws, ev)
+
+            events = [
+                {
+                    "event": "init",
+                    "conversation_id": "conv-sqlite-schema-only",
+                    "init": {"model": "gemini-4-carbon-medium", "cwd": str(ws)},
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 1,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": "/home/user/.gemini/antigravity-cli/mcp/sqlite/list_tables.json"
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 2,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "runs/20261119_model_s2_primary/model_estimates.tsv"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "result",
+                    "result": {
+                        "conversation_id": "conv-sqlite-schema-only",
+                        "status": "SUCCESS",
+                        "response": VALID_RESPONSE_FI,
+                        "duration_seconds": 10.0,
+                        "num_turns": 1,
+                        "usage": {},
+                    },
+                },
+            ]
+            stream_file = base / "sqlite_schema.jsonl"
+            stream_file.write_text(
+                "\n".join(json.dumps(e) for e in events) + "\n", encoding="utf-8"
+            )
+            md_path = base / "sqlite_schema.md"
+            rep = fixture.evaluate(
+                ev, stream_file, base / "sqlite_schema.json", md_path
+            )
+            self.assertTrue(rep["source_search_pass"])
+            self.assertFalse(rep["log_compliance_pass"])
+            self.assertFalse(rep["primary_criterion_pass"])
+            self.assertTrue(rep["checks"]["tool_execution_compliant"])
+            self.assertFalse(rep["checks"]["path_scope_compliant"])
+            self.assertEqual(rep["sqlite_schema_reads"], ["list_tables.json"])
+            self.assertEqual(rep["sqlite_tool_executions"], [])
+            self.assertEqual(rep["non_schema_outside_paths"], [])
+            md_text = md_path.read_text(encoding="utf-8")
+            self.assertIn("**Lähdehaun tulos (`source_search_pass`):** `PASS`", md_text)
+            self.assertIn(
+                "**Työkalujen ja polkujen sääntöjenmukaisuus (`log_compliance_pass`):** `FAIL`",
+                md_text,
+            )
+            self.assertIn("SQLite-kuvaustiedoston luku", md_text)
+            self.assertIn("Varsinaisen SQLite-työkalun suoritus", md_text)
+
+    def test_sqlite_tool_execution_recorded_separately_from_schema_read(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            ws = base / "ws"
+            ev = base / "eval"
+            fixture.materialize(ws, ev)
+
+            events = [
+                {
+                    "event": "init",
+                    "conversation_id": "conv-sqlite-exec",
+                    "init": {"model": "gemini-4-carbon-medium", "cwd": str(ws)},
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 1,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "call_mcp_tool",
+                        "tool_info": {
+                            "parameters": {
+                                "ServerName": "sqlite",
+                                "ToolName": "execute_query",
+                                "Arguments": {"query": "SELECT 1"},
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "step_update",
+                    "step_update": {
+                        "step_index": 2,
+                        "state": "DONE",
+                        "step_type": "tool",
+                        "tool_name": "read_file",
+                        "tool_info": {
+                            "parameters": {
+                                "Path": str(
+                                    ws / "runs/20261119_model_s2_primary/model_estimates.tsv"
+                                )
+                            }
+                        },
+                    },
+                },
+                {
+                    "event": "result",
+                    "result": {
+                        "conversation_id": "conv-sqlite-exec",
+                        "status": "SUCCESS",
+                        "response": VALID_RESPONSE_FI,
+                        "duration_seconds": 9.0,
+                        "num_turns": 1,
+                        "usage": {},
+                    },
+                },
+            ]
+            stream_file = base / "sqlite_exec.jsonl"
+            stream_file.write_text(
+                "\n".join(json.dumps(e) for e in events) + "\n", encoding="utf-8"
+            )
+            rep = fixture.evaluate(
+                ev, stream_file, base / "sqlite_exec.json", base / "sqlite_exec.md"
+            )
+            self.assertTrue(rep["source_search_pass"])
+            self.assertFalse(rep["log_compliance_pass"])
+            self.assertFalse(rep["primary_criterion_pass"])
+            self.assertFalse(rep["checks"]["tool_execution_compliant"])
+            self.assertTrue(rep["checks"]["path_scope_compliant"])
+            self.assertEqual(rep["sqlite_schema_reads"], [])
+            self.assertEqual(rep["sqlite_tool_executions"], ["execute_query"])
+            self.assertIn(
+                "call_mcp_tool(sqlite/execute_query)", rep["forbidden_tools_used"]
+            )
 
     def test_evaluate_fails_escape_or_forbidden_tool_and_flags_manual_copy(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -198,6 +361,8 @@ class SynthFileSearchFixtureTests(unittest.TestCase):
                 ev, stream_file, base / "bad_report.json", base / "bad_report.md"
             )
             self.assertFalse(rep["primary_criterion_pass"])
+            self.assertFalse(rep["source_search_pass"])
+            self.assertFalse(rep["log_compliance_pass"])
             self.assertFalse(rep["checks"]["workspace_isolated"])
             self.assertIn("run_command", rep["forbidden_tools_used"])
             self.assertTrue(rep["checks"]["wrong_distractor_as_primary"])
