@@ -2,20 +2,20 @@
 id: "PRJ-AIM1-REPO"
 title: "AIM1:n erillinen analyysirepo"
 short_name: "AIM1-analyysirepo"
-repo: "Tupatuko2023/Python-R-Scripts"
+repo: "Tupatuko2023/frailty-healthcare-use-costs"
 repo_ref: "origin/main"
 state: "active"
-delivery: "not_delivered"
+delivery: "delivered"
 goal: "Rakentaa erillinen, katselmoitava ja myöhemmin julkistamiseen soveltuva AIM1-analyysirepo lähdekriittisesti dokumentoiduista työpaketeista."
 done_criterion: "AIM1:n sovittu analyysikoodi, lähde- ja tutkimuspäätösrajaukset, synteettiset testit ja julkaisuvalmiuden erillinen arvio on hyväksytty; projekti suljetaan vain ihmisomistajan päätöksellä."
-latest_status: "2026-11-21: Neurologisen yhdistelmän rajattu lähdesidonta toimitettiin PR #245:ssa mainiin hyväksytyltä täsmärevisiolta. Aiempien kahdeksan komponentin toteutus ja tekninen sulku toimitettiin PR:issä #242 ja #243. AIM1-projekti jatkuu aktiivisena."
-next_step: "Hanki kymmenen muun komponentin kenttäkohtainen lähde- ja päätösnäyttö erillisissä tehtävissä. Varmenna nykyisen §3.1:n täsmäversio ja käsittele AIM1-kohderepon julkaisupäätös erikseen."
+latest_status: "Paikallinen K51/AUTH_SOURCE-, E1-, E2/E3 v2- ja kustannuskoodin siirto hyväksyttiin ja neljä siirtokorttia suljettiin. Julkaisuvaltuutus toteutettiin tällä koodikokonaisuudella: julkisen AIM1-repon main toimitettiin ja varmennettiin commitissa 1a4432e989a6835b35e4d0173fa61649dcfe4ee3."
+next_step: "Suojattu toistoajo kohdereposta on tekemättä. Sen valmistelu on erillinen jatkotyö, jossa yksilöidään historialliset ulkoiset apumoduuliversiot, suojatut syötteet ja ajovaltuutus."
 source_description_sha256: "25ebce316d938aa2111dd9df66cddf649ee68d2249e1444599305f5b0da76507"
 source_captured_at: "2026-11-19"
-observed_at: "2026-11-21"
-observed_commit: "7f544327e6ddcf0fa456d4eafcbc01f1f5f1a270"
-observed_worktree_label: "aim1-deac-neurological-binding-20261121"
-blocker: "AIM1-kohderepon erillinen julkaisupäätös puuttuu; kahden aiemman Python-täsmäversion MIT-sisällytysoikeus on vahvistettu. Nykyisen §3.1:n täsmäversio sekä hyväksyntä- ja korvaavuusketju puuttuvat tieteellisestä vastaavuustarkistuksesta. Kymmenen muun komponentin sidontaa odottavat kenttäkohtaiset vastauslegendat, aistitoimintojen päätösnäyttö, versioidut MOI-ohjeet, kipuasteikon kuvaus sekä suorituskykytestien protokollat ja poikkeuskoodit."
+observed_at: "2026-11-22"
+observed_commit: "1a4432e989a6835b35e4d0173fa61649dcfe4ee3"
+observed_worktree_label: "aim1-public-release-tracking-20261122"
+blocker: "Historiallisen päästä päähän -täsmätoiston apumoduuliversiot ovat osittain varmentamatta. Historialliset tutkimussyötteet, konfiguraatiot ja niitä valmistelevat adapterit ovat kohderepon ulkopuolella. Kustannustulkinnan lähderajat, §3.1:n täsmäversio ja alkuperäiset D-010/D-012-päätösotteet ovat erillisiä tieteellisen dokumentoinnin avoimia kysymyksiä."
 orchestrator: "Owner"
 agent: "Termux Codex"
 agent_tool: "Codex"
@@ -24,7 +24,7 @@ started_date: "2026-11-19"
 paused_date: ""
 completed_date: ""
 pause_reason: ""
-link: "https://github.com/Tupatuko2023/Python-R-Scripts/pull/245"
+link: "https://github.com/Tupatuko2023/frailty-healthcare-use-costs"
 worktree_inventory: "unknown"
 tasks:
   - "AIM1_REPO_WP1_20261119"
@@ -53,14 +53,18 @@ yksittäisen työpaketin valmistumisesta.
 
 ## Tehtäväviitteet
 
-| repo                            | task                                                   | path                                                                    |
-| ------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------- |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_REPO_WP1_20261119`                               | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                               |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_WP1_CLEANUP_20261120`                            | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`                            |
-| `Tupatuko2023/Python-R-Scripts` | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120`                | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`                |
-| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-WALK500-FIRST-BINDING`                | `tasks/04-done/TASK-DEAC20-K40-WALK500-FIRST-BINDING.md`                |
-| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121`     | `tasks/04-done/TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121.md`     |
-| `Tupatuko2023/Python-R-Scripts` | `TASK-DEAC20-K40-NEUROLOGICAL-SOURCE-BINDING-20261121` | `tasks/04-done/TASK-DEAC20-K40-NEUROLOGICAL-SOURCE-BINDING-20261121.md` |
+| repo                                        | task                                                   | path                                                                    |
+| ------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `Tupatuko2023/Python-R-Scripts`             | `AIM1_REPO_WP1_20261119`                               | `tasks/04-done/AIM1_REPO_WP1_20261119.md`                               |
+| `Tupatuko2023/Python-R-Scripts`             | `AIM1_WP1_CLEANUP_20261120`                            | `tasks/04-done/AIM1_WP1_CLEANUP_20261120.md`                            |
+| `Tupatuko2023/Python-R-Scripts`             | `AIM1_AUTHORITY_SOURCE_REVIEW_20261120`                | `tasks/04-done/AIM1_AUTHORITY_SOURCE_REVIEW_20261120.md`                |
+| `Tupatuko2023/Python-R-Scripts`             | `TASK-DEAC20-K40-WALK500-FIRST-BINDING`                | `tasks/04-done/TASK-DEAC20-K40-WALK500-FIRST-BINDING.md`                |
+| `Tupatuko2023/Python-R-Scripts`             | `TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121`     | `tasks/04-done/TASK-DEAC20-K40-EIGHT-VERIFIED-BINDINGS-20261121.md`     |
+| `Tupatuko2023/Python-R-Scripts`             | `TASK-DEAC20-K40-NEUROLOGICAL-SOURCE-BINDING-20261121` | `tasks/04-done/TASK-DEAC20-K40-NEUROLOGICAL-SOURCE-BINDING-20261121.md` |
+| `Tupatuko2023/frailty-healthcare-use-costs` | `TASK-AIM1-K51-CODE-TRANSFER-20261122`                 | `tasks/04-done/TASK-AIM1-K51-CODE-TRANSFER-20261122.md`                 |
+| `Tupatuko2023/frailty-healthcare-use-costs` | `TASK-AIM1-E1-NB-RUNNER-TRANSFER-20261122`             | `tasks/04-done/TASK-AIM1-E1-NB-RUNNER-TRANSFER-20261122.md`             |
+| `Tupatuko2023/frailty-healthcare-use-costs` | `TASK-AIM1-E2E3-NB-RUNNER-TRANSFER-20261122`           | `tasks/04-done/TASK-AIM1-E2E3-NB-RUNNER-TRANSFER-20261122.md`           |
+| `Tupatuko2023/frailty-healthcare-use-costs` | `TASK-AIM1-COST-RUNNER-TRANSFER-20261122`              | `tasks/04-done/TASK-AIM1-COST-RUNNER-TRANSFER-20261122.md`              |
 
 ## Jatkamismuistio
 
@@ -151,6 +155,47 @@ nykyistä §3.1:tä eikä valtuuta AIM1-kohderepon julkaisua.
 - Neurologisen yhdistelmän eristetty sidonta ja synteettiset testit toimitettiin
   mainiin PR #245:ssa omistajan täsmähyväksynnän jälkeen. Tuotantorivin ja
   metadatan saman snapshotin alkuperä on myöhemmän tuotantokäytön erillinen ehto.
+
+- 2026-11-22: Ajomanifestin 20261005T105241Z viisi puuttuvaa Python-tiedostoa
+  siirrettiin paikalliseen AIM1-kohderepoon. Kuuden moduulin tiivisteet
+  täsmäsivät. Kohderepon testit 19/19 ja historiallinen synteettinen
+  regressiosarja 334/334 läpäisivät. Kohderepon työhaaran commit on
+  `a3d1705fae3efe9c00fe75525a2206b5f0ec306e`.
+
+- 2026-11-22: E1:n alkuperäinen NB-ajuri kopioitiin tavutarkasti AIM1-kohderepon
+  työhaaraan. Synteettinen testi varmisti neljän mallin JSON-koosteen ja
+  kolme syötehylkäystä. Paikallinen commit on `f90293bf56a05df125d1d5a7b71ffcd8d2913eca`.
+
+- 2026-11-22: E2/E3 v2:n alkuperäinen NB-ajuri kopioitiin tavutarkasti
+  AIM1-kohderepon työhaaraan K51- ja E1-committien päälle. Synteettinen
+  rajapintatesti varmisti neljän mallin JSON- ja PDF-tulosteet,
+  syötevirheet ja estimoimattoman tapauksen. Paikallinen commit on
+  `c5c2779bb1c450f5f5a94b5bf4349c5c49da2332`.
+
+- 2026-11-22: Käsikirjoituksen kaksiosaisen kustannusmallin v2-ajuri
+  kopioitiin tavutarkasti paikalliseen AIM1-kohderepoon. Synteettinen
+  testi varmisti molemmat malliosat, yhdistetyt ennusteet, bootstrapin
+  ja syötehylkäykset. Paikallinen commit on
+  `7cdfa349f2d07391b8861273c68742c1aaafce31`.
+
+- 2026-11-22: Ihmisomistajan yksi täsmähyväksyntä koski paikallista
+  AIM1-revisiota `a80b84e6556813aabadd94062cbdc40d35da588d`.
+  Neljä olemassa olevaa siirtokorttia siirrettiin `04-done`-jonoon
+  paikallisessa sulkucommitissa `48f8134f1e591476704a660ce786bb02a3a7d85f`.
+  Tässä vaiheessa PRS-seuranta oli paikallinen ja julkaisuvaltuutus
+  oli vielä avoin.
+
+- 2026-11-22: AIM1-koodikokonaisuus toimitettiin julkisen
+  [AIM1-repon](https://github.com/Tupatuko2023/frailty-healthcare-use-costs)
+  `main`-haaraan. GitHubista varmennettiin näkyvyys, commit
+  `1a4432e989a6835b35e4d0173fa61649dcfe4ee3` ja puu `b240bd9498d7025349915dc50143c4035ab9bfe0`.
+  Julkaisuhistoria muodostettiin hyväksytystä paikallisesta sulkuversiosta
+  `48f8134f1e591476704a660ce786bb02a3a7d85f`, joka säilyy palautettavana. Julkaisusta rajattiin
+  yksityisen hyväksyntänäytön viitteet ja paikallinen commit-metadata.
+  Koodi, testit ja MIT-lisenssiteksti vastaavat hyväksyttyä sisältöä.
+  Julkaisuvaltuutus toteutettiin tämän toimitetun sisällön osalta.
+  Koodirepon toimitus on valmis ja tutkimusprojektin tila on edelleen
+  aktiivinen. Suojattu toistoajo kuuluu erilliseen jatkotyöhön.
 
 ## Worktree-havainnot
 
