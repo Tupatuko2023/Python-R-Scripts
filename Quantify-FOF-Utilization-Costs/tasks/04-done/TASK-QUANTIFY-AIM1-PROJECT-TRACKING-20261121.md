@@ -16,9 +16,9 @@
 ## Outputs
 
 - `docs/governance/project_registry/PRJ-QUANTIFY-AIM1-UTILIZATION-COSTS.md` ja sen ohjeenmukainen, ignoroitu CSV-näkymä.
-- Tämä tehtäväkortti `03-review`-tilassa, kun dokumentaatiomuutos ja tarkistukset valmistuvat.
-- Sallitut kirjoituspolut: `Quantify-FOF-Utilization-Costs/tasks/01-ready/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `Quantify-FOF-Utilization-Costs/tasks/02-in-progress/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `Quantify-FOF-Utilization-Costs/tasks/03-review/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `docs/governance/project_registry/PRJ-QUANTIFY-AIM1-UTILIZATION-COSTS.md`, ignoroitu `tools/project_registry/outputs/projects.csv`.
-- Toimitusraja: alkuperäinen valtuutus kattoi paikallisen katselmoitavan commitin. Käyttäjän 21.11.2026 jatkovaltuutus kattaa tämän toimitushaaran pushin ja PR:n avaamisen. Ei main-mergeä, `04-done`-siirtoa eikä työpuun siivousta.
+- Tämä tehtäväkortti siirrettiin hyväksytyn PR #241:n main-toimituksen jälkeen tekniseen `04-done`-tilaan. Projektin G4-työ säilyy aktiivisena.
+- Sallitut kirjoituspolut: `Quantify-FOF-Utilization-Costs/tasks/01-ready/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `Quantify-FOF-Utilization-Costs/tasks/02-in-progress/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `Quantify-FOF-Utilization-Costs/tasks/03-review/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `Quantify-FOF-Utilization-Costs/tasks/04-done/TASK-QUANTIFY-AIM1-PROJECT-TRACKING-20261121.md`, `docs/governance/project_registry/PRJ-QUANTIFY-AIM1-UTILIZATION-COSTS.md`, ignoroitu `tools/project_registry/outputs/projects.csv`.
+- Toimitusraja: alkuperäinen valtuutus kattoi paikallisen commitin ja myöhempi jatkovaltuutus PR:n. Ihmisomistajan erillinen hyväksyntä ja käyttäjän jatko-ohje kattavat PR #241:n main-yhdistämisen sekä saman tehtävän teknisen sulkukirjauksen. Työpuuta tai haaraa ei poisteta.
 
 ## Definition of Done (DoD)
 
@@ -37,11 +37,13 @@
 - 2026-11-21: [Ubuntu `python-ci` -ajo 44807014203](https://github.com/Tupatuko2023/Python-R-Scripts/actions/runs/44807014203) koski aiempaa main-committia `2de6c1e516ee207aa8fb193d684807e31e3fbb33`, jossa rekisterigeneraattorin ja sen testitiedoston Git-blobit täsmäävät tämän haaran versioihin. JUnit-artefakti sisältää 62 rekisteritestiä; edellä nimetyt neljä ovat PASS. Tämä on saman koodiversion aiempaa Linux-CI-näyttöä, ei tämän Markdown-PR:n oma testiajo. PR:n Markdown-lint tarkistetaan erikseen.
 - 2026-11-21T09:58:47Z: Haara puskettiin ja [PR #241](https://github.com/Tupatuko2023/Python-R-Scripts/pull/241) avattiin katselmointiin. PR:n ensimmäinen Markdown-lint pysähtyi uuden projektitietueen Prettier-muotoiluun. Taulukot muotoiltiin paikallisella, jo välimuistissa olleella Prettierillä ja lukittu lähdekuvaus suojattiin muotoilulta; lähdehash sekä CSV:n `--check` pysyivät ennallaan. Korjaus toimitetaan samaan PR:ään. Ei hyväksyntää, mergeä tai siivousta.
 - 2026-11-21: PR #241:n kolmen Sourcery-huomion katselmoinnissa Markdown-lint oli jo PASS nykyisellä HEADillä. Projektitietueeseen lisättiin paikallisesti raportoitujen analyysitoimitusten tunnisteet ja hashit; tieteellistä sisältöä ei varmennettu tässä dokumentaatiotehtävässä. DoD-otsikko täsmättiin nykyiseen `tasks/_template.md`-pohjaan. CSV:n `--check`, lähdehash, Prettier-tarkistus ja pre-push-smoke läpäisivät. Termuxin neljän `os.link`-testin rajoite säilyy; GitHubin Linux-CI-näyttö on kirjattu edellä. Katselmointi ei ole ihmisomistajan hyväksyntä, main-merge eikä työpuun siivous.
+- 2026-11-21T16:35:37Z: Ihmisomistaja `Tupatuko2023` hyväksyi tehtävän [PR #241:n kommentissa](https://github.com/Tupatuko2023/Python-R-Scripts/pull/241#issuecomment-7065742611) 2026-11-21T16:34:05Z. Hyväksyntä yksilöi tämän tehtävän, PR:n ja HEADin `2230822d9514d69bf1599fcb9ba94c5ba8350896` sekä rajaa G4:n tieteellisen päätöksen ulkopuolelle. PR:n vaaditut tarkistukset olivat PASS, ja se yhdistettiin mainiin squash-commitilla `6d11037d0a78f61cd98a398d0cdf76e3f6110e58` 2026-11-21T16:34:44Z. Commit varmennettiin `origin/main`ista. Tämä riippumaton GitHub-hyväksyntä ja main-toimitus ovat saman tehtävän teknisen `04-done`-siirron peruste; sulkukirjauksen oma main-toimitus varmennetaan erikseen. Työpuu ja haarat säilytetään käyttäjän ohjeen mukaan.
+- 2026-11-21T16:38:56Z: Teknisen sulun rekisteripolku päivitettiin `04-done`-korttiin. CSV generoitiin kahdesti samoin tavuin (SHA-256 `33bf6c57a33a3ea37deb63f7479bc54b7a57308358a085d1db965c69e1c6aaa1`), `--check`, ignore-tarkistus, lähdekuvauksen SHA-256, Prettier, `git diff --check` ja pre-push-smoke läpäisivät. K18/QC ja analyysiajot eivät sovellu tähän puhtaaseen hallintomuutokseen. Termuxin neljän `os.link`-testin aiempi ympäristörajoite ja soveltuva Linux-CI-näyttö pysyvät yllä kirjattuina; testikoodia ei muutettu.
 
 ## Blockers
 
 - G4:n seuraamatonta, laajaa valmistelukorttia ei tuoda tähän dokumentaatiomuutokseen. Sen Git-julkaisukelpoisuus ja tehtäväelinkaari arvioidaan erikseen.
-- Tieteellinen raportointipäätös, ihmishyväksyntä ja main-toimitus eivät kuulu tämän tehtävän valmistumiseen.
+- G4:n tieteellinen raportointipäätös ei sisälly tähän dokumentaatiotehtävän hyväksyntään tai main-toimitukseen.
 
 ## Links
 
